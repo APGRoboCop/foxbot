@@ -1,0 +1,469 @@
+============================================================
+
+USEFUL FILES
+
+In the Half-Life SDK directory you may want to look at:
+/hlsdk/multiplayer/cl_dll/tf_defs.h
+This header file contains some important Team Fortress #defines,
+for example the maximum amount of shotgun ammo a Scout can carry.
+
+The Metamod source code has a file simply called 'tfc'.
+It lists the names for important TFC entities such as tf_weapon_sniperrifle
+or item_health.
+
+============================================================
+
+IMPORTANT STRUCTURES AND CLASSES
+
+bot_t can be found in bot.h
+
+edict_t is typedefined from edict_s.
+edict_s can be found in /hlsdk/multiplayer/engine/edict.h
+
+gpGlobals is a structure of the type globalvars_t.
+globalvars_t can be found in /hlsdk/multiplayer/engine/progdefs.h
+entvars_s can be found there too.
+
+The classes Vector and Vector2D can be found in vector.h
+
+cvar_t is typedefined from cvar_s.
+cvar_s can be found in /hlsdk/multiplayer/common/cvardef.h
+
+============================================================
+
+LIST OF FAKECLIENTCOMMANDS
+
+Here is a list of some of the commands that bots can use to perform
+certain actions.
+
+FakeClientCommand(pBot->pEdict, "discard", NULL, NULL);
+   -   discard unneeded ammo
+FakeClientCommand(pEdict, "build", "4", NULL);
+   -   build a teleporter entrance
+FakeClientCommand(pEdict, "build", "5", NULL);
+   -   build a teleporter exit
+FakeClientCommand(pEdict, "detsentry", NULL, NULL);
+   -   detonate the bots sentry gun
+FakeClientCommand(pEdict, "detdispenser", NULL, NULL);
+   -   detonate the bots dispenser
+FakeClientCommand(pEdict, "detentryteleporter", NULL, NULL);
+   -   detonate the bots teleporter entrance
+FakeClientCommand(pEdict, "detexitteleporter", NULL, NULL);
+   -   detonate the bots teleporter exit
+FakeClientCommand(pEdict, "saveme", NULL, NULL);
+   -   call for a medic
+FakeClientCommand(pEdict, "kill", NULL, NULL);
+   -   commit instant suicide
+FakeClientCommand(pEdict, "feign", NULL, NULL);
+   -   feign death
+FakeClientCommand(pEdict, "sfeign", NULL, NULL);
+   -   feign death silently
+FakeClientCommand(pBot->pEdict, "disguise_enemy", enemy_class, NULL);
+   -   disguise as a specific enemy class
+FakeClientCommand(pEdict, "detpipe", NULL, NULL);
+   -   detonate the bots pipebombs
+FakeClientCommand(pEdict, "+det5", NULL, NULL);
+   -   set a detpack
+FakeClientCommand(pBot->pEdict, "detstart", "5", "");
+   -   start setting a detpack
+
+============================================================
+
+SPY SPECIFIC NOTES
+
+When a bot has feigned death pBot->pEdict->v.deadflag is set to 5.
+Also, you may find that bots will refuse to feign death for a few seconds
+after spawning.
+
+============================================================
+
+FEIGNING PROBLEMS
+
+There are times when a Spy shouldn't feign death.
+Here are the ones I've encountered so far:
+1. Whilst near a lift(the lift can get jammed, and the bot stuck in a wall).
+2. Whilst infected(teammates may run right over the top of the Spy).
+3. Whilst underwater(even shallow water).
+4. Whilst priming a grenade(feigning death becomes accidental suicide).
+5. On top of a grenade(keeps it cosy and warm!).
+
+============================================================
+
+From tf_defs.h
+
+// Building times
+#define BUILD_TIME_DISPENSER	2		// seconds to build
+#define BUILD_TIME_SENTRYGUN	5
+#define BUILD_TIME_TELEPORTER	4
+
+============================================================
+
+GENERAL NOTES
+
+The civilian in the map hunted is essentially carrying an invisible flag around.
+
+info_tfgoal is often used for flag spawn locations(and backpack spawn locations too).
+item_tfgoal is used just for a dropped flag.
+
+You may want to do a FNullEnt() check on a Sentry Gun pointer before using it.
+This is because Sentry Guns can be marked for deletion by the Half-Life engine
+and that would mean you would have a bad pointer(causes crashing).
+
+Some sound effects are handled client side and some server side.
+This means that bots can hear some sounds, such as grenade primings and
+ammo being discarded, but not other sounds, such as weapons being fired.
+
+ALERT(at_console, "text") will only show stuff in the console when
+"developer 1" is set in the console.
+
+You can use ENT_IS_ON_FLOOR(pBot->pEdict) to see if a bot is on the ground.
+Alternatively (pEdict->v.flags & FL_ONGROUND) may be more reliable.
+
+gpGlobals->time resets to 1(or 0?) on map change.  So it may be wise to reset any
+timers that are dependant upon it when the map changes.
+
+gpGlobals->time appears to run in another thread because it can update part way
+through a single bots think cycle.
+
+Lifts do not directly affect a bot's velocity(pBot->pEdict->v.velocity).
+
+On a server with sv_gravity set to 800:
+   You can jump no higher than about 50 units.
+   Pyros can rocket jump to a height of about 95 units.
+   Rocket jumps can reach a height of about 440 units.
+   Concussion jumps can reach a height of about 490 units.
+
+When standing Bots have a standing height of 72 units and their origin is 37 units high.
+When crouching bots are 36 units tall and their origin is 19 units high.
+
+According to pBot->pEdict->v.size the bots are 32 units wide when standing.
+
+============================================================
+
+VALGRIND
+
+Valgrind can reveal the cause of crashes, not just memory leaks.
+
+If you want to run Valgrind on the Linux version of Foxbot you should invoke it
+on the hlds executable, not the hlds_run shell script.
+
+A valgrind invocation line I found useful:
+valgrind --leak-check=full --show-reachable=yes --leak-resolution=high --num-callers=20 --undef-value-errors=yes --track-fds=yes --log-file=valgrind ./hlds -debug -nomaster +sv_lan 1 -game tfc +maxplayers 16 +map badlands -norestart
+
+============================================================
+
+DEBUGGING A LISTEN SERVER VIA WINE ON LINUX
+
+On Linux you can run the Windows listen server(or client) via a program called Wine.
+Provided the Foxbot.dll is compiled with the debugging symbols left in,
+Wine can actually tell you where Foxbot crashed.
+For example the Wine debugger automatically told me this after a crash:
+Backtrace:
+=>0 0x6d8cb395 _Z8BotFightP5bot_t+0x175(pBot=0x6d937960) [C:/Dev-Cpp/projects/foxbot_src/foxbot/bot.cpp:4708] in foxbot (0x00334f68)
+
+It marked the precise location of a null pointer related bug.
+
+============================================================
+
+If you want to test the bots without having to deal with the TFC start-up screens
+you can load the map you want straight away with a command like this:
+
+hl.exe -dev -console -game tfc -heapsize 128000 -nomaster -noipx +maxplayers 7 +map 2fort
+
+============================================================
+
+METAMOD PLUGIN LOAD ERRORS ENCOUNTERED SO FAR
+
+Foxbot plugin is missing, or name/path is wrong:
+L 05/02/2010 - 08:44:42: [META] (debug:4) Unable to get realpath for '/hda_seven/hlds_l/tfc/../tfc/addons/foxbot/foxbot_MM_i386.so': No such file or directory
+
+This one was e-mailed to me:
+Windows didn't like the .dll before it was even loaded - strange.
+L 04/21/2010 - 14:14:22: [META] ERROR: dll: Failed query plugin '<foxbot.dll>'; Couldn't open file 'c:/hlserver/tfc/addons/foxbot/foxbot.dll': Invalid access to memory location.
+
+These two are compilation issues:
+L 06/06/2010 - 05:50:23: [META] ERROR: dll: Failed query plugin '<foxbot.dll>'; Couldn't find GiveFnptrsToDll(): Procedure not found
+L 06/06/2010 - 06:20:37: [META] ERROR: dll: Failed query plugin '<foxbot.dll>'; Couldn't find Meta_Query(): Procedure not found
+
+============================================================
+
+WAYS A BOT CAN GET STUCK
+
+For extra fun some of these can even combine with each other!
+
+1. Someone is in the way(not on a ladder).
+2. Someone is standing at the bots waypoint.
+3. Blocked by a jumpable or duckable obstacle.
+4. Waypoint is behind a closed door or wall and strafing wont help.
+5. Blocked on a ladder by scenery.
+6. Blocked on a ladder by another player.
+7. No route to current goal.
+8. No route to any goal(bot is in a waypoint trap).
+9. There are no waypoints in the bots current area.
+10. The bots waypoint is suspended in mid-air.
+11. The map has mysterious edges.  You can't see them but they can stop you.
+12. New maps can equal new problems.  How about lava, poison, glass or crushers.
+
+============================================================
+
+FLAG TEAM COLORS
+
+You can find the team color of a flag by checking flag_entity->v.skin.
+Here are the values of flag_entity->v.skin that I've seen so far:
+Neutral - 0
+Blue - 2
+Red - 1
+
+============================================================
+
+TRACKING TEAM SCORES
+
+You can track TeamScore messages via engine.cpp so that you can update the
+bots knowledge of what the team scores are.
+The problem is that the messaging system identifies teams by their string names
+not their actual colors.
+For example Red are "Red" on most maps, but on hunted they are called
+"Bodyguards", and on dustbowl they are called "Defenders".
+Plus there are over 500 custom maps where the teams may be given many other
+names too.
+
+============================================================
+
+BOT NAMES
+
+There are two ways to get a bots name:
+1. STRING(pBot->pEdict->v.netname)
+2. pBot->name
+
+If a bot was given the name "[FoX]Trouser Leg" then it will appear as:
+[FoX]Trouser Leg
+
+============================================================
+
+If you're interested in modifying bot behaviour the following files are important:
+bot.cpp
+bot_combat.cpp
+bot_navigation.cpp
+bot_job_assessors.cpp
+bot_job_functions.cpp
+bot_job_think.cpp
+
+============================================================
+
+THINGS THAT MAY POSSIBLY CAUSE HALF-LIFE AND/OR FOXBOT TO CRASH
+
+-	Too many entities in the game world(usually not a Foxbot specific issue).
+-	Here's something from Botmans forum archive:
+	Not all (in fact many) plugins are compatible with bots.
+	The "tried to write to unitialized sizebuf_t" error is caused when
+	some plugin tries to send network messages to bots.
+	e.g. using the pfnClientCommand() or pfnClientPrintf() functions.
+-	Another old clue from Botman in 2000 is that Half-Life may have problems
+	when running on Windows 2000.
+-  The user hasn't installed Foxbot properly, and/or has an unusual server configuration.
+-	Bots spawning too soon after dying(a Half-Life engine problem apparently).
+-	Many versions of Windows often corrupt files over time(e.g. Half-Life files).
+-	Compiling with one version of Metamod, then running the dll/so with another?
+-	Altering a structure in one of the shared header files and then not
+	re-compiling all the source files that use that structure.
+-  Not updating the makefile(s) when you 've added a new source file to the project.
+   I forgot this once and Metamod was receiving strange function pointers as a result.
+-	Screwed up Foxbot code.  For example:
+      1. The bots may not be initialising their data properly.
+      2. Buffer overflows.
+      3. adding/kicking bot related bugs.
+      4. Not checking if a sentry gun entity still exists before using it's data.
+
+============================================================
+
+THINGS TO TEST OR DO BEFORE RELEASING A NEW VERSION OF FOXBOT
+
+-	Make sure compiler options are user friendly.
+	For example, optimizing for Pentium 4 may exclude some people.
+
+-	Re-compile ALL the necessary source files, just to be sure.
+	Check for new compiler warnings afterwards.
+
+-	Make sure all text files have CRLF line endings on Windows.
+	And LF line endings on Linux.
+
+-	Check that waypoint and area editing still works okay.
+
+-	Check that bots can chat and report stuff okay.
+
+-	Check that you can boss bots about with the changerole and
+	changeclass commands.
+
+-	Check that nothing really weird happens on any of the standard maps.
+
+-	Make sure the bots don't report debug messages with UTIL_HostSay().
+	One trick is to comment all debug messages with a unique word so that
+	these messages are easy to search for.
+
+-	Make sure foxbot.dll is capitalised the way you want it to be.
+	e.g. FoXBot.dll.
+
+-	Make sure all map waypoint/script/area updates are included.
+
+-	Make sure the correct version number is set everywhere it appears.
+	For example it may appear in default.cfg and the readme.txt files.
+
+-	Check that both the Windows and Linux versions compile okay.
+
+-	Make sure the release is dated.
+	meta_api.cpp has release date information for example.
+
+-	Run a virus check on the files.
+
+-	Remember that the uncommented lines of text in the file
+	'\addons\metamod\plugins.ini'
+	should use this directory separator: '/' even for Windows.  For example:
+	win32 ../foxbot/FoXBot.dll
+
+-	Remember that the uncommented lines of text in the file
+	'\addons\metamod\plugins.ini'
+	are probably case-sensitive.
+
+-  Commit sepuku because there is soooo much that can go wrong with the code.
+
+============================================================
+
+INTERESTING NETWORK MESSAGES
+
+HINT: You can find these and others by opening tfc.dll as a text file.
+
+#Engineer_building
+#Build_nobuild
+#Build_noroom
+#Build_air
+#Build_nometal
+#Build_stop
+#Build_notenoughmetal
+#Build_onesentry
+#Build_onedispenser
+#Build_entryteleporter
+#Build_exitteleporter
+#Sentry_built
+#Dispenser_built
+#Teleporter_Entrance_Built
+#Teleporter_Exit_Built
+#Sentry_destroyed
+#Dispenser_destroyed
+#Teleporter_Entrance_Destroyed
+#Teleporter_Exit_Destroyed
+
+#Sniper_legshot
+#Sniper_leginjury
+#Sniper_cantfire
+
+============================================================
+
+CONCUSSION JUMP INFO
+
+I ran some tests on bot speeds when they concussion jump.
+Between 0.1 and 0.6 of a second after the concussion jump begins
+the bot should have an upwards velocity of over 300 units.
+Medics have a slightly slower boost than a Scout, but will still have an
+upwards velocity of over 300 units within that window of time.
+
+A velocity below 300 means the concussion jump probably screwed up.
+
+Bear in mind that a server can change movement speed to some extent.
+
+Here's some data for [FoX]RainMan, who was concussion jumping as a Medic
+at the time(Jump time = pBot->ConcCruise - gpGlobals->time):
+
+[FoX]RainMan jumping, velocity.z:0.000000 speed:333.221008 Jump time:4.000000
+[FoX]RainMan jumping, velocity.z:247.528168 speed:333.221008 Jump time:3.969479
+[FoX]RainMan jumping, velocity.z:226.728180 speed:333.221008 Jump time:3.941395
+[FoX]RainMan jumping, velocity.z:840.455750 speed:906.651062 Jump time:3.910061
+[FoX]RainMan jumping, velocity.z:819.655701 speed:906.651062 Jump time:3.877960
+[FoX]RainMan jumping, velocity.z:798.855652 speed:906.651062 Jump time:3.843704
+[FoX]RainMan jumping, velocity.z:778.055603 speed:906.651062 Jump time:3.813999
+[FoX]RainMan jumping, velocity.z:757.255554 speed:906.651062 Jump time:3.785336
+[FoX]RainMan jumping, velocity.z:736.455505 speed:906.651062 Jump time:3.751671
+[FoX]RainMan jumping, velocity.z:715.655457 speed:906.651062 Jump time:3.719688
+[FoX]RainMan jumping, velocity.z:694.855408 speed:906.651062 Jump time:3.665440
+[FoX]RainMan jumping, velocity.z:674.055359 speed:906.651062 Jump time:3.634792
+[FoX]RainMan jumping, velocity.z:650.055359 speed:906.651062 Jump time:3.602428
+[FoX]RainMan jumping, velocity.z:626.055359 speed:906.651062 Jump time:3.574150
+[FoX]RainMan jumping, velocity.z:602.055359 speed:906.651062 Jump time:3.542576
+[FoX]RainMan jumping, velocity.z:578.055359 speed:906.651062 Jump time:3.511177
+[FoX]RainMan jumping, velocity.z:554.055359 speed:906.651062 Jump time:3.481892
+[FoX]RainMan jumping, velocity.z:530.055359 speed:906.651062 Jump time:3.452057
+[FoX]RainMan jumping, velocity.z:506.055359 speed:906.651062 Jump time:3.421585
+[FoX]RainMan jumping, velocity.z:482.055359 speed:906.651062 Jump time:3.391792
+[FoX]RainMan jumping, velocity.z:458.055359 speed:906.651062 Jump time:3.358597
+[FoX]RainMan jumping, velocity.z:434.055359 speed:906.651062 Jump time:3.328148
+[FoX]RainMan jumping, velocity.z:410.055359 speed:906.651062 Jump time:3.299381
+[FoX]RainMan jumping, velocity.z:386.055359 speed:906.651062 Jump time:3.271381
+[FoX]RainMan jumping, velocity.z:362.055359 speed:906.651062 Jump time:3.240654
+[FoX]RainMan jumping, velocity.z:338.055359 speed:906.651062 Jump time:3.211800
+[FoX]RainMan jumping, velocity.z:314.055359 speed:906.651062 Jump time:3.183601
+[FoX]RainMan jumping, velocity.z:290.055359 speed:906.651062 Jump time:3.139553
+[FoX]RainMan jumping, velocity.z:266.055359 speed:906.651062 Jump time:3.109295
+[FoX]RainMan jumping, velocity.z:243.655365 speed:906.651062 Jump time:3.079494
+[FoX]RainMan jumping, velocity.z:221.255371 speed:906.651062 Jump time:3.048508
+[FoX]RainMan jumping, velocity.z:198.855377 speed:906.651062 Jump time:3.019512
+[FoX]RainMan jumping, velocity.z:176.455383 speed:906.651062 Jump time:2.988407
+
+============================================================
+
+SOME OF THE SOUNDS THE BOTS HAVE HEARD IN TFC
+
+weapons/building.wav
+weapons/turrset.wav
+weapons/turrspot.wav          (played when a sentry targets a player)
+weapons/pl_gun3.wav
+weapons/turridle.wav
+weapons/357_cock1.wav
+weapons/ax1.wav               (grenade prime sound)
+speech/saveme1.wav            (medic calls)
+speech/saveme2.wav            (medic calls)
+ambience/flameburst1.wav
+common/bodysplat.wav
+common/wpn_select.wav
+common/wpn_denyselect.wav
+items/smallmedkit1.wav
+items/armoron_1.wav
+items/smallmedkit1.wav
+items/gunpickup2.wav
+items/ammopickup1.wav
+items/ammopickup2.wav
+player/pain1.wav
+player/pain2.wav
+player/pain3.wav
+player/pain5.wav
+player/pain4.wav
+player/pain6.wav
+player/death1.wav
+player/death3.wav
+player/death4.wav
+player/death5.wav
+player/gib.wav              (played when players leave the game)
+misc/r_tele3.wav            (played when players join the game)
+misc/r_tele4.wav            (played when players join the game)
+
+============================================================
+
+In order to better understand some special features of certain maps I've
+made a small list of entities found near those features:
+
+RAVELINS LASERS
+(v.classname)env_beam
+(v.classname)trigger_hurt
+
+RAVELINS GENERATOR
+(v.classname)func_rotating     (v.targetname)redgen_dead
+(v.classname)func_wall         (v.targetname)redgen_ok
+
+DUSTBOWLS WALLS THAT DISSAPPEAR
+(v.classname)func_wall_toggle
+(v.classname)area1_extraroute
+(v.classname)area2_extraroute
+
+ROCK2'S RUBBLE
+(v.classname)func_wall_toggle   (one for each side of the rubble I think)
+
+ROCK2'S YARD HOLE
+(v.classname)func_wall_toggle   (one only for the underground side)

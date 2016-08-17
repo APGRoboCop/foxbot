@@ -1,0 +1,989 @@
+
+Hi, my online name is Zybby, and this document contains some of the ideas
+I've had for Foxbot development.
+Just in case they are useful to anybody else.
+Some of these ideas have made it into the code, others haven't.
+
+========================================
+
+SOLVING WAYPOINT CONFLICTS
+
+Bot behaviour code can branch into many different functions, and you can
+find yourself with a problem if you allow many of those functions to set the
+bots goal.
+For example, one function keeps saying "go to this waypoint!" and another
+function keeps saying "go here instead".  This can lead to bot confusion.
+Here are some ideas on how to solve this issue.
+
+Use a function for setting the bots goal waypoint
+-------------------------------------------------
+Any function that wishes to change the bots goal must this function:
+void BotSetGoalWP(bot_t *pBot, const int newGoalType, const int newGoalWP)
+{
+   static const int goalTypeScore[8] = {0, 0, 1, 2, 1, 6, 3, 4}
+   if(goalTypeScore[newGoalType] < goalTypeScore[pBot->goalType])
+      return;  // the new goal waypoint is not important enough right now
+   // set the bots goal and goal type to the requested ones...
+}
+It checks that the requested goal type is important enough to override
+the current one.
+
+Use a variable to monitor goal change requests
+----------------------------------------------
+You could add two variables to the bot structure: requestedGoalType,
+and requestedGoalWP.  If a peripheral function wishes to alter the bots
+goal waypoint then it must use these variables instead.
+A waypoint navigating function can then check these two variables later
+on and decide whether or not the request is more important than the
+bots current goal.
+
+========================================
+
+WAYPOINT OVERRIDE PRIORITIES
+
+Sometimes something may happen to a bot as it's proceeding to a goal
+which may be so important that the bot will have to pick a new goal.
+Here is a list of goal overrides I've implemented, listed according
+to their level of importance:
+
+1. Being infected(only bots who are carrying a flag should ignore this).
+2. Low ammo.
+   It should be checked first if ammo waypoints could be found before
+   altering the bots goal.
+3. Low health or armour.
+   It should be checked first if health or armour are fairly near before
+   altering the bots goal.
+4. Chasing enemies the bot has spotted(especially enemy flag carriers
+   and sentry guns).
+
+========================================
+
+TYPES OF WAYPOINT GOALS AND THEIR LEVELS OF PRIORITY
+
+This table is just an idea and indicates when one waypoint goal should be
+allowed to override another based on which one is higher than which.
+
+CAPPING_A_FLAG
+INFECTED_SUICIDE_MISSION
+AVOID_GRENADE
+CHASING_FLAG_CARRIER
+ATTACK_SPOTTED_SENTRY_GUN
+SEEK_AMMO
+RETREAT_FROM_ENEMY
+SEEK_HEALTH
+SEEK_ARMOUR
+SEEK_FLAG
+ENGINEER_CONSTRUCTION
+CHASING_AN_ENEMY
+SEEK_DEFEND_POINT
+ATTACK_ENEMY_DEFEND_POINT
+
+========================================
+
+STOPPING BOTS FROM KILLING THEMSELVES WITH EXPLOSIVE GUNS
+
+The simplest method of stopping a bot from blowing itself up with a rocket
+launcher is to trace a short line out in front of the bot and see if anything
+would get immediately in the way of the rocket.
+If so the bot can change to a safer weapon rather than pull the trigger.
+
+However, changing weapons takes time and if an enemy is rapidly moving in and
+out of this safe range then the bot would spend more time changing back and
+forth between weapons than doing any fighting.
+So, one solution is to remember how long ago the bot last changed weapons.
+If it was a very short while ago - don't change back to the suicide inducing
+weapon just yet.
+
+========================================
+
+REDUCTION OF GRENADE SUICIDES
+-----------------------------
+
+As of Foxbot 0.74 the bots still kill themselves regularly with grenades.
+Here are some reasons why:
+1. They are not afraid to prime a grenade when right next to their enemy.
+2. When they lose sight of an enemy they try to dispose of the grenade they
+   are carrying by chucking it behind them.  This behaviour can backfire.
+3. They run into the enemy they threw a grenade at.
+4. They are throwing whilst in a narrow, confined space, and the grenade
+   rebounds.
+
+There are two main ways to reduce grenade suicides:
+1. Not prime a grenade at point blank range(unless the bot is outnumbered).
+2. Make sure the bot avoids the damage created by their own grenade.
+
+Priming a grenade when next to an enemy is a great idea if you are pretty sure
+you are about to die anyway.
+Pretty good indicators you are about to die:
+1. You are infected.
+2. You are outnumbered by nearby enemies.
+3. Your class is seriously outgunned by another class(e.g. Scout versus HWGuy).
+4. You've just run into a Sentry Gun.
+
+Shortly after throwing a grenade bots could make sure that they avoid approaching
+it.  For example they could pause briefly or retreat a short distance.
+
+========================================
+
+WHEN TO THROW GRENADES
+
+Good times to prime a grenade:
+1. Your enemy is slow or stationary.  e.g. a HWGuy or Sentry gun.
+2. The bot can see more than one enemy.
+3. The enemy is a flag carrier.
+4. The grenade will hurt the enemy more than it will you.
+   e.g. Engineer EMP grenade versus Soldiers, Demomen and HWGuys.
+5. You are low on health and the enemy is not too near.
+6. The enemy is not facing you and not too near.
+
+========================================
+
+WHEN TO BE EVASIVE
+
+Factors that affect whether or not evading an enemy is a good idea:
+1. The number of allies present.
+2. The number of enemies present.
+3. The class of the bots current enemy.
+4. The bots own class.
+5. How recently the bots last injury occurred.
+6. The amount of health and armor the bot has.
+7. Is the bots current weapon clip empty?
+
+Evading an enemy can be a preventative measure, not just a curative one.
+This means that some of the factors listed above should not always play
+a dominant role in the evasion decision making process.
+For example, a bot with full health and armour could choose to avoid a
+certain threat in order to avoid losing health and armour.
+
+Sometimes the bot should evade with full health.
+Sometimes the bot shouldn't evade, even when outnumbered.
+
+Deciding when to throw a grenade at an enemy is quite different
+to deciding when to evade an enemy.  Here's an example as to why:
+Always throwing grenades at your enemies is merely wasteful.
+Always evading your enemies will give your enemies control of the map.
+
+A simple formula:
+Decide toughness of the bot.
+Decide toughness of the bots enemy.
+Factor in the number of enemies present.
+Factor in the number of allies present.
+
+========================================
+
+DETECTION OF DISGUISED SPYS
+
+Here's one idea on how to represent fair detection of enemy Spies.
+Add a variable to the bot_t structure called something like f_spySpottedTime.
+
+When a bot encounters a disguised Spy one of three conditions are checked
+for, which are:
+1. f_spySpottedTime occurred over 5 seconds ago.
+   Assume this is a new sighting and set f_spySpottedTime to the current time.
+2. f_spySpottedTime occurred under 4 seconds ago.  Do nothing yet.
+3. f_spySpottedTime occurred over 4 seconds ago.
+   The bot is suspicious and should attack the Spy.
+
+Three stages of Spy detection
+-----------------------------
+I've begun to think that there should ideally be three stages of Spy detection.
+Which are:
+1. Ignorance.  Do nothing about the Spy yet.
+2. Suspicion.  If you are a defender follow the Spy.  Otherwise at least
+   keep your eye on him.
+3. Attack the mofo!
+
+Factors affecting Spy detection
+-------------------------------
+Some things should ideally affect how well a bot can detect a Spy.
+For example:
+
+1. Is the Spy going towards the enemy teams objective.  If so then it's
+   time to be more suspicious of them.
+2. Is the Spy very near? (nearby enemy Spys are likely to stab you)
+3. Has the bot not seen any enemies for more than a few seconds?
+   Bots who are busy fighting have less time for being suspicious
+   of Spys.
+4. The longer a bot can see a Spy the more likely they will eventually
+   suspect them.
+5. Spys disguised as HWGuys or Scouts should be easier to detect.
+   However, some players may use scripts to affect their speed when
+   disguised as HWGuys or Scouts.
+6. The more often a bot encounters undisguised Spys the more suspicious
+   it should be of Spys for a while.
+7. If the Spy is disguised as your team and you see him feign or un-feign
+   then kick his ass!
+8. If a disguised Spy is running around with his non-Spy teammates, then
+   something dodgy is clearly going on.
+9. Spys can't shoot without losing their disguise.  If there is a fight
+   going on, and they're not shooting, they will stand out.
+10. If there is no team damage and a teammate was hurt by a teammates gun,
+   the injured teammate must be a Spy.
+11. If the bot was killed by a Spy then be extra vigilant.
+
+========================================
+
+   USING FEIGNING AS AN AMBUSH TACTIC
+
+Here's one idea on how to make Spys use feigning as a wait-and-ambush tactic.
+
+Variables needed:
+evil_spy_time
+
+Here are the steps and/or conditions involved:
+A. As the Spy travels around they can periodically draw tracelines left
+   and right of their position.
+B. If both tracelines are blocked then the Spy is quite likely to be in an
+   enclosed space and/or a narrow passageway.  Enclosed spaces are a pretty good
+   place to ambush people with a knife!  The Spy should feign here.
+C. Whilst feigning death the Spy should check for three different conditions:
+   1. The Spy should measure distances to enemy players.
+      If an enemy player comes near enough, the Spy should un-feign, select the
+      knife and target that player.
+   2. If the Spy is injured by an enemy whilst feigning, the Spy should un-feign
+      and target that player.
+   3. If nobody comes near enough to the feigning Spy after a several seconds
+      have passed the Spy should un-feign and continue on their way.
+
+The variable evil_spy_time can be used for various purposes.
+It can be used to keep the Spy from checking too often for an ambush location.
+Once the Spy is feigning, evil_spy_time can also be used to measure how
+long the Spy will wait for a victim to come by.
+
+========================================
+
+ANOTHER FEIGN AND AMBUSH TACTIC
+
+A simple idea is that a Spy bot could pick a waypoint somewhere nearby
+an enemy defender waypoint, and feign when it arrives there.
+Then it can ambush enemies who pass nearby.
+
+However you should probably make sure that the waypoint it chooses to feign
+at is not in a wide open area as that would make the bot easy to spot.
+A couple of traceline checks should help to check for enclosed spaces.
+
+========================================
+
+IDEAS FOR STEALTHY BEHAVIOUR
+
+Stealth based upon enemy proximity
+----------------------------------
+One simple idea is that a disguised Spy bot can check 4 randomly selected enemy
+players every 3 seconds as it travels around.
+If any of those enemies is within a certain radius then the Spy bot should go into
+stealth mode.  i.e. walk or creep rather than run.
+Walking is quieter and slows the bot down, which may help it to avoid contact with
+the enemy players it detected.
+Only a few randomly selected players are checked at a time, because the bots
+behaviour shouldn't be too perfect.
+
+Stealth based upon footstep sounds
+----------------------------------
+This would be the ideal solution.
+If a Spy bot can hear footsteps, but can see no teammates or enemies around
+then it may be a good idea to sneak rather than run.
+Also, it may be best to sneak when the Spy is fairly near to an enemy flag.
+
+========================================
+
+GRENADE AVOIDANCE IDEAS
+
+Waypointless avoidance
+----------------------
+This is the first method that I implemented in Foxbot 0.705(I copied it
+from HPB bot).
+Basically the bot periodically checks the area immediately ahead of it for
+harmful grenades.  If it spots one it then backs away for several tenths of
+a second, and checks for grenades again.
+It's a nice simple idea that requires no waypoints, but can make the bots
+too easy to predict by human players, and it fails to help the bot if it's
+already backed up against a wall.
+
+Messing with the bots current waypoint memory only
+--------------------------------------------------
+The strength of this idea is that you only need to alter the bots
+current waypoint memory.
+Basically, when a bot spots a grenade it can perform a check for nearby
+visible waypoints to set as it's current waypoint.
+This newly selected current waypoint should be at least a certain distance
+from the grenade and behind or to the left or right of the bots current
+position.
+One problem with this approach is that it may be computationally intensive
+and may screw up if items of scenery get in the way of the bots movement.
+
+Messing with the bots goal waypoint
+-----------------------------------
+If a bot spots a grenade ahead it can pick a new goal waypoint that will
+steer it a good healthy distance away from the grenade.
+It can look for a goal waypoint that is within a certain movement distance,
+and at least a certain distance away from the grenade.
+One debatable flaw of this approach is that the bots goal waypoint is
+changed from what it was.
+Also, it may be tricky to alter the bots current waypoint so that it starts
+heading towards it's new goal as soon as possible.
+
+========================================
+
+A NEW TYPE OF OFFENSIVE BEHAVIOUR
+
+In older versions of Foxbot, bots on offense would head straight
+towards any flag.
+It might be cool if they showed a new type of behaviour which I call 'Marauder'.
+Basically, a marauding bot would target enemy defender points and try to kill
+enemy defenders.  Also they would check how near health and flags are.
+It injured and health is near they should go for the health.
+And if a flag becomes near enough, they would break off and go for that flag.
+
+Problems with this idea
+-----------------------
+1. Bots are given offensive or defensive roles.  Marauding is a subspecies
+   of the offensive role.  How do you make it clear which bots are Marauders?
+2. On cz2 and epicenter the flags are very near to the team spawn points.
+   The Marauding bots would go for the flag straight away.
+3. How do you make sure that some bots still go just for the flag?
+
+A solution to problem 2 is to check how long ago the bot spawned before
+deciding what type of goal waypoint to go for.  However, if so then they may
+never return to pick up a flag as they will leave the base behind.
+
+========================================
+
+THE CARDINAL SINS OF HEALTH/ARMOR SEEKING BEHAVIOUR
+
+1. Being very predictable about it.  Being too predictable can make the
+   bots look dumb, but more importantly it's something that human enemies
+   can take advantage of.
+2. Multiple bots all going for the same health pack at the same time
+   is not an obvious sign of intelligence.
+3. Injured bots should not take long detours for health/armor at the expense
+   of completing the maps objectives.
+4. Going for health/armor that hasn't respawned yet, and wont respawn for
+   quite a long time.
+
+Solutions
+---------
+
+Sin 1. Bots can check how long it's been since they last saw an enemy
+   before going for health/armor items.
+Sin 2. An easy solution to sin 2 is to make the bots check if other bot
+   teammates are already heading to the health/armor they're interested in.
+Sin 3. A simple solution is to place a limit on how far a bot will go in
+   the pursuit of health.
+Sin 4. This is a tough problem to deal with.  You could check for entities
+   very near to the health/armor waypoint, and abort if no health/armor
+   entities have spawned there yet.
+
+========================================
+
+SOME REASONS PEOPLE CHANGE CLASS
+
+-  They're not doing very well as their current class.
+
+-  They're doing too well as their current class(looking for fun or a challenge).
+
+-  They wish to change role(e.g. from attack to defence).
+
+-  They perceive a class specific void in their teams setup.
+   e.g. on Hunted if the Bodyguards have no Medics.
+
+-  The enemy team has certain classes.  e.g. Snipers or Engineers.
+
+-  They need to be a demoman and detpack something.
+
+========================================
+
+WHEN TO CHOOSE DEMOMAN FOR CERTAIN MAPS
+
+There are several maps with detpack waypoints, and for the bots to be competitive
+they should make sure that there is eventually at least one Demoman on their team.
+
+However, it could make the bots boring if they always detected detpack waypoints
+and switched to Demoman immediately.
+
+A more interesting system could be to simulate frustration.
+e.g. if a bot tries to pass through a detpack tunnel and discovers it hasn't been
+blown open yet.  Or, a bot notices that it's team is losing.
+
+========================================
+
+HUMAN STYLE TEAM BALANCING
+
+When teams are unbalanced on a public server a number of things can happen, e.g.
+1. Nobody notices for a long while.
+2. People notice and talk about it, but too few people want to switch teams.
+3. People switch teams to balance them out fairly quickly.
+
+Some people hate being on a losing team, even if the losing team is outnumbered.
+Some people are looking for a challenge and will want to be on a losing team.
+Each bot in the game could fall somewhere within either category, thus influencing
+it's willingness to balance unbalanced teams.
+
+Also some players may avoid switching teams for a while because they think that
+someone else will do it.
+
+So, it may be useful to have a mechanism that looks out for unbalanced teams
+every once in a while.  e.g. every random amount of seconds.
+It could be a long while or a short one.
+
+Then when an imbalance has been spotted the bots could be polled to see if
+any of them are inclined to do something about it.
+
+========================================
+
+IDEAS FOR BOT PERSONALITY CHARACTERISTICS
+
+-  Class preferences if given a choice.  Possibly lower their skill when
+   playing as classes they don't prefer.
+-  Weapon preferences if given a choice.
+-  Map preferences.  e.g. they may leave if they're not keen on the map.
+-  Team preference.  Ideally this should depend upon the map(maybe on the
+   classes available to each team).
+-  Choice of graffiti logo.
+-  Role preference. e.g. defense or offense.
+-  How needy they are regarding health/armour/ammo.  A butchness rating.
+-  How keen they are on throwing grenades.
+-  Accuracy bonuses or penalties.
+-  If snipers hit and run or camp for long periods.
+-  If engineers put sgs near the flag or not.
+   (search for the this variable: closestSGPointToOurFlag)
+-  Do they behave according to natural selection(class selection behaviour)?
+-  How good they are at dodging grenades.
+-  How single minded they are regarding going for the flag/objective.
+-  Team-orientation.  Team-orientated bots notice team mates more
+   and try to help them.
+-  Evasiveness.  Some bots are more cautious in battle than others.
+-  Territoriality.  How likely the bot is to try and dominate whatever situation
+   it's in.
+-  Inquisitiveness.
+   How likely they are to pursue spotted enemies when going about.
+-  Jumpiness.  Jumpy bots jump around more.
+-  Trick Jump skillz.  How likely they are to concussion/rocket jump.
+-  Chattiness, some bots chat more or less than others.
+-  Humour.  Some bots have more of a sense of humour than others.
+-  Spy stealthiness.  Some spies barge through, others creep about
+   and feign death.
+-  Dirtiness.  i.e. how unfair the bot is willing to play.
+   For example, how unlikely it is to change teams in order to balance them.
+   Or how likely it is to grab health that a teammate needed.
+
+NOTE: Some of the ideas listed above may be better described as moods rather
+than personality traits.
+
+========================================
+
+REALLY DAFT WAYS BOTS COULD MESS ABOUT
+
+-  Trying to kill with just a crowbar.
+-  Stand on a ammo backpack and repeatedly discard ammo in all directions.
+-  Feign death repeatedly in front of team mates.
+-  Medics could try to heal Sentry guns for a bit.
+-  Make a tower of bots(make them jump on top of each other).
+-  Concussion jump on the spot then discard ammo way up in the air.
+-  Concussion jump on the spot then spray graffiti somewhere high up.
+-  Run about between 2 or 3 waypoints maniacally, perhaps swinging a crowbar.
+-  Stand on a health item and call for a medic.
+-  Spin on the spot.
+-  Suicide bombing with Mirvs and a crowbar.
+-  Keep trying to set a detpack in the enemy base.
+-  Go graffitti a wall.
+
+========================================
+
+   DESIRABLE HUNTED BEHAVIOUR
+
+If only enemies are nearby - head for the nearest bodyguard or hide.
+
+If enemies and bodyguards are nearby - move evasively towards the escape area.
+Or retreat from the enemies.
+
+If no enemies are around - run for the exit.
+
+========================================
+
+OTHER MESSAGES BOTS COULD REPORT
+--------------------------------
+
+-  What class they have changed to.
+
+-  That they have changed to Medic, when there was none on the team.
+
+-  That they are infected and which area.
+
+-  An enemy spy was seen near a friendly flag.
+
+-  The position of troublesome enemy Snipers.
+
+-  Where they are sniping from.
+
+-  That more defense or offense is needed, possibly with more details.
+   e.g. "our flag room needs defending".
+
+-  Where they encountered heavy resistance.
+
+-  Where they encountered heavy resistance, and that someone should switch to
+   a certain class to solve the problem(e.g. sniper or spy).
+	NOTE: Each request could be put into a small queue so that the team keeps adapting.
+
+-  That they are near to picking up a flag.
+
+-  They are about to score on Rock2.
+
+-  That they have a flag and need support at a map location.
+   They could wait for help to arrive too.
+
+-  Acknowledgement of a team message.  Especially if they are acting upon it.
+
+========================================
+
+OTHER THINGS BOTS COULD CHAT ABOUT
+----------------------------------
+
+-  Congratulations when someone scores more than 2 points at once, or a round is won.
+
+-  That someone on their team is being a dumbass.
+
+-  Whinging about suicide.
+
+-  How unbalanced the teams are.
+
+-  Whinging about a certain class.
+
+-  Deliberate trash talk to players on the other team.
+
+-  They could say bye when they leave.
+
+-  Chatter at the end of a map.
+
+-  make bots chat if you mention their name.
+
+-  Thanks when someone helps them.
+
+-  Occasional daft comments when they detpack a waypoint.
+
+========================================
+
+REALISTIC AIM SKILLS
+--------------------
+
+As of Foxbot 0.74 the bots still have inhumanly good aim skills with shotguns
+and other weapons.  Here are some factors that should affect bot aim skill
+if they are to be more human like:
+
+-  Encountering an enemy they did not expect to see.
+
+-  Being set on fire, being shot, blown up or concussed.
+
+-  Poor light levels, and foggy or murky conditions.
+
+-  The bots own speed.  The faster the bot is going, the more difficult
+   aiming should be.
+   The bots own speed matters least if the bot is approaching or retreating
+   from the target in a direct line.
+
+-  The enemies speed.  The faster the enemy is going, the more difficult
+   aiming at them should be.
+   The enemies speed matters least if they are approaching or retreating
+   from the bot in a direct line.
+   A simple way of deciding how this affects the bots aim is to make the bot
+   more accurate if their enemy is moving very little.
+
+-  Changes in the bots speed and/or changes in it's targets speed.
+   With humans there may be a tendency to aim where the enemy appeared to
+   be going rather than aim where they currently are.
+
+-  Distance to the target.  Nearby targets look bigger but appear to move
+   faster.  Distant targets appear to move slower but look smaller.
+
+-  A general variation of skill over time.  The same human can vary in skill
+   over the course of a half hour game.
+
+-  Determination.  A player may make more effort to aim well if they have
+   a flag and only one enemy is in their way.  Or less effort if they have
+   maximum health and armor and are fighting an enemy scout.
+
+Good aim versus moving targets
+------------------------------
+When a human and/or their target is moving then it's harder to hit the target but
+not impossible.  One simple trick humans do is stop moving for just long enough
+so that they can stabilize their aim.
+Also, a human can fire several accurate shots in a row but at a slower rate of
+fire because it takes more time to correct the aim.
+In other words it might be cool if bots occasionally paused to improve their aim,
+and fired less frequently(but more accurately) when shooting at
+difficult targets.
+
+========================================
+
+THE LAYOUT OF BOTFINDENEMY()
+----------------------------
+
+BotFindEnemy() is a function in bot_combat.cpp that is used to update each
+bots knowledge of enemies in the visible area.
+The problem is that as of Foxbot 0.74 the function is oversized and difficult
+to understand in it's entirety.
+Here is an attempt to figure out what BotFindEnemy() should be doing,
+step by step.
+
+1. Check if the bots current enemy is visible.  If not, remember that enemies
+   last position and then target them no more.
+2. Check if the bots remembered enemy Sentry Gun is still a valid target.
+   If not forget all about it(especially as a crash could occur otherwise).
+3. In order to conserve CPU usage, don't check for new enemies too often
+   So maybe abort going any further if the bot is checking again too soon.
+
+========================================
+
+TEAMMATE TAGGING
+----------------
+
+Teammate tagging is an idea where one bot on offense may decide to
+track(follow) another bot(who is also on offense).
+For example, a Medic might spot a HWGuy who is entering the enemy base and
+decide to tag along with the HWGuy.
+
+It might be best if certain classes only tag along with certain classes.
+For example, a HWGuy wouldn't be able to keep up with a Scout.
+
+It's also important to make sure that two bots don't tag along to each
+other, otherwise they wont go anywhere special.
+
+Knowing when to tag
+-------------------
+
+The hardest part of organising tag behaviour is knowing when bots should
+tag on to each other, and also knowing when to stop tagging and split up.
+
+A good time to tag onto another offensive team mate is when the bot is
+low on health and therefore may die soon.
+
+A good time to split from a tagged offensive team mate would be if the bot
+comes across a flag or a similar objective.
+
+========================================
+
+GENERAL IDEAS
+
+-  Move the foxbot directory to /addons/ like with some other bots?
+   This makes the directory layout easier to understand.
+   But what if Foxbot were to officially support more than one mod?
+
+-  Make bots safely chuck held grenades upwards if they have no enemies.
+
+-  Make Spys switch disguise when starting a feign ambush?
+   They shouldn't do this unless they are going to feign for long enough.
+
+-  Instead of just goal waypoint based evasion, you could also make bots
+   evade with a jink function.  Alter their current waypoint.
+
+-  If burning or concussed etc. a bot could choose to retreat more.
+
+-  Make a new variable.  pBot->target_ally.
+   It's so that pBot->enemy.ptr can be used JUST for enemies.
+
+-  Bot aim improves the longer they fight the same player.
+
+-  Bots could pick classes to counter the enemy classes if their team is losing.
+
+========================================
+
+DETECTION OF EACH TEAMS BASE
+
+One useful piece of information is the location of each teams current base.
+It could be used to make sure infected bots go to the enemy base for example.
+A new type of waypoint could be used for this purpose, or a script command.
+
+Reliable autodetection in the code would be preferable and here is a simple idea
+on how to do it.
+
+Each time a bot dies it would need to pick a new current waypoint.
+This current waypoint should be in/near the spawn area for that team so all
+you have to do is get each bot that dies to report where they spawned to all
+the other bots on their team.
+i.e. update a global array of team spawn areas.
+
+You could also support a script command that could be used on unusual maps
+where the autodetection fails to guess the right team base locations.
+
+There are some complications to the autodetection system described above:
+1. Bots on different teams should not rely on sharing this data with each other
+   because sometimes one team might have bots and the other teams no bots.
+
+2. Bots that pause do not update their current waypoint info.  This is a problem
+   if a bot pauses for some time as soon as it spawns.
+
+========================================
+
+TO HEAL OR NOT TO HEAL
+
+Medics and Engineers were probably intended to be support classes, but many
+players have decided to use these two classes for more offensive purposes.
+Some human Medics don't seem to want to heal anybody, they're there to cap flags.
+
+With the bots you can keep it simple and make bots heal anybody that's injured
+a certain amount.
+Or, alternatively here's a couple of extra ideas.
+
+1. The further a bot Medic/Engineer gets from their spawn location the more
+   willing they are to heal teammates.  This is something that human Medics
+   will do in order to boost the offense inside enemy territory.
+2. Bots can be made to exhibit personality traits.  Bots with a more aggressive
+   personality trait could be less willing to heal teammates.
+
+========================================
+
+TRACKING DROPPED FLAG LOCATIONS
+
+With older versions of Foxbot dropped flags were remembered in a global array
+of 32 possible waypoint locations.
+
+I wanted to adopt a more personal approach where each bot remembers one flags
+location at a time, because it should be simpler to keep track of.
+
+Variables needed for each bot:
+droppedFlagWP  // nearest waypoint to where the flag was dropped(-1 for none)
+f_droppedFlagTime  // when it was dropped
+
+Some things to note:
+-  A script could indicate how long dropped flags sit around for on each map.
+-  A script could tell bots how many flags exist for each team.  The fewer
+   flags there are the more important a dropped flag becomes.
+-  Bots on offence could remember where a flag they want was dropped, and
+   bots on defence could remember where the enemy dropped a flag.
+-  Bots that drop a flag can update other interested bots on their team as
+   to where the flag was dropped(if done properly it's not cheating).
+
+========================================
+
+BASIC COMBAT BEHAVIOUR
+
+With older versions of Foxbot bot combat behaviour was often a case of charging
+in with guns blazing and hoping the enemy dies first.
+
+A basic system I would prefer would be more like this:
+-  If the enemy has their back turned away from you then it's more okay to
+   approach them.
+-  If you are a Medic then you can approach anybody, but it would be preferable
+   to stick to a shotgun versus enemy Medics.
+-  You should avoid getting too close to certain enemy classes.  e.g. Medics,
+   HWGuys and Pyros.
+
+Human players tend to think about where they want to be when engaged in a fight.
+For example a player may wish to retreat a bit and would think about a specific
+nearby map location they wish to move towards to accomplish that.
+With the bots you could do a similar thing by adjusting their current_wp variable.
+i.e. setting it nearer to the enemy if the bot wants to approach the enemy, or
+moving it further if the bot wants to move further away.
+Then you could monitor how far the bot moves astray from the current_wp variable
+and try to keep it fairly near.
+
+========================================
+
+COMBAT FACTORS
+
+When players get into a fight all sorts of factors come into play, here is
+a partial list that maybe the bots could take into account:
+
+-  Take the bots health and armor into account(no armor at all really matters).
+-  Take a guess at the enemies health.  If the bot hears the enemy emit a
+   pain sound then it can adjust the estimate.
+-  Is the enemy facing towards the bot or away from it?
+-  Who is outnumbering who in the current fight?
+-  What classes are the bot and it's enemy using?
+-  How near is the bot to an important objective(e.g. a flag or health)?
+-  Bots carrying flags should be less willing to retreat if enemies block
+   their route to the capture point.
+
+========================================
+
+COMBAT STANCES
+
+When encountering an enemy a bot could take one of the following stances
+(rated from most aggressive to least aggressive):
+
+1. Purue the enemy if they try to escape.
+2. Don't be afraid to keep going where you are going.
+3. Don't approach the enemy, don't retreat from them.  Strafing and jumping
+   might be a good idea though.
+4. Back away from the enemy.
+5. Escape. Get away from the enemy.
+   Maybe find another route around them.
+
+========================================
+
+ONE ON ONE COMBAT
+
+A fairly common scenario is that of a duel.  i.e. two opposing players meet
+and a battle of wits ensues.
+
+Here are some factors that can come into play at such a time.
+-  The class of each player.
+-  The amount of ammo each player has(low ammo is usually the only worry).
+-  The amount of grenades each player has(this factor can be decisive).
+-  Who is on who's turf?  If the players meet in a teams base then the defending
+   player may have more to lose if they give up pursuit.
+-  How near are health and armor items?
+-  Is one of the players blocking the route of the other?
+-  Is one of the players a flag carrier(not a good time for a grudge fight)?
+
+One of the most interesting things about small fights such as these is the idea
+of prediction.  i.e. trying to guess what the other player is going to do.
+For example, here are some interesting questions:
+-  How injured is the other player?
+-  Is the other player holding a primed grenade?
+-  Has the other player run away to get help from teammates?
+-  Has the other player run away so that they can catch me by surprise?
+-  Has the other player run away so that they can find another route?
+-  Is the other player running off for health/armor?
+-  Am I blocking the route of the other player?
+-  Will the other player be crazy and aggressive or cool and calculating?
+
+AN ALTERNATIVE VIEW
+
+Combat could possibly be divided into two main areas: contact and preparation.
+
+Contact is when you can see your enemy.
+And here are some basic stratagies you can try at this time:
+-  Jumping and ducking.
+-  Strafing.
+-  Retreating.
+-  Go for nearby health.
+-  Head for pockets of cover.  i.e. small parts of the immediate area that
+   will obstruct the enemies fire.
+
+Preparation is when you can't see your enemy but you know that they are lurking nearby.
+So here are some basic stratagies you can try at this time:
+-  Go for nearby health(if you need health).
+-  Find another route to your goal(if your goal is a flag waypoint, for example).
+-  Look for allies that you can team up with(helps if you remembered where you saw some).
+-  Attack the enemy(possibly they will not be prepared for your sudden appearance).
+   It might be a good idea to prime a grenade before launching your attack.
+
+========================================
+
+LAYING THE SMACK DOWN(SIEGE TACTICS)
+
+One thing human players like to do is team up and lay siege to the enemy team
+by occupying an area of interest fairly near to the enemy defended objective.
+This can really pressure the enemy team and increase the chances of scoring.
+
+To recreate this behaviour with the bots one of the first things to do is to
+select a good location for meeting up.
+Here are a couple of ways you could go about doing this.
+
+Idea 1. Pearls can form because one grain of sand was in the "right" place.
+Likewise a single bot could initiate a major offensive by finding itself in
+the right place at the right time.
+For example a HWGuy bot could find a good spot for racking up lots of kills
+without dying very often.
+It could then signal for other players to come and meet up at the same location.
+
+Idea 2. You could analyse the map for suitable offensive areas and then pick
+one of them randomly.
+Factors in choosing a good location.
+-  Proximity.  Ideally, the enemy team should be pressured as close to their
+   base as possible.
+-  Height.  It's usually an advantage to look down upon your opponents.
+-  Health and armor.  These items can still be hugely important to an assault
+   even if there are Medics and Engineers on the team.
+-  Sites for a Sentry Gun.  A sentry gun in the right place can kick a lot of ass.
+
+A simple way of governing bot behaviour when they arrive at these siege locations
+is to make sure that each bot that arrives will stick around for a certain
+amount of time before they move on to their next objective.
+
+========================================
+
+MISCELLANY
+
+Each bot could regularly monitor their distance to the nearest flag and health
+waypoint(two items of significant importance).
+
+All bots should time their grenade throw if the Sentry Gun is above their heads.
+Spys should time their throw if it's their last frag grenade.
+You can check Sentry Gun height externally, but it leads to lots of duplicate
+code.
+
+Remember each health item within range.
+Target the nearest if no teammate is going for it.
+If nearest is taken, go for next nearest.
+
+Have a pEdict *pause_target variable.
+It defines who the bot wishes to look at whilst paused.
+You could also have pause_target_type variable, which indicates what the
+bot would like to look out for whilst paused.
+For example:
+PAUSE_MODE_DUMB   -   just look straight ahead
+PAUSE_TYPE_THREATS   -   look around for new enemies
+PAUSE_TYPE_CURIOUS   -   look at the nearest, most interesting thing
+
+========================================
+
+DETECTING WHEN A BOT IS FALLING BELOW THE WAYPOINT IT WANTS TO GET TO
+
+A simple way of checking for this situation is checking for these factors:
+1. The bot is descending by more than a certain speed.
+2. The bot is lower than the waypoint it wants to get to.
+3. The bot is in the air.
+
+To refine the check there are two different methods that can be used.
+
+The first one is to see if the bots current waypoint is higher than it is further out.
+Unreachably high waypoints tend to have that characteristic(e.g. 80 units higher,
+20 units out).
+
+The second method is to trace a line straight down a bit further than jumping
+height.  If you hit nothing then you can assume the bot is in freefall.
+
+========================================
+
+TRACKING BOT PROGRESS
+
+I was watching the bots play and thought that it might be cool if they had
+some idea of how well or poorly they were doing.
+Some kind of database tracking their actions and the consequences up until
+the current moment.
+
+Here are some things that would indicate that a bot is currently doing well:
+-  The bot carried a flag.
+-  The bot captured a flag.
+-  The bot has killed at least one enemy.
+-  The bot has killed more than one enemy.
+-  The bot is surviving for more than a certain amount of time.
+-  The bot has healed/repaired a teammate.
+-  The bot has escorted/assisted a flag carrier.
+-  The bot has killed an enemy flag carrier.
+-  The bot has detpacked a detpack waypoint.
+-  The bot has built a level 2 Sentry Gun.
+-  The bot has built a Teleporter entrance and exit.
+-  The bots team is winning.
+
+Here are some less exciting positive things:
+-  The bot survived an encounter with an enemy.
+-  The bot regained some health or armor.
+-  The bot repaired a sentry gun.
+
+You could use timers to track the events listed above.
+e.g. when the bot last carried a flag, or last healed a teammate.
+You could also analyse the timer information, moment by moment, and provide
+the bot with a single combined value.  i.e. a success rating.
+
+Here are some possible uses for a success rating:
+-  If the bot is doing really badly it could choose to change class.
+-  If the bot is doing really badly it could leave the server.
+-  A Bot could moan if it is doing poorly or trash talk if it's doing well.
+-  If the bot is not living very long it could become more cautious of enemies.
+-  If the bot is not living very long it could work with teammates more.
+
+// a structure for tracking bot success or lack thereof
+typedef struct
+{
+	bool had_flag;
+	bool brought_flag;  // to capture point, or gave it to allies
+	bool healed_ally;
+	bool assisted_carrier;
+	bool killed_carrier;
+	bool detpacked_point;
+	bool had_level2_SG;
+} bot_stat_struct;
+
+========================================

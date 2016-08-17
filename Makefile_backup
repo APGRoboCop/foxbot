@@ -1,0 +1,308 @@
+#
+# FoxBot Makefile
+# by Florian Zschocke, 2001
+
+# Based on:
+#
+# Admin Mod Defstar Makefile
+#
+# Valve Half-Life SDK 2.1 Makefile
+# Half-Life mp_i386.so Makefile for Linux
+# August 1999 by Leon Hartwig (jehannum@planethalflife.com)
+# Revised February 5, 2000
+#
+# Based on the Q2 Makefile by Zoid
+#
+# Shamelessly stealing from the MetaMOD Makefile
+# by Will Day
+
+
+###
+#
+# TARGETS:
+# This makefile is used to create different configurations of Foxbot.
+# The default is to compile in
+# debug mode but you can also choose to build optimized objects. 
+#
+#
+# Debug builts:
+# standalone     Standalone version
+# metamod        Metamod plugin
+#
+# You have two possible ways to build with optimization. Either run make on one
+# of the targets listed above with the variable OPT defined to opt, eg.:
+# $ make standalone OPT=opt
+# Or you use one of the four targets below which prefix the targets with an O:
+#
+# Ostandalone    Optimized standalone version
+# Ometamod       Optimized metamod plugin
+#
+# The default target is 'metamod'.
+# Change it in the configuration section.
+#
+###
+
+
+#################################################################
+#
+#  CONFIGURATION
+#
+#################################################################
+
+# The source paths to the SDK and metamod
+# These are the settings for a standard installation
+
+# The top directory of the HL SDK.
+SDKTOP= ../hlsdk-2.3-p4
+SDKSRC= $(SDKTOP)/multiplayer
+
+# The directory with the metamod include files.
+# For Linux we assume a link called 'metamod' in the adminmod directory
+METATOP= ../metamod-p-37
+METADIR= $(METATOP)/metamod
+
+
+# The default target to build
+DEFTARGET= Ometamod
+
+# The version number 
+VERSION=0.78-b3
+
+#make sure this is the correct compiler for your system
+CC=gcc
+#CXX=clang
+CXX=g++-4.8
+
+################################################################################################
+# !! If you only want to compile and go you shouldn't need to edit anything below this line !! #
+################################################################################################
+
+######################################################
+# Bogus targets
+######################################################
+
+OPT=opt
+MM=mm
+
+
+default: $(DEFTARGET)
+
+all: default
+
+standalone:
+	$(MAKE) am_standalone SQL=$(SQL) OPT=$(OPT)
+
+metamod:
+	$(MAKE) am_metamod MM=mm SQL=$(SQL) OPT=$(OPT)
+
+Ostandalone:
+	$(MAKE) am_standalone SQL=$(SQL) OPT=opt
+
+Ometamod:
+	$(MAKE) am_metamod MM=mm SQL=$(SQL) OPT=opt
+
+
+#####################################################
+# GENERAL OPTIONS
+#####################################################
+
+MODNAME= foxbot
+SHLIBEXT=so
+
+SA_TARGET= $(MODNAME)_.$(SHLIBEXT)
+MM_TARGET= $(MODNAME)_mm.$(SHLIBEXT)
+
+BASE_CFLAGS=-Dstricmp=strcasecmp -D_strnicmp=strncasecmp -Dstrnicmp=strncasecmp -Dstrcmpi=strcasecmp -DLINUX -D__linux__
+XTFLAGS= -DTZONE=$(TZONE)
+
+ifneq "$(VERSION)" ""
+	ifeq "$(MM)" "mm"
+		MM_VSTRING= \(MM\)
+	endif
+
+	XTFLAGS+= -DMOD_VERSION=\"$(VERSION)\ $(MM_VSTRING)\"
+endif
+
+ifeq "$(OPT)" "opt"
+	XTFLAGS+= -DOPT_TYPE=\"optimized\"
+else
+	XTFLAGS+= -DOPT_TYPE=\"debugging\"
+endif
+
+#################################################################
+# COMPILER FLAGS
+#################################################################
+
+CFLAGS=$(BASE_CFLAGS) -Wall
+
+
+# debug build
+#CFDBG= -g -ggdb -Wall
+#CFDBG+= -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations
+#CFDBG+= -fno-thread-jumps -fno-defer-pop -fno-delayed-branch -fno-omit-frame-pointer -fkeep-static-consts
+#CFDBG+= -march=i486 
+
+#full optimization (WONT WORK WITH omit-frame-pointer !!!!!)
+#CFOPT=  -march=i486 -O6 
+#CFOPT+= -ffast-math -funroll-loops 
+#CFOPT+= -Wall
+
+CFOPT= -march=i686 -O2 -m32 -msse2 -fexpensive-optimizations  \
+	   -malign-loops=2 -malign-jumps=2 -malign-functions=2 
+
+# configuration dependand setup
+ifeq "$(OPT)" "opt"
+	CFLAGS+= $(CFOPT)
+else
+	CFLAGS+= $(CFDBG)
+endif
+
+
+SHLIBCFLAGS=-fPIC
+SHLIBLDFLAGS=-static #-shared#-fkeep-static-consts #-shared -static
+
+
+###############################################################
+# DIRECTORY SETUP
+###############################################################
+
+OBJDIR= obj
+MMOBJDIR= objMM
+
+
+INCLUDEDIRS=-I$(SDKSRC)/engine -I$(SDKSRC)/common -I$(SDKSRC)/pm_shared -I$(SDKSRC)/dlls -I$(SDKSRC)/cl_dll 
+
+ifeq "$(MM)" "mm"
+	XTFLAGS+= -DUSE_METAMOD
+	INCLUDEDIRS+= -I$(METADIR)
+endif
+
+
+##############################################################
+# OBJECTS AND LIBRARIES
+##############################################################
+
+#
+# Adminmod source files
+#
+
+SRC = \
+bot.cpp \
+bot_client.cpp \
+bot_combat.cpp \
+bot_job_assessors.cpp \
+bot_job_functions.cpp \
+bot_job_think.cpp \
+bot_navigate.cpp \
+bot_start.cpp \
+botcam.cpp \
+dll.cpp \
+engine.cpp \
+h_export.cpp \
+meta_api.cpp \
+sdk_util.cpp \
+util.cpp \
+version.cpp \
+waypoint.cpp
+
+
+ifneq "$(MM)" "mm"
+	SRC+= linkfunc.cpp
+endif
+
+#
+# Object files
+#
+OBJ=$(addprefix $(OBJDIR)/,$(subst .cpp,.o,$(SRC)))
+MMOBJ=$(addprefix $(MMOBJDIR)/,$(subst .cpp,.o,$(SRC)))
+OBJADD=   
+
+
+#
+# Libraries
+#
+LDFLAGS=-ldl -lcrypt -lm -lc -lstdc++
+LIBADD=-shared
+
+
+
+##############################################################
+# COMPILER SETUP
+##############################################################
+
+
+DO_CC=$(CC) $(CFLAGS) $(XTFLAGS) $(SHLIBCFLAGS) $(INCLUDEDIRS) -o $@ -c $<
+DO_CXX=$(CXX) $(CFLAGS) $(XTFLAGS) $(SHLIBCFLAGS) $(INCLUDEDIRS) -o $@ -c $<
+
+
+##############################################################
+# SPECIAL SETUPS IF REQUIRED
+##############################################################
+
+#OBJADD := $(OBJADD) LeakTracer.o
+#
+#LeakTracer.o: LeakTracer.cc
+#	$(CC) -fPIC -c -g -pipe -Wall -W LeakTracer.cc -o LeakTracer.o
+
+
+##############################################################
+# BUILD TARGETS AND RULES
+##############################################################
+
+$(OBJDIR)/%.o: %.cpp
+	$(DO_CXX)
+
+$(OBJDIR)/%.o: %.cc
+	$(DO_CXX)
+
+$(MMOBJDIR)/%.o: %.cpp
+	$(DO_CXX)
+
+$(MMOBJDIR)/%.o: %.cc
+	$(DO_CXX)
+
+
+# make sure to recompile vdate.c for each link
+$(OBJDIR)/version.o: $(SRC) *.h Makefile
+$(MMOBJDIR)/version.o: $(SRC) *.h Makefile
+
+
+am_standalone: $(SA_TARGET)
+
+am_metamod:  $(MM_TARGET)
+
+
+$(SA_TARGET) : neat $(OBJ) $(OBJADD)
+	$(CC) $(CFLAGS) $(SHLIBLDFLAGS) $(LDFLAGS) -o $@ $(OBJ) $(OBJADD) $(LIBADD) 
+
+$(MM_TARGET) : neat $(MMOBJ) $(OBJADD)
+	$(CC) $(CFLAGS) $(SHLIBLDFLAGS) $(LDFLAGS) -o $@ $(MMOBJ) $(OBJADD) $(LIBADD) 
+
+neat:
+	- if [ ! -d $(OBJDIR) ]; then mkdir $(OBJDIR); fi
+	- if [ ! -d $(MMOBJDIR) ]; then mkdir $(MMOBJDIR); fi
+clean:
+	-rm -f $(OBJ)
+	-rm -f $(MMOBJ)
+	-rm -f *.$(SHLIBEXT)
+
+spotless: clean
+	-rm -f *~
+	-rmdir $(OBJDIR)
+	-rmdir $(MMOBJDIR)
+
+depend:
+	$(CC) -MM $(INCLUDEDIRS) $(SRC)
+
+# test: $(TESTDIR)/$(MODNAME)_MM_$(ARCH).$(SHLIBEXT)
+
+
+# $(TESTDIR)/$(MODNAME)_MM_$(ARCH).$(SHLIBEXT): $(MODNAME)_MM_$(ARCH).$(SHLIBEXT)
+# 	install $< $@
+
+# dlls: ../dlls/$(MODNAME)_MM_$(ARCH).$(SHLIBEXT)
+
+# ../dlls/$(MODNAME)_MM_$(ARCH).$(SHLIBEXT): $(MODNAME)_$(ARCH).$(SHLIBEXT)
+# 	install $< $@
+
+win32 snap cleanall:

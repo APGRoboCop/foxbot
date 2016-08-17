@@ -1,0 +1,17 @@
+***************
+*** 175,181 ****
+        // Keep track of the list this iterator is working with
+        List<Type> *list;
+        // Also keep track of the current node.
+-       List<Type>::Node *currentNode;
+  
+     public:
+  
+--- 175,181 ----
+        // Keep track of the list this iterator is working with
+        List<Type> *list;
+        // Also keep track of the current node.
++       typename List<Type>::Node *currentNode;
+  
+     public:
+  

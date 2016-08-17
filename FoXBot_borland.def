@@ -1,0 +1,8 @@
+LIBRARY hl
+EXPORTS
+ GetEntityAPI = _GetEntityAPI
+ GetNewDLLFunctions = _GetNewDLLFunctions
+ Meta_Query = _Meta_Query
+ Meta_Init = _Meta_Init
+ Meta_Attach = _Meta_Attach
+ Meta_Detach = _Meta_Detach

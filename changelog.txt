@@ -1,0 +1,1188 @@
+==============================
+   FoxBot Version History
+==============================
+
+--------------------------------------------------------------------------------
+Version 0.78-beta3
+August-14-2016
+Updated by RoboCop
+--------------------------------------------------------------------------------
+
+- Fixed the unwanted 'const' for the bot global variables that fail for Win32 build
+
+- Drop the '_i386' suffix build name for Linux binary version
+
+- Both builds compiled for SteamPipe using HLSDK v2.3p4 and Metamod v1.21-p37 source codes
+
+- Fixed the 'snprint' script that was used for the older FoxBot cpp files
+
+- Removed non-required entities for TFC that were used from the HPB Template
+
+- Removed support for HLDM, CS, FLF and Op4 from HPB Template to focus support for TFC
+
+- Fixed code typo error for 'bot_max_inaccuracy' in bot_combat.cpp
+
+- Linux version optimised as i686 build and fixed Linux binary for TFC SteamPipe Servers
+
+- Both builds optimised for SSE2 code generation
+
+- Fixed '[META] WARNING: Plugin didn't set meta_result: foxbot.dll:engClientCommand()' 
+  that appears to be fixed from the newer HLSDK and Metamod kits
+
+- Added a config variable 'botdontmove' to spawn stationary bots for the purpose of minigolf maps
+
+--------------------------------------------------------------------------------
+Version 0.77
+August-31-2010
+Updated by Zybby
+--------------------------------------------------------------------------------
+
+-  Used a different compiler to create the Windows version.
+   Hopefully this will resolve a particular 'badf' load error some people have
+   been experiencing.
+
+-  The bot behaviour code has been re-written to allow for more advanced behaviour.
+   The bots can now multitask by keeping track of a number of jobs that they
+   currently want to do and prioritising which job they think is the most important.
+
+-  Medic and Engineer bots can now navigate via waypoints to a more distant ally
+   that they want to heal/repair.
+
+-  The bots can now wait for a Medic to reach them if they call for one.
+
+-  Fixed a problem where the bots didn't know they were still infected if the medic
+   who infected them then changed to a new class.
+
+-  Snipers can now stop and begin charging their rifles just before moving into
+   a sniper waypoint.
+
+-  Demomen bots can now use the Pipebomb Launcher as a normal combat weapon.
+
+-  Demomen wont detpack a waypoint if they arrive and find a detpack there already
+	or can see that it has been detpacked already.
+
+-  Bot Engineers can now volunteer to play offense or defense on their teams.
+
+-  Bots on defense can now patrol from defense waypoint to defense waypoint.
+
+-  The bots can now guard a flag that an opposing team has dropped.
+	They can also report it's location if they know the area.
+
+-  Bots of skill 1, 2 and 3 will now try to find somewhere to surface and breathe if
+   they start drowning.
+
+-  The hunted can go look for the last seen ally if he is alone.
+   He can also open the exit garage doors to let himself out.
+
+-  Intimidated bots can hide out of sight of an enemy and then wait a short while
+   for allies to come along.
+
+-  The bots can tell when a grenade has ceased to be a threat if they were avoiding it.
+
+-  The bots can now escort or pursue players they can't see by making predictions
+   about where to find them.
+
+-  The bots have a better understanding of how high they can concussion or rocket jump.
+   They also check for low ceilings, and can detect rocket/concussion jump waypoints better.
+
+-  If not facing a jump waypoint fully then the bots will pause until they're
+   ready to jump.
+
+-  When climbing ladders the bots check their height more precisely compared
+   with their next waypoint.  i.e. they climb ladders more accurately.
+   They also try to prevent ladder traffic jams by jumping off before they occur.
+
+-  Bot navigation has been improved when they are fighting underwater.
+
+-  The Bots are better at recognising when they have fallen off of a ledge.
+
+-  Fixed a few problems when the bots try to use lifts.
+
+-  The bots can react to footstep sounds if footsteps are active on the server.
+
+-  Each bot has a memory for a maximum of three different Teleporter pairs at any one time.
+   First they can test any Teleporters they find to see where they go,
+   afterwards they can use them as shortcuts to destinations.
+
+-  The bots can now attack any enemy owned Teleporters they find.
+
+-  The bots can now attack any breakable items they come across.
+
+-  The bots will throw grenades more directly at the last known enemy position,
+   and will not twitch any more if throwing an uneeded grenade away.
+
+-  The bots crouch when they are just above their target so that their
+   close combat weapons can reach.
+
+-  Engineers will detonate their Teleporters if the waypoints they built them
+   at are no longer available(because of a map script).
+
+-  Updated the counter-classing code.  Bots can choose certain classes if
+   those classes aren't on their team and they are getting killed by a player
+   who has a significantly better score than they do.
+   They may try to counter-class high scoring Snipers with Snipers or HW Guys,
+   Engineers with Spies, and Medics with Medics(to counter infection).
+
+-  Fixed a bug where two or more bots could end up with the same name even though
+   there were more than enough unique names available.
+
+-  New config setting: bot_allow_moods (0 - 1)
+   When set active each bot can have a randomly assigned set of personality
+   characteristics.  Turn this off if you want all the bots to have the same
+   average personality profile.
+
+-  New config setting: bot_allow_humour (0 - 1)
+   When this is active the bots are allowed to go a bit crazy occasionally and
+   do fun stuff that probably wont help them win the game.
+
+-  New bot personality trait/mood.
+   Humour.  i.e. how willing the bot is to do something daft to lighten the moment.
+
+-  New bot personality trait/mood.
+   Aggression.
+   More aggressive bots are less likely to back out of a fight, and more
+   likely to pursue enemies if they think they have the upper hand.
+   Low aggression bots are more cautious of enemies.
+
+-  New personality trait/mood: fairplay.
+   The higher this trait is the more likely the bot is to play honorably.
+   For example:
+      1. A more honorable bot is more likely to join a team that has the fewest
+         players.
+      2. A more honorable bot is more likely to switch teams if bot_team_balance
+         is switched off and the teams become unbalanced.
+
+-  New behaviour that may trigger if bot_allow_humour is active.
+   Individual bots may decide to go on the rampage with just close combat
+   weapons if they haven't seen any enemies for a while.
+
+-  New behaviour that may trigger if bot_allow_humour is active.
+   The bots can choose to go and spray a nearby wall if they haven't seen
+   any enemies for a while.
+
+-  New console command: spectate_debug (0 - 4)
+   This command has been created primarily for Foxbot development purposes.
+   When this is active a hosting human spectator(on a listen server) who comes really
+   close to a bot will trigger detailed debug messages about it's behaviour.
+
+-  Updated the bot chat system and the bot chat file.
+   Chat section headers are now enclosed by these symbols - '['  and ']'
+   The chat sections can also appear in any order.
+   Older Foxbot chat files are not compatible with this release(easy to convert though).
+
+-  A new pair of bot settings have been added.
+   bot_skill_1_aim and bot_aim_per_skill.
+   When used together you can set the accuracy levels for all bot skill levels.
+   Please see the foxbot.cfg or bot documentation for information on how they operate.
+
+-  Bot accuracy is now less twitchy and more human-like in style.
+
+-  Fixed the pause config setting(the delay before bots join the server).
+   Now it works as documented.
+
+-  New config setting: bot_create_interval.
+   This setting governs the delay between spawning one bot and the next
+   when the server is being automatically filled with bots.
+
+-  New bot setting added: bot_total_varies.
+   This setting can be used to help simulate playing TFC online.
+   When it is active the number of bots on the server will fluctuate from
+   min_bots to max_bots randomly.
+
+-  Different bots now prefer different classes which means:
+      1. If team balance is switched off then the bots may pick teams based
+         upon what classes each team offers.
+      2. A bot that is allowed to change class may play longer with a class
+         it prefers.
+
+-  bot_can_build_teleporter and bot_can_use_teleporter now work as server commands
+   for all server types.
+
+-  Fixed a waypoint editing bug where the script number flags for a waypoint weren't
+   being cleared when the waypoint was deleted. (this bug appeared in Foxbot 0.76)
+
+-  The 'locate_waypoint' command now provides information about the height and distance
+   of the waypoint relative to the host player on a listen server.
+   Also it will give the route distance from the nearest waypoint if possible.
+
+-  More waypoint file fixes and tweaks for the standard maps.
+
+
+--------------------------------------------------------------------------------
+Version 0.76
+March-1-2010
+Updated by Zybby
+--------------------------------------------------------------------------------
+
+-  The Foxbot directory is now placed in the \tfc\addons\ directory by default.
+   This has been done to simplify installation, and because Foxbot is
+   primarily a TFC bot.
+
+-  The log file 'bot.txt' has been renamed to 'foxbot.log' and moved to the
+   \foxbot\ directory.
+
+-  Each time Foxbot is started, and if it needs to log something the 'foxbot.log'
+   file from a previous session will be renamed to 'foxbot.log.old'.
+   Then a new log will be started.
+
+-  A warning is logged in the console if the Foxbot log file could not be created.
+   With older Foxbot releases, failure to create a log file could crash the server.
+   This has been fixed in this release.
+
+-  The bots can now roam maps by choosing alternate routes to any goal waypoint
+   on any map whenever they want to.
+
+-  The bots will try to find another route to their objective if their path is
+   unexpectedly blocked(e.g. by rubble or a temporary wall).
+
+-  New waypoint tag added: 'Detpack Seal'.  Demoman bots will only set detpacks
+   near them if all the connected paths are clear of obstructions.
+   i.e. This waypoint tag tells Demomen to try and close a passageway.
+
+-  The normal detpack waypoint tag has been converted into a 'detpack clear'
+   waypoint tag.
+   Demoman bots will only set detpacks near them if either:
+      1. Any of the connected paths are obstructed(e.g. by a destroyable wall).
+      2. The detpack waypoint is only connected to one other waypoint.
+   The detpack points in most existing waypoint files and scripts
+   should still work okay despite this change.
+
+-  New waypoint tag added: 'Path Check'.  When a bot encounters a Path Check
+   waypoint it will test if the path from that waypoint is obstructed or not
+   before proceeding.  This waypoint type is useful for dealing with un-scriptable
+   obstacles, such as the time delayed walls on Dustbowl.
+
+-  Foxbot 0.76 can now support more waypoint tags than Foxbot 0.75.
+   Please note:
+   1. Waypoint files created by Foxbot 0.76(and newer) are not compatible with
+      Foxbot 0.75(and older).
+   2. Foxbot 0.76 can still load the older waypoint files that Foxbot 0.75
+      can load.
+   3. Waypoint files created with Foxbot 0.76 and above will be a little bit
+      larger than before.
+
+-  Bots now keep track of where they spawn so that they have some idea of
+   where their teams home base is.
+
+-  Infected bots target the furthest enemy defender waypoints from their spawn
+   location.  This should stop them bringing the infection home on all maps.
+
+-  Bots now have a larger sight radius when keeping an eye out for dropped flags
+   and are able to navigate to them more successfully.
+
+-  Bots will report the position of a spotted enemy flag carrier if
+   defensive_chatter is active and they think that they are not powerful enough
+   to stop the carrier.  This can cause other bots on defense to come and help.
+
+-  Bots that have been fragged may change class to Demoman if a map has active
+   detpack waypoints, and their team has no Demomen.
+
+-  If a map has active detpack waypoints then Demomen will no longer volunteer
+   for a defensive role even though a defender is needed. (was broken in 0.705)
+
+-  Demomen will try to vacate the area after they have placed a detpack.
+
+-  Only bots that were around to see a sentry gun get destroyed will report
+   its destruction.
+
+-  Fixed a bug where bot Snipers would (very rarely) snipe a Medic teammate
+   on purpose.
+
+-  Higher skilled bots now jump more often when fighting a nearby Soldier or Pyro.
+
+-  Higher skilled bots will try to jump over any caltrops in their path.
+
+-  The "waypoint delete" command can now delete aim indicator waypoints
+   that are not near enough to a normal waypoint.
+   A red line will appear if the aim indicator waypoint is near enough
+   to another waypoint.
+
+-  Added Exit options to all waypoint editor menu lists.
+
+-  A bot that has just been created will no longer inherit private data from
+   a player who has left the server(e.g. their score and deaths).
+
+-  Fixed some bot initialisation issues to improve long-term stability when
+   the number of bots on a server keeps changing.
+
+-  Waypoint updates for all non-custom maps.
+
+-  Added an area file for ravelin.
+
+-  Updated the area file for dustbowl(most of the map is now defined).
+
+
+--------------------------------------------------------------------------------
+Version 0.75
+December-30-2009
+Updated by Zybby
+--------------------------------------------------------------------------------
+
+-  A Bot that is having trouble aiming at a target may fire less often for a
+   few moments in order to avoid wasting ammo on bad shots.
+
+-  Each bots aim is now negatively affected by it's own speed and by the
+   speed of it's target.
+
+-  Bots can now notice when a concussion jump failed to boost them near enough
+   to the concussion jump waypoint they were aiming for, and will rethink their
+   goal when this happens.
+
+-  Bots will only chat if they can see no enemies nearby.
+   They will also pause briefly when chatting, as if typing on a keyboard.
+
+-  The bot setting bot_chat can now be set to a number from 0 to 1000.
+   The higher this number the more often the bots will chat during the
+   course of a game.  Or you can set it to 0 to stop them chatting completely.
+
+-  New config setting and console command: bot_use_grenades (0 - 2).
+   When set to 0 the bots are not allowed to use any grenades.
+   When set to 1 the bots may concussion jump.
+   When set to 2 the bots can use all grenades freely.
+   [Change made from a request by [EI]Weasel]
+
+-  The bot setting botskill has been replaced with two new bot settings:
+   botskill_lower and botskill_upper.
+   These allow you to set the range of randomly selected skill levels
+   that bots will spawn with, when they join a game automatically.
+
+-  Defenders no longer forget the waypoint they were defending when they
+   go to investigate a suspicious sound.
+
+-  All bots now listen out for sounds that their enemies may make(e.g. a grenade
+   being primed, or a crowbar being swung about).  This makes them more aware
+   of any potential attackers in the area.
+
+-  Medics and Engineers may now investigate calls for a Medic that they hear
+   coming from an unknown source.
+   This also means that they can now respond to calls for a Medic coming
+   from bot teammates, not just human players.
+
+-  Bots now check to see if a Medic is present on their team before calling for
+   a Medic.  Much the same way as humans can check the score board for Medics.
+
+-  Bots will not call for a Medic if they are already heading towards a health
+   waypoint.
+
+-  If a map script file issues the script command blue_attack, red_attack,
+   green_attack or yellow_attack then that teams bots will be less willing
+   to evade enemies, so that they are more aggressive.
+   This affects blue teams bot behaviour on Dustbowl for example.
+
+-  Bots now keep track of the number of enemies and allies they can see nearby.
+   The more a bot is outnumbered the more likely it will be to prime a grenade
+   and/or evade it's enemies.
+   The reverse is true if it's enemy appears to be outnumbered.
+
+-  If a bot on offense spots another bot on offense then it might decide to
+   tag along with that bot for a while so that they can combine their
+   firepower and abilities.
+
+-  Bots(especially bot defenders), when suspicious of a disguised enemy Spy,
+   may follow the Spy about for a bit before they decide to attack him.
+
+-  Bots with skill levels 3, 4 and 5 no longer pause during a concussion jump.
+
+-  Bots with skill levels 3, 4 and 5 no longer pause for a "think" whilst
+   underwater.
+
+-  Bots of all skill levels may now pause occasionally as if having a think.
+   Bots of skill levels 3 - 5 no longer pause as often as they used to.
+   Also, when bots pause to "think" they will look around them, in case they
+   spot anything interesting.
+
+-  Changes have been made to reduce occurences of "suicide by grenade".
+   These changes are:
+   1. If a bot is holding a live grenade and has no enemy it will try to
+      throw the grenade at the last known enemy position, or at some distant
+      visible point.
+   2. Bots take their health into account when deciding when to throw a held
+      grenade.  The less health they have the sooner they throw.
+   3. Bots are less likely to prime a grenade when standing right next to
+      their enemies.
+   4. Bots are encouraged to retreat from an enemy if the enemy is very near
+      and the bot is about to throw a grenade at them.
+
+-  Medics and Scouts may throw concussion grenades at enemies if they feel
+   threatened enough.  If they have only one concussion grenade left they
+   will keep it for concussion jumping with.
+
+-  Medics and Snipers may throw frag grenades at their enemies, not just at sentry guns.
+
+-  Outnumbered spies may throw gas grenades at enemies as well as frag grenades.
+
+-  Outnumbered Heavy weapon guys and Demomen are more likely to throw MIRV
+   grenades at enemies than frag grenades.
+
+-  Outnumbered Soldiers are more likely to throw nail grenades at enemies than
+   frag grenades.
+
+-  Minor waypoint tweaks for: badlands, casbah, epicenter, flagrun, hunted and well.
+
+
+--------------------------------------------------------------------------------
+Version 0.74
+October-19-2009
+Updated by Zybby
+--------------------------------------------------------------------------------
+
+-  Bots on offense, other than Scouts and Civilians, will now occasionally
+   seek out enemy defense waypoints to attack.  Targetted waypoint types
+   include: defender, pipetrap, sentry gun and sniper.
+
+-  Classes other than Scout and Civilian will try to go for flag waypoints
+   that are not already occupied by a bot teammate.  If none were found they
+   will assist the offense in other ways.
+
+-  Bots now attempt to push buttons much more accurately.
+
+-  No more than 2 bots will try to use the same lift at the same time,
+   so that they don't overcrowd it and block it's movement.
+
+-  Bots will sometimes back away from nearby enemy Medics who they are
+   fighting, unless they are Medics themselves.
+
+-  Fixed a bug in Foxbot 0.73 which allowed infected bots to
+   occasionally seek health.
+
+-  Infected bots will prefer to seek out the furthest enemy defender,
+   sentry gun or sniper waypoint from their current position.
+   This is done so that they move away from their home base on almost any map.
+
+-  Bots will check when firing rocket launchers or grenade launchers
+   to see if there is an object in front and very near, so that they can
+   try to avoid "suicide by rocket launcher".
+
+-  The grenade avoidance behaviour has been re-written.  Changes include:
+   1. Bots now try to head for waypoints that are some distance away from
+      spotted live grenades.
+   2. Bots will only avoid a Spy gas grenade if their health is so low that
+      passing through the gas might kill them.
+   3. Bots with high health levels will not avoid napalm, nail or grenade
+      launcher grenades, but will jump more instead.
+   [Changes made from a request by Chaotic Llama]
+
+-  New evasion code.  Bots used to prefer to evade enemies by going to a
+   waypoint somewhere behind them.  Now they are more open to evading in
+   other directions providing they have a number of routes to choose from.
+
+-  Updated the monitoring of bot ammunition levels.
+   Bots of all classes should now seek necessary ammo on maps where
+   reachable ammo waypoints exist.
+
+-  Fixed a bug which caused fully stocked Engineers to be on a continuous
+   look out for ammunition packs in the area.
+
+-  Spy detection switched to a new system.  Changes include:
+   1. When a bot has a new encounter with a disguised enemy Spy it will
+      remember him and become suspicious for at least a couple of seconds.
+   2. Bots can remember a suspected Spy even if he disappears from view
+      for a few seconds.
+   3. When it's suspicious enough of the Spy it will then attack him.
+   4. bot_spy_random_check is no longer checked or included in this release.
+
+-  Fixed a problem where disguised spys weren't targetting their attackers.
+
+-  Disguised Spys will not shoot at Sentry Guns until a few seconds after
+   they have thrown their last frag grenade.
+   [Change made from a request by Chaotic Llama]
+
+-  New behaviour when Spy class bots are disguising.
+   They may feign, walk or wait depending on how long it's been since
+   they last spawned.
+
+-  Spy class bots can now feign death in narrow areas and lie in wait
+   for enemy players to come near so that they can ambush them.
+
+-  A number of changes to grenade throwing behaviour, which includes:
+   1. All classes carrying Frag grenades can throw them at Sentry Guns.
+   2. Bots will try to time their grenade throws more accurately if throwing
+      at an enemy Sentry Gun which is significantly higher than them.
+   3. When heading for enemy Sentry Guns bots will look for waypoints that are
+      near enough for grenade throwing but not so near that they will blow
+      themselves up too easily.
+   4. Scouts will throw caltrops if near to a dangerous enough enemy.
+
+-  Bot defenders no longer give up their guard positions because another
+   bot defender has passed nearby.
+
+-  Bots that get stuck no longer try to pass through defender waypoints,
+   because they might get stuck on an allied defender.
+
+-  Bots no longer slow down when nearing teammates who are in their way.
+   This can help when faster classes are trying to overtake slower classes.
+
+-  A bots aim will worsen for about a second when it first encounters
+   a new enemy, or is affected by an explosion.
+
+-  False "Invalid Character" server warnings should no longer occur.
+   These warnings would appear when comment lines in 'foxbot_commanders.txt'
+   were longer than 80 characters.
+   [Fix requested by [EI]Weasel]
+
+-  Fixed a resource leak, whereby map script files were not always
+   being closed after use.
+
+-  Bots can have spaces in their names if you put speech marks around
+   the bots name.  For example, if you named a bot: "[FoX]Sniper Geek"
+   it's name would appear in game as: [FoX]Sniper Geek
+   [Change requested by Grubber]
+
+-  Added Teleporter waypoints to: casbah, crossover2, cz2, epicenter.
+
+-  Converted the help file 'FoxBot_Documentation.chm' back into plain HTML,
+   so that it is easier to maintain, and easier to read for Linux users.
+
+
+--------------------------------------------------------------------------------
+Version 0.73
+July-13-2009
+Updated by Zybby/rix.
+--------------------------------------------------------------------------------
+
+-  plugins.ini was mistakenly 'corrected' in 0.72 causing Metamod badf
+   errors to occur.  This release should address that issue.
+
+-  Reinstated the original Linux makefile and built the Linux version from it.
+   This may fix an issue some Linux users were having getting the Foxbot plugin to load.
+
+-  Tweaked the bots to make them smarter about when to evade enemies
+   and how far to travel when they do.
+
+-  Civilian class bots weren't evading enemies they can see, this has been fixed.
+
+-  Spys will occasionally feign death when they begin disguising themselves.
+
+-  Bots can occasionally be fooled by a feigning spy, no matter what
+   team colour the spy appears to be.
+
+
+--------------------------------------------------------------------------------
+Version 0.72
+July-6-2009
+Updated by Zybby/rix.
+--------------------------------------------------------------------------------
+
+-  Fixed a bug where certain bot defender classes(Soldier, HWGuy, Demoman and Pyro)
+   would get lost if they were carrying a flag.
+   This issue was a common occurrence on cz2 for example.
+
+-  Fixed a bug where bots would fail to exit button activated lifts properly.
+
+-  Certain bot defender classes(Soldier, HWGuy, Demoman and Pyro) can switch
+   from defense to offense if there are too many bot defenders on their team.
+
+-  Bots will sometimes pick classes based on which enemy class killed them.
+   For example: if a bot was killed by a sentry gun, then it may choose to play
+   as a spy or a soldier rather than a scout or a medic.
+   As a result they will try to adapt to dominant enemy classes more often.
+
+-  Bots on offense will sometimes try to avoid being shot by certain
+   enemy classes by maneuvering around or away from them.
+   Snipers and HWGuys are considered especially dangerous(because they are!).
+
+-  Scouts and Demomen will use the crowbar when very near to their enemies.
+
+-  Added a simple Linux makefile to the source code package.
+
+-  Waypoint tweaks for the following maps:
+      2Fort, badlands, crossover2, cz2, epicenter, ravelin, rock2, warpath.
+
+
+--------------------------------------------------------------------------------
+Version 0.711
+June-10-2009
+Updated by Zybby/rix.
+--------------------------------------------------------------------------------
+
+-  Fixed an issue where heavily injured Sniper bots would obssess about the nearest
+   health/armor location until it provided them the health/armor they wanted.
+
+-  Fixed an issue where Snipers would camp with their rifles pointing at
+   the sky or the ground.
+
+
+--------------------------------------------------------------------------------
+Version 0.710
+June-5-2009
+Updated by Zybby/rix.
+--------------------------------------------------------------------------------
+
+-  The beginnings of a bot personality trait system.
+   New trait: Camper. Snipers with the camper trait prefer to stay in one
+   good spot and rack up the kills.
+   New trait: Butchness. Some bots tolerate heavier injuries than others
+   before seeking health/armor.
+
+-  A bots aim can be disturbed by it being set on fire.
+
+-  Soldiers should no longer linger around concussion/rocket jump
+   waypoints that they think are too high for them to reach.
+
+-  Bot Snipers can leave their camping spot for some health/armor and
+   if they have the camper trait return to the same spot.
+
+-  Grenade avoidance behaviour has been tweaked to reduce CPU usage and
+   smooth out bot movement.
+
+-  Bots base the decision of when to change class upon how their own score changes.
+
+-  Waypointing tweaks for the following maps:
+      casbah, crossover2, rock2, warpath.
+
+
+--------------------------------------------------------------------------------
+Version 0.705
+May-24-2009
+Updated by Zybby/rix.
+--------------------------------------------------------------------------------
+
+-  If you don't specify a class with the addbot command then the spawned
+   bot will be capable of picking new classes when it dies.
+   They will try to pick classes that fit whatever offense/defense role they are playing.
+
+-  Bots try to avoid running into grenades that are visible in front of them.
+   Some code was copied over from the HPB bot code to make this happen.
+
+-  Snipers check if a snipe point is already occupied or not before occupying them.
+
+-  Snipers are less likely to vacate a snipe point when they've killed someone.
+
+-  Defenders at defend points look about a bit from time to time.
+
+-  Stopped Heavy Weapon Guys from running off for rocket ammo when defending a position.
+
+-  Demomen waiting with a pipetrap will go for health/armour when injured enough.
+
+-  Bots are now more likely to throw grenades at Snipers.
+
+-  Spies can disguise as enemy spies.
+
+-  Pyros can become defenders too, not just attackers.
+
+-  Attackers go for health and armour more often.  However, on some maps,
+   in certain areas this occasionally confuses them for a while.
+
+-  Waypointing tweaks for the following maps:
+      badlands, hunted, warpath, dustbowl, cz2, crossover2, flagrun
+      rock2, epicenter, well.
+
+-  A new waypoint and area file for the map casbah.
+
+-  Updated documentation.
+
+
+--------------------------------------------------------------------------------
+Version 0.701
+September-30-2007
+This update was created by Yuraj.
+--------------------------------------------------------------------------------
+
+Bugs Fixed:
+
+-  Bots not using teleports very often and doesn't waits for TP very long
+
+
+--------------------------------------------------------------------------------
+Version 0.700
+September-24-2007
+This update was created by Yuraj.
+--------------------------------------------------------------------------------
+
+Additions:
+
+-  New FoxBot installer
+
+-  New FoxBot manual
+
+-  Added Exit item in waypoint menu for close waypoint menu
+
+-  Added updated waypoint tutorial to manual
+
+-  bot_can_use_teleporter (on/off)
+
+-  bot_can_build_teleporter (on/off)
+
+-  bot_spy_random_check (number)
+
+Bugs Fixed:
+
+-  Now is visible TP Entrance and TP Exit waypoint
+
+-  Fixed aiming wp (in Teleporter WP, HW/Soldier Defend WP, Demoman WP) on deleting
+   waypoint is aiming wp removed
+
+-  Fixed Teleporters -  Known crash (for more see 0.698 version changes),
+   if is not waypoint available, then bot don't going to teleporter
+
+-  Fixed -  On Teleport Entrance/Exit Built message, bots don't stop
+
+-  Fixed Spys checking (from random number 500 to 250)
+
+Waypoints Updates:
+
+-  Dustbowl -  Added teleporters and other minor updates
+
+
+--------------------------------------------------------------------------------
+Version 0.698 Final (Build # was not changed to 0.699 until later. No tweeks/fixes were made)
+June-19-2004
+This update was created by Grubber and DrEvil
+--------------------------------------------------------------------------------
+
+-  Added bot engineers making teleporters
+
+-  bots take teams teleporters
+
+I forget whatever else was covered in this build?
+
+
+About the Teleporters: Un-stable!
+
+The engineer's will build teleporters & the bots will take them & human teleporters.
+
+But if a human builds where a bot has no waypoints, the server WILL crash!!
+
+Unless the server admin places extra waypoints where humans can get but bots can't..
+
+Example: crossover2 base roof's. (i think the water also).
+
+
+--------------------------------------------------------------------------------
+Version 0.698 Final (Change Added by Grubber and DrEvil)
+Apr 5 2003
+--------------------------------------------------------------------------------
+
+Bots on ladders tweak
+
+foxbot_commanders.txt can load steam ID's
+
+I've compiled this release in Visual C+-  6, can you please test the speed difference
+between this build and build 17, there was such a small amount of actual code changed
+here you should be able to just do a straight comparison. The DLL came out bigger, which
+I didn't expect but if you run a server or something please compare cpu usages.
+I'll post a VC+-  .NET compile tomorrow.
+
+Overall Changelog from last full release:
+
+-  Added bot ordering *
+
+-  Implemented "color_attack" and "color_defend" into the start section of scripts.
+   These commands adjust the offensive ratio for the team. (see dustbowl script)
+
+-  Rocketjumping -  This feature needs updated waypoints to take advantage of*.
+
+-  Conc Jumping -  This feature needs updated waypoints to take advantage of*.
+
+-  Demo-man bots lay and detonate pipe traps from Demo-man defender waypoints.
+
+-  Script support for defense tags(command points)
+
+-  Engys should pick closest sg point to their own flag if its not already taken.
+
+-  Grenade arc & leading skill based error.
+
+-  Toned down HW-Guy aim.
+
+-  NEO-TF : Pyro bots use the jetpack boost to get to rocketjump points**.
+
+-  NEO-TF : Pyro bots use freeze weapon**.
+
+-  NEO-TF : Scout bots use ring of shadows against sentrys**.
+
+-  Bots Time, Arc, & lead Grenades for better combat effectiveness.
+
+-  Bot Engys repair teammates armor if needed.
+
+-  Greatly improved sentry memory
+
+-  Implemented 180 degree sentry rotation waypoint tags.
+
+-  Demo-men arc pipes.
+
+-  When running with a primed nade, and no target, bots should turn around to toss them
+   when the timer gets low
+
+-  Bots should not prime underwater, and should drop any nades they have upon going underwater.
+
+-  Bots should use appropriate grenades against sg's, and only use conc/gas if they are
+   out of the primary type.
+
+-  Bots announce enemy SG positions, and announce when the sg's are down.
+
+-  Defense classes announce their defend area.
+
+-  Bot Hearing system. Defensive bots should go investigate some common sounds they hear
+   while defending.
+
+-  Defense Points -  Bots choose to defend based on the ratio of offensive classes on their team.
+   These are waypoint tags.
+
+---  1) Normal Defense Point -  Usable by Soldiers/Hwguys/Demo-men
+
+---  2) Demo-man Defense Point -  Usable by demo's only. Favored over normal Defense points so they will lay pipes there.
+
+-  2 new CVARS
+
+---  1) defensive_chatter 1/0 -  controls bots announcing defense related messages.
+
+---  2) offensive_chatter 1/0 -  same for offensive bots.
+
+-  Implemented changerole command (see below)
+
+-Commands-
+
+botname changeclass #
+
+botname changeclassnow #
+
+botname changerole role
+
+valid roles are: attack, defend, roam
+
+-  Only 1 bot should escort flag carrier.
+
+-  Fixed aiming at feet.
+
+-  Should be a height limit for medic responses
+
+-  Tweaked avoid code
+
+-  Fixed demo trying to blow up friendly flag carriers
+
+-  Fixed wrong area reporting
+
+-  miscellaneous fixes & tweaks.
+
+-  Bot Medics should pump your health up a bit more.
+
+-  Greatly reduced pause delays in lower skilled bots.
+
+-  Various tweaks to cut down on bot nade suicides
+
+-  Fixed interrupting engys while building by calling for medic.
+
+-  Engys & medics shouldnt respond unless you actually need it
+
+-  Introduced a bit of error in bot dispensor detting
+
+-  Quite a few speed optimizations.
+
+-  Fixed cfg files not getting loaded.
+
+-  Check to prevent engys from building on the same spot.
+
+-  Bots discard occasionally to reduce EMP vulnerability.
+
+-  Engys shouldn't repair infected teammates.
+
+-  Bots shouldn't run for health if infected(reduce infection spreading)
+
+-  Tweaked soldiers shooting at feet if target is higher.
+
+-  Completely re-arranged waypoint menus, to make room so I can keep tags logically arranged.
+
+
+* Ordering bots -
+
+Go to your halflife/foxbot/tfc folder and create a file called foxbot_commanders.txt
+
+Open this file in notepad and add wonids for all players you wish to give commander access to.
+1 wonid per line.
+
+Only the people with the wonids in this list will be able to give the bots commands.
+There are 2 commands currently implemented. Commands are given through team chat during play.
+
+** You will need to be running Neo-TF in order to see these features.
+** Get is at http://www.planetneotf.com
+
+
+--------------------------------------------------------------------------------
+Version v0.697 (1.6.0)
+Mar-6-2003
+--------------------------------------------------------------------------------
+
+-  Projectile leading, soldiers and demoman will lead for better accuracy on moving targets
+
+-  Basic SG memory added, when bot is killed by SG/MG they instantly aim for it next time around
+
+-  Better and friendlier aim/nav movement
+
+-  New command bot "dump" for HLDS debugging
+
+-  Spy detection heightened
+
+-  Added FoxBot client connect message
+
+-  Compiled with latest metamod version 1.15 (Note: you must update your metamod!)
+
+-  Waypoint entities not cached unless in waypointing mode (fixes warpath crashes)
+
+-  Bots aim is more accurately affected by concs
+
+-  Fixed bots unable to shoot feigned spies
+
+-  Fixed Medic bots targeting disguised enemy spies and not attacking them
+
+-  Fixed Engineer bots from building SG in combat
+
+-  Fixed Demoman bots not reloading in combat
+
+-  Fixed cr_<class> limit bug where bots try to choose unavailable classes
+
+-  Ent fixer updated, various broken door bugs fixed
+
+-  Linux: required new GCC libraries compiled into .so for older GCC version compatibility
+
+-  Windows: All bot fixes from linux v0.696 included
+
+-  Neo-TF: Medics use snarks in battle
+
+-  Neo-TF: Snipers build ladder and not rocket pack in new neo-tf version
+
+
+--------------------------------------------------------------------------------
+Version v0.696 --  LINUX (1.5.1)
+Jan-23-2003
+--------------------------------------------------------------------------------
+
+-  Built in dos2unix program for scripts/configs
+
+-  Min/max bots works correctly
+
+-  Removed botdontshoot from hlds
+
+-  Removed 'hi/hello/lo bots' trigger
+
+
+--------------------------------------------------------------------------------
+Version v0.696 (1.5.1)
+May-5-2002
+--------------------------------------------------------------------------------
+
+-  Now works with recent half-life update
+
+
+--------------------------------------------------------------------------------
+Version v0.695 (1.5.0)
+Apr-21-2002
+--------------------------------------------------------------------------------
+
+-  Engineers now build dispensers close to SG and det them on enemy usage.
+
+-  Engineers use zones to tell team where SG is built
+
+-  Hurt bots run toward any friendly medics in sight
+
+-  Temporary waypoint files (fw1, fw2, ect) are not used anymore
+
+-  Bots randomly follow enemies
+
+-  Bots shoot feigned spies (not well)
+
+-  Bots randomly discover spies depending on skill and distance
+
+-  Bots guard flag when dropped for a short while
+
+-  Bots use spray decals from decals.wad in tfc folder (Read docs for more info)
+
+-  New command: Bot_cam added. Debug through the eyes of the bot.
+
+-  New command: Pathrun_oneway, twoway commands added. Allows users to run threw waypoints to connect paths
+
+-  New command: Bot_info command print bot settings on screen
+
+-  New command: Waypoint_author command added for waypoint signing
+
+-  Neo-TF: Bots upgrade MGs
+
+-  Neo-TF: Bots target and capture enemy MGs
+
+-  Neo-TF: Engineers spin and build as many MGs as possible on dispenser placement.
+
+-  Neo-TF: Medics will drop grenade pod around engineer's setup
+
+-  Neo-TF: Snipers drop anti-missile launchers around sniper waypoints
+
+-  Countless adminmod fixes
+
+-  Several memory leaks fixes
+
+-  Bots do not shoot threw grates in avanti and dustbowl type maps
+
+-  Snipers always snipe in the correct direction and scan laser across a 90 degree plan
+
+-  Capital map names don't screw up waypoint loading anymore
+
+-  Medics ignore spectator's calls for medic
+
+
+--------------------------------------------------------------------------------
+Version v0.69 (1.4.0)
+Feb-22-2001
+--------------------------------------------------------------------------------
+
+-  Bots jump over crouched players (leapfrog)
+
+-  Ducking is used in combat now
+
+-  New command: bot_info echos FoxBot's settings
+
+-  Engies guard there own SG and duck next to it waiting for prey
+
+-  Snipes getting real pissed when an enemy flashes there laser dot at them
+
+-  Hunted REDONE.. bots closely guard the hunted
+
+-  Countless number of adminmod tweaks
+
+-  Fixed a few medic bugs
+
+-  Snipes combat redone
+
+-  Config file fix, Foxbot.cfg is ran EVERY time now
+
+-  New file! default.cfg.. This is ran when theres no bot config file
+
+-  Ladder code tweaked.. tall ladders should be no prob
+
+-  Optimized code for cpu and memory
+
+-  Snipes stay at there waypoints longer
+
+-  Engies now know when their gun is destroyed and build another right away
+
+
+--------------------------------------------------------------------------------
+Version v0.68 (1.3.0)
+May-17-2001
+--------------------------------------------------------------------------------
+
+-  Scripting system! -  Needed for complex map types with multiple goals other than standard CTF
+
+-  Zoning system! -  Implemented but not yet used by the bots
+
+-  Spies only backstab if enemies back it to them. Makes them a bit less predictable
+
+-  Better bot avoid code. Should help keep them from jamming up
+
+-  Sentry Gun waypoints have directional flags like sniper points. (more planned for this later)
+
+-  Users can make mapname_bot.cfg with addbot commands to add custom team. Executed at map startup
+
+-  Bots fight more aggressive and follow their target more. Weapon choices will be addressed in next release
+
+-  Waypointers can make mapname_bot.cfg which can be edited by the user to customize the bot teams when the map loads
+
+-  Fixed bots sticking in the list without a team or class
+
+-  Fixed spies seeing through disguises due to new models
+
+-  Sliced down CPU usage a bit. (can and will still be improved)
+
+-  Fixed button pushing
+
+-  Bots keep their name/class/team on level changes
+
+-  Bots choose names randomly from the foxbot_names.txt instead of in order
+
+-  File changes-  Bot_names.txt is now foxbot_names.txt & Bot_chat.txt is now foxbot_chat.cfg
+
+-  Bots go for armor more
+
+-  Snipers and HW Guys tweaked slightly. (more to come)
+
+-  Bot chat is now shown on dedicated server console.
+
+-  Kicking/Adding bots should work perfectly now
+
+-  Medics are hopefully fixed
+
+
+--------------------------------------------------------------------------------
+Version v0.67 (1.2.0)
+Feb-20-2001
+--------------------------------------------------------------------------------
+
+-  Run and shoot (Woohoo!), fun to watch the bot cap/frag you at the same time
+
+-  Bots do their best to attack sentry guns first/when seen
+
+-  Bots pickup armor and the flags on flagrun now
+
+-  Fixed waypoint delete/add bug
+
+-  Fixed bot spinning round waypoint when low on health!
+
+-  Fixed dedicated console spamming (Bot chat off/on)
+
+-  Fixed a few bugs with handling enemy's and objects when the bot has the flag (won't pickup objects now)
+
+
+--------------------------------------------------------------------------------
+Version v0.66 (1.1.0)
+Feb-15-2001
+--------------------------------------------------------------------------------
+
+-  Bots can be concussed by concussion grenades
+
+-  New command: bot_debug on/off -  a bot will report at the console if he can't reach
+   a goal (health/flag etc) from a waypoint, giving his goal and current waypoint
+
+-  New command: Locate_waypoint on/off -  turns waypoint location on/off
+
+-  New command: Locate_waypoint -  sets the destination of the locator (the locator
+   draws a beam from you to the waypoint you want to find, best use spec mode for this)
+
+-  New command: pathwaypoint_connect on/off -  turns on/off automatic path connection to a waypoint
+
+-  New command: bot_chat on/off -  turn off bot chatting
+
+-  Kick/addbot fixed, you can re-add a bot back to a team it was kicked from
+
+-  More lift checking, shouldn't get stuck under lifts at all (but is possible)
+
+-  The demoman actually takes time out and reloads his grenade launcher
+
+-  Medics don't instantly recognize disguised spies
+
+-  Bots don't go for objects (back packs/buttons/flags) that are a different height to them
+
+-  Dedicated server commands bot_chat and kickall
+
+-  Fixed dedicated server commands from not working after level changes
+
+
+--------------------------------------------------------------------------------
+Version v0.65 (1.0.0)
+Jan-16-2001
+--------------------------------------------------------------------------------
+
+-  Medics will heal you if you shout for one AND they can see you, even if you are full health.
+
+-  All bots attack enemy flag carrier if they can see them
+
+-  New chat system: Comments when killed or when they kill others, customizable
+
+-  Bots aim at body more rather than enemies head all the time
+
+-  Bots roam looking for: flags, health, ammo, armor, enemies, dropped items, and other items (switches, etc)
+
+-  Snipes prioritize snipe points, Engys proirotize guard/sg points
+
+-  Bots drop spare ammo for friendly SGs
+
+-  Bots with flag will prioritize capping and will rarely engage enemy
+
+-  Each class has slightly different behavior, scouts will go for flag without engaging
+   the enemy, spys will disguise themselves and go for flag
+
+-  Bots in combat will now Jump (rarely)
+
+-  Throw grenades sometimes (if close/far enough away) if they can no longer see the enemy
+
+-  Bots attempt to follow them enemies where they saw them last
+
+-  Spys will attempt to backstab (if disguised)
+
+-  If a bot sees an enemy sentry gun, they will attempt to kill it without being shot
