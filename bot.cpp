@@ -97,7 +97,7 @@ extern bool spawn_check_crash;
 extern int spawn_check_crash_count;
 extern edict_t* spawn_check_crash_edict;
 
-// bot settings //////////////////  Fixed the wanted const and replaced bool for int on bot_allow_moods - Arkshine
+// bot settings //////////////////  Fixed the unwanted 'const' and replaced 'bool' for 'int' on bot_allow_moods - Arkshine
 extern int bot_allow_moods;
 extern int botskill_lower;
 extern int botskill_upper;
@@ -106,9 +106,11 @@ extern bool offensive_chatter;
 extern bool b_observer_mode;
 extern bool b_botdontshoot;
 extern bool botdontmove;
+
 extern int botchat;
 extern int min_bots;
 extern int max_bots;
+extern int bot_team_balance;
 extern bool bot_can_use_teleporter;
 extern bool bot_can_build_teleporter;
 extern bool bot_xmas;
