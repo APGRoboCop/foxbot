@@ -1,0 +1,145 @@
+[{
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod -MG -MP -MT././Release/bot.cpp.o -MF././Release/bot.cpp.o.d -MM bot.cpp",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\bot.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod -MG -MP -MT././Release/bot_client.cpp.o -MF././Release/bot_client.cpp.o.d -MM bot_client.cpp",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\bot_client.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod -MG -MP -MT././Release/bot_combat.cpp.o -MF././Release/bot_combat.cpp.o.d -MM bot_combat.cpp",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\bot_combat.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod -MG -MP -MT././Release/bot_navigate.cpp.o -MF././Release/bot_navigate.cpp.o.d -MM bot_navigate.cpp",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\bot_navigate.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod -MG -MP -MT././Release/bot_start.cpp.o -MF././Release/bot_start.cpp.o.d -MM bot_start.cpp",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\bot_start.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod -MG -MP -MT././Release/botcam.cpp.o -MF././Release/botcam.cpp.o.d -MM botcam.cpp",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\botcam.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod -MG -MP -MT././Release/cbase.cpp.o -MF././Release/cbase.cpp.o.d -MM cbase.cpp",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\cbase.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod -MG -MP -MT././Release/dll.cpp.o -MF././Release/dll.cpp.o.d -MM dll.cpp",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\dll.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod -MG -MP -MT././Release/engine.cpp.o -MF././Release/engine.cpp.o.d -MM engine.cpp",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\engine.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod -MG -MP -MT././Release/fsubs.cpp.o -MF././Release/fsubs.cpp.o.d -MM fsubs.cpp",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\fsubs.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod -MG -MP -MT././Release/fworld.cpp.o -MF././Release/fworld.cpp.o.d -MM fworld.cpp",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\fworld.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod -MG -MP -MT././Release/globals.cpp.o -MF././Release/globals.cpp.o.d -MM globals.cpp",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\globals.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod -MG -MP -MT././Release/h_export.cpp.o -MF././Release/h_export.cpp.o.d -MM h_export.cpp",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\h_export.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod -MG -MP -MT././Release/linkfunc.cpp.o -MF././Release/linkfunc.cpp.o.d -MM linkfunc.cpp",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\linkfunc.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod -MG -MP -MT././Release/meta_api.cpp.o -MF././Release/meta_api.cpp.o.d -MM meta_api.cpp",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\meta_api.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod -MG -MP -MT././Release/sdk_util.cpp.o -MF././Release/sdk_util.cpp.o.d -MM sdk_util.cpp",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\sdk_util.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod -MG -MP -MT././Release/util.cpp.o -MF././Release/util.cpp.o.d -MM util.cpp",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\util.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod -MG -MP -MT././Release/waypoint.cpp.o -MF././Release/waypoint.cpp.o.d -MM waypoint.cpp",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\waypoint.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -c C:/Users/Ryan/Dropbox/src/foxbot/bot.cpp -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -o ././Release/bot.cpp.o -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\bot.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -c C:/Users/Ryan/Dropbox/src/foxbot/bot_client.cpp -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -o ././Release/bot_client.cpp.o -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\bot_client.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -c C:/Users/Ryan/Dropbox/src/foxbot/bot_combat.cpp -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -o ././Release/bot_combat.cpp.o -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\bot_combat.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -c C:/Users/Ryan/Dropbox/src/foxbot/bot_start.cpp -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -o ././Release/bot_start.cpp.o -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\bot_start.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -c C:/Users/Ryan/Dropbox/src/foxbot/bot_navigate.cpp -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -o ././Release/bot_navigate.cpp.o -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\bot_navigate.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -c C:/Users/Ryan/Dropbox/src/foxbot/botcam.cpp -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -o ././Release/botcam.cpp.o -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\botcam.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -c C:/Users/Ryan/Dropbox/src/foxbot/cbase.cpp -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -o ././Release/cbase.cpp.o -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\cbase.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -c C:/Users/Ryan/Dropbox/src/foxbot/dll.cpp -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -o ././Release/dll.cpp.o -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\dll.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -c C:/Users/Ryan/Dropbox/src/foxbot/engine.cpp -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -o ././Release/engine.cpp.o -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\engine.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -c C:/Users/Ryan/Dropbox/src/foxbot/fworld.cpp -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -o ././Release/fworld.cpp.o -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\fworld.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -c C:/Users/Ryan/Dropbox/src/foxbot/fsubs.cpp -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -o ././Release/fsubs.cpp.o -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\fsubs.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -c C:/Users/Ryan/Dropbox/src/foxbot/globals.cpp -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -o ././Release/globals.cpp.o -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\globals.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -c C:/Users/Ryan/Dropbox/src/foxbot/h_export.cpp -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -o ././Release/h_export.cpp.o -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\h_export.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -c C:/Users/Ryan/Dropbox/src/foxbot/linkfunc.cpp -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -o ././Release/linkfunc.cpp.o -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\linkfunc.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -c C:/Users/Ryan/Dropbox/src/foxbot/meta_api.cpp -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -o ././Release/meta_api.cpp.o -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\meta_api.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -c C:/Users/Ryan/Dropbox/src/foxbot/sdk_util.cpp -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -o ././Release/sdk_util.cpp.o -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\sdk_util.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -c C:/Users/Ryan/Dropbox/src/foxbot/util.cpp -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -o ././Release/util.cpp.o -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\util.cpp"
+ }, {
+  "directory": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot",
+  "command": "C:/MinGW/bin/g++.exe -c C:/Users/Ryan/Dropbox/src/foxbot/waypoint.cpp -g -Wall -O2 -DNDEBUG -DWIN32 -D_WINDOWS -DVALVE_DLL -D_WIN32 -o ././Release/waypoint.cpp.o -I. -I../hlsdk-2.3-p4/multiplayer/cl_dll -I../hlsdk-2.3-p4/multiplayer/dlls -I../hlsdk-2.3-p4/multiplayer/common -I../hlsdk-2.3-p4/multiplayer/engine -I../hlsdk-2.3-p4/multiplayer/pm_shared -I../metamod-p-37/metamod",
+  "file": "C:\\Users\\Ryan\\Dropbox\\src\\foxbot\\waypoint.cpp"
+ }]
