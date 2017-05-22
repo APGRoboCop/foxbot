@@ -1,0 +1,44 @@
+#
+# HPB_bot makefile for Borland C++ 5.5
+#
+# created: 12/16/2000 botman (botman@mailandnews.com)
+#
+
+CPP = bcc32 -w-nak -4 -D_strnicmp=strnicmp -O2
+
+# uncomment the next line to turn on debugging information
+#DEBUG = -v
+
+# the following specifies the path to your MOD...
+#MOD_DIR = C:\Half-Life\tfc
+
+INCLUDES = -I..\metamod-p-37\metamod -I..\hlsdk-2.3-p4\multiplayer\engine \
+	-I..\hlsdk-2.3-p4\multiplayer\common -I..\hlsdk-2.3-p4\multiplayer\pm_shared \
+	-I..\hlsdk-2.3-p4\multiplayer\dlls -I..\hlsdk-2.3-p4\multiplayer\cl_dll
+
+OBJ = bot.obj botcam.obj bot_combat.obj bot_client.obj \
+	bot_job_assessors.obj bot_job_functions.obj bot_job_think.obj \
+	bot_navigate.obj bot_start.obj \
+	waypoint.obj util.obj h_export.obj meta_api.obj version.obj sdk_util.obj \
+	dll.obj engine.obj
+
+FoXBot.dll:	${OBJ} linkfunc.obj
+	ilink32 -c -aa -q -Gn -Tpd -m ${DEBUG} c0d32.obj ${OBJ} \
+	linkfunc.obj, $@, FoXBot.map, import32.lib cw32mt.lib, \
+	FoXBot_borland.def
+
+linkfunc.obj:	linkfunc.cpp
+	${CPP} ${DEBUG} ${INCLUDES} -u- -o$@ -c linkfunc.cpp
+
+clean:
+	-del *.obj
+	-del *.dll
+	-del *.map
+	-del *.tds
+
+.cpp.obj:
+	${CPP} ${DEBUG} ${INCLUDES} -o$@ -c $<
+
+.c.obj:
+	${CPP} ${DEBUG} ${INCLUDES} -o$@ -c $<
+

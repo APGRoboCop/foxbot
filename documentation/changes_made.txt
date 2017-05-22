@@ -1,0 +1,279 @@
+
+Hello, my online name is Zybby.
+This file contains explanations for a number of changes I've made to the
+Foxbot sourcecode for Foxbot versions 0.705 to 0.77.
+
+========================================
+
+AMMO MONITORING EXPLAINED
+
+I've updated the ammo monitoring code and it works like this:
+In bot_t there is a variable called ammoStatus.
+
+When bots spawn it is set to the value AMMO_WANTED.
+This means they have OK amounts of ammo but may want to pick up any
+ammo packs lying around nearby during their travels.
+
+When bots fire their weapons a check is performed to see if a weapon the
+bot is carrying is running low on ammunition, in which case ammoStatus
+is set to AMMO_LOW.
+This means the bot should seek out an ammo waypoint as soon as possible.
+
+A function called BotAmmoCheck() is called periodically to check if
+the bots ammo levels are above 50 per cent and if so sets ammoStatus
+to AMMO_UNNEEDED.
+
+========================================
+
+THE JOB BUFFER
+
+With Foxbot 0.77 I re-wrote most of the bot behaviour code to incorporate the job buffer
+system.
+Basically, almost eveything that a bot does is broken down into distinct jobs.
+For example, picking up a discarded ammo pack is one type of job.
+Another type of job is the pushing of a maps button.
+
+The bots are then supposed to perform one job at a time, one after another.
+In addition to pursuing one job at a time, the bots also have a memory of a number of
+jobs they want to do - this is the job buffer.
+
+In order to decide which job in the buffer the bot should currently do each job in
+the buffer is assigned a priority number, indicating it's current level of importance.
+The most important job in the buffer is the job the bot should currently do.
+
+To summarise, a buffer for an Engineer which can store five jobs might look a bit like this:
+
+1. BUILD SENTRY GUN(at waypoint 95).   [PRIORITY: 200]
+2. SPANNER A TEAMMATE([FoX]Freddy last seen near waypoint 121).   [PRIORITY: 500]
+3. NOTHING.
+4. REPAIR MY DISPENSER.   [PRIORITY: 400]
+5. TOP UP MY HEALTH.   [PRIORITY: 600]    <--The bots current job
+
+To see a list of job types currently available to the bots check out bot_job_think.h.
+Much of the job buffer engine code can be found in bot_job_think.cpp.
+
+When you wish to add a job to the bots job buffer the function SubmitNewJob()
+exists for that purpose.
+It will work out the jobs priority and see if it is important enough for inclusion
+in the buffer(relative to other jobs already in the buffer).
+
+Also, the job buffer must be kept up to date, otherwise old jobs may linger in
+the buffer even though they are no longer relevant.
+RefreshJobBuffer() exists for that purpose.
+This is a good place to mention the job assessor functions.
+
+The job assessor functions are located in bot_job_assessors.cpp.
+There is one assessor function for each type of job.
+An assessor function can be run on a job you wish to add to the buffer or a job
+that is already in the buffer.
+An assessor function is designed to decide the jobs current priority level and whether or
+not the job is currently viable.
+
+Frequently I ran into serious job failure issues.
+For example, a bot would go to build a sentry gun, but the sentry gun waypoint was
+in a bad location, causing the job to fail every time.
+Which is a problem if the bot continuously wants to build a sentry gun.
+This is why I added a job blacklist system.
+When a job fails in a bad way you can blacklist it with the function BlacklistJob().
+When you blacklist a job for a certain amount of time it will not be allowed back
+into the job buffer for that amount of time.
+Thus you can prevent overly repetitive job failure behaviour.
+
+In the catastrophic case of total job failure resulting in a completely empty job buffer
+I added a job called JOB_ROAM, which is designed to never fail, and keep the bot busy
+should it's buffer end up empty of other jobs.
+
+NOTE: The spectate_debug console command will show a bot's job buffer in action
+if you spectate close to a bot during a game.
+
+-  Possible new jobs to add:
+   JOB_MELEE_ATTACK,  // strafe, get in close and attack
+   JOB_BYPASS_KILLZONE,  // for avoiding pipetraps and snipers
+   JOB_RANDOM_MADNESS,   // call for a medic, run around maniacly, change weapons, be mad!
+   JOB_ATTACK_SENTRY,  // surprisingly complicated!
+   JOB_SPAWNED_THINK,  // just spawned
+	JOB_PATROL_SENTRY,  // Engineers patrol area near their sentry
+	JOB_FIRETEAM,  // one bot pauses and calls for teammates to join it before going for the flag
+	JOB_SPY_CHECK, // the bot suspects a spy and wants to follow them around for a while
+
+========================================
+
+WHERE SHOULD THE BOT LOOK?
+
+One source of conflict is figuring out which bit of code is responsible for the bots
+current viewing direction.
+
+Here are the three main influences of viewing direction I can think of:
+1. The bots current enemy.
+2. The bots waypoints.  Especially if the bot is climbing a ladder or doing a jump.
+3. Special purposes.  e.g. Building a sentry gun in a certain place or pushing a button.
+
+The approach I've taken is to first check if the bot has an enemy.
+If the bot has no enemy then you needn't worry about that.
+
+Secondly, since implementing the job buffer system I've decided to let each job
+decide which of the two remaining influences take precedence.
+In almost all cases each job will either be navigating waypoints OR taking control of the
+bots viewing direction exclusively.
+
+========================================
+
+WHEN TO CHANGE CLASS EXPLAINED
+
+In Foxbot 0.705 I implemented a 'natural selection' system of class changing
+behaviour for the bots.
+With natural selection good ideas live on and bad ideas die out.
+With the bots, the better they score the longer they get to play as their
+current class.  And if they repeatedly score nothing or worse they are pushed
+towards picking a new class.
+
+I added a variable called pBot->deathsTillClassChange.
+When a bot picks a new class deathsTillClassChange is set to a number such as 4.
+They wont be asked to change class until deathsTillClassChange is as low as 0.
+
+A variable called pBot->scoreAtSpawn remembers what their score was when they
+last spawned.
+When they die a check is performed to see how well they scored since they last
+spawned.
+If the score is 0 or worse subtract 1 from deathsTillClassChange.
+If the score is 1 leave deathsTillClassChange as it is.
+If the score is 2 or more add 1 to deathsTillClassChange.
+
+========================================
+
+CLASS SELECTION METHODS
+
+When bots are told to pick a new class there are two ways they can decide
+which class to select.
+
+The first method
+----------------
+The first method is to pick classes that will balance out the offense/defense
+balance of the team.
+If there are not enough defenders they will pick a suitable defense class
+for example.  Here is a list of the classes ordered by role:
+
+Offense classes: scout, soldier, demoman, medic, HWGuy, pyro, spy
+Defense classes: sniper, soldier, demoman, HWGuy, pyro, engineer
+
+The second method
+-----------------
+The second way of choosing classes can sometimes clash with the first.
+Bots will choose classes based on what class last killed them.
+So if an enemy team has 4 sentry guns set up then the bots will get chewed
+up by the sentry guns and eventually start to pick Spy as an anti Sentry Gun
+class.  Here's a table I came up with for this class selection method:
+
+KILLED BY     |     NEW CLASS SELECTION
+-------------------------------------------------
+Scout      --->      scout, medic
+Sniper     --->      sniper, pyro
+Soldier    --->      sniper, HWGuy
+Demoman    --->      soldier, scout
+Medic      --->      medic, engineer
+HWGuy      --->      spy, HWGuy
+Pyro       --->      engineer, demoman
+Spy        --->      pyro, demoman
+Engineer   --->      spy, soldier
+Sentry Gun --->      spy, soldier
+
+========================================
+
+SPY DETECTION
+
+I've added a new Spy detection function(located in bot_combat.cpp).
+
+Basic principle:
+1. If a bot encounters a disguised/feigning Spy it will remember who the
+   Spy is and when it should attack him.  The bot will then be suspicious.
+2. If suspicious the bot may track the Spy but may not shoot or throw
+   grenades at him.
+3. Once the time to attack the Spy arrives, kick his ass.
+
+Defenders should be more likely to track suspected Spies because it's in
+their job description.
+
+========================================
+
+ROUTE BRANCHING
+
+The bots use a Floyds Matrix algorithm for pathfinding.  It precomputes the
+shortest route from each waypoint to all the other waypoints and stores this data
+in a look-up table.
+Because it is precomputed it is fast, but does not allow for any kind of path
+deviation.  Hence predictable bot movements.
+
+I was trying to figure out how to get the bots to use the underground tunnels
+on rock2 when I stumbled upon this solution.
+The dynamic function I came up with has two main search factors which
+counterbalance each other and will pick out a new waypoint for the bot to
+go to along a branching route.
+
+You search all the waypoints in the map for a waypoint which satisfies these
+two search criteria:
+1. It must not be on the bots current route.  This can be checked with the
+   WaypointRouteFromTo() function.
+2. It must be nearer to the bots goal than the bot is currently.
+   This can be checked with the WaypointDistanceFromTo() function.
+
+Here are some things you may want to note:
+1. You should search all the waypoints in some kind of random order in order
+   to assist in the unpredictability of bot movement.
+2. If you call this function when the bot is at a non-junction waypoint then
+   the bot may backtrack some way when this function is called.
+3. You may want the bot to check if the first few waypoints along the new
+   route are not detpack waypoints and obstructed by rubble or a wall etc.
+   If you check too far ahead you may consume a bit of processor time and the
+   bot will essentially be cheating(humans don't see whole routes at once).
+4. This function is fast.  The data provided by WaypointRouteFromTo() and
+   WaypointDistanceFromTo() is all precomputed, hence the speed.
+
+Reasons for branching a route
+-----------------------------
+
+1. To generally keep the enemy team guessing.
+2. To avoid a known threat location(e.g. sniper or sentry gun).
+3. To avoid boredom.
+
+Deciding factors about when to pick a new route
+-----------------------------------------------
+
+1. The distance of the new route.  If it is the same distance or a little bit
+   more than the current route, then there is no real distance penalty involved.
+   But if the new route is longer then the bot should have some kind of reason
+   for picking the new route(e.g. boredom).
+2. How far the bot is from it's goal.  e.g. the nearer the goal is the less
+   willing the bot should be to take long detours.
+3. If the new route sends the bot back the way it came it could lead to a lot of
+   backtracking.  Sometimes backtracking is okay, sometimes it's not so good.
+4. How much nearer to the goal the new chosen waypoint is.  i.e. waypoints that
+   aren't much nearer are probably not branching as far as waypoints that
+   are nearer.
+5. How long since the bot picked a side route.  The longer the time the more
+   willing to pick a side route the bot could be.
+6. Is the bot already heading along a side route?
+
+Problems with this approach
+---------------------------
+
+1. Some routes contain more waypoints than others.  This means that statistically,
+   they will be chosen more often.  Getting around this issue probably means
+   eating up more CPU time.
+
+Different situations
+--------------------
+
+One of the biggest problems faced by an auto route branching function is that
+there are a wide variety of unusual situations to consider.
+These are the most difficult ones I can think of:
+
+1. The shortest route is actually blocked by a temporary wall/grate etc.
+2. A branching route is blocked by a temporary wall/grate etc.
+3. The shortest route is guarded by deadly traps(e.g. laser grid on ravelin).
+4. A branching route is guarded by deadly traps(e.g. laser grid on ravelin).
+5. A detpack waypoint is merely used to score points or kills NOT to open
+   or close routes.
+6. Detpack waypoints and a script are used to blow a route open and maybe closed too.
+7. Detpack waypoints(but no script) are used to blow a route open AND closed.
+
+========================================

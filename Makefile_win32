@@ -1,0 +1,79 @@
+##
+## compiling under ubuntu:
+##  for compiling linux: make 
+##  for compiling win32: make OSTYPE=win32
+## i686-w64-mingw32-gcc -mdll --add-stdcall-alias
+
+ifeq ($(OSTYPE),win32)
+	CPP = i586-linux-gnu-gcc -m32 -Dstricmp=strcasecmp -D_strnicmp=strncasecmp -Dstrnicmp=strncasecmp -Dstrcmpi=strcasecmp
+	LINKFLAGS = -Xlinker -shared -s
+	DLLEND = .dll
+else
+	CPP = clang -m32 -Dstricmp=strcasecmp -D_strnicmp=strncasecmp -Dstrnicmp=strncasecmp -Dstrcmpi=strcasecmp -DLINUX -D__linux__
+	ARCHFLAG = -fPIC
+	LINKFLAGS = -fPIC -shared -ldl -s
+	DLLEND = .so
+endif
+
+TARGET = foxbot_mm
+BASEFLAGS = -Wall -Wno-write-strings
+ARCHFLAG += -march=i686 -mtune=generic
+
+ifeq ($(DBG_FLGS),1)
+	OPTFLAGS = -O0 -g
+else
+	OPTFLAGS = -O2 -msse2 -fexpensive-optimizations -g -flto
+endif
+
+INCLUDES = -I"../metamod-p-37/metamod" \
+	-I"../hlsdk-2.3-p4/multiplayer/common" \
+	-I"../hlsdk-2.3-p4/multiplayer/dlls" \
+	-I"../hlsdk-2.3-p4/multiplayer/cl_dll" \
+	-I"../hlsdk-2.3-p4/multiplayer/engine" \
+	-I"../hlsdk-2.3-p4/multiplayer/pm_shared"
+
+CFLAGS = ${BASEFLAGS} ${OPTFLAGS} ${ARCHFLAG} ${INCLUDES}
+CPPFLAGS = -fno-rtti -fno-exceptions ${CFLAGS} 
+
+SRC = \
+bot.cpp \
+bot_client.cpp \
+bot_combat.cpp \
+bot_job_assessors.cpp \
+bot_job_functions.cpp \
+bot_job_think.cpp \
+bot_navigate.cpp \
+bot_start.cpp \
+botcam.cpp \
+dll.cpp \
+engine.cpp \
+h_export.cpp \
+meta_api.cpp \
+sdk_util.cpp \
+util.cpp \
+version.cpp \
+waypoint.cpp
+
+OBJ = $(SRC:%.cpp=%.o)
+
+${TARGET}${DLLEND}: ${OBJ}
+	${CPP} -o $@ ${OBJ} ${LINKFLAGS}
+
+clean:
+	rm -f *.o ${TARGET}${DLLEND}
+
+distclean:
+	rm -f Rules.depend ${TARGET}.dll ${TARGET}.so addons/foxbot/dlls/*
+
+%.o: %.cpp
+	${CPP} ${CPPFLAGS} -c $< -o $@
+
+%.o: %.c
+	${CPP} ${CFLAGS} -c $< -o $@
+
+depend: Rules.depend
+
+Rules.depend: Makefile $(SRC)
+	$(CPP) -MM ${INCLUDES} $(SRC) > $@
+
+include Rules.depend

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="FoXBot" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug Win32">
+				<Option output="FoXBot" prefix_auto="1" extension_auto="1" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-D_DEBUG" />
+					<Add option="-DWIN32" />
+					<Add option="-D_WINDOWS" />
+					<Add option="-DVALVE_DLL" />
+					<Add directory="../hlsdk/multiplayer/common" />
+					<Add directory="../hlsdk/multiplayer/dlls" />
+					<Add directory="../hlsdk/multiplayer/engine" />
+					<Add directory="../hlsdk/multiplayer/pm_shared" />
+					<Add directory="../hlsdk/multiplayer/cl_dll" />
+					<Add directory="../metamod/metamod" />
+				</Compiler>
+			</Target>
+			<Target title="Release Win32">
+				<Option output="FoXBot" prefix_auto="1" extension_auto="1" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-DNDEBUG" />
+					<Add option="-DWIN32" />
+					<Add option="-D_WINDOWS" />
+					<Add option="-DTFC_DLL" />
+					<Add option="-D_WIN32" />
+					<Add option="-D_CRT_SECURE_NO_WARNINGS" />
+					<Add option="-D_CRT_NONSTDC_NO_WARNINGS" />
+					<Add directory="../hlsdk-2.3-p4/multiplayer/common" />
+					<Add directory="../hlsdk-2.3-p4/multiplayer/dlls" />
+					<Add directory="../hlsdk-2.3-p4/multiplayer/engine" />
+					<Add directory="../hlsdk-2.3-p4/multiplayer/pm_shared" />
+					<Add directory="../hlsdk-2.3-p4/multiplayer/cl_dll" />
+					<Add directory="../metamod-p-37/metamod" />
+				</Compiler>
+			</Target>
+		</Build>
+		<Unit filename="THINGSTODO.txt" />
+		<Unit filename="VTune/FoXBot.vpj" />
+		<Unit filename="bot.cpp" />
+		<Unit filename="bot.h" />
+		<Unit filename="bot_client.cpp" />
+		<Unit filename="bot_client.h" />
+		<Unit filename="bot_combat.cpp" />
+		<Unit filename="bot_func.h" />
+		<Unit filename="bot_navigate.cpp" />
+		<Unit filename="bot_start.cpp" />
+		<Unit filename="botcam.cpp" />
+		<Unit filename="cbase.cpp" />
+		<Unit filename="dll.cpp" />
+		<Unit filename="engine.cpp" />
+		<Unit filename="fsubs.cpp" />
+		<Unit filename="fworld.cpp" />
+		<Unit filename="globals.cpp" />
+		<Unit filename="h_export.cpp" />
+		<Unit filename="linkfunc.cpp" />
+		<Unit filename="list.h" />
+		<Unit filename="meta_api.cpp" />
+		<Unit filename="sdk_util.cpp" />
+		<Unit filename="util.cpp" />
+		<Unit filename="util.h" />
+		<Unit filename="waypoint.cpp" />
+		<Unit filename="waypoint.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
