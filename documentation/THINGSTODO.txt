@@ -1,0 +1,98 @@
+
+Note: This file was included with Foxbot version 0.701.
+
+==================================
+
+Some shit I want to do.
+
+Bot switch classes smartly?
+move snipers if close sniper within a small distance.
+spy hoverboard
+get MG and SG killers
+snipes strafe
+make the killer of an sg say the "down" message
+make spies efficient sg killers
+send closest d class to their own flag when taken.
+scouts go to detpacks if they hear
+make a function that sends a bot to a waypoint of opportunity for the bot, meaning a wp with good nade distance.
+
+TEST FILE LOADING ON NIX
+human command bots. access via users txt file, or highest scored human. (cvar frag_commander)
+
+
+
+CHANGELOG
+---------
+botname changerole role (attack, defend, roam)
+hopefully fixed flag carriers screwing around
+
+less flag escorts
+aim at feet
+height limit for medic heals
+defense tweaks
+optimizations
+tweak avoid code
+fixed demo trying to blow flag carriers
+foxbot_commanders.txt
+implement class changing
+PUUT WP RANGE BACK HIGHER
+demo piping
+rotate sgs sturn180
+increased spy det range
+decreased target find timer
+added script support for defense points
+demo pipes
+implement defense points
+engys need to pick closest spot to flag location if no sg there yet
+fixed command tag menus
+increased wp view distance
+medics shouldnt interrupt concing to heal.
+Bot Offense/Defense?
+implement missions
+improve action choice in bot_navigate
+discard
+engys pick diff spots
+defender waypoint type
+implement hearing.
+engy not buff if target infected
+bots shouldnt go for health if infected (better than infecting teammates)
+Rocketjumping - provide waypoint explanation
+nade arc error
+lead error
+add some error to nading
+hwguy aim error
+ded server cfg load fix
+pyro boost
+pyro freeze
+scout ring of shadows
+NO ENGY ARMOR REPAIR UNLESS HE HAS A SG - 976 bot_com
+
+version info
+------------
+40 dll.cpp
+48 dll.cpp
+40 meta_api.cpp
+resource file
+
+
+BUGS
+----
+
+NOTES
+-----
+
+
+
+TODO
+----
+code to check if outdoor
+TraceResult tr;
+UTIL_TraceLine(pEntity->v.origin, pEntity->v.origin + Vector(0,0,8192), ignore_monsters, pEntity, &tr);
+ /******** CHECKS ********/
+ /******** Is the client inside? ********/
+if(UTIL_PointContents(tr.vecEndPos) != CONTENTS_SKY)
+{
+    pCEntity->PrintTalk( "> You must be outside to build a marker" );
+    return;
+}
+

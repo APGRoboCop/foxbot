@@ -1,0 +1,409 @@
+bot.o: bot.cpp extdll.h vector.h \
+  ../hlsdk-2.3-p4/multiplayer/common/const.h \
+  ../hlsdk-2.3-p4/multiplayer/common/in_buttons.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/progdefs.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/edict.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/eiface.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/archtypes.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/custom.h \
+  ../hlsdk-2.3-p4/multiplayer/common/crc.h \
+  ../hlsdk-2.3-p4/multiplayer/common/cvardef.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/Sequence.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/cdll_dll.h bot.h osdep.h \
+  ../metamod-p-37/metamod/meta_api.h ../metamod-p-37/metamod/comp_dep.h \
+  ../metamod-p-37/metamod/dllapi.h ../metamod-p-37/metamod/sdk_util.h \
+  ../metamod-p-37/metamod/enginecallbacks.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/enginecallback.h \
+  ../hlsdk-2.3-p4/multiplayer/common/event_flags.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/util.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/activity.h \
+  ../metamod-p-37/metamod/osdep.h ../metamod-p-37/metamod/types_meta.h \
+  ../metamod-p-37/metamod/mreg.h ../metamod-p-37/metamod/new_baseclass.h \
+  ../metamod-p-37/metamod/log_meta.h \
+  ../metamod-p-37/metamod/engine_api.h ../metamod-p-37/metamod/plinfo.h \
+  ../metamod-p-37/metamod/mutil.h ../metamod-p-37/metamod/mhook.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/cbase.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/saverestore.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/schedule.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/monsterevent.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/basemonster.h \
+  ../hlsdk-2.3-p4/multiplayer/cl_dll/tf_defs.h list.h bot_func.h \
+  waypoint.h bot_navigate.h bot_weapons.h bot_job_think.h engine.h
+bot_client.o: bot_client.cpp extdll.h vector.h \
+  ../hlsdk-2.3-p4/multiplayer/common/const.h \
+  ../hlsdk-2.3-p4/multiplayer/common/in_buttons.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/progdefs.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/edict.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/eiface.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/archtypes.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/custom.h \
+  ../hlsdk-2.3-p4/multiplayer/common/crc.h \
+  ../hlsdk-2.3-p4/multiplayer/common/cvardef.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/Sequence.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/cdll_dll.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/util.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/activity.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/enginecallback.h \
+  ../hlsdk-2.3-p4/multiplayer/common/event_flags.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/cbase.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/saverestore.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/schedule.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/monsterevent.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/basemonster.h bot.h osdep.h \
+  bot_func.h bot_job_think.h bot_client.h bot_weapons.h waypoint.h \
+  bot_navigate.h ../hlsdk-2.3-p4/multiplayer/cl_dll/tf_defs.h
+bot_combat.o: bot_combat.cpp extdll.h vector.h \
+  ../hlsdk-2.3-p4/multiplayer/common/const.h \
+  ../hlsdk-2.3-p4/multiplayer/common/in_buttons.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/progdefs.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/edict.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/eiface.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/archtypes.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/custom.h \
+  ../hlsdk-2.3-p4/multiplayer/common/crc.h \
+  ../hlsdk-2.3-p4/multiplayer/common/cvardef.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/Sequence.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/cdll_dll.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/util.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/activity.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/enginecallback.h \
+  ../hlsdk-2.3-p4/multiplayer/common/event_flags.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/cbase.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/saverestore.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/schedule.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/monsterevent.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/basemonster.h bot.h osdep.h \
+  bot_func.h bot_job_think.h bot_weapons.h waypoint.h bot_navigate.h
+bot_job_assessors.o: bot_job_assessors.cpp extdll.h vector.h \
+  ../hlsdk-2.3-p4/multiplayer/common/const.h \
+  ../hlsdk-2.3-p4/multiplayer/common/in_buttons.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/progdefs.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/edict.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/eiface.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/archtypes.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/custom.h \
+  ../hlsdk-2.3-p4/multiplayer/common/crc.h \
+  ../hlsdk-2.3-p4/multiplayer/common/cvardef.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/Sequence.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/cdll_dll.h bot.h osdep.h \
+  ../metamod-p-37/metamod/meta_api.h ../metamod-p-37/metamod/comp_dep.h \
+  ../metamod-p-37/metamod/dllapi.h ../metamod-p-37/metamod/sdk_util.h \
+  ../metamod-p-37/metamod/enginecallbacks.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/enginecallback.h \
+  ../hlsdk-2.3-p4/multiplayer/common/event_flags.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/util.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/activity.h \
+  ../metamod-p-37/metamod/osdep.h ../metamod-p-37/metamod/types_meta.h \
+  ../metamod-p-37/metamod/mreg.h ../metamod-p-37/metamod/new_baseclass.h \
+  ../metamod-p-37/metamod/log_meta.h \
+  ../metamod-p-37/metamod/engine_api.h ../metamod-p-37/metamod/plinfo.h \
+  ../metamod-p-37/metamod/mutil.h ../metamod-p-37/metamod/mhook.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/cbase.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/saverestore.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/schedule.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/monsterevent.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/basemonster.h \
+  ../hlsdk-2.3-p4/multiplayer/cl_dll/tf_defs.h list.h bot_func.h \
+  bot_job_think.h bot_job_assessors.h bot_weapons.h waypoint.h \
+  bot_navigate.h
+bot_job_functions.o: bot_job_functions.cpp extdll.h vector.h \
+  ../hlsdk-2.3-p4/multiplayer/common/const.h \
+  ../hlsdk-2.3-p4/multiplayer/common/in_buttons.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/progdefs.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/edict.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/eiface.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/archtypes.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/custom.h \
+  ../hlsdk-2.3-p4/multiplayer/common/crc.h \
+  ../hlsdk-2.3-p4/multiplayer/common/cvardef.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/Sequence.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/cdll_dll.h bot.h osdep.h \
+  ../metamod-p-37/metamod/meta_api.h ../metamod-p-37/metamod/comp_dep.h \
+  ../metamod-p-37/metamod/dllapi.h ../metamod-p-37/metamod/sdk_util.h \
+  ../metamod-p-37/metamod/enginecallbacks.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/enginecallback.h \
+  ../hlsdk-2.3-p4/multiplayer/common/event_flags.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/util.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/activity.h \
+  ../metamod-p-37/metamod/osdep.h ../metamod-p-37/metamod/types_meta.h \
+  ../metamod-p-37/metamod/mreg.h ../metamod-p-37/metamod/new_baseclass.h \
+  ../metamod-p-37/metamod/log_meta.h \
+  ../metamod-p-37/metamod/engine_api.h ../metamod-p-37/metamod/plinfo.h \
+  ../metamod-p-37/metamod/mutil.h ../metamod-p-37/metamod/mhook.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/cbase.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/saverestore.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/schedule.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/monsterevent.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/basemonster.h \
+  ../hlsdk-2.3-p4/multiplayer/cl_dll/tf_defs.h list.h bot_func.h \
+  bot_job_think.h bot_job_assessors.h bot_job_functions.h bot_weapons.h \
+  waypoint.h bot_navigate.h
+bot_job_think.o: bot_job_think.cpp extdll.h vector.h \
+  ../hlsdk-2.3-p4/multiplayer/common/const.h \
+  ../hlsdk-2.3-p4/multiplayer/common/in_buttons.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/progdefs.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/edict.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/eiface.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/archtypes.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/custom.h \
+  ../hlsdk-2.3-p4/multiplayer/common/crc.h \
+  ../hlsdk-2.3-p4/multiplayer/common/cvardef.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/Sequence.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/cdll_dll.h bot.h osdep.h \
+  ../metamod-p-37/metamod/meta_api.h ../metamod-p-37/metamod/comp_dep.h \
+  ../metamod-p-37/metamod/dllapi.h ../metamod-p-37/metamod/sdk_util.h \
+  ../metamod-p-37/metamod/enginecallbacks.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/enginecallback.h \
+  ../hlsdk-2.3-p4/multiplayer/common/event_flags.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/util.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/activity.h \
+  ../metamod-p-37/metamod/osdep.h ../metamod-p-37/metamod/types_meta.h \
+  ../metamod-p-37/metamod/mreg.h ../metamod-p-37/metamod/new_baseclass.h \
+  ../metamod-p-37/metamod/log_meta.h \
+  ../metamod-p-37/metamod/engine_api.h ../metamod-p-37/metamod/plinfo.h \
+  ../metamod-p-37/metamod/mutil.h ../metamod-p-37/metamod/mhook.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/cbase.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/saverestore.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/schedule.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/monsterevent.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/basemonster.h \
+  ../hlsdk-2.3-p4/multiplayer/cl_dll/tf_defs.h list.h bot_func.h \
+  bot_job_think.h bot_job_assessors.h bot_job_functions.h bot_weapons.h \
+  waypoint.h bot_navigate.h
+bot_navigate.o: bot_navigate.cpp extdll.h vector.h \
+  ../hlsdk-2.3-p4/multiplayer/common/const.h \
+  ../hlsdk-2.3-p4/multiplayer/common/in_buttons.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/progdefs.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/edict.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/eiface.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/archtypes.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/custom.h \
+  ../hlsdk-2.3-p4/multiplayer/common/crc.h \
+  ../hlsdk-2.3-p4/multiplayer/common/cvardef.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/Sequence.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/cdll_dll.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/util.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/activity.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/enginecallback.h \
+  ../hlsdk-2.3-p4/multiplayer/common/event_flags.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/cbase.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/saverestore.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/schedule.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/monsterevent.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/basemonster.h bot.h osdep.h \
+  bot_func.h bot_job_think.h waypoint.h bot_navigate.h bot_weapons.h \
+  list.h
+bot_start.o: bot_start.cpp extdll.h vector.h \
+  ../hlsdk-2.3-p4/multiplayer/common/const.h \
+  ../hlsdk-2.3-p4/multiplayer/common/in_buttons.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/progdefs.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/edict.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/eiface.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/archtypes.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/custom.h \
+  ../hlsdk-2.3-p4/multiplayer/common/crc.h \
+  ../hlsdk-2.3-p4/multiplayer/common/cvardef.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/Sequence.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/cdll_dll.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/util.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/activity.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/enginecallback.h \
+  ../hlsdk-2.3-p4/multiplayer/common/event_flags.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/cbase.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/saverestore.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/schedule.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/monsterevent.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/basemonster.h bot.h osdep.h \
+  bot_func.h bot_weapons.h
+botcam.o: botcam.cpp extdll.h vector.h \
+  ../hlsdk-2.3-p4/multiplayer/common/const.h \
+  ../hlsdk-2.3-p4/multiplayer/common/in_buttons.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/progdefs.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/edict.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/eiface.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/archtypes.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/custom.h \
+  ../hlsdk-2.3-p4/multiplayer/common/crc.h \
+  ../hlsdk-2.3-p4/multiplayer/common/cvardef.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/Sequence.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/cdll_dll.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/util.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/activity.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/enginecallback.h \
+  ../hlsdk-2.3-p4/multiplayer/common/event_flags.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/cbase.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/saverestore.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/schedule.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/monsterevent.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/basemonster.h botcam.h bot.h osdep.h
+dll.o: dll.cpp extdll.h vector.h \
+  ../hlsdk-2.3-p4/multiplayer/common/const.h \
+  ../hlsdk-2.3-p4/multiplayer/common/in_buttons.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/progdefs.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/edict.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/eiface.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/archtypes.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/custom.h \
+  ../hlsdk-2.3-p4/multiplayer/common/crc.h \
+  ../hlsdk-2.3-p4/multiplayer/common/cvardef.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/Sequence.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/cdll_dll.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/enginecallback.h \
+  ../hlsdk-2.3-p4/multiplayer/common/event_flags.h \
+  ../hlsdk-2.3-p4/multiplayer/common/entity_state.h \
+  ../hlsdk-2.3-p4/multiplayer/pm_shared/pm_info.h \
+  ../hlsdk-2.3-p4/multiplayer/common/weaponinfo.h bot.h osdep.h \
+  bot_func.h bot_weapons.h waypoint.h ../metamod-p-37/metamod/dllapi.h \
+  ../metamod-p-37/metamod/sdk_util.h \
+  ../metamod-p-37/metamod/enginecallbacks.h \
+  ../metamod-p-37/metamod/comp_dep.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/util.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/activity.h \
+  ../metamod-p-37/metamod/osdep.h ../metamod-p-37/metamod/types_meta.h \
+  ../metamod-p-37/metamod/mreg.h ../metamod-p-37/metamod/new_baseclass.h \
+  ../metamod-p-37/metamod/log_meta.h ../metamod-p-37/metamod/meta_api.h \
+  ../metamod-p-37/metamod/engine_api.h ../metamod-p-37/metamod/plinfo.h \
+  ../metamod-p-37/metamod/mutil.h ../metamod-p-37/metamod/mhook.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/cbase.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/saverestore.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/schedule.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/monsterevent.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/basemonster.h player.h \
+  ../hlsdk-2.3-p4/multiplayer/pm_shared/pm_materials.h botcam.h
+engine.o: engine.cpp extdll.h vector.h \
+  ../hlsdk-2.3-p4/multiplayer/common/const.h \
+  ../hlsdk-2.3-p4/multiplayer/common/in_buttons.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/progdefs.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/edict.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/eiface.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/archtypes.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/custom.h \
+  ../hlsdk-2.3-p4/multiplayer/common/crc.h \
+  ../hlsdk-2.3-p4/multiplayer/common/cvardef.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/Sequence.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/cdll_dll.h bot.h osdep.h bot_client.h \
+  engine.h bot_func.h ../metamod-p-37/metamod/meta_api.h \
+  ../metamod-p-37/metamod/comp_dep.h ../metamod-p-37/metamod/dllapi.h \
+  ../metamod-p-37/metamod/sdk_util.h \
+  ../metamod-p-37/metamod/enginecallbacks.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/enginecallback.h \
+  ../hlsdk-2.3-p4/multiplayer/common/event_flags.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/util.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/activity.h \
+  ../metamod-p-37/metamod/osdep.h ../metamod-p-37/metamod/types_meta.h \
+  ../metamod-p-37/metamod/mreg.h ../metamod-p-37/metamod/new_baseclass.h \
+  ../metamod-p-37/metamod/log_meta.h \
+  ../metamod-p-37/metamod/engine_api.h ../metamod-p-37/metamod/plinfo.h \
+  ../metamod-p-37/metamod/mutil.h ../metamod-p-37/metamod/mhook.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/cbase.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/saverestore.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/schedule.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/monsterevent.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/basemonster.h
+h_export.o: h_export.cpp extdll.h vector.h \
+  ../hlsdk-2.3-p4/multiplayer/common/const.h \
+  ../hlsdk-2.3-p4/multiplayer/common/in_buttons.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/progdefs.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/edict.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/eiface.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/archtypes.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/custom.h \
+  ../hlsdk-2.3-p4/multiplayer/common/crc.h \
+  ../hlsdk-2.3-p4/multiplayer/common/cvardef.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/Sequence.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/cdll_dll.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/enginecallback.h \
+  ../hlsdk-2.3-p4/multiplayer/common/event_flags.h bot.h osdep.h \
+  engine.h ../metamod-p-37/metamod/h_export.h \
+  ../metamod-p-37/metamod/osdep.h ../metamod-p-37/metamod/comp_dep.h \
+  ../metamod-p-37/metamod/types_meta.h ../metamod-p-37/metamod/mreg.h \
+  ../metamod-p-37/metamod/new_baseclass.h \
+  ../metamod-p-37/metamod/log_meta.h ../metamod-p-37/metamod/meta_api.h \
+  ../metamod-p-37/metamod/dllapi.h ../metamod-p-37/metamod/sdk_util.h \
+  ../metamod-p-37/metamod/enginecallbacks.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/util.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/activity.h \
+  ../metamod-p-37/metamod/engine_api.h ../metamod-p-37/metamod/plinfo.h \
+  ../metamod-p-37/metamod/mutil.h ../metamod-p-37/metamod/mhook.h
+meta_api.o: meta_api.cpp ../hlsdk-2.3-p4/multiplayer/dlls/extdll.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/vector.h \
+  ../hlsdk-2.3-p4/multiplayer/common/const.h \
+  ../hlsdk-2.3-p4/multiplayer/common/in_buttons.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/progdefs.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/edict.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/eiface.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/archtypes.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/custom.h \
+  ../hlsdk-2.3-p4/multiplayer/common/crc.h \
+  ../hlsdk-2.3-p4/multiplayer/common/cvardef.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/Sequence.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/cdll_dll.h \
+  ../metamod-p-37/metamod/meta_api.h ../metamod-p-37/metamod/comp_dep.h \
+  ../metamod-p-37/metamod/dllapi.h ../metamod-p-37/metamod/sdk_util.h \
+  ../metamod-p-37/metamod/enginecallbacks.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/enginecallback.h \
+  ../hlsdk-2.3-p4/multiplayer/common/event_flags.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/util.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/activity.h \
+  ../metamod-p-37/metamod/osdep.h ../metamod-p-37/metamod/types_meta.h \
+  ../metamod-p-37/metamod/mreg.h ../metamod-p-37/metamod/new_baseclass.h \
+  ../metamod-p-37/metamod/log_meta.h \
+  ../metamod-p-37/metamod/engine_api.h ../metamod-p-37/metamod/plinfo.h \
+  ../metamod-p-37/metamod/mutil.h ../metamod-p-37/metamod/mhook.h
+sdk_util.o: sdk_util.cpp ../hlsdk-2.3-p4/multiplayer/dlls/extdll.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/vector.h \
+  ../hlsdk-2.3-p4/multiplayer/common/const.h \
+  ../hlsdk-2.3-p4/multiplayer/common/in_buttons.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/progdefs.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/edict.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/eiface.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/archtypes.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/custom.h \
+  ../hlsdk-2.3-p4/multiplayer/common/crc.h \
+  ../hlsdk-2.3-p4/multiplayer/common/cvardef.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/Sequence.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/cdll_dll.h sdk_util.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/util.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/activity.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/enginecallback.h \
+  ../hlsdk-2.3-p4/multiplayer/common/event_flags.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/cbase.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/saverestore.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/schedule.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/monsterevent.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/basemonster.h osdep.h
+util.o: util.cpp extdll.h vector.h \
+  ../hlsdk-2.3-p4/multiplayer/common/const.h \
+  ../hlsdk-2.3-p4/multiplayer/common/in_buttons.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/progdefs.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/edict.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/eiface.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/archtypes.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/custom.h \
+  ../hlsdk-2.3-p4/multiplayer/common/crc.h \
+  ../hlsdk-2.3-p4/multiplayer/common/cvardef.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/Sequence.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/cdll_dll.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/util.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/activity.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/enginecallback.h \
+  ../hlsdk-2.3-p4/multiplayer/common/event_flags.h engine.h bot.h \
+  osdep.h bot_func.h
+version.o: version.cpp
+waypoint.o: waypoint.cpp extdll.h vector.h \
+  ../hlsdk-2.3-p4/multiplayer/common/const.h \
+  ../hlsdk-2.3-p4/multiplayer/common/in_buttons.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/progdefs.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/edict.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/eiface.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/archtypes.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/custom.h \
+  ../hlsdk-2.3-p4/multiplayer/common/crc.h \
+  ../hlsdk-2.3-p4/multiplayer/common/cvardef.h \
+  ../hlsdk-2.3-p4/multiplayer/engine/Sequence.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/cdll_dll.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/enginecallback.h \
+  ../hlsdk-2.3-p4/multiplayer/common/event_flags.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/util.h \
+  ../hlsdk-2.3-p4/multiplayer/dlls/activity.h bot.h osdep.h waypoint.h \
+  engine.h list.h
