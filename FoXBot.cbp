@@ -31,9 +31,7 @@
 					<Add option="-DNDEBUG" />
 					<Add option="-DWIN32" />
 					<Add option="-D_WINDOWS" />
-					<Add option="-DTFC_DLL" />
 					<Add option="-D_WIN32" />
-					<Add option="-D_CRT_SECURE_NO_WARNINGS" />
 					<Add option="-D_CRT_NONSTDC_NO_WARNINGS" />
 					<Add directory="../hlsdk-2.3-p4/multiplayer/common" />
 					<Add directory="../hlsdk-2.3-p4/multiplayer/dlls" />
@@ -52,29 +50,44 @@
 		<Unit filename="bot_client.h" />
 		<Unit filename="bot_combat.cpp" />
 		<Unit filename="bot_func.h" />
+		<Unit filename="bot_job_assessors.cpp" />
+		<Unit filename="bot_job_assessors.h" />
+		<Unit filename="bot_job_functions.cpp" />
+		<Unit filename="bot_job_functions.h" />
+		<Unit filename="bot_job_think.cpp" />
+		<Unit filename="bot_job_think.h" />
 		<Unit filename="bot_navigate.cpp" />
+		<Unit filename="bot_navigate.h" />
 		<Unit filename="bot_start.cpp" />
+		<Unit filename="bot_weapons.h" />
 		<Unit filename="botcam.cpp" />
-		<Unit filename="cbase.cpp" />
+		<Unit filename="botcam.h" />
 		<Unit filename="dll.cpp" />
 		<Unit filename="engine.cpp" />
-		<Unit filename="fsubs.cpp" />
-		<Unit filename="fworld.cpp" />
-		<Unit filename="globals.cpp" />
+		<Unit filename="engine.h" />
+		<Unit filename="extdll.h" />
+		<Unit filename="foxbot_private.h" />
 		<Unit filename="h_export.cpp" />
 		<Unit filename="linkfunc.cpp" />
 		<Unit filename="list.h" />
 		<Unit filename="meta_api.cpp" />
+		<Unit filename="osdep.h" />
+		<Unit filename="player.h" />
+		<Unit filename="res_fox.rc" />
+		<Unit filename="resource.h" />
 		<Unit filename="sdk_util.cpp" />
+		<Unit filename="sdk_util.h" />
 		<Unit filename="util.cpp" />
-		<Unit filename="util.h" />
+		<Unit filename="vector.h" />
+		<Unit filename="vers_fox.h" />
+		<Unit filename="version.h" />
 		<Unit filename="waypoint.cpp" />
 		<Unit filename="waypoint.h" />
 		<Extensions>
-			<code_completion />
 			<envvars />
-			<debugger />
+			<code_completion />
 			<lib_finder disable_auto="1" />
+			<debugger />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

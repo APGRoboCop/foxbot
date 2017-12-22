@@ -14,8 +14,8 @@
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,78,0,0
- PRODUCTVERSION 0,78,0,0
+ FILEVERSION 0,791,0,0
+ PRODUCTVERSION 0,791,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -33,12 +33,12 @@ BEGIN
             VALUE "Comments", "AI opponent for half-life TFC"
             VALUE "CompanyName", "Tom Simpson <redfox@foxbot.net>"
             VALUE "FileDescription", "FoxBot Half-Life MOD DLL"
-            VALUE "FileVersion", "0.78.0.0"
+            VALUE "FileVersion", "0.791.0.0"
             VALUE "InternalName", "FoxBot"
             VALUE "LegalCopyright", "Copyright© 2003,Tom Simpson"
             VALUE "OriginalFilename", "foxbot_mm.dll"
             VALUE "ProductName", "FoxBot"
-            VALUE "ProductVersion", "0.78.0.0"
+            VALUE "ProductVersion", "0.791.0.0"
         END
     END
     BLOCK "VarFileInfo"

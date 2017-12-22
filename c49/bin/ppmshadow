@@ -1,0 +1,190 @@
+#!/usr/bin/perl
+#  Change the path name in the line above to wherever Perl lives
+#  on your system.  This script was tested with Perl 4.0, patch
+#  level 36.
+
+#                         P P M S H A D O W
+
+#            by John Walker  --  http://www.fourmilab.ch/
+                           $version = 1.2;
+#   --> with minor changes by Bryan Henderson.  See above web site for
+#   the real John Walker work, named pnmshadow.
+
+#   Pnmshadow is a brutal sledgehammer implemented in Perl which
+#   adds attractive shadows to images, as often seen in titles
+#   of World-Wide Web pages.  This program does not actually
+#   *do* any image processing--it simply invokes components of
+#   Jef Poskanzer's PBMplus package (which must be present on
+#   the path when this script is run) to bludgeon the source
+#   image into a plausible result.
+#
+#               This program is in the public domain.
+#
+#
+
+    #   Process command line options
+
+    $convolve = 11;                   # Default blur convolution kernel size
+    $purge = 1;                       # Set to 0 to preserve intermediate files
+    $translucent = 0;                 # Default not translucent
+
+    while (@ARGV) {
+        $arg = shift;
+        if ((substr($arg, 0, 1) eq '-') && (length($arg) > 1)) {
+            $opt = substr($arg, 1, 1);
+            $opt =~ tr/A-Z/a-z/;
+            if ($opt eq 'b') {        # -B n  --  Blur size
+                if (!defined($convolve = shift)) {
+                    die("Argument missing after -b option\n");
+                }
+                if (($convolve < 11) && (($convolve & 1) == 0)) {
+                    $convolve++;      # Round up even kernel specification
+                }
+            } elsif ($opt eq 'k') {   # -K  --  Keep temporary files
+                $purge = 0;
+            } elsif ($opt eq 't') {   # -T  --  Translucent image
+                $translucent = 1;
+            } elsif ($opt eq 'u' || $opt eq '?') {
+                print(STDERR "ppmshadow  --  Add simulated shadow to anymap.\n");
+                if (defined $version) {
+                    print(STDERR "               Version $version.\n"); 
+                }
+                print(STDERR "Usage: ppmshadow [options] [pnmfile] \n");
+                print(STDERR "Options:\n");
+                print(STDERR "    -B n       Set blur size to n pixels\n");
+                print(STDERR "    -K         Keep intermediate temporary files from run\n");
+                print(STDERR "    -T         Cast shadows of translucent objects\n");
+                print(STDERR "    -U         Print this message\n");
+                print(STDERR "    -X n       Shift shadow n pixels to the right\n");
+                print(STDERR "    -Y n       Shift shadow n pixels down\n");
+                exit(0);
+            } elsif ($opt eq 'x') {   # -X n  --  X offset
+                if (!defined($xoffset = shift)) {
+                    die("Argument missing after -x option\n");
+                }
+                if ($xoffset < 0) {
+                    $xoffset = -$xoffset;
+                }
+            } elsif ($opt eq 'y') {   # -Y n  --  Y offset
+                if (!defined($yoffset = shift)) {
+                    die("Argument missing after -x option\n");
+                }
+                if ($yoffset < 0) {
+                    $yoffset = -$xoffset;
+                }
+            }
+        } else {
+            if (defined $ifile) {
+                die("Duplicate input file specification.");
+            }
+            $ifile = $arg;            # Input file name
+        }
+    }
+
+    #   Apply defaults for arguments not specified
+
+    if (!(defined $xoffset)) {
+        #   Xoffset defaults to half the blur distance
+        $xoffset = int($convolve / 2);
+    }
+
+    if (!(defined $yoffset)) {
+        #   Yoffset defaults to Xoffset, however specified
+        $yoffset = $xoffset;
+    }
+
+use File::Temp "tempdir";
+my $fname = tempdir("PPMshadow.XXXXXXX", CLEANUP => $purge)
+    || die "Cant create tmpdir"; #219019
+
+    $stdin = 0;
+    if ((!(defined $ifile)) || ($ifile eq '-')) {
+        #   Input default to standard input
+        $stdin = 1;
+        $ifile = "$fname/0.ppm";
+        system("cat >$fname/0.ppm");
+    }
+
+    #   Determine the size of the source image
+
+    $a = `pnmfile $ifile`;
+    $a =~ m/.*\sP[BGP]M\s.*,\s*(\d*)\sby\s(\d*)/;
+    $xsize = $1;
+    $ysize = $2;
+
+    #   Create a blank background bitmap the size of the source bitmap
+
+    system("pnmcut 0 0 1 1 $ifile | pnmscale -xsize $xsize -ysize $ysize >$fname/5.ppm");
+
+    #   Create positive mask file from input image
+
+    system("pnmarith -difference $ifile $fname/5.ppm | pnminvert | ppmtopgm | pgmtopbm -thresh -value 1.0 >$fname/1.ppm");
+
+    #   Create convolution kernel file to generate shadow
+
+    open(OF, ">$fname/2.ppm");
+    $ckern = $convolve <= 11 ? $convolve : 11;
+    printf(OF "P2\n$ckern $ckern\n%d\n", $ckern * $ckern * 2);
+    $a = ($ckern * $ckern) + 1;
+    for ($i = 0; $i < $ckern; $i++) {
+        for ($j = 0; $j < $ckern; $j++) {
+            printf(OF "%d%s", $a, ($j < ($ckern - 1)) ? " " : "\n");
+        }
+    }
+    close(OF);
+
+    if ($translucent) {
+
+        #   Convolve the input colour image with the kernel
+        #   to create a translucent shadow image.
+
+        system("pnmconvol $fname/2.ppm $ifile >$fname/10.ppm");
+        while ($ckern < $convolve) {
+            system("pnmsmooth $fname/10.ppm >$fname/10a.ppm");
+            system("mv $fname/10a.ppm $fname/10.ppm");
+            $ckern++;
+        }
+    } else {
+
+        #   Convolve the positive mask with the kernel to create shadow
+
+        system("pnmconvol $fname/2.ppm $fname/1.ppm >$fname/3.ppm");
+        while ($ckern < $convolve) {
+            system("pnmsmooth $fname/3.ppm >$fname/3a.ppm");
+            system("mv $fname/3a.ppm $fname/3.ppm");
+            $ckern++;
+        }
+
+        #   Multiply the shadow by the background colour
+
+        system("pnmarith -multiply $fname/3.ppm $fname/5.ppm >$fname/10.ppm");
+    }
+
+    #   Cut an offset rectangle from the shadow image
+
+    $i = $xsize - $xoffset;
+    $j = $ysize - $yoffset;
+    system("pnmcut 0 0 $i $j $fname/10.ppm >$fname/4.ppm");
+
+    #   Create offset shadow image
+
+    system("pnmpaste -replace $fname/4.ppm $xoffset $yoffset $fname/5.ppm >$fname/6.ppm");
+
+    #   Create inverse mask
+
+    system("pnminvert $fname/1.ppm >$fname/7.ppm");
+
+    #   Multiply original image by inverse mask
+
+    system("pnmarith -multiply $ifile $fname/7.ppm >$fname/8.ppm");
+
+    #   Multiply shadow by mask
+
+    system("pnmarith -multiply $fname/6.ppm $fname/1.ppm >$fname/9.ppm");
+
+    #   Add masked image and shadow to obtain result, which this
+    #   last call on pnmarith sends to standard output.
+
+    system("pnmarith -add $fname/8.ppm $fname/9.ppm");
+
+    # temporary files are automatically removed by tempdir

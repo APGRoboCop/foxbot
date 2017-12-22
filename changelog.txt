@@ -3,14 +3,28 @@
 ==============================
 
 --------------------------------------------------------------------------------
-Version 0.791
-??????-??-2017
+Version 0.791-beta2
+December-23-2017
 Updated by RoboCop
 --------------------------------------------------------------------------------
 
 - Added optimisation for Inline Function for both builds
 
-- Linux build optimised and tuned for newer Pentium arch
+- Linux build optimised and tuned for newer Pentium 4 arch
+
+- Both builds appear to perform well using older compilers as they appear more stable (GCC 4.8 & VS2013)
+
+- h_export.cpp Linux 'h_Library' can now detect both old and new TFC server build
+
+- Added teleport waypoints for baconbowl_r and siege
+
+*  high_flag, mortality_l, ss_nyx_ectfc, alchimy_l2, bases2k3 and hellion (coming soon!)
+  
+>> Known issues - botdontmove and bot_team_balance cvars not operational
+
+>> Adjusting the bot_job_think.cpp for equalising and to balance the bot task priority
+
+>> bot_chat doesn't seem to be functioning
 
 --------------------------------------------------------------------------------
 Version 0.79
@@ -45,10 +59,6 @@ Updated by RoboCop
 - Added teleport waypoints for warpath, shutdown2, avanti, schtop, monkey_l, ksour and palermo
 
 - New waypoints for 55, openfire_lowgrens, rats, rats2, rats3, xpress2k4, destroy_l, phantom, rats_cmd and tf2fort
-  *baconbowl_r, siege, high_flag, mortality_l, ss_nyx_ectfc, alchimy_l2, bases2k3 and hellion (coming soon!)
-  
->> Known issues - botdontmove and bot_team_balance cvars not operational and experimenting with bot_job_think.cpp
-for equalising and to balance the bot task priority to act more professional
 
 --------------------------------------------------------------------------------
 Version 0.78

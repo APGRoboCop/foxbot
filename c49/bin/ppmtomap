@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# This program exists for backward compatibility.
+
+pnmcolormap all $@

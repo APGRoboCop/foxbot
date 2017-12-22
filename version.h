@@ -38,7 +38,7 @@
  * If not, we provide it here.
  */
 #ifndef VERSION
-#  define VERSION 0.791
+#  define VERSION 0.791-b2
 #endif
 
 /*
@@ -77,8 +77,8 @@ extern char *COMPILE_DATE;
  */
 #define VDATE		COMPILE_DATE
 #define VNAME		"FoxBot"
-#define VAUTHOR		"Tom Simpson, RoboCop <robocop@lycos.co.uk>"
-#define VURL		"http://www.apg-clan.org"
+#define VAUTHOR		"Tom Simpson & RoboCop <robocop@lycos.co.uk>"
+#define VURL		"www.apg-clan.org"
 
 
 #endif /* _VERSION_H_ */

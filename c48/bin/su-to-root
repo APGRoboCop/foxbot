@@ -1,0 +1,119 @@
+#!/bin/bash
+
+if test -r /etc/su-to-rootrc; then
+. /etc/su-to-rootrc
+fi
+
+if test -r ~/.su-to-rootrc; then
+. ~/.su-to-rootrc
+fi
+
+PRIV=root
+COMMAND=
+NEEDS=text
+
+gettext=$(which gettext 2>/dev/null)
+
+transl() {
+  txt="$1";
+  shift;
+  if [ -n "$gettext" ]; then 
+    txt="$(gettext su-to-root "$txt")";
+  fi
+  printf "$txt" "$@"
+}
+
+eshell() {
+   getent passwd $1 | cut -f7 -d:
+}
+
+usage () {
+  transl 'usage: %s [-X] [-p <user>] -c <command>
+  -c command: command to execute as a string (mandatory)
+  -p <user>: user to switch to (default: root)
+  -X: command is a X11 program\n' "$0" >&2
+  exit 1
+}
+
+for i in "$@"; do
+   case "$prev" in
+     -p)
+       PRIV="$i";;
+     -c)
+       COMMAND="$i";;
+     -X) 
+       NEEDS="X11";;
+   esac
+   prev="$i"
+done
+
+if [ -z "$COMMAND" ] ; then
+   usage;
+fi
+
+euid=$(id -u)
+privid=$(id -u $PRIV)
+if test "$euid" = "$privid"; then
+  sh -c "$COMMAND"
+else
+  case $NEEDS in
+  text)
+    if test "$euid" != 0; then
+      transl 'About to execute %s.\n' "$COMMAND"
+      transl 'This command needs %s privileges to be executed.\n' "$PRIV"
+    fi
+    PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/bin/X11:/usr/local/sbin:/usr/local/bin
+    SHELL=`eshell $PRIV`
+    case $SU_TO_ROOT_SU in
+      sux)  suname=sux; pwuser="$PRIV"; cmd='sux  -p "$PRIV" "$COMMAND"';;
+      sudo) suname=sudo;pwuser="$USER"; cmd='sudo -u "$PRIV" sh -c "$COMMAND"';;
+      *)    suname=su;  pwuser="$PRIV"; cmd='su   -p "$PRIV" -c "$COMMAND"';;
+    esac
+    transl 'Using %s...\n' "$suname"
+    transl 'Enter %s password at prompt.\n' "$pwuser"
+    yesexpr=$(locale yesexpr)
+    while ! eval $cmd; do
+      transl 'Incorrect password or command failed. Try again? (y/N)'
+      read ans
+      if echo "$ans" | perl -e "<> =~ /$yesexpr/ and exit(1);"; then
+        exit 1
+      fi
+    done;;
+  X11)
+    if test -z "$SU_TO_ROOT_X"; then
+      if which gksu >/dev/null 2>&1 ; then
+        SU_TO_ROOT_X=gksu
+        if test "X$KDE_FULL_SESSION" = "Xtrue" ; then
+          if which kdesu >/dev/null 2>&1 ; then
+            SU_TO_ROOT_X=kdesu
+          elif test -x /usr/lib/kde4/libexec/kdesu ; then
+            SU_TO_ROOT_X=kde4su
+          fi;
+        fi;
+      elif which kdesu >/dev/null 2>&1 ; then 
+        SU_TO_ROOT_X=kdesu
+      elif test -x /usr/lib/kde4/libexec/kdesu ; then
+        SU_TO_ROOT_X=kde4su
+      elif which ktsuss >/dev/null 2>&1 ; then
+        SU_TO_ROOT_X=ktsuss
+      elif which sux >/dev/null 2>&1 ; then 
+        SU_TO_ROOT_X=sux
+      else
+        SU_TO_ROOT_X=su-to-root
+      fi
+    fi
+    case $SU_TO_ROOT_X in
+      gksu) gksu -u "$PRIV" "$COMMAND";;
+      gksudo) gksudo -u "$PRIV" "$COMMAND";;
+      kdesu) kdesu -u "$PRIV" "$COMMAND";;
+      kdesudo) kdesudo -u "$PRIV" "$COMMAND";;
+      kde4su) /usr/lib/kde4/libexec/kdesu -u "$PRIV" "$COMMAND";;
+      ktsuss) ktsuss -u "$PRIV" "$COMMAND";;
+      sux) env SU_TO_ROOT_SU=sux \
+        x-terminal-emulator -e su-to-root -p "$PRIV" -c "$COMMAND";;
+  # As a last resort, open a new x-terminal-emulator and prompt for the password
+  # Do not use -X here!
+      *) x-terminal-emulator -e su-to-root -p "$PRIV" -c "$COMMAND";;
+    esac;;
+  esac
+fi

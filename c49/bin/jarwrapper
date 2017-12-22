@@ -1,0 +1,57 @@
+#!/bin/sh --
+
+set -e
+
+JAR=$1
+shift
+
+if [  -z "$JAR" ]; then
+   echo "Jarwrapper must be run with a jar as the first parameter. Doing so via binfmt_misc is a good way to do it"
+   exit 1
+fi
+
+JAR="`readlink -f "$JAR"`"
+TEMP="`mktemp -d`"
+
+(cd "$TEMP"; fastjar xf "$JAR" META-INF/MANIFEST.MF)
+
+NEW_JAVA_HOMES="$(perl -0nE 's{\r?\n\s}{}gsm; print $1 if m{^Debian-Java-Home:\s*([^\r\n]+)}m;' "$TEMP/META-INF/MANIFEST.MF")"
+JAVAOPTS="$(perl -0nE 's{\r?\n\s}{}gsm; print $1 if m{^Debian-Java-Parameters:\s*([^\r\n]+)}m;' "$TEMP/META-INF/MANIFEST.MF")"
+rm -rf "$TEMP"
+
+for i in $NEW_JAVA_HOMES; do
+   if [ -x "$i/bin/java" ]; then
+      JAVA="$i/bin/java"
+      JAVA_HOME="$i"
+   elif [ -x "$i/jre/bin/java" ]; then
+      JAVA="$i/jre/bin/java"
+      JAVA_HOME="$i/jre"
+   fi
+done
+
+if [ -z "$JAVA" ]; then
+   JAVA=java
+fi
+
+MULTIARCH_LIBRARY_PATH_32BIT="/usr/lib/jni:/usr/lib/arm-linux-gnueabi/jni:/usr/lib/arm-linux-gnueabihf/jni:/usr/lib/i386-gnu/jni:/usr/lib/i386-linux-gnu/jni:/usr/lib/i386-kfreebsd-gnu/jni:/usr/lib/mips-linux-gnu/jni:/usr/lib/mipsel-linux-gnu/jni:/usr/lib/powerpc-linux-gnu/jni:/usr/lib/powerpc-linux-gnuspe/jni:/usr/lib/sparc-linux-gnu/jni:/usr/lib/x86_64-linux-gnux32/jni:/usr/lib/hppa-linux-gnu/jni:/usr/lib/sh4-linux-gnu/jni:/usr/lib/m68k-linux-gnu/jni"
+
+MULTIARCH_LIBRARY_PATH_64BIT="/usr/lib/jni:/usr/lib/alpha-linux-gnu/jni:/usr/lib/x86_64-linux-gnu/jni:/usr/lib/aarch64-linux-gnu/jni:/usr/lib/x86_64-kfreebsd-gnu/jni:/usr/lib/powerpc64-linux-gnu/jni:/usr/lib/powerpc64le-linux-gnu/jni:/usr/lib/s390x-linux-gnu/jni:/usr/lib/sparc64-linux-gnu/jni"
+
+if which "$JAVA" >/dev/null 2>&1; then
+    if java --version 2>&1 | grep "GNU libgcj" > /dev/null; then
+        # Let GNU gij handle the library path by itself
+        export LD_LIBRARY_PATH=/usr/lib/jni
+        exec $JAVA $JAVAOPTS -jar "$JAR" "$@"
+    fi
+    if java -d32 2>&1 | grep "does not support" > /dev/null; then
+        # 64bit
+        export LD_LIBRARY_PATH=$MULTIARCH_LIBRARY_PATH_64BIT
+        exec $JAVA $JAVAOPTS -Djava.library.path=$MULTIARCH_LIBRARY_PATH_64BIT -jar "$JAR" "$@"
+    else
+        # 32bit
+        export LD_LIBRARY_PATH=$MULTIARCH_LIBRARY_PATH_32BIT
+        exec $JAVA $JAVAOPTS -Djava.library.path=$MULTIARCH_LIBRARY_PATH_32BIT -jar "$JAR" "$@"
+    fi
+else
+    echo "In order to run Java programs you must install a compatible JRE. If you don't know what JRE you need, default-jre is probably a good bet"
+fi

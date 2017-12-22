@@ -1,0 +1,59 @@
+#!/bin/sh -e
+#
+#    ecryptfs-find - use inode numbers to match encrypted/decrypted filenames
+#    Copyright (C) 2011 Dustin Kirkland
+#    Copyright (C) 2011 Sergio Mena de la Cruz
+#
+#    Authors: Dustin Kirkland <kirkland@ubuntu.com>
+#             Sergio Mena de la Cruz
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, version 2 of the License.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+if [ ! -e "$1" ]; then
+	echo "ERROR: [$1] not found" 1>&2
+	exit 1
+fi
+
+# Use one utility for both directions; same method is used
+case "$1" in
+	*ECRYPTFS_FNEK_ENCRYPTED.*)
+		direction="decrypt"
+	;;
+	*)
+		direction="encrypt"
+	;;
+esac
+
+# Grab the target inode number
+inum=$(ls -aid "$1" | awk '{print $1}')
+mounts=
+
+# Process /proc/mounts
+while read lower upper fstype opts dump pass; do
+	[ "$fstype" = "ecryptfs" ] || continue
+	if [ "$direction" = "encrypt" ]; then
+		find="$lower"
+	else
+		find="$upper"
+	fi
+	# Match against filesystem or mountpoint, build list of
+	# mounts to search
+	if [ -r "$find" ] && [ -x "$find" ]; then
+		mounts="$mounts $find"
+	fi
+done < /proc/mounts
+
+# Do the search
+for m in $mounts; do
+	find "$m/" -inum "$inum"
+done

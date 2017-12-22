@@ -85,7 +85,7 @@ extern int max_teams;
 
 extern bot_weapon_t weapon_defs[MAX_WEAPONS];
 
-extern int flf_bug_fix;
+//extern int flf_bug_fix;
 
 extern int CheckTeleporterExitTime;
 
@@ -141,7 +141,7 @@ struct msg_com_struct msg_com[MSG_MAX];
 char msg_msg[64][MSG_MAX];
 
 #define PLAYER_SEARCH_RADIUS 50.0
-#define FLF_PLAYER_SEARCH_RADIUS 60.0
+//#define FLF_PLAYER_SEARCH_RADIUS 60.0
 
 #define GETPLAYERAUTHID (*g_engfuncs.pfnGetPlayerAuthId)
 

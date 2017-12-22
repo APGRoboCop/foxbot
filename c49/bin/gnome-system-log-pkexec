@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if test -r /var/log/syslog ; then
+	exec /usr/bin/gnome-system-log "$@"
+else
+	pkexec /usr/bin/gnome-system-log "$@"
+	# Run unprivileged if the user dismissed the auth dialog
+	if [ $? -eq 126 ] ; then
+		exec /usr/bin/gnome-system-log "$@"
+	fi
+fi

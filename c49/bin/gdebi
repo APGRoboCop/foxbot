@@ -1,0 +1,117 @@
+#! /usr/bin/python3
+#
+# Copyright (c) 2005-2009 Canonical Ltd
+#
+# AUTHOR:
+# Michael Vogt <mvo@ubuntu.com>
+#
+# This file is part of GDebi
+#
+# GDebi is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as published
+# by the Free Software Foundation; either version 2 of the License, or (at
+# your option) any later version.
+#
+# GDebi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with GDebi; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+
+# silly py3 compat, py3.3 should make this unneeded
+try:
+    unicode
+except NameError:
+    unicode = lambda *args: args[0]
+
+import sys
+import os.path
+import gettext
+from gettext import gettext as _
+from re import findall
+
+from optparse import OptionParser
+from GDebi.GDebiCli import GDebiCli
+from GDebi.Version import VERSION
+
+# FIXME: - add "--assume-yes" option
+#        - add check for removal of essential packages
+
+if __name__ == "__main__":
+    localesApp="gdebi"
+    localesDir="/usr/share/locale"
+    gettext.bindtextdomain(localesApp, localesDir)
+    gettext.textdomain(localesApp)
+
+    usage = unicode(_("usage: %prog [options] filename\n"
+                      "For a graphical version run gdebi-gtk\n"),"UTF-8")
+    parser = OptionParser(usage=usage, version = VERSION)
+    parser.add_option("-n", "--non-interactive",
+                      action="store_true", dest="non_interactive",
+                      default=False,
+                      help=unicode(_("Run non-interactive (dangerous!)"),"UTF-8"))
+    parser.add_option("-o", "--option",
+                      action="append", dest="apt_opts",
+                      default=[],
+                      help=unicode(_("Set an APT configuration option"),"UTF-8"))
+    parser.add_option("-q", "--quiet",
+                      action="store_true", dest="quiet",
+                      default=False,
+                      help=unicode(_("Do not show progress information"),"UTF-8"))
+    parser.add_option("--apt-line",
+                      action="store_true", dest="apt_line",
+                      default=False,
+                      help=unicode(_("Simulate only and print a apt-get install compatible line to stderr"), "UTF-8"))
+    parser.add_option("--root", dest="rootdir", default="/",
+                      help=unicode(_("Use alternative root dir"), "UTF-8"))
+    (options, args) = parser.parse_args()
+
+    if len(args) == 0:
+        parser.print_help()
+        sys.exit(1)
+
+    if not os.path.exists(args[0]):
+        sys.stderr.write(_("gdebi error, file not found: %s\n" % args[0]))
+        sys.exit(1)
+
+    try:
+        debi = GDebiCli(options)
+    except SystemError as e:
+        print("Error opening the cache:\n%s" % e)
+        sys.exit(1)
+    if not debi.open(args[0]):
+        sys.exit(1)
+
+    if options.apt_line == True:
+        (install, remove, unauthenticated) = debi._deb.required_changes
+        print(" ".join(install))
+        print(" ".join([pkg+"-" for pkg in remove]))
+        sys.exit(0)
+
+    if options.non_interactive == True:
+        if os.getuid() != 0:
+            print(_("Need to be root to install packages"))
+            sys.exit(1)
+        sys.exit(debi.install())
+
+    # show information
+    debi.show_dependencies()
+    debi.show_description()
+    # check if we actually can install it
+    if os.getuid() != 0:
+        print(_("Need to be root to install packages"))
+        sys.exit(1)
+    msg =  _("Do you want to install the software package? [y/N]:")
+    sys.stdout.write(msg)
+    sys.stdout.flush()
+    res = sys.stdin.readline()
+    try:
+        c = findall("[[(](\S+)/\S+[])]", msg)[0].lower()
+    except IndexError:
+        c = "y"
+    if res.lower().startswith(c):
+        sys.exit(debi.install())

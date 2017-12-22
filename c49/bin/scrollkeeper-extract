@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Wrapper around xsltproc to mimic scrollkeeper-extract.
+#
+# Note that scrollkeeper internally uses libxslt for
+# this, so this method is cheaper and achieves the same result
+
+print_usage()
+{
+  echo -e "Usage: "
+  echo -e "`basename $0` <xml file> <stylesheet 1> <output file 1> <stylesheet 2> <output file 2> ..."
+}
+
+if [[ $# < 2 ]]
+then
+  print_usage
+  exit 0
+fi
+
+infile=$1
+shift 1
+
+while true; do
+  xsltproc --xinclude --xincludestyle $1 $infile > $2
+  #echo "xml: $infile style: $1 out: $2"
+  shift 2
+  if [[ $# < 2 ]];
+  then
+    break
+  fi
+done

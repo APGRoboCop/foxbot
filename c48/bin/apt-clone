@@ -1,0 +1,148 @@
+#! /usr/bin/python3
+# Copyright (C) 2011 Canonical
+#
+# Authors:
+#  Michael Vogt
+#
+# This program is free software; you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation; version 3.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+
+from __future__ import print_function
+
+import argparse
+import os
+import sys
+
+from apt_clone import AptClone
+
+
+if __name__ == "__main__":
+
+    # command line parser
+    parser = argparse.ArgumentParser(description="Clone/restore package info")
+    parser.add_argument("--debug", action="store_true", default=False,
+                        help="enable debug output")
+    subparser = parser.add_subparsers(title="Commands")
+    # info
+    command = subparser.add_parser(
+        "info",
+        help="info about a apt-clone archive")
+    command.add_argument("source")
+    command.set_defaults(command="info")
+    # clone
+    command = subparser.add_parser(
+        "clone",
+        help="create a clone-file into <destination>. An alternative source dir can be specified with --source.")
+    command.add_argument("--source", default="/",
+                         help="The source dir of the system or chroot, usually '/'")
+    command.add_argument("destination")
+    command.add_argument("--with-dpkg-repack",
+                         action="store_true", default=False,
+                         help="add no longer downloadable package to the state bundle (that can make it rather big)")
+    command.add_argument("--with-dpkg-status",
+                         action="store_true", default=False,
+                         help="include full copy of dpkg-status file, mostly useful for debugging")
+    command.add_argument("--extra-files", nargs='*',
+                         help="include extra files (glob)")
+    command.set_defaults(command="clone")
+    # restore
+    command = subparser.add_parser(
+        "restore",
+        help="restore a clone file from <source>. An alternative destination can be given with --destination.")
+    command.add_argument("source")
+    command.add_argument("--destination", default="/")
+    command.add_argument("--simulate", action="store_true", default=False)
+    command.add_argument(
+        "--rewrite-server",
+        help="rewrite all URIs in sources.list to the specified url")
+    command.add_argument("--exclude", nargs='*',
+                         help="exclude the listed package names from the restore")
+    command.set_defaults(command="restore")
+    # restore on new distro
+    command = subparser.add_parser(
+        "restore-new-distro",
+        help="restore a clone file from <source> to <destination> and try "\
+             "upgrading along the way. this can be used so that the current "\
+             "release is cloned, a new install is done and then the old clone "\
+             "is installed")
+    command.add_argument("source")
+    command.add_argument("new_distro_codename")
+    command.add_argument("--destination", default="/")
+    command.add_argument("--simulate", action="store_true", default=False)
+    command.set_defaults(command="restore-new-distro")
+    # show-diff
+    command = subparser.add_parser(
+        "show-diff",
+        help="show the difference of a clone file from <source> to the system. "
+             "An alternative destination can be given with --destination.")
+    command.add_argument("source")
+    command.add_argument("--destination", default="/")
+    command.set_defaults(command="show-diff")
+
+    # parse
+    args = parser.parse_args()
+    if not hasattr(args, "command"):
+        parser.error("no command specified")
+    if args.debug:
+        import logging
+        logging.basicConfig(level=logging.DEBUG)
+
+
+    # do the actual work
+    clone = AptClone()
+    if args.command == "info":
+        info = clone.info(args.source)
+        print(info)
+    if args.command == "clone":
+        clone.save_state(args.source, args.destination,
+                         args.with_dpkg_repack, args.with_dpkg_status,
+                         extra_files=args.extra_files)
+        print("not installable: %s" % ", ".join(clone.not_downloadable))
+        print("version mismatch: %s" % ", ".join(clone.version_mismatch))
+        if not args.with_dpkg_repack:
+            print("\nNote that you can use --with-dpkg-repack to include "
+                  "those packges in the clone file.")
+    elif args.command == "restore":
+        if not os.path.exists(args.source):
+            print("can not find source file '%s'" % args.source)
+            sys.exit(1)
+        if args.simulate:
+            miss = clone.simulate_restore_state(args.source, args.exclude)
+            print("missing: %s" % ",".join(sorted(list(miss))))
+        else:
+            clone.restore_state(args.source, args.destination,
+                                args.exclude,
+                                mirror=args.rewrite_server)
+    elif args.command == "show-diff":
+        clone.show_diff(args.source, args.destination)
+    elif args.command == "restore-new-distro":
+
+        # this is a bit of magic, the idea is that if we clone into a new
+        # release and we are on it already we do not want to remove
+        # packages because they are probably new defaults pkgs. If however
+        # we are not yet on the new release its fine to remove installed
+        # pkgs as part of the upgrade
+        import lsb_release
+        codename = lsb_release.get_lsb_information()["CODENAME"]
+        if (args.new_distro_codename and args.new_distro_codename == codename):
+            protect_installed = True
+        else:
+            protect_installed = False
+
+        if args.simulate:
+            miss = clone.simulate_restore_state(
+                args.source, None, args.new_distro_codename)
+            print("missing: %s" % ",".join(sorted(list(miss))))
+        else:
+            clone.restore_state(
+                args.source, args.destination, new_distro=args.new_distro_codename, protect_installed=protect_installed)

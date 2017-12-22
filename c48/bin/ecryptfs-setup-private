@@ -1,0 +1,466 @@
+#!/bin/sh
+# This script sets up an ecryptfs mount in a user's ~/Private
+#
+# Originally ecryptfs-setup-pam-wrapped.sh by Michael Halcrow, IBM
+#
+# Ported for use on Ubuntu by Dustin Kirkland <kirkland@ubuntu.com>
+# Copyright (C) 2008 Canonical Ltd.
+# Copyright (C) 2007-2008 International Business Machines
+PRIVATE_DIR="Private"
+WRAPPING_PASS="LOGIN"
+ECRYPTFS_DIR="/home/.ecryptfs"
+PW_ATTEMPTS=3
+TEXTDOMAIN="ecryptfs-utils"
+MESSAGE="$(gettext 'Enter your login passphrase')"
+CIPHER="aes"
+KEYBYTES="16"
+FNEK=
+
+# Zero out user-defined GREP_OPTIONS, such as --line-number
+GREP_OPTIONS=
+
+usage() {
+	echo "
+Usage:
+
+$0 [-f|--force] [-w|--wrapping] [--nopwcheck] [-n|--no-fnek]
+  [-u|--username USER] [-l|--loginpass LOGINPASS]
+  [-m|--mountpass MOUNTPASS]
+
+ -f, --force      Force overwriting of an existing setup
+ -w, --wrapping   Use an independent wrapping passphrase,
+                  different from the login passphrase
+ -n, --no-fnek    Do not encrypt filenames; If this flag is
+                  omitted, and the kernel supports filename
+                  encryption, then filenames will be encrypted
+ -u, --username   Username for encrypted private mountpoint,
+                  defaults to yourself
+ -l, --loginpass  Login/Wrapping passphrase for USER,
+                  used to wrap MOUNTPASS
+ --nopwcheck      Do not check the validity of the specified
+                  login password (useful for LDAP user accounts)
+ --noautomount    Setup this user such that the encrypted private
+                  directory is not automatically mounted on login
+ --noautoumount   Setup this user such that the encrypted private
+                  directory is not automatically unmounted at
+                  logout
+ -m, --mountpass  Passphrase for mounting the ecryptfs directory,
+                  defaults to randomly generated $KEYBYTES bytes
+ -b, --bootstrap  Bootstrap a new user's entire home directory
+                  Generates a random mount passphrase, which
+		  will be wrapped when the new login passphrase
+		  is set. SHOULD ONLY BE CALLED FROM 'adduser'.
+ --undo           Provide instructions on how to undo an
+                  encrypted private setup
+
+   Be sure to properly escape your parameters according to your
+   shell's special character nuances, and also surround the
+   parameters by double quotes, if necessary.
+"
+	exit 1
+}
+
+undo_msg() {
+	echo "
+In the event that you want to remove your eCryptfs Private Directory setup,
+you will need to very carefully perform the following actions manually:
+
+ 1. Obtain your Private directory mountpoint
+   $ PRIVATE=\`cat ~/.ecryptfs/Private.mnt 2>/dev/null || echo \$HOME/$PRIVATE_DIR\`
+ 2. Ensure that you have moved all relevant data out of your \$PRIVATE directory
+ 3. Unmount your encrypted private directory
+   $ ecryptfs-umount-private
+ 4. Make your Private directory writable again
+   $ chmod 700 \$PRIVATE
+ 5. Remove \$PRIVATE, ~/.Private, ~/.ecryptfs
+    Note: THIS IS VERY PERMANENT, BE VERY CAREFUL
+   $ rm -rf \$PRIVATE ~/.Private ~/.ecryptfs
+ 6. Uninstall the utilities (this is specific to your Linux distribution)
+   $ sudo apt-get remove ecryptfs-utils libecryptfs0
+"
+}
+
+error() {
+	echo "$(gettext 'ERROR: ')" "$@" 1>&2
+	exit 1
+}
+
+error_testing() {
+	rm -f "$1" >/dev/null
+	shift
+	/sbin/umount.ecryptfs_private >/dev/null
+	error "$@"
+	exit 1
+}
+
+random_passphrase () {
+	bytes=$1
+	# Pull $1 of random data from /dev/random,
+	# and convert to a string of hex digits
+	od -x -N $bytes --width=$bytes /dev/random | head -n 1 | sed "s/^0000000//" | sed "s/\s*//g"
+}
+
+filename_encryption_available() {
+	version=$(cat /sys/fs/ecryptfs/version 2>/dev/null)
+	[ -z "$version" ] && error "$(gettext 'Cannot get ecryptfs version, ecryptfs kernel module not loaded?')"
+	[ $(($version & 0x100)) -eq 0 ] && return 1
+	return 0
+}
+
+filename_encryption_available && FNEK="--fnek"
+
+if [ ! -z "$SUDO_USER" ]; then
+	USER="$SUDO_USER"
+fi
+
+while [ ! -z "$1" ]; do
+	case "$1" in
+		-u|--username)
+                        USER="$2"
+			shift 2
+		;;
+		-l|--loginpass)
+			LOGINPASS="$2"
+			shift 2
+		;;
+		-m|--mountpass)
+			MOUNTPASS="$2"
+			shift 2
+		;;
+		-w|--wrapping)
+			WRAPPING_PASS="INDEPENDENT"
+			MESSAGE="$(gettext 'Enter your wrapping passphrase')"
+			shift 1
+		;;
+		-f|--force)
+			FORCE=1
+			shift 1
+		;;
+		--nopwcheck)
+			NOPWCHECK=1
+			shift 1
+		;;
+		--noautomount)
+			NOAUTOMOUNT=1
+			shift 1
+		;;
+		--noautoumount)
+			NOAUTOUMOUNT=1
+			shift 1
+		;;
+		--undo)
+			undo_msg
+			exit 0
+		;;
+		-b|--bootstrap)
+			[ `whoami` = "root" ] || error "$(gettext 'You must be root to bootstrap encrypt a home directory')"
+			BOOTSTRAP=1
+			MOUNTPASS=`random_passphrase $KEYBYTES`
+			RANDOM_MOUNTPASS=1
+			shift 1
+		;;
+		-n|--no-fnek)
+			FNEK=
+			shift 1
+		;;
+		*)
+			usage
+		;;
+	esac
+done
+
+# Prompt for the USER name, if not on the command line and not in the env
+if [ -z "$USER" ]; then
+	while [ true ]; do
+		echo -n "$(gettext 'Enter the username: ')"
+		USER=`head -n1`
+		echo
+		if [ -z "$USER" ]; then
+			echo "$(gettext 'ERROR: ')" "$(gettext 'You must provide a username')"
+			continue
+		else
+			# Verify that the user exists
+			if ! id "$USER" >/dev/null; then
+				echo "$(gettext 'ERROR: ')" "$(gettext 'User does not exist')" " [$USER]"
+				continue
+			fi
+			break
+		fi
+	done
+else
+	# Verify that the user exists
+	id "$USER" >/dev/null || error "$(gettext 'User does not exist')" "[$USER]"
+fi
+
+# Obtain USER's primary group
+GROUP=$(id -g $USER)
+
+# Check if the ecryptfs group exists, and user is member of ecryptfs group
+if grep -qs "^ecryptfs:" /etc/group; then
+	if ! id "$USER" | grep -qs "\(ecryptfs\)"; then
+	       error "$(gettext 'User needs to be a member of ecryptfs group')"
+	fi
+fi
+
+# Obtain the user's home directory
+HOME=`getent passwd "$USER" | awk -F: '{print $6}'`
+if [ ! -d "$HOME" ]; then
+	error "$(gettext 'User home directory does not exist')" "[$HOME]"
+fi
+
+if [ "$BOOTSTRAP" = "1" ]; then
+	# If we want to encrypt the entire homedir, we need the .ecryptfs
+	# config dir elsewhere, but linked into the homedir
+	mkdir -p -m 700 $ECRYPTFS_DIR/$USER/.ecryptfs 
+	ln -sf $ECRYPTFS_DIR/$USER/.ecryptfs $HOME/.ecryptfs
+	ln -sf $ECRYPTFS_DIR/$USER/.$PRIVATE_DIR $HOME/.$PRIVATE_DIR
+	MOUNTPOINT="$HOME"
+	CRYPTDIR="$ECRYPTFS_DIR/$USER/.$PRIVATE_DIR"
+else
+	mkdir -p -m 700 $HOME/.ecryptfs
+	MOUNTPOINT="$HOME/$PRIVATE_DIR"
+	CRYPTDIR="$HOME/.$PRIVATE_DIR"
+fi
+
+# Check for previously setup private directory
+if [ -s "$HOME/.ecryptfs/wrapped-passphrase" -a "$FORCE" != "1" ]; then
+	error "$(gettext 'wrapped-passphrase file already exists, use --force to overwrite.')"
+fi
+if [ -s "$HOME/.ecryptfs/$PRIVATE_DIR.sig" -a "$FORCE" != "1" ]; then
+	error "$PRIVATE_DIR.sig" "$(gettext 'file already exists, use --force to overwrite.')"
+fi
+
+# Check for active mounts
+grep -qs "$MOUNTPOINT " /proc/mounts && error "[$MOUNTPOINT]" "$(gettext 'is already mounted')"
+grep -qs "$CRYPTDIR " /proc/mounts && error "[$CRYPTDIR]" "$(gettext 'is already mounted')"
+
+# Check that the mount point and encrypted directory are empty (skip symlinks).
+# Perhaps one day we could provide a migration mode (using rsync or something),
+# but this would be VERY hard to do safely.
+count=`ls -Al "$MOUNTPOINT" 2>/dev/null | egrep -c "^[drwx-]{10}"`
+if [ "$count" != "0" ]; then
+	error "$MOUNTPOINT" "$(gettext 'must be empty before proceeding')"
+fi
+count=`ls -Al "$CRYPTDIR" 2>/dev/null | egrep -c "^[dlrwx-]{10}"`
+if [ "$count" != "0" ]; then
+	error "$CRYPTDIR" "$(gettext 'must be empty before proceeding')"
+fi
+
+stty_orig=`stty -g`
+# Prompt for the LOGINPASS, if not on the command line and not in the env
+if [ -z "$LOGINPASS" ] && ( [ "$BOOTSTRAP" != "1" ] || [ "$ECRYPTFS_MIGRATE" = "1" ] ); then
+	tries=0
+	while [ $tries -lt $PW_ATTEMPTS ]; do
+		stty -echo
+		echo -n "$MESSAGE [$USER]: "
+		LOGINPASS=`head -n1`
+		stty $stty_orig
+		echo
+		if [ $WRAPPING_PASS != "LOGIN" -o ! -x /sbin/unix_chkpwd ]; then
+			# If we can't check the accuracy of the user's entered
+			# passphrase, force them to type it twice (matching)
+			stty -echo
+			echo -n "$MESSAGE [$USER] (again): "
+			LOGINPASS2=`head -n1`
+			stty $stty_orig
+			echo
+			if [ "$LOGINPASS" != "$LOGINPASS2" ]; then
+				echo "$(gettext 'ERROR: ')" "$(gettext 'Wrapping passphrases must match')"
+			else
+				break
+			fi
+			tries=$(($tries + 1))
+			continue
+		fi
+		if [ -z "$LOGINPASS" ]; then
+			echo "$(gettext 'ERROR: ')" "$(gettext 'You must provide a login passphrase')"
+			tries=$(($tries + 1))
+		else
+			if [ "$NOPWCHECK" = "1" ]; then
+				echo "$(gettext 'INFO:')" "$(gettext 'Skipping password verification')"
+				break
+			else
+				if printf "%s\0" "$LOGINPASS" | /sbin/unix_chkpwd "$USER" nullok; then
+					break
+				else
+					echo "$(gettext 'ERROR: ')" "$(gettext 'Your login passphrase is incorrect')"
+					tries=$(($tries + 1))
+				fi
+			fi
+		fi
+	done
+	if [ $tries -ge $PW_ATTEMPTS ]; then
+		error "$(gettext 'Too many incorrect password attempts, exiting')"
+	fi
+fi
+
+# Prompt for the MOUNTPASS, if not on the command line and not in the env
+if [ -z "$MOUNTPASS" ]; then
+	tries=0
+	while [ $tries -lt $PW_ATTEMPTS ]; do
+		stty -echo
+		echo -n "$(gettext 'Enter your mount passphrase [leave blank to generate one]: ')"
+		MOUNTPASS=`head -n1`
+		stty $stty_orig
+		echo
+		if [ -z "$MOUNTPASS" ]; then
+			MOUNTPASS=`random_passphrase $KEYBYTES`
+			RANDOM_MOUNTPASS=1
+			break
+		else
+			stty -echo
+			echo -n "$(gettext 'Enter your mount passphrase (again): ')"
+			MOUNTPASS2=`head -n1`
+			stty $stty_orig
+			echo
+			if [ "$MOUNTPASS" != "$MOUNTPASS2" ]; then
+				echo "$(gettext 'ERROR: ')" "$(gettext 'Mount passphrases do not match')"
+				tries=$(($tries + 1))
+			else
+				break
+			fi
+		fi
+	done
+	if [ $tries -ge $PW_ATTEMPTS ]; then
+		error "$(gettext 'Too many incorrect passphrase attempts, exiting')"
+	fi
+fi
+
+echo
+echo "************************************************************************"
+echo "$(gettext 'YOU SHOULD RECORD YOUR MOUNT PASSPHRASE AND STORE IT IN A SAFE LOCATION.')"
+echo "  ecryptfs-unwrap-passphrase ~/.ecryptfs/wrapped-passphrase"
+echo "$(gettext 'THIS WILL BE REQUIRED IF YOU NEED TO RECOVER YOUR DATA AT A LATER TIME.')"
+echo "************************************************************************"
+echo
+
+###############################################################################
+
+# Setup private directory in home
+mkdir -m 700 -p "$CRYPTDIR" || error "$(gettext 'Could not create crypt directory')" "[$CRYPTDIR]"
+mkdir -m 700 -p "$MOUNTPOINT" || error "$(gettext 'Could not create mount directory')" "[$MOUNTPOINT]"
+ln -sf /usr/share/ecryptfs-utils/ecryptfs-mount-private.txt "$MOUNTPOINT"/README.txt
+ln -sf /usr/share/ecryptfs-utils/ecryptfs-mount-private.desktop "$MOUNTPOINT"/Access-Your-Private-Data.desktop
+chmod 500 "$MOUNTPOINT"
+
+# Setup ~/.ecryptfs directory
+if [ "$NOAUTOMOUNT" = "1" ]; then
+	echo "$(gettext 'INFO:')" "$HOME/$PRIVATE_DIR" "$(gettext 'will not be mounted on login')"
+else
+	touch $HOME/.ecryptfs/auto-mount || error "$(gettext 'Could not setup ecryptfs auto-mount')"
+fi
+if [ "$NOAUTOUMOUNT" = "1" ]; then
+	echo "$(gettext 'INFO:')" "$HOME/$PRIVATE_DIR" "$(gettext 'will not be unmounted on logout')"
+else
+	touch $HOME/.ecryptfs/auto-umount || error "$(gettext 'Could not setup ecryptfs auto-umount')"
+fi
+
+if [ "$WRAPPING_PASS" = "LOGIN" ]; then
+	rm -f $HOME/.ecryptfs/wrapping-independent || error "$(gettext 'Could not remove ecryptfs wrapping-independent')"
+else
+	touch $HOME/.ecryptfs/wrapping-independent || error "$(gettext 'Could not setup ecryptfs wrapping-independent')"
+fi
+
+
+# Backup any existing wrapped-passphrase or sig files; we DO NOT destroy this
+timestamp=`date +%Y%m%d%H%M%S`
+for i in "$HOME/.ecryptfs/wrapped-passphrase" "$HOME/.ecryptfs/$PRIVATE_DIR.sig"; do
+	if [ -s "$i" ]; then
+		mv -f "$i" "$i.$timestamp" || error "(gettext 'Could not backup existing data')" "[$i]"
+	fi
+done
+
+# Setup wrapped-passphrase file
+u=`umask`
+umask 377
+if [ -z "$LOGINPASS" ] && [ "$BOOTSTRAP" = "1" ]; then
+	# This will be wrapped by pam_ecryptfs's chauthtok as soon as the user
+	# chooses a password.  Until that happens (hopefully soon), standard
+	# file permissions (600) are all that's protecting it.  Write it to
+	# ramdisk, to keep it from leaking to the hard-drive.
+	temp=`mktemp /dev/shm/.ecryptfs-XXXXXX`
+	printf "%s" "$MOUNTPASS" > "$temp"
+	mv -f -T "$temp" "/dev/shm/.ecryptfs-$USER" || error "Could not create passphrase file"
+else
+	printf "%s\n%s" "$MOUNTPASS" "$LOGINPASS" | ecryptfs-wrap-passphrase "$HOME/.ecryptfs/wrapped-passphrase" - || error "$(gettext 'Could not wrap passphrase')"
+fi
+umask $u
+
+# Add the passphrase to current keyring
+# On subsequent logins, this should be handled by "pam_ecryptfs.so unwrap"
+response=`printf "%s" "$MOUNTPASS" | ecryptfs-add-passphrase $FNEK -`
+if [ $? -ne 0 ]; then
+	error "$(gettext 'Could not add passphrase to the current keyring')"
+fi
+sig=`echo "$response" | grep "Inserted auth tok" | sed "s/^.*\[//" | sed "s/\].*$//"`
+if ! echo "$sig" | egrep -qs "^[0-9a-fA-F]{$KEYBYTES,$KEYBYTES}$"; then
+	error "$(gettext 'Could not obtain the key signature')"
+fi
+temp=`mktemp`
+echo "$sig" > "$temp" || error "$(gettext 'Could not create signature file')" "[$HOME/.ecryptfs/$PRIVATE_DIR.sig]"
+mv "$temp" "$HOME/.ecryptfs/$PRIVATE_DIR.sig"
+which restorecon 2>/dev/null && restorecon "$HOME/.ecryptfs/$PRIVATE_DIR.sig" > /dev/null 2>&1
+temp=`mktemp`
+echo "$MOUNTPOINT" > "$temp" || error "$(gettext 'Could not create mountpoint file')" "[$HOME/.ecryptfs/$PRIVATE_DIR.mnt]"
+mv "$temp" "$HOME/.ecryptfs/$PRIVATE_DIR.mnt"
+which restorecon 2>/dev/null && restorecon "$HOME/.ecryptfs/$PRIVATE_DIR.mnt" > /dev/null 2>&1
+
+echo
+echo "$(gettext 'Done configuring.')"
+echo
+
+# Link the user and session keyrings
+keyctl link @u @s
+# Skip the tests if we're in bootstrap mode, but exit with the encrypted
+# homedir mounted
+if [ "$BOOTSTRAP" = "1" ]; then
+	# Force the mount here, since the root user has the key loaded,
+	# and the calling 'adduser' is about to copy over /etc/skel
+	# NOTE: it is the responsibility of 'adduser' to unmount!
+	# And ensure that $USER owns the files/dirs we've created as root
+	chown $USER:$GROUP "$CRYPTDIR" /dev/shm/.ecryptfs-$USER
+	chown -R $USER:$GROUP $ECRYPTFS_DIR/$USER
+	chown -R $USER:$GROUP $MOUNTPOINT
+	if [ "$FNEK" = "--fnek" ]; then
+		fnek_sig=`tail -n 1 "$HOME/.ecryptfs/$PRIVATE_DIR.sig"`
+		sig=`head -n 1 "$HOME/.ecryptfs/$PRIVATE_DIR.sig"`
+		sig_opt="ecryptfs_sig=$sig,ecryptfs_fnek_sig=$fnek_sig"
+	else
+		sig_opt="ecryptfs_sig=$sig"
+	fi
+	# Do the mount, and provide some helpful symlinks
+	mount -i -t ecryptfs -o "rw,$sig_opt,ecryptfs_cipher=$CIPHER,ecryptfs_key_bytes=$KEYBYTES" "$CRYPTDIR" "$MOUNTPOINT" || error "Could not mount"
+	ln -sf $ECRYPTFS_DIR/$USER/.ecryptfs $MOUNTPOINT/.ecryptfs
+	ln -sf $ECRYPTFS_DIR/$USER/.$PRIVATE_DIR $MOUNTPOINT/.$PRIVATE_DIR
+	chown -R $USER:$GROUP $ECRYPTFS_DIR/$USER
+	chown -R $USER:$GROUP $MOUNTPOINT
+	exit 0
+fi
+
+# Now let's perform some basic mount/write/umount/read sanity testing...
+echo "$(gettext 'Testing mount/write/umount/read...')"
+printf "%s" "$MOUNTPASS" | ecryptfs-add-passphrase $FNEK -
+/sbin/mount.ecryptfs_private || error "$(gettext 'Could not mount private ecryptfs directory')"
+temp=`mktemp "$MOUNTPOINT/ecryptfs.test.XXXXXX"` || error_testing "$temp" "$(gettext 'Could not create empty file')"
+random_data=`head -c 16000 /dev/urandom | od -x` || error_testing "$temp" "$(gettext 'Could not generate random data')"
+echo "$random_data" > "$temp" || error_testing "$temp" "$(gettext 'Could not write encrypted file')"
+md5sum1=`md5sum "$temp"` || error_testing "$temp" "$(gettext 'Could not read encrypted file')"
+/sbin/umount.ecryptfs_private || error_testing "$temp" "$(gettext 'Could not unmount private ecryptfs directory')"
+printf "%s" "$MOUNTPASS" | ecryptfs-add-passphrase $FNEK -
+/sbin/mount.ecryptfs_private || error_testing "$temp" "$(gettext 'Could not mount private ecryptfs directory (2)')"
+md5sum2=`md5sum "$temp"` || error_testing "$temp" "$(gettext 'Could not read encrypted file (2)')"
+rm -f "$temp"
+# Use ecryptfs-umount-private on the final run, to clear the used keys
+# out of the keyring
+ecryptfs-umount-private || error_testing "$temp" "$(gettext 'Could not unmount private ecryptfs directory (2)')"
+if [ "$md5sum1" != "$md5sum2" ]; then
+	error "$(gettext 'Testing failed.')"
+else
+	echo "$(gettext 'Testing succeeded.')"
+fi
+
+echo
+echo "$(gettext 'Logout, and log back in to begin using your encrypted directory.')"
+echo
+
+exit 0

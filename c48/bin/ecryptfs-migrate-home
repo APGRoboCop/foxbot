@@ -1,0 +1,206 @@
+#!/bin/sh
+# -*- sh-basic-offset: 4; sh-indentation: 4; tab-width: 4; indent-tabs-mode: t; sh-indent-comment: t; -*-
+# This script encrypts an user's home
+#
+# Written by Yan Li <yan.i.li@intel.com>, <yanli@gnome.org>
+# Copyright (C) 2010 Intel Corporation
+#
+# Modified by Dustin Kirkland <kirkland@ubuntu.com>
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+# 02111-1307, USA.
+
+set -e
+
+PRIVATE_DIR="Private"
+
+usage() {
+       echo "
+Usage:
+
+$0 -u USER
+
+ -u,--user       Migrate USER's home directory to an encrypted home directory
+
+WARNING: Make a complete backup copy of the non-encrypted data to
+another system or external media. This script is dangerous and, in
+case of an error, could result in data lost, or lock you out of your
+system!
+
+This program must be executed by root.
+
+"
+	exit 1
+}
+
+error() {
+	echo "$(gettext 'ERROR: ')" "$@" 1>&2
+	exit 1
+}
+
+warning() {
+	echo "$(gettext 'WARNING: ')" "$@" 1>&2
+}
+
+info() {
+	echo "$(gettext 'INFO: ')" "$@" 1>&2
+}
+
+assert_dir_empty() {
+	local DIR="$1"
+	if [ -e "$DIR" ]; then
+		# if $DIR is a directory, make sure it's empty
+		if [ -d "$DIR" ]; then
+			ls=$(ls -A "$DIR" | wc -l)
+			if [ "$ls" != "0" ]; then
+				echo 1>&2 "If you already have some data in directory $DIR,"
+				echo 1>&2 "please move all of these files and directories out of the way, and"
+				echo 1>&2 "follow the instructions in:"
+				echo 1>&2 "    ecryptfs-setup-private --undo"
+				echo 1>&2 
+				error "$DIR is not empty, cannot continue."
+			fi
+		else
+			error "$DIR exists but is not an empty directory, cannot continue."
+		fi
+	fi
+}
+
+# get user home by username
+get_user_home () {
+	local USER_NAME="$1"
+	local USER_HOME=$(getent passwd "$USER_NAME" | cut -d":" -f 6)
+	if [ -z "$USER_HOME" ]; then
+		error "Cannot find the home directory of $USER_NAME."
+	fi
+	echo "$USER_HOME"
+}
+
+sanity_check () {
+	local USER_NAME="$1"
+	local USER_HOME="$2"
+	if [ -e "$USER_HOME/.ecryptfs" ]; then
+		error "$USER_HOME appears to be encrypted already."
+	fi
+	# Check for rsync
+	if ! which rsync >/dev/null 2>&1; then
+		error "Please install the rsync package."
+	fi
+	# Check free space: make sure we have sufficient disk space
+	# available. To make a full copy, we will need at least 2.5x the
+	# disk usage of the target home directory.
+	info "Checking disk space, this may take a few moments.  Please be patient."
+	needed=$(du -s "$USER_HOME" | awk '{printf "%.0f", $1*2.5}')
+	free=$(df -P "$USER_HOME" | tail -n 1 | awk '{print $4}')
+	if [ $needed -gt $free ]; then
+		info "2.5x the size your current home directory is required to perform a migration."
+		info "Once the migration succeeds, you may recover most of this space by deleting the cleartext directory."
+		error "Not enough free disk space."
+	fi
+	assert_dir_empty "$USER_HOME/.$PRIVATE_DIR"
+	assert_dir_empty "$USER_HOME/.ecryptfs"
+	assert_dir_empty "/home/.ecryptfs/$USER_NAME"
+}
+
+encrypt_dir () {
+	local USER_NAME="$1"
+	local USER_HOME="$2"
+	if ! which lsof >/dev/null 2>&1; then
+		info "Please install lsof."
+		error "Can not tell whether $USER_HOME is in use or not."
+	fi
+	info "Checking for open files in $USER_HOME"
+	lsof=$(lsof +D "$USER_HOME" | wc -l)
+	if [ "$lsof" != "0" ]; then
+		info "The following files are in use:"
+		echo
+		lsof +D "$USER_HOME" | sed "s/^/    /"
+		echo
+		error "Cannot proceed."
+	fi
+	# start encryption
+	orig=$(mktemp /home/$USER_NAME.XXXXXXXX)
+	rm "$orig" && mv "$USER_HOME" "$orig"
+	chmod 700 "$orig"
+	mkdir -p -m 700 "$USER_HOME"
+	USER_GROUP=$(id -g "$USER_NAME")
+	chown "$USER_NAME:$USER_GROUP" "$USER_HOME" "$orig"
+	ECRYPTFS_SETUP_PRIVATE_ARGS=""
+	if [ -n "$LOGINPASS" ]; then
+		ECRYPTFS_SETUP_PRIVATE_ARGS="-l $LOGINPASS"
+	fi
+	if [ -n "$MOUNTPASS" ]; then
+		ECRYPTFS_SETUP_PRIVATE_ARGS="$ECRYPTFS_SETUP_PRIVATE_ARGS -m $MOUNTPASS"
+	fi
+	export ECRYPTFS_MIGRATE="1"
+	if ! ecryptfs-setup-private -u "$USER_NAME" -b $ECRYPTFS_SETUP_PRIVATE_ARGS; then
+		# too bad, something went wrong, we'll try to recover
+		rm -rf "$USER_HOME"
+		mv "$orig" "$USER_HOME"
+		exit 1
+	fi
+	info "Encrypted home has been set up, encrypting files now...this may take a while."
+	# Show progress, but on stderr, in case the user wants to filter that out
+	rsync -aP "$orig/" "$USER_HOME/" 1>&2
+	umount "$USER_HOME/"
+	echo
+	echo "========================================================================"
+	echo "Some Important Notes!"
+	echo
+	echo " 1. The file encryption appears to have completed successfully, however,"
+	echo "    $USER_NAME MUST LOGIN IMMEDIATELY, _BEFORE_THE_NEXT_REBOOT_,"
+	echo "    TO COMPLETE THE MIGRATION!!!"
+	echo
+	echo " 2. If $USER_NAME can log in and read and write their files, then the migration is complete,"
+	echo "    and you should remove $orig."
+	echo "    Otherwise, restore $orig back to $USER_HOME."
+	echo
+	echo " 3. $USER_NAME should also run 'ecryptfs-unwrap-passphrase' and record"
+	echo "    their randomly generated mount passphrase as soon as possible."
+	echo
+	echo " 4. To ensure the integrity of all encrypted data on this system, you"
+	echo "    should also encrypt swap space with 'ecryptfs-setup-swap'."
+	echo "========================================================================"
+	echo
+}
+
+DO_ENCRYPT=
+while true; do
+	[ -z "$1" ] && break
+	case "$1" in
+		-u|--user)
+			DO_ENCRYPT=1
+			USER_NAME="$2"
+			shift 2
+		;;
+		*)
+			usage
+		;;
+	esac
+done
+
+if [ "$DO_ENCRYPT" != "1" ]; then
+	usage
+fi
+
+if [ "$(id -u)" != "0" ]; then
+	error "This program must be executed with root privileges"
+fi
+
+if [ "$DO_ENCRYPT" = "1" ]; then
+	USER_HOME=$(get_user_home "$USER_NAME")
+	sanity_check "$USER_NAME" "$USER_HOME"
+	encrypt_dir "$USER_NAME" "$USER_HOME" "$LOGINPASS" "$MOUNTPASS"
+fi

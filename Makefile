@@ -71,9 +71,11 @@ VERSION=0.791
 
 #make sure this is the correct compiler for your system
 
-#CC=clang
+# 4.8 appears to compile the builds smaller but GCC 5+ appears not compatible
+
+#CC=clang --gcc-toolchain=c48
 CC=gcc-4.8
-#CXX=clang++
+#CXX=clang++ --gcc-toolchain=c48
 CXX=g++-4.8
 
 ################################################################################################
@@ -149,13 +151,8 @@ CFLAGS=$(BASE_CFLAGS) -Wall
 #full optimization (WONT WORK WITH omit-frame-pointer !!!!!)
 #CFOPT=  -march=i486 -O6 
 #CFOPT+= -ffast-math -funroll-loops (-ffast-math unstable?)
-#CFOPT+= -Wall
 
-CFOPT=	-mtune=pentium4 -march=i686 -mmmx -msse2 -O2 -m32 -mfpmath=sse \
-		-funroll-loops -ffunction-sections -fomit-frame-pointer \
-		-fexpensive-optimizations -finline-functions -ffast-math \
-		-falign-loops=2 -falign-jumps=2 -falign-functions=2 \
-
+CFOPT= -O2 -m32 -mtune=pentium4 -march=i686 -msse2 -mfpmath=sse
 
 # configuration dependand setup
 ifeq "$(OPT)" "opt"

@@ -1,0 +1,962 @@
+#!/usr/bin/perl -w
+
+eval 'exec /usr/bin/perl -w -S $0 ${1+"$@"}'
+    if 0; # not running under some shell
+
+# apt-show-versions - Lists available package versions with distribution
+
+# This program parses the dpkg status file and the APT lists for the
+# installed and available package versions and distribution and shows
+# upgrade options within the specific distribution of the selected
+# package
+
+# Copyright (C) 2001 - 2014 Christoph Martin
+
+# Author: Christoph Martin <martin@uni-mainz.de>
+# Maintainer: Christoph Martin <martin@uni-mainz.de>
+my $VERSION ='0.22.6'; # Used by ExtUtils::MakeMaker:
+
+# This file is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the
+# Free Software Foundation; either version 2, or (at your option) any
+# later version.
+
+# This file is distributed in the hope that it will be
+# useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+# of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this file; see the file 'copyright' respectively
+# '/usr/share/common-licenses/GPL-2'.  If not, write to the
+# Free Software Foundation, Inc.,
+# 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+
+use strict;
+use Getopt::Long;
+use Storable qw(nstore retrieve);
+
+my $apackagescachefile="/var/cache/apt-show-versions/apackages-multiarch";
+my $ipackagescachefile="/var/cache/apt-show-versions/ipackages-multiarch";
+my $filescachefile="/var/cache/apt-show-versions/files";
+
+use AptPkg::Cache;
+use AptPkg::Config '$_config';
+use AptPkg::Policy;
+use AptPkg::System '$_system';
+use AptPkg::Version;
+
+Getopt::Long::Configure('no_ignore_case');  # Distinguish options -R and -r.
+
+$_config->init;
+$_config->{quiet} = 2;  # Suppress cache building messages.
+$_system = $_config->system;
+my $vs = $_system->versioning;
+my $cache = AptPkg::Cache->new;
+my $policy = $cache->policy;
+
+# Provide some constants (to avoid redundant literals).
+my $ARCHIVE  = 'Archive';
+my $CODENAME = 'Codename';
+my $NAME     = 'Name';
+my $PACKAGE  = 'Package';
+my $RELEASE  = 'Release';
+my $STATUS   = 'Status';
+my $SUITE    = 'Suite';
+my $UNKNOWN  = 'unknown';
+my $VERS     = 'Version';
+my $ARCH     = 'Architecture';
+
+# process commandline parameters
+my %opts;
+# If more than one packages are requested by name, each one gets registered
+# in hash %pkg_names as a key (with a true value).
+my %pkg_names = ();
+unless (GetOptions (\%opts,
+        'status-file|stf=s',
+        'list-dir|ld=s',
+        'package|p=s',
+        'regex|r',
+        'regex-all|R',
+        'allversions|a',
+        'upgradeable|u',
+        'brief|b',
+        'nohold|nh',
+        'initialize|i',
+        'verbose|v',
+	'version|V',
+        'help|h')) {
+    exit 1;
+}
+if (scalar @ARGV == 1) {
+    if (exists $opts{'package'}) {
+        &die(1, "apt-show-versions: too many arguments\n");
+    }
+    $opts{'package'} = $ARGV[0];
+} elsif (scalar @ARGV > 1) {
+    if (exists($opts{'package'}) or exists($opts{'regex'})) {
+        &die(1, "apt-show-versions: too many arguments\n");
+    }
+    $pkg_names{$_} = 1 foreach (@ARGV);
+}
+
+# Consider implicit option dependencies.
+$opts{'regex'} = 1 if ($opts{'regex-all'});
+
+# Determine call mode.
+my $MODE_SINGLE   = 1;  # Called with one package name.
+my $MODE_MULTIPLE = 2;  # Called with several packages names.
+my $MODE_REGEX    = 3;  # Called with a package name regular expression.
+my $MODE_ALL      = 4;  # Called without any package information: all packages.
+my $mode;
+if (%pkg_names) {
+    $mode = $MODE_MULTIPLE;
+}
+elsif ($opts{'regex'}) {
+    $mode = $MODE_REGEX;
+}
+elsif ($opts{'package'}) {
+    $mode = $MODE_SINGLE;
+}
+else {
+    $mode = $MODE_ALL;
+}
+
+if ($opts{'version'}) {
+    print "Apt-Show-Versions v.$VERSION (c) Christoph Martin\n";
+    exit;
+}
+
+if (exists $opts{'help'}) {
+    print <<EOF;
+Apt-Show-Versions v.$VERSION (c) Christoph Martin
+
+Usage:
+ apt-show-versions         shows available versions of installed packages.
+
+Options:
+ -stf|--status-file=<file>  Use <file> as the dpkg status file instead
+                            of /var/lib/dpkg/status
+ -ld|list-dir=<directory>   Use <directory> as path to apt's list files instead
+                            of /var/state/apt/lists/ or /var/lib/apt/lists/
+ -p|--package=<package>     Print versions for <package>.
+ -r|--regex                 Read package with -p as regex
+ -R|--regex-all             Like --regex, but also show not installed packages.
+ -u|--upgradeable           Print only upgradeable packages
+ -a|--allversions           Print all available versions.
+ -b|--brief                 Short output.
+ -nh|--nohold               Don't treat holded packages.
+ -i|--initialize            Initialize or update package cache only (as root).
+ -v|--verbose               Verbose messages.
+ -V|--version		    Prints apt-show-versions version
+ -h|--help                  Print this help.
+EOF
+    exit;
+}
+
+# Path to apt's list files
+my $list_dir;
+if ($opts{'list-dir'}) {
+    $list_dir = $opts{'list-dir'};
+}
+else {
+    $list_dir = $_config->get_dir("Dir::State::lists");
+}
+
+# Path to dpkg status file
+my $status_file = $opts{'status-file'} || "/var/lib/dpkg/status";
+my @files;
+my $filesref;
+
+my %used_suites = ();
+# Determine the release names currently used by this host.
+# %releasenames structure example:
+# ('ftp.de.debian.org_debian_dists_unstable' => {'Suite'    => 'unstable',
+#                                                'Name'     => 'unstable',
+#                                                'Codename' => 'sid'},
+#  'debian.udsorg.ru_dists_unstable'         => {'Suite'    => 'unknown',
+#                                                'Name'     => 'unknown',
+#                                                'Codename' => 'unknown'},
+#  ...)
+my %releasenames = &determine_releasenames();
+
+if (exists $opts{'initialize'}) {
+    unlink $apackagescachefile;
+    unlink $ipackagescachefile;
+    unlink $filescachefile;
+}
+
+# Get Packages-files list from cache or create new list and write
+# cache if root
+if (-e $filescachefile and -M $filescachefile < -M $list_dir) {
+    $filesref = retrieve($filescachefile);
+    @files = @$filesref unless !ref($filesref);
+}
+# Test also to be sure $filescachefile is not corrupt and returns a ref to it
+if (!-e $filescachefile or -M $list_dir < -M $filescachefile or !ref($filesref)) {
+    opendir(DIR, $list_dir) or &die("Can't opendir $list_dir: $!\n");
+    @files = map { $list_dir . $_} grep /Packages$/, readdir(DIR);
+    ($< == 0) and (nstore(\@files, $filescachefile) or
+        warn "Can't write $filescachefile\n");
+
+    closedir DIR ;
+}
+unless (@files > 0) {
+    &die("Error: No information about packages! (Maybe no deb entries?)\n");
+}
+
+# Get hash with all installed packages from cache or create new hash
+# and write cache if root
+# $ipackages structure example:
+# {'dblatex' => {'amd64' => {'Version' => '0.2.8-6',
+#                            'Status' => 'install ok installed',
+#                            'Package' => 'dblatex'}},
+#  ...}
+my $ipackages;
+
+if (-e $ipackagescachefile and -M $ipackagescachefile < -M $status_file) {
+    $ipackages = retrieve($ipackagescachefile);
+}
+if (!-e $ipackagescachefile or -M $status_file < -M $ipackagescachefile or !ref($ipackages)) {
+    ($ipackages, undef) = parse_file ($status_file, 1);
+    ($< == 0) and (nstore($ipackages, $ipackagescachefile) or
+        warn "Can't write $ipackagescachefile\n");
+}
+
+# Get available packages list from cache if possible
+# $apackages structure example:
+# {'dblatex' => {'amd64' => {'ftp.de.debian.org_debian_dists_stable'
+#                             => {'Version' => '0.2-2',
+#                                 'Release' => 'ftp.de.debian.org_debian_dists_stable',
+#                                 'Package' => 'dblatex'},
+#                            'ftp.de.debian.org_debian_dists_testing'
+#                             => {'Version' => '0.2.8-2',
+#                                 'Release' => 'ftp.de.debian.org_debian_dists_testing',
+#                                 'Package' => 'dblatex'},
+#                            'ftp.de.debian.org_debian_dists_unstable'
+#                             => {'Version' => '0.2.8-6',
+#                                 'Release' => 'ftp.de.debian.org_debian_dists_unstable',
+#                                 'Package' => 'dblatex'}}},
+#  ...}
+my $apackages;
+my $cache_file_corrupt;
+-e $apackagescachefile and $apackages = retrieve($apackagescachefile);
+unless (ref($apackages)) {
+    $cache_file_corrupt = 1;
+    undef $apackages;
+}
+
+my $default_release;
+
+$default_release = $_config->get("APT::Default-Release");
+
+my @official_suites = qw(oldstable stable proposed-updates stable-updates testing testing-proposed-updates testing-updates unstable experimental);
+# %official_suites:
+# - Keys:   Known official suite names
+# - Values: Order index
+my %official_suites;
+$official_suites{$official_suites[$_]} = $_ foreach (0 .. $#official_suites);
+
+# Get available package information out of all Packages files
+foreach (@files) {
+    # Parse Packages file if creation time is newer than packages cache
+    if (! -e $apackagescachefile or -C $_ < -M $apackagescachefile
+        or $cache_file_corrupt) {
+        my ($href, $release) = &parse_file ($_);
+        foreach my $pkg (keys %$href) {
+	    foreach my $arch (keys %{$href->{$pkg}}) {
+                $apackages->{$pkg}{$arch}{$release} = $href->{$pkg}{$arch};
+            }
+	}
+    }
+}
+# Store if we are root
+($< == 0) and (nstore($apackages, $apackagescachefile) or
+               &die("Warning: Can't write to $apackagescachefile!\n"));
+# Exit if we are root and using the -i option
+($< == 0) and (exists $opts{'initialize'}) and exit;
+
+# print info for selected package
+if ($mode == $MODE_SINGLE) {
+    my $key = $opts{'package'};
+
+    print_package ($key);
+}
+elsif ($mode == $MODE_MULTIPLE) {
+    print_package($_) foreach (sort keys %pkg_names);
+}
+else {
+    # print info for all packages or packages matching regex
+    my $pkgs = ($opts{'regex-all'}) ? $apackages : $ipackages;
+    foreach my $key (sort keys %$pkgs) {
+        next if (exists $opts{'package'} &&
+                 exists $opts{'regex'} &&
+                 !($key =~ m/$opts{'package'}/));
+        print_package ($key);
+    }
+}
+
+################################################################################
+# Collect uptodate or up/downgradeable status of package depending on
+# distribution.  Return: ($version_indicator, @version_info)
+# - $version_indicator:
+#   * 0: Version is not to be installed/kept.
+#   * 1: Version is to be kept.
+#   * 2: Version is to be up/downgraded.
+# - @version_info:
+#   Version information to be printed (undef if no information exists)
+################################################################################
+sub print_version {
+    my ($archiv, $pkgarch, $iversion, $aversion, $cand) = @_;
+
+    if (defined($aversion) and $cache->{$pkgarch}) {
+        if ($cand and $aversion eq $cand->{VerStr})
+        {
+            my $cmp_versions = $vs->compare($aversion, $iversion);
+            if ($cmp_versions != 0) {
+                my $direction = ($cmp_versions > 0) ? 'up' : 'down';
+                return(2, "$pkgarch/$archiv",
+                       (defined($opts{'brief'})) ? "\n" :
+                       " $iversion ${direction}gradeable to $aversion\n");
+            }
+            else {
+                return(1, "$pkgarch/$archiv", defined($opts{'brief'}) ? "\n"
+                       : " $iversion uptodate\n");
+            }
+        }
+    }
+    # Default outcome: either version is definitely not to be installed/kept
+    #                  or information for a decicion is lacking.
+    return(0, undef);
+}
+
+# print information about package
+
+sub print_package {
+    my ($package) = @_;
+    my ($pkgname, $archname);
+
+    if ($package =~ m/:/) {
+        ($pkgname, $archname) = split /:/, $package;
+    } else {
+        $pkgname = $package;
+    }
+    
+    my $pkgs = ($opts{'regex-all'}) ? $apackages : $ipackages;
+
+    if ($archname and ! defined $apackages->{$pkgname}{$archname}) {
+        printf("%s not available for architecture %s\n", $pkgname, $archname);
+    } elsif (! defined $pkgs->{$pkgname}) {
+        if ($mode != $MODE_SINGLE || $archname) {
+	    print_package_internal($pkgname, $archname)
+        } elsif (keys(%{$apackages->{$pkgname}})) {
+            my $archlist = "";
+            foreach my $a (sort keys(%{$apackages->{$pkgname}})) {
+		print_package_internal($pkgname, $a);
+                $archlist .= ($archlist ? ", $a" : "$a");
+            }
+        } else {
+            printf("%s not installed (not available)\n", $pkgname);
+        }
+    } else {
+        foreach my $arch ($archname or sort keys(%{{map{$_=>1}(keys(%{$apackages->{$pkgname}}), keys(%{$pkgs->{$pkgname}}))}})) {
+            print_package_internal($pkgname, $arch);
+        }
+    }
+}
+
+sub print_package_internal {
+    my ($package, $arch) = @_;
+    my $pkgarch = $package . ":" . $arch;
+
+    # Sort all releases of package.
+    my @pkg_releases = sort sort_pkg_releases values(%{$apackages->{$package}{$arch}});
+
+    # All print information of package must be buffered, as the decision
+    # whether to suppress all printing for the package can be executed only at
+    # a later stage.
+    my @print_info = ();
+    my $is_upgradeable = 0;  # Intialize with: not upgradeable.
+    # To guarantee tabular printing of the package's releases some further
+    # variables are needed:
+    my $max_package_len = 0;
+    my $max_version_len = 0;
+    my $max_name_len = 0;
+    my $ipkg = $ipackages->{$package}{$arch};
+
+    # print more information if required
+    if ($opts{'allversions'}) {
+        if ($ipkg->{$PACKAGE}) {
+            push @print_info, "$ipkg->{$PACKAGE}:$ipkg->{$ARCH} ";
+            unless ($ipkg->{$STATUS} =~ /not-installed/ ||
+                $ipkg->{$STATUS} =~ /config-files/) {
+                push @print_info, "$ipkg->{$VERS} ";
+            }
+            push @print_info, "$ipkg->{$STATUS}\n";
+        }
+
+        # Index to @official_suites: Next official suite to mention if missing.
+        my $official_idx = 0;
+        # Print preparation loop
+        foreach my $pkg (@pkg_releases) {
+            # First handle missing official suites to be listed before current
+            # release.
+            my $cur_idx = $official_suites{&get_rel_suite($pkg->{$RELEASE})};
+            if (defined $cur_idx) {
+                # Current release is an official one:
+                # List prepending missing suites.
+                foreach ($official_idx .. $cur_idx - 1) {
+                    if ($used_suites{$official_suites[$_]}) {
+                        push @print_info, "No $official_suites[$_] version\n";
+                    }
+                }
+                # All official suites including current one are handled.
+                $official_idx = $cur_idx + 1;
+            }
+            # Then handle current release.
+            (my $archive = $pkg->{$RELEASE}) =~ s/_.*//;
+            my $pa = $pkg->{$PACKAGE} . ":" . $pkg->{$ARCH};
+            push @print_info, {$PACKAGE => $pa,
+                               $VERS => $pkg->{$VERS},
+                               $NAME => &get_rel_name($pkg->{$RELEASE}),
+                               $ARCHIVE => $archive};
+            $max_package_len = &max(length($pa), $max_package_len);
+            $max_version_len = &max(length($pkg->{$VERS}), $max_version_len);
+            $max_name_len = &max(length(&get_rel_name($pkg->{$RELEASE})),
+                                 $max_name_len);
+        }
+        # Finally handle missing official suites after last existing release.
+        foreach ($official_idx .. $#official_suites) {
+            if ($used_suites{$official_suites[$_]}) {
+                push @print_info, "No $official_suites[$_] version\n";
+            }
+        }
+    }
+
+    my $iversion = $ipkg->{$VERS};
+
+    # print info about upgrade status (only if package is installed)
+
+    if (($ipkg->{$VERS}) &&
+        (!($ipkg->{$STATUS} =~ /config-files/))) {
+        # Reorder package version structures to prefer the default release.
+        @pkg_releases = &reorder_pkg_releases(@pkg_releases);
+        my $found = 0;
+        my $aversion = 0;
+        my $cand;
+        if ($cache->{$pkgarch}) {
+            $cand = $policy->candidate($cache->{$pkgarch});
+        }
+	my $irelease; # first release associated with $iversion in reorder_pkg_releases() order.
+	foreach (@pkg_releases) {
+	    if ( $_->{$VERS} eq $iversion ) {
+		$irelease = &get_rel_name($_->{$RELEASE});
+		last;
+	    }
+	}
+        foreach (@pkg_releases) {
+            my $version = $_->{$VERS};
+            if ($version) {
+                my @version_info;
+                ($found, @version_info) =
+		    &print_version(($irelease ? $irelease : &get_rel_name($_->{$RELEASE})),
+                                   $pkgarch, $iversion, $version, $cand);
+                push @print_info, @version_info if ($found);
+                $aversion = $version;
+            }
+            $is_upgradeable = 1 if ($found == 2);
+            last if $found;
+        }
+        if ($aversion && ($vs->compare($iversion, $aversion) > 0)) {
+            # Test whether installed version is newer
+            # than all available versions.
+            my $newer_indic = 1;
+            foreach (@pkg_releases) {
+                my $cmp_version = $_->{$VERS};
+                if ($cmp_version and
+                    $vs->compare($iversion, $cmp_version) <= 0)
+                {
+                    $newer_indic = 0;
+                    last;
+                }
+            }
+            if ($newer_indic and not defined($opts{'brief'}))
+            {
+                push(@print_info,
+                     "$pkgarch $iversion newer than version in archive\n");
+            }
+        } elsif (not $found) {
+            # Check for manual upgrade possibility:
+            # There are cases where the APT policy doesn't find a better
+            # candidate than the installed version, but which itself isn't
+            # available any longer because it has been replaced by a newer
+            # version in the archives.  As the newer version isn't chosen by
+            # the policy, the upgrade can only be executed manually.
+            if ($cand and $iversion eq $cand->{VerStr}) {
+                foreach my $release (@pkg_releases) {
+                    my $cmp_version = $release->{$VERS};
+                    if ($cmp_version and
+                        $vs->compare($iversion, $cmp_version) < 0)
+                    {
+                        push(@print_info,
+                             $pkgarch,
+                             '/',
+                             &get_rel_name($release->{$RELEASE}),
+                             (defined($opts{'brief'})) ? "\n" :
+                             " *manually* upgradeable from $iversion to " .
+                             "$aversion\n");
+                        $found = 1;
+                        $is_upgradeable = 1;
+                        last;
+                    }
+                }
+            }
+            if (not $found) {
+                push(@print_info, "$pkgarch $iversion installed: No available ",
+                     "version in archive\n");
+            }
+        }
+    } else {
+        push(@print_info, "$pkgarch not installed",
+             ($mode == $MODE_SINGLE and not keys(%{$apackages->{$package}{$arch}}))
+            ? " (even not available)\n" : "\n");
+    }
+
+    if ($opts{'upgradeable'}
+        and not $is_upgradeable
+        and $mode == $MODE_SINGLE) {
+        # Caller expects single given package to be upgradeable.
+        # Signal failure of this expectation with a special exit code.
+        exit 2;
+    }
+
+    # Print loop
+    unless ($opts{'upgradeable'} and not $is_upgradeable) {
+        foreach my $print_info (@print_info) {
+            if (ref $print_info) {
+                printf("%*s %*s %*s %s\n",
+                       -$max_package_len, $print_info->{$PACKAGE},
+                       -$max_version_len, $print_info->{$VERS},
+                       -$max_name_len, $print_info->{$NAME},
+                       $print_info->{$ARCHIVE});
+            }
+            else {
+                print $print_info;
+            }
+        }
+    }
+}
+
+# ------------------------------------------------------
+# FUNCTION: HASHREF, RELEASE_KEY = parse_file FILE (STATUS)
+#
+# Parses FILE into an HASHREF of Hashes
+# Set STATUS when the file should be parsed just for
+# installed packages (here the dpkg status file)
+# Returns HASHREF and key of corresponding %releasenames record.
+# ------------------------------------------------------
+
+sub parse_file {
+    my ($file, $status) = @_;
+    my ($key, $value, $package, $packages);
+
+    my $release = &determine_pkgfile_release($file);
+    open FILE, $file or &die("Can't open file $file: $!\n");
+    if ($opts{'verbose'}) {print "Parsing $file...";};
+    while (<FILE>) {
+        if (/^$/){
+            unless (defined $package) {next};
+
+            if ($status) { # Are we parsing the status file?
+                # if we did not specify a package or pattern
+                # only include installed packages
+                unless ($mode == $MODE_ALL and
+                        ($package->{$STATUS} =~ /not-installed|config-files/ or
+                         # don't print holded packages if requested
+                         ($opts{'nohold'} and $package->{$STATUS} =~ /hold/))) {
+                    $packages->{$package->{$PACKAGE}}{$package->{$ARCH}} = $package;
+                }
+            }
+            else {
+                if (!defined $packages->{$package->{$PACKAGE}} or
+		    !defined $packages->{$package->{$PACKAGE}}{$package->{$ARCH}}{$VERS} or
+                    $vs->compare($packages->{$package->{$PACKAGE}}{$package->{$ARCH}}{$VERS},
+			 $package->{$VERS}) < 0) {
+                    $package->{$RELEASE} = $release;
+                    $packages->{$package->{$PACKAGE}}{$package->{$ARCH}} = $package;
+                }
+            }
+            undef $package;
+            next;
+        }
+        unless ((/^Package/) || (/^Version/) || (/^Status/) || (/^Source/) || (/^Architecture/)) {next};
+        ($key, $value) = split /: /, $_;
+        $value =~ s/\n//;
+        $value =~ s/\s\(.*\)$//; # Remove any Version information in ()
+        $package->{$key} = $value;
+    }
+    if ($opts{'verbose'}) {print " completed.\n"};
+    close FILE;
+    return $packages, $release;
+}
+
+################################################################################
+# Determine the release of the specified package file.
+# If no corresponding %releasenames record exists, one gets created.
+# Argument $pkgfile is either full package file name or name core, e.g.:
+# - /var/lib/apt/lists/ftp.de.debian.org_debian_dists_unstable_main_binary-i386_Packages
+# - ftp.de.debian.org_debian_dists_unstable
+################################################################################
+sub determine_pkgfile_release {
+    my $pkgfile = shift;
+
+    return $pkgfile if ($releasenames{$pkgfile});
+    $pkgfile =~ s{.*/}{};
+    return undef if ($pkgfile eq 'status');
+    # Sort according to length so we make the most specfic match
+    foreach (sort { length($b) <=> length($a) } keys %releasenames) {
+        return $_ if ($_ eq substr($pkgfile, 0, length($_)));
+    }
+    # As package file has no release file, create a fallback %releasenames
+    # record based on the information of the package file name.
+    my $releasename;
+    foreach my $suite (@official_suites) {
+        if (index($pkgfile, "_${suite}_") != -1) {
+            # Packagefile belongs to a known suite.
+            ($releasename = $pkgfile) =~ s/(.*$suite).*/$1/;
+            $releasenames{$releasename}{$SUITE} = $suite;
+            $releasenames{$releasename}{$NAME} = $suite;
+            last;
+        }
+    }
+    unless ($releasename) {
+        # No release information available for this package file:
+        # create a dummy %releasenames record.
+        $releasename = $pkgfile;
+        $releasenames{$releasename}{$SUITE} = $UNKNOWN;
+        $releasenames{$releasename}{$NAME} = $UNKNOWN;
+    }
+    $releasenames{$releasename}{$CODENAME} = $UNKNOWN;
+    return $releasename;
+}
+
+################################################################################
+# Determine the release names currently used by this host.
+################################################################################
+sub determine_releasenames {
+    my %rel_names;
+    opendir LIST_DIR, $list_dir
+        or &die("Failed to open directory $list_dir: $!\n");
+    while (defined(my $rel_file = readdir LIST_DIR)) {
+        my $file_name = "$list_dir/$rel_file";
+        if ($rel_file =~ m/(.*)_(In|)Release$/) {
+            $rel_file = $1;
+        }
+        else {
+            next;
+        }
+        open RELEASE_FILE, "< $file_name"
+            or &die("Failed to open file $file_name for reading: $!\n");
+        while (defined (my $line = <RELEASE_FILE>)) {
+            if ($line =~ m/^\s*($SUITE|$CODENAME):\s*(\S+)\s*$/o) {
+                $rel_names{$rel_file}{$1} = $2;
+            }
+            # After extracting values for Suite and Codename, do not parse
+            # rest of release file.
+            # Thus normally only the first lines of the release file must be
+            # read, whereas the much bigger rest may be skipped.
+            if (defined $rel_names{$rel_file}{$SUITE} and
+                defined $rel_names{$rel_file}{$CODENAME}) {
+                last;
+            }
+        }
+        close RELEASE_FILE
+            or &die("Failed to close file $file_name: $!\n");
+        # Register suite as used.
+        if (defined $rel_names{$rel_file}{$SUITE}) {
+            $used_suites{$rel_names{$rel_file}{$SUITE}} = 1;
+        }
+        # Provide default values for missing fields.
+        foreach ($SUITE, $CODENAME) {
+            unless (defined $rel_names{$rel_file}{$_}) {
+                $rel_names{$rel_file}{$_} = $UNKNOWN;
+            }
+        }
+        # Determine name relevant to user (as used in sources.list):
+        # either Suite or Codename.
+        if ($rel_file =~ m/_$rel_names{$rel_file}{$SUITE}/) {
+            $rel_names{$rel_file}{$NAME} = $rel_names{$rel_file}{$SUITE};
+        }
+        elsif ($rel_file =~ m/_$rel_names{$rel_file}{$CODENAME}/) {
+            $rel_names{$rel_file}{$NAME} = $rel_names{$rel_file}{$CODENAME};
+        }
+        else {
+            # Fall back to Suite.
+            $rel_names{$rel_file}{$NAME} = $rel_names{$rel_file}{$SUITE};
+        }
+    }
+    closedir LIST_DIR
+        or &die("Failed to close directory $list_dir: $!\n");
+    return %rel_names;
+}
+
+################################################################################
+# Return the numerically biger of the two specified arguments.
+################################################################################
+sub max {
+    return ($_[0] > $_[1]) ? $_[0] : $_[1];
+}
+
+################################################################################
+# Reorder package releases in a way that within the releases of the same
+# version number the default release gets placed first.
+################################################################################
+sub reorder_pkg_releases {
+    my @releases = @_;
+
+    if (@releases and $default_release) {
+        # Reordering strategy:
+        # - Precondition: The releases are sorted by version already.
+        # - Iterate over the release list: from "left" to "right".
+        # - For the releases of each version:
+        #   - Find the first release that is not the default release.
+        #   - If right from this "move candidate" the default release is found,
+        #     move it left before the move candidate.
+        my $move_idx;  # Index of move candidate
+        foreach my $idx (0 .. $#releases) {
+            my $rel_key = $releases[$idx]->{$RELEASE};
+            if (defined $move_idx) {
+                # There exists a move candidate.
+                if ($releases[$idx]->{$VERS} eq $releases[$move_idx]->{$VERS}) {
+                    # Current release is of same version as move candidate.
+                    if (&get_rel_suite($rel_key) eq $default_release
+                        or &get_rel_codename($rel_key) eq $default_release) {
+                        # Move current release before move candidate in order to
+                        # place default release first.
+                        my $rel = splice @releases, $idx, 1;
+                        splice @releases, $move_idx, 0, $rel;
+                        $move_idx = $idx;
+                    }
+                }
+                else {
+                    # Version change
+                    undef $move_idx;
+                }
+            }
+            unless (defined $move_idx) {
+                # Test whether current release is move candidate.
+                if (&get_rel_suite($rel_key) ne $default_release
+                    and &get_rel_codename($rel_key) ne $default_release) {
+                    $move_idx = $idx;
+                }
+            }
+        }
+    }
+    return @releases;
+}
+
+################################################################################
+# Sorting function for package releases
+# Sorting hierarchy:
+# 1) Release number
+# 2) @official_suites (in array order) before other ones
+# 3) Release name
+################################################################################
+sub sort_pkg_releases {
+    my $cmp_versions = $vs->compare($a->{$VERS}, $b->{$VERS});
+    return $cmp_versions if ($cmp_versions);
+    my $cmp_suites = (&suite_idx(&get_rel_suite($a->{$RELEASE})) <=>
+                      &suite_idx(&get_rel_suite($b->{$RELEASE})));
+    return $cmp_suites if ($cmp_suites);
+    return(&get_rel_name($a->{$RELEASE}) cmp &get_rel_name($b->{$RELEASE}));
+}
+
+################################################################################
+# Return the sorting index of the specified suite name.
+# Unofficial suites are sorted last.
+################################################################################
+sub suite_idx {
+    return(defined($official_suites{$_[0]}) ? $official_suites{$_[0]}
+           : $#official_suites + 1);
+}
+
+################################################################################
+# Simple die wrapper which controls the exit code.
+# If first parameter is a number, it is used as the exit code.  Otherwise it
+# gets interpreted (like the remaining parameters) as the error message.
+################################################################################
+sub die {
+    $! = ($_[0] =~ m/^\d+$/) ? shift() : 255;
+    die @_;
+}
+
+################################################################################
+# Access function for the fields of the %releasenames structure
+# Missing fields are augmented on the fly (compare BTS report #515328).
+################################################################################
+sub get_rel_codename {
+    my $rel_key = shift;
+    &determine_pkgfile_release($rel_key) unless $releasenames{$rel_key};
+    return $releasenames{$rel_key}{$CODENAME};
+}
+sub get_rel_name {
+    my $rel_key = shift;
+    &determine_pkgfile_release($rel_key) unless $releasenames{$rel_key};
+    return $releasenames{$rel_key}{$NAME};
+}
+sub get_rel_suite {
+    my $rel_key = shift;
+    &determine_pkgfile_release($rel_key) unless $releasenames{$rel_key};
+    return $releasenames{$rel_key}{$SUITE};
+}
+
+# script documentation (POD style)
+
+=encoding utf8
+
+=head1 NAME
+
+apt-show-versions - Lists available package versions with distribution
+
+=head1 DESCRIPTION
+
+apt-show-versions parses the dpkg status file and the APT lists for
+the installed and available package versions and distribution and
+shows upgrade options within the specific distribution of the selected
+package.
+
+This is really useful if you have a mixed stable/testing environment
+and want to list all packages which are from testing and can be
+upgraded in testing.
+
+apt-show-versions uses caching for the status information of installed
+and available packages. If you run apt-show-versions as root the
+cache is updated as needed. If you run as non-root uses the newest
+available information, but can't update the cache. If you run as root
+with the option B<-i> the cache is initialized or updated only.
+
+=head1 SYNOPSIS
+
+B<apt-show-versions> [B<-h>] [[B<-p>] I<package name>] [B<-a>] [B<-b>]
+
+=head1 OPTIONS
+
+If you don't give any options the status of all installed packages is
+printed.
+
+=over 4
+
+=item B<-p> I<package>, B<--package>=I<package>
+
+Print available and installed versions for specified I<package>. You
+can also specify a package name without the option B<-p>. If B<-p> and
+a package name are missing, all installed packages are displayed.
+
+=item B<-r>, B<--regex>
+
+interpret I<package> from option B<-p> as a regex.
+
+=item B<-R>, B<--regex-all>
+
+like B<--regex>, but also show matching packages which are not installed
+
+=item B<-u>, B<--upgradeable>
+
+Print only upgradeable packages
+
+=item B<-a>, B<--allversions>
+
+Print all available versions of the selected packages
+
+=item B<-b>, B<--brief>
+
+Print only package_name/distribution for upgradeable packages
+
+=item B<-v>, B<--verbose>
+
+Prints out messages about which package files are parsed.
+
+=item B<-V>, B<--version>
+
+Prints out version of apt-show-versions
+
+=item B<-i>, B<--initialize>
+
+Initialize or update package cache only (as root). Do this every time
+when the status of the installed or available packages has
+changed. Initialization is done automatically on installation of the
+package and via a cron.daily job.
+
+=item B<-stf> I<file>, B<--status-file>=I<file>
+
+Use I<file> as the dpkg status file instead of /var/lib/dpkg/status
+
+=item B<-ld> I<directory>, B<--list-dir>=I<directory>
+
+Use I<directory> as path to apt's list files instead of
+/var/state/apt/lists/ or /var/lib/apt/lists/
+
+=item B<-h>, B<--help>
+
+Prints out command-line help.
+
+=back
+
+=head1 EXIT CODES
+
+=over 4
+
+=item C<0>
+
+No error
+
+=item C<1>
+
+Wrong usage
+
+=item C<2>
+
+apt-show-versions has been called with exactly one package and upgradeable
+option set, but package is uptodate. As no output has been requested, this
+case gets signaled using the exit code.
+
+=item C<255>
+
+Unspecified error
+
+=back
+
+=head1 EXAMPLES
+
+If you want to know for all your installed packages whether they are
+uptodate or upgradeable, use:
+
+    apt-show-versions
+
+If you want to have a list of all upgradeable packages:
+
+    apt-show-versions -u
+
+To get a list of all available versions of libc6:
+
+    apt-show-versions -a -p libc6
+
+To get information about several packages:
+
+    apt-show-versions dpkg apt
+
+    apt-show-versions -r ^texlive
+
+To upgrade all packages in testing:
+
+    apt-get install `apt-show-versions -u -b | grep testing`
+
+=head1 AUTHOR
+
+Christoph Martin, martin@uni-mainz.de
+
+=head1 SEE ALSO
+
+apt(8), dpkg(1)
+
+=cut

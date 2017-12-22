@@ -1,0 +1,123 @@
+#!/bin/sh -e
+#
+#    ecryptfs-recover-private
+#    Copyright (C) 2010 Canonical Ltd.
+#
+#    Authors: Dustin Kirkland <kirkland@ubuntu.com>
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, version 2 of the License.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+error() {
+	echo "ERROR: $@" 1>&2
+	exit 1
+}
+
+info() {
+	echo "INFO: $@"
+}
+
+# We need root access to do the deep find and the mount
+[ "$(id -u)" = "0" ] || error "This program must be run as root."
+
+# Handle parameters
+opts="ro"
+if [ "$1" = "--rw" ]; then
+	opts="rw"
+	shift
+fi
+
+if [ -d "$1" ]; then
+	# Allow for target directories on the command line
+	dirs="$@"
+else
+	# Otherwise, search the system for directories named ".Private"
+	info "Searching for encrypted private directories (this might take a while)..."
+	dirs=$(find / -type d -name ".Private")
+	if [ -z "$dirs" ]; then
+		info "Hint: click 'Places' and select your hard disk, then run this again."
+		error "No private directories found; make sure that your root filesystem is mounted."
+	fi
+fi
+
+# Examine directories
+for d in $dirs; do
+	if [ -d "$d" ]; then
+		info "Found [$d]."
+		echo -n "Try to recover this directory? [Y/n]: "
+		answer=$(head -n1)
+		case "$answer" in n*|N*) continue ;; esac
+	else
+		continue
+	fi
+	# Determine if filename encryption is on
+	ls "$d/ECRYPTFS_FNEK_ENCRYPTED"* >/dev/null 2>&1 && fnek="--fnek" || fnek=
+	if [ -f "$d/../.ecryptfs/wrapped-passphrase" ]; then
+		info "Found your wrapped-passphrase"
+		echo -n "Do you know your LOGIN passphrase? [Y/n] "
+		lpw=$(head -n1)
+		case "$lpw" in
+			y|Y|"")
+				# Use the wrapped-passphrase, if available
+				info "Enter your LOGIN passphrase..."
+				ecryptfs-insert-wrapped-passphrase-into-keyring "$d/../.ecryptfs/wrapped-passphrase"
+				sigs=$(sed -e "s/[^0-9a-f]//g" "$d/../.ecryptfs/Private.sig")
+				use_mount_passphrase=0
+			;;
+			*)
+				use_mount_passphrase=1
+			;;
+		esac
+	else
+		# Fall back to mount passphrase
+		info "Could not find your wrapped passphrase file."
+		use_mount_passphrase=1
+	fi
+	if [ "$use_mount_passphrase" = "1" ]; then
+
+		info "To recover this directory, you MUST have your original MOUNT passphrase."
+		info "When you first setup your encrypted private directory, you were told to record"
+		info "your MOUNT passphrase."
+		info "It should be 32 characters long, consisting of [0-9] and [a-f]."
+		echo
+		echo -n "Enter your MOUNT passphrase: "
+		stty_orig=$(stty -g)
+		stty -echo
+		passphrase=$(head -n1)
+		stty $stty_orig
+		echo
+		sigs=$(printf "%s\0" "$passphrase" | ecryptfs-add-passphrase $fnek | grep "^Inserted" | sed -e "s/^.*\[//" -e "s/\].*$//" -e "s/[^0-9a-f]//g")
+	fi
+	case $(echo "$sigs" | wc -l) in
+		1)
+			mount_sig=$(echo "$sigs" | head -n1)
+			fnek_sig=
+			mount_opts="$opts,ecryptfs_sig=$mount_sig,ecryptfs_cipher=aes,ecryptfs_key_bytes=16"
+		;;
+		2)
+			mount_sig=$(echo "$sigs" | head -n1)
+			fnek_sig=$(echo "$sigs" | tail -n1)
+			mount_opts="$opts,ecryptfs_sig=$mount_sig,ecryptfs_fnek_sig=$fnek_sig,ecryptfs_cipher=aes,ecryptfs_key_bytes=16"
+		;;
+		*)
+			continue
+		;;
+	esac
+	(keyctl list @u | grep -qs "$mount_sig") || error "The key required to access this private data is not available."
+	(keyctl list @u | grep -qs "$fnek_sig") || error "The key required to access this private data is not available."
+	tmpdir=$(mktemp -d /tmp/ecryptfs.XXXXXXXX)
+	if mount -i -t ecryptfs -o "$mount_opts" "$d" "$tmpdir"; then
+		info "Success!  Private data mounted at [$tmpdir]."
+	else
+		error "Failed to mount private data at [$tmpdir]."
+	fi
+done

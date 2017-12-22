@@ -1,0 +1,195 @@
+#!/usr/bin/ruby
+
+# Silence Ctrl-C's
+trap('INT'){ exit 1 }
+
+if Signal.list.include? 'PIPE'
+  trap('PIPE', 'EXIT')
+end
+
+require 'optparse'
+require 'gist'
+
+# For the holdings of options.
+options = {}
+filenames = []
+
+OptionParser.new do |opts|
+  executable_name = File.split($0)[1]
+  opts.banner = <<-EOS
+Gist (v#{Gist::VERSION}) lets you upload to https://gist.github.com/
+
+The content to be uploaded can be passed as a list of files, if none are
+specified STDIN will be read. The default filename for STDIN is "a.rb", and all
+filenames can be overridden by repeating the "-f" flag. The most useful reason
+to do this is to change the syntax highlighting.
+
+If you'd like your gists to be associated with your GitHub account, so that you
+can edit them and find them in future, first use `gist --login` to obtain an
+Oauth2 access token. This is stored and used by gist in the future.
+
+Private gists do not have guessable URLs and can be created with "-p", you can
+also set the description at the top of the gist by passing "-d".
+
+Anonymous gists are not associated with your GitHub account, they can be created
+with "-a" even after you have used "gist --login".
+
+If you would like to shorten the resulting gist URL, use the -s flag. This will
+use GitHub's URL shortener, git.io. You can also use -R to get the link to the
+raw gist.
+
+To copy the resulting URL to your clipboard you can use the -c option, or to
+just open it directly in your browser, use -o. Using the -e option will copy the
+embeddable URL to the clipboard. You can add `alias gist='gist -c'` to your
+shell's rc file to configure this behaviour by default.
+
+Instead of creating a new gist, you can update an existing one by passing its ID
+or URL with "-u". For this to work, you must be logged in, and have created the
+original gist with the same GitHub account.
+
+Usage: #{executable_name} [-o|-c|-e] [-p] [-s] [-R] [-d DESC] [-a] [-u URL] [-P] [-f NAME|-t EXT]* FILE*
+       #{executable_name} --login
+       #{executable_name} [-l|-r]
+
+  EOS
+
+  opts.on("--login", "Authenticate gist on this computer.") do
+    Gist.login!
+    exit
+  end
+
+  opts.on("-f", "--filename [NAME.EXTENSION]", "Sets the filename and syntax type.") do |filename|
+    filenames << filename
+    options[:filename] = filename
+  end
+
+  opts.on("-t", "--type [EXTENSION]", "Sets the file extension and syntax type.") do |extension|
+    filenames << "foo.#{extension}"
+    options[:filename] = "foo.#{extension}"
+  end
+
+  opts.on("-p", "--private", "Makes your gist private.") do
+    options[:private] = true
+  end
+
+  opts.on("--no-private") do
+    options[:private] = false
+  end
+
+  opts.on("-d", "--description DESCRIPTION", "Adds a description to your gist.") do |description|
+    options[:description] = description
+  end
+
+  opts.on("-s", "--shorten", "Shorten the gist URL using git.io.") do |shorten|
+    options[:shorten] = shorten
+  end
+
+  opts.on("-u", "--update [ URL | ID ]", "Update an existing gist.") do |update|
+    options[:update] = update
+  end
+
+  opts.on("-a", "--anonymous", "Create an anonymous gist.") do
+    options[:anonymous] = true
+  end
+
+  opts.on("-c", "--copy", "Copy the resulting URL to the clipboard") do
+    options[:copy] = true
+  end
+
+  opts.on("-e", "--embed", "Copy the embed code for the gist to the clipboard") do
+    options[:embed] = true
+    options[:copy] = true
+  end
+
+  opts.on("-o", "--open", "Open the resulting URL in a browser") do
+    options[:open] = true
+  end
+
+  opts.on("--no-open")
+
+  opts.on("-P", "--paste", "Paste from the clipboard to gist") do
+    options[:paste] = true
+  end
+
+  opts.on("-R", "--raw", "Display raw URL of the new gist") do
+    options[:raw] = true
+  end
+
+  opts.on("-l", "--list [USER]", "List all gists for user") do |user|
+    options[:list] = user
+  end
+
+  opts.on("-r", "--read ID [FILENAME]", "Read a gist and print out the contents") do |id|
+    options[:read] = id
+  end
+
+  opts.on_tail("-h","--help", "Show this message.") do
+    puts opts
+    exit
+  end
+
+  opts.on_tail("-v", "--version", "Print the version.") do
+    puts "gist v#{Gist::VERSION}"
+    exit
+  end
+
+end.parse!
+
+begin
+  options[:output] = if options[:embed] && options[:shorten]
+                       raise Gist::Error, "--embed does not make sense with --shorten"
+                     elsif options[:embed]
+                       :javascript
+                     elsif options[:shorten] and options[:raw]
+                       :short_raw_url
+                     elsif options[:shorten]
+                       :short_url
+                     elsif options[:raw]
+                       :raw_url
+                     else
+                       :html_url
+                     end
+
+  options[:public] = Gist.should_be_public?(options)
+
+  if options.key? :list
+    if options[:list]
+      Gist.list_all_gists(options[:list])
+    else
+      Gist.list_all_gists
+    end
+    exit
+  end
+
+  if options.key? :read
+    file_name = ARGV.first
+    Gist.read_gist(options[:read], file_name)
+    exit
+  end
+
+  if options[:paste]
+    puts Gist.gist(Gist.paste, options)
+  else
+    to_read = ARGV.empty? ? ['-'] : ARGV
+    files = {}
+    to_read.zip(filenames).each do |(file, name)|
+      files[name || file] =
+        begin
+          if file == '-'
+            $stderr.puts "(type a gist. <ctrl-c> to cancel, <ctrl-d> when done)" if $stdin.tty?
+            STDIN.read
+          else
+            File.read(File.expand_path(file))
+          end
+        rescue => e
+          raise e.extend(Gist::Error)
+        end
+    end
+
+    puts Gist.multi_gist(files, options)
+  end
+
+rescue Gist::Error => e
+  puts "Error: #{e.message}"
+  exit 1
+end

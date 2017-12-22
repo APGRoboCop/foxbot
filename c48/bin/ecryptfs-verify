@@ -1,0 +1,245 @@
+#!/bin/sh -e
+#    ecryptfs-verify
+#    Copyright (C) 2011 Dustin Kirkland <kirkland@ubuntu.com>
+#
+#    Authors: Dustin Kirkland <kirkland@ubuntu.com>
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; version 2 of the License.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+error() {
+	echo `gettext "ERROR:"` "$@" 1>&2
+	echo `gettext "ERROR:"` "Configuration invalid" 1>&2
+	exit 1
+}
+
+info() {
+	echo `gettext "INFO:"` "$@"
+}
+
+usage() {
+	echo "
+Usage:
+ecryptfs-verify [-h|--home] [-p|--private] [-e|--filenames-encrypted] [-n|--filenames-not-encrypted] [-u|--user USER] [--help]
+
+ -h|--home			True if HOME is correctly configured for
+				encryption, False otherwise
+
+ -p|--private			True if a non-HOME directory is correctly
+				configured for encryption, False otherwise
+
+ -e|--filenames-encrypted	True if filenames are set for encryption,
+				False otherwise
+
+ -n|--filenames-not-encrypted	True if filenames are not encrypted,
+				False otherwise
+
+ -u|--user USER			By default, the current user's configuration
+				is checked, override with this option
+
+ --help 			This usage information
+
+ Note that options are additive.  ALL checks must pass in order for this
+ program to exit 0.  Any failing check will cause this program to exit
+ non-zero.
+
+"
+	return 1
+}
+
+ecryptfs_exists() {
+	local dotecryptfs="$1/.ecryptfs"
+	if [ -d "$dotecryptfs" ]; then
+		info "[$dotecryptfs] exists"
+	else
+		error "[$dotecryptfs] does not exist"
+	fi
+	return 0
+}
+
+sigfile_valid() {
+	local sigfile="$1/.ecryptfs/Private.sig"
+	if [ -f "$sigfile" ]; then
+		info "[$sigfile] exists"
+	else
+		error "[$sigfile] does not exist"
+	fi
+	local c=$(wc -l "$sigfile" | awk '{print $1}')
+	if [ "$c" = "1" ] || [ "$c" = "2" ]; then
+		info "[$sigfile] contains [$c] signatures"
+	else
+		error "[$sigfile] does not contain exactly 1 or 2 lines"
+	fi
+	return 0
+}
+
+mountfile_valid() {
+	local mountfile="$1/.ecryptfs/Private.mnt"
+	if [ -f "$mountfile" ]; then
+		info "[$mountfile] exists"
+	else
+		error "[$mountfile] does not exist"
+	fi
+	local m=$(cat "$mountfile")
+	if [ -d "$m" ]; then
+		info "[$m] is a directory"
+	else
+		error "[$m] is not a directory"
+	fi
+	return 0
+}
+
+automount_true() {
+	local home="$1"
+	local automount="$1/.ecryptfs/auto-mount"
+	if [ -f "$automount" ]; then
+		info "[$automount] Automount is set"
+	else
+		error "[$home/.ecryptfs/auto-mount] does not exist"
+	fi
+	return 0
+}
+
+owns_mountpoint() {
+	local owner=$(stat -c "%U" "$2")
+	if [ "$owner" = "$1" ]; then
+		info "Ownership [$owner] of mount point [$2] is correct"
+	else
+		error "Invalid owner [$owner] of mount point [$2]"
+	fi
+}
+
+mount_is_home() {
+	local home="$1"
+	local mountfile="$home/.ecryptfs/Private.mnt"
+	local m=$(cat "$mountfile")
+	if [ "$m" = "$home" ]; then
+		info "Mount point [$m] is the user's home"
+	else
+		error "Mount point [$m] is not the user's home [$home]"
+	fi
+	owns_mountpoint "$user" "$m"
+	return 0
+}
+
+mount_is_private() {
+	local home="$1"
+	local mountfile="$home/.ecryptfs/Private.mnt"
+	local m=$(cat "$mountfile")
+	if [ "$m" != "$home" ]; then
+		info "Mount point [$m] is not the user's home [$home]"
+	else
+		error "Mount point [$m] is the user's home"
+	fi
+	if [ -d "$m" ]; then
+		info "Mount point [$m] is a valid directory"
+	else
+		error "[$m] is not a valid mount point"
+	fi
+	owns_mountpoint "$user" "$m"
+	return 0
+}
+
+filenames_encrypted() {
+	local sigfile="$1/.ecryptfs/Private.sig"
+	local c=$(wc -l "$sigfile" | awk '{print $1}')
+	if [ "$c" = "2" ]; then
+		info "Filenames are encrypted"
+	else
+		error "Filenames are not encrypted"
+	fi
+	return 0
+}
+
+filenames_not_encrypted() {
+	local sigfile="$1/.ecryptfs/Private.sig"
+	local c=$(wc -l "$sigfile" | awk '{print $1}')
+	if [ "$c" = "1" ]; then
+		info "Filenames are not encrypted"
+	else
+		error "Filenames are encrypted"
+	fi
+	return 0
+}
+
+home="$HOME"
+user="$USER"
+checks=
+while [ ! -z "$1" ]; do
+	case "$1" in
+		-h|--home)
+			checks="$checks check_home"
+			shift
+		;;
+		-p|--private)
+			checks="$checks check_private"
+			shift
+		;;
+		-e|--filenames-encrypted)
+			checks="$checks check_filenames_encrypted"
+			shift
+		;;
+		-n|--filenames-not-encrypted)
+			checks="$checks check_filenames_not_encrypted"
+			shift
+		;;
+		--help)
+			usage
+		;;
+		-u|--user)
+			user="$2"
+			home=$(getent passwd "$user" | awk -F: '{print $6}')
+			if [ ! -d "$home" ]; then
+				error "Invalid home directory [$home] of [$user]"
+			fi
+			shift 2
+		;;
+	esac
+done
+
+if [ -z "$checks" ]; then
+	error "No checks given"
+fi
+
+for i in $checks; do
+	case "$i" in
+		check_home)
+			ecryptfs_exists "$home"
+			sigfile_valid "$home"
+			mountfile_valid "$home"
+			automount_true "$home"
+			mount_is_home "$home"
+		;;
+		check_private)
+			ecryptfs_exists "$home"
+			sigfile_valid "$home"
+			mountfile_valid "$home"
+			mount_is_private "$home"
+		;;
+		check_filenames_encrypted)
+			ecryptfs_exists "$home"
+			sigfile_valid "$home"
+			filenames_encrypted "$home"
+		;;
+		check_filenames_not_encrypted)
+			ecryptfs_exists "$home"
+			sigfile_valid "$home"
+			filenames_not_encrypted "$home"
+		;;
+		*)
+			error "Invalid check [$i]"
+		;;
+	esac
+done
+
+info "Configuration valid"
+exit 0

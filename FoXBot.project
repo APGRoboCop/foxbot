@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<CodeLite_Project Name="FoXBot">
+<CodeLite_Project Name="FoXBot" Version="10.0.0">
   <Plugins>
     <Plugin Name="qmake">
       <![CDATA[00020001N0011Win32_Debug0000000000000001N0013Win32_Release000000000000]]>
@@ -121,7 +121,7 @@
         <SearchPaths/>
       </Completion>
     </Configuration>
-    <Configuration Name="Win32_Release" CompilerType="MinGW ( MinGW )" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+    <Configuration Name="Win32_Release" CompilerType="GCC ( 4.8 )" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g;-O2;-fexpensive-optimizations;-Wall;-march=i686;-msse2;-D_strnicmp=strnicmp;-Wno-unknown-pragmas;-Wno-write-strings" C_Options="" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="../hlsdk-2.3-p4/multiplayer/cl_dll"/>
         <IncludePath Value="../hlsdk-2.3-p4/multiplayer/dlls"/>

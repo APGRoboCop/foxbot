@@ -1,0 +1,4 @@
+#!/bin/sh
+c_user=$(whoami)
+pkexec gufw-pkexec $c_user
+

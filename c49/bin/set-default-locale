@@ -1,0 +1,12 @@
+#!/usr/bin/python3
+
+import sys
+import os
+
+locale_path = sys.argv[1]
+locale = sys.argv[2]
+info = locale.replace(".UTF-8", "")
+language = info.split("_")[0]
+region = sys.argv[3]
+
+os.system("sed -e 's/$locale/%s/g' -e 's/$info/%s/g' -e 's/$language/%s/g' -e 's/$region/%s/g' /usr/share/linuxmint/mintlocale/templates/default_locale.template > %s" % (locale, info, language, region, locale_path))

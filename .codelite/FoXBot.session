@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Session Name="E:\Dropbox\src\foxbot\FoXBot.workspace">
+<Session Name="/home/mint/Dropbox/src/foxbot/FoXBot.workspace">
   <int Value="0" Name="m_selectedTab"/>
-  <wxString Value="E:\Dropbox\src\foxbot\FoXBot.workspace" Name="m_workspaceName"/>
-  <TabInfoArray Name="TabInfoArray"/>
+  <wxString Value="/home/mint/Dropbox/src/foxbot/FoXBot.workspace" Name="m_workspaceName"/>
+  <TabInfoArray Name="TabInfoArray">
+    <TabInfo>
+      <wxString Value="/home/mint/Dropbox/src/foxbot/bot.h" Name="FileName"/>
+      <int Value="20" Name="FirstVisibleLine"/>
+      <int Value="27" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+  </TabInfoArray>
   <SerializedObject Name="m_breakpoints">
     <long Value="0" Name="Count"/>
   </SerializedObject>

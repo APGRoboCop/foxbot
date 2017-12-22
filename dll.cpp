@@ -53,7 +53,7 @@
 
 #define VER_MAJOR 0
 #define VER_MINOR 79
-#define VER_BUILD 1
+#define VER_BUILD 2
 
 #define MENU_NONE 0
 #define MENU_1 1
@@ -64,7 +64,7 @@
 #define MENU_6 6
 #define MENU_7 7
 
-cvar_t foxbot = { "foxbot", "0.791-beta1", FCVAR_SERVER | FCVAR_UNLOGGED, 0, NULL };
+cvar_t foxbot = { "foxbot", "0.791-b2", FCVAR_SERVER | FCVAR_UNLOGGED, 0, NULL };
 cvar_t enable_foxbot = { "enable_foxbot", "1", FCVAR_SERVER | FCVAR_UNLOGGED, 0, NULL };
 
 cvar_t sv_bot = { "bot", "", 0, 0, NULL };

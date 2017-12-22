@@ -1,0 +1,425 @@
+#!/bin/bash
+
+# This script is designed to replace scrollkeeper-update
+# It iterates through all the directories specified using -o <dir_list>
+# If these aren't specified, the default convert_dir is used
+# (typically /usr/share/omf) and checks whether the last-modified time for
+# the directory has changed from the previous run.
+# The previous timings are stored in output_dir/.rarian-update-mtimes
+# in the file format:
+# <mtime>:@:<dir_name>:@:<converted filenames>
+# For top-level directories, the mtime is '0'
+# When multiple scrolls are generated from a single omf subdir,
+# the scroll names are seperated by a semi-colon.
+
+# I'll annotate the rest of the scirpt
+# If you want more info, please ping me and I'll try and help.
+
+
+prefix=/usr
+exec_prefix=/usr
+bindir=/usr/bin
+statedir=/var/lib/rarian
+convert_dir=/usr/share/omf
+datarootdir=/usr/share
+datadir=/usr/share
+output_dir=${datadir}/help
+package_version=0.8.1
+real_convert[0]=$convert_dir
+skip_omf_translate=1
+
+# Print the version info for this file
+print_version()
+{
+	echo "`basename $0` version 0.9"
+	echo "This script is distributed as part of Rarian v$package_version"
+	echo "Use '`basename $0` --help' for options and instructions for running"
+	echo ""
+	echo "Have a nice day!"
+
+	exit 0
+}
+
+# Standard help message
+print_usage()
+{
+	echo "Usage: `basename $0` [OPTIONS]"
+	echo "Update Rarian scrolls archive from scrollkeeper omf files."
+	echo "Note: This script is a replacement for scrollkeeper-update, but"
+	echo "does not update the scrollkeeper internal database."
+	echo ""
+	echo "Options:"
+	echo -e "-o DIR\t\t\t\tUse the specified omf directories for"
+	echo -e "\t\t\t\tconversion. Multiple directories can be "
+	echo -e "\t\t\t\tspecified using colon (:) separator."
+	echo -e "-r DIR\t\t\t\tUse the specified directory for the"\
+			"resulting"
+	echo -e "\t\t\t\tscrolls.  If the directory doesn't exist, it"
+	echo -e "\t\t\t\twill be created at run time."
+	echo -e "\t\t\t\t Note: Multiple output paths are not supported"
+	echo -e "--c\t\t\t\tRebuild the index entirely.  This will rebuild"
+	echo -e "\t\t\t\tall scroll files and may take a long time."
+	echo -e "-v\t\t\t\tTurn Verbosity on."
+	echo -e "-p\t\t\t\tSpecify a different place to store the mtimes file."
+	echo -e "-q\t\t\t\tRun silently (default)."
+	echo -e "-h, -?\t\t\t\tPrint this help message and exit."
+	echo ""
+	echo "Using this script without option will use the default omf directory"
+	echo "'$convert_dir' and the default output directory '$output_dir'"
+
+	echo ""
+	if [ $skip_omf_translate != 0 ]
+     	then
+		echo "NOTE (2): This script doesn't do anything and is "
+		echo "only provided for scrollkeeper compatibility"
+	fi
+	exit 0
+}
+
+# Nice print function to call when we're in verbose mode.
+# In normal mode, it's a no-op.
+print_verbose()
+{
+	if [ $verbose ]
+	then
+		echo "$1"
+	fi
+}
+
+
+# Process_dir handles the calling of the migration program
+# It calls the program with the correct parameters
+# and moves the results to the correct place.
+process_dir()
+{
+	fname_list=""
+	old_basename=""
+	for f in $1/*.omf; do
+	    bname=$(basename $f)
+	    bname=${bname%-*.omf}
+		if [[ $bname != $old_basename ]]
+		then
+			old_basename=$bname
+	    	filename=$bname.document
+			fname_list=$fname_list$filename";"
+		    if $bindir/rarian-sk-migrate $(dirname $f) ${bname%-*.omf} > $tmpdir/tmp.rarian
+			then
+        		cp $tmpdir/tmp.rarian $output_dir/$filename
+	        	rm $tmpdir/tmp.rarian
+		    else
+    		    echo "Error: Cannot process file "$f".  See "$tmpdir"/tmp.rarian for the reason."
+        		exit 5
+		    fi
+		fi
+	done
+	echo -e `stat -c %Y $1`':@:'$1':@:'$fname_list >> $tmpdir/rarian-updates
+}
+
+# Split up the omf dirs specified on the command line
+# I've never seen this used in practice, but
+# better safe than sorry
+split_omf_dirs ()
+{
+	let counter=0
+	while [ $convert_dir ]
+	do
+		entry=`echo $convert_dir | cut -d ':' -f 1`
+		convert_dir=${convert_dir#$entry}
+		convert_dir=${convert_dir#:}
+		real_convert[$counter]=$entry
+		let counter+=1
+	done
+
+}
+
+# Determine whether the directory defined within the index file
+# was specified in the convert_dirs
+am_adding_dir ()
+{
+	let counter=0
+	am_processing="0"
+	for i in ${real_convert[@]}
+	do
+		if [[ $fname == $i ]]
+		then
+			real_convert[$counter]="0"
+			am_processing="1"
+			return
+		fi
+		let counter+=1
+	done
+}
+
+# The directory wasn't specified.  This does nothing except cat the
+# relevant lines from the old file to the new one
+skip_directory ()
+{
+	read line
+	time=`echo $line | awk -F ":@:" '{print $1}'`
+	while [[ $time -ne 0 ]]
+	do
+		echo $line
+		echo $line >> $tmpdir/rarian-updates
+		read line
+		time=`echo $line | awk -F ":@:" '{print $1}'`
+	done
+}
+
+# Go through the given directory and add all subdirs (containing omfs)
+# to the index file (and convert the omf's to scrolls)
+add_all_files ()
+{
+	for i in $(ls $fname);
+	do
+		if [ -d $fname/$i ]
+		then
+			print_verbose "$fname/$i is new and will be added"
+			process_dir $fname/$i
+		fi
+	done
+	read line
+}
+
+# If the given directory actually exists within the omf dir
+dirs_contains ()
+{
+	let counter=0
+	am_processing="0"
+	for i in ${entries[@]}
+	do
+		if [[ $1 == $i ]]
+		then
+			entries[$counter]="0"
+			am_processing="1"
+			return
+		fi
+		let counter+=1
+	done
+}
+
+# The meat.  Goes through and checks each directory mtime against the
+# cached version.  If they're different, regenerate the scroll.
+# If the dir has been removed, delete.
+process_directory ()
+{
+	let counter=0
+	for i in  $(ls $fname)
+	do
+		entries[$counter]="$fname/$i"
+		let counter+=1
+	done
+
+	read line
+
+	old_time=`echo $line | awk -F ":@:" '{print $1}'`
+
+	while [[ $old_time && $old_time != "0" ]]
+	do
+		name=`echo $line | awk -F ":@:" '{print $2}'`
+
+		dirs_contains $name
+
+		if [[ $am_processing != "0" ]]
+		then
+			new_time=`stat -c %Y $name`
+			if [[ $new_time -ne $old_time ]]
+			then
+				print_verbose "Directory $name has changed.  Updating."
+				process_dir $name
+			else
+				echo $line >> $tmpdir/rarian-updates
+			fi
+		else
+			filenames=`echo $line | awk -F ":@:" '{print $3}'`
+			while [[ $filenames ]]
+			do
+				entry=`echo $filenames | cut -d ';' -f 1`
+				print_verbose "Directory resonsible for $entry has been removed.  Deleting"
+				filenames=${filenames#$entry}
+				filenames=${filenames#;}
+				mv $entry $tmpdir
+			done
+
+		fi
+
+		read line
+		old_time=`echo $line | awk -F ":@:" '{print $1}'`
+	done
+
+	for i in ${entries[@]}
+	do
+		if [[ $i != "0" ]]
+		then
+			print_verbose "Directory $i is new and will be added."
+			process_dir $i
+		fi
+	done
+}
+
+
+
+# Beginning of the main chunk of the script
+
+# Sorry for the stupid naming of options.
+# They are inherited from scrollkeeper :(
+
+# We use TEMP as set -- seems to nuke the return value of getopt
+TEMP=`getopt -u -n$(basename $0) -o "o:r:p:vqnhV" \
+    	     -- "$@"` \
+    || print_usage
+
+if [ $? != 0 ] ; then
+	print_usage
+	exit 0
+fi
+
+eval set -- "$TEMP"
+
+while true; do
+    case "$1" in
+		-o )
+			convert_dir=$2
+			update_output_dir=1
+			shift 2
+			;;
+		-r )
+			output_dir=$2
+			overload_update=1
+			shift 2
+			;;
+		-v )
+			verbose=1
+			shift
+			;;
+		-q )
+			shift
+			;;
+        -c )
+        	clean_index=1
+			shift
+            ;;	      
+		-h | -\? )
+			print_usage
+			;;
+		-n )
+			# Scrollkeeper compat.  Actually do nothing
+			shift
+			;;
+	        -p )
+	                statedir=$2
+	                shift 2
+			;;
+		-V | --version )
+			print_version
+			;;
+         * )
+         	break
+         	;;
+    esac
+done
+
+if [ $verbose ]
+then
+	echo "Verbosity turned on"
+fi
+
+if [ $skip_omf_translate = 0 ]
+then
+
+split_omf_dirs
+
+if [ $update_output_dir ] && [ ! $overload_update ]
+then
+    # We assume here that people are sensible and put the 
+    # omf files in <prefix>/share/omf
+    # Also assumes only a single omf path
+    print_verbose "Using non-installed location"
+    output_dir=`dirname $real_convert[0]`/help
+fi
+
+print_verbose "Outputting to $output_dir"
+
+if [ $clean_index ]
+then
+	print_verbose "Removing index file $statedir/rarian-update-mtimes"
+	rm $statedir/rarian-update-mtimes > /dev/null 2>&1
+fi
+
+
+tmpdir=/tmp/rarian-$RANDOM
+mkdir $tmpdir
+
+if [ ! -d $output_dir ]
+then
+	mkdir -p $output_dir
+fi
+
+if [ ! -d $statedir ]
+then
+	mkdir -p $statedir
+fi
+
+
+res=$(touch $statedir/rarian-update-mtimes > /dev/null 2>&1)
+
+if [ $? -ne 0  ]
+then
+	echo "Error: Unable to write to the output directory $output_dir."
+	echo "write permission is needed in order to run"
+	echo "this script.  If you don't have it, things"
+	echo "break.  Please run this script with the correct"
+	echo "permissions (normally root).  Exiting."
+	exit 3
+fi
+
+exec < $statedir/rarian-update-mtimes
+
+read line
+fname=`echo $line | awk -F ":@:" '{print $2}'`
+
+
+while [[ $fname != "" ]]
+do
+	print_verbose "Processing directory $fname"
+	echo "0:@:$fname" >> $tmpdir/rarian-updates
+	am_adding_dir $fname
+	if [[ ! $(ls $fname 2>&1) ]]
+	then
+	    print_verbose "Previous directory $fname no longer exists"
+	else
+	    if [[ $am_processing != "0" ]]
+	    then
+		process_directory
+	    else
+		skip_directory
+	    fi
+	    fname=`echo $line | awk -F ":@:" '{print $2}'`
+	fi
+done
+
+for i in ${real_convert[@]}
+do
+    if [[ $i != "0" ]]
+    then
+	res=$(ls $i 2>/dev/null)
+	if [[ ! $res ]]
+	then
+	    print_verbose "Path $i does not exist.  Ignoring"
+	else
+	    
+	    print_verbose "Adding contents of directory $i"
+	    fname=$i
+	    echo "0:@:$fname" >> $tmpdir/rarian-updates
+	    add_all_files
+	fi
+    fi
+done
+
+rm -f $statedir/rarian-update-mtimes
+if [ -e $tmpdir/rarian-updates ]
+then
+    mv $tmpdir/rarian-updates $statedir/rarian-update-mtimes
+fi
+rm -rf $tmpdir
+
+fi # ENABLE_OMF_READ
