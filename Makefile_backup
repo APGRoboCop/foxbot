@@ -49,30 +49,28 @@
 #
 #################################################################
 
-# The source paths to the SDK and metamod
+# The source pathes to the SDK and metamod
 # These are the settings for a standard installation
 
 # The top directory of the HL SDK.
-SDKTOP= ../hlsdk-2.3-p4
+SDKTOP= ../hlsdk
 SDKSRC= $(SDKTOP)/multiplayer
 
 # The directory with the metamod include files.
 # For Linux we assume a link called 'metamod' in the adminmod directory
-#METATOP= ../metamod-p-32
-METATOP= ../metamod-p-37
-METADIR= $(METATOP)/metamod
+METATOP= /metamod
+METADIR= $(SDKTOP)/$(METATOP)/metamod
 
 
 # The default target to build
 DEFTARGET= Ometamod
 
 # The version number 
-VERSION=0.79-b3
+VERSION=0.75
 
 #make sure this is the correct compiler for your system
-
-CC=gcc-4.8
-CXX=g++-4.8
+CC=gcc
+CXX=g++
 
 ################################################################################################
 # !! If you only want to compile and go you shouldn't need to edit anything below this line !! #
@@ -103,16 +101,17 @@ Ometamod:
 	$(MAKE) am_metamod MM=mm SQL=$(SQL) OPT=opt
 
 
+
 #####################################################
 # GENERAL OPTIONS
 #####################################################
 
 MODNAME= foxbot
+ARCH=i386
 SHLIBEXT=so
 
-SA_TARGET= $(MODNAME)_.$(SHLIBEXT)
-MM_TARGET= $(MODNAME)_mm.$(SHLIBEXT)
-#MM_TARGET= $(MODNAME)_mm_i686.$(SHLIBEXT)
+SA_TARGET= $(MODNAME)_$(ARCH).$(SHLIBEXT)
+MM_TARGET= $(MODNAME)_MM_$(ARCH).$(SHLIBEXT)
 
 BASE_CFLAGS=-Dstricmp=strcasecmp -D_strnicmp=strncasecmp -Dstrnicmp=strncasecmp -Dstrcmpi=strcasecmp -DLINUX -D__linux__
 XTFLAGS= -DTZONE=$(TZONE)
@@ -146,11 +145,12 @@ CFLAGS=$(BASE_CFLAGS) -Wall
 
 #full optimization (WONT WORK WITH omit-frame-pointer !!!!!)
 #CFOPT=  -march=i486 -O6 
-#CFOPT+= -ffast-math -funroll-loops 
+#CFOPT+= -ffast-math -funroll-loops \
+	-fexpensive-optimizations -malign-loops=2 \
+	-malign-jumps=2 -malign-functions=2 
 #CFOPT+= -Wall
 
-CFOPT= -march=i686 -O2 -m32 -msse2 \
-#	   -malign-loops=2 -malign-jumps=2 -malign-functions=2 
+CFOPT= -O2
 
 # configuration dependand setup
 ifeq "$(OPT)" "opt"
@@ -162,6 +162,8 @@ endif
 
 SHLIBCFLAGS=-fPIC
 SHLIBLDFLAGS=-static #-shared#-fkeep-static-consts #-shared -static
+
+
 
 
 ###############################################################
@@ -189,23 +191,10 @@ endif
 #
 
 SRC = \
-bot.cpp \
-bot_client.cpp \
-bot_combat.cpp \
-bot_job_assessors.cpp \
-bot_job_functions.cpp \
-bot_job_think.cpp \
-bot_navigate.cpp \
-bot_start.cpp \
-botcam.cpp \
-dll.cpp \
-engine.cpp \
-h_export.cpp \
-meta_api.cpp \
-sdk_util.cpp \
-util.cpp \
-version.cpp \
-waypoint.cpp
+bot.cpp bot_client.cpp bot_combat.cpp bot_navigate.cpp \
+bot_start.cpp dll.cpp engine.cpp h_export.cpp \
+meta_api.cpp version.cpp sdk_util.cpp \
+util.cpp waypoint.cpp botcam.cpp
 
 
 ifneq "$(MM)" "mm"
@@ -252,16 +241,16 @@ DO_CXX=$(CXX) $(CFLAGS) $(XTFLAGS) $(SHLIBCFLAGS) $(INCLUDEDIRS) -o $@ -c $<
 ##############################################################
 
 $(OBJDIR)/%.o: %.cpp
-	$(DO_CXX)
+	$(DO_CC)
 
 $(OBJDIR)/%.o: %.cc
-	$(DO_CXX)
+	$(DO_CC)
 
 $(MMOBJDIR)/%.o: %.cpp
-	$(DO_CXX)
+	$(DO_CC)
 
 $(MMOBJDIR)/%.o: %.cc
-	$(DO_CXX)
+	$(DO_CC)
 
 
 # make sure to recompile vdate.c for each link

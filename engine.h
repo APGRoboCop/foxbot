@@ -118,7 +118,7 @@ const char* pfnCVarGetString(const char* szVarName);
 void pfnCVarSetFloat(const char* szVarName, float flValue);
 void pfnCVarSetString(const char* szVarName, const char* szValue);
 void pfnAlertMessage(ALERT_TYPE atype, char* szFmt, ...);
-void pfnEngineFprintf(FILE* pfile, char* szFmt, ...);
+//void pfnEngineFprintf(FILE* pfile, char* szFmt, ...); // Not required? [APG]RoboCop[CL]
 void* pfnPvAllocEntPrivateData(edict_t* pEdict, int32 cb);
 void* pfnPvEntPrivateData(edict_t* pEdict);
 void pfnFreeEntPrivateData(edict_t* pEdict);
@@ -228,5 +228,5 @@ void pfnCvar_DirectSet(struct cvar_s* var, char* value);
 void pfnForceUnmodified(FORCE_TYPE type, float* mins, float* maxs, const char* filename);
 void pfnGetPlayerStats(const edict_t* pClient, int* ping, int* packet_loss);
 const char* pfnGetPlayerAuthID(edict_t* e);
-extern unsigned int mm_GetPlayerWONId(edict_t* e);
+//extern unsigned int mm_GetPlayerWONId(edict_t* e); // Old and outdated? [APG]RoboCop[CL]
 #endif // ENGINE_H
