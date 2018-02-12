@@ -1,4 +1,4 @@
-#ifndef _VERSION_H_
+﻿#ifndef _VERSION_H_
 #define _VERSION_H_
 /*
  *
@@ -38,7 +38,7 @@
  * If not, we provide it here.
  */
 #ifndef VERSION
-#  define VERSION 0.791-b2
+#  define VERSION 0.791-b3
 #endif
 
 /*

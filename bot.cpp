@@ -47,6 +47,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+// for logging crashlog.txt [APG]RoboCop[CL]
+#include <time.h>
+
 //#include "list.h"
 extern List<char*> commanders;
 
@@ -1618,6 +1621,27 @@ static void BotAmmoCheck(bot_t* pBot)
         pBot->ammoStatus = AMMO_UNNEEDED;
         break;
     }
+}
+
+//Borrowed from Cheeseh from RCBot - [APG]RoboCop[CL]
+void BotFile_Write ( char *string )
+{
+	FILE *fp = fopen(CRASHLOG_FILE,"a");
+	
+	if ( fp )
+	{
+		char time_str[512];
+		time_t ltime = time(NULL);
+		struct tm *today;
+		today = localtime( &ltime );
+		
+		strftime(time_str, sizeof(time_str), "%m/%d/%Y %H:%M:%S", today );
+		
+		fprintf(fp,"%s => ",time_str);
+		fprintf(fp,"%s\n",string);
+
+		fclose(fp);
+	}
 }
 
 // This function handles the behaviour of bots when they are in close
