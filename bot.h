@@ -69,6 +69,10 @@ void ClientKill(edict_t* pEntity);
 void FakeClientCommand(edict_t* pBot, char* arg1, char* arg2, char* arg3);
 // void FakeClientCommand (edict_t *pFakeClient, const char *fmt, ...);
 
+//Borrowed from Cheeseh from RCBot - [APG]RoboCop[CL]
+#define CRASHLOG_FILE "crashlog.txt"
+void BotFile_Write ( char *string );
+
 const char* Cmd_Args(void);
 const char* Cmd_Argv(int argc);
 int Cmd_Argc(void);

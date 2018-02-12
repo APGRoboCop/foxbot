@@ -3,16 +3,19 @@
 ==============================
 
 --------------------------------------------------------------------------------
-Version 0.791-beta2
-December-23-2017
+Version 0.791-beta3
+??-??-2017
 Updated by RoboCop
 --------------------------------------------------------------------------------
+- Added RCBot's CrashLog script to help keep record of 'FATAL ERROR' crashes
+
+- Hopefully bot_chat now works for Linux builds
 
 - Added optimisation for Inline Function for both builds
 
 - Linux build optimised and tuned for newer Pentium 4 arch
 
-- Both builds appear to perform well using older compilers as they appear more stable (GCC 4.8 & VS2013)
+- Both builds appear to perform well using older compilers as they appear more stable (GCC 4.9 & VS2013)
 
 - h_export.cpp Linux 'h_Library' can now detect both old and new TFC server build
 
@@ -24,7 +27,7 @@ Updated by RoboCop
 
 >> Adjusting the bot_job_think.cpp for equalising and to balance the bot task priority
 
->> bot_chat doesn't seem to be functioning
+>> Bots don't perform better in AvD nor CP maps
 
 --------------------------------------------------------------------------------
 Version 0.79
