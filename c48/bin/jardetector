@@ -1,3 +1,0 @@
-#!/bin/sh -- 
-
-jar tf "$1" META-INF/MANIFEST.MF | grep META-INF/MANIFEST.MF >/dev/null

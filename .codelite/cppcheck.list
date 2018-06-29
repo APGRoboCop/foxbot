@@ -1,6 +1,9 @@
 /home/desktop/Dropbox/src/foxbot/bot.cpp
 /home/desktop/Dropbox/src/foxbot/bot_client.cpp
 /home/desktop/Dropbox/src/foxbot/bot_combat.cpp
+/home/desktop/Dropbox/src/foxbot/bot_job_assessors.cpp
+/home/desktop/Dropbox/src/foxbot/bot_job_functions.cpp
+/home/desktop/Dropbox/src/foxbot/bot_job_think.cpp
 /home/desktop/Dropbox/src/foxbot/bot_navigate.cpp
 /home/desktop/Dropbox/src/foxbot/bot_start.cpp
 /home/desktop/Dropbox/src/foxbot/botcam.cpp
@@ -12,6 +15,3 @@
 /home/desktop/Dropbox/src/foxbot/sdk_util.cpp
 /home/desktop/Dropbox/src/foxbot/util.cpp
 /home/desktop/Dropbox/src/foxbot/waypoint.cpp
-/home/desktop/Dropbox/src/foxbot/bot_job_assessors.cpp
-/home/desktop/Dropbox/src/foxbot/bot_job_functions.cpp
-/home/desktop/Dropbox/src/foxbot/bot_job_think.cpp

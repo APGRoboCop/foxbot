@@ -1,3 +1,0 @@
-#!/bin/bash
-
-/usr/lib/linuxmint/mintlocale/mintlocale.py $@

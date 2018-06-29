@@ -2,20 +2,7 @@
 <CodeLite_Project Name="FoXBot" Version="10.0.0">
   <Plugins>
     <Plugin Name="qmake">
-      <![CDATA[00020001N0011Win32_Debug0000000000000001N0013Win32_Release000000000000]]>
-    </Plugin>
-    <Plugin Name="CppCheck"/>
-    <Plugin Name="CMakePlugin">
-      <![CDATA[[{
-  "name": "Win32_Release",
-  "enabled": false,
-  "buildDirectory": "build",
-  "sourceDirectory": "$(ProjectPath)",
-  "generator": "",
-  "buildType": "",
-  "arguments": [],
-  "parentProject": ""
- }]]]>
+      <![CDATA[00010001N0013Release_Win32000000000000]]>
     </Plugin>
   </Plugins>
   <Description/>
@@ -24,6 +11,9 @@
     <File Name="bot.cpp"/>
     <File Name="bot_client.cpp"/>
     <File Name="bot_combat.cpp"/>
+    <File Name="bot_job_assessors.cpp"/>
+    <File Name="bot_job_functions.cpp"/>
+    <File Name="bot_job_think.cpp"/>
     <File Name="bot_navigate.cpp"/>
     <File Name="bot_start.cpp"/>
     <File Name="botcam.cpp"/>
@@ -35,28 +25,36 @@
     <File Name="sdk_util.cpp"/>
     <File Name="util.cpp"/>
     <File Name="waypoint.cpp"/>
-    <File Name="bot_job_assessors.cpp"/>
-    <File Name="bot_job_functions.cpp"/>
-    <File Name="bot_job_think.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="Header Files">
     <File Name="bot.h"/>
+    <File Name="botcam.h"/>
     <File Name="bot_client.h"/>
     <File Name="bot_func.h"/>
-    <File Name="botcam.h"/>
-    <File Name="cbase.h"/>
+    <File Name="bot_job_assessors.h"/>
+    <File Name="bot_job_functions.h"/>
+    <File Name="bot_job_think.h"/>
+    <File Name="bot_navigate.h"/>
+    <File Name="bot_weapons.h"/>
     <File Name="engine.h"/>
     <File Name="extdll.h"/>
+    <File Name="foxbot_private.h"/>
     <File Name="list.h"/>
     <File Name="osdep.h"/>
     <File Name="player.h"/>
     <File Name="resource.h"/>
     <File Name="sdk_util.h"/>
-    <File Name="util.h"/>
+    <File Name="vector.h"/>
+    <File Name="version.h"/>
+    <File Name="vers_fox.h"/>
     <File Name="waypoint.h"/>
   </VirtualDirectory>
   <VirtualDirectory Name="Resource Files">
+    <File Name="THINGSTODO.txt"/>
     <File Name="res_fox.rc"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="resource">
+    <File Name="VTune/FoXBot.vpj"/>
   </VirtualDirectory>
   <Settings Type="Dynamic Library">
     <GlobalSettings>
@@ -68,14 +66,14 @@
       </Linker>
       <ResourceCompiler Options=""/>
     </GlobalSettings>
-    <Configuration Name="Win32_Debug" CompilerType="MinGW ( MinGW )" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+    <Configuration Name="Debug_Win32" CompilerType="Cross GCC ( i686-w64-mingw32 )" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g -Wall" C_Options="" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
-        <IncludePath Value="..\hlsdk-2.3-p4\multiplayer\dlls"/>
-        <IncludePath Value="..\hlsdk-2.3-p4\multiplayer\engine"/>
-        <IncludePath Value="..\hlsdk-2.3-p4\multiplayer\common"/>
-        <IncludePath Value="..\hlsdk-2.3-p4\multiplayer\pm_shared"/>
-        <IncludePath Value="..\hlsdk-2.3-p4\multiplayer\cl_dll"/>
-        <IncludePath Value="..\metamod-p-37\metamod"/>
+        <IncludePath Value="../hlsdk-2.3-p4/multiplayer/common"/>
+        <IncludePath Value="../hlsdk-2.3-p4/multiplayer/dlls"/>
+        <IncludePath Value="../hlsdk-2.3-p4/multiplayer/engine"/>
+        <IncludePath Value="../hlsdk-2.3-p4/multiplayer/pm_shared"/>
+        <IncludePath Value="../hlsdk-2.3-p4/multiplayer/cl_dll"/>
+        <IncludePath Value="../metamod-p-38/metamod"/>
         <Preprocessor Value="_DEBUG"/>
         <Preprocessor Value="WIN32"/>
         <Preprocessor Value="_WINDOWS"/>
@@ -84,14 +82,19 @@
       <Linker Options="-O0" Required="yes">
         <LibraryPath Value="."/>
         <LibraryPath Value="Debug"/>
-        <Library Value="user32.lib"/>
-        <Library Value="advapi32.lib"/>
       </Linker>
       <ResourceCompiler Options="" Required="no"/>
-      <General OutputFile="$(IntermediateDirectory)/$(ProjectName).dll" IntermediateDirectory="./Debug" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="./$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
+      <General OutputFile="./Debug/FoXBot.dll" IntermediateDirectory="./Debug/" Command="./FoXBot.dll" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="./Debug" PauseExecWhenProcTerminates="no" IsGUIProgram="no" IsEnabled="yes"/>
       <BuildSystem Name="Default"/>
-      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
-        <![CDATA[]]>
+      <Environment EnvVarSetName="&lt;Use Workspace Settings&gt;" DbgSetName="&lt;Use Global Settings&gt;">
+        <![CDATA[VS_Configuration=Debug
+VS_IntDir=./Debug/
+VS_OutDir=./Debug/
+VS_Platform=Win32
+VS_ProjectDir=/home/desktop/Dropbox/src/foxbot/
+VS_ProjectName=FoXBot
+VS_SolutionDir=/home/desktop/Dropbox/src/foxbot/
+]]>
       </Environment>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="" IsExtended="no">
         <DebuggerSearchPaths/>
@@ -99,7 +102,9 @@
         <StartupCommands/>
       </Debugger>
       <PreBuild/>
-      <PostBuild/>
+      <PostBuild>
+        <Command Enabled="yes">copy "$(TargetPath)" "$(FOXBOTFOLDER)"</Command>
+      </PostBuild>
       <CustomBuild Enabled="no">
         <RebuildCommand/>
         <CleanCommand/>
@@ -121,38 +126,36 @@
         <SearchPaths/>
       </Completion>
     </Configuration>
-    <Configuration Name="Win32_Release" CompilerType="GCC ( 4.8 )" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-g;-O2;-fexpensive-optimizations;-Wall;-march=i686;-msse2;-D_strnicmp=strnicmp;-Wno-unknown-pragmas;-Wno-write-strings" C_Options="" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
-        <IncludePath Value="../hlsdk-2.3-p4/multiplayer/cl_dll"/>
-        <IncludePath Value="../hlsdk-2.3-p4/multiplayer/dlls"/>
+    <Configuration Name="Release_Win32" CompilerType="Cross GCC ( i686-w64-mingw32 )" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-g -Wall" C_Options="" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="../hlsdk-2.3-p4/multiplayer/common"/>
+        <IncludePath Value="../hlsdk-2.3-p4/multiplayer/dlls"/>
         <IncludePath Value="../hlsdk-2.3-p4/multiplayer/engine"/>
         <IncludePath Value="../hlsdk-2.3-p4/multiplayer/pm_shared"/>
+        <IncludePath Value="../hlsdk-2.3-p4/multiplayer/cl_dll"/>
         <IncludePath Value="../metamod-p-37/metamod"/>
         <Preprocessor Value="NDEBUG"/>
         <Preprocessor Value="WIN32"/>
         <Preprocessor Value="_WINDOWS"/>
         <Preprocessor Value="_WIN32"/>
+        <Preprocessor Value="_CRT_NONSTDC_NO_WARNINGS"/>
+        <Preprocessor Value="_CRT_SECURE_NO_WARNINGS"/>
       </Compiler>
-      <Linker Options="-Xlinker;-shared;-s" Required="yes">
+      <Linker Options="-O0" Required="yes">
         <LibraryPath Value="."/>
         <LibraryPath Value="Debug"/>
-        <Library Value="libkernel32.a"/>
-        <Library Value="libuser32.a"/>
-        <Library Value="libgdi32.a"/>
-        <Library Value="libwinspool.a"/>
-        <Library Value="libcomdlg32.a"/>
-        <Library Value="libadvapi32.a"/>
-        <Library Value="libshell32.a"/>
-        <Library Value="libole32.a"/>
-        <Library Value="liboleaut32.a"/>
-        <Library Value="libuuid.a"/>
       </Linker>
       <ResourceCompiler Options="" Required="no"/>
-      <General OutputFile="$(IntermediateDirectory)/foxbot.dll" IntermediateDirectory="./Release" Command="./foxbot" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="./$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
+      <General OutputFile="./Release/foxbot.dll" IntermediateDirectory="./Release/" Command="./foxbot.dll" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="./Release" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
       <BuildSystem Name="Default"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
-        <![CDATA[]]>
+        <![CDATA[VS_Configuration=Release
+VS_IntDir=./Release/
+VS_OutDir=./Release/
+VS_Platform=Win32
+VS_ProjectDir=/home/desktop/Dropbox/src/foxbot/
+VS_ProjectName=FoXBot
+VS_SolutionDir=/home/desktop/Dropbox/src/foxbot/]]>
       </Environment>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="" IsExtended="no">
         <DebuggerSearchPaths/>
@@ -160,7 +163,9 @@
         <StartupCommands/>
       </Debugger>
       <PreBuild/>
-      <PostBuild/>
+      <PostBuild>
+        <Command Enabled="yes">copy "$(TargetPath)" "$(FOXBOTFOLDER)"</Command>
+      </PostBuild>
       <CustomBuild Enabled="no">
         <RebuildCommand/>
         <CleanCommand/>
