@@ -37,8 +37,8 @@ static META_FUNCTIONS gMetaFunctionTable = {
 plugin_info_t Plugin_info = {
     META_INTERFACE_VERSION,                       // ifvers
     "FoxBot",                                     // name
-    "0.791-beta2",                                    // version
-    "23/12/2017",                                  // date
+    "0.791-beta3",                                    // version
+    "11/02/2018",                                  // date
     "Tom Simpson & RoboCop <robocop@lycos.co.uk>", // author
     "http://www.apg-clan.org/",                   // url
     //"http://www.omni-bot.com/",	// url

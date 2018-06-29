@@ -41,7 +41,6 @@
 #include "bot_weapons.h"
 #include "bot_job_think.h"
 
-#include "math.h"
 #include "engine.h" //originally commented
 
 #include <sys/types.h>

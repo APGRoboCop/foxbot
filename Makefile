@@ -16,7 +16,6 @@
 # Shamelessly stealing from the MetaMOD Makefile
 # by Will Day
 
-
 ###
 #
 # TARGETS:
@@ -42,7 +41,6 @@
 #
 ###
 
-
 #################################################################
 #
 #  CONFIGURATION
@@ -62,20 +60,18 @@ SDKSRC= $(SDKTOP)/multiplayer
 METATOP= ../metamod-p-37
 METADIR= $(METATOP)/metamod
 
-
 # The default target to build
 DEFTARGET= Ometamod
 
 # The version number 
 VERSION=0.791
 
-#make sure this is the correct compiler for your system
+# Make sure this is the correct compiler for your system
+# 4.8 appears to compile the builds smaller but GCC 5+ and Clang appears not compatible
 
-# 4.8 appears to compile the builds smaller but GCC 5+ appears not compatible
-
-#CC=clang --gcc-toolchain=c48
+#CC=clang
 CC=gcc-4.8
-#CXX=clang++ --gcc-toolchain=c48
+#CXX=clang++
 CXX=g++-4.8
 
 ################################################################################################
@@ -86,9 +82,8 @@ CXX=g++-4.8
 # Bogus targets
 ######################################################
 
-OPT=opt
+OPT=debug
 MM=mm
-
 
 default: $(DEFTARGET)
 
@@ -106,7 +101,6 @@ Ostandalone:
 Ometamod:
 	$(MAKE) am_metamod MM=mm SQL=$(SQL) OPT=opt
 
-
 #####################################################
 # GENERAL OPTIONS
 #####################################################
@@ -118,7 +112,9 @@ SA_TARGET= $(MODNAME)_.$(SHLIBEXT)
 MM_TARGET= $(MODNAME)_mm.$(SHLIBEXT)
 #MM_TARGET= $(MODNAME)_mm_i686.$(SHLIBEXT)
 
-BASE_CFLAGS=-Dstricmp=strcasecmp -D_strnicmp=strncasecmp -Dstrnicmp=strncasecmp -Dstrcmpi=strcasecmp -DLINUX -D__linux__
+BASE_CFLAGS=-Dstricmp=strcasecmp -D_strnicmp=strncasecmp -Dstrnicmp=strncasecmp -Dstrcmpi=strcasecmp -DLINUX -D__linux__ \
+#	-std=gnu++98 -Wno-c++11-compat
+
 XTFLAGS= -DTZONE=$(TZONE)
 
 ifneq "$(VERSION)" ""
@@ -141,9 +137,8 @@ endif
 
 CFLAGS=$(BASE_CFLAGS) -Wall
 
-
 # debug build
-#CFDBG= -g -ggdb -Wall
+CFDBG= -g -ggdb -Wall
 #CFDBG+= -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations
 #CFDBG+= -fno-thread-jumps -fno-defer-pop -fno-delayed-branch -fno-omit-frame-pointer -fkeep-static-consts
 #CFDBG+= -march=i486 
@@ -152,7 +147,7 @@ CFLAGS=$(BASE_CFLAGS) -Wall
 #CFOPT=  -march=i486 -O6 
 #CFOPT+= -ffast-math -funroll-loops (-ffast-math unstable?)
 
-CFOPT= -O2 -m32 -mtune=pentium4 -march=i686 -msse2 -mfpmath=sse
+CFOPT= -O2 -m32 -mtune=generic -march=i686 -msse -msse2 -mfpmath=sse
 
 # configuration dependand setup
 ifeq "$(OPT)" "opt"
@@ -161,10 +156,8 @@ else
 	CFLAGS+= $(CFDBG)
 endif
 
-
 SHLIBCFLAGS=-fPIC
 SHLIBLDFLAGS=-static #-shared#-fkeep-static-consts #-shared -static
-
 
 ###############################################################
 # DIRECTORY SETUP
@@ -180,7 +173,6 @@ ifeq "$(MM)" "mm"
 	XTFLAGS+= -DUSE_METAMOD
 	INCLUDEDIRS+= -I$(METADIR)
 endif
-
 
 ##############################################################
 # OBJECTS AND LIBRARIES
@@ -215,7 +207,6 @@ util.cpp \
 version.cpp \
 waypoint.cpp
 
-
 ifneq "$(MM)" "mm"
 	SRC+= linkfunc.cpp
 endif
@@ -227,23 +218,18 @@ OBJ=$(addprefix $(OBJDIR)/,$(subst .cpp,.o,$(SRC)))
 MMOBJ=$(addprefix $(MMOBJDIR)/,$(subst .cpp,.o,$(SRC)))
 OBJADD=   
 
-
 #
 # Libraries
 #
 LDFLAGS=-ldl -lcrypt -lm -lc -lstdc++
 LIBADD=-shared
 
-
-
 ##############################################################
 # COMPILER SETUP
 ##############################################################
 
-
 DO_CC=$(CC) $(CFLAGS) $(XTFLAGS) $(SHLIBCFLAGS) $(INCLUDEDIRS) -o $@ -c $<
 DO_CXX=$(CXX) $(CFLAGS) $(XTFLAGS) $(SHLIBCFLAGS) $(INCLUDEDIRS) -o $@ -c $<
-
 
 ##############################################################
 # SPECIAL SETUPS IF REQUIRED
@@ -253,7 +239,6 @@ DO_CXX=$(CXX) $(CFLAGS) $(XTFLAGS) $(SHLIBCFLAGS) $(INCLUDEDIRS) -o $@ -c $<
 #
 #LeakTracer.o: LeakTracer.cc
 #	$(CC) -fPIC -c -g -pipe -Wall -W LeakTracer.cc -o LeakTracer.o
-
 
 ##############################################################
 # BUILD TARGETS AND RULES
@@ -271,16 +256,13 @@ $(MMOBJDIR)/%.o: %.cpp
 $(MMOBJDIR)/%.o: %.cc
 	$(DO_CXX)
 
-
 # make sure to recompile vdate.c for each link
 $(OBJDIR)/version.o: $(SRC) *.h Makefile
 $(MMOBJDIR)/version.o: $(SRC) *.h Makefile
 
-
 am_standalone: $(SA_TARGET)
 
 am_metamod:  $(MM_TARGET)
-
 
 $(SA_TARGET) : neat $(OBJ) $(OBJADD)
 	$(CC) $(CFLAGS) $(SHLIBLDFLAGS) $(LDFLAGS) -o $@ $(OBJ) $(OBJADD) $(LIBADD) 
@@ -305,7 +287,6 @@ depend:
 	$(CC) -MM $(INCLUDEDIRS) $(SRC)
 
 # test: $(TESTDIR)/$(MODNAME)_MM_$(ARCH).$(SHLIBEXT)
-
 
 # $(TESTDIR)/$(MODNAME)_MM_$(ARCH).$(SHLIBEXT): $(MODNAME)_MM_$(ARCH).$(SHLIBEXT)
 # 	install $< $@

@@ -7,14 +7,20 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug Win32">
-				<Option output="FoXBot" prefix_auto="1" extension_auto="1" />
-				<Option type="0" />
+				<Option output="./Debug/FoXBot" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Debug" />
+				<Option type="3" />
 				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
 				<Compiler>
 					<Add option="-D_DEBUG" />
 					<Add option="-DWIN32" />
 					<Add option="-D_WINDOWS" />
 					<Add option="-DVALVE_DLL" />
+					<Add option="-W" />
+					<Add option="-g" />
+					<Add option="-O0" />
 					<Add directory="../hlsdk/multiplayer/common" />
 					<Add directory="../hlsdk/multiplayer/dlls" />
 					<Add directory="../hlsdk/multiplayer/engine" />
@@ -22,24 +28,51 @@
 					<Add directory="../hlsdk/multiplayer/cl_dll" />
 					<Add directory="../metamod/metamod" />
 				</Compiler>
+				<ResourceCompiler>
+					<Add directory="../hlsdk/multiplayer/common" />
+					<Add directory="../hlsdk/multiplayer/dlls" />
+					<Add directory="../hlsdk/multiplayer/engine" />
+					<Add directory="../hlsdk/multiplayer/pm_shared" />
+					<Add directory="../hlsdk/multiplayer/cl_dll" />
+					<Add directory="../metamod/metamod" />
+				</ResourceCompiler>
+				<ExtraCommands>
+					<Add after="copy .\Debug\ $(FOXBOTFOLDER)" />
+				</ExtraCommands>
 			</Target>
 			<Target title="Release Win32">
-				<Option output="FoXBot" prefix_auto="1" extension_auto="1" />
-				<Option type="0" />
+				<Option output="./Release/FoXBot" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Release" />
+				<Option type="3" />
 				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
 				<Compiler>
 					<Add option="-DNDEBUG" />
 					<Add option="-DWIN32" />
 					<Add option="-D_WINDOWS" />
+					<Add option="-DVALVE_DLL" />
 					<Add option="-D_WIN32" />
-					<Add option="-D_CRT_NONSTDC_NO_WARNINGS" />
-					<Add directory="../hlsdk-2.3-p4/multiplayer/common" />
-					<Add directory="../hlsdk-2.3-p4/multiplayer/dlls" />
-					<Add directory="../hlsdk-2.3-p4/multiplayer/engine" />
-					<Add directory="../hlsdk-2.3-p4/multiplayer/pm_shared" />
-					<Add directory="../hlsdk-2.3-p4/multiplayer/cl_dll" />
-					<Add directory="../metamod-p-37/metamod" />
+					<Add option="-W" />
+					<Add option="-O1" />
+					<Add directory="../hlsdk/multiplayer/common" />
+					<Add directory="../hlsdk/multiplayer/dlls" />
+					<Add directory="../hlsdk/multiplayer/engine" />
+					<Add directory="../hlsdk/multiplayer/pm_shared" />
+					<Add directory="../hlsdk/multiplayer/cl_dll" />
+					<Add directory="../metamod/metamod" />
 				</Compiler>
+				<ResourceCompiler>
+					<Add directory="../hlsdk/multiplayer/common" />
+					<Add directory="../hlsdk/multiplayer/dlls" />
+					<Add directory="../hlsdk/multiplayer/engine" />
+					<Add directory="../hlsdk/multiplayer/pm_shared" />
+					<Add directory="../hlsdk/multiplayer/cl_dll" />
+					<Add directory="../metamod/metamod" />
+				</ResourceCompiler>
+				<ExtraCommands>
+					<Add after="copy .\Release\ $(FOXBOTFOLDER)" />
+				</ExtraCommands>
 			</Target>
 		</Build>
 		<Unit filename="THINGSTODO.txt" />
@@ -50,43 +83,30 @@
 		<Unit filename="bot_client.h" />
 		<Unit filename="bot_combat.cpp" />
 		<Unit filename="bot_func.h" />
-		<Unit filename="bot_job_assessors.cpp" />
-		<Unit filename="bot_job_assessors.h" />
-		<Unit filename="bot_job_functions.cpp" />
-		<Unit filename="bot_job_functions.h" />
-		<Unit filename="bot_job_think.cpp" />
-		<Unit filename="bot_job_think.h" />
 		<Unit filename="bot_navigate.cpp" />
-		<Unit filename="bot_navigate.h" />
 		<Unit filename="bot_start.cpp" />
-		<Unit filename="bot_weapons.h" />
 		<Unit filename="botcam.cpp" />
-		<Unit filename="botcam.h" />
+		<Unit filename="cbase.cpp" />
 		<Unit filename="dll.cpp" />
 		<Unit filename="engine.cpp" />
-		<Unit filename="engine.h" />
-		<Unit filename="extdll.h" />
-		<Unit filename="foxbot_private.h" />
+		<Unit filename="fsubs.cpp" />
+		<Unit filename="fworld.cpp" />
+		<Unit filename="globals.cpp" />
 		<Unit filename="h_export.cpp" />
 		<Unit filename="linkfunc.cpp" />
 		<Unit filename="list.h" />
 		<Unit filename="meta_api.cpp" />
-		<Unit filename="osdep.h" />
-		<Unit filename="player.h" />
-		<Unit filename="res_fox.rc" />
-		<Unit filename="resource.h" />
+		<Unit filename="res_fox.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
 		<Unit filename="sdk_util.cpp" />
-		<Unit filename="sdk_util.h" />
 		<Unit filename="util.cpp" />
-		<Unit filename="vector.h" />
-		<Unit filename="vers_fox.h" />
-		<Unit filename="version.h" />
+		<Unit filename="util.h" />
 		<Unit filename="waypoint.cpp" />
 		<Unit filename="waypoint.h" />
 		<Extensions>
-			<envvars />
 			<code_completion />
-			<lib_finder disable_auto="1" />
+			<envvars />
 			<debugger />
 		</Extensions>
 	</Project>

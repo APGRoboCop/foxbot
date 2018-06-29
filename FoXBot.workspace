@@ -4,11 +4,11 @@
   <BuildMatrix>
     <WorkspaceConfiguration Name="Debug" Selected="no">
       <Environment/>
-      <Project Name="FoXBot" ConfigName="Win32_Debug"/>
+      <Project Name="FoXBot" ConfigName="Debug_Win32"/>
     </WorkspaceConfiguration>
     <WorkspaceConfiguration Name="Release" Selected="yes">
       <Environment/>
-      <Project Name="FoXBot" ConfigName="Win32_Release"/>
+      <Project Name="FoXBot" ConfigName="Release_Win32"/>
     </WorkspaceConfiguration>
   </BuildMatrix>
 </CodeLite_Workspace>

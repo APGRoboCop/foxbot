@@ -45,3 +45,19 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+.codelite/.tern-project
+.codelite/cppcheck.list
+.codelite/FoXBot.session
+.codelite/FoXBot.tags
+.codelite/refactoring.db
+.codelite/subversion.conf
+.idea/foxbot.iml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/workspace.xml
+.vs/FoXBot/v15/.suo
+.vs/FoXBot/v15/Browse.VC.db
+.vs/ProjectSettings.json
+.vs/slnx.sqlite
+.vs/VSWorkspaceState.json

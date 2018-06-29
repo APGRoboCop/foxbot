@@ -28,6 +28,8 @@
 #ifndef BOT_H
 #define BOT_H
 
+#include <string> //Required? [APG]RoboCop[CL]
+
 #include "osdep.h"
 
 // stuff for Win32 vs. Linux builds
@@ -144,8 +146,6 @@ int Cmd_Argc(void);
 #define CHAT_TYPE_KILLED_HI 3
 #define CHAT_TYPE_KILLED_LOW 4
 #define CHAT_TYPE_SUICIDE 5
-
-#include <string>
 
 using namespace std;
 
