@@ -1,1 +1,106 @@
-﻿
+﻿  bot.cpp
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE' : macro redefinition
+          C:\Program Files (x86)\Windows Kits\8.1\Include\um\winnt.h(1243) : see previous definition of 'ARRAYSIZE'
+C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stddef.h(56): warning C4005: 'offsetof' : macro redefinition
+          E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(395) : see previous definition of 'offsetof'
+e:\dropbox\src\metamod-p-37\metamod\comp_dep.h(79): warning C4005: 'va_copy' : macro redefinition
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdarg.h(37) : see previous definition of 'va_copy'
+  bot_client.cpp
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE' : macro redefinition
+          C:\Program Files (x86)\Windows Kits\8.1\Include\um\winnt.h(1243) : see previous definition of 'ARRAYSIZE'
+C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stddef.h(56): warning C4005: 'offsetof' : macro redefinition
+          E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(395) : see previous definition of 'offsetof'
+  bot_combat.cpp
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE' : macro redefinition
+          C:\Program Files (x86)\Windows Kits\8.1\Include\um\winnt.h(1243) : see previous definition of 'ARRAYSIZE'
+C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stddef.h(56): warning C4005: 'offsetof' : macro redefinition
+          E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(395) : see previous definition of 'offsetof'
+  bot_job_assessors.cpp
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE' : macro redefinition
+          C:\Program Files (x86)\Windows Kits\8.1\Include\um\winnt.h(1243) : see previous definition of 'ARRAYSIZE'
+C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stddef.h(56): warning C4005: 'offsetof' : macro redefinition
+          E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(395) : see previous definition of 'offsetof'
+e:\dropbox\src\metamod-p-37\metamod\comp_dep.h(79): warning C4005: 'va_copy' : macro redefinition
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdarg.h(37) : see previous definition of 'va_copy'
+  bot_job_functions.cpp
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE' : macro redefinition
+          C:\Program Files (x86)\Windows Kits\8.1\Include\um\winnt.h(1243) : see previous definition of 'ARRAYSIZE'
+C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stddef.h(56): warning C4005: 'offsetof' : macro redefinition
+          E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(395) : see previous definition of 'offsetof'
+e:\dropbox\src\metamod-p-37\metamod\comp_dep.h(79): warning C4005: 'va_copy' : macro redefinition
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdarg.h(37) : see previous definition of 'va_copy'
+  bot_job_think.cpp
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE' : macro redefinition
+          C:\Program Files (x86)\Windows Kits\8.1\Include\um\winnt.h(1243) : see previous definition of 'ARRAYSIZE'
+C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stddef.h(56): warning C4005: 'offsetof' : macro redefinition
+          E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(395) : see previous definition of 'offsetof'
+e:\dropbox\src\metamod-p-37\metamod\comp_dep.h(79): warning C4005: 'va_copy' : macro redefinition
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdarg.h(37) : see previous definition of 'va_copy'
+  bot_navigate.cpp
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE' : macro redefinition
+          C:\Program Files (x86)\Windows Kits\8.1\Include\um\winnt.h(1243) : see previous definition of 'ARRAYSIZE'
+C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stddef.h(56): warning C4005: 'offsetof' : macro redefinition
+          E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(395) : see previous definition of 'offsetof'
+  bot_start.cpp
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE' : macro redefinition
+          C:\Program Files (x86)\Windows Kits\8.1\Include\um\winnt.h(1243) : see previous definition of 'ARRAYSIZE'
+C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stddef.h(56): warning C4005: 'offsetof' : macro redefinition
+          E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(395) : see previous definition of 'offsetof'
+  botcam.cpp
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE' : macro redefinition
+          C:\Program Files (x86)\Windows Kits\8.1\Include\um\winnt.h(1243) : see previous definition of 'ARRAYSIZE'
+C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stddef.h(56): warning C4005: 'offsetof' : macro redefinition
+          E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(395) : see previous definition of 'offsetof'
+  dll.cpp
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE' : macro redefinition
+          C:\Program Files (x86)\Windows Kits\8.1\Include\um\winnt.h(1243) : see previous definition of 'ARRAYSIZE'
+C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stddef.h(56): warning C4005: 'offsetof' : macro redefinition
+          E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(395) : see previous definition of 'offsetof'
+e:\dropbox\src\metamod-p-37\metamod\comp_dep.h(79): warning C4005: 'va_copy' : macro redefinition
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdarg.h(37) : see previous definition of 'va_copy'
+  engine.cpp
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE' : macro redefinition
+          C:\Program Files (x86)\Windows Kits\8.1\Include\um\winnt.h(1243) : see previous definition of 'ARRAYSIZE'
+C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stddef.h(56): warning C4005: 'offsetof' : macro redefinition
+          E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(395) : see previous definition of 'offsetof'
+e:\dropbox\src\metamod-p-37\metamod\comp_dep.h(79): warning C4005: 'va_copy' : macro redefinition
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdarg.h(37) : see previous definition of 'va_copy'
+  h_export.cpp
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE' : macro redefinition
+          C:\Program Files (x86)\Windows Kits\8.1\Include\um\winnt.h(1243) : see previous definition of 'ARRAYSIZE'
+C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stddef.h(56): warning C4005: 'offsetof' : macro redefinition
+          E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(395) : see previous definition of 'offsetof'
+e:\dropbox\src\metamod-p-37\metamod\comp_dep.h(79): warning C4005: 'va_copy' : macro redefinition
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdarg.h(37) : see previous definition of 'va_copy'
+  linkfunc.cpp
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE' : macro redefinition
+          C:\Program Files (x86)\Windows Kits\8.1\Include\um\winnt.h(1243) : see previous definition of 'ARRAYSIZE'
+C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stddef.h(56): warning C4005: 'offsetof' : macro redefinition
+          E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(395) : see previous definition of 'offsetof'
+  meta_api.cpp
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE' : macro redefinition
+          C:\Program Files (x86)\Windows Kits\8.1\Include\um\winnt.h(1243) : see previous definition of 'ARRAYSIZE'
+e:\dropbox\src\metamod-p-37\metamod\comp_dep.h(79): warning C4005: 'va_copy' : macro redefinition
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdarg.h(37) : see previous definition of 'va_copy'
+meta_api.cpp(97): warning C4390: ';' : empty controlled statement found; is this the intent?
+meta_api.cpp(118): warning C4390: ';' : empty controlled statement found; is this the intent?
+  sdk_util.cpp
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE' : macro redefinition
+          C:\Program Files (x86)\Windows Kits\8.1\Include\um\winnt.h(1243) : see previous definition of 'ARRAYSIZE'
+  util.cpp
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE' : macro redefinition
+          C:\Program Files (x86)\Windows Kits\8.1\Include\um\winnt.h(1243) : see previous definition of 'ARRAYSIZE'
+C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stddef.h(56): warning C4005: 'offsetof' : macro redefinition
+          E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(395) : see previous definition of 'offsetof'
+  waypoint.cpp
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE' : macro redefinition
+          C:\Program Files (x86)\Windows Kits\8.1\Include\um\winnt.h(1243) : see previous definition of 'ARRAYSIZE'
+C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stddef.h(56): warning C4005: 'offsetof' : macro redefinition
+          E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(395) : see previous definition of 'offsetof'
+waypoint.cpp(3319): warning C4309: 'initializing' : truncation of constant value
+  Generating Code...
+e:\dropbox\src\foxbot\waypoint.cpp(140): warning C4700: uninitialized local variable 'x' used
+e:\dropbox\src\foxbot\waypoint.cpp(141): warning C4700: uninitialized local variable 'y' used
+     Creating library .\Release\FoXBot.lib and object .\Release\FoXBot.exp
+  FoXBot.vcxproj -> E:\Dropbox\src\foxbot\.\Release\foxbot.dll
+          0 file(s) copied.
