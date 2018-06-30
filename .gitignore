@@ -62,11 +62,7 @@ Temporary Items
 .vs/slnx.sqlite
 .vs/VSWorkspaceState.json
 *.so
-.vs/FoXBot/v15/Browse.VC.db
-.vs/FoXBot/v15/.suo
 *.o
-.vs/FoXBot/v15/.suo
-.vs/FoXBot/v15/Browse.VC.db
 foxbot_mm.so
 Release/bot.obj
 Release/bot.sbr
@@ -124,5 +120,3 @@ Release/vc120.pdb
 Release/waypoint.obj
 Release/waypoint.sbr
 Release/FoXBot.log
-foxbot_mm.so
-.vs/FoXBot/v15/.suo
