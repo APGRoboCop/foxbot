@@ -3,10 +3,14 @@
 ==============================
 
 --------------------------------------------------------------------------------
-Version 0.791-beta3
-??-??-2017
+Version 0.791-beta4
+July-14-2018
 Updated by RoboCop
 --------------------------------------------------------------------------------
+- Fixed Write Strings and compile time for version.cpp that fails on GCC 6+
+
+- Fixed extdll.h that appears to fail to compile on GCC 6+ for #ifndef min and max
+
 - Added RCBot's CrashLog script to help keep record of 'FATAL ERROR' crashes
 
 - Hopefully bot_chat now works for Linux builds
@@ -15,17 +19,18 @@ Updated by RoboCop
 
 - Linux build optimised and tuned for newer Pentium 4 arch
 
-- Both builds appear to perform well using older compilers as they appear more stable (GCC 4.9 & VS2013)
-
 - h_export.cpp Linux 'h_Library' can now detect both old and new TFC server build
 
 - Added teleport waypoints for baconbowl_r and siege
 
 *  high_flag, mortality_l, ss_nyx_ectfc, alchimy_l2, bases2k3 and hellion (coming soon!)
-  
->> Known issues - botdontmove and bot_team_balance cvars not operational
+
+Known issues -  
+>> botdontmove and bot_team_balance cvars not operational
 
 >> Adjusting the bot_job_think.cpp for equalising and to balance the bot task priority
+
+>> FoxBot appears to crash sometimes on Windows Listenservers
 
 >> Bots don't perform better in AvD nor CP maps
 

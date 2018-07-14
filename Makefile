@@ -51,28 +51,28 @@
 # These are the settings for a standard installation
 
 # The top directory of the HL SDK.
-SDKTOP= ../hlsdk-2.3-p4
-SDKSRC= $(SDKTOP)/multiplayer
+SDKTOP=../hlsdk-2.3-p4
+SDKSRC=$(SDKTOP)/multiplayer
 
 # The directory with the metamod include files.
 # For Linux we assume a link called 'metamod' in the adminmod directory
-#METATOP= ../metamod-p-32
-METATOP= ../metamod-p-37
-METADIR= $(METATOP)/metamod
+#METATOP=../metamod-p-32
+METATOP=../metamod-p-37
+METADIR=$(METATOP)/metamod
 
 # The default target to build
-DEFTARGET= Ometamod
+DEFTARGET=Ometamod
 
 # The version number 
 VERSION=0.791
 
 # Make sure this is the correct compiler for your system
-# 4.8 appears to compile the builds smaller but GCC 5+ and Clang appears not compatible
+# 4.8 appears to compile the builds smaller but Clang appears not compatible
 
-#CC=clang
-CC=gcc-4.8
-#CXX=clang++
-CXX=g++-4.8
+CC=gcc
+#CC=gcc-4.8
+CXX=g++
+#CXX=g++-4.8
 
 ################################################################################################
 # !! If you only want to compile and go you shouldn't need to edit anything below this line !! #
@@ -110,10 +110,8 @@ SHLIBEXT=so
 
 SA_TARGET= $(MODNAME)_.$(SHLIBEXT)
 MM_TARGET= $(MODNAME)_mm.$(SHLIBEXT)
-#MM_TARGET= $(MODNAME)_mm_i686.$(SHLIBEXT)
 
 BASE_CFLAGS=-Dstricmp=strcasecmp -D_strnicmp=strncasecmp -Dstrnicmp=strncasecmp -Dstrcmpi=strcasecmp -DLINUX -D__linux__ \
-#	-std=gnu++98 -Wno-c++11-compat
 
 XTFLAGS= -DTZONE=$(TZONE)
 
@@ -135,10 +133,12 @@ endif
 # COMPILER FLAGS
 #################################################################
 
-CFLAGS=$(BASE_CFLAGS) -Wall
-
+CFLAGS=$(BASE_CFLAGS) -Wno-deprecated -Wno-deprecated-declarations \
+		-Wno-format-security -Wno-write-strings -Wno-attributes \
+		-Wno-unused-local-typedefs -Wno-unused-result
+		
 # debug build
-CFDBG= -g -ggdb -Wall
+CFDBG= -g -ggdb
 #CFDBG+= -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations
 #CFDBG+= -fno-thread-jumps -fno-defer-pop -fno-delayed-branch -fno-omit-frame-pointer -fkeep-static-consts
 #CFDBG+= -march=i486 
@@ -147,7 +147,7 @@ CFDBG= -g -ggdb -Wall
 #CFOPT=  -march=i486 -O6 
 #CFOPT+= -ffast-math -funroll-loops (-ffast-math unstable?)
 
-CFOPT= -O2 -m32 -mtune=generic -march=i686 -msse -msse2 -mfpmath=sse
+CFOPT= -O2 -m32 -mtune=generic -march=i686 -msse -msse2 -mfpmath=sse -fno-aggressive-loop-optimizations
 
 # configuration dependand setup
 ifeq "$(OPT)" "opt"
@@ -157,7 +157,7 @@ else
 endif
 
 SHLIBCFLAGS=-fPIC
-SHLIBLDFLAGS=-static #-shared#-fkeep-static-consts #-shared -static
+SHLIBLDFLAGS=-static#-shared#-fkeep-static-consts #-shared -static
 
 ###############################################################
 # DIRECTORY SETUP
@@ -221,7 +221,7 @@ OBJADD=
 #
 # Libraries
 #
-LDFLAGS=-ldl -lcrypt -lm -lc -lstdc++
+LDFLAGS=-lcrypt -lm -lc -lstdc++ -ldl
 LIBADD=-shared
 
 ##############################################################

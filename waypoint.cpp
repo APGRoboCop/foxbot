@@ -214,7 +214,7 @@ void WaypointInit(void)
         areas[i].namec[0] = '\0';
         areas[i].named[0] = '\0';
 
-        is_junction[i] = FALSE;
+        is_junction[i] = false; //Fix for AvD maps? [APG]RoboCop[CL]
     }
 
     f_path_time = 0.0; // reset waypoint path display time
@@ -2215,8 +2215,8 @@ void WaypointPrintInfo(edict_t* pEntity)
     if(flags & W_FL_TFC_FLAG_GOAL)
         ClientPrint(pEntity, HUD_PRINTNOTIFY, "There is a flag goal near this waypoint\n");
 
-    // script flags next
-
+    // script flags next //Those flags incompatible? [APG]RoboCop[CL]
+	
     if(waypoints[index].script_flags & S_FL_POINT1)
         ClientPrint(pEntity, HUD_PRINTNOTIFY, "This is marked as point1\n");
 
@@ -2240,7 +2240,34 @@ void WaypointPrintInfo(edict_t* pEntity)
 
     if(waypoints[index].script_flags & S_FL_POINT8)
         ClientPrint(pEntity, HUD_PRINTNOTIFY, "This is marked as point8\n");
+	
+	/*
+	if (flags & W_FL_POINT1)
+		ClientPrint(pEntity, HUD_PRINTNOTIFY, "This is marked as point1\n");
+
+	if (flags & W_FL_POINT2)
+		ClientPrint(pEntity, HUD_PRINTNOTIFY, "This is marked as point2\n");
+
+	if (flags & W_FL_POINT3)
+		ClientPrint(pEntity, HUD_PRINTNOTIFY, "This is marked as point3\n");
+
+	if (flags & W_FL_POINT4)
+		ClientPrint(pEntity, HUD_PRINTNOTIFY, "This is marked as point4\n");
+
+	if (flags & W_FL_POINT5)
+		ClientPrint(pEntity, HUD_PRINTNOTIFY, "This is marked as point5\n");
+
+	if (flags & W_FL_POINT6)
+		ClientPrint(pEntity, HUD_PRINTNOTIFY, "This is marked as point6\n");
+
+	if (flags & W_FL_POINT7)
+		ClientPrint(pEntity, HUD_PRINTNOTIFY, "This is marked as point7\n");
+
+	if (flags & W_FL_POINT8)
+		ClientPrint(pEntity, HUD_PRINTNOTIFY, "This is marked as point8\n");
+	*/
 }
+
 
 void WaypointThink(edict_t* pEntity)
 {
@@ -2282,7 +2309,8 @@ void WaypointThink(edict_t* pEntity)
 
     min_distance = 9999.0f;
 
-    if((g_waypoint_on || g_area_def) && !g_waypoint_cache) {
+    if((g_waypoint_on || g_area_def) && !g_waypoint_cache)
+	{
         char cmd[255];
         sprintf(cmd, "changelevel %s\n", STRING(gpGlobals->mapname));
         SERVER_COMMAND(cmd);
@@ -2518,7 +2546,7 @@ void WaypointThink(edict_t* pEntity)
                         }
                     }
 
-                    // display dots showing what script flags are set for a waypoint
+                    // display dots showing what script flags are set for a waypoint //Incompatible for AvD maps? [APG]RoboCop[CL]
                     WPT_INT8 script_flags = waypoints[i].script_flags;
                     if((script_flags & S_FL_POINT1) || (script_flags & S_FL_POINT2) || (script_flags & S_FL_POINT3) ||
                         (script_flags & S_FL_POINT4) || (script_flags & S_FL_POINT5) || (script_flags & S_FL_POINT6) ||
@@ -2873,7 +2901,7 @@ void WaypointThink(edict_t* pEntity)
             // checks only for whole area delete.....
             if((areas[i].flags & W_FL_DELETED) == W_FL_DELETED)
                 continue;
-            timr = FALSE;
+            timr = false;	//Fix for AvD maps? [APG]RoboCop[CL]
             if((areas[i].flags & A_FL_1) == A_FL_1) {
                 // display 1 of 4..(a)
                 distance = (areas[i].a - pEntity->v.origin).Length();
