@@ -52,19 +52,19 @@
 #include "botcam.h"
 
 #define VER_MAJOR 0
-#define VER_MINOR 79
-#define VER_BUILD 3
+#define VER_MINOR 791
+#define VER_BUILD 4
 
-#define MENU_NONE 0
-#define MENU_1 1
-#define MENU_2 2
-#define MENU_3 3
-#define MENU_4 4
-#define MENU_5 5
-#define MENU_6 6
-#define MENU_7 7
+#define MENU_NONE  0
+#define MENU_1     1
+#define MENU_2     2
+#define MENU_3     3
+#define MENU_4     4
+#define MENU_5     5
+#define MENU_6     6
+#define MENU_7     7
 
-cvar_t foxbot = { "foxbot", "0.791-b3", FCVAR_SERVER | FCVAR_UNLOGGED, 0, NULL };
+cvar_t foxbot = { "foxbot", "0.791-b4", FCVAR_SERVER | FCVAR_UNLOGGED, 0, NULL };
 cvar_t enable_foxbot = { "enable_foxbot", "1", FCVAR_SERVER | FCVAR_UNLOGGED, 0, NULL };
 
 cvar_t sv_bot = { "bot", "", 0, 0, NULL };
@@ -73,8 +73,8 @@ extern GETENTITYAPI other_GetEntityAPI;
 extern GETNEWDLLFUNCTIONS other_GetNewDLLFunctions;
 extern enginefuncs_t g_engfuncs;
 extern int debug_engine;
-extern globalvars_t* gpGlobals;
-extern char* g_argv;
+extern globalvars_t  *gpGlobals;
+extern char *g_argv;
 extern bool g_waypoint_on;
 extern bool g_waypoint_cache;
 extern bool g_auto_waypoint;
@@ -2768,7 +2768,7 @@ void StartFrame(void)
             }
 
             if((welcome_time > 0.0) && (welcome_time < gpGlobals->time) && (welcome_sent == FALSE)) {
-                char welcome_msg[128] = "--FoxBot--\n\nwww.foxbot.net\nAnd: www.apg-clan.org\n";
+                char welcome_msg[128] = "--FoxBot--\n\nwww.apg-clan.org\n";
                 char version[32];
 
                 // sprintf(version," Beta v%d.%d Build#%d\n", VER_MAJOR, VER_MINOR, VER_BUILD);

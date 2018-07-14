@@ -4159,9 +4159,7 @@ static void BotSenseEnvironment(bot_t* pBot)
 
     BotAmmoCheck(pBot);
 	
-	if (b_botdontmove == 0) { // Stationary bots for TFC minigolf maps [APG]RoboCop[CL]	
-		BotEnemyCheck(pBot);
-		} else {
+	if (b_botdontmove == 1) { // Stationary bots for TFC minigolf maps [APG]RoboCop[CL]	
 		pBot->f_move_speed = 0;
 		pBot->f_side_speed = 0;
 		pBot->f_vertical_speed = 0;

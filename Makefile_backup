@@ -51,28 +51,28 @@
 # These are the settings for a standard installation
 
 # The top directory of the HL SDK.
-SDKTOP=../hlsdk-2.3-p4
-SDKSRC=$(SDKTOP)/multiplayer
+SDKTOP= ../hlsdk-2.3-p4
+SDKSRC= $(SDKTOP)/multiplayer
 
 # The directory with the metamod include files.
 # For Linux we assume a link called 'metamod' in the adminmod directory
-#METATOP=../metamod-p-32
-METATOP=../metamod-p-37
-METADIR=$(METATOP)/metamod
+#METATOP= ../metamod-p-32
+METATOP= ../metamod-p-37
+METADIR= $(METATOP)/metamod
 
 # The default target to build
-DEFTARGET=Ometamod
+DEFTARGET= Ometamod
 
 # The version number 
 VERSION=0.791
 
 # Make sure this is the correct compiler for your system
-# 4.8 appears to compile the builds smaller but Clang appears not compatible
+# 4.8 appears to compile the builds smaller but GCC 5+ and Clang appears not compatible
 
+#CC=clang
 CC=gcc
-#CC=gcc-4.8
+#CXX=clang++
 CXX=g++
-#CXX=g++-4.8
 
 ################################################################################################
 # !! If you only want to compile and go you shouldn't need to edit anything below this line !! #
@@ -133,10 +133,8 @@ endif
 # COMPILER FLAGS
 #################################################################
 
-CFLAGS=$(BASE_CFLAGS) -Wno-deprecated -Wno-deprecated-declarations \
-		-Wno-format-security -Wno-write-strings -Wno-attributes \
-		-Wno-unused-local-typedefs -Wno-unused-result
-		
+CFLAGS=$(BASE_CFLAGS) -Wno-deprecated -Wno-deprecated-declarations
+
 # debug build
 CFDBG= -g -ggdb
 #CFDBG+= -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations
@@ -147,7 +145,8 @@ CFDBG= -g -ggdb
 #CFOPT=  -march=i486 -O6 
 #CFOPT+= -ffast-math -funroll-loops (-ffast-math unstable?)
 
-CFOPT= -O2 -m32 -mtune=generic -march=i686 -msse -msse2 -mfpmath=sse -fno-aggressive-loop-optimizations
+CFOPT= -O2 -m32 -mtune=generic -march=i686 -msse -msse2 -mfpmath=sse \
+        -Wno-write-strings -Wno-unused-local-typedefs -Wno-unused-result
 
 # configuration dependand setup
 ifeq "$(OPT)" "opt"
@@ -157,7 +156,7 @@ else
 endif
 
 SHLIBCFLAGS=-fPIC
-SHLIBLDFLAGS=-static#-shared#-fkeep-static-consts #-shared -static
+SHLIBLDFLAGS=-static #-shared#-fkeep-static-consts #-shared -static
 
 ###############################################################
 # DIRECTORY SETUP
@@ -221,7 +220,7 @@ OBJADD=
 #
 # Libraries
 #
-LDFLAGS=-lcrypt -lm -lc -lstdc++ -ldl
+LDFLAGS=-ldl -lcrypt -lm -lc -lstdc++
 LIBADD=-shared
 
 ##############################################################
