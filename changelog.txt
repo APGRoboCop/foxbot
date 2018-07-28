@@ -3,36 +3,36 @@
 ==============================
 
 --------------------------------------------------------------------------------
-Version 0.791-beta4
-July-14-2018
+Version 0.791-beta5
+??-??-2018
 Updated by RoboCop
 --------------------------------------------------------------------------------
+- Removed unwanted tchar.h dependancies that are no longer required - Thanks to Globoss
+
+- Linux build should now work for Assault and Capture Point maps due to syntax error fixed - Thanks to Globoss
+
 - Fixed Write Strings and compile time for version.cpp that fails on GCC 6+
 
 - Fixed extdll.h that appears to fail to compile on GCC 6+ for #ifndef min and max
 
-- Added RCBot's CrashLog script to help keep record of 'FATAL ERROR' crashes
+- Added optimisation for faster float point for both builds
 
-- Hopefully bot_chat now works for Linux builds
+- Linux build optimised and tuned for newer arch
 
-- Added optimisation for Inline Function for both builds
-
-- Linux build optimised and tuned for newer Pentium 4 arch
-
-- h_export.cpp Linux 'h_Library' can now detect both old and new TFC server build
+- h_export.cpp Linux 'h_Library' can now detect both old and new TFC server build (tfc.so or tfc_i386.so)
 
 - Added teleport waypoints for baconbowl_r and siege
+
+- Reduced excessive waypoint and pathwaypoint quantity for rats, rats2 and rats3
+
+- Fixed some waypoint problems for 55, openfire_lowgrens
 
 *  high_flag, mortality_l, ss_nyx_ectfc, alchimy_l2, bases2k3 and hellion (coming soon!)
 
 Known issues -  
->> botdontmove and bot_team_balance cvars not operational
-
->> Adjusting the bot_job_think.cpp for equalising and to balance the bot task priority
+>> botdontmove, bot_chat and bot_team_balance cvars not fully operational
 
 >> FoxBot appears to crash sometimes on Windows Listenservers
-
->> Bots don't perform better in AvD nor CP maps
 
 --------------------------------------------------------------------------------
 Version 0.79

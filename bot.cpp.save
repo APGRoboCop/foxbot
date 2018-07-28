@@ -110,7 +110,7 @@ extern bool b_observer_mode;
 extern bool b_botdontshoot;
 extern bool b_botdontmove;
 
-extern int bot_chat;
+extern int botchat;
 extern int min_bots;
 extern int max_bots;
 extern int bot_team_balance;
@@ -152,7 +152,8 @@ bot_t bots[MAX_BOTS]; // max of 32 bots in a game
 // this can allow us to track which bots are joining the game for the first time
 // and which are joining because they were kicked off due to a map change
 bool botJustJoined[MAX_BOTS] = { TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,
-    TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE };
+                                 TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE
+                               };
 
 extern chatClass chat; // bot chat stuff
 
@@ -167,7 +168,8 @@ static char bot_names[MAX_BOT_NAMES][BOT_NAME_LEN + 1];
 
 // defend response distance per class
 const static float defendMaxRespondDist[] = { 300.0f, 1500.0f, 500.0f, 1500.0f, 800.0f, 1500.0f, 1500.0f, 1500.0f,
-    1500.0f, 1500.0f };
+                                              1500.0f, 1500.0f
+                                            };
 
 const static double double_pi = 3.141592653589793238;
 
@@ -410,7 +412,7 @@ void BotNameInit(void)
             str_index = 0;
             while(str_index < length) {
                 if((name_buffer[str_index] < ' ') || (name_buffer[str_index] > '~') ||
-                    (name_buffer[str_index] == '"')) {
+                   (name_buffer[str_index] == '"')) {
                     for(index = str_index; index < length; index++)
                         name_buffer[index] = name_buffer[index + 1];
                 }
@@ -471,7 +473,7 @@ void BotPickName(char* name_buffer)
             pPlayer = INDEXENT(index);
 
             if(pPlayer && !FNullEnt(pPlayer) && !pPlayer->free &&
-                strcmp(bot_names[name_index], STRING(pPlayer->v.netname)) == 0) {
+               strcmp(bot_names[name_index], STRING(pPlayer->v.netname)) == 0) {
                 used = TRUE;
                 break;
             }
@@ -505,7 +507,8 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 {
     // indicate which models are currently used for random model allocation
     static bool valve_skin_used[VALVE_MAX_SKINS] = { FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
-        FALSE };
+                                                     FALSE
+                                                   };
 
     /*static bool gearbox_skin_used[GEARBOX_MAX_SKINS] = {
             FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
@@ -514,7 +517,8 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 
     // store the names of the models...
     static const char* valve_bot_skins[VALVE_MAX_SKINS] = { "barney", "gina", "gman", "gordon", "helmet", "hgrunt",
-        "recon", "robo", "scientist", "zombie" };
+                                                            "recon", "robo", "scientist", "zombie"
+                                                          };
 
     /*static const char *gearbox_bot_skins[GEARBOX_MAX_SKINS] = {
             "barney", "beret", "cl_suit", "drill", "fassn", "gina", "gman",
@@ -524,7 +528,8 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 
     // store the player names for each of the models...
     static const char* valve_bot_names[VALVE_MAX_SKINS] = { "Barney", "Gina", "G-Man", "Gordon", "Helmet", "H-Grunt",
-        "Recon", "Robo", "Scientist", "Zombie" };
+                                                            "Recon", "Robo", "Scientist", "Zombie"
+                                                          };
 
     /*static const char *gearbox_bot_names[GEARBOX_MAX_SKINS] = {
             "Barney", "Beret", "Cl_suit", "Drill", "Fassn", "Gina", "G-Man",
@@ -555,8 +560,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 
     // count the number of players present
     int count = 0;
-    for(i = 1; i <= 32; i++) //<32
-    {
+    for(i = 1; i <= 32; i++) { //<32
         char* infobuffer;
         char cl_name[128];
         cl_name[0] = '\0';
@@ -933,8 +937,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
                 pBot->trait.camper = TRUE;
             else
                 pBot->trait.camper = FALSE;
-        } else // make each bot have the same personality traits
-        {
+        } else { // make each bot have the same personality traits
             pBot->trait.aggression = 50;
             pBot->trait.fairplay = 600;
             pBot->trait.faveClass = 3;
@@ -1073,7 +1076,7 @@ void BotFindItem(bot_t* pBot)
             if(strcmp("func_button", item_name) == 0 || strcmp("func_rot_button", item_name) == 0) {
                 newJob = InitialiseNewJob(pBot, JOB_PUSH_BUTTON);
                 if(newJob != NULL && pent->v.target != 0 &&
-                    VectorsNearerThan(pBot->pEdict->v.origin, entity_origin, 250.0)) {
+                   VectorsNearerThan(pBot->pEdict->v.origin, entity_origin, 250.0)) {
                     // ignore this button if the nearest waypoint to it is unavailable
                     const int nearestWP = WaypointFindNearest_V(entity_origin, 80.0, -1);
                     if(nearestWP != -1 && !WaypointAvailable(nearestWP, pBot->current_team))
@@ -1161,8 +1164,7 @@ void BotFindItem(bot_t* pBot)
                     }
                 }
             }
-        } else // everything else...
-        {
+        } else { // everything else...
             entity_origin = pent->v.origin;
 
             vecStart = pEdict->v.origin + pEdict->v.view_ofs;
@@ -1251,47 +1253,42 @@ void BotFindItem(bot_t* pBot)
                 }
 
                 // check if entity is a dispenser  // Fixed for Foxbot 0.79? [APG]RoboCop[CL]
-                		else if(strcmp("building_dispenser", item_name) == 0)
-                                {
-                                        // check if the item is not visible (i.e. has not respawned)
-                                        if(pent->v.effects & EF_NODRAW)
-                                                continue;
+                else if(strcmp("building_dispenser", item_name) == 0) {
+                    // check if the item is not visible (i.e. has not respawned)
+                    if(pent->v.effects & EF_NODRAW)
+                        continue;
 
-                                        if(pBot->ammoStatus == AMMO_UNNEEDED
-                                                && pBot->bot_has_flag == FALSE)
-                                        {
-                                                // make engineers attend to their own dispensers
-                                                if(pEdict->v.playerclass == TFC_CLASS_ENGINEER)
-                                                {
-                                                        if(pBot->dispenser_edict != pent)
-                                                                continue;
-                                                        else
-                                                        {
-                                                                UTIL_SelectItem(pEdict, "tf_weapon_spanner");
-                                                                float dis = (pent->v.origin - pEdict->v.origin).Length();
-                                                                if(dis < 140.0f)
-                                                                {
-                                                                        pEdict->v.button |= IN_ATTACK; // charge the weapon
-                                                                        pBot->f_duck_time = pBot->f_think_time + 1.0f;
-                                                                }
-                                                        }
-                                                }
-                                                else continue;
-                                        }
+                    if(pBot->ammoStatus == AMMO_UNNEEDED
+                       && pBot->bot_has_flag == FALSE) {
+                        // make engineers attend to their own dispensers
+                        if(pEdict->v.playerclass == TFC_CLASS_ENGINEER) {
+                            if(pBot->dispenser_edict != pent)
+                                continue;
+                            else {
+                                UTIL_SelectItem(pEdict, "tf_weapon_spanner");
+                                float dis = (pent->v.origin - pEdict->v.origin).Length();
+                                if(dis < 140.0f) {
+                                    pEdict->v.button |= IN_ATTACK; // charge the weapon
+                                    pBot->f_duck_time = pBot->f_think_time + 1.0f;
+                                }
+                            }
+                        } else
+                            continue;
+                    }
 
-                                        // ignore this item if it's on an unavailable waypoint
-                                        const int nearestWP
-                                                = WaypointFindNearest_V(pent->v.origin, 80.0, -1);
-                                        if(nearestWP != -1
-                                                && !WaypointAvailable(nearestWP, pBot->current_team))
-                                                continue;
+                    // ignore this item if it's on an unavailable waypoint
+                    const int nearestWP
+                        = WaypointFindNearest_V(pent->v.origin, 80.0, -1);
+                    if(nearestWP != -1
+                       && !WaypointAvailable(nearestWP, pBot->current_team))
+                        continue;
 
-                                //	can_pickup = TRUE;
-                                }// [APG]RoboCop[CL]
+                    //	can_pickup = TRUE;
+                }// [APG]RoboCop[CL]
                 else if(strcmp("building_sentrygun", item_name) == 0) {
                     if(pEdict->v.playerclass != TFC_CLASS_ENGINEER ||
-                        pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] < 140 ||
-                        pBot->current_team != UTIL_GetTeam(pent))
+                       pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] < 140 ||
+                       pBot->current_team != UTIL_GetTeam(pent))
                         continue;
 
                     static char modelName[24]; // static for speed reasons
@@ -1317,7 +1314,7 @@ void BotFindItem(bot_t* pBot)
                     // is this the bots own teleporter entrance?
                     // ignore it if the bot hasn't made an exit yet
                     if(pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER && pent == pBot->tpEntrance &&
-                        pBot->tpExit == NULL)
+                       pBot->tpExit == NULL)
                         continue;
 
                     // if it's an enemy teleporter maybe set up a job to attack it
@@ -1333,12 +1330,11 @@ void BotFindItem(bot_t* pBot)
 
                     // is this an allied Teleporter the bot hasn't used before?
                     else if(pBot->enemy.ptr == NULL && bot_can_use_teleporter == TRUE &&
-                        pent->v.iuser1 == W_FL_TFC_TELEPORTER_ENTRANCE) {
+                            pent->v.iuser1 == W_FL_TFC_TELEPORTER_ENTRANCE) {
                         // if the bot doesn't know where this entrance goes, give it a test run
                         const int telePairIndex = BotRecallTeleportEntranceIndex(pBot, pent);
                         if(telePairIndex == -1                             // unknown entrance
-                            || pBot->telePair[telePairIndex].exitWP == -1) // unknown exit
-                        {
+                           || pBot->telePair[telePairIndex].exitWP == -1) { // unknown exit
                             newJob = InitialiseNewJob(pBot, JOB_USE_TELEPORT);
                             if(newJob != NULL) {
                                 newJob->object = pent;
@@ -1473,13 +1469,12 @@ void BotFindItem(bot_t* pBot)
             } // end if object is visible
         }     // end else not "func_" entity
 
-        if(can_pickup) // if the bot found something it can pickup...
-        {
+        if(can_pickup) { // if the bot found something it can pickup...
             const float distance = (entity_origin - pEdict->v.origin).Length();
 
             // see if it's the closest item so far...
             if(distance < min_distance && entity_origin.z > (pEdict->v.origin.z - 80) &&
-                entity_origin.z < pEdict->v.origin.z + 80) {
+               entity_origin.z < pEdict->v.origin.z + 80) {
                 min_distance = distance;       // update the minimum distance
                 pPickupEntity = pent;          // remember this entity
                 pickup_origin = entity_origin; // remember location of entity
@@ -1517,8 +1512,8 @@ static void BotFlagSpottedCheck(bot_t* pBot)
     while((pent = FIND_ENTITY_BY_CLASSNAME(pent, "item_tfgoal")) != NULL && !FNullEnt(pent)) {
         // if the bot can see the flag
         if(pent->v.owner == NULL && !(pent->v.effects & EF_NODRAW) &&
-            VectorsNearerThan(pBot->pEdict->v.origin, pent->v.origin, 1500.0) &&
-            FInViewCone(pent->v.origin, pBot->pEdict) && BotCanSeeOrigin(pBot, pent->v.origin)) {
+           VectorsNearerThan(pBot->pEdict->v.origin, pent->v.origin, 1500.0) &&
+           FInViewCone(pent->v.origin, pBot->pEdict) && BotCanSeeOrigin(pBot, pent->v.origin)) {
             // ignore this flag if it's on an unavailable waypoint
             int nearestWP = WaypointFindNearest_V(pent->v.origin, 80.0, -1);
             if(nearestWP != -1 && !WaypointAvailable(nearestWP, pBot->current_team))
@@ -1553,35 +1548,35 @@ static void BotAmmoCheck(bot_t* pBot)
     switch(pBot->pEdict->v.playerclass) {
     case TFC_CLASS_SCOUT:
         if(pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SHOTGUN].iAmmo1] >= PC_SCOUT_MAXAMMO_SHOT / 2 &&
-            pBot->m_rgAmmo[weapon_defs[TF_WEAPON_NAILGUN].iAmmo1] >= PC_SCOUT_MAXAMMO_NAIL / 2)
+           pBot->m_rgAmmo[weapon_defs[TF_WEAPON_NAILGUN].iAmmo1] >= PC_SCOUT_MAXAMMO_NAIL / 2)
             pBot->ammoStatus = AMMO_UNNEEDED;
         else if(pBot->ammoStatus != AMMO_LOW)
             pBot->ammoStatus = AMMO_WANTED;
         break;
     case TFC_CLASS_SNIPER:
         if(pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SHOTGUN].iAmmo1] >= PC_SNIPER_MAXAMMO_SHOT / 2 &&
-            pBot->m_rgAmmo[weapon_defs[TF_WEAPON_NAILGUN].iAmmo1] >= PC_SNIPER_MAXAMMO_NAIL / 2)
+           pBot->m_rgAmmo[weapon_defs[TF_WEAPON_NAILGUN].iAmmo1] >= PC_SNIPER_MAXAMMO_NAIL / 2)
             pBot->ammoStatus = AMMO_UNNEEDED;
         else if(pBot->ammoStatus != AMMO_LOW)
             pBot->ammoStatus = AMMO_WANTED;
         break;
     case TFC_CLASS_SOLDIER:
         if(pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SHOTGUN].iAmmo1] >= PC_SOLDIER_MAXAMMO_SHOT / 2 &&
-            pBot->m_rgAmmo[weapon_defs[TF_WEAPON_RPG].iAmmo1] >= PC_SOLDIER_MAXAMMO_ROCKET / 2)
+           pBot->m_rgAmmo[weapon_defs[TF_WEAPON_RPG].iAmmo1] >= PC_SOLDIER_MAXAMMO_ROCKET / 2)
             pBot->ammoStatus = AMMO_UNNEEDED;
         else if(pBot->ammoStatus != AMMO_LOW)
             pBot->ammoStatus = AMMO_WANTED;
         break;
     case TFC_CLASS_DEMOMAN:
         if(pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SHOTGUN].iAmmo1] >= PC_DEMOMAN_MAXAMMO_SHOT / 2 &&
-            pBot->m_rgAmmo[weapon_defs[TF_WEAPON_RPG].iAmmo1] >= PC_DEMOMAN_MAXAMMO_ROCKET / 2)
+           pBot->m_rgAmmo[weapon_defs[TF_WEAPON_RPG].iAmmo1] >= PC_DEMOMAN_MAXAMMO_ROCKET / 2)
             pBot->ammoStatus = AMMO_UNNEEDED;
         else if(pBot->ammoStatus != AMMO_LOW)
             pBot->ammoStatus = AMMO_WANTED;
         break;
     case TFC_CLASS_MEDIC:
         if(pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SHOTGUN].iAmmo1] >= PC_MEDIC_MAXAMMO_SHOT / 2 &&
-            pBot->m_rgAmmo[weapon_defs[TF_WEAPON_NAILGUN].iAmmo1] >= PC_MEDIC_MAXAMMO_NAIL / 2)
+           pBot->m_rgAmmo[weapon_defs[TF_WEAPON_NAILGUN].iAmmo1] >= PC_MEDIC_MAXAMMO_NAIL / 2)
             pBot->ammoStatus = AMMO_UNNEEDED;
         else if(pBot->ammoStatus != AMMO_LOW)
             pBot->ammoStatus = AMMO_WANTED;
@@ -1594,24 +1589,24 @@ static void BotAmmoCheck(bot_t* pBot)
         break;
     case TFC_CLASS_PYRO:
         if(pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SHOTGUN].iAmmo1] >= PC_PYRO_MAXAMMO_SHOT / 2 &&
-            pBot->m_rgAmmo[weapon_defs[TF_WEAPON_FLAMETHROWER].iAmmo1] >= PC_PYRO_MAXAMMO_CELL / 2 &&
-            pBot->m_rgAmmo[weapon_defs[TF_WEAPON_RPG].iAmmo1] >= PC_PYRO_MAXAMMO_ROCKET / 2)
+           pBot->m_rgAmmo[weapon_defs[TF_WEAPON_FLAMETHROWER].iAmmo1] >= PC_PYRO_MAXAMMO_CELL / 2 &&
+           pBot->m_rgAmmo[weapon_defs[TF_WEAPON_RPG].iAmmo1] >= PC_PYRO_MAXAMMO_ROCKET / 2)
             pBot->ammoStatus = AMMO_UNNEEDED;
         else if(pBot->ammoStatus != AMMO_LOW)
             pBot->ammoStatus = AMMO_WANTED;
         break;
     case TFC_CLASS_SPY:
         if(pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SHOTGUN].iAmmo1] >= PC_SPY_MAXAMMO_SHOT / 2 &&
-            pBot->m_rgAmmo[weapon_defs[TF_WEAPON_NAILGUN].iAmmo1] >= PC_SPY_MAXAMMO_NAIL / 2)
+           pBot->m_rgAmmo[weapon_defs[TF_WEAPON_NAILGUN].iAmmo1] >= PC_SPY_MAXAMMO_NAIL / 2)
             pBot->ammoStatus = AMMO_UNNEEDED;
         else if(pBot->ammoStatus != AMMO_LOW)
             pBot->ammoStatus = AMMO_WANTED;
         break;
     case TFC_CLASS_ENGINEER:
         if(pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] == PC_ENGINEER_MAXAMMO_CELL &&
-            pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SHOTGUN].iAmmo1] >= (PC_ENGINEER_MAXAMMO_SHOT - 10) &&
-            pBot->m_rgAmmo[weapon_defs[TF_WEAPON_NAILGUN].iAmmo1] >= PC_ENGINEER_MAXAMMO_NAIL / 2 &&
-            pBot->m_rgAmmo[weapon_defs[TF_WEAPON_RPG].iAmmo1] == PC_ENGINEER_MAXAMMO_ROCKET)
+           pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SHOTGUN].iAmmo1] >= (PC_ENGINEER_MAXAMMO_SHOT - 10) &&
+           pBot->m_rgAmmo[weapon_defs[TF_WEAPON_NAILGUN].iAmmo1] >= PC_ENGINEER_MAXAMMO_NAIL / 2 &&
+           pBot->m_rgAmmo[weapon_defs[TF_WEAPON_RPG].iAmmo1] == PC_ENGINEER_MAXAMMO_ROCKET)
             pBot->ammoStatus = AMMO_UNNEEDED;
         else if(pBot->ammoStatus != AMMO_LOW)
             pBot->ammoStatus = AMMO_WANTED;
@@ -1625,22 +1620,21 @@ static void BotAmmoCheck(bot_t* pBot)
 //Borrowed from Cheeseh from RCBot - [APG]RoboCop[CL]
 void BotFile_Write ( char *string )
 {
-	FILE *fp = fopen(CRASHLOG_FILE,"a");
-	
-	if ( fp )
-	{
-		char time_str[512];
-		time_t ltime = time(NULL);
-		struct tm *today;
-		today = localtime( &ltime );
-		
-		strftime(time_str, sizeof(time_str), "%m/%d/%Y %H:%M:%S", today );
-		
-		fprintf(fp,"%s => ",time_str);
-		fprintf(fp,"%s\n",string);
+    FILE *fp = fopen(CRASHLOG_FILE,"a");
 
-		fclose(fp);
-	}
+    if ( fp ) {
+        char time_str[512];
+        time_t ltime = time(NULL);
+        struct tm *today;
+        today = localtime( &ltime );
+
+        strftime(time_str, sizeof(time_str), "%m/%d/%Y %H:%M:%S", today );
+
+        fprintf(fp,"%s => ",time_str);
+        fprintf(fp,"%s\n",string);
+
+        fclose(fp);
+    }
 }
 
 // This function handles the behaviour of bots when they are in close
@@ -1674,7 +1668,7 @@ edict_t* BotContactThink(bot_t* pBot)
             // don't avoid if going for player with one of these weapons
             if(pBot->enemy.ptr == pPlayer || (pBot->currentJob > -1 && pPlayer == pBot->job[pBot->currentJob].player)) {
                 if(pBot->current_weapon.iId == TF_WEAPON_KNIFE || pBot->current_weapon.iId == TF_WEAPON_MEDIKIT ||
-                    pBot->current_weapon.iId == TF_WEAPON_SPANNER || pBot->current_weapon.iId == TF_WEAPON_AXE)
+                   pBot->current_weapon.iId == TF_WEAPON_SPANNER || pBot->current_weapon.iId == TF_WEAPON_AXE)
                     continue;
             }
 
@@ -1693,8 +1687,8 @@ edict_t* BotContactThink(bot_t* pBot)
                 vang.y += 360.0;
 
             if(!((UTIL_GetTeamColor(pBot->pEdict) == UTIL_GetTeamColor(pPlayer) ||
-                     team_allies[pBot->current_team] & (1 << UTIL_GetTeam(pPlayer))) &&
-                   pPlayer == pBot->enemy.ptr)) {
+                  team_allies[pBot->current_team] & (1 << UTIL_GetTeam(pPlayer))) &&
+                 pPlayer == pBot->enemy.ptr)) {
                 Vector vecEnd = pPlayer->v.origin + pPlayer->v.view_ofs;
 
                 if(FInViewCone(vecEnd, pBot->pEdict) && FVisible(vecEnd, pBot->pEdict)) {
@@ -1763,9 +1757,9 @@ edict_t* BotContactThink(bot_t* pBot)
         // if a slower player is at the bots current waypoint
         // preventing the bot reaching it, try to cope with that here
         if(pBot->current_wp != pBot->goto_wp && pBot->current_wp != -1 && pBot->pEdict->v.flags & FL_ONGROUND &&
-            VectorsNearerThan(playerToAvoid->v.origin, waypoints[pBot->current_wp].origin, 40.0) &&
-            VectorsNearerThan(pBot->pEdict->v.origin, waypoints[pBot->current_wp].origin, 100.1) &&
-            playerToAvoid->v.velocity.Length2D() < pBot->pEdict->v.velocity.Length2D()) {
+           VectorsNearerThan(playerToAvoid->v.origin, waypoints[pBot->current_wp].origin, 40.0) &&
+           VectorsNearerThan(pBot->pEdict->v.origin, waypoints[pBot->current_wp].origin, 100.1) &&
+           playerToAvoid->v.velocity.Length2D() < pBot->pEdict->v.velocity.Length2D()) {
             int nextWP;
             if(pBot->branch_waypoint == -1)
                 nextWP = WaypointRouteFromTo(pBot->current_wp, pBot->goto_wp, pBot->current_team);
@@ -1773,8 +1767,8 @@ edict_t* BotContactThink(bot_t* pBot)
                 nextWP = WaypointRouteFromTo(pBot->current_wp, pBot->branch_waypoint, pBot->current_team);
 
             if(nextWP != -1 && !(waypoints[pBot->current_wp].flags & W_FL_LIFT) &&
-                !(waypoints[pBot->current_wp].flags & W_FL_JUMP) &&
-                BotCanSeeOrigin(pBot, waypoints[pBot->current_wp].origin))
+               !(waypoints[pBot->current_wp].flags & W_FL_JUMP) &&
+               BotCanSeeOrigin(pBot, waypoints[pBot->current_wp].origin))
                 pBot->current_wp = nextWP;
         }
 
@@ -1980,7 +1974,7 @@ void script(const char* sz)
                         if(g_bot_debug) {
                             char msg[255];
                             _snprintf(msg, 250, "if : %s +++ %s %d \nComparing point %s\n", msg_msg[current_msg], sz,
-                                current_msg, (curr->ifs) + 4);
+                                      current_msg, (curr->ifs) + 4);
                             ALERT(at_console, msg);
                             /*{ fp=UTIL_OpenFoxbotLog();
                                     fprintf(fp,msg,sz); fclose(fp);}*/
@@ -2121,8 +2115,8 @@ void BotSprayLogo(edict_t* pEntity, const bool sprayDownwards)
     if(index < 0)
         index = DECAL_INDEX("{FOXBOT");
     if(index < 0)
-    // return;
-    // index=0;
+        // return;
+        // index=0;
     {
         switch(random_long(1, 4)) {
         case 1:
@@ -2195,8 +2189,8 @@ static void BotAttackerCheck(bot_t* pBot)
     edict_t* mysteryPlayer = NULL; // unseen enemies
     bool readyDefender = FALSE;
     if(pBot->mission == ROLE_DEFENDER && pBot->visAllyCount < 4 // too many allies nearby = white noise
-        && pBot->bot_skill < 4 && PlayerHealthPercent(pBot->pEdict) >= pBot->trait.health &&
-        (pBot->enemy.f_lastSeen + 5.0) < pBot->f_think_time)
+       && pBot->bot_skill < 4 && PlayerHealthPercent(pBot->pEdict) >= pBot->trait.health &&
+       (pBot->enemy.f_lastSeen + 5.0) < pBot->f_think_time)
         readyDefender = TRUE;
 
     // start checking from a randomly selected player, this is
@@ -2258,7 +2252,7 @@ static void BotAttackerCheck(bot_t* pBot)
                     return;
                 }
             } else if(readyDefender // remember any unseen enemies we can investigate
-                && mysteryPlayer == NULL) {
+                      && mysteryPlayer == NULL) {
                 mysteryPlayer = pPlayer;
             }
         }
@@ -2322,16 +2316,16 @@ void BotSoundSense(edict_t* pEdict, const char* pszSample, float fVolume)
 
     // make defenders respond to combat sounds
     if(strncmp("weapons/ax1", pszSample, 11) == 0 || strncmp("player/pain", pszSample, 11) == 0 ||
-        strncmp("items/armoron_1", pszSample, 15) == 0 || strncmp("items/smallmedkit", pszSample, 17) == 0 ||
-        strncmp("items/ammopickup", pszSample, 16) == 0) {
+       strncmp("items/armoron_1", pszSample, 15) == 0 || strncmp("items/smallmedkit", pszSample, 17) == 0 ||
+       strncmp("items/ammopickup", pszSample, 16) == 0) {
         float botDistance;
         const float hearingDistance = 1500 * fVolume;
         int closestWPToThreat = -1;
 
         for(int i = 0; i < MAX_BOTS; i++) {
             if(bots[i].is_used // Is this a bot?
-                && bots[i].visEnemyCount < 1 && bots[i].mission == ROLE_DEFENDER && bots[i].current_wp != -1 &&
-                (bots[i].current_team != sourceTeam || random_long(0, 1000) < 333)) {
+               && bots[i].visEnemyCount < 1 && bots[i].mission == ROLE_DEFENDER && bots[i].current_wp != -1 &&
+               (bots[i].current_team != sourceTeam || random_long(0, 1000) < 333)) {
                 botDistance = (bots[i].pEdict->v.origin - pEdict->v.origin).Length();
                 if(botDistance < hearingDistance) {
                     // This bot can hear it. Try going to it
@@ -2343,11 +2337,11 @@ void BotSoundSense(edict_t* pEdict, const char* pszSample, float fVolume)
 
                         // Respond if we are within range
                         if(WaypointDistanceFromTo(bots[i].current_wp, closestWPToThreat, bots[i].current_team) <
-                            respondDist) {
+                           respondDist) {
                             // If it's a spy, and we can see it, attack the mofo
                             if(pEdict->v.playerclass == TFC_CLASS_SPY) {
                                 if(FInViewCone(pEdict->v.origin, bots[i].pEdict) &&
-                                    FVisible(pEdict->v.origin, bots[i].pEdict))
+                                   FVisible(pEdict->v.origin, bots[i].pEdict))
                                     bots[i].enemy.ptr = pEdict;
                             }
 
@@ -2379,7 +2373,7 @@ void BotSoundSense(edict_t* pEdict, const char* pszSample, float fVolume)
         for(int index = 0; index < 32; index++) {
             // look for the nearest free Medic
             if(bots[index].is_used && bots[index].pEdict->v.playerclass == TFC_CLASS_MEDIC &&
-                bots[index].enemy.ptr == NULL) {
+               bots[index].enemy.ptr == NULL) {
                 botDistance = (bots[index].pEdict->v.origin - pEdict->v.origin).Length();
                 if(botDistance < hearingDistance && botDistance < nearestMedDist) {
                     nearestMedic = index;
@@ -2390,7 +2384,7 @@ void BotSoundSense(edict_t* pEdict, const char* pszSample, float fVolume)
 
             // look for the nearest free Engineer
             if(bots[index].is_used && bots[index].pEdict->v.playerclass == TFC_CLASS_ENGINEER &&
-                bots[index].enemy.ptr == NULL && bots[index].m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > 20) {
+               bots[index].enemy.ptr == NULL && bots[index].m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > 20) {
                 botDistance = (bots[index].pEdict->v.origin - pEdict->v.origin).Length();
                 if(botDistance < hearingDistance && botDistance < nearestEngDist) {
                     nearestEngy = index;
@@ -2403,7 +2397,7 @@ void BotSoundSense(edict_t* pEdict, const char* pszSample, float fVolume)
         if(nearestMedic != -1) {
             // target the patient if they're visible
             if(FInViewCone(pEdict->v.origin, bots[nearestMedic].pEdict) &&
-                FVisible(pEdict->v.origin, bots[nearestMedic].pEdict)) {
+               FVisible(pEdict->v.origin, bots[nearestMedic].pEdict)) {
                 if(bots[nearestMedic].current_team == UTIL_GetTeam(pEdict)) {
                     // set up a job to handle the healing/repairing
                     newJob = InitialiseNewJob(&bots[nearestMedic], JOB_BUFF_ALLY);
@@ -2413,8 +2407,7 @@ void BotSoundSense(edict_t* pEdict, const char* pszSample, float fVolume)
                         SubmitNewJob(&bots[nearestMedic], JOB_BUFF_ALLY, newJob);
                     }
                 }
-            } else // go find the person who called for a Medic
-            {
+            } else { // go find the person who called for a Medic
                 newJob = InitialiseNewJob(&bots[nearestMedic], JOB_INVESTIGATE_AREA);
                 if(newJob != NULL) {
                     int closestWPToSound =
@@ -2437,9 +2430,9 @@ void BotSoundSense(edict_t* pEdict, const char* pszSample, float fVolume)
         if(nearestEngy != -1) {
             // target the patient if they're visible
             if(FInViewCone(pEdict->v.origin, bots[nearestEngy].pEdict) &&
-                FVisible(pEdict->v.origin, bots[nearestEngy].pEdict)) {
+               FVisible(pEdict->v.origin, bots[nearestEngy].pEdict)) {
                 if(bots[nearestEngy].current_team == UTIL_GetTeam(pEdict) && !PlayerIsInfected(pEdict) &&
-                    (PlayerArmorPercent(pEdict) < 100)) {
+                   (PlayerArmorPercent(pEdict) < 100)) {
                     // set up a job to handle the healing/repairing
                     newJob = InitialiseNewJob(&bots[nearestEngy], JOB_BUFF_ALLY);
                     if(newJob != NULL) {
@@ -2448,8 +2441,7 @@ void BotSoundSense(edict_t* pEdict, const char* pszSample, float fVolume)
                         SubmitNewJob(&bots[nearestEngy], JOB_BUFF_ALLY, newJob);
                     }
                 }
-            } else // go find the person who called for a Medic
-            {
+            } else { // go find the person who called for a Medic
                 newJob = InitialiseNewJob(&bots[nearestEngy], JOB_INVESTIGATE_AREA);
                 if(newJob != NULL) {
                     int closestWPToSound =
@@ -2475,9 +2467,8 @@ void BotSoundSense(edict_t* pEdict, const char* pszSample, float fVolume)
     for(int i = 0; i < MAX_BOTS; i++) {
         // only check with bots who are now ready to respond to a sound
         if(bots[i].is_used // Is this a bot?
-            && bots[i].f_soundReactTime < bots[i].f_think_time &&
-            bots[i].pEdict->v.deadflag != 5) // skip feigning spies(for now)
-        {
+           && bots[i].f_soundReactTime < bots[i].f_think_time &&
+           bots[i].pEdict->v.deadflag != 5) { // skip feigning spies(for now)
             newJob = InitialiseNewJob(&bots[i], JOB_SPOT_STIMULUS);
             if(newJob == NULL)
                 continue;
@@ -2492,7 +2483,7 @@ void BotSoundSense(edict_t* pEdict, const char* pszSample, float fVolume)
             if(botDistance < hearingDistance && botDistance > 100.0f) {
                 // if this bot can hear the sound, but is not looking at its source
                 if(!bots[i].enemy.ptr && !FInViewCone(pEdict->v.origin, bots[i].pEdict) &&
-                    FVisible(pEdict->v.origin, bots[i].pEdict)) {
+                   FVisible(pEdict->v.origin, bots[i].pEdict)) {
                     // set up a job for spotting the unseen activity
                     newJob->origin = pEdict->v.origin;
                     newJob->waypoint = bots[i].goto_wp;
@@ -2581,8 +2572,8 @@ edict_t* BotAllyAtVector(const bot_t* pBot, const Vector& r_vecOrigin, const flo
         pPlayer = INDEXENT(i);
 
         if(pPlayer != NULL && !pPlayer->free && pPlayer != pBot->pEdict // ignore this bot
-            && UTIL_GetTeam(pPlayer) == pBot->current_team &&
-            VectorsNearerThan(pPlayer->v.origin, r_vecOrigin, range)) {
+           && UTIL_GetTeam(pPlayer) == pBot->current_team &&
+           VectorsNearerThan(pPlayer->v.origin, r_vecOrigin, range)) {
             if(stationaryOnly) {
                 if(pPlayer->v.velocity.Length() < 1.0)
                     return pPlayer;
@@ -2612,7 +2603,7 @@ short BotTeammatesNearWaypoint(const bot_t* pBot, const int waypoint)
         // Is this player a bot teammate who is
         // heading towards the indicated waypoint?
         if(bots[i].is_used && &bots[i] != pBot // make sure the player isn't THIS bot
-            && bots[i].current_wp == waypoint && bots[i].current_team == pBot->current_team) {
+           && bots[i].current_wp == waypoint && bots[i].current_team == pBot->current_team) {
             // if this player is nearer than the bot add them to the total
             if(VectorsNearerThan(bots[i].pEdict->v.origin, waypoints[waypoint].origin, my_distance))
                 ++total_present;
@@ -2636,9 +2627,9 @@ bot_t* BotDefenderAtWaypoint(const bot_t* pBot, const int waypoint, const float 
         // Is this a bot defender teammate, with an interest in the
         // indicated waypoint?
         if(bots[i].is_used      // make sure this player is a bot
-            && &bots[i] != pBot // make sure the player isn't THIS bot
-            && bots[i].goto_wp == waypoint && bots[i].mission == ROLE_DEFENDER &&
-            bots[i].current_team == pBot->current_team) {
+           && &bots[i] != pBot // make sure the player isn't THIS bot
+           && bots[i].goto_wp == waypoint && bots[i].mission == ROLE_DEFENDER &&
+           bots[i].current_team == pBot->current_team) {
             // if this player is near enough return who they are
             if(VectorsNearerThan(bots[i].pEdict->v.origin, waypoints[waypoint].origin, range))
                 return &bots[i];
@@ -2686,7 +2677,7 @@ static void BotGrenadeAvoidance(bot_t* pBot)
     edict_t* pent = NULL;
     edict_t* threatEnt = NULL;
     while(avoid_action == avoid_no_action && (pent = FIND_ENTITY_IN_SPHERE(pent, search_source, 250)) != NULL &&
-        !FNullEnt(pent)) {
+          !FNullEnt(pent)) {
         if(pent->v.classname == 0)
             continue;
 
@@ -2695,7 +2686,7 @@ static void BotGrenadeAvoidance(bot_t* pBot)
 
         // beware MIRVIN Marvin!
         if(strncmp("tf_weapon_mirvgrenade", classname, 29) == 0 ||
-            strncmp("tf_weapon_mirvbomblet", classname, 29) == 0) {
+           strncmp("tf_weapon_mirvbomblet", classname, 29) == 0) {
             entity_origin = pent->v.origin;
             if(FInViewCone(entity_origin, pBot->pEdict) && FVisible(entity_origin, pBot->pEdict)) {
                 avoid_action = avoid_retreat;
@@ -2719,21 +2710,20 @@ static void BotGrenadeAvoidance(bot_t* pBot)
                                                     avoid_action = avoid_retreat;
                                     }*/
         } else if(strncmp("tf_weapon_normalgrenade", classname, 29) == 0 ||
-            strncmp("tf_weapon_empgrenade", classname, 29) == 0) {
+                  strncmp("tf_weapon_empgrenade", classname, 29) == 0) {
             entity_origin = pent->v.origin;
             if(FInViewCone(entity_origin, pBot->pEdict) && FVisible(entity_origin, pBot->pEdict)) {
                 avoid_action = avoid_retreat;
                 threatEnt = pent;
             }
         } else if(strncmp("tf_weapon_nailgrenade", classname, 29) == 0 ||
-            strncmp("tf_weapon_napalmgrenade", classname, 29) == 0 ||
-            (strncmp("tf_gl_grenade", classname, 29) == 0 && pBot->pEdict->v.playerclass != TFC_CLASS_DEMOMAN)) {
+                  strncmp("tf_weapon_napalmgrenade", classname, 29) == 0 ||
+                  (strncmp("tf_gl_grenade", classname, 29) == 0 && pBot->pEdict->v.playerclass != TFC_CLASS_DEMOMAN)) {
             entity_origin = pent->v.origin;
             if(FInViewCone(entity_origin, pBot->pEdict) && FVisible(entity_origin, pBot->pEdict)) {
                 if(pBot->trait.aggression < 33 || static_cast<int>(pBot->pEdict->v.health) > 70)
                     pBot->pEdict->v.button |= IN_JUMP; // try jumping the grenade anyway
-                else                                   // low health or aggression - retreat!
-                {
+                else {                                 // low health or aggression - retreat!
                     avoid_action = avoid_retreat;
                     threatEnt = pent;
                 }
@@ -2774,7 +2764,7 @@ static void BotGrenadeAvoidance(bot_t* pBot)
 static void BotRoleCheck(bot_t* pBot)
 {
     if(roleCheckTimer > gpGlobals->time &&
-        roleCheckTimer < (gpGlobals->time + 300.0)) // make sure roleCheckTimer is sane
+       roleCheckTimer < (gpGlobals->time + 300.0)) // make sure roleCheckTimer is sane
         return;
 
     roleCheckTimer = gpGlobals->time + 10.0f; // reset the timer
@@ -2811,7 +2801,7 @@ static void BotRoleCheck(bot_t* pBot)
         if(clients[i]) {
             teams.total[clients[i]->v.team - 1]++;
             if(clients[i]->v.playerclass == TFC_CLASS_MEDIC || clients[i]->v.playerclass == TFC_CLASS_SPY ||
-                clients[i]->v.playerclass == TFC_CLASS_SCOUT || clients[i]->v.playerclass == TFC_CLASS_PYRO)
+               clients[i]->v.playerclass == TFC_CLASS_SCOUT || clients[i]->v.playerclass == TFC_CLASS_PYRO)
                 teams.humanAttackers[clients[i]->v.team - 1].addTail(clients[i]);
             else if(clients[i]->v.playerclass == TFC_CLASS_ENGINEER || clients[i]->v.playerclass == TFC_CLASS_SNIPER)
                 teams.humanDefenders[clients[i]->v.team - 1].addTail(clients[i]);
@@ -2859,7 +2849,7 @@ static void BotRoleCheck(bot_t* pBot)
         // has active detpack waypoints
         bool ignoreDemomen = FALSE;
         if(needed_mission == ROLE_DEFENDER &&
-            WaypointTypeExists(W_FL_TFC_DETPACK_CLEAR | W_FL_TFC_DETPACK_SEAL, team) == TRUE)
+           WaypointTypeExists(W_FL_TFC_DETPACK_CLEAR | W_FL_TFC_DETPACK_SEAL, team) == TRUE)
             ignoreDemomen = TRUE;
 
         // start the search from a randomly selected bot
@@ -2872,14 +2862,14 @@ static void BotRoleCheck(bot_t* pBot)
 
             // found a maleable bot, ripe for initiation?
             if(bots[i].is_used && bots[i].pEdict->v.playerclass && bots[i].current_team == team &&
-                bots[i].mission != needed_mission && !bots[i].lockMission && !bots[i].bot_has_flag) {
+               bots[i].mission != needed_mission && !bots[i].lockMission && !bots[i].bot_has_flag) {
                 // these classes are good candidates for switching between attack and defense
                 // Engineers are also suitable here because EMP and armor repair is cool
                 if(bots[i].pEdict->v.playerclass == TFC_CLASS_SOLDIER ||
-                    bots[i].pEdict->v.playerclass == TFC_CLASS_PYRO ||
-                    bots[i].pEdict->v.playerclass == TFC_CLASS_HWGUY ||
-                    bots[i].pEdict->v.playerclass == TFC_CLASS_ENGINEER ||
-                    (bots[i].pEdict->v.playerclass == TFC_CLASS_DEMOMAN && !ignoreDemomen)) {
+                   bots[i].pEdict->v.playerclass == TFC_CLASS_PYRO ||
+                   bots[i].pEdict->v.playerclass == TFC_CLASS_HWGUY ||
+                   bots[i].pEdict->v.playerclass == TFC_CLASS_ENGINEER ||
+                   (bots[i].pEdict->v.playerclass == TFC_CLASS_DEMOMAN && !ignoreDemomen)) {
                     bots[i].mission = needed_mission;
                     /*	char msg[80];//DebugMessageOfDoom!
                             sprintf(msg, "team %d needed_mission %d totalAttackers %d",
@@ -3037,7 +3027,7 @@ static void BotComms(bot_t* pBot)
     // greetings from the bots
     if(pBot->greeting == FALSE && (pBot->create_time + 3.0) > pBot->f_think_time) {
         pBot->greeting = TRUE;
-        if(random_long(1, 1000) < static_cast<long>(bot_chat)) {
+        if(random_long(1, 1000) < static_cast<long>(botchat)) {
             chat.pickRandomChatString(newJob->message, MAX_CHAT_LENGTH, CHAT_TYPE_GREETING, NULL);
 
             newJob->message[MAX_CHAT_LENGTH - 1] = '\0';
@@ -3052,7 +3042,7 @@ static void BotComms(bot_t* pBot)
 
     // my chat, bot has died
     // good idea to check for null...urg!
-    if(pBot->killer_edict != NULL && random_long(1, 1000) < static_cast<long>(bot_chat)) {
+    if(pBot->killer_edict != NULL && random_long(1, 1000) < static_cast<long>(botchat)) {
         if(pBot->killer_edict->v.frags > pEdict->v.frags) {
             chat.pickRandomChatString(
                 newJob->message, MAX_CHAT_LENGTH, CHAT_TYPE_KILLED_LOW, STRING(pBot->killer_edict->v.netname));
@@ -3073,7 +3063,7 @@ static void BotComms(bot_t* pBot)
         pBot->killer_edict = NULL;
 
     // haha I killed you messages
-    if(pBot->killed_edict != NULL && random_long(1, 1000) < static_cast<long>(bot_chat)) {
+    if(pBot->killed_edict != NULL && random_long(1, 1000) < static_cast<long>(botchat)) {
         if(pBot->killed_edict->v.frags > pEdict->v.frags) {
             chat.pickRandomChatString(
                 newJob->message, MAX_CHAT_LENGTH, CHAT_TYPE_KILL_LOW, STRING(pBot->killed_edict->v.netname));
@@ -3337,7 +3327,7 @@ static void BotPickNewClass(bot_t* pBot)
         if(clients[i] && (clients[i]->v.team - 1) == pBot->current_team) {
             ++team_total;
             if(clients[i]->v.playerclass == TFC_CLASS_MEDIC || clients[i]->v.playerclass == TFC_CLASS_SPY ||
-                clients[i]->v.playerclass == TFC_CLASS_SCOUT || clients[i]->v.playerclass == TFC_CLASS_PYRO)
+               clients[i]->v.playerclass == TFC_CLASS_SCOUT || clients[i]->v.playerclass == TFC_CLASS_PYRO)
                 ++attackers;
             /*	else if(clients[i]->v.playerclass == TFC_CLASS_ENGINEER
                             || clients[i]->v.playerclass == TFC_CLASS_SNIPER)
@@ -3454,8 +3444,7 @@ static bool BotChooseCounterClass(bot_t* pBot)
     if(pBot->killer_edict == pBot->lastEnemySentryGun && !FNullEnt(pBot->lastEnemySentryGun)) {
         if(FriendlyClassTotal(pBot->pEdict, TFC_CLASS_SPY, FALSE) < 1)
             new_class = 8;
-    } else // enemy is not a sentry gun
-    {
+    } else { // enemy is not a sentry gun
         // try to choose a counter class if the enemy who killed the bot
         // has a significantly better score than the bot
         if(pBot->killer_edict->v.frags > 4 && (pBot->pEdict->v.frags + 5) < pBot->killer_edict->v.frags) {
@@ -3554,7 +3543,7 @@ static bool BotDemomanNeededCheck(bot_t* pBot)
 {
     // give up if there is a demoman on the bots team already
     if(pBot->pEdict->v.playerclass == TFC_CLASS_DEMOMAN ||
-        FriendlyClassTotal(pBot->pEdict, TFC_CLASS_DEMOMAN, FALSE) > 0)
+       FriendlyClassTotal(pBot->pEdict, TFC_CLASS_DEMOMAN, FALSE) > 0)
         return FALSE;
 
     // Check if any more demoman are allowed on this map.
@@ -3591,7 +3580,7 @@ bool SpyAmbushAreaCheck(bot_t* pBot, Vector& r_wallVector)
     // perform some basic checks first
     // e.g. don't feign near a lift
     if(pBot->pEdict->v.waterlevel != WL_NOT_IN_WATER || pBot->nadePrimed == TRUE || pBot->bot_has_flag ||
-        PlayerIsInfected(pBot->pEdict) || (pBot->current_wp > -1 && waypoints[pBot->current_wp].flags & W_FL_LIFT)) {
+       PlayerIsInfected(pBot->pEdict) || (pBot->current_wp > -1 && waypoints[pBot->current_wp].flags & W_FL_LIFT)) {
         return FALSE;
     }
 
@@ -3613,7 +3602,7 @@ bool SpyAmbushAreaCheck(bot_t* pBot, Vector& r_wallVector)
             // ignore allied players
             player_team = UTIL_GetTeam(pPlayer);
             if(player_team > -1 &&
-                (player_team == pBot->current_team || team_allies[pBot->current_team] & (1 << player_team)))
+               (player_team == pBot->current_team || team_allies[pBot->current_team] & (1 << player_team)))
                 continue;
 
             if(VectorsNearerThan(pPlayer->v.origin, pBot->pEdict->v.origin, 1200.0f)) {
@@ -3723,8 +3712,8 @@ static void BotReportMyFlagDrop(bot_t* pBot)
         if(newJob != NULL) {
             for(int i = 0; i < 32; i++) {
                 if(bots[i].is_used && &bots[i] != pBot // not this bot
-                    && bots[i].bot_has_flag == FALSE && bots[i].mission == ROLE_ATTACKER &&
-                    bots[i].current_team == pBot->current_team) {
+                   && bots[i].bot_has_flag == FALSE && bots[i].mission == ROLE_ATTACKER &&
+                   bots[i].current_team == pBot->current_team) {
                     SubmitNewJob(&bots[i], JOB_PICKUP_FLAG, newJob);
                 }
             }
@@ -3765,7 +3754,7 @@ static void BotEnemyCarrierAlert(bot_t* pBot)
     // or is quite healthy
     // or the bot has said enough already
     if(!defensive_chatter || pBot->visAllyCount > 1 || pBot->f_roleSayDelay > pBot->f_think_time ||
-        (pBot->pEdict->v.health / pBot->pEdict->v.max_health) > 0.45)
+       (pBot->pEdict->v.health / pBot->pEdict->v.max_health) > 0.45)
         return;
 
     job_struct* newJob = InitialiseNewJob(pBot, JOB_REPORT);
@@ -3775,11 +3764,11 @@ static void BotEnemyCarrierAlert(bot_t* pBot)
     // if there's only one enemy find out if the bot is outgunned
     if(pBot->visEnemyCount < 2) {
         if(pBot->bot_class == TFC_CLASS_SCOUT || pBot->bot_class == TFC_CLASS_SNIPER ||
-            pBot->bot_class == TFC_CLASS_DEMOMAN || pBot->bot_class == TFC_CLASS_MEDIC ||
-            pBot->bot_class == TFC_CLASS_SPY || pBot->bot_class == TFC_CLASS_ENGINEER) {
+           pBot->bot_class == TFC_CLASS_DEMOMAN || pBot->bot_class == TFC_CLASS_MEDIC ||
+           pBot->bot_class == TFC_CLASS_SPY || pBot->bot_class == TFC_CLASS_ENGINEER) {
             if(pBot->enemy.ptr->v.playerclass != TFC_CLASS_SOLDIER ||
-                pBot->enemy.ptr->v.playerclass != TFC_CLASS_HWGUY || pBot->enemy.ptr->v.playerclass != TFC_CLASS_PYRO ||
-                pBot->enemy.ptr->v.playerclass != TFC_CLASS_MEDIC)
+               pBot->enemy.ptr->v.playerclass != TFC_CLASS_HWGUY || pBot->enemy.ptr->v.playerclass != TFC_CLASS_PYRO ||
+               pBot->enemy.ptr->v.playerclass != TFC_CLASS_MEDIC)
                 return;
         }
     }
@@ -3883,8 +3872,7 @@ void BotThink(bot_t* pBot)
 
     // keep an up-to-date record of which team the bot is on
     pBot->current_team = UTIL_GetTeam(pBot->pEdict);
-    if(pBot->current_team < 0) // shouldn't happen, but, just in case
-    {
+    if(pBot->current_team < 0) { // shouldn't happen, but, just in case
         pBot->not_started = TRUE; // try joining again
         return;
     }
@@ -3895,8 +3883,8 @@ void BotThink(bot_t* pBot)
 
     // if the bot is dead, randomly press fire to respawn...
     if(pBot->pEdict->v.health < 1 ||
-        (pBot->pEdict->v.deadflag != DEAD_NO && pBot->pEdict->v.deadflag != 5) // not a spy feigning death
-        || pBot->pEdict->v.playerclass == 0) {
+       (pBot->pEdict->v.deadflag != DEAD_NO && pBot->pEdict->v.deadflag != 5) // not a spy feigning death
+       || pBot->pEdict->v.playerclass == 0) {
         if(pBot->bot_start2 > 0 && pBot->bot_start3 == 0)
             pBot->bot_start3 = pBot->f_think_time;
 
@@ -3963,7 +3951,7 @@ void BotThink(bot_t* pBot)
             // crsh=true;
         }
         g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, pBot->f_move_speed, 0, 0,
-            pBot->pEdict->v.button, (byte)0, (byte)pBot->msecval);
+                                    pBot->pEdict->v.button, (byte)0, (byte)pBot->msecval);
 
         // if(crsh)
         //{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"returned ok(1)..\n"); fclose(fp); }
@@ -4005,7 +3993,7 @@ void BotThink(bot_t* pBot)
         // UTIL_HostSay(pBot->pEdict,0,"a");
 
         g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, pBot->f_move_speed, 0, 0,
-            pBot->pEdict->v.button, (byte)0, (byte)pBot->msecval);
+                                    pBot->pEdict->v.button, (byte)0, (byte)pBot->msecval);
         return;
     }
 
@@ -4028,8 +4016,7 @@ void BotThink(bot_t* pBot)
     if(pBot->f_feigningTime >= pBot->f_think_time) {
         if(pBot->pEdict->v.deadflag != 5)
             FakeClientCommand(pBot->pEdict, "sfeign", NULL, NULL);
-    } else // stop playing dead
-    {
+    } else { // stop playing dead
         if(pBot->pEdict->v.deadflag == 5)
             FakeClientCommand(pBot->pEdict, "feign", NULL, NULL);
     }
@@ -4043,7 +4030,7 @@ void BotThink(bot_t* pBot)
 
     // crouch if the bots current waypoint is a crouch waypoint...
     if(pBot->current_wp != -1 && waypoints[pBot->current_wp].flags & W_FL_CROUCH &&
-        VectorsNearerThan(pBot->pEdict->v.origin, waypoints[pBot->current_wp].origin, 100.0f)) {
+       VectorsNearerThan(pBot->pEdict->v.origin, waypoints[pBot->current_wp].origin, 100.0f)) {
         pBot->f_duck_time = pBot->f_think_time + 2.0;
     }
 
@@ -4126,7 +4113,7 @@ void BotThink(bot_t* pBot)
     // THIS FUNCTION ACTUALLY MOVES THE BOT INGAME //
     /////////////////////////////////////////////////
     g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, pBot->f_move_speed, pBot->f_side_speed,
-        pBot->f_vertical_speed, pBot->pEdict->v.button, (byte)0, (byte)pBot->msecval);
+                                pBot->f_vertical_speed, pBot->pEdict->v.button, (byte)0, (byte)pBot->msecval);
     //////////////////////////////////////////////////
 
     // check if bots aim should still be affected by concussion and fire etc.
@@ -4158,16 +4145,16 @@ static void BotSenseEnvironment(bot_t* pBot)
         pBot->enemy.ptr = NULL; // clear enemy pointer(b_botdontshoot is true)
 
     BotAmmoCheck(pBot);
-	
-	if (b_botdontmove == 1) { // Stationary bots for TFC minigolf maps [APG]RoboCop[CL]	
-		pBot->f_move_speed = 0;
-		pBot->f_side_speed = 0;
-		pBot->f_vertical_speed = 0;
 
-		g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, 0, 0, 0,
-		pBot->pEdict->v.button, (byte)0, (byte)pBot->msecval);
-	}
-	
+    if (b_botdontmove == 1) { // Stationary bots for TFC minigolf maps [APG]RoboCop[CL]
+        pBot->f_move_speed = 0;
+        pBot->f_side_speed = 0;
+        pBot->f_vertical_speed = 0;
+
+        g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, 0, 0, 0,
+                                    pBot->pEdict->v.button, (byte)0, (byte)pBot->msecval);
+    }
+
     if(pBot->enemy.ptr == NULL)
         BotAttackerCheck(pBot);
 
@@ -4208,14 +4195,14 @@ static void BotFight(bot_t* pBot)
     if(pBot->lastEnemySentryGun && pBot->enemy.ptr == pBot->lastEnemySentryGun && !FNullEnt(pBot->lastEnemySentryGun))
         BotNadeHandler(pBot, false, GRENADE_STATIONARY);
     else if(pBot->enemy.ptr != NULL && (pBot->enemy.f_firstSeen + 1.0) < pBot->f_think_time &&
-        BotAssessThreatLevel(pBot) > 50)
+            BotAssessThreatLevel(pBot) > 50)
         BotNadeHandler(pBot, true, GRENADE_RANDOM);
     else
         BotNadeHandler(pBot, true, 0);
 
     // detonate the bots dispenser if enemies are using it
     if(pBot->f_dispenserDetTime > 0.5 // i.e. a valid time
-        && pBot->f_dispenserDetTime < pBot->f_think_time && !FNullEnt(pBot->dispenser_edict)) {
+       && pBot->f_dispenserDetTime < pBot->f_think_time && !FNullEnt(pBot->dispenser_edict)) {
         FakeClientCommand(pBot->pEdict, "detdispenser", NULL, NULL);
         pBot->f_dispenserDetTime = 0.0;
         pBot->has_dispenser = FALSE;
@@ -4280,16 +4267,15 @@ static void BotCombatThink(bot_t* pBot)
     if(pBot->bot_skill < 3 && pBot->disguise_state != DISGUISE_COMPLETE && pBot->f_dontEvadeTime < pBot->f_think_time) {
         // make snipers duck randomly when sniping
         if(pBot->pEdict->v.playerclass == TFC_CLASS_SNIPER && pBot->current_weapon.iId == TF_WEAPON_SNIPERRIFLE &&
-            pBot->f_periodicAlertFifth < pBot->f_think_time) {
+           pBot->f_periodicAlertFifth < pBot->f_think_time) {
             if(random_long(1, 1000) <= 300)
                 pBot->f_duck_time = pBot->f_think_time + 0.8f;
-        } else // not a sniping sniper
-        {
+        } else { // not a sniping sniper
             // jump a lot if the enemy is a nearby soldier or pyro
             // (extra annoying for the enemy!)
             if(pBot->f_periodicAlert1 < pBot->f_think_time && (pBot->enemy.ptr->v.playerclass == TFC_CLASS_SOLDIER ||
-                                                                  pBot->enemy.ptr->v.playerclass == TFC_CLASS_PYRO) &&
-                pBot->bot_skill < 2 && pBot->enemy.f_seenDistance < 800.0)
+                    pBot->enemy.ptr->v.playerclass == TFC_CLASS_PYRO) &&
+               pBot->bot_skill < 2 && pBot->enemy.f_seenDistance < 800.0)
                 pBot->pEdict->v.button |= IN_JUMP;
 
             // duck/jump randomly in battle
@@ -4341,10 +4327,10 @@ static void BotCombatThink(bot_t* pBot)
 
     // pursue the enemy?
     if((ThreatLevel <= 25 || pBot->enemy.seenWithFlag) && !pBot->bot_has_flag &&
-        pBot->f_periodicAlert1 < pBot->f_think_time) {
+       pBot->f_periodicAlert1 < pBot->f_think_time) {
         bool tooBusySniping = FALSE; // to stop snipers running after everybody!
         if(pBot->pEdict->v.playerclass == TFC_CLASS_SNIPER &&
-            (pBot->trait.aggression < 50 || waypoints[pBot->current_wp].flags & W_FL_SNIPER))
+           (pBot->trait.aggression < 50 || waypoints[pBot->current_wp].flags & W_FL_SNIPER))
             tooBusySniping = TRUE;
 
         if(tooBusySniping == FALSE) {
@@ -4359,7 +4345,7 @@ static void BotCombatThink(bot_t* pBot)
 
     // make the hunted seek backup when alone(the snipers love a lone fawn in the woods!)
     if(pBot->pEdict->v.playerclass == TFC_CLASS_CIVILIAN && pBot->bot_has_flag && pBot->visAllyCount <= 1 &&
-        (pBot->f_lastAllySeenTime + 15.0) > pBot->f_think_time && pBot->f_lastAllySeenTime > pBot->f_killed_time) {
+       (pBot->f_lastAllySeenTime + 15.0) > pBot->f_think_time && pBot->f_lastAllySeenTime > pBot->f_killed_time) {
         job_struct* newJob = InitialiseNewJob(pBot, JOB_SEEK_BACKUP);
         if(newJob != NULL)
             SubmitNewJob(pBot, JOB_SEEK_BACKUP, newJob);
@@ -4367,8 +4353,7 @@ static void BotCombatThink(bot_t* pBot)
 
     // should the bot retreat from it's enemy?
     if(ThreatLevel >= 66 && (pBot->pEdict->v.playerclass == TFC_CLASS_CIVILIAN ||
-                                !pBot->bot_has_flag)) // the civilian has an invisible flag in hunted
-    {
+                             !pBot->bot_has_flag)) { // the civilian has an invisible flag in hunted
         // seek an ally if the bot is alone and saw an ally recently
         job_struct* newJob = InitialiseNewJob(pBot, JOB_SEEK_BACKUP);
         if(newJob != NULL && pBot->visAllyCount < 2 && (pBot->f_lastAllySeenTime + 15.0) > pBot->f_think_time) {
@@ -4384,8 +4369,8 @@ static void BotCombatThink(bot_t* pBot)
 
     // make Demomen reload if they have an empty clip
     if(pBot->pEdict->v.playerclass == TFC_CLASS_DEMOMAN &&
-        (pBot->current_weapon.iId == TF_WEAPON_GL || pBot->current_weapon.iId == TF_WEAPON_PL) &&
-        pBot->current_weapon.iClip == 0) {
+       (pBot->current_weapon.iId == TF_WEAPON_GL || pBot->current_weapon.iId == TF_WEAPON_PL) &&
+       pBot->current_weapon.iClip == 0) {
         pBot->pEdict->v.button |= IN_RELOAD; // press reload button
         pBot->f_shoot_time = pBot->f_think_time + 1.0f;
     }
@@ -4533,8 +4518,8 @@ static int guessThreatLevel(bot_t* pBot)
     // if the bot is a certain class and their clip is empty
     // pursuade them to retreat so they can reload
     if(pBot->pEdict->v.playerclass == TFC_CLASS_DEMOMAN &&
-        (pBot->current_weapon.iId == TF_WEAPON_GL || pBot->current_weapon.iId == TF_WEAPON_PL) &&
-        pBot->current_weapon.iClip == 0)
+       (pBot->current_weapon.iId == TF_WEAPON_GL || pBot->current_weapon.iId == TF_WEAPON_PL) &&
+       pBot->current_weapon.iClip == 0)
         Threat += 20;
 
     // encourage the bot to retreat from an enemy if the enemy is close
@@ -4608,8 +4593,8 @@ static void BotSpectatorDebug(bot_t* pBot)
 
     // only give debug messages if a spectating human player is very close
     if(pPlayer != NULL && !pPlayer->free && !(pPlayer->v.flags & FL_FAKECLIENT)
-        //	&& pPlayer->v.movetype == MOVETYPE_NOCLIP  // didn't work
-        && !IsAlive(pPlayer) && VectorsNearerThan(pBot->pEdict->v.origin, pPlayer->v.origin, 80.0)) {
+       //	&& pPlayer->v.movetype == MOVETYPE_NOCLIP  // didn't work
+       && !IsAlive(pPlayer) && VectorsNearerThan(pBot->pEdict->v.origin, pPlayer->v.origin, 80.0)) {
         char msg[255];
 
         // show the bots name, skill, and role
@@ -4641,7 +4626,7 @@ static void BotSpectatorDebug(bot_t* pBot)
                     if(pBot->currentJob == i) {
                         char msgBuffer[128] = "";
                         _snprintf(msgBuffer, 128, " [phase %d, buffered %f]\n", pBot->job[pBot->currentJob].phase,
-                            pBot->f_think_time - pBot->job[pBot->currentJob].f_bufferedTime);
+                                  pBot->f_think_time - pBot->job[pBot->currentJob].f_bufferedTime);
                         strncat(msg, msgBuffer, 255 - strlen(msg));
                     } else
                         strncat(msg, "\n", 255 - strlen(msg)); // add a newline on the end
@@ -4652,36 +4637,33 @@ static void BotSpectatorDebug(bot_t* pBot)
                 } else
                     strncat(msg, "\n", 255 - strlen(msg)); // skip empty job indexes
             }
-        } else if(spectate_debug == 2) // list what jobs are blacklisted
-        {
+        } else if(spectate_debug == 2) { // list what jobs are blacklisted
             // list any jobs in the blacklist
             strncat(msg, "Blacklist:\n", 255 - strlen(msg));
             for(int i = 0; i < JOB_BLACKLIST_MAX; i++) {
                 // list one blacklisted job per line
                 if(pBot->jobBlacklist[i].type > JOB_NONE && pBot->jobBlacklist[i].f_timeOut >= pBot->f_think_time &&
-                    pBot->jobBlacklist[i].type < JOB_TYPE_TOTAL) {
+                   pBot->jobBlacklist[i].type < JOB_TYPE_TOTAL) {
                     strncat(msg, jl[pBot->jobBlacklist[i].type].jobNames, 255 - strlen(msg));
                     strncat(msg, "\n", 255 - strlen(msg)); // add a newline on the end
                 } else
                     strncat(msg, "\n", 255 - strlen(msg)); // skip empty blacklist indexes
             }
-        } else if(spectate_debug == 3) // show the bots personality traits
-        {
+        } else if(spectate_debug == 3) { // show the bots personality traits
             char msgBuffer[128] = "";
             _snprintf(msgBuffer, 128, "aggression %d\nhealth threshold%d\ncamper %d", pBot->trait.aggression,
-                pBot->trait.health, pBot->trait.camper);
+                      pBot->trait.health, pBot->trait.camper);
             strncat(msg, msgBuffer, 255 - strlen(msg));
-        } else // some other spectate_debug mode - show navigation info
-        {
+        } else { // some other spectate_debug mode - show navigation info
             char msgBuffer[128] = "";
             _snprintf(msgBuffer, 128, "waypoint deadline %f\nnavDistance %f\nf_navProblemStartTime %f\n",
-                (pBot->f_current_wp_deadline - pBot->f_think_time),
-                (waypoints[pBot->current_wp].origin - pBot->pEdict->v.origin).Length(),
-                pBot->f_think_time - pBot->f_navProblemStartTime);
+                      (pBot->f_current_wp_deadline - pBot->f_think_time),
+                      (waypoints[pBot->current_wp].origin - pBot->pEdict->v.origin).Length(),
+                      pBot->f_think_time - pBot->f_navProblemStartTime);
             strncat(msg, msgBuffer, 255 - strlen(msg));
 
             _snprintf(msgBuffer, 128, "velocity length 2D %f\n velocity Z %f\n", pBot->pEdict->v.velocity.Length2D(),
-                pBot->pEdict->v.velocity.z);
+                      pBot->pEdict->v.velocity.z);
             strncat(msg, msgBuffer, 255 - strlen(msg));
         }
 
@@ -4723,13 +4705,13 @@ static void BotSpectatorDebug(bot_t* pBot)
         if(pBot->current_wp > -1 && pBot->current_wp < num_waypoints) {
             if(pBot->f_navProblemStartTime < 0.1) // green - all is well
                 WaypointDrawBeam(INDEXENT(1), pBot->pEdict->v.origin, waypoints[pBot->current_wp].origin, 10, 2, 50,
-                    250, 50, 200, 1);
+                                 250, 50, 200, 1);
             else if((pBot->f_navProblemStartTime + 0.5) >= pBot->f_think_time)
                 WaypointDrawBeam(INDEXENT(1), pBot->pEdict->v.origin, // amber - caution
-                    waypoints[pBot->current_wp].origin, 10, 2, 250, 128, 0, 200, 1);
+                                 waypoints[pBot->current_wp].origin, 10, 2, 250, 128, 0, 200, 1);
             else
                 WaypointDrawBeam(INDEXENT(1), pBot->pEdict->v.origin, // red - trouble!
-                    waypoints[pBot->current_wp].origin, 10, 2, 250, 50, 50, 200, 1);
+                                 waypoints[pBot->current_wp].origin, 10, 2, 250, 50, 50, 200, 1);
         }
 
         // show what other waypoints the bot is interested in
@@ -4741,7 +4723,7 @@ static void BotSpectatorDebug(bot_t* pBot)
             // if the bot is taking a side route, show it
             if(pBot->branch_waypoint != -1)
                 WaypointDrawBeam(INDEXENT(1), pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs,
-                    waypoints[pBot->branch_waypoint].origin + Vector(0, 0, 35.0), 10, 2, 250, 250, 50, 200, 10);
+                                 waypoints[pBot->branch_waypoint].origin + Vector(0, 0, 35.0), 10, 2, 250, 250, 50, 200, 10);
         }
 
         return;
