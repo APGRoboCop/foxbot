@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="FoXBot" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug Win32">
+				<Option output="./Debug/FoXBot" imp_lib="./Debug/FoXBot.lib" def_file="./FoXBot.def" prefix_auto="1" extension_auto="1" />
+				<Option object_output="./Debug/" />
+				<Option deps_output="./Debug/" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-D_DEBUG" />
+					<Add option="-DWIN32" />
+					<Add option="-D_WINDOWS" />
+					<Add option="-DVALVE_DLL" />
+					<Add option="-O0" />
+					<Add option="-Wall" />
+					<Add directory="../hlsdk-2.3-p4/multiplayer/common/" />
+					<Add directory="../hlsdk-2.3-p4/multiplayer/dlls/" />
+					<Add directory="../hlsdk-2.3-p4/multiplayer/engine/" />
+					<Add directory="../hlsdk-2.3-p4/multiplayer/pm_shared/" />
+					<Add directory="../hlsdk-2.3-p4/multiplayer/cl_dll/" />
+					<Add directory="../metamod-p-38/metamod/" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="../engine/" />
+				</ResourceCompiler>
+				<Linker>
+					<Add library="winmm.lib" />
+					<Add library="comctl32.lib" />
+					<Add library="kernel32.lib" />
+					<Add library="user32.lib" />
+					<Add library="gdi32.lib" />
+					<Add library="winspool.lib" />
+					<Add library="comdlg32.lib" />
+					<Add library="advapi32.lib" />
+					<Add library="shell32.lib" />
+					<Add library="ole32.lib" />
+					<Add library="oleaut32.lib" />
+					<Add library="uuid.lib" />
+					<Add library="odbc32.lib" />
+					<Add library="odbccp32.lib" />
+				</Linker>
+				<ExtraCommands>
+					<Add after='copy &quot;&quot; &quot;$(FOXBOTFOLDER)&quot;' />
+				</ExtraCommands>
+			</Target>
+			<Target title="Release Win32">
+				<Option output="./Release/foxbot" imp_lib="./Release/FoXBot.lib" def_file="./FoXBot.def" prefix_auto="1" extension_auto="1" />
+				<Option object_output="./Release/" />
+				<Option deps_output="./Release/" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-DNDEBUG" />
+					<Add option="-DWIN32" />
+					<Add option="-D_WINDOWS" />
+					<Add option="-D_WIN32" />
+					<Add option="-D_CRT_NONSTDC_NO_WARNINGS" />
+					<Add option="-D_CRT_SECURE_NO_WARNINGS" />
+					<Add option="-O1" />
+					<Add option="-Wall" />
+					<Add directory="../hlsdk-2.3-p4/multiplayer/common/" />
+					<Add directory="../hlsdk-2.3-p4/multiplayer/dlls/" />
+					<Add directory="../hlsdk-2.3-p4/multiplayer/engine/" />
+					<Add directory="../hlsdk-2.3-p4/multiplayer/pm_shared/" />
+					<Add directory="../hlsdk-2.3-p4/multiplayer/cl_dll/" />
+					<Add directory="../metamod-p-37/metamod/" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="winmm.lib" />
+					<Add library="comctl32.lib" />
+					<Add library="kernel32.lib" />
+					<Add library="user32.lib" />
+					<Add library="gdi32.lib" />
+					<Add library="winspool.lib" />
+					<Add library="comdlg32.lib" />
+					<Add library="advapi32.lib" />
+					<Add library="shell32.lib" />
+					<Add library="ole32.lib" />
+					<Add library="oleaut32.lib" />
+					<Add library="uuid.lib" />
+					<Add library="odbc32.lib" />
+					<Add library="odbccp32.lib" />
+				</Linker>
+				<ExtraCommands>
+					<Add after='copy &quot;&quot; &quot;$(FOXBOTFOLDER)&quot;' />
+				</ExtraCommands>
+			</Target>
+		</Build>
+		<Unit filename="THINGSTODO.txt" />
+		<Unit filename="VTune/FoXBot.vpj" />
+		<Unit filename="bot.cpp" />
+		<Unit filename="bot.h" />
+		<Unit filename="bot_client.cpp" />
+		<Unit filename="bot_client.h" />
+		<Unit filename="bot_combat.cpp" />
+		<Unit filename="bot_func.h" />
+		<Unit filename="bot_job_assessors.cpp" />
+		<Unit filename="bot_job_assessors.h" />
+		<Unit filename="bot_job_functions.cpp" />
+		<Unit filename="bot_job_functions.h" />
+		<Unit filename="bot_job_think.cpp" />
+		<Unit filename="bot_job_think.h" />
+		<Unit filename="bot_navigate.cpp" />
+		<Unit filename="bot_navigate.h" />
+		<Unit filename="bot_start.cpp" />
+		<Unit filename="bot_weapons.h" />
+		<Unit filename="botcam.cpp" />
+		<Unit filename="botcam.h" />
+		<Unit filename="dll.cpp" />
+		<Unit filename="engine.cpp" />
+		<Unit filename="engine.h" />
+		<Unit filename="extdll.h" />
+		<Unit filename="foxbot_private.h" />
+		<Unit filename="h_export.cpp" />
+		<Unit filename="linkfunc.cpp" />
+		<Unit filename="list.h" />
+		<Unit filename="meta_api.cpp" />
+		<Unit filename="osdep.h" />
+		<Unit filename="player.h" />
+		<Unit filename="res_fox.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
+		<Unit filename="resource.h" />
+		<Unit filename="sdk_util.cpp" />
+		<Unit filename="sdk_util.h" />
+		<Unit filename="util.cpp" />
+		<Unit filename="vector.h" />
+		<Unit filename="vers_fox.h" />
+		<Unit filename="version.h" />
+		<Unit filename="waypoint.cpp" />
+		<Unit filename="waypoint.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

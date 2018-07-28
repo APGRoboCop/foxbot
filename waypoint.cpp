@@ -214,7 +214,7 @@ void WaypointInit(void)
         areas[i].namec[0] = '\0';
         areas[i].named[0] = '\0';
 
-        is_junction[i] = false; //Fix for AvD maps? [APG]RoboCop[CL]
+        is_junction[i] = false;
     }
 
     f_path_time = 0.0; // reset waypoint path display time

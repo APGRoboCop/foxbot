@@ -33,9 +33,9 @@
 
 //#include <osdep.h>
 
-#ifndef __linux__
-#include <tchar.h>
-#endif
+//#ifndef __linux__ //Fix by Globoss - [APG]RoboCop[CL]
+//#include <tchar.h>
+//#endif
 
 #include "bot.h"
 #include "bot_func.h"
@@ -103,7 +103,7 @@ bool offensive_chatter = TRUE;
 bool b_observer_mode = FALSE;
 bool b_botdontshoot = FALSE;
 bool b_botdontmove = FALSE;
-int botchat = 50;
+int bot_chat = 50;
 int bot_allow_moods = 1;  // whether bots can have different personality traits or not
 int bot_allow_humour = 1; // whether bots can choose to do daft things or not
 bool bot_can_use_teleporter = TRUE;
@@ -749,7 +749,7 @@ void chatClass::readChatFile(void)
 
     if(bfp == NULL) {
         UTIL_BotLogPrintf("Unable to read from the Foxbot chat file.  The bots will not chat.");
-        botchat = 0; // stop the bots trying to chat
+        bot_chat = 0; // stop the bots trying to chat
         return;
     }
 
@@ -2023,7 +2023,7 @@ void ClientCommand(edict_t* pEntity)
                 RETURN_META(MRES_SUPERCEDE);
             return;
         } else if(FStrEq(pcmd, "bot_chat")) {
-            changeBotSetting("bot_chat", &botchat, arg1, 0, 1000, SETTING_SOURCE_CLIENT_COMMAND);
+            changeBotSetting("bot_chat", &bot_chat, arg1, 0, 1000, SETTING_SOURCE_CLIENT_COMMAND);
 
             if(mr_meta)
                 RETURN_META(MRES_SUPERCEDE);
@@ -3166,7 +3166,7 @@ void StartFrame(void)
                         kickBots(MAX_BOTS, whichTeam);
                     }
                 } else if(strcmp(cmd, "bot_chat") == 0 && arg1 != NULL) {
-                    changeBotSetting("bot_chat", &botchat, arg1, 0, 1000, SETTING_SOURCE_SERVER_COMMAND);
+                    changeBotSetting("bot_chat", &bot_chat, arg1, 0, 1000, SETTING_SOURCE_SERVER_COMMAND);
                 } else if(strcmp(cmd, "botskill_lower") == 0) {
                     changeBotSetting("botskill_lower", &botskill_lower, arg1, 1, 5, SETTING_SOURCE_SERVER_COMMAND);
                 } else if(strcmp(cmd, "botskill_upper") == 0) {
@@ -3520,7 +3520,7 @@ void StartFrame(void)
                 if(strncmp(buf, "//", 2) == 0) {
                     commentline = TRUE;
                     i++;
-                    buf = _strinc(buf);
+                    buf = buf + 1;
                 }
                 if(buffer[i] == '\n')
                     commentline = FALSE;
@@ -3537,7 +3537,7 @@ void StartFrame(void)
                             havestart = 1;
                         for(int j = 0; j < 8; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // try and move to end of on start
                     }
                     if(strncmp(buf, "on_msg", 6) == 0) {
@@ -3547,7 +3547,7 @@ void StartFrame(void)
                             msgsection = 1;
                         for(int j = 0; j < 6; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // try and move to end of on_msg
                         // now check input var!
                         if(buffer[i] != '(')
@@ -3555,7 +3555,7 @@ void StartFrame(void)
                         // make sure it starts wif a (
                         else {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                             if(buffer[i] == ')')
                                 msgsection = 99;
                             // make sure message isnt empty
@@ -3563,7 +3563,7 @@ void StartFrame(void)
                                 // if it isn't empty, move to end (ignore msg)
                                 while(buffer[i] != ')') {
                                     i++;
-                                    buf = _strinc(buf);
+                                    buf = buf + 1;
                                 }
                             }
                         }
@@ -3575,7 +3575,7 @@ void StartFrame(void)
                             random_shit_error = TRUE;
                         for(int j = 0; j < 11; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                             RoleStatus[0] = 90;
                         } // move to end
                     } else if(strncmp(buf, "red_attack", 10) == 0) {
@@ -3584,7 +3584,7 @@ void StartFrame(void)
                             random_shit_error = TRUE;
                         for(int j = 0; j < 10; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                             RoleStatus[1] = 90;
                         } // move to end
                     } else if(strncmp(buf, "yellow_attack", 13) == 0) {
@@ -3593,7 +3593,7 @@ void StartFrame(void)
                             random_shit_error = TRUE;
                         for(int j = 0; j < 13; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                             RoleStatus[3] = 90;
                         } // move to end
                     } else if(strncmp(buf, "green_attack", 12) == 0) {
@@ -3602,7 +3602,7 @@ void StartFrame(void)
                             random_shit_error = TRUE;
                         for(int j = 0; j < 12; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                             RoleStatus[3] = 90;
                         } // move to end
                     }
@@ -3614,7 +3614,7 @@ void StartFrame(void)
                             random_shit_error = TRUE;
                         for(int j = 0; j < 11; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                             RoleStatus[0] = 15;
                         } // move to end
                     } else if(strncmp(buf, "red_defend", 10) == 0) {
@@ -3623,7 +3623,7 @@ void StartFrame(void)
                             random_shit_error = TRUE;
                         for(int j = 0; j < 10; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                             RoleStatus[1] = 15;
                         } // move to end
                     } else if(strncmp(buf, "yellow_defend", 13) == 0) {
@@ -3632,7 +3632,7 @@ void StartFrame(void)
                             random_shit_error = TRUE;
                         for(int j = 0; j < 13; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                             RoleStatus[2] = 15;
                         } // move to end
                     } else if(strncmp(buf, "green_defend", 12) == 0) {
@@ -3641,7 +3641,7 @@ void StartFrame(void)
                             random_shit_error = TRUE;
                         for(int j = 0; j < 12; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                             RoleStatus[3] = 15;
                         } // move to end
                     } else if(strncmp(buf, "blue_normal", 11) == 0) {
@@ -3650,7 +3650,7 @@ void StartFrame(void)
                             random_shit_error = TRUE;
                         for(int j = 0; j < 11; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                             RoleStatus[0] = 50;
                         } // move to end
                     } else if(strncmp(buf, "red_normal", 10) == 0) {
@@ -3659,7 +3659,7 @@ void StartFrame(void)
                             random_shit_error = TRUE;
                         for(int j = 0; j < 10; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                             RoleStatus[1] = 50;
                         } // move to end
                     } else if(strncmp(buf, "yellow_normal", 13) == 0) {
@@ -3668,7 +3668,7 @@ void StartFrame(void)
                             random_shit_error = TRUE;
                         for(int j = 0; j < 13; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                             RoleStatus[2] = 50;
                         } // move to end
                     } else if(strncmp(buf, "green_normal", 12) == 0) {
@@ -3677,7 +3677,7 @@ void StartFrame(void)
                             random_shit_error = TRUE;
                         for(int j = 0; j < 12; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                             RoleStatus[3] = 50;
                         } // move to end
                     }
@@ -3689,14 +3689,14 @@ void StartFrame(void)
                             random_shit_error = TRUE;
                         for(int j = 0; j < 25; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                         if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                             buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
                             random_shit_error = TRUE;
                         else {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                     } else if(strncmp(buf, "red_available_only_point", 24) == 0) {
                         // this can only be in a section
@@ -3704,14 +3704,14 @@ void StartFrame(void)
                             random_shit_error = TRUE;
                         for(int j = 0; j < 24; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                         if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                             buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
                             random_shit_error = TRUE;
                         else {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                     } else if(strncmp(buf, "green_available_only_point", 26) == 0) {
                         // this can only be in a section
@@ -3719,14 +3719,14 @@ void StartFrame(void)
                             random_shit_error = TRUE;
                         for(int j = 0; j < 26; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                         if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                             buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
                             random_shit_error = TRUE;
                         else {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                     } else if(strncmp(buf, "yellow_available_only_point", 27) == 0) {
                         // this can only be in a section
@@ -3734,14 +3734,14 @@ void StartFrame(void)
                             random_shit_error = TRUE;
                         for(int j = 0; j < 27; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                         if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                             buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
                             random_shit_error = TRUE;
                         else {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                     }
 
@@ -3752,14 +3752,14 @@ void StartFrame(void)
                             random_shit_error = TRUE;
                         for(int j = 0; j < 20; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                         if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                             buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
                             random_shit_error = TRUE;
                         else {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                     } else if(strncmp(buf, "red_available_point", 19) == 0) {
                         // this can only be in a section
@@ -3767,14 +3767,14 @@ void StartFrame(void)
                             random_shit_error = TRUE;
                         for(int j = 0; j < 19; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                         if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                             buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
                             random_shit_error = TRUE;
                         else {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                     } else if(strncmp(buf, "green_available_point", 21) == 0) {
                         // this can only be in a section
@@ -3782,14 +3782,14 @@ void StartFrame(void)
                             random_shit_error = TRUE;
                         for(int j = 0; j < 21; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                         if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                             buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
                             random_shit_error = TRUE;
                         else {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                     } else if(strncmp(buf, "yellow_available_point", 22) == 0) {
                         // this can only be in a section
@@ -3797,14 +3797,14 @@ void StartFrame(void)
                             random_shit_error = TRUE;
                         for(int j = 0; j < 22; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                         if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                             buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
                             random_shit_error = TRUE;
                         else {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                     }
 
@@ -3815,14 +3815,14 @@ void StartFrame(void)
                             random_shit_error = TRUE;
                         for(int j = 0; j < 23; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                         if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                             buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
                             random_shit_error = TRUE;
                         else {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                     } else if(strncmp(buf, "red_notavailable_point", 22) == 0) {
                         // this can only be in a section
@@ -3830,14 +3830,14 @@ void StartFrame(void)
                             random_shit_error = TRUE;
                         for(int j = 0; j < 22; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                         if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                             buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
                             random_shit_error = TRUE;
                         else {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                     } else if(strncmp(buf, "green_notavailable_point", 24) == 0) {
                         // this can only be in a section
@@ -3845,14 +3845,14 @@ void StartFrame(void)
                             random_shit_error = TRUE;
                         for(int j = 0; j < 24; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                         if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                             buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
                             random_shit_error = TRUE;
                         else {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                     } else if(strncmp(buf, "yellow_notavailable_point", 25) == 0) {
                         // this can only be in a section
@@ -3861,14 +3861,14 @@ void StartFrame(void)
 
                         for(int j = 0; j < 25; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                         if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                             buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
                             random_shit_error = TRUE;
                         else {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                     }
 
@@ -3883,14 +3883,14 @@ void StartFrame(void)
                             ifsec = 1;
                         for(int j = 0; j < 13; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                         if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                             buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
                             random_shit_error = TRUE;
                         else {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                     } else if(strncmp(buf, "if_red_point", 12) == 0) {
                         // this can only be in a section
@@ -3902,14 +3902,14 @@ void StartFrame(void)
                             ifsec = 1;
                         for(int j = 0; j < 12; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                         if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                             buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
                             random_shit_error = TRUE;
                         else {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                     } else if(strncmp(buf, "if_green_point", 14) == 0) {
                         // this can only be in a section
@@ -3921,14 +3921,14 @@ void StartFrame(void)
                             ifsec = 1;
                         for(int j = 0; j < 14; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                         if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                             buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
                             random_shit_error = TRUE;
                         else {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                     } else if(strncmp(buf, "if_yellow_point", 15) == 0) {
                         // this can only be in a section
@@ -3940,14 +3940,14 @@ void StartFrame(void)
                             ifsec = 1;
                         for(int j = 0; j < 15; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                         if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                             buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
                             random_shit_error = TRUE;
                         else {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                     }
 
@@ -3962,14 +3962,14 @@ void StartFrame(void)
                             ifsec = 1;
                         for(int j = 0; j < 14; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                         if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                             buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
                             random_shit_error = TRUE;
                         else {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                     } else if(strncmp(buf, "ifn_red_point", 13) == 0) {
                         // this can only be in a section
@@ -3981,14 +3981,14 @@ void StartFrame(void)
                             ifsec = 1;
                         for(int j = 0; j < 13; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                         if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                             buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
                             random_shit_error = TRUE;
                         else {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                     } else if(strncmp(buf, "ifn_green_point", 15) == 0) {
                         // this can only be in a section
@@ -4000,14 +4000,14 @@ void StartFrame(void)
                             ifsec = 1;
                         for(int j = 0; j < 15; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                         if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                             buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
                             random_shit_error = TRUE;
                         else {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                     } else if(strncmp(buf, "ifn_yellow_point", 16) == 0) {
                         // this can only be in a section
@@ -4019,14 +4019,14 @@ void StartFrame(void)
                             ifsec = 1;
                         for(int j = 0; j < 16; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                         if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                             buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
                             random_shit_error = TRUE;
                         else {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                     }
 
@@ -4044,7 +4044,7 @@ void StartFrame(void)
                         int j;
                         for(j = 0; j < 14; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                         // check for 8 if vals
                         for(j = 0; j < 8; j++) {
@@ -4052,7 +4052,7 @@ void StartFrame(void)
                                 random_shit_error = TRUE;
                             else {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                         }
                     } else if(strncmp(buf, "if_red_mpoint", 13) == 0) {
@@ -4066,7 +4066,7 @@ void StartFrame(void)
                         int j;
                         for(j = 0; j < 13; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                         // check for 8 if vals
                         for(j = 0; j < 8; j++) {
@@ -4074,7 +4074,7 @@ void StartFrame(void)
                                 random_shit_error = TRUE;
                             else {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                         }
                     } else if(strncmp(buf, "if_green_mpoint", 15) == 0) {
@@ -4088,7 +4088,7 @@ void StartFrame(void)
                         int j;
                         for(j = 0; j < 15; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                         // check for 8 if vals
                         for(j = 0; j < 8; j++) {
@@ -4096,7 +4096,7 @@ void StartFrame(void)
                                 random_shit_error = TRUE;
                             else {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                         }
                     } else if(strncmp(buf, "if_yellow_mpoint", 16) == 0) {
@@ -4110,7 +4110,7 @@ void StartFrame(void)
                         int j;
                         for(j = 0; j < 16; j++) {
                             i++;
-                            buf = _strinc(buf);
+                            buf = buf + 1;
                         } // move to end
                         // check for 8 if vals
                         for(j = 0; j < 8; j++) {
@@ -4118,7 +4118,7 @@ void StartFrame(void)
                                 random_shit_error = TRUE;
                             else {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                         }
                     }
@@ -4168,7 +4168,7 @@ void StartFrame(void)
                     };
                 }
                 if(!random_shit_error)
-                    buf = _strinc(buf); // like i++ but for stringcmp stuff
+                    buf = buf + 1; // like i++ but for stringcmp stuff
             }
             bool syntax_error;
             syntax_error = FALSE;
@@ -4232,7 +4232,7 @@ void StartFrame(void)
                     if(strncmp(buf, "//", 2) == 0) {
                         commentline = TRUE;
                         i++;
-                        buf = _strinc(buf);
+                        buf = buf + 1;
                     }
                     if(buffer[i] == '\n')
                         commentline = FALSE;
@@ -4249,7 +4249,7 @@ void StartFrame(void)
                                 havestart = 1;
                             for(int j = 0; j < 8; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // try and move to end of on start
                         }
                         if(strncmp(buf, "on_msg", 6) == 0) {
@@ -4260,7 +4260,7 @@ void StartFrame(void)
                                 msgsection = 1;
                             for(int j = 0; j < 6; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // try and move to end of on_msg
                             // now check input var!
                             if(buffer[i] != '(')
@@ -4268,7 +4268,7 @@ void StartFrame(void)
                             // make sure it starts wif a (
                             else {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                                 if(buffer[i] == ')')
                                     msgsection = 99;
                                 // make sure message isnt empty
@@ -4279,7 +4279,7 @@ void StartFrame(void)
                                         msgtext[cnt] = buffer[i];
                                         cnt++;
                                         i++;
-                                        buf = _strinc(buf);
+                                        buf = buf + 1;
                                     }
                                     msgtext[cnt] = '\0'; // terminate string
                                     strcpy(msg_msg[current_msg], msgtext);
@@ -4305,7 +4305,7 @@ void StartFrame(void)
                                 random_shit_error = TRUE;
                             for(int j = 0; j < 11; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             attack[0] = TRUE;
                         } else if(strncmp(buf, "red_attack", 10) == 0) {
@@ -4314,7 +4314,7 @@ void StartFrame(void)
                                 random_shit_error = TRUE;
                             for(int j = 0; j < 10; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             attack[1] = TRUE;
                         } else if(strncmp(buf, "green_attack", 12) == 0) {
@@ -4323,7 +4323,7 @@ void StartFrame(void)
                                 random_shit_error = TRUE;
                             for(int j = 0; j < 12; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             attack[2] = TRUE;
                         } else if(strncmp(buf, "yellow_attack", 13) == 0) {
@@ -4332,7 +4332,7 @@ void StartFrame(void)
                                 random_shit_error = TRUE;
                             for(int j = 0; j < 13; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             attack[3] = TRUE;
                         }
@@ -4344,7 +4344,7 @@ void StartFrame(void)
                                 random_shit_error = TRUE;
                             for(int j = 0; j < 11; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             defend[0] = TRUE;
                         } else if(strncmp(buf, "red_defend", 10) == 0) {
@@ -4353,7 +4353,7 @@ void StartFrame(void)
                                 random_shit_error = TRUE;
                             for(int j = 0; j < 10; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             defend[1] = TRUE;
                         } else if(strncmp(buf, "green_defend", 12) == 0) {
@@ -4362,7 +4362,7 @@ void StartFrame(void)
                                 random_shit_error = TRUE;
                             for(int j = 0; j < 12; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             defend[2] = TRUE;
                         } else if(strncmp(buf, "yellow_defend", 13) == 0) {
@@ -4371,7 +4371,7 @@ void StartFrame(void)
                                 random_shit_error = TRUE;
                             for(int j = 0; j < 13; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             defend[3] = TRUE;
                         }
@@ -4384,7 +4384,7 @@ void StartFrame(void)
                                 random_shit_error = TRUE;
                             for(int j = 0; j < 11; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                         } else if(strncmp(buf, "red_normal", 10) == 0) {
                             // this can only be in a section
@@ -4392,7 +4392,7 @@ void StartFrame(void)
                                 random_shit_error = TRUE;
                             for(int j = 0; j < 10; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                         } else if(strncmp(buf, "green_normal", 12) == 0) {
                             // this can only be in a section
@@ -4400,7 +4400,7 @@ void StartFrame(void)
                                 random_shit_error = TRUE;
                             for(int j = 0; j < 12; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                         } else if(strncmp(buf, "yellow_normal", 13) == 0) {
                             // this can only be in a section
@@ -4408,7 +4408,7 @@ void StartFrame(void)
                                 random_shit_error = TRUE;
                             for(int j = 0; j < 13; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                         }
 
@@ -4419,7 +4419,7 @@ void StartFrame(void)
                                 random_shit_error = TRUE;
                             for(int j = 0; j < 25; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                                 buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
@@ -4428,7 +4428,7 @@ void StartFrame(void)
                                 pnt = atoi(&buffer[i]); // get the var
                                 pnt--;
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(start == 2) {
                                 for(int j = 0; j < 8; j++) {
@@ -4454,7 +4454,7 @@ void StartFrame(void)
                                 random_shit_error = TRUE;
                             for(int j = 0; j < 24; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                                 buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
@@ -4463,7 +4463,7 @@ void StartFrame(void)
                                 pnt = atoi(&buffer[i]); // get the var
                                 pnt--;
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(start == 2) {
                                 for(int j = 0; j < 8; j++) {
@@ -4489,7 +4489,7 @@ void StartFrame(void)
                                 random_shit_error = TRUE;
                             for(int j = 0; j < 26; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                                 buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
@@ -4498,7 +4498,7 @@ void StartFrame(void)
                                 pnt = atoi(&buffer[i]); // get the var
                                 pnt--;
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(start == 2) {
                                 for(int j = 0; j < 8; j++) {
@@ -4524,7 +4524,7 @@ void StartFrame(void)
                                 random_shit_error = TRUE;
                             for(int j = 0; j < 27; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                                 buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
@@ -4533,7 +4533,7 @@ void StartFrame(void)
                                 pnt = atoi(&buffer[i]); // get the var
                                 pnt--;
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(start == 2) {
                                 for(int j = 0; j < 8; j++) {
@@ -4562,7 +4562,7 @@ void StartFrame(void)
                                 random_shit_error = TRUE;
                             for(int j = 0; j < 20; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                                 buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
@@ -4571,7 +4571,7 @@ void StartFrame(void)
                                 pnt = atoi(&buffer[i]); // get the var
                                 pnt--;
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(start == 2) {
                                 blue_av[pnt] = TRUE;
@@ -4588,7 +4588,7 @@ void StartFrame(void)
                                 random_shit_error = TRUE;
                             for(int j = 0; j < 19; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                                 buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
@@ -4597,7 +4597,7 @@ void StartFrame(void)
                                 pnt = atoi(&buffer[i]); // get the var
                                 pnt--;
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(start == 2) {
                                 red_av[pnt] = TRUE;
@@ -4614,7 +4614,7 @@ void StartFrame(void)
                                 random_shit_error = TRUE;
                             for(int j = 0; j < 21; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                                 buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
@@ -4623,7 +4623,7 @@ void StartFrame(void)
                                 pnt = atoi(&buffer[i]); // get the var
                                 pnt--;
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(start == 2) {
                                 green_av[pnt] = TRUE;
@@ -4640,7 +4640,7 @@ void StartFrame(void)
                                 random_shit_error = TRUE;
                             for(int j = 0; j < 22; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                                 buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
@@ -4649,7 +4649,7 @@ void StartFrame(void)
                                 pnt = atoi(&buffer[i]); // get the var
                                 pnt--;
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(start == 2) {
                                 yellow_av[pnt] = TRUE;
@@ -4669,7 +4669,7 @@ void StartFrame(void)
                                 random_shit_error = TRUE;
                             for(int j = 0; j < 23; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                                 buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
@@ -4678,7 +4678,7 @@ void StartFrame(void)
                                 pnt = atoi(&buffer[i]); // get the var
                                 pnt--;
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(start == 2) {
                                 blue_av[pnt] = FALSE;
@@ -4695,7 +4695,7 @@ void StartFrame(void)
                                 random_shit_error = TRUE;
                             for(int j = 0; j < 22; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                                 buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
@@ -4704,7 +4704,7 @@ void StartFrame(void)
                                 pnt = atoi(&buffer[i]); // get the var
                                 pnt--;
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(start == 2) {
                                 red_av[pnt] = FALSE;
@@ -4721,7 +4721,7 @@ void StartFrame(void)
                                 random_shit_error = TRUE;
                             for(int j = 0; j < 24; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                                 buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
@@ -4730,7 +4730,7 @@ void StartFrame(void)
                                 pnt = atoi(&buffer[i]); // get the var
                                 pnt--;
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(start == 2) {
                                 green_av[pnt] = FALSE;
@@ -4747,7 +4747,7 @@ void StartFrame(void)
                                 random_shit_error = TRUE;
                             for(int j = 0; j < 25; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                                 buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
@@ -4756,7 +4756,7 @@ void StartFrame(void)
                                 pnt = atoi(&buffer[i]); // get the var
                                 pnt--;
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(start == 2) {
                                 yellow_av[pnt] = FALSE;
@@ -4780,7 +4780,7 @@ void StartFrame(void)
                                 ifsec = 1;
                             for(int j = 0; j < 13; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                                 buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
@@ -4788,7 +4788,7 @@ void StartFrame(void)
                             else {
                                 pnt = atoi(&buffer[i]); // get the var
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             while(curr->next != NULL && curr->next != 0 && (int)curr->next != -1)
                                 curr = curr->next; // get to null
@@ -4815,7 +4815,7 @@ void StartFrame(void)
                                 ifsec = 1;
                             for(int j = 0; j < 12; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                                 buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
@@ -4823,7 +4823,7 @@ void StartFrame(void)
                             else {
                                 pnt = atoi(&buffer[i]); // get the var
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             while(curr->next != NULL && curr->next != 0 && (int)curr->next != -1)
                                 curr = curr->next; // get to null
@@ -4850,7 +4850,7 @@ void StartFrame(void)
                                 ifsec = 1;
                             for(int j = 0; j < 14; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                                 buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
@@ -4858,7 +4858,7 @@ void StartFrame(void)
                             else {
                                 pnt = atoi(&buffer[i]); // get the var
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             while(curr->next != NULL && curr->next != 0 && (int)curr->next != -1)
                                 curr = curr->next; // get to null
@@ -4885,7 +4885,7 @@ void StartFrame(void)
                                 ifsec = 1;
                             for(int j = 0; j < 15; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                                 buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
@@ -4893,7 +4893,7 @@ void StartFrame(void)
                             else {
                                 pnt = atoi(&buffer[i]); // get the var
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             while(curr->next != NULL && curr->next != 0 && (int)curr->next != -1)
                                 curr = curr->next; // get to null
@@ -4923,7 +4923,7 @@ void StartFrame(void)
                                 ifsec = 1;
                             for(int j = 0; j < 14; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                                 buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
@@ -4931,7 +4931,7 @@ void StartFrame(void)
                             else {
                                 pnt = atoi(&buffer[i]); // get the var
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             while(curr->next != NULL && curr->next != 0 && (int)curr->next != -1)
                                 curr = curr->next; // get to null
@@ -4958,7 +4958,7 @@ void StartFrame(void)
                                 ifsec = 1;
                             for(int j = 0; j < 13; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                                 buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
@@ -4966,7 +4966,7 @@ void StartFrame(void)
                             else {
                                 pnt = atoi(&buffer[i]); // get the var
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             while(curr->next != NULL && curr->next != 0 && (int)curr->next != -1)
                                 curr = curr->next; // get to null
@@ -4993,7 +4993,7 @@ void StartFrame(void)
                                 ifsec = 1;
                             for(int j = 0; j < 15; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                                 buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
@@ -5001,7 +5001,7 @@ void StartFrame(void)
                             else {
                                 pnt = atoi(&buffer[i]); // get the var
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             while(curr->next != NULL && curr->next != 0 && (int)curr->next != -1)
                                 curr = curr->next; // get to null
@@ -5028,7 +5028,7 @@ void StartFrame(void)
                                 ifsec = 1;
                             for(int j = 0; j < 16; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             if(buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' &&
                                 buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
@@ -5036,7 +5036,7 @@ void StartFrame(void)
                             else {
                                 pnt = atoi(&buffer[i]); // get the var
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             while(curr->next != NULL && curr->next != 0 && (int)curr->next != -1)
                                 curr = curr->next; // get to null
@@ -5069,7 +5069,7 @@ void StartFrame(void)
                             int j;
                             for(j = 0; j < 14; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             // check for 8 if vals
                             char pnts[9];
@@ -5079,7 +5079,7 @@ void StartFrame(void)
                                 else {
                                     pnts[j] = buffer[i];
                                     i++;
-                                    buf = _strinc(buf);
+                                    buf = buf + 1;
                                 } // move to end
                             }
                             while(curr->next != NULL && curr->next != 0 && (int)curr->next != -1)
@@ -5109,7 +5109,7 @@ void StartFrame(void)
                             int j;
                             for(j = 0; j < 13; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             // check for 8 if vals
                             char pnts[9];
@@ -5119,7 +5119,7 @@ void StartFrame(void)
                                 else {
                                     pnts[j] = buffer[i];
                                     i++;
-                                    buf = _strinc(buf);
+                                    buf = buf + 1;
                                 } // move to end
                             }
                             while(curr->next != NULL && curr->next != 0 && (int)curr->next != -1)
@@ -5149,7 +5149,7 @@ void StartFrame(void)
                             int j;
                             for(j = 0; j < 15; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             // check for 8 if vals
                             char pnts[9];
@@ -5159,7 +5159,7 @@ void StartFrame(void)
                                 else {
                                     pnts[j] = buffer[i];
                                     i++;
-                                    buf = _strinc(buf);
+                                    buf = buf + 1;
                                 } // move to end
                             }
                             while(curr->next != NULL && curr->next != 0 && (int)curr->next != -1)
@@ -5189,7 +5189,7 @@ void StartFrame(void)
                             int j;
                             for(j = 0; j < 16; j++) {
                                 i++;
-                                buf = _strinc(buf);
+                                buf = buf + 1;
                             } // move to end
                             // check for 8 if vals
                             char pnts[9];
@@ -5199,7 +5199,7 @@ void StartFrame(void)
                                 else {
                                     pnts[j] = buffer[i];
                                     i++;
-                                    buf = _strinc(buf);
+                                    buf = buf + 1;
                                 } // move to end
                             }
                             while(curr->next != NULL && curr->next != 0 && (int)curr->next != -1)
@@ -5264,7 +5264,7 @@ void StartFrame(void)
                             break;
                         };
                     }
-                    buf = _strinc(buf); // like i++ but for stringcmp stuff
+                    buf = buf + 1; // like i++ but for stringcmp stuff
                 }
             } else {
                 ALERT(at_console, "\nScript will not be used until there are no syntax errors\n\n");
@@ -6254,7 +6254,7 @@ static void ProcessBotCfgFile(void)
     }
 
     if(strcmp(cmd, "bot_chat") == 0) {
-        changeBotSetting("bot_chat", &botchat, arg1, 0, 1000, SETTING_SOURCE_CONFIG_FILE);
+        changeBotSetting("bot_chat", &bot_chat, arg1, 0, 1000, SETTING_SOURCE_CONFIG_FILE);
         return;
     }
 
@@ -6705,7 +6705,7 @@ static void DisplayBotInfo()
         strncat(msg2, msg, 511 - strlen(msg2));
 
         // bot chat
-        sprintf(msg, "Bot chat %d\n", botchat);
+        sprintf(msg, "Bot chat %d\n", bot_chat);
         printf(msg);
         strncat(msg2, msg, 511 - strlen(msg2));
 
@@ -6817,7 +6817,7 @@ static void DisplayBotInfo()
         strncat(msg2, msg, 511 - strlen(msg2));
 
         // bot chat
-        sprintf(msg, "Bot chat %d\n", botchat);
+        sprintf(msg, "Bot chat %d\n", bot_chat);
         ALERT(at_console, msg);
         strncat(msg2, msg, 511 - strlen(msg2));
 

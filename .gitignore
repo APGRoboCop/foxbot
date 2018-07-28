@@ -135,3 +135,4 @@ Release/FoXBot.log
 Release/foxbot.Build.CppClean.log
 changelog.txt
 foxbot_mm.so
+Release/foxbot_mm.dll

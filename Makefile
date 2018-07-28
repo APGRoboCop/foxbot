@@ -69,10 +69,11 @@ VERSION=0.791
 # Make sure this is the correct compiler for your system
 # 4.8 appears to compile the builds smaller but Clang appears not compatible
 
-CC=gcc
-#CC=gcc-4.8
-CXX=g++
-#CXX=g++-4.8
+#CC=gcc
+CC=gcc-4.8
+
+#CXX=g++
+CXX=g++-4.8
 
 ################################################################################################
 # !! If you only want to compile and go you shouldn't need to edit anything below this line !! #
@@ -138,16 +139,17 @@ CFLAGS=$(BASE_CFLAGS) -Wno-deprecated -Wno-deprecated-declarations \
 		-Wno-unused-local-typedefs -Wno-unused-result
 		
 # debug build
-CFDBG= -g -ggdb
-#CFDBG+= -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations
-#CFDBG+= -fno-thread-jumps -fno-defer-pop -fno-delayed-branch -fno-omit-frame-pointer -fkeep-static-consts
-#CFDBG+= -march=i486 
+CFDBG= -g -ggdb -Wall
+CFDBG+= -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations
+CFDBG+= -fno-thread-jumps -fno-defer-pop -fno-delayed-branch -fno-omit-frame-pointer -fkeep-static-consts
+CFDBG+= -march=i686 
 
 #full optimization (WONT WORK WITH omit-frame-pointer !!!!!)
 #CFOPT=  -march=i486 -O6 
 #CFOPT+= -ffast-math -funroll-loops (-ffast-math unstable?)
 
-CFOPT= -O2 -m32 -mtune=generic -march=i686 -msse -msse2 -mfpmath=sse -fno-aggressive-loop-optimizations
+CFOPT= -O2 -m32 -mtune=generic -march=i686 -msse -msse2 -mfpmath=sse -s -pipe
+CFOPT+= -funsafe-math-optimizations -fno-aggressive-loop-optimizations
 
 # configuration dependand setup
 ifeq "$(OPT)" "opt"
@@ -165,7 +167,6 @@ SHLIBLDFLAGS=-static#-shared#-fkeep-static-consts #-shared -static
 
 OBJDIR= obj
 MMOBJDIR= objMM
-
 
 INCLUDEDIRS=-I$(SDKSRC)/engine -I$(SDKSRC)/common -I$(SDKSRC)/pm_shared -I$(SDKSRC)/dlls -I$(SDKSRC)/cl_dll 
 
@@ -221,7 +222,7 @@ OBJADD=
 #
 # Libraries
 #
-LDFLAGS=-lcrypt -lm -lc -lstdc++ -ldl
+LDFLAGS=-ldl -lcrypt -lm -lc -lstdc++
 LIBADD=-shared
 
 ##############################################################

@@ -110,7 +110,7 @@ extern bool b_observer_mode;
 extern bool b_botdontshoot;
 extern bool b_botdontmove;
 
-extern int botchat;
+extern int bot_chat;
 extern int min_bots;
 extern int max_bots;
 extern int bot_team_balance;
@@ -3037,7 +3037,7 @@ static void BotComms(bot_t* pBot)
     // greetings from the bots
     if(pBot->greeting == FALSE && (pBot->create_time + 3.0) > pBot->f_think_time) {
         pBot->greeting = TRUE;
-        if(random_long(1, 1000) < static_cast<long>(botchat)) {
+        if(random_long(1, 1000) < static_cast<long>(bot_chat)) {
             chat.pickRandomChatString(newJob->message, MAX_CHAT_LENGTH, CHAT_TYPE_GREETING, NULL);
 
             newJob->message[MAX_CHAT_LENGTH - 1] = '\0';
@@ -3052,7 +3052,7 @@ static void BotComms(bot_t* pBot)
 
     // my chat, bot has died
     // good idea to check for null...urg!
-    if(pBot->killer_edict != NULL && random_long(1, 1000) < static_cast<long>(botchat)) {
+    if(pBot->killer_edict != NULL && random_long(1, 1000) < static_cast<long>(bot_chat)) {
         if(pBot->killer_edict->v.frags > pEdict->v.frags) {
             chat.pickRandomChatString(
                 newJob->message, MAX_CHAT_LENGTH, CHAT_TYPE_KILLED_LOW, STRING(pBot->killer_edict->v.netname));
@@ -3073,7 +3073,7 @@ static void BotComms(bot_t* pBot)
         pBot->killer_edict = NULL;
 
     // haha I killed you messages
-    if(pBot->killed_edict != NULL && random_long(1, 1000) < static_cast<long>(botchat)) {
+    if(pBot->killed_edict != NULL && random_long(1, 1000) < static_cast<long>(bot_chat)) {
         if(pBot->killed_edict->v.frags > pEdict->v.frags) {
             chat.pickRandomChatString(
                 newJob->message, MAX_CHAT_LENGTH, CHAT_TYPE_KILL_LOW, STRING(pBot->killed_edict->v.netname));

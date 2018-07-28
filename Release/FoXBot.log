@@ -3,87 +3,165 @@ e:\dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'AR
   c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\winnt.h(1315): note: see previous definition of 'ARRAYSIZE'
 e:\dropbox\src\metamod-p-37\metamod\comp_dep.h(79): warning C4005: 'va_copy': macro redefinition
   c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.14.26428\include\stdarg.h(20): note: see previous definition of 'va_copy'
-e:\dropbox\src\hlsdk-2.3-p4\multiplayer\dlls\util.h(249): warning C4091: 'typedef ': ignored on left of '' when no variable is declared
+e:\dropbox\src\foxbot_test\cbase.h(266): warning C4458: declaration of 'pev' hides class member
+  e:\dropbox\src\foxbot_test\cbase.h(149): note: see declaration of 'CBaseEntity::pev'
+e:\dropbox\src\foxbot_test\bot.cpp(781): warning C4456: declaration of 'index' hides previous local declaration
+  e:\dropbox\src\foxbot_test\bot.cpp(542): note: see declaration of 'index'
+e:\dropbox\src\foxbot_test\bot.cpp(1628): warning C4459: declaration of 'fp' hides global declaration
+  e:\dropbox\src\foxbot_test\bot.cpp(94): note: see declaration of 'fp'
+e:\dropbox\src\foxbot_test\bot.cpp(4377): warning C4456: declaration of 'newJob' hides previous local declaration
+  e:\dropbox\src\foxbot_test\bot.cpp(4373): note: see declaration of 'newJob'
   bot_client.cpp
 e:\dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE': macro redefinition
   c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\winnt.h(1315): note: see previous definition of 'ARRAYSIZE'
+e:\dropbox\src\foxbot_test\cbase.h(266): warning C4458: declaration of 'pev' hides class member
+  e:\dropbox\src\foxbot_test\cbase.h(149): note: see declaration of 'CBaseEntity::pev'
   bot_combat.cpp
 e:\dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE': macro redefinition
   c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\winnt.h(1315): note: see previous definition of 'ARRAYSIZE'
-e:\dropbox\src\foxbot\bot_combat.cpp(204): warning C4838: conversion from 'double' to 'float' requires a narrowing conversion
+e:\dropbox\src\foxbot_test\cbase.h(266): warning C4458: declaration of 'pev' hides class member
+  e:\dropbox\src\foxbot_test\cbase.h(149): note: see declaration of 'CBaseEntity::pev'
+e:\dropbox\src\foxbot_test\bot_combat.cpp(904): warning C4456: declaration of 'pent' hides previous local declaration
+  e:\dropbox\src\foxbot_test\bot_combat.cpp(515): note: see declaration of 'pent'
+e:\dropbox\src\foxbot_test\bot_combat.cpp(2435): warning C4456: declaration of 'i' hides previous local declaration
+  e:\dropbox\src\foxbot_test\bot_combat.cpp(2423): note: see declaration of 'i'
   bot_job_assessors.cpp
 e:\dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE': macro redefinition
   c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\winnt.h(1315): note: see previous definition of 'ARRAYSIZE'
 e:\dropbox\src\metamod-p-37\metamod\comp_dep.h(79): warning C4005: 'va_copy': macro redefinition
   c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.14.26428\include\stdarg.h(20): note: see previous definition of 'va_copy'
-e:\dropbox\src\hlsdk-2.3-p4\multiplayer\dlls\util.h(249): warning C4091: 'typedef ': ignored on left of '' when no variable is declared
+e:\dropbox\src\foxbot_test\cbase.h(266): warning C4458: declaration of 'pev' hides class member
+  e:\dropbox\src\foxbot_test\cbase.h(149): note: see declaration of 'CBaseEntity::pev'
   bot_job_functions.cpp
 e:\dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE': macro redefinition
   c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\winnt.h(1315): note: see previous definition of 'ARRAYSIZE'
 e:\dropbox\src\metamod-p-37\metamod\comp_dep.h(79): warning C4005: 'va_copy': macro redefinition
   c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.14.26428\include\stdarg.h(20): note: see previous definition of 'va_copy'
-e:\dropbox\src\hlsdk-2.3-p4\multiplayer\dlls\util.h(249): warning C4091: 'typedef ': ignored on left of '' when no variable is declared
+e:\dropbox\src\foxbot_test\cbase.h(266): warning C4458: declaration of 'pev' hides class member
+  e:\dropbox\src\foxbot_test\cbase.h(149): note: see declaration of 'CBaseEntity::pev'
   bot_job_think.cpp
 e:\dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE': macro redefinition
   c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\winnt.h(1315): note: see previous definition of 'ARRAYSIZE'
 e:\dropbox\src\metamod-p-37\metamod\comp_dep.h(79): warning C4005: 'va_copy': macro redefinition
   c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.14.26428\include\stdarg.h(20): note: see previous definition of 'va_copy'
-e:\dropbox\src\hlsdk-2.3-p4\multiplayer\dlls\util.h(249): warning C4091: 'typedef ': ignored on left of '' when no variable is declared
+e:\dropbox\src\foxbot_test\cbase.h(266): warning C4458: declaration of 'pev' hides class member
+  e:\dropbox\src\foxbot_test\cbase.h(149): note: see declaration of 'CBaseEntity::pev'
   bot_navigate.cpp
 e:\dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE': macro redefinition
   c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\winnt.h(1315): note: see previous definition of 'ARRAYSIZE'
+e:\dropbox\src\foxbot_test\cbase.h(266): warning C4458: declaration of 'pev' hides class member
+  e:\dropbox\src\foxbot_test\cbase.h(149): note: see declaration of 'CBaseEntity::pev'
   bot_start.cpp
 e:\dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE': macro redefinition
   c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\winnt.h(1315): note: see previous definition of 'ARRAYSIZE'
+e:\dropbox\src\foxbot_test\cbase.h(266): warning C4458: declaration of 'pev' hides class member
+  e:\dropbox\src\foxbot_test\cbase.h(149): note: see declaration of 'CBaseEntity::pev'
   botcam.cpp
 e:\dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE': macro redefinition
   c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\winnt.h(1315): note: see previous definition of 'ARRAYSIZE'
-e:\dropbox\src\hlsdk-2.3-p4\multiplayer\dlls\util.h(249): warning C4091: 'typedef ': ignored on left of '' when no variable is declared
+e:\dropbox\src\foxbot_test\cbase.h(266): warning C4458: declaration of 'pev' hides class member
+  e:\dropbox\src\foxbot_test\cbase.h(149): note: see declaration of 'CBaseEntity::pev'
   dll.cpp
 e:\dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE': macro redefinition
   c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\winnt.h(1315): note: see previous definition of 'ARRAYSIZE'
 e:\dropbox\src\metamod-p-37\metamod\comp_dep.h(79): warning C4005: 'va_copy': macro redefinition
   c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.14.26428\include\stdarg.h(20): note: see previous definition of 'va_copy'
-e:\dropbox\src\hlsdk-2.3-p4\multiplayer\dlls\util.h(249): warning C4091: 'typedef ': ignored on left of '' when no variable is declared
+e:\dropbox\src\foxbot_test\dll.cpp(1059): warning C4456: declaration of 'msg' hides previous local declaration
+  e:\dropbox\src\foxbot_test\dll.cpp(999): note: see declaration of 'msg'
+e:\dropbox\src\foxbot_test\dll.cpp(1065): warning C4457: declaration of 'pent' hides function parameter
+  e:\dropbox\src\foxbot_test\dll.cpp(962): note: see declaration of 'pent'
+e:\dropbox\src\foxbot_test\dll.cpp(1867): warning C4456: declaration of 'msg' hides previous local declaration
+  e:\dropbox\src\foxbot_test\dll.cpp(1595): note: see declaration of 'msg'
+e:\dropbox\src\foxbot_test\dll.cpp(2533): warning C4459: declaration of 'fp' hides global declaration
+  e:\dropbox\src\foxbot_test\dll.cpp(154): note: see declaration of 'fp'
+e:\dropbox\src\foxbot_test\dll.cpp(2896): warning C4456: declaration of 'index' hides previous local declaration
+  e:\dropbox\src\foxbot_test\dll.cpp(2675): note: see declaration of 'index'
+e:\dropbox\src\foxbot_test\dll.cpp(3261): warning C4456: declaration of 'count' hides previous local declaration
+  e:\dropbox\src\foxbot_test\dll.cpp(2680): note: see declaration of 'count'
+e:\dropbox\src\foxbot_test\dll.cpp(3496): warning C4456: declaration of 'i' hides previous local declaration
+  e:\dropbox\src\foxbot_test\dll.cpp(3422): note: see declaration of 'i'
+e:\dropbox\src\foxbot_test\dll.cpp(4200): warning C4459: declaration of 'fp' hides global declaration
+  e:\dropbox\src\foxbot_test\dll.cpp(154): note: see declaration of 'fp'
+e:\dropbox\src\foxbot_test\dll.cpp(4289): warning C4456: declaration of 'i' hides previous local declaration
+  e:\dropbox\src\foxbot_test\dll.cpp(3496): note: see declaration of 'i'
+e:\dropbox\src\foxbot_test\dll.cpp(4800): warning C4456: declaration of 'i' hides previous local declaration
+  e:\dropbox\src\foxbot_test\dll.cpp(3496): note: see declaration of 'i'
+e:\dropbox\src\foxbot_test\dll.cpp(4835): warning C4456: declaration of 'i' hides previous local declaration
+  e:\dropbox\src\foxbot_test\dll.cpp(3496): note: see declaration of 'i'
+e:\dropbox\src\foxbot_test\dll.cpp(4870): warning C4456: declaration of 'i' hides previous local declaration
+  e:\dropbox\src\foxbot_test\dll.cpp(3496): note: see declaration of 'i'
+e:\dropbox\src\foxbot_test\dll.cpp(4905): warning C4456: declaration of 'i' hides previous local declaration
+  e:\dropbox\src\foxbot_test\dll.cpp(3496): note: see declaration of 'i'
+e:\dropbox\src\foxbot_test\dll.cpp(4943): warning C4456: declaration of 'i' hides previous local declaration
+  e:\dropbox\src\foxbot_test\dll.cpp(3496): note: see declaration of 'i'
+e:\dropbox\src\foxbot_test\dll.cpp(4978): warning C4456: declaration of 'i' hides previous local declaration
+  e:\dropbox\src\foxbot_test\dll.cpp(3496): note: see declaration of 'i'
+e:\dropbox\src\foxbot_test\dll.cpp(5013): warning C4456: declaration of 'i' hides previous local declaration
+  e:\dropbox\src\foxbot_test\dll.cpp(3496): note: see declaration of 'i'
+e:\dropbox\src\foxbot_test\dll.cpp(5048): warning C4456: declaration of 'i' hides previous local declaration
+  e:\dropbox\src\foxbot_test\dll.cpp(3496): note: see declaration of 'i'
+e:\dropbox\src\foxbot_test\dll.cpp(5092): warning C4456: declaration of 'i' hides previous local declaration
+  e:\dropbox\src\foxbot_test\dll.cpp(3496): note: see declaration of 'i'
+e:\dropbox\src\foxbot_test\dll.cpp(5132): warning C4456: declaration of 'i' hides previous local declaration
+  e:\dropbox\src\foxbot_test\dll.cpp(3496): note: see declaration of 'i'
+e:\dropbox\src\foxbot_test\dll.cpp(5172): warning C4456: declaration of 'i' hides previous local declaration
+  e:\dropbox\src\foxbot_test\dll.cpp(3496): note: see declaration of 'i'
+e:\dropbox\src\foxbot_test\dll.cpp(5212): warning C4456: declaration of 'i' hides previous local declaration
+  e:\dropbox\src\foxbot_test\dll.cpp(3496): note: see declaration of 'i'
+e:\dropbox\src\foxbot_test\dll.cpp(6522): warning C4459: declaration of 'fp' hides global declaration
+  e:\dropbox\src\foxbot_test\dll.cpp(154): note: see declaration of 'fp'
   engine.cpp
 e:\dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE': macro redefinition
   c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\winnt.h(1315): note: see previous definition of 'ARRAYSIZE'
 e:\dropbox\src\metamod-p-37\metamod\comp_dep.h(79): warning C4005: 'va_copy': macro redefinition
   c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.14.26428\include\stdarg.h(20): note: see previous definition of 'va_copy'
-e:\dropbox\src\hlsdk-2.3-p4\multiplayer\dlls\util.h(249): warning C4091: 'typedef ': ignored on left of '' when no variable is declared
+e:\dropbox\src\foxbot_test\cbase.h(266): warning C4458: declaration of 'pev' hides class member
+  e:\dropbox\src\foxbot_test\cbase.h(149): note: see declaration of 'CBaseEntity::pev'
   h_export.cpp
 e:\dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE': macro redefinition
   c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\winnt.h(1315): note: see previous definition of 'ARRAYSIZE'
 e:\dropbox\src\metamod-p-37\metamod\comp_dep.h(79): warning C4005: 'va_copy': macro redefinition
   c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.14.26428\include\stdarg.h(20): note: see previous definition of 'va_copy'
-e:\dropbox\src\hlsdk-2.3-p4\multiplayer\dlls\util.h(249): warning C4091: 'typedef ': ignored on left of '' when no variable is declared
   linkfunc.cpp
 e:\dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE': macro redefinition
   c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\winnt.h(1315): note: see previous definition of 'ARRAYSIZE'
+e:\dropbox\src\foxbot_test\cbase.h(266): warning C4458: declaration of 'pev' hides class member
+  e:\dropbox\src\foxbot_test\cbase.h(149): note: see declaration of 'CBaseEntity::pev'
   meta_api.cpp
 e:\dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE': macro redefinition
   c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\winnt.h(1315): note: see previous definition of 'ARRAYSIZE'
 e:\dropbox\src\metamod-p-37\metamod\comp_dep.h(79): warning C4005: 'va_copy': macro redefinition
   c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.14.26428\include\stdarg.h(20): note: see previous definition of 'va_copy'
-e:\dropbox\src\hlsdk-2.3-p4\multiplayer\dlls\util.h(249): warning C4091: 'typedef ': ignored on left of '' when no variable is declared
-e:\dropbox\src\foxbot\meta_api.cpp(95): warning C4390: ';': empty controlled statement found; is this the intent?
-e:\dropbox\src\foxbot\meta_api.cpp(116): warning C4390: ';': empty controlled statement found; is this the intent?
+e:\dropbox\src\foxbot_test\meta_api.cpp(95): warning C4390: ';': empty controlled statement found; is this the intent?
+e:\dropbox\src\foxbot_test\meta_api.cpp(116): warning C4390: ';': empty controlled statement found; is this the intent?
   sdk_util.cpp
 e:\dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE': macro redefinition
   c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\winnt.h(1315): note: see previous definition of 'ARRAYSIZE'
-e:\dropbox\src\hlsdk-2.3-p4\multiplayer\dlls\util.h(249): warning C4091: 'typedef ': ignored on left of '' when no variable is declared
+e:\dropbox\src\foxbot_test\cbase.h(266): warning C4458: declaration of 'pev' hides class member
+  e:\dropbox\src\foxbot_test\cbase.h(149): note: see declaration of 'CBaseEntity::pev'
   util.cpp
 e:\dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE': macro redefinition
   c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\winnt.h(1315): note: see previous definition of 'ARRAYSIZE'
-e:\dropbox\src\hlsdk-2.3-p4\multiplayer\dlls\util.h(249): warning C4091: 'typedef ': ignored on left of '' when no variable is declared
   waypoint.cpp
 e:\dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE': macro redefinition
   c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\winnt.h(1315): note: see previous definition of 'ARRAYSIZE'
-e:\dropbox\src\foxbot\waypoint.cpp(3347): warning C4309: 'initializing': truncation of constant value
+e:\dropbox\src\foxbot_test\waypoint.cpp(1193): warning C4456: declaration of 'i' hides previous local declaration
+  e:\dropbox\src\foxbot_test\waypoint.cpp(1169): note: see declaration of 'i'
+e:\dropbox\src\foxbot_test\waypoint.cpp(3050): warning C4459: declaration of 'shortest_path' hides global declaration
+  e:\dropbox\src\foxbot_test\waypoint.cpp(121): note: see declaration of 'shortest_path'
+e:\dropbox\src\foxbot_test\waypoint.cpp(3050): warning C4459: declaration of 'from_to' hides global declaration
+  e:\dropbox\src\foxbot_test\waypoint.cpp(122): note: see declaration of 'from_to'
+e:\dropbox\src\foxbot_test\waypoint.cpp(3347): warning C4309: 'initializing': truncation of constant value
   Generating Code...
-e:\dropbox\src\foxbot\waypoint.cpp(140): warning C4700: uninitialized local variable 'x' used
-e:\dropbox\src\foxbot\waypoint.cpp(141): warning C4700: uninitialized local variable 'y' used
+e:\dropbox\src\foxbot_test\waypoint.cpp(140): warning C4700: uninitialized local variable 'x' used
+e:\dropbox\src\foxbot_test\waypoint.cpp(141): warning C4700: uninitialized local variable 'y' used
+e:\dropbox\src\foxbot_test\dll.cpp(5538): warning C4702: unreachable code
+e:\dropbox\src\foxbot_test\dll.cpp(4437): warning C4701: potentially uninitialized local variable 'pnt' used
+e:\dropbox\src\foxbot_test\bot.cpp(645): warning C4701: potentially uninitialized local variable 'max_skin_index' used
+e:\dropbox\src\foxbot_test\bot.cpp(610): warning C4701: potentially uninitialized local variable 'index' used
+e:\dropbox\src\foxbot_test\bot.cpp(610): warning C4701: potentially uninitialized local variable 'pSkinUsed' used
+e:\dropbox\src\foxbot_test\bot.cpp(610): warning C4703: potentially uninitialized local pointer variable 'pSkinUsed' used
      Creating library .\Release\FoXBot.lib and object .\Release\FoXBot.exp
-  FoXBot.vcxproj -> E:\Dropbox\src\foxbot\.\Release\foxbot.dll
+  FoXBot.vcxproj -> E:\Dropbox\src\foxbot_test\.\Release\foxbot.dll
   Copy to Foxbot Folder
           0 file(s) copied.
