@@ -53,7 +53,7 @@
 
 #define VER_MAJOR 0
 #define VER_MINOR 791
-#define VER_BUILD 4
+#define VER_BUILD 0
 
 #define MENU_NONE  0
 #define MENU_1     1
@@ -64,7 +64,7 @@
 #define MENU_6     6
 #define MENU_7     7
 
-cvar_t foxbot = { "foxbot", "0.791-b4", FCVAR_SERVER | FCVAR_UNLOGGED, 0, NULL };
+cvar_t foxbot = { "foxbot", "0.791", FCVAR_SERVER | FCVAR_UNLOGGED, 0, NULL };
 cvar_t enable_foxbot = { "enable_foxbot", "1", FCVAR_SERVER | FCVAR_UNLOGGED, 0, NULL };
 
 cvar_t sv_bot = { "bot", "", 0, 0, NULL };
@@ -103,7 +103,7 @@ bool offensive_chatter = TRUE;
 bool b_observer_mode = FALSE;
 bool b_botdontshoot = FALSE;
 bool b_botdontmove = FALSE;
-int bot_chat = 50;
+int bot_chat = 500;
 int bot_allow_moods = 1;  // whether bots can have different personality traits or not
 int bot_allow_humour = 1; // whether bots can choose to do daft things or not
 bool bot_can_use_teleporter = TRUE;
@@ -217,10 +217,10 @@ char* show_menu_1 = { "Waypoint Tags\n\n1. Team Specific\n2. Locations\n3. Items
                       "Control Points\n7. Exit" };
 char* show_menu_2 = { "Team Specific Tags\n\n1. Team 1\n2. Team 2\n3. Team 3\n4. Team 4\n5. Exit" };
 char* show_menu_3 = { "Location Tags\n\n1. Flag Location\n2. Flag Goal Location\n3. Exit" };
-char* show_menu_4 = { "Item Tags\n\n1. Health\n2. Armor\n3. Ammo\n4. Exit" };
-char* show_menu_5 = { "Action Tags p1\n\n1. Defend (Soldier/HW/Demo)\n2. Defend(Demo-man Only)\n3. Sniper\n4. Build "
+char* show_menu_4 = { "Item Tags\n\n1. Health\n2. Armour\n3. Ammo\n4. Exit" };
+char* show_menu_5 = { "Action Tags p1\n\n1. Defend (Soldier/HW/Demo)\n2. Defend(Demoman Only)\n3. Sniper\n4. Build "
                       "Sentry\n5. Rotate SG 180\n6. Build TP Entrance\n7. Build TP Exit\n8. Exit" };
-char* show_menu_6 = { "Action Tags p2\n\n1. RJ/CJ\n2. Jump\n3. Wait For Lift\n4. Walk\n5. Detpack(clear "
+char* show_menu_6 = { "Action Tags p2\n\n1. RJ/CJ\n2. Jump\n3. Wait For Lift\n4. Walk\n5. Detpack(Clear "
                       "passageway)\n6. Detpack(Seal passageway)\n7. Path Check\n8. Exit" };
 char* show_menu_7 = {
     "Waypoint Tags\n\n1. Point1\n2. Point2\n3. Point3\n4. Point4\n5. Point5\n6. Point6\n7. Point7\n8. Point8\n9 Exit"

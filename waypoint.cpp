@@ -2215,7 +2215,7 @@ void WaypointPrintInfo(edict_t* pEntity)
     if(flags & W_FL_TFC_FLAG_GOAL)
         ClientPrint(pEntity, HUD_PRINTNOTIFY, "There is a flag goal near this waypoint\n");
 
-    // script flags next //Those flags incompatible? [APG]RoboCop[CL]
+    // script flags next
 	
     if(waypoints[index].script_flags & S_FL_POINT1)
         ClientPrint(pEntity, HUD_PRINTNOTIFY, "This is marked as point1\n");
