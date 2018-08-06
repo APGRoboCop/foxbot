@@ -3,10 +3,11 @@
 ==============================
 
 --------------------------------------------------------------------------------
-Version 0.791-beta5
-??-??-2018
+Version 0.791
+August-07-2018
 Updated by RoboCop
 --------------------------------------------------------------------------------
+
 - Removed unwanted tchar.h dependancies that are no longer required - Thanks to Globoss
 
 - Linux build should now work for Assault and Capture Point maps due to syntax error fixed - Thanks to Globoss
@@ -15,22 +16,39 @@ Updated by RoboCop
 
 - Fixed extdll.h that appears to fail to compile on GCC 6+ for #ifndef min and max
 
-- Added optimisation for faster float point for both builds
+- Added optimisation for faster float point for Win32 build
 
-- Linux build optimised and tuned for newer arch
+- Linux build optimised for floating-point arithmetic and tuned for newer arch
+
+- bot_job_think.cpp should be fairly adjusted for the bots to choose their paths and tasks wisely
 
 - h_export.cpp Linux 'h_Library' can now detect both old and new TFC server build (tfc.so or tfc_i386.so)
 
-- Added teleport waypoints for baconbowl_r and siege
+- Added teleport waypoints for baconbowl_r, chimkey_l and siege
 
-- Reduced excessive waypoint and pathwaypoint quantity for rats, rats2 and rats3
+- Added more map configs for rats maps, plus turkeyburgers2002, fishburgers and donutburgers to spawn 1 sniper per 4 teams
 
-- Fixed some waypoint problems for 55, openfire_lowgrens
+- Enhanced the map configs for the Assault & Defend maps, rock2 and flagrun to spawn the recommended bot classes for each team
 
-*  high_flag, mortality_l, ss_nyx_ectfc, alchimy_l2, bases2k3 and hellion (coming soon!)
+- Enhanced the hunted waypoints to prevent the Red team and the Hunted wondering back and forth in entrance tunnel
 
-Known issues -  
->> botdontmove, bot_chat and bot_team_balance cvars not fully operational
+- Added some more defensive waypoints for avanti, casbah, flagrun, chimkey_l and warpath
+
+- Added some important conc/rocket jump waypoints for the stock maps, palermo, ksour, cornfield, baconbowl_r and sandbowl_r2
+
+- Reduced the risk of bots invading enemy spawns for the stock maps, chimkey_l, tf2fort and ksour
+
+- Reduced excessive waypoint and pathwaypoint quantity for rats, rats2 and rats3, rats_cmd, palermo and baconbowl_r
+
+- Removed non recommended waypoints for dustbowl that includes sentry that are not suitable for defending CP3
+
+- Fixed the waypoint problems for 55, openfire_lowgrens, xpress2k4, destroy_l, phantom, shutdown2, sandbowl_r2 and tf2fort
+
+- Added new waypoints for bases2k3, momentum_l, mortality_l and hellion
+
+Known bugs:-  
+
+>> botdontmove, bot_chat, bot_bot_balance and bot_team_balance cvars may not be 100% operational
 
 >> FoxBot appears to crash sometimes on Windows Listenservers
 

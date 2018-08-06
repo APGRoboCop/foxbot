@@ -2138,22 +2138,6 @@ void pfnServerPrint(const char* szMsg)
     (*g_engfuncs.pfnServerPrint)(szMsg);
 }
 
-// Fix for 0.791? [APG]RoboCop[CL]
-/*const char * pfnCmd_Args(void)
-{
-	return 0;
-}
-
-const char * pfnCmd_Argv(int argc)
-{
-	return 0;
-}
-
-int pfnCmd_Argc(void)
-{
-	return 0;
-}*/
-
 // This function returns true if the bots name is in the indicated message.
 static bool name_message_check(const char* msg_string, const char* name_string)
 {
@@ -2918,12 +2902,6 @@ void pfnGetPlayerStats(const edict_t* pClient, int* ping, int* packet_loss)
     (*g_engfuncs.pfnGetPlayerStats)(pClient, ping, packet_loss);
     //}
 }
-// Fix for 0.791? [APG]RoboCop[CL]
-//const char * pfnGetPlayerAuthID(edict_t * e)
-//{
-//	return 0;
-//}
-
 
 // idea for making meta mod work..add these engine calls
 

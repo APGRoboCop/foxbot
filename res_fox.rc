@@ -30,12 +30,12 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "Comments", "AI opponent for half-life TFC"
+            VALUE "Comments", "AI opponent for Half-Life TFC"
             VALUE "CompanyName", "Tom Simpson <redfox@foxbot.net>"
             VALUE "FileDescription", "FoxBot Half-Life MOD DLL"
             VALUE "FileVersion", "0.791.0.0"
             VALUE "InternalName", "FoxBot"
-            VALUE "LegalCopyright", "Copyright© 2003,Tom Simpson"
+            VALUE "LegalCopyright", "Copyright © 2018, Tom Simpson and APG Foundation"
             VALUE "OriginalFilename", "foxbot_mm.dll"
             VALUE "ProductName", "FoxBot"
             VALUE "ProductVersion", "0.791.0.0"
