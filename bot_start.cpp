@@ -161,7 +161,7 @@ void BotStartGame(bot_t* pBot)
                 if(pBot->bot_class == 10)
                     class_not_allowed = team_class_limits[team] & 1 << 7;
                 else if(pBot->bot_class <= 7)
-                    class_not_allowed = team_class_limits[team] & 1 << pBot->bot_class - 1;
+                    class_not_allowed = team_class_limits[team] & 1 << (pBot->bot_class - 1);
                 else
                     class_not_allowed = team_class_limits[team] & 1 << pBot->bot_class;
 
@@ -171,7 +171,7 @@ void BotStartGame(bot_t* pBot)
                     if(pBot->bot_class == 10)
                         class_not_allowed = team_class_limits[team] & 1 << 7;
                     else if(pBot->bot_class <= 7)
-                        class_not_allowed = team_class_limits[team] & 1 << pBot->bot_class - 1;
+                        class_not_allowed = team_class_limits[team] & 1 << (pBot->bot_class - 1);
                     else
                         class_not_allowed = team_class_limits[team] & 1 << pBot->bot_class;
                 }
@@ -385,7 +385,7 @@ static int BotPickFavoredTeam_TFC(int faveClass)
         int class_not_allowed;
 
         if(faveClass <= 7)
-            class_not_allowed = team_class_limits[i] & 1 << faveClass - 1;
+            class_not_allowed = team_class_limits[i] & 1 << (faveClass - 1);
         else
             class_not_allowed = team_class_limits[i] & 1 << faveClass;
 

@@ -33,13 +33,13 @@
 #include "engine.h"
 #include "bot_func.h"
 
-#include <meta_api.h> //meta mod
+#include "meta_api.h" //meta mod
 
 #include "cbase.h"
 
 extern bool mr_meta;
 
-extern enginefuncs_t g_engfuncs;
+//extern enginefuncs_t g_engfuncs; //No longer required? [APG]RoboCop[CL]
 extern bot_t bots[32];
 extern int mod_id;
 
@@ -1659,7 +1659,8 @@ int pfnAllocString(const char* szValue)
         fclose(fp);
     }
     if(mr_meta)
-        RETURN_META_VALUE(MRES_HANDLED, NULL);
+		//RETURN_META_VALUE(MRES_HANDLED, NULL); //[APG]RoboCop[CL]
+		do { gpMetaGlobals->mres = MRES_HANDLED; return(0); } while (false);
     return (*g_engfuncs.pfnAllocString)(szValue);
 }
 
@@ -2227,7 +2228,8 @@ CRC32_t pfnCRC32_Final(CRC32_t pulCRC)
         fclose(fp);
     }
     if(mr_meta)
-        RETURN_META_VALUE(MRES_HANDLED, NULL);
+		//RETURN_META_VALUE(MRES_HANDLED, NULL);//[APG]RoboCop[CL]
+        do { gpMetaGlobals->mres=MRES_HANDLED; return(0); } while(false);
     return (*g_engfuncs.pfnCRC32_Final)(pulCRC);
 }
 

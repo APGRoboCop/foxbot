@@ -111,7 +111,8 @@ SHLIBEXT=so
 SA_TARGET= $(MODNAME)_.$(SHLIBEXT)
 MM_TARGET= $(MODNAME)_mm.$(SHLIBEXT)
 
-BASE_CFLAGS=-Dstricmp=strcasecmp -D_strnicmp=strncasecmp -Dstrnicmp=strncasecmp -Dstrcmpi=strcasecmp -DLINUX -D__linux__ \
+BASE_CFLAGS=-Dstricmp=strcasecmp -D_strnicmp=strncasecmp -Dstrnicmp=strncasecmp -Dstrcmpi=strcasecmp \
+            -std=gnu++11 -DLINUX -D__linux__
 
 XTFLAGS= -DTZONE=$(TZONE)
 
