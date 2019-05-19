@@ -610,7 +610,7 @@ void pfnSetOrigin(edict_t* e, const float* rgflOrigin)
         for(int bot_index = 0; bot_index < 32; bot_index++) {
             // only consider existing bots that haven't died very recently
             if(bots[bot_index].pEdict == e && bots[bot_index].is_used &&
-                (bots[bot_index].f_killed_time + 3.0) < gpGlobals->time) {
+                bots[bot_index].f_killed_time + 3.0 < gpGlobals->time) {
                 // see if a teleporter pad moved the bot
                 const edict_t* teleExit =
                     BotEntityAtPoint("building_teleporter", bots[bot_index].pEdict->v.origin, 90.0);
@@ -690,12 +690,12 @@ void pfnSetOrigin(edict_t* e, const float* rgflOrigin)
             fprintf(fp, " name=%s\n", STRING(e->v.classname));
         if(e->v.target != 0)
             fprintf(fp, " target=%s\n", STRING(e->v.target));
-        if((e->v.ltime) < (e->v.nextthink))
+        if(e->v.ltime < e->v.nextthink)
             fprintf(fp, " 1\n");
         else
             fprintf(fp, " 0\n");
 
-        fprintf(fp, " t %f %f\n", (e->v.ltime), (e->v.nextthink));
+        fprintf(fp, " t %f %f\n", e->v.ltime, e->v.nextthink);
         fprintf(fp, " button=%d\n", e->v.button);
         fclose(fp);
     }
@@ -2116,12 +2116,12 @@ void pfnServerPrint(const char* szMsg)
 
             // check that the message was meant for this bot
             // bots[i].name = name obviously
-            if((bots[i].is_used && name_message_check(szMsg, bots[i].name)) ||
-                (bots[i].is_used && stricmp(cmd, "bots") == 0)) {
+            if(bots[i].is_used && name_message_check(szMsg, bots[i].name) ||
+                bots[i].is_used && stricmp(cmd, "bots") == 0) {
                 // DONT ALLOW CHANGECLASS TO ALL BOTS
-                if((stricmp(cmd, "bots") == 0) && strstr(szMsg, "changeclass"))
+                if(stricmp(cmd, "bots") == 0 && strstr(szMsg, "changeclass"))
                     continue;
-                if((stricmp(cmd, "bots") == 0) && strstr(szMsg, "changeclassnow"))
+                if(stricmp(cmd, "bots") == 0 && strstr(szMsg, "changeclassnow"))
                     continue;
 
                 strncpy(bots[i].message, szMsg, 253);
@@ -3128,13 +3128,13 @@ C_DLLEXPORT int GetEngineFunctions(enginefuncs_t* pengfuncsFromEngine, int* inte
 {
     if(!pengfuncsFromEngine) {
         // LOG_ERROR(PLID, "GetEngineFunctions called with null pengfuncsFromEngine");
-        return (FALSE);
+        return FALSE;
     } else if(*interfaceVersion != ENGINE_INTERFACE_VERSION) {
         // LOG_ERROR(PLID, "GetEngineFunctions version mismatch; requested=%d ours=%d", *interfaceVersion,
         // ENGINE_INTERFACE_VERSION);
         // Tell metamod what version we had, so it can figure out who is out of date.
         *interfaceVersion = ENGINE_INTERFACE_VERSION;
-        return (FALSE);
+        return FALSE;
     }
     memcpy(pengfuncsFromEngine, &meta_engfuncs, sizeof(enginefuncs_t));
     return TRUE;
@@ -3332,7 +3332,7 @@ int GetEngineFunctions_Post(enginefuncs_t* pengfuncsFromEngine, int* interfaceVe
 {
     if(!pengfuncsFromEngine) {
         UTIL_LogPrintf("%s: GetEngineFunctions called with null pengfuncsFromEngine", Plugin_info.logtag);
-        return (FALSE);
+        return FALSE;
     } else if(*interfaceVersion != ENGINE_INTERFACE_VERSION) {
         UTIL_LogPrintf("%s: GetEngineFunctions version mismatch; requested=%d ours=%d", Plugin_info.logtag,
             *interfaceVersion, ENGINE_INTERFACE_VERSION);
@@ -3340,7 +3340,7 @@ int GetEngineFunctions_Post(enginefuncs_t* pengfuncsFromEngine, int* interfaceVe
         // Tell metamod what version we had, so it can figure out who is
         // out of date.
         *interfaceVersion = ENGINE_INTERFACE_VERSION;
-        return (FALSE);
+        return FALSE;
     }
 
     memcpy(pengfuncsFromEngine, &meta_engfuncs_post, sizeof(enginefuncs_t));

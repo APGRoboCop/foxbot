@@ -75,7 +75,7 @@ static bool playerHasFlag[32];
 // FUNCTION PROTOTYPES ///////////////
 static void BotPipeBombCheck(bot_t* pBot);
 static edict_t* BotFindEnemy(bot_t* pBot);
-static bool BotSpyDetectCheck(bot_t* pBot, edict_t* Spy);
+static bool BotSpyDetectCheck(bot_t* pBot, edict_t* pNewEnemy);
 static void BotSGSpotted(bot_t* pBot, edict_t* sg);
 static bool BotPrimeGrenade(bot_t* pBot, const int slot, const char nadeType, const unsigned short reserve);
 static bool BotClearShotCheck(bot_t* pBot);
@@ -245,7 +245,7 @@ int FriendlyClassTotal(edict_t* pEdict, const int specifiedClass, const bool ign
                 player_team = UTIL_GetTeam(pPlayer);
 
                 // add another if the player is a teammate or ally
-                if(my_team == player_team || team_allies[my_team] & (1 << player_team))
+                if(my_team == player_team || team_allies[my_team] & 1 << player_team)
                     ++classTotal;
             }
         }
@@ -269,7 +269,7 @@ void BotUpdateSkillInaccuracy(void)
 
     // sniper rifle inaccuracy starts out a bit lower than with other weapons
     // but then scales up in the same way
-    bot_snipe_max_inaccuracy[0] = bot_max_inaccuracy[0] * 0.75;
+    bot_snipe_max_inaccuracy[0] = 0.75 * bot_max_inaccuracy[0];
     bot_snipe_max_inaccuracy[1] = bot_snipe_max_inaccuracy[0] + f_aim_per_skill;
     bot_snipe_max_inaccuracy[2] = bot_snipe_max_inaccuracy[1] + f_aim_per_skill;
     bot_snipe_max_inaccuracy[3] = bot_snipe_max_inaccuracy[2] + f_aim_per_skill;
@@ -315,7 +315,7 @@ static void BotFeigningEnemyCheck(bot_t* pBot)
             // ignore allied players
             player_team = UTIL_GetTeam(pPlayer);
             if(player_team > -1 &&
-                (player_team == pBot->current_team || team_allies[pBot->current_team] & (1 << player_team)))
+                (player_team == pBot->current_team || team_allies[pBot->current_team] & 1 << player_team))
                 continue;
 
             // is this enemy near and facing away from the bot?
@@ -365,7 +365,7 @@ void BotEnemyCheck(bot_t* pBot)
         // Is it a sentry gun or an NTF multigun?
         if((strcmp(STRING(pBot->lastEnemySentryGun->v.classname), "building_sentrygun") == 0 ||
                strncmp(STRING(pBot->lastEnemySentryGun->v.classname), "ntf_", 4) == 0) &&
-            (BotTeamColorCheck(pBot->lastEnemySentryGun) != pBot->current_team)) {
+            BotTeamColorCheck(pBot->lastEnemySentryGun) != pBot->current_team) {
             // get the bots to notice the destruction of this sentry gun
             if(!IsAlive(pBot->lastEnemySentryGun) && pBot->lastEnemySentryGun->v.origin != Vector(0, 0, 0)) {
                 edict_t* deadSG = pBot->lastEnemySentryGun;
@@ -471,7 +471,7 @@ void BotEnemyCheck(bot_t* pBot)
                 float timeVal = (pBot->bot_skill + 1) * 0.4;
 
                 // if f_snipe_time is too high or too low reset it
-                if((pBot->f_snipe_time + 0.3) < pBot->f_think_time ||
+                if(pBot->f_snipe_time + 0.3 < pBot->f_think_time ||
                     pBot->f_snipe_time > pBot->f_think_time + timeVal) {
                     // set pBot->f_snipe_time for a short delay
                     pBot->f_snipe_time = pBot->f_think_time + random_float(0.0, timeVal);
@@ -520,11 +520,11 @@ static edict_t* BotFindEnemy(bot_t* pBot)
     if(mod_id == TFC_DLL) {
         // if bot is a disguised spy consider not targetting anyone
         if(pEdict->v.playerclass == TFC_CLASS_SPY && pBot->enemy.ptr == NULL &&
-            pBot->disguise_state == DISGUISE_COMPLETE && (pBot->f_injured_time + 0.5f) < pBot->f_think_time)
+            pBot->disguise_state == DISGUISE_COMPLETE && pBot->f_injured_time + 0.5f < pBot->f_think_time)
             return_null = TRUE;
 
         // if injured whilst carrying a flag always shoot back
-        if((pBot->f_injured_time + 0.3f) > pBot->f_think_time && pBot->bot_has_flag)
+        if(pBot->f_injured_time + 0.3f > pBot->f_think_time && pBot->bot_has_flag)
             return_null = FALSE;
     }
 
@@ -537,12 +537,12 @@ static edict_t* BotFindEnemy(bot_t* pBot)
             // and sentry guns!!!!!!
             pent = NULL;
             nearestDistance = 2000.0;
-            while((pent = FIND_ENTITY_BY_CLASSNAME(pent, "building_sentrygun")) != NULL && (!FNullEnt(pent))) {
+            while((pent = FIND_ENTITY_BY_CLASSNAME(pent, "building_sentrygun")) != NULL && !FNullEnt(pent)) {
                 int sentry_team = BotTeamColorCheck(pent);
 
                 // don't target your own team's sentry guns...
                 // don't target allied sentry guns either...
-                if(pBot->current_team == sentry_team || team_allies[pBot->current_team] & (1 << sentry_team))
+                if(pBot->current_team == sentry_team || team_allies[pBot->current_team] & 1 << sentry_team)
                     continue;
 
                 vecEnd = pent->v.origin + pent->v.view_ofs;
@@ -560,12 +560,12 @@ static edict_t* BotFindEnemy(bot_t* pBot)
 
             // This checks for uncaptured multiguns.
             pent = NULL;
-            while((pent = FIND_ENTITY_BY_CLASSNAME(pent, "ntf_multigun")) != NULL && (!FNullEnt(pent))) {
+            while((pent = FIND_ENTITY_BY_CLASSNAME(pent, "ntf_multigun")) != NULL && !FNullEnt(pent)) {
                 if((pent->v.flags & FL_KILLME) == FL_KILLME)
                     continue;
                 int sentry_team = pent->v.team - 1;
                 // don't target friendly sentry guns...
-                if(pBot->current_team == sentry_team || team_allies[pBot->current_team] & (1 << sentry_team))
+                if(pBot->current_team == sentry_team || team_allies[pBot->current_team] & 1 << sentry_team)
                     continue;
 
                 // ntf_capture_mg 1 = ignore, we can cap it
@@ -601,7 +601,7 @@ static edict_t* BotFindEnemy(bot_t* pBot)
                 if(pBot->f_snipe_time < pBot->f_think_time &&
                     (VectorsNearerThan(pBot->enemy.ptr->v.origin, pEdict->v.origin, 250.0f) ||
                         random_long(1, 1000) < 700))
-                    return (pBot->enemy.ptr);
+                    return pBot->enemy.ptr;
             } else
                 return NULL;
         } else {
@@ -619,8 +619,8 @@ static edict_t* BotFindEnemy(bot_t* pBot)
     if(mod_id == TFC_DLL) {
         // get medics and engineers to heal/repair teammates
         if(pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC ||
-            (pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER &&
-                pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > 90)) {
+            pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER &&
+            pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > 90) {
             nearestDistance = 1000.0;
             edict_t* pPlayer;
             int player_team;
@@ -642,12 +642,12 @@ static edict_t* BotFindEnemy(bot_t* pBot)
                     player_team = UTIL_GetTeamColor(pPlayer);
 
                     // ignore all enemies...
-                    if((pBot->current_team != player_team) && !(team_allies[pBot->current_team] & (1 << player_team)))
+                    if(pBot->current_team != player_team && !(team_allies[pBot->current_team] & 1 << player_team))
                         continue;
 
                     // check if the player needs to be healed
                     if(pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC &&
-                        (pPlayer->v.health / pPlayer->v.max_health) > 0.80 &&
+                        pPlayer->v.health / pPlayer->v.max_health > 0.80 &&
                         !PlayerIsInfected(pPlayer)) // scores a point, even to selfish medics
                         continue;                   // health greater than 70% so ignore
 
@@ -678,7 +678,7 @@ static edict_t* BotFindEnemy(bot_t* pBot)
         if(!pNewEnemy) {
             // check for sniper laser dots
             pent = NULL;
-            while((pent = FIND_ENTITY_BY_CLASSNAME(pent, "laser_spot")) != NULL && (!FNullEnt(pent))) {
+            while((pent = FIND_ENTITY_BY_CLASSNAME(pent, "laser_spot")) != NULL && !FNullEnt(pent)) {
                 // ignore your own sniper spot
                 if(pent->v.owner == pEdict)
                     continue;
@@ -687,7 +687,7 @@ static edict_t* BotFindEnemy(bot_t* pBot)
 
                 // ignore sniper spots from your team
                 // and ignore sniper spots from your allies
-                if(sniper_team == pBot->current_team || team_allies[pBot->current_team] & (1 << sniper_team))
+                if(sniper_team == pBot->current_team || team_allies[pBot->current_team] & 1 << sniper_team)
                     continue;
 
                 // ok... check distance to sniper spot and see if its nearish
@@ -700,7 +700,7 @@ static edict_t* BotFindEnemy(bot_t* pBot)
                         // Lets add some error into this. annoying when the
                         // bots always snapshot as soon as they see your dot.
                         if(pBot->pEdict->v.playerclass == TFC_CLASS_CIVILIAN ||
-                            (pBot->bot_skill * 10 + random_long(0, 50)) < 60)
+                            pBot->bot_skill * 10 + random_long(0, 50) < 60)
                             pNewEnemy = pent->v.owner;
                     }
                 }
@@ -708,13 +708,13 @@ static edict_t* BotFindEnemy(bot_t* pBot)
 
             // check for sentry guns
             pent = NULL;
-            while((pent = FIND_ENTITY_BY_CLASSNAME(pent, "building_sentrygun")) != NULL && (!FNullEnt(pent))) {
+            while((pent = FIND_ENTITY_BY_CLASSNAME(pent, "building_sentrygun")) != NULL && !FNullEnt(pent)) {
                 int sentry_team = BotTeamColorCheck(pent);
 
                 // don't target your own team's sentry guns...
                 // don't target allied sentry guns either...
                 vecEnd = pent->v.origin + pent->v.view_ofs; // + Vector(0,0,16);
-                if(pBot->current_team == sentry_team || team_allies[pBot->current_team] & (1 << sentry_team)) {
+                if(pBot->current_team == sentry_team || team_allies[pBot->current_team] & 1 << sentry_team) {
                     if(VectorsNearerThan(pent->v.origin, pEdict->v.origin, 300.0f) &&
                         pEdict->v.playerclass != TFC_CLASS_ENGINEER && FInViewCone(vecEnd, pEdict) &&
                         FVisible(vecEnd, pEdict)) {
@@ -746,14 +746,14 @@ static edict_t* BotFindEnemy(bot_t* pBot)
 
             // neotf guns
             pent = NULL;
-            while((pent = FIND_ENTITY_BY_CLASSNAME(pent, "ntf_multigun")) != NULL && (!FNullEnt(pent))) {
+            while((pent = FIND_ENTITY_BY_CLASSNAME(pent, "ntf_multigun")) != NULL && !FNullEnt(pent)) {
                 if((pent->v.flags & FL_KILLME) == FL_KILLME)
                     continue;
 
                 int sentry_team = pent->v.team - 1;
 
                 // don't target friendly sentry guns...
-                if(pBot->current_team == sentry_team || team_allies[pBot->current_team] & (1 << sentry_team))
+                if(pBot->current_team == sentry_team || team_allies[pBot->current_team] & 1 << sentry_team)
                     continue;
 
                 // ntf_capture_mg 1 = ignore, we can cap it
@@ -799,7 +799,7 @@ static edict_t* BotFindEnemy(bot_t* pBot)
             pPlayer = INDEXENT(i);
 
             // skip invalid players and skip self (i.e. this bot)
-            if((pPlayer) && (!pPlayer->free) && (pPlayer != pEdict)) {
+            if(pPlayer && !pPlayer->free && pPlayer != pEdict) {
                 // skip this player if not alive (i.e. dead or dying)
                 if(!IsAlive(pPlayer) &&
                     !(pPlayer->v.deadflag == 5 // a feign check
@@ -822,11 +822,11 @@ static edict_t* BotFindEnemy(bot_t* pBot)
 
                     if(mod_id == TFC_DLL) {
                         // don't target your allies either...
-                        if(team_allies[pBot->current_team] & (1 << player_team))
+                        if(team_allies[pBot->current_team] & 1 << player_team)
                             player_is_ally = TRUE;
 
                         // so disguised spys wont attack other disguised spys
-                        if(pEdict->v.playerclass == TFC_CLASS_SPY && (pPlayer->v.playerclass == TFC_CLASS_SPY) &&
+                        if(pEdict->v.playerclass == TFC_CLASS_SPY && pPlayer->v.playerclass == TFC_CLASS_SPY &&
                             pBot->current_team == UTIL_GetTeamColor(pPlayer))
                             continue;
                     }
@@ -909,14 +909,14 @@ static edict_t* BotFindEnemy(bot_t* pBot)
                 }
             }
 
-            if(enemy_has_flag == FALSE && (pBot->enemy.f_lastSeen + 2.0) <= pBot->f_think_time)
+            if(enemy_has_flag == FALSE && pBot->enemy.f_lastSeen + 2.0 <= pBot->f_think_time)
                 return pBot->enemy.ptr; // if the enemy doesn't have the flag
         }
     }
 
     // check if the bot should continue to target a disguised/feigning Spy
     if(return_null == FALSE && BotSpyDetectCheck(pBot, pNewEnemy) == FALSE)
-        return (pBot->enemy.ptr);
+        return pBot->enemy.ptr;
 
     if(pNewEnemy) {
         // face the new enemy
@@ -934,11 +934,11 @@ static edict_t* BotFindEnemy(bot_t* pBot)
     }
 
     // has the bot NOT seen an enemy for a few seconds? (time to reload)
-    if((pBot->enemy.f_lastSeen + 0.5f) <= pBot->f_think_time && (pBot->enemy.f_lastSeen + 1.5f) > pBot->f_think_time) {
+    if(pBot->enemy.f_lastSeen + 0.5f <= pBot->f_think_time && pBot->enemy.f_lastSeen + 1.5f > pBot->f_think_time) {
         // press reload button
         pEdict->v.button |= IN_RELOAD;
 
-        return (pNewEnemy);
+        return pNewEnemy;
     }
 
     if(!pNewEnemy) {
@@ -949,7 +949,7 @@ static edict_t* BotFindEnemy(bot_t* pBot)
             return pBot->enemy.ptr;
     }
 
-    return (pNewEnemy);
+    return pNewEnemy;
 }
 
 // You can call this function when the bot spots a disguised or feigning Spy.
@@ -979,7 +979,7 @@ static bool BotSpyDetectCheck(bot_t* pBot, edict_t* pNewEnemy)
 
             // moderate the bots suspicion based on what role it's filling
             if(pBot->mission == ROLE_DEFENDER) {
-                pBot->f_suspectSpyTime = (pBot->f_think_time + random_float(2.0f, 5.0f)) + (pBot->bot_skill * 0.5f);
+                pBot->f_suspectSpyTime = pBot->f_think_time + random_float(2.0f, 5.0f) + pBot->bot_skill * 0.5f;
 
                 // maybe track the spy about for a bit whilst suspicious
                 if(pBot->bot_class != TFC_CLASS_CIVILIAN && random_long(0, 1000) < 250) {
@@ -994,7 +994,7 @@ static bool BotSpyDetectCheck(bot_t* pBot, edict_t* pNewEnemy)
                 }
             } else // attackers
             {
-                pBot->f_suspectSpyTime = (pBot->f_think_time + random_float(2.0f, 5.0f)) + (pBot->bot_skill * 0.5f);
+                pBot->f_suspectSpyTime = pBot->f_think_time + random_float(2.0f, 5.0f) + pBot->bot_skill * 0.5f;
 
                 // maybe track the spy about for a bit whilst suspicious
                 if(pBot->bot_class != TFC_CLASS_CIVILIAN && random_long(0, 1000) < 100) {
@@ -1016,14 +1016,14 @@ static bool BotSpyDetectCheck(bot_t* pBot, edict_t* pNewEnemy)
     // the bot sees nobody
     if(pNewEnemy == NULL) {
         // forget the last Spy if the bot hasn't seen him for a while
-        if((pBot->f_suspectSpyTime + 5.0f) < pBot->f_think_time)
+        if(pBot->f_suspectSpyTime + 5.0f < pBot->f_think_time)
             pBot->suspectedSpy = NULL;
 
         return TRUE;
     }
     // the bot has decided to target it's suspected Spy
-    else if((pNewEnemy == pBot->suspectedSpy && pBot->f_suspectSpyTime < pBot->f_think_time) ||
-        (pBot->current_team != UTIL_GetTeamColor(pNewEnemy) && pNewEnemy->v.deadflag != 5)) {
+    else if(pNewEnemy == pBot->suspectedSpy && pBot->f_suspectSpyTime < pBot->f_think_time ||
+        pBot->current_team != UTIL_GetTeamColor(pNewEnemy) && pNewEnemy->v.deadflag != 5) {
         // keep the memory of this experience fresh
         pBot->f_suspectSpyTime = pBot->f_think_time - 0.5f;
 
@@ -1306,7 +1306,7 @@ void BotShootAtEnemy(bot_t* pBot)
 
         // don't target your teammates.
         // and don't target your allies either...
-        if(pBot->current_team == player_team || team_allies[pBot->current_team] & (1 << player_team)) {
+        if(pBot->current_team == player_team || team_allies[pBot->current_team] & 1 << player_team) {
             pBot->strafe_mod = STRAFE_MOD_HEAL;
             return;
         }
@@ -1335,7 +1335,7 @@ static Vector BotBodyTarget(edict_t* pBotEnemy, bot_t* pBot)
     // aim at the enemies feet if the bot is using a rocket launcher
     // and the enemy is not much higher up than the bot
     if((pBot->current_weapon.iId == TF_WEAPON_RPG || pBot->current_weapon.iId == TF_WEAPON_IC) // pyro RPG
-        && pBot->enemy.ptr->v.origin.z < (pBot->pEdict->v.origin.z + 35.0)) {
+        && pBot->enemy.ptr->v.origin.z < pBot->pEdict->v.origin.z + 35.0) {
         target.x = pBotEnemy->v.origin.x;
         target.y = pBotEnemy->v.origin.y;
         target.z = pBotEnemy->v.absmin.z;
@@ -1357,7 +1357,7 @@ static Vector BotBodyTarget(edict_t* pBotEnemy, bot_t* pBot)
             float aim_error = random_float(0.0, enemy_velocity) * 0.05;
 
             // Make the bot less accurate if the enemy was just seen
-            if((pBot->enemy.f_firstSeen + 2.0) > pBot->f_think_time)
+            if(pBot->enemy.f_firstSeen + 2.0 > pBot->f_think_time)
                 aim_error += (pBot->bot_skill + 1) * random_float(5.0, 20.0);
 
             float aim_offset = bot_snipe_max_inaccuracy[pBot->bot_skill] + aim_error;
@@ -1399,7 +1399,7 @@ static Vector BotBodyTarget(edict_t* pBotEnemy, bot_t* pBot)
             aim_error += random_float(0.0, enemy_velocity) * 0.05;
 
             // Make the bot less accurate if the enemy was just seen
-            if((pBot->enemy.f_firstSeen + 2.0) > pBot->f_think_time)
+            if(pBot->enemy.f_firstSeen + 2.0 > pBot->f_think_time)
                 aim_error += (pBot->bot_skill + 1) * random_float(5.0, 20.0);
 
             float aim_offset = bot_max_inaccuracy[pBot->bot_skill] + aim_error;
@@ -1441,7 +1441,7 @@ static Vector BotBodyTarget(edict_t* pBotEnemy, bot_t* pBot)
     // make healers aim for the head
     if(mod_id == TFC_DLL &&
         (pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC || pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER) &&
-        ((pBot->current_weapon.iId == TF_WEAPON_MEDIKIT) || (pBot->current_weapon.iId == TF_WEAPON_SPANNER)))
+        (pBot->current_weapon.iId == TF_WEAPON_MEDIKIT || pBot->current_weapon.iId == TF_WEAPON_SPANNER))
         target = pBotEnemy->v.origin + pBotEnemy->v.view_ofs;
 
     /*	float aim_tolerance;
@@ -1536,7 +1536,7 @@ bool BotFireWeapon(Vector v_enemy, bot_t* pBot, int weapon_choice)
         if(diff > 180)
             diff -= 360;
 
-        double ang = (((32 * pBot->bot_skill) + 16) / f_distance);
+        double ang = (32 * pBot->bot_skill + 16) / f_distance;
         ang = tan(ang);
         ang = ang * 180;
 
@@ -1569,7 +1569,7 @@ bool BotFireWeapon(Vector v_enemy, bot_t* pBot, int weapon_choice)
         if(pBot->enemy.ptr != NULL) {
             int z = static_cast<int>(pBot->enemy.ptr->v.origin.z - pEdict->v.origin.z);
             if(z > 0 && z < 300 && distance < 901)
-                distance = static_cast<int>((pBot->enemy.ptr->v.origin - pEdict->v.origin).Length2D()) + (z * 3);
+                distance = static_cast<int>((pBot->enemy.ptr->v.origin - pEdict->v.origin).Length2D()) + z * 3;
             else if(z > 300 && distance < 901)
                 distance = 901;
         }
@@ -1603,7 +1603,7 @@ bool BotFireWeapon(Vector v_enemy, bot_t* pBot, int weapon_choice)
                 // find the correct fire delay for this weapon
                 select_index = 0;
 
-                while((pSelect[select_index].iId) && (pSelect[select_index].iId != iId))
+                while(pSelect[select_index].iId && pSelect[select_index].iId != iId)
                     select_index++;
 
                 // set next time to shoot
@@ -1635,7 +1635,7 @@ bool BotFireWeapon(Vector v_enemy, bot_t* pBot, int weapon_choice)
                 // find the correct fire delay for this weapon
                 select_index = 0;
 
-                while((pSelect[select_index].iId) && (pSelect[select_index].iId != iId))
+                while(pSelect[select_index].iId && pSelect[select_index].iId != iId)
                     select_index++;
 
                 // set next time to shoot
@@ -1660,26 +1660,26 @@ bool BotFireWeapon(Vector v_enemy, bot_t* pBot, int weapon_choice)
         while(pSelect[select_index].iId && !use_primary && !use_secondary) {
             // was a weapon choice specified?
             // (and if so do they NOT match?)
-            if((weapon_choice != 0) && (weapon_choice != pSelect[select_index].iId)) {
+            if(weapon_choice != 0 && weapon_choice != pSelect[select_index].iId) {
                 select_index++; // skip to next weapon
                 continue;
             }
 
             // is the bot NOT carrying this weapon?
-            if(!(pBot->bot_weapons & (1 << pSelect[select_index].iId))) {
+            if(!(pBot->bot_weapons & 1 << pSelect[select_index].iId)) {
                 select_index++; // skip to next weapon
                 continue;
             }
 
             // is the bot NOT skilled enough to use this weapon?
-            if((pBot->bot_skill + 1) > pSelect[select_index].skill_level) {
+            if(pBot->bot_skill + 1 > pSelect[select_index].skill_level) {
                 select_index++; // skip to next weapon
                 continue;
             }
 
             // is the bot underwater and does this weapon
             // NOT work under water?
-            if((pEdict->v.waterlevel == WL_HEAD_IN_WATER) && !(pSelect[select_index].can_use_underwater)) {
+            if(pEdict->v.waterlevel == WL_HEAD_IN_WATER && !pSelect[select_index].can_use_underwater) {
                 select_index++; // skip to next weapon
                 continue;
             }
@@ -1716,26 +1716,26 @@ bool BotFireWeapon(Vector v_enemy, bot_t* pBot, int weapon_choice)
             // the bot is far enough away to use primary fire AND
             // the bot is close enough to the enemy to use primary fire
 
-            if((primary_percent <= pSelect[select_index].primary_fire_percent) &&
-                ((weapon_defs[iId].iAmmo1 == -1) ||
-                    (pBot->m_rgAmmo[weapon_defs[iId].iAmmo1] >= pSelect[select_index].min_primary_ammo)) &&
-                (distance >= pSelect[select_index].primary_min_distance) &&
-                (distance <= pSelect[select_index].primary_max_distance)) {
+            if(primary_percent <= pSelect[select_index].primary_fire_percent &&
+                (weapon_defs[iId].iAmmo1 == -1 ||
+                    pBot->m_rgAmmo[weapon_defs[iId].iAmmo1] >= pSelect[select_index].min_primary_ammo) &&
+                distance >= pSelect[select_index].primary_min_distance &&
+                distance <= pSelect[select_index].primary_max_distance) {
                 use_primary = TRUE;
             }
 
             // otherwise see if there is enough secondary ammo AND
             // the bot is far enough away to use secondary fire AND
             // the bot is close enough to the enemy to use secondary fire
-            else if(((weapon_defs[iId].iAmmo2 == -1) ||
-                        (pBot->m_rgAmmo[weapon_defs[iId].iAmmo2] >= pSelect[select_index].min_secondary_ammo)) &&
-                (distance >= pSelect[select_index].secondary_min_distance) &&
-                (distance <= pSelect[select_index].secondary_max_distance)) {
+            else if((weapon_defs[iId].iAmmo2 == -1 ||
+                        pBot->m_rgAmmo[weapon_defs[iId].iAmmo2] >= pSelect[select_index].min_secondary_ammo) &&
+                distance >= pSelect[select_index].secondary_min_distance &&
+                distance <= pSelect[select_index].secondary_max_distance) {
                 use_secondary = TRUE;
             }
 
             // see if there wasn't enough ammo to fire the weapon...
-            if((use_primary == FALSE) && (use_secondary == FALSE)) {
+            if(use_primary == FALSE && use_secondary == FALSE) {
                 select_index++; // skip to next weapon
                 continue;
             }
@@ -1766,7 +1766,7 @@ bool BotFireWeapon(Vector v_enemy, bot_t* pBot, int weapon_choice)
                     const int player_team = UTIL_GetTeam(pBot->enemy.ptr);
 
                     // only heal your teammates or allies...
-                    if((pBot->current_team == player_team || team_allies[pBot->current_team] & (1 << player_team)) &&
+                    if((pBot->current_team == player_team || team_allies[pBot->current_team] & 1 << player_team) &&
                         (iId != TF_WEAPON_MEDIKIT && iId != TF_WEAPON_SPANNER)) {
                         pBot->strafe_mod = STRAFE_MOD_HEAL;
                         // return FALSE;  // don't "fire" unless weapon is medikit
@@ -1914,7 +1914,7 @@ int BotNadeHandler(bot_t* pBot, bool timed, char newNadeType)
 
         // Throw it if we got a good chance at landing good splash damage.
         if(fabs(distanceThrown - pBot->enemy.f_seenDistance) < 20.0f ||
-            (distanceThrown - pBot->enemy.f_seenDistance) < -200.0f) {
+            distanceThrown - pBot->enemy.f_seenDistance < -200.0f) {
             toss = TRUE;
             pBot->tossNade = 1;
             // UTIL_HostSay(pEdict, 0, "Die Bitch!!");
@@ -1923,7 +1923,7 @@ int BotNadeHandler(bot_t* pBot, bool timed, char newNadeType)
         // If target is rapidly(ish) moving away from me, go ahead and throw.
         // Uses a timer delay between checks
         if(pBot->lastDistanceCheck <= pBot->f_think_time &&
-            (pBot->lastDistance > (pBot->enemy.f_seenDistance + 375) && (pBot->enemy.f_seenDistance > 500))) {
+            (pBot->lastDistance > pBot->enemy.f_seenDistance + 375 && pBot->enemy.f_seenDistance > 500)) {
             toss = TRUE;
             pBot->tossNade = 1;
             pBot->lastDistanceCheck = pBot->f_think_time + 1;
@@ -1942,7 +1942,7 @@ int BotNadeHandler(bot_t* pBot, bool timed, char newNadeType)
     }
 
     // Time to throw?
-    if(toss || (pEdict->v.waterlevel == WL_HEAD_IN_WATER)) {
+    if(toss || pEdict->v.waterlevel == WL_HEAD_IN_WATER) {
         // Throw the mofos!
         FakeClientCommand(pEdict, "-gren1", "102", NULL);
         FakeClientCommand(pEdict, "-gren2", "101", NULL);
@@ -2062,7 +2062,7 @@ int BotNadeHandler(bot_t* pBot, bool timed, char newNadeType)
                 }
                 break;
             case TFC_CLASS_MEDIC:
-                if((newNadeType == GRENADE_DAMAGE)) {
+                if(newNadeType == GRENADE_DAMAGE) {
                     if(random_long(0, 100) < 20)
                         FakeClientCommand(pEdict, "snark", NULL, NULL); // NeoTF specific?
                     BotPrimeGrenade(pBot, PrimaryGrenade, GRENADE_FRAGMENTATION, 0);
@@ -2280,7 +2280,7 @@ int BotAssessThreatLevel(bot_t* pBot)
         Threat += (pBot->visEnemyCount - pBot->visAllyCount) * 15;
     else {
         // if the enemy appears outnumbered, reduce the threat level
-        Threat -= ((pBot->visAllyCount) - pBot->visEnemyCount) * 10;
+        Threat -= (pBot->visAllyCount - pBot->visEnemyCount) * 10;
 
         // experimental - don't prime grenades when too near to enemy
         // (probably not the best place to do this)
@@ -2289,9 +2289,9 @@ int BotAssessThreatLevel(bot_t* pBot)
     }
 
     // The less our health, the higher threat the enemy is.
-    Threat += (100 - PlayerHealthPercent(pBot->pEdict));
+    Threat += 100 - PlayerHealthPercent(pBot->pEdict);
 
-    return (Threat <= 100) ? Threat : 100;
+    return Threat <= 100 ? Threat : 100;
 }
 
 // BotTeamColorCheck -  Use this for getting sentry gun teams.
@@ -2321,7 +2321,7 @@ int PickRandomEnemyTeam(const int my_team)
 
     // count and index the hostile teams
     for(int index = 0; index < 4; index++) {
-        if(is_team[index] == TRUE && my_team != index && !(team_allies[my_team] & (1 << index))) {
+        if(is_team[index] == TRUE && my_team != index && !(team_allies[my_team] & 1 << index)) {
             teamList[total] = index;
             ++total;
         }
@@ -2358,13 +2358,13 @@ static int BotLeadTarget(edict_t* pBotEnemy, bot_t* pBot, const int projSpeed, f
     if(f_distance > 1000.0f)
         f_distance = 1000.0f;
 
-    d_x += (pBot->enemy.ptr->v.velocity.x * (f_distance / projSpeed));
-    d_y += (pBot->enemy.ptr->v.velocity.y * (f_distance / projSpeed));
+    d_x += pBot->enemy.ptr->v.velocity.x * (f_distance / projSpeed);
+    d_y += pBot->enemy.ptr->v.velocity.y * (f_distance / projSpeed);
 
     if(pBot->enemy.ptr->v.velocity.z < -30) // falling
-        d_z += (pBot->enemy.ptr->v.velocity.z * (f_distance / 2000.0f));
+        d_z += pBot->enemy.ptr->v.velocity.z * (f_distance / 2000.0f);
     else
-        d_z += (pBot->enemy.ptr->v.velocity.z * (f_distance / 1000.0f));
+        d_z += pBot->enemy.ptr->v.velocity.z * (f_distance / 1000.0f);
 
     return static_cast<int>(pBot->enemy.ptr->v.origin.z - pBot->pEdict->v.origin.z);
 }
@@ -2391,7 +2391,7 @@ void BotCheckForMultiguns(bot_t* pBot, float nearestdistance, edict_t* pNewEnemy
     // and storing it in nearestdistance, and pNewEnemy
     for(int i = 0; i < NumNTFGuns; i++) {
         edict_t* pent = NULL;
-        while((pent = FIND_ENTITY_BY_CLASSNAME(pent, ntfTargetChecks[i])) != NULL && (!FNullEnt(pent))) {
+        while((pent = FIND_ENTITY_BY_CLASSNAME(pent, ntfTargetChecks[i])) != NULL && !FNullEnt(pent)) {
             sentry_team = pent->v.team - 1;
 
             // flagged for deletion by the engine?
@@ -2399,7 +2399,7 @@ void BotCheckForMultiguns(bot_t* pBot, float nearestdistance, edict_t* pNewEnemy
                 continue;
 
             // don't target friendly sentry guns...
-            if(pBot->current_team == sentry_team || team_allies[pBot->current_team] & (1 << sentry_team))
+            if(pBot->current_team == sentry_team || team_allies[pBot->current_team] & 1 << sentry_team)
                 continue;
 
             // is this the closest visible sentry gun?
@@ -2430,7 +2430,7 @@ void UpdateFlagCarrierList(void)
     // search for visible friendly flag carriers and track them.
     edict_t* pent = NULL;
     edict_t* pPlayer;
-    while((pent = FIND_ENTITY_BY_CLASSNAME(pent, "item_tfgoal")) != NULL && (!FNullEnt(pent))) {
+    while((pent = FIND_ENTITY_BY_CLASSNAME(pent, "item_tfgoal")) != NULL && !FNullEnt(pent)) {
         // search the world for players...
         for(int i = 1; i <= gpGlobals->maxClients; i++) {
             pPlayer = INDEXENT(i);

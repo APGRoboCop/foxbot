@@ -225,7 +225,7 @@ void BotClient_Valve_CurrentWeapon(void* p, int bot_index)
         iClip = *(int*)p; // ammo currently in the clip for this weapon
 
         if(iId <= 31) {
-            bots[bot_index].bot_weapons |= (1 << iId); // set this weapon bit
+            bots[bot_index].bot_weapons |= 1 << iId; // set this weapon bit
 
             if(iState == 1) {
                 bots[bot_index].current_weapon.iId = iId;
@@ -372,7 +372,7 @@ void BotClient_Valve_WeaponPickup(void* p, int bot_index)
     index = *(int*)p;
 
     // set this weapon bit to indicate that we are carrying this weapon
-    bots[bot_index].bot_weapons |= (1 << index);
+    bots[bot_index].bot_weapons |= 1 << index;
 }
 
 void BotClient_TFC_WeaponPickup(void* p, int bot_index)
@@ -545,7 +545,7 @@ void BotClient_Valve_Damage(void* p, int bot_index)
         }
 
         // let the bot know it's getting hurt
-        if((damage_armor > 0) || (damage_taken > 0)) {
+        if(damage_armor > 0 || damage_taken > 0) {
             // drowning detection - set up a job to avoid death by drowning
             if(damage_bits & DMG_DROWN
                 //	&& bots[bot_index].pEdict->v.waterlevel == WL_HEAD_IN_WATER
@@ -563,7 +563,7 @@ void BotClient_Valve_Damage(void* p, int bot_index)
                 return;
 
             // if the bot didn't spawn very recently
-            if(gpGlobals->time > (bots[bot_index].last_spawn_time + 1.0f)) {
+            if(gpGlobals->time > bots[bot_index].last_spawn_time + 1.0f) {
                 bots[bot_index].f_injured_time = gpGlobals->time;
 
                 // stop using health or HEV stations...
@@ -644,7 +644,7 @@ void BotClient_Valve_DeathMsg(void* p, int bot_index)
         // FILE *fp;
         //{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"kill messages\n"); fclose(fp); }
         if(index == -1) {
-            if((killer_index == 0) || (killer_index == victim_index)) {
+            if(killer_index == 0 || killer_index == victim_index) {
                 // bot killed by world (worldspawn) or bot killed self...
                 // bots[index].killer_edict = NULL;
             } else {
@@ -660,7 +660,7 @@ void BotClient_Valve_DeathMsg(void* p, int bot_index)
 
         // is this message about a bot being killed?
         if(index != -1) {
-            if((killer_index == 0) || (killer_index == victim_index)) {
+            if(killer_index == 0 || killer_index == victim_index) {
                 // bot killed by world (worldspawn) or bot killed self...
                 bots[index].killer_edict = NULL;
             } else {
@@ -922,10 +922,10 @@ void BotClient_Engineer_BuildStatus(void* p, int bot_index)
                     // Get the teleporter ent
                     edict_t* pent = NULL;
                     while(
-                        (pent = FIND_ENTITY_IN_SPHERE(pent, clients[i]->v.origin, 200)) != NULL && (!FNullEnt(pent))) {
+                        (pent = FIND_ENTITY_IN_SPHERE(pent, clients[i]->v.origin, 200)) != NULL && !FNullEnt(pent)) {
                         float l = (clients[i]->v.origin - pent->v.origin).Length2D();
 
-                        if((strcmp("building_teleporter", STRING(pent->v.classname)) == 0) && l >= 16.0 && l <= 96.0) {
+                        if(strcmp("building_teleporter", STRING(pent->v.classname)) == 0 && l >= 16.0 && l <= 96.0) {
                             // Set the owner on the teleport
                             pent->v.euser1 = clients[i];
                             pent->v.iuser1 = teleportType;

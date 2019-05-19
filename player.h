@@ -208,7 +208,7 @@ public:
     }
     virtual BOOL IsAlive(void)
     {
-        return (pev->deadflag == DEAD_NO) && pev->health > 0;
+        return pev->deadflag == DEAD_NO && pev->health > 0;
     }
     virtual BOOL ShouldFadeOnDeath(void)
     {

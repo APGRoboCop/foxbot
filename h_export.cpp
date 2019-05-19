@@ -111,7 +111,7 @@ void WINAPI GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t* pG
         pos = strlen(game_dir) - 1;
         // scan backwards till first directory separator...
 
-        while((pos) && (game_dir[pos] != '/'))
+        while(pos && game_dir[pos] != '/')
             pos--;
         if(pos == 0) {
             // Error getting directory name!

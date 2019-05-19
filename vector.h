@@ -50,7 +50,7 @@ public:
 	vec_t	x, y;
 };
 
-inline float DotProduct(const Vector2D& a, const Vector2D& b) { return( a.x*b.x + a.y*b.y ); }
+inline float DotProduct(const Vector2D& a, const Vector2D& b) { return a.x*b.x + a.y*b.y; }
 inline Vector2D operator*(float fl, const Vector2D& v)	{ return v * fl; }
 
 
@@ -110,7 +110,7 @@ public:
 	vec_t x, y, z;
 };
 inline Vector operator*(float fl, const Vector& v)	{ return v * fl; }
-inline float DotProduct(const Vector& a, const Vector& b) { return(a.x*b.x+a.y*b.y+a.z*b.z); }
+inline float DotProduct(const Vector& a, const Vector& b) { return a.x*b.x+a.y*b.y+a.z*b.z; }
 inline Vector CrossProduct(const Vector& a, const Vector& b) { return Vector( a.y*b.z - a.z*b.y, a.z*b.x - a.x*b.z, a.x*b.y - a.y*b.x ); }
 
 

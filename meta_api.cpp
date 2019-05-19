@@ -78,7 +78,7 @@ C_DLLEXPORT int Meta_Query(char* ifvers, plugin_info_t** pPlugInfo, mutil_funcs_
             Plugin_info.name, Plugin_info.ifvers);
     }
 
-    return (TRUE);
+    return TRUE;
 }
 
 // Metamod attaching plugin	to the server.
@@ -92,19 +92,19 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now,
     gamedll_funcs_t* pGamedllFuncs)
 {
     if(now)
-        ; // to satisfy gcc -Wunused
+	    // to satisfy gcc -Wunused
     if(!pMGlobals) {
         LOG_ERROR(PLID, "Meta_Attach called	with null pMGlobals");
-        return (FALSE);
+        return FALSE;
     }
     gpMetaGlobals = pMGlobals;
     if(!pFunctionTable) {
         LOG_ERROR(PLID, "Meta_Attach called	with null pFunctionTable");
-        return (FALSE);
+        return FALSE;
     }
     memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));
     gpGamedllFuncs = pGamedllFuncs;
-    return (TRUE);
+    return TRUE;
 }
 
 // Metamod detaching plugin	from the server.
@@ -113,6 +113,6 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now,
 C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason)
 {
     if(now && reason)
-        ; // to satisfy gcc -Wunused
-    return (TRUE);
+	    // to satisfy gcc -Wunused
+    return TRUE;
 }
