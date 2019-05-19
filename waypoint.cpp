@@ -401,8 +401,8 @@ int WaypointFindPath(PATH** pPath, int* path_index, int waypoint_index, int team
 
                 // skip this path if next waypoint is team specific and
                 // NOT this team
-                if((team != -1) && (waypoints[index].flags & W_FL_TEAM_SPECIFIC) &&
-                    ((waypoints[index].flags & W_FL_TEAM) != team)) {
+                if(team != -1 && waypoints[index].flags & W_FL_TEAM_SPECIFIC &&
+                    (waypoints[index].flags & W_FL_TEAM) != team) {
                     (*path_index)++;
                     continue;
                 }
@@ -438,7 +438,7 @@ int WaypointFindNearest_E(edict_t* pEntity, const float range, const int team)
     Vector distance;
     double distance_squared;
     int min_index = -1;
-    double min_distance_squared = (range * range) + 0.1f;
+    double min_distance_squared = range * range + 0.1f;
     TraceResult tr;
 
     // bit field of waypoint types to ignore
@@ -451,11 +451,11 @@ int WaypointFindNearest_E(edict_t* pEntity, const float range, const int team)
             continue;
 
         // skip this waypoint if it's team specific and teams don't match
-        if(team != -1 && (waypoints[i].flags & W_FL_TEAM_SPECIFIC) && (waypoints[i].flags & W_FL_TEAM) != team)
+        if(team != -1 && waypoints[i].flags & W_FL_TEAM_SPECIFIC && (waypoints[i].flags & W_FL_TEAM) != team)
             continue;
 
         distance = waypoints[i].origin - pEntity->v.origin;
-        distance_squared = (distance.x * distance.x) + (distance.y * distance.y) + (distance.z * distance.z);
+        distance_squared = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
 
         if(distance_squared < min_distance_squared) {
             // if waypoint is visible from current position
@@ -520,7 +520,7 @@ int WaypointFindNearest_S(Vector v_src,
     Vector distance;
     double distance_squared;
     int min_index = -1;
-    double min_distance_squared = (range * range) + 0.1f;
+    double min_distance_squared = range * range + 0.1f;
     TraceResult tr;
 
     // find the nearest waypoint...
@@ -534,12 +534,12 @@ int WaypointFindNearest_S(Vector v_src,
             continue;
 
         // skip this waypoint if it's team specific and teams don't match
-        if(team != -1 && (waypoints[index].flags & W_FL_TEAM_SPECIFIC) && (waypoints[index].flags & W_FL_TEAM) != team)
+        if(team != -1 && waypoints[index].flags & W_FL_TEAM_SPECIFIC && (waypoints[index].flags & W_FL_TEAM) != team)
             continue;
 
         // square the Manhattan distance
         distance = waypoints[index].origin - v_src;
-        distance_squared = (distance.x * distance.x) + (distance.y * distance.y) + (distance.z * distance.z);
+        distance_squared = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
 
         // if it's the nearest found so far
         if(distance_squared < min_distance_squared) {
@@ -597,7 +597,7 @@ int WaypointFindInRange(Vector v_src,
             continue;
 
         // skip this waypoint if it's team specific and teams don't match
-        if(team != -1 && (waypoints[i].flags & W_FL_TEAM_SPECIFIC) && (waypoints[i].flags & W_FL_TEAM) != team)
+        if(team != -1 && waypoints[i].flags & W_FL_TEAM_SPECIFIC && (waypoints[i].flags & W_FL_TEAM) != team)
             continue;
 
         distance = (waypoints[i].origin - v_src).Length();
@@ -1134,7 +1134,7 @@ void WaypointAdd(edict_t* pEntity)
     //********************************************************
 
     char item_name[64];
-    while((pent = FIND_ENTITY_IN_SPHERE(pent, pEntity->v.origin, radius)) != NULL && (!FNullEnt(pent))) {
+    while((pent = FIND_ENTITY_IN_SPHERE(pent, pEntity->v.origin, radius)) != NULL && !FNullEnt(pent)) {
         strcpy(item_name, STRING(pent->v.classname));
 
         if(strcmp("item_healthkit", item_name) == 0) {
@@ -1287,7 +1287,7 @@ void WaypointDelete(edict_t* pEntity)
 
             distance = (waypoints[i].origin - waypoints[index].origin).Length();
 
-            if((distance < min_distance) && (distance < 40.0f)) {
+            if(distance < min_distance && distance < 40.0f) {
                 min_index = i;
                 min_distance = distance;
             }
@@ -1443,7 +1443,7 @@ void WaypointCreatePath(edict_t* pEntity, int cmd)
     {
         waypoint2 = WaypointFindNearest_E(pEntity, 50.0, -1);
 
-        if((waypoint1 == -1) || (waypoint2 == -1)) {
+        if(waypoint1 == -1 || waypoint2 == -1) {
             // play "error" sound...
             EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "common/wpn_denyselect.wav", 1.0, ATTN_NORM, 0, 100);
 
@@ -1484,7 +1484,7 @@ void WaypointRemovePath(edict_t* pEntity, int cmd)
     {
         waypoint2 = WaypointFindNearest_E(pEntity, 50.0, -1);
 
-        if((waypoint1 == -1) || (waypoint2 == -1)) {
+        if(waypoint1 == -1 || waypoint2 == -1) {
             // play "error" sound...
             EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "common/wpn_denyselect.wav", 1.0, ATTN_NORM, 0, 100);
 
@@ -1556,7 +1556,7 @@ bool WaypointLoad(edict_t* pEntity)
             printf("loading waypoint file: %s\n", filename);
 
         // read in the waypoint header
-        fread(&header, sizeof(header), 1, bfp);
+        fread(&header, sizeof header, 1, bfp);
 
         header.filetype[7] = 0; // null terminate the filetype string
 
@@ -1641,10 +1641,10 @@ bool WaypointLoad(edict_t* pEntity)
         // read and add waypoint paths...
         for(index = 0; index < num_waypoints; index++) {
             // read the number of paths from this node...
-            fread(&num, sizeof(num), 1, bfp);
+            fread(&num, sizeof num, 1, bfp);
 
             for(i = 0; i < num; i++) {
-                fread(&path_index, sizeof(path_index), 1, bfp);
+                fread(&path_index, sizeof path_index, 1, bfp);
 
                 WaypointAddPath(index, path_index);
             }
@@ -1682,7 +1682,7 @@ bool WaypointLoad(edict_t* pEntity)
     if(bfp != NULL) {
         if(IS_DEDICATED_SERVER())
             printf("loading waypoint file: %s\n", filename);
-        fread(&header, sizeof(header), 1, bfp);
+        fread(&header, sizeof header, 1, bfp);
 
         header.filetype[7] = 0;
         if(strcmp(header.filetype, "HPB_bot") == 0) {
@@ -1701,17 +1701,17 @@ bool WaypointLoad(edict_t* pEntity)
                 WaypointInit(); // remove any existing waypoints
 
                 for(i = 0; i < header.number_of_waypoints; i++) {
-                    fread(&waypoints[i], sizeof(waypoints[0]), 1, bfp);
+                    fread(&waypoints[i], sizeof waypoints[0], 1, bfp);
                     num_waypoints++;
                 }
 
                 // read and add waypoint paths...
                 for(index = 0; index < num_waypoints; index++) {
                     // read the number of paths from this node...
-                    fread(&num, sizeof(num), 1, bfp);
+                    fread(&num, sizeof num, 1, bfp);
 
                     for(i = 0; i < num; i++) {
-                        fread(&path_index, sizeof(path_index), 1, bfp);
+                        fread(&path_index, sizeof path_index, 1, bfp);
 
                         WaypointAddPath(index, path_index);
                     }
@@ -1770,8 +1770,8 @@ static bool WaypointLoadVersion4(FILE* bfp, int number_of_waypoints)
     WAYPOINT_VERSION4 dummy_waypoint;
 
     // these script flags used to be in the main waypoint flag
-    const int OLD_POINT1 = (1 << 16), OLD_POINT2 = (1 << 17), OLD_POINT3 = (1 << 18), OLD_POINT4 = (1 << 19),
-              OLD_POINT5 = (1 << 20), OLD_POINT6 = (1 << 21), OLD_POINT7 = (1 << 22), OLD_POINT8 = (1 << 23);
+    const int OLD_POINT1 = 1 << 16, OLD_POINT2 = 1 << 17, OLD_POINT3 = 1 << 18, OLD_POINT4 = 1 << 19,
+              OLD_POINT5 = 1 << 20, OLD_POINT6 = 1 << 21, OLD_POINT7 = 1 << 22, OLD_POINT8 = 1 << 23;
 
     int i, index;
     short int num;
@@ -1836,10 +1836,10 @@ static bool WaypointLoadVersion4(FILE* bfp, int number_of_waypoints)
     // read and add waypoint paths...
     for(index = 0; index < num_waypoints; index++) {
         // read the number of paths from this node...
-        fread(&num, sizeof(num), 1, bfp);
+        fread(&num, sizeof num, 1, bfp);
 
         for(i = 0; i < num; i++) {
-            fread(&path_index, sizeof(path_index), 1, bfp);
+            fread(&path_index, sizeof path_index, 1, bfp);
 
             WaypointAddPath(index, path_index);
         }
@@ -1867,7 +1867,7 @@ void WaypointSave(void)
     header.waypoint_file_flags = 0; // not currently used
     header.number_of_waypoints = num_waypoints;
 
-    memset(header.mapname, 0, sizeof(header.mapname));
+    memset(header.mapname, 0, sizeof header.mapname);
     strncpy(header.mapname, STRING(gpGlobals->mapname), 31);
     header.mapname[31] = 0;
 
@@ -1883,7 +1883,7 @@ void WaypointSave(void)
     }
 
     // write the waypoint header to the file...
-    fwrite(&header, sizeof(header), 1, bfp);
+    fwrite(&header, sizeof header, 1, bfp);
 
     int index, i;
     short int num;
@@ -1891,7 +1891,7 @@ void WaypointSave(void)
 
     // write the waypoint data to the file...
     for(index = 0; index < num_waypoints; index++) {
-        fwrite(&waypoints[index], sizeof(waypoints[0]), 1, bfp);
+        fwrite(&waypoints[index], sizeof waypoints[0], 1, bfp);
     }
 
     // save the waypoint paths...
@@ -1914,7 +1914,7 @@ void WaypointSave(void)
             p = p->next; // go to next node in linked list
         }
 
-        fwrite(&num, sizeof(num), 1, bfp); // write the count
+        fwrite(&num, sizeof num, 1, bfp); // write the count
 
         // now write out each path index...
 
@@ -1925,7 +1925,7 @@ void WaypointSave(void)
 
             while(i < MAX_PATH_INDEX) {
                 if(p->index[i] != -1) // save path node if it's used
-                    fwrite(&p->index[i], sizeof(p->index[0]), 1, bfp);
+                    fwrite(&p->index[i], sizeof p->index[0], 1, bfp);
 
                 i++;
             }
@@ -1961,13 +1961,13 @@ bool WaypointReachable(Vector v_src, Vector v_dest, edict_t* pEntity)
             float last_height, curr_height;
 
             // check for special case of both waypoints being underwater...
-            if((POINT_CONTENTS(v_src) == CONTENTS_WATER) && (POINT_CONTENTS(v_dest) == CONTENTS_WATER))
+            if(POINT_CONTENTS(v_src) == CONTENTS_WATER && POINT_CONTENTS(v_dest) == CONTENTS_WATER)
                 return TRUE;
 
             // check for special case of waypoint being suspended in mid-air...
 
             // is dest waypoint higher than src? (45 is max jump height)
-            if(v_dest.z > (v_src.z + 45.0)) {
+            if(v_dest.z > v_src.z + 45.0) {
                 Vector v_new_src = v_dest;
                 Vector v_new_dest = v_dest;
 
@@ -1999,7 +1999,7 @@ bool WaypointReachable(Vector v_src, Vector v_dest, edict_t* pEntity)
 
             while(distance > 10.0) {
                 // move 10 units closer to the goal...
-                v_check = v_check + (v_direction * 10.0);
+                v_check = v_check + v_direction * 10.0;
 
                 v_down = v_check;
                 v_down.z = v_down.z - 1000.0; // straight down 1000 units
@@ -2010,7 +2010,7 @@ bool WaypointReachable(Vector v_src, Vector v_dest, edict_t* pEntity)
 
                 // is the difference in the last height and the current
                 // height higher that the jump height?
-                if((last_height - curr_height) > 45.0) {
+                if(last_height - curr_height > 45.0) {
                     // can't get there from here...
                     return FALSE;
                 }
@@ -2335,12 +2335,12 @@ void WaypointThink(edict_t* pEntity)
                 // waypoint holographic models + sprites
                 if(pEntity == INDEXENT(1)) {
                     WPT_INT32 flags = waypoints[i].flags;
-                    if((flags & W_FL_HEALTH) || (flags & W_FL_ARMOR) || (flags & W_FL_AMMO) || (flags & W_FL_SNIPER) ||
-                        (flags & W_FL_TFC_FLAG) || (flags & W_FL_TFC_FLAG_GOAL) || (flags & W_FL_TFC_SENTRY) ||
-                        (flags & W_FL_TFC_TELEPORTER_ENTRANCE) || (flags & W_FL_TFC_TELEPORTER_EXIT) ||
-                        (flags & W_FL_LIFT) || (flags & W_FL_JUMP) || (flags & W_FL_TFC_DETPACK_CLEAR) ||
-                        (flags & W_FL_TFC_DETPACK_SEAL) || (flags & W_FL_TFC_JUMP) || (flags & W_FL_TFC_PL_DEFEND) ||
-                        (flags & W_FL_TFC_PIPETRAP) || (flags & W_FL_PATHCHECK)) {
+                    if(flags & W_FL_HEALTH || flags & W_FL_ARMOR || flags & W_FL_AMMO || flags & W_FL_SNIPER ||
+                        flags & W_FL_TFC_FLAG || flags & W_FL_TFC_FLAG_GOAL || flags & W_FL_TFC_SENTRY ||
+                        flags & W_FL_TFC_TELEPORTER_ENTRANCE || flags & W_FL_TFC_TELEPORTER_EXIT ||
+                        flags & W_FL_LIFT || flags & W_FL_JUMP || flags & W_FL_TFC_DETPACK_CLEAR ||
+                        flags & W_FL_TFC_DETPACK_SEAL || flags & W_FL_TFC_JUMP || flags & W_FL_TFC_PL_DEFEND ||
+                        flags & W_FL_TFC_PIPETRAP || flags & W_FL_PATHCHECK) {
                         short model;
                         if(flags & W_FL_HEALTH) {
                             model = PRECACHE_MODEL("models/w_medkit.mdl");
@@ -2499,7 +2499,7 @@ void WaypointThink(edict_t* pEntity)
                             MESSAGE_END();
 
                             // draw 2 crossed lines to create a blockage symbol
-                            if((wp_display_time[i] + 1.0) < gpGlobals->time) {
+                            if(wp_display_time[i] + 1.0 < gpGlobals->time) {
                                 Vector beam_start = waypoints[i].origin + Vector(20, 0, 20);
                                 Vector beam_end = waypoints[i].origin - Vector(20, 0, 0) - Vector(0, 0, 20);
                                 WaypointDrawBeam(pEntity, beam_start, beam_end, 10, 2, 250, 0, 250, 200, 10);
@@ -2509,7 +2509,7 @@ void WaypointThink(edict_t* pEntity)
                                 WaypointDrawBeam(pEntity, beam_start, beam_end, 10, 2, 250, 0, 250, 200, 10);
                             }
                         }
-                        if((flags & W_FL_TFC_TELEPORTER_ENTRANCE) || (flags & W_FL_TFC_TELEPORTER_EXIT)) {
+                        if(flags & W_FL_TFC_TELEPORTER_ENTRANCE || flags & W_FL_TFC_TELEPORTER_EXIT) {
                             model = PRECACHE_MODEL("models/teleporter.mdl");
                             MESSAGE_BEGIN(MSG_PAS, SVC_TEMPENTITY, pEntity->v.origin);
                             WRITE_BYTE(17);
@@ -2533,7 +2533,7 @@ void WaypointThink(edict_t* pEntity)
                             WRITE_BYTE(128);
                             MESSAGE_END();
                         }
-                        if(flags & W_FL_PATHCHECK && (wp_display_time[i] + 1.0) < gpGlobals->time) {
+                        if(flags & W_FL_PATHCHECK && wp_display_time[i] + 1.0 < gpGlobals->time) {
                             // draw 2 crossed lines to create a signpost symbol
                             // near the top of the waypoint
                             Vector beam_start = waypoints[i].origin + Vector(15, 0, 25);
@@ -2548,11 +2548,11 @@ void WaypointThink(edict_t* pEntity)
 
                     // display dots showing what script flags are set for a waypoint //Incompatible for AvD maps? [APG]RoboCop[CL]
                     WPT_INT8 script_flags = waypoints[i].script_flags;
-                    if((script_flags & S_FL_POINT1) || (script_flags & S_FL_POINT2) || (script_flags & S_FL_POINT3) ||
-                        (script_flags & S_FL_POINT4) || (script_flags & S_FL_POINT5) || (script_flags & S_FL_POINT6) ||
-                        (script_flags & S_FL_POINT7) || (script_flags & S_FL_POINT8)) {
+                    if(script_flags & S_FL_POINT1 || script_flags & S_FL_POINT2 || script_flags & S_FL_POINT3 ||
+                        script_flags & S_FL_POINT4 || script_flags & S_FL_POINT5 || script_flags & S_FL_POINT6 ||
+                        script_flags & S_FL_POINT7 || script_flags & S_FL_POINT8) {
                         short model;
-                        if((script_flags & S_FL_POINT1)) {
+                        if(script_flags & S_FL_POINT1) {
                             model = PRECACHE_MODEL("sprites/cnt1.spr");
                             MESSAGE_BEGIN(MSG_PAS, SVC_TEMPENTITY, pEntity->v.origin);
                             WRITE_BYTE(17);
@@ -2575,7 +2575,7 @@ void WaypointThink(edict_t* pEntity)
                             WRITE_BYTE(128);
                             MESSAGE_END();
                         }
-                        if((script_flags & S_FL_POINT2)) {
+                        if(script_flags & S_FL_POINT2) {
                             model = PRECACHE_MODEL("sprites/cnt1.spr");
                             MESSAGE_BEGIN(MSG_PAS, SVC_TEMPENTITY, pEntity->v.origin);
                             WRITE_BYTE(17);
@@ -2598,7 +2598,7 @@ void WaypointThink(edict_t* pEntity)
                             WRITE_BYTE(128);
                             MESSAGE_END();
                         }
-                        if((script_flags & S_FL_POINT3)) {
+                        if(script_flags & S_FL_POINT3) {
                             model = PRECACHE_MODEL("sprites/cnt1.spr");
                             MESSAGE_BEGIN(MSG_PAS, SVC_TEMPENTITY, pEntity->v.origin);
                             WRITE_BYTE(17);
@@ -2621,7 +2621,7 @@ void WaypointThink(edict_t* pEntity)
                             WRITE_BYTE(128);
                             MESSAGE_END();
                         }
-                        if((script_flags & S_FL_POINT4)) {
+                        if(script_flags & S_FL_POINT4) {
                             model = PRECACHE_MODEL("sprites/cnt1.spr");
                             MESSAGE_BEGIN(MSG_PAS, SVC_TEMPENTITY, pEntity->v.origin);
                             WRITE_BYTE(17);
@@ -2644,7 +2644,7 @@ void WaypointThink(edict_t* pEntity)
                             WRITE_BYTE(128);
                             MESSAGE_END();
                         }
-                        if((script_flags & S_FL_POINT5)) {
+                        if(script_flags & S_FL_POINT5) {
                             model = PRECACHE_MODEL("sprites/cnt1.spr");
                             MESSAGE_BEGIN(MSG_PAS, SVC_TEMPENTITY, pEntity->v.origin);
                             WRITE_BYTE(17);
@@ -2667,7 +2667,7 @@ void WaypointThink(edict_t* pEntity)
                             WRITE_BYTE(128);
                             MESSAGE_END();
                         }
-                        if((script_flags & S_FL_POINT6)) {
+                        if(script_flags & S_FL_POINT6) {
                             model = PRECACHE_MODEL("sprites/cnt1.spr");
                             MESSAGE_BEGIN(MSG_PAS, SVC_TEMPENTITY, pEntity->v.origin);
                             WRITE_BYTE(17);
@@ -2690,7 +2690,7 @@ void WaypointThink(edict_t* pEntity)
                             WRITE_BYTE(128);
                             MESSAGE_END();
                         }
-                        if((script_flags & S_FL_POINT7)) {
+                        if(script_flags & S_FL_POINT7) {
                             model = PRECACHE_MODEL("sprites/cnt1.spr");
                             MESSAGE_BEGIN(MSG_PAS, SVC_TEMPENTITY, pEntity->v.origin);
                             WRITE_BYTE(17);
@@ -2713,7 +2713,7 @@ void WaypointThink(edict_t* pEntity)
                             WRITE_BYTE(128);
                             MESSAGE_END();
                         }
-                        if((script_flags & S_FL_POINT8)) {
+                        if(script_flags & S_FL_POINT8) {
                             model = PRECACHE_MODEL("sprites/cnt1.spr");
                             MESSAGE_BEGIN(MSG_PAS, SVC_TEMPENTITY, pEntity->v.origin);
                             WRITE_BYTE(17);
@@ -2744,7 +2744,7 @@ void WaypointThink(edict_t* pEntity)
                     min_distance = distance;
                 }
 
-                if((wp_display_time[i] + 1.0) < gpGlobals->time) {
+                if(wp_display_time[i] + 1.0 < gpGlobals->time) {
                     if(waypoints[i].flags & W_FL_CROUCH) {
                         start = waypoints[i].origin - Vector(0, 0, 17);
                         end = start + Vector(0, 0, 34);
@@ -2800,7 +2800,7 @@ void WaypointThink(edict_t* pEntity)
         // check if path waypointing is on...
         // check if player is close enough to a waypoint and
         // time to draw path...
-        if(g_path_waypoint && index != -1 && (min_distance <= 50) && (f_path_time <= gpGlobals->time)) {
+        if(g_path_waypoint && index != -1 && min_distance <= 50 && f_path_time <= gpGlobals->time) {
             f_path_time = gpGlobals->time + 1.0f;
 
             PATH* p;
@@ -2913,7 +2913,7 @@ void WaypointThink(edict_t* pEntity)
                     //		min_distance = distance;
                     //	}
 
-                    if((a_display_time[i] + 1.0) < gpGlobals->time) {
+                    if(a_display_time[i] + 1.0 < gpGlobals->time) {
                         start = areas[i].a - Vector(0, 0, 34);
                         end = start + Vector(0, 0, 68);
                         // draw a red waypoint
@@ -2934,7 +2934,7 @@ void WaypointThink(edict_t* pEntity)
                     //		min_distance = distance;
                     //	}
 
-                    if((a_display_time[i] + 1.0) < gpGlobals->time) {
+                    if(a_display_time[i] + 1.0 < gpGlobals->time) {
                         start = areas[i].b - Vector(0, 0, 34);
                         end = start + Vector(0, 0, 68);
                         // draw a red waypoint
@@ -2955,7 +2955,7 @@ void WaypointThink(edict_t* pEntity)
                     //		min_distance = distance;
                     //	}
 
-                    if((a_display_time[i] + 1.0) < gpGlobals->time) {
+                    if(a_display_time[i] + 1.0 < gpGlobals->time) {
                         start = areas[i].c - Vector(0, 0, 34);
                         end = start + Vector(0, 0, 68);
                         // draw a red waypoint
@@ -2976,7 +2976,7 @@ void WaypointThink(edict_t* pEntity)
                     //		min_distance = distance;
                     //	}
 
-                    if((a_display_time[i] + 1.0) < gpGlobals->time) {
+                    if(a_display_time[i] + 1.0 < gpGlobals->time) {
                         start = areas[i].d - Vector(0, 0, 34);
                         end = start + Vector(0, 0, 68);
                         // draw a red waypoint
@@ -2988,7 +2988,7 @@ void WaypointThink(edict_t* pEntity)
             }
 
             // connect the dots :)
-            if((a_display_time[i] + 1.0) < gpGlobals->time && timr) {
+            if(a_display_time[i] + 1.0 < gpGlobals->time && timr) {
                 int g = 0;
                 // if(AreaInside(pEntity,i)) g=64;
                 if(AreaInsideClosest(pEntity) == i) {
@@ -3072,7 +3072,7 @@ static void WaypointFloyds(unsigned int* shortest_path, unsigned int* from_to)
                     yRz = y * route_num_waypoints + z;
                     xRz = x * route_num_waypoints + z;
 
-                    if((shortest_path[yRx] == WAYPOINT_UNREACHABLE) || (shortest_path[xRz] == WAYPOINT_UNREACHABLE))
+                    if(shortest_path[yRx] == WAYPOINT_UNREACHABLE || shortest_path[xRz] == WAYPOINT_UNREACHABLE)
                         continue;
 
                     distance = shortest_path[yRx] + shortest_path[xRz];
@@ -3080,7 +3080,7 @@ static void WaypointFloyds(unsigned int* shortest_path, unsigned int* from_to)
                     if(distance > WAYPOINT_MAX_DISTANCE)
                         distance = WAYPOINT_MAX_DISTANCE;
 
-                    if((distance < shortest_path[yRz]) || (shortest_path[yRz] == WAYPOINT_UNREACHABLE)) {
+                    if(distance < shortest_path[yRz] || shortest_path[yRz] == WAYPOINT_UNREACHABLE) {
                         shortest_path[yRz] = distance;
                         from_to[yRz] = from_to[yRx];
                         changed = TRUE;
@@ -3172,7 +3172,7 @@ static void WaypointRouteInit(void)
                                     // check if this is NOT team specific OR
                                     // matches this team
                                     if(!(waypoints[index].flags & W_FL_TEAM_SPECIFIC) ||
-                                        ((waypoints[index].flags & W_FL_TEAM) == matrix)) {
+                                        (waypoints[index].flags & W_FL_TEAM) == matrix) {
                                         distance = (waypoints[row].origin - waypoints[index].origin).Length();
 
                                         if(distance > static_cast<float>(WAYPOINT_MAX_DISTANCE))
@@ -3237,7 +3237,7 @@ static void WaypointRouteInit(void)
             if(waypoints[i].flags & W_FL_TEAM_SPECIFIC) {
                 // Put the waypoint index, and the team # into the list.
                 RJPoints[RJIndex][0] = i;
-                RJPoints[RJIndex][1] = (waypoints[index].flags & W_FL_TEAM);
+                RJPoints[RJIndex][1] = waypoints[index].flags & W_FL_TEAM;
                 teamCount[RJPoints[RJIndex][1] - 1]++;
                 RJIndex++;
             } else {
@@ -3343,8 +3343,8 @@ bool WaypointAvailable(const int index, const int team)
 
     // a bit field of all script number waypoint flags
     // to speed the checking operation up
-    static const WPT_INT8 validFlags = 0 +
-        (S_FL_POINT1 | S_FL_POINT2 | S_FL_POINT3 | S_FL_POINT4 | S_FL_POINT5 | S_FL_POINT6 | S_FL_POINT7 | S_FL_POINT8);
+    static const WPT_INT8 validFlags = (S_FL_POINT1 | S_FL_POINT2 | S_FL_POINT3 | S_FL_POINT4 | S_FL_POINT5 | S_FL_POINT6 | S_FL_POINT7 | S_FL_POINT8) +
+        0;
 
     // Report true if this waypoint is scripted and currently
     // available to the indicated team
@@ -3590,12 +3590,12 @@ void WaypointAutoBuild(edict_t* pEntity)
     // clear all wpts
     WaypointInit();
 
-    for(int x = (-4096 + 32); x <= (4096 - 32); x = x + 32) {
+    for(int x = -4096 + 32; x <= 4096 - 32; x = x + 32) {
         /*{ fp=UTIL_OpenFoxbotLog();
                 fprintf(fp,"%d %d\n\n",x,num_waypoints); fclose(fp); }*/
 
-        for(int y = (-4096 + 32); y <= (4096 - 32); y = y + 32) {
-            for(int z = (-4096 + (32 + 32)); z <= (4096 - 32); z = z + 32) {
+        for(int y = -4096 + 32; y <= 4096 - 32; y = y + 32) {
+            for(int z = -4096 + (32 + 32); z <= 4096 - 32; z = z + 32) {
                 /*{ fp=UTIL_OpenFoxbotLog();
                         fprintf(fp,"-%d %d\n",y,num_waypoints); fclose(fp); }*/
 
@@ -3878,7 +3878,7 @@ int AreaDefPointFindNearest(edict_t* pEntity, float range, int flags)
         if(distance == 9999)
             continue;
 
-        if((distance < min_distance) && (distance < range)) {
+        if(distance < min_distance && distance < range) {
             // if waypoint is visible from current position
             // (even behind head)...
             UTIL_TraceLine(
@@ -3948,7 +3948,7 @@ void AreaDefSave(void)
 
     header.number_of_areas = num_areas;
 
-    memset(header.mapname, 0, sizeof(header.mapname));
+    memset(header.mapname, 0, sizeof header.mapname);
     strncpy(header.mapname, STRING(gpGlobals->mapname), 31);
     header.mapname[31] = 0;
 
@@ -3960,11 +3960,11 @@ void AreaDefSave(void)
     FILE* bfp = fopen(filename, "wb");
 
     // write the waypoint header to the file...
-    fwrite(&header, sizeof(header), 1, bfp);
+    fwrite(&header, sizeof header, 1, bfp);
 
     // write the waypoint data to the file...
     for(index = 0; index < num_areas; index++) {
-        fwrite(&areas[index], sizeof(areas[0]), 1, bfp);
+        fwrite(&areas[index], sizeof areas[0], 1, bfp);
     }
 
     fclose(bfp);
@@ -3989,7 +3989,7 @@ bool AreaDefLoad(edict_t* pEntity)
     if(bfp != NULL) {
         if(IS_DEDICATED_SERVER())
             printf("loading area file: %s\n", filename);
-        fread(&header, sizeof(header), 1, bfp);
+        fread(&header, sizeof header, 1, bfp);
 
         header.filetype[7] = 0;
         if(strcmp(header.filetype, "FoXBot") == 0) {
@@ -4028,7 +4028,7 @@ bool AreaDefLoad(edict_t* pEntity)
                     ClientPrint(pEntity, HUD_PRINTNOTIFY, "Loading FoXBot area file\n");
 
                 for(i = 0; i < header.number_of_areas; i++) {
-                    fread(&areas[i], sizeof(areas[0]), 1, bfp);
+                    fread(&areas[i], sizeof areas[0], 1, bfp);
                     num_areas++;
                 }
             } else {
@@ -4216,7 +4216,7 @@ int AreaInsideClosest(edict_t* pEntity)
             // we want the mid point between hz and lz.. that will be
             // our distance..
             // nearly forgot, the distance revolves around the player!
-            a = fabs((((hz - lz) / 2) + lz) - pEntity->v.origin.z);
+            a = fabs((hz - lz) / 2 + lz - pEntity->v.origin.z);
             if(a < distance) {
                 distance = a;
                 index = i;
@@ -4281,18 +4281,18 @@ void AreaAutoBuild1()
             while(k <= num_waypoints) {
                 if(waypoints[i].origin.y == waypoints[k].origin.y && waypoints[i].origin.z == waypoints[k].origin.z &&
                     i != k) {
-                    if(waypoints[i].origin.x - (32 * (lc + 1)) == waypoints[k].origin.x) {
+                    if(waypoints[i].origin.x - 32 * (lc + 1) == waypoints[k].origin.x) {
                         k = -1;
                         lc++;
                     }
-                    if(waypoints[i].origin.x + (32 * (rc + 1)) == waypoints[k].origin.x) {
+                    if(waypoints[i].origin.x + 32 * (rc + 1) == waypoints[k].origin.x) {
                         k = -1;
                         rc++;
                     }
                 } else if(waypoints[i].origin.y == waypoints[k].origin.y &&
                     waypoints[i].origin.z - 16 <= waypoints[k].origin.z &&
                     waypoints[i].origin.z + 16 >= waypoints[k].origin.z && !lu && !ld && i != k) {
-                    if(waypoints[i].origin.x - (32 * (lc + 1)) == waypoints[k].origin.x) {
+                    if(waypoints[i].origin.x - 32 * (lc + 1) == waypoints[k].origin.x) {
                         ll = k;
                         k = -1;
                         lc++;
@@ -4304,7 +4304,7 @@ void AreaAutoBuild1()
                 } else if(waypoints[i].origin.y == waypoints[k].origin.y &&
                     waypoints[i].origin.z - 16 <= waypoints[k].origin.z &&
                     waypoints[i].origin.z + 16 >= waypoints[k].origin.z && !ru && !rd && i != k) {
-                    if(waypoints[i].origin.x + (32 * (rc + 1)) == waypoints[k].origin.x) {
+                    if(waypoints[i].origin.x + 32 * (rc + 1) == waypoints[k].origin.x) {
                         lr = k;
                         k = -1;
                         rc++;
@@ -4316,10 +4316,10 @@ void AreaAutoBuild1()
                 } else if(waypoints[i].origin.y == waypoints[k].origin.y &&
                         (waypoints[ll].origin.z - 16 <= waypoints[k].origin.z &&
                               waypoints[ll].origin.z + 16 >= waypoints[k].origin.z) ||
-                    (waypoints[lr].origin.z - 16 <= waypoints[k].origin.z &&
-                        waypoints[lr].origin.z + 16 >= waypoints[k].origin.z) &&
+                    waypoints[lr].origin.z - 16 <= waypoints[k].origin.z &&
+                    waypoints[lr].origin.z + 16 >= waypoints[k].origin.z &&
                         (ru || rd) && (ld || lu) && i != k) {
-                    if(waypoints[i].origin.x - (32 * (lc + 1)) == waypoints[k].origin.x) {
+                    if(waypoints[i].origin.x - 32 * (lc + 1) == waypoints[k].origin.x) {
                         if(waypoints[i].origin.z <= waypoints[k].origin.z && ld) {
                             ll = k;
                             k = -1;
@@ -4330,7 +4330,7 @@ void AreaAutoBuild1()
                             lc++;
                         }
                     }
-                    if(waypoints[i].origin.x + (32 * (rc + 1)) == waypoints[k].origin.x) {
+                    if(waypoints[i].origin.x + 32 * (rc + 1) == waypoints[k].origin.x) {
                         if(waypoints[i].origin.z <= waypoints[k].origin.z && rd) {
                             lr = k;
                             k = -1;
@@ -4366,18 +4366,18 @@ void AreaAutoBuild1()
                                 while(k <= num_waypoints) {
                                     if(waypoints[j].origin.y == waypoints[k].origin.y &&
                                         waypoints[j].origin.z == waypoints[k].origin.z && j != k) {
-                                        if(waypoints[j].origin.x - (32 * (l + 1)) == waypoints[k].origin.x) {
+                                        if(waypoints[j].origin.x - 32 * (l + 1) == waypoints[k].origin.x) {
                                             k = -1;
                                             l++;
                                         }
-                                        if(waypoints[j].origin.x + (32 * (r + 1)) == waypoints[k].origin.x) {
+                                        if(waypoints[j].origin.x + 32 * (r + 1) == waypoints[k].origin.x) {
                                             k = -1;
                                             r++;
                                         }
                                     } else if(waypoints[j].origin.y == waypoints[k].origin.y &&
                                         waypoints[j].origin.z - 16 <= waypoints[k].origin.z &&
                                         waypoints[j].origin.z + 16 >= waypoints[k].origin.z && !lu && !ld && j != k) {
-                                        if(waypoints[j].origin.x - (32 * (l + 1)) == waypoints[k].origin.x) {
+                                        if(waypoints[j].origin.x - 32 * (l + 1) == waypoints[k].origin.x) {
                                             ll = k;
                                             k = -1;
                                             l++;
@@ -4389,7 +4389,7 @@ void AreaAutoBuild1()
                                     } else if(waypoints[j].origin.y == waypoints[k].origin.y &&
                                         waypoints[j].origin.z - 16 <= waypoints[k].origin.z &&
                                         waypoints[j].origin.z + 16 >= waypoints[k].origin.z && !ru && !rd && j != k) {
-                                        if(waypoints[j].origin.x + (32 * (r + 1)) == waypoints[k].origin.x) {
+                                        if(waypoints[j].origin.x + 32 * (r + 1) == waypoints[k].origin.x) {
                                             lr = k;
                                             k = -1;
                                             r++;
@@ -4401,10 +4401,10 @@ void AreaAutoBuild1()
                                     } else if(waypoints[j].origin.y == waypoints[k].origin.y &&
                                             (waypoints[ll].origin.z - 16 <= waypoints[k].origin.z &&
                                                   waypoints[ll].origin.z + 16 >= waypoints[k].origin.z) ||
-                                        (waypoints[lr].origin.z - 16 <= waypoints[k].origin.z &&
-                                            waypoints[lr].origin.z + 16 >= waypoints[k].origin.z) &&
+                                        waypoints[lr].origin.z - 16 <= waypoints[k].origin.z &&
+                                        waypoints[lr].origin.z + 16 >= waypoints[k].origin.z &&
                                             (ru || rd) && (ld || lu) && j != k) {
-                                        if(waypoints[j].origin.x - (32 * (l + 1)) == waypoints[k].origin.x) {
+                                        if(waypoints[j].origin.x - 32 * (l + 1) == waypoints[k].origin.x) {
                                             if(waypoints[j].origin.z <= waypoints[k].origin.z && ld) {
                                                 ll = k;
                                                 k = -1;
@@ -4415,7 +4415,7 @@ void AreaAutoBuild1()
                                                 l++;
                                             }
                                         }
-                                        if(waypoints[j].origin.x + (32 * (r + 1)) == waypoints[k].origin.x) {
+                                        if(waypoints[j].origin.x + 32 * (r + 1) == waypoints[k].origin.x) {
                                             if(waypoints[j].origin.z <= waypoints[k].origin.z && rd) {
                                                 lr = k;
                                                 k = -1;
@@ -4450,18 +4450,18 @@ void AreaAutoBuild1()
                                 while(k <= num_waypoints) {
                                     if(waypoints[j].origin.y == waypoints[k].origin.y &&
                                         waypoints[j].origin.z == waypoints[k].origin.z && j != k) {
-                                        if(waypoints[j].origin.x - (32 * (l + 1)) == waypoints[k].origin.x) {
+                                        if(waypoints[j].origin.x - 32 * (l + 1) == waypoints[k].origin.x) {
                                             k = -1;
                                             l++;
                                         }
-                                        if(waypoints[j].origin.x + (32 * (r + 1)) == waypoints[k].origin.x) {
+                                        if(waypoints[j].origin.x + 32 * (r + 1) == waypoints[k].origin.x) {
                                             k = -1;
                                             r++;
                                         }
                                     } else if(waypoints[j].origin.y == waypoints[k].origin.y &&
                                         waypoints[j].origin.z - 16 <= waypoints[k].origin.z &&
                                         waypoints[j].origin.z + 16 >= waypoints[k].origin.z && !lu && !ld && j != k) {
-                                        if(waypoints[j].origin.x - (32 * (l + 1)) == waypoints[k].origin.x) {
+                                        if(waypoints[j].origin.x - 32 * (l + 1) == waypoints[k].origin.x) {
                                             ll = k;
                                             k = -1;
                                             l++;
@@ -4473,7 +4473,7 @@ void AreaAutoBuild1()
                                     } else if(waypoints[j].origin.y == waypoints[k].origin.y &&
                                         waypoints[j].origin.z - 16 <= waypoints[k].origin.z &&
                                         waypoints[j].origin.z + 16 >= waypoints[k].origin.z && !ru && !rd && j != k) {
-                                        if(waypoints[j].origin.x + (32 * (r + 1)) == waypoints[k].origin.x) {
+                                        if(waypoints[j].origin.x + 32 * (r + 1) == waypoints[k].origin.x) {
                                             lr = k;
                                             k = -1;
                                             r++;
@@ -4485,10 +4485,10 @@ void AreaAutoBuild1()
                                     } else if(waypoints[j].origin.y == waypoints[k].origin.y &&
                                             (waypoints[ll].origin.z - 16 <= waypoints[k].origin.z &&
                                                   waypoints[ll].origin.z + 16 >= waypoints[k].origin.z) ||
-                                        (waypoints[lr].origin.z - 16 <= waypoints[k].origin.z &&
-                                            waypoints[lr].origin.z + 16 >= waypoints[k].origin.z) &&
+                                        waypoints[lr].origin.z - 16 <= waypoints[k].origin.z &&
+                                        waypoints[lr].origin.z + 16 >= waypoints[k].origin.z &&
                                             (ru || rd) && (ld || lu) && j != k) {
-                                        if(waypoints[j].origin.x - (32 * (l + 1)) == waypoints[k].origin.x) {
+                                        if(waypoints[j].origin.x - 32 * (l + 1) == waypoints[k].origin.x) {
                                             if(waypoints[j].origin.z <= waypoints[k].origin.z && ld) {
                                                 ll = k;
                                                 k = -1;
@@ -4499,7 +4499,7 @@ void AreaAutoBuild1()
                                                 l++;
                                             }
                                         }
-                                        if(waypoints[j].origin.x + (32 * (r + 1)) == waypoints[k].origin.x) {
+                                        if(waypoints[j].origin.x + 32 * (r + 1) == waypoints[k].origin.x) {
                                             if(waypoints[j].origin.z <= waypoints[k].origin.z && rd) {
                                                 lr = k;
                                                 k = -1;
@@ -4530,8 +4530,8 @@ void AreaAutoBuild1()
     // their will be lots of parallel areas that can be merged...
     for(i = 0; i <= num_areas; i++) {
         if(!(areas[i].flags & W_FL_DELETED)) {
-            if(((areas[i].flags & A_FL_1) == A_FL_1 && (areas[i].flags & A_FL_2) == A_FL_2 &&
-                   (areas[i].flags & A_FL_3) == A_FL_3 && (areas[i].flags & A_FL_4) == A_FL_4)) {
+            if((areas[i].flags & A_FL_1) == A_FL_1 && (areas[i].flags & A_FL_2) == A_FL_2 &&
+	            (areas[i].flags & A_FL_3) == A_FL_3 && (areas[i].flags & A_FL_4) == A_FL_4) {
                 lc = 0;
                 rc = 0;
 
@@ -4557,18 +4557,18 @@ void AreaAutoBuild1()
                 while(k <= num_waypoints) {
                     if(waypoints[h].origin.x == waypoints[k].origin.x &&
                         waypoints[h].origin.z == waypoints[k].origin.z && h != k) {
-                        if(waypoints[h].origin.y - (32 * (lc + 1)) == waypoints[k].origin.y) {
+                        if(waypoints[h].origin.y - 32 * (lc + 1) == waypoints[k].origin.y) {
                             k = -1;
                             lc++;
                         }
-                        if(waypoints[h].origin.y + (32 * (rc + 1)) == waypoints[k].origin.y) {
+                        if(waypoints[h].origin.y + 32 * (rc + 1) == waypoints[k].origin.y) {
                             k = -1;
                             rc++;
                         }
                     } else if(waypoints[h].origin.x == waypoints[k].origin.x &&
                         waypoints[h].origin.z - 16 <= waypoints[k].origin.z &&
                         waypoints[h].origin.z + 16 >= waypoints[k].origin.z && !lu && !ld && i != k) {
-                        if(waypoints[h].origin.y - (32 * (lc + 1)) == waypoints[k].origin.y) {
+                        if(waypoints[h].origin.y - 32 * (lc + 1) == waypoints[k].origin.y) {
                             ll = k;
                             k = -1;
                             lc++;
@@ -4580,7 +4580,7 @@ void AreaAutoBuild1()
                     } else if(waypoints[h].origin.x == waypoints[k].origin.x &&
                         waypoints[h].origin.z - 16 <= waypoints[k].origin.z &&
                         waypoints[h].origin.z + 16 >= waypoints[k].origin.z && !ru && !rd && i != k) {
-                        if(waypoints[h].origin.y + (32 * (rc + 1)) == waypoints[k].origin.y) {
+                        if(waypoints[h].origin.y + 32 * (rc + 1) == waypoints[k].origin.y) {
                             lr = k;
                             k = -1;
                             rc++;
@@ -4592,10 +4592,10 @@ void AreaAutoBuild1()
                     } else if(waypoints[h].origin.x == waypoints[k].origin.x &&
                             (waypoints[ll].origin.z - 16 <= waypoints[k].origin.z &&
                                   waypoints[ll].origin.z + 16 >= waypoints[k].origin.z) ||
-                        (waypoints[lr].origin.z - 16 <= waypoints[k].origin.z &&
-                            waypoints[lr].origin.z + 16 >= waypoints[k].origin.z) &&
+                        waypoints[lr].origin.z - 16 <= waypoints[k].origin.z &&
+                        waypoints[lr].origin.z + 16 >= waypoints[k].origin.z &&
                             (ru || rd) && (ld || lu) && i != k) {
-                        if(waypoints[h].origin.y - (32 * (lc + 1)) == waypoints[k].origin.y) {
+                        if(waypoints[h].origin.y - 32 * (lc + 1) == waypoints[k].origin.y) {
                             if(waypoints[h].origin.z <= waypoints[k].origin.z && ld) {
                                 ll = k;
                                 k = -1;
@@ -4606,7 +4606,7 @@ void AreaAutoBuild1()
                                 lc++;
                             }
                         }
-                        if(waypoints[h].origin.y + (32 * (rc + 1)) == waypoints[k].origin.y) {
+                        if(waypoints[h].origin.y + 32 * (rc + 1) == waypoints[k].origin.y) {
                             if(waypoints[h].origin.z <= waypoints[k].origin.z && rd) {
                                 lr = k;
                                 k = -1;
@@ -4630,8 +4630,8 @@ void AreaAutoBuild1()
                     expanded = FALSE;
                     for(j = 0; j <= num_areas; j++) {
                         if(!(areas[j].flags & W_FL_DELETED)) {
-                            if(((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 &&
-                                   (areas[j].flags & A_FL_3) == A_FL_3 && (areas[j].flags & A_FL_4) == A_FL_4)) {
+                            if((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 &&
+	                            (areas[j].flags & A_FL_3) == A_FL_3 && (areas[j].flags & A_FL_4) == A_FL_4) {
                                 if(i != j) {
                                     if(areas[i].a == areas[j].d && areas[i].b == areas[j].c) {
                                         r = 0;
@@ -4649,11 +4649,11 @@ void AreaAutoBuild1()
                                         while(k <= num_waypoints) {
                                             if(waypoints[h].origin.x == waypoints[k].origin.x &&
                                                 waypoints[h].origin.z == waypoints[k].origin.z && h != k) {
-                                                if(waypoints[h].origin.y - (32 * (l + 1)) == waypoints[k].origin.y) {
+                                                if(waypoints[h].origin.y - 32 * (l + 1) == waypoints[k].origin.y) {
                                                     k = -1;
                                                     l++;
                                                 }
-                                                if(waypoints[h].origin.y + (32 * (r + 1)) == waypoints[k].origin.y) {
+                                                if(waypoints[h].origin.y + 32 * (r + 1) == waypoints[k].origin.y) {
                                                     k = -1;
                                                     r++;
                                                 }
@@ -4661,7 +4661,7 @@ void AreaAutoBuild1()
                                                 waypoints[h].origin.z - 16 <= waypoints[k].origin.z &&
                                                 waypoints[h].origin.z + 16 >= waypoints[k].origin.z && !lu && !ld &&
                                                 i != k) {
-                                                if(waypoints[h].origin.y - (32 * (l + 1)) == waypoints[k].origin.y) {
+                                                if(waypoints[h].origin.y - 32 * (l + 1) == waypoints[k].origin.y) {
                                                     ll = k;
                                                     k = -1;
                                                     l++;
@@ -4674,7 +4674,7 @@ void AreaAutoBuild1()
                                                 waypoints[h].origin.z - 16 <= waypoints[k].origin.z &&
                                                 waypoints[h].origin.z + 16 >= waypoints[k].origin.z && !ru && !rd &&
                                                 i != k) {
-                                                if(waypoints[h].origin.y + (32 * (r + 1)) == waypoints[k].origin.y) {
+                                                if(waypoints[h].origin.y + 32 * (r + 1) == waypoints[k].origin.y) {
                                                     lr = k;
                                                     k = -1;
                                                     r++;
@@ -4686,10 +4686,10 @@ void AreaAutoBuild1()
                                             } else if(waypoints[h].origin.x == waypoints[k].origin.x &&
                                                     (waypoints[ll].origin.z - 16 <= waypoints[k].origin.z &&
                                                           waypoints[ll].origin.z + 16 >= waypoints[k].origin.z) ||
-                                                (waypoints[lr].origin.z - 16 <= waypoints[k].origin.z &&
-                                                    waypoints[lr].origin.z + 16 >= waypoints[k].origin.z) &&
+                                                waypoints[lr].origin.z - 16 <= waypoints[k].origin.z &&
+                                                waypoints[lr].origin.z + 16 >= waypoints[k].origin.z &&
                                                     (ru || rd) && (ld || lu) && i != k) {
-                                                if(waypoints[h].origin.y - (32 * (l + 1)) == waypoints[k].origin.y) {
+                                                if(waypoints[h].origin.y - 32 * (l + 1) == waypoints[k].origin.y) {
                                                     if(waypoints[h].origin.z <= waypoints[k].origin.z && ld) {
                                                         ll = k;
                                                         k = -1;
@@ -4700,7 +4700,7 @@ void AreaAutoBuild1()
                                                         l++;
                                                     }
                                                 }
-                                                if(waypoints[h].origin.y + (32 * (r + 1)) == waypoints[k].origin.y) {
+                                                if(waypoints[h].origin.y + 32 * (r + 1) == waypoints[k].origin.y) {
                                                     if(waypoints[h].origin.z <= waypoints[k].origin.z && rd) {
                                                         lr = k;
                                                         k = -1;
@@ -4751,16 +4751,16 @@ void AreaAutoMerge()
 
     for(i = 0; i <= num_areas; i++) {
         if(!(areas[i].flags & W_FL_DELETED)) {
-            if(((areas[i].flags & A_FL_1) == A_FL_1 && (areas[i].flags & A_FL_2) == A_FL_2 &&
-                   (areas[i].flags & A_FL_3) == A_FL_3 && (areas[i].flags & A_FL_4) == A_FL_4)) {
+            if((areas[i].flags & A_FL_1) == A_FL_1 && (areas[i].flags & A_FL_2) == A_FL_2 &&
+	            (areas[i].flags & A_FL_3) == A_FL_3 && (areas[i].flags & A_FL_4) == A_FL_4) {
                 a = FALSE;
                 b = FALSE;
                 c = FALSE;
                 d = FALSE;
                 for(j = 0; j <= num_areas; j++) {
                     if(!(areas[j].flags & W_FL_DELETED) && i != j) {
-                        if(((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 &&
-                               (areas[j].flags & A_FL_3) == A_FL_3 && (areas[j].flags & A_FL_4) == A_FL_4)) {
+                        if((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 &&
+	                        (areas[j].flags & A_FL_3) == A_FL_3 && (areas[j].flags & A_FL_4) == A_FL_4) {
                             if(areas[j].a == areas[i].a || areas[j].b == areas[i].a || areas[j].c == areas[i].a ||
                                 areas[j].d == areas[i].a)
                                 a = TRUE;
@@ -4778,20 +4778,20 @@ void AreaAutoMerge()
                 }
 
                 // corner areas will have 1 bool (out of a-c) false only
-                if((!a && b && c && d) || (a && !b && c && d) || (a && b && !c && d) || (a && b && c && !d)) {
+                if(!a && b && c && d || a && !b && c && d || a && b && !c && d || a && b && c && !d) {
                     // Vector aa,bb;
                     // now find all the areas we can merge this one with
                     bool merged = TRUE;
                     while(merged) {
                         stk_cnt = 0;
                         merged = FALSE;
-                        if((areas[i].d.x - areas[i].a.x) > (areas[i].b.y - areas[i].a.y)) {
+                        if(areas[i].d.x - areas[i].a.x > areas[i].b.y - areas[i].a.y) {
                             // x>y so expand in the y direction
                             for(j = 0; j <= num_areas; j++) {
                                 if(!(areas[j].flags & W_FL_DELETED) && i != j) {
-                                    if(((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 &&
-                                           (areas[j].flags & A_FL_3) == A_FL_3 &&
-                                           (areas[j].flags & A_FL_4) == A_FL_4)) {
+                                    if((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 &&
+	                                    (areas[j].flags & A_FL_3) == A_FL_3 &&
+	                                    (areas[j].flags & A_FL_4) == A_FL_4) {
                                         if(!a || !d) {
                                             if(areas[j].a == areas[i].b && areas[j].d == areas[i].c) {
                                                 areas[i].b = areas[j].b;
@@ -4804,23 +4804,23 @@ void AreaAutoMerge()
                                             else {
                                                 // start
                                                 if(stk_cnt == 0 && areas[j].a == areas[i].b &&
-                                                    (areas[j].d.x < areas[i].c.x)) {
+                                                    areas[j].d.x < areas[i].c.x) {
                                                     stk[stk_cnt] = j;
                                                     stk_cnt++;
                                                     j = -1;
                                                 } else if(stk_cnt != 0) {
                                                     // middle
-                                                    if(stk_cnt < stk_sz && (areas[j].d.x < areas[i].c.x) &&
-                                                        (areas[j].a == areas[stk[stk_cnt - 1]].d) &&
-                                                        (areas[j].b == areas[stk[stk_cnt - 1]].c)) {
+                                                    if(stk_cnt < stk_sz && areas[j].d.x < areas[i].c.x &&
+                                                        areas[j].a == areas[stk[stk_cnt - 1]].d &&
+                                                        areas[j].b == areas[stk[stk_cnt - 1]].c) {
                                                         stk[stk_cnt] = j;
                                                         stk_cnt++;
                                                         j = -1;
                                                     }
                                                     // end
                                                     if(areas[j].d == areas[i].c &&
-                                                        (areas[j].a == areas[stk[stk_cnt - 1]].d) &&
-                                                        (areas[j].b == areas[stk[stk_cnt - 1]].c)) {
+                                                        areas[j].a == areas[stk[stk_cnt - 1]].d &&
+                                                        areas[j].b == areas[stk[stk_cnt - 1]].c) {
                                                         areas[i].b = areas[stk[0]].b;
                                                         areas[i].c = areas[j].c;
                                                         areas[j].flags = W_FL_DELETED;
@@ -4845,23 +4845,23 @@ void AreaAutoMerge()
                                             else {
                                                 // start
                                                 if(stk_cnt == 0 && areas[j].b == areas[i].a &&
-                                                    (areas[j].c.x < areas[i].d.x)) {
+                                                    areas[j].c.x < areas[i].d.x) {
                                                     stk[stk_cnt] = j;
                                                     stk_cnt++;
                                                     j = -1;
                                                 } else if(stk_cnt != 0) {
                                                     // middle
-                                                    if(stk_cnt < stk_sz && (areas[j].c.x < areas[i].d.x) &&
-                                                        (areas[j].a == areas[stk[stk_cnt - 1]].d) &&
-                                                        (areas[j].b == areas[stk[stk_cnt - 1]].c)) {
+                                                    if(stk_cnt < stk_sz && areas[j].c.x < areas[i].d.x &&
+                                                        areas[j].a == areas[stk[stk_cnt - 1]].d &&
+                                                        areas[j].b == areas[stk[stk_cnt - 1]].c) {
                                                         stk[stk_cnt] = j;
                                                         stk_cnt++;
                                                         j = -1;
                                                     }
                                                     // end
                                                     if(areas[j].c == areas[i].d &&
-                                                        (areas[j].a == areas[stk[stk_cnt - 1]].d) &&
-                                                        (areas[j].b == areas[stk[stk_cnt - 1]].c)) {
+                                                        areas[j].a == areas[stk[stk_cnt - 1]].d &&
+                                                        areas[j].b == areas[stk[stk_cnt - 1]].c) {
                                                         areas[i].a = areas[stk[0]].a;
                                                         areas[i].d = areas[j].d;
                                                         areas[j].flags = W_FL_DELETED;
@@ -4881,9 +4881,9 @@ void AreaAutoMerge()
                             // x<=y so expand in the x direction
                             for(j = 0; j <= num_areas; j++) {
                                 if(!(areas[j].flags & W_FL_DELETED) && i != j) {
-                                    if(((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 &&
-                                           (areas[j].flags & A_FL_3) == A_FL_3 &&
-                                           (areas[j].flags & A_FL_4) == A_FL_4)) {
+                                    if((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 &&
+	                                    (areas[j].flags & A_FL_3) == A_FL_3 &&
+	                                    (areas[j].flags & A_FL_4) == A_FL_4) {
                                         if(!a || !b) {
                                             if(areas[j].a == areas[i].d && areas[j].b == areas[i].c) {
                                                 areas[i].d = areas[j].d;
@@ -4896,23 +4896,23 @@ void AreaAutoMerge()
                                             else {
                                                 // start
                                                 if(stk_cnt == 0 && areas[j].a == areas[i].d &&
-                                                    (areas[j].b.y < areas[i].c.y)) {
+                                                    areas[j].b.y < areas[i].c.y) {
                                                     stk[stk_cnt] = j;
                                                     stk_cnt++;
                                                     j = -1;
                                                 } else if(stk_cnt != 0) {
                                                     // middle
-                                                    if(stk_cnt < stk_sz && (areas[j].b.y < areas[i].c.y) &&
-                                                        (areas[j].a == areas[stk[stk_cnt - 1]].b) &&
-                                                        (areas[j].d == areas[stk[stk_cnt - 1]].c)) {
+                                                    if(stk_cnt < stk_sz && areas[j].b.y < areas[i].c.y &&
+                                                        areas[j].a == areas[stk[stk_cnt - 1]].b &&
+                                                        areas[j].d == areas[stk[stk_cnt - 1]].c) {
                                                         stk[stk_cnt] = j;
                                                         stk_cnt++;
                                                         j = -1;
                                                     }
                                                     // end
                                                     if(areas[j].b == areas[i].c &&
-                                                        (areas[j].a == areas[stk[stk_cnt - 1]].b) &&
-                                                        (areas[j].d == areas[stk[stk_cnt - 1]].c)) {
+                                                        areas[j].a == areas[stk[stk_cnt - 1]].b &&
+                                                        areas[j].d == areas[stk[stk_cnt - 1]].c) {
                                                         areas[i].d = areas[stk[0]].d;
                                                         areas[i].c = areas[j].c;
                                                         areas[j].flags = W_FL_DELETED;
@@ -4937,23 +4937,23 @@ void AreaAutoMerge()
                                             else {
                                                 // start
                                                 if(stk_cnt == 0 && areas[j].d == areas[i].a &&
-                                                    (areas[j].c.y < areas[i].b.y)) {
+                                                    areas[j].c.y < areas[i].b.y) {
                                                     stk[stk_cnt] = j;
                                                     stk_cnt++;
                                                     j = -1;
                                                 } else if(stk_cnt != 0) {
                                                     // middle
-                                                    if(stk_cnt < stk_sz && (areas[j].c.y < areas[i].b.y) &&
-                                                        (areas[j].a == areas[stk[stk_cnt - 1]].b) &&
-                                                        (areas[j].d == areas[stk[stk_cnt - 1]].c)) {
+                                                    if(stk_cnt < stk_sz && areas[j].c.y < areas[i].b.y &&
+                                                        areas[j].a == areas[stk[stk_cnt - 1]].b &&
+                                                        areas[j].d == areas[stk[stk_cnt - 1]].c) {
                                                         stk[stk_cnt] = j;
                                                         stk_cnt++;
                                                         j = -1;
                                                     }
                                                     // end
                                                     if(areas[j].c == areas[i].b &&
-                                                        (areas[j].a == areas[stk[stk_cnt - 1]].b) &&
-                                                        (areas[j].d == areas[stk[stk_cnt - 1]].c)) {
+                                                        areas[j].a == areas[stk[stk_cnt - 1]].b &&
+                                                        areas[j].d == areas[stk[stk_cnt - 1]].c) {
                                                         areas[i].a = areas[stk[0]].a;
                                                         areas[i].b = areas[j].b;
                                                         areas[j].flags = W_FL_DELETED;
@@ -4980,16 +4980,16 @@ void AreaAutoMerge()
     // clear the remaining shit up!!
     for(i = 0; i <= num_areas; i++) {
         if(!(areas[i].flags & W_FL_DELETED)) {
-            if(((areas[i].flags & A_FL_1) == A_FL_1 && (areas[i].flags & A_FL_2) == A_FL_2 &&
-                   (areas[i].flags & A_FL_3) == A_FL_3 && (areas[i].flags & A_FL_4) == A_FL_4)) {
+            if((areas[i].flags & A_FL_1) == A_FL_1 && (areas[i].flags & A_FL_2) == A_FL_2 &&
+	            (areas[i].flags & A_FL_3) == A_FL_3 && (areas[i].flags & A_FL_4) == A_FL_4) {
                 a = FALSE;
                 b = FALSE;
                 c = FALSE;
                 d = FALSE;
                 for(j = 0; j <= num_areas; j++) {
                     if(!(areas[j].flags & W_FL_DELETED) && i != j) {
-                        if(((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 &&
-                               (areas[j].flags & A_FL_3) == A_FL_3 && (areas[j].flags & A_FL_4) == A_FL_4)) {
+                        if((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 &&
+	                        (areas[j].flags & A_FL_3) == A_FL_3 && (areas[j].flags & A_FL_4) == A_FL_4) {
                             if(areas[j].a == areas[i].a || areas[j].b == areas[i].a || areas[j].c == areas[i].a ||
                                 areas[j].d == areas[i].a)
                                 a = TRUE;
@@ -5007,21 +5007,21 @@ void AreaAutoMerge()
                 }
 
                 // corner areas will have 1 bool (out of a-c) false only
-                if((!a && b && c && d) || (a && !b && c && d) || (a && b && !c && d) || (a && b && c && !d) ||
-                    (!a && !b && c && d) || (a && b && !c && !d) || (a && !b && !c && d) || (!a && b && c && !d)) {
+                if(!a && b && c && d || a && !b && c && d || a && b && !c && d || a && b && c && !d ||
+                    !a && !b && c && d || a && b && !c && !d || a && !b && !c && d || !a && b && c && !d) {
                     // Vector aa,bb;
                     // now find all the areas we can merge this one with
                     bool merged = TRUE;
                     while(merged) {
                         stk_cnt = 0;
                         merged = FALSE;
-                        if((areas[i].d.x - areas[i].a.x) > (areas[i].b.y - areas[i].a.y)) {
+                        if(areas[i].d.x - areas[i].a.x > areas[i].b.y - areas[i].a.y) {
                             // x>y so expand in the y direction
                             for(j = 0; j <= num_areas; j++) {
                                 if(!(areas[j].flags & W_FL_DELETED) && i != j) {
-                                    if(((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 &&
-                                           (areas[j].flags & A_FL_3) == A_FL_3 &&
-                                           (areas[j].flags & A_FL_4) == A_FL_4)) {
+                                    if((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 &&
+	                                    (areas[j].flags & A_FL_3) == A_FL_3 &&
+	                                    (areas[j].flags & A_FL_4) == A_FL_4) {
                                         if(!a || !d) {
                                             if(areas[j].a == areas[i].b && areas[j].d == areas[i].c) {
                                                 areas[i].b = areas[j].b;
@@ -5034,23 +5034,23 @@ void AreaAutoMerge()
                                             else {
                                                 // start
                                                 if(stk_cnt == 0 && areas[j].a == areas[i].b &&
-                                                    (areas[j].d.x < areas[i].c.x)) {
+                                                    areas[j].d.x < areas[i].c.x) {
                                                     stk[stk_cnt] = j;
                                                     stk_cnt++;
                                                     j = -1;
                                                 } else if(stk_cnt != 0) {
                                                     // middle
-                                                    if(stk_cnt < stk_sz && (areas[j].d.x < areas[i].c.x) &&
-                                                        (areas[j].a == areas[stk[stk_cnt - 1]].d) &&
-                                                        (areas[j].b == areas[stk[stk_cnt - 1]].c)) {
+                                                    if(stk_cnt < stk_sz && areas[j].d.x < areas[i].c.x &&
+                                                        areas[j].a == areas[stk[stk_cnt - 1]].d &&
+                                                        areas[j].b == areas[stk[stk_cnt - 1]].c) {
                                                         stk[stk_cnt] = j;
                                                         stk_cnt++;
                                                         j = -1;
                                                     }
                                                     // end
                                                     if(areas[j].d == areas[i].c &&
-                                                        (areas[j].a == areas[stk[stk_cnt - 1]].d) &&
-                                                        (areas[j].b == areas[stk[stk_cnt - 1]].c)) {
+                                                        areas[j].a == areas[stk[stk_cnt - 1]].d &&
+                                                        areas[j].b == areas[stk[stk_cnt - 1]].c) {
                                                         areas[i].b = areas[stk[0]].b;
                                                         areas[i].c = areas[j].c;
                                                         areas[j].flags = W_FL_DELETED;
@@ -5075,23 +5075,23 @@ void AreaAutoMerge()
                                             else {
                                                 // start
                                                 if(stk_cnt == 0 && areas[j].b == areas[i].a &&
-                                                    (areas[j].c.x < areas[i].d.x)) {
+                                                    areas[j].c.x < areas[i].d.x) {
                                                     stk[stk_cnt] = j;
                                                     stk_cnt++;
                                                     j = -1;
                                                 } else if(stk_cnt != 0) {
                                                     // middle
-                                                    if(stk_cnt < stk_sz && (areas[j].c.x < areas[i].d.x) &&
-                                                        (areas[j].a == areas[stk[stk_cnt - 1]].d) &&
-                                                        (areas[j].b == areas[stk[stk_cnt - 1]].c)) {
+                                                    if(stk_cnt < stk_sz && areas[j].c.x < areas[i].d.x &&
+                                                        areas[j].a == areas[stk[stk_cnt - 1]].d &&
+                                                        areas[j].b == areas[stk[stk_cnt - 1]].c) {
                                                         stk[stk_cnt] = j;
                                                         stk_cnt++;
                                                         j = -1;
                                                     }
                                                     // end
                                                     if(areas[j].c == areas[i].d &&
-                                                        (areas[j].a == areas[stk[stk_cnt - 1]].d) &&
-                                                        (areas[j].b == areas[stk[stk_cnt - 1]].c)) {
+                                                        areas[j].a == areas[stk[stk_cnt - 1]].d &&
+                                                        areas[j].b == areas[stk[stk_cnt - 1]].c) {
                                                         areas[i].a = areas[stk[0]].a;
                                                         areas[i].d = areas[j].d;
                                                         areas[j].flags = W_FL_DELETED;
@@ -5111,9 +5111,9 @@ void AreaAutoMerge()
                             // x<=y so expand in the x direction
                             for(j = 0; j <= num_areas; j++) {
                                 if(!(areas[j].flags & W_FL_DELETED) && i != j) {
-                                    if(((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 &&
-                                           (areas[j].flags & A_FL_3) == A_FL_3 &&
-                                           (areas[j].flags & A_FL_4) == A_FL_4)) {
+                                    if((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 &&
+	                                    (areas[j].flags & A_FL_3) == A_FL_3 &&
+	                                    (areas[j].flags & A_FL_4) == A_FL_4) {
                                         if(!a || !b) {
                                             if(areas[j].a == areas[i].d && areas[j].b == areas[i].c) {
                                                 areas[i].d = areas[j].d;
@@ -5126,23 +5126,23 @@ void AreaAutoMerge()
                                             else {
                                                 // start
                                                 if(stk_cnt == 0 && areas[j].a == areas[i].d &&
-                                                    (areas[j].b.y < areas[i].c.y)) {
+                                                    areas[j].b.y < areas[i].c.y) {
                                                     stk[stk_cnt] = j;
                                                     stk_cnt++;
                                                     j = -1;
                                                 } else if(stk_cnt != 0) {
                                                     // middle
-                                                    if(stk_cnt < stk_sz && (areas[j].b.y < areas[i].c.y) &&
-                                                        (areas[j].a == areas[stk[stk_cnt - 1]].b) &&
-                                                        (areas[j].d == areas[stk[stk_cnt - 1]].c)) {
+                                                    if(stk_cnt < stk_sz && areas[j].b.y < areas[i].c.y &&
+                                                        areas[j].a == areas[stk[stk_cnt - 1]].b &&
+                                                        areas[j].d == areas[stk[stk_cnt - 1]].c) {
                                                         stk[stk_cnt] = j;
                                                         stk_cnt++;
                                                         j = -1;
                                                     }
                                                     // end
                                                     if(areas[j].b == areas[i].c &&
-                                                        (areas[j].a == areas[stk[stk_cnt - 1]].b) &&
-                                                        (areas[j].d == areas[stk[stk_cnt - 1]].c)) {
+                                                        areas[j].a == areas[stk[stk_cnt - 1]].b &&
+                                                        areas[j].d == areas[stk[stk_cnt - 1]].c) {
                                                         areas[i].d = areas[stk[0]].d;
                                                         areas[i].c = areas[j].c;
                                                         areas[j].flags = W_FL_DELETED;
@@ -5167,23 +5167,23 @@ void AreaAutoMerge()
                                             else {
                                                 // start
                                                 if(stk_cnt == 0 && areas[j].d == areas[i].a &&
-                                                    (areas[j].c.y < areas[i].b.y)) {
+                                                    areas[j].c.y < areas[i].b.y) {
                                                     stk[stk_cnt] = j;
                                                     stk_cnt++;
                                                     j = -1;
                                                 } else if(stk_cnt != 0) {
                                                     // middle
-                                                    if(stk_cnt < stk_sz && (areas[j].c.y < areas[i].b.y) &&
-                                                        (areas[j].a == areas[stk[stk_cnt - 1]].b) &&
-                                                        (areas[j].d == areas[stk[stk_cnt - 1]].c)) {
+                                                    if(stk_cnt < stk_sz && areas[j].c.y < areas[i].b.y &&
+                                                        areas[j].a == areas[stk[stk_cnt - 1]].b &&
+                                                        areas[j].d == areas[stk[stk_cnt - 1]].c) {
                                                         stk[stk_cnt] = j;
                                                         stk_cnt++;
                                                         j = -1;
                                                     }
                                                     // end
                                                     if(areas[j].c == areas[i].b &&
-                                                        (areas[j].a == areas[stk[stk_cnt - 1]].b) &&
-                                                        (areas[j].d == areas[stk[stk_cnt - 1]].c)) {
+                                                        areas[j].a == areas[stk[stk_cnt - 1]].b &&
+                                                        areas[j].d == areas[stk[stk_cnt - 1]].c) {
                                                         areas[i].a = areas[stk[0]].a;
                                                         areas[i].b = areas[j].b;
                                                         areas[j].flags = W_FL_DELETED;
@@ -5209,8 +5209,8 @@ void AreaAutoMerge()
     // and the final lot?
     for(i = 0; i <= num_areas; i++) {
         if(!(areas[i].flags & W_FL_DELETED)) {
-            if(((areas[i].flags & A_FL_1) == A_FL_1 && (areas[i].flags & A_FL_2) == A_FL_2 &&
-                   (areas[i].flags & A_FL_3) == A_FL_3 && (areas[i].flags & A_FL_4) == A_FL_4)) {
+            if((areas[i].flags & A_FL_1) == A_FL_1 && (areas[i].flags & A_FL_2) == A_FL_2 &&
+	            (areas[i].flags & A_FL_3) == A_FL_3 && (areas[i].flags & A_FL_4) == A_FL_4) {
                 a = FALSE;
                 b = FALSE;
                 c = FALSE;
@@ -5226,8 +5226,8 @@ void AreaAutoMerge()
                         // x>y so expand in the y direction
                         for(j = 0; j <= num_areas; j++) {
                             if(!(areas[j].flags & W_FL_DELETED) && i != j) {
-                                if(((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 &&
-                                       (areas[j].flags & A_FL_3) == A_FL_3 && (areas[j].flags & A_FL_4) == A_FL_4)) {
+                                if((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 &&
+	                                (areas[j].flags & A_FL_3) == A_FL_3 && (areas[j].flags & A_FL_4) == A_FL_4) {
                                     if(!a || !d) {
                                         if(areas[j].a == areas[i].b && areas[j].d == areas[i].c) {
                                             areas[i].b = areas[j].b;
@@ -5240,23 +5240,23 @@ void AreaAutoMerge()
                                         else {
                                             // start
                                             if(stk_cnt == 0 && areas[j].a == areas[i].b &&
-                                                (areas[j].d.x < areas[i].c.x)) {
+                                                areas[j].d.x < areas[i].c.x) {
                                                 stk[stk_cnt] = j;
                                                 stk_cnt++;
                                                 j = -1;
                                             } else if(stk_cnt != 0) {
                                                 // middle
-                                                if(stk_cnt < stk_sz && (areas[j].d.x < areas[i].c.x) &&
-                                                    (areas[j].a == areas[stk[stk_cnt - 1]].d) &&
-                                                    (areas[j].b == areas[stk[stk_cnt - 1]].c)) {
+                                                if(stk_cnt < stk_sz && areas[j].d.x < areas[i].c.x &&
+                                                    areas[j].a == areas[stk[stk_cnt - 1]].d &&
+                                                    areas[j].b == areas[stk[stk_cnt - 1]].c) {
                                                     stk[stk_cnt] = j;
                                                     stk_cnt++;
                                                     j = -1;
                                                 }
                                                 // end
                                                 if(areas[j].d == areas[i].c &&
-                                                    (areas[j].a == areas[stk[stk_cnt - 1]].d) &&
-                                                    (areas[j].b == areas[stk[stk_cnt - 1]].c)) {
+                                                    areas[j].a == areas[stk[stk_cnt - 1]].d &&
+                                                    areas[j].b == areas[stk[stk_cnt - 1]].c) {
                                                     areas[i].b = areas[stk[0]].b;
                                                     areas[i].c = areas[j].c;
                                                     areas[j].flags = W_FL_DELETED;
@@ -5281,23 +5281,23 @@ void AreaAutoMerge()
                                         else {
                                             // start
                                             if(stk_cnt == 0 && areas[j].b == areas[i].a &&
-                                                (areas[j].c.x < areas[i].d.x)) {
+                                                areas[j].c.x < areas[i].d.x) {
                                                 stk[stk_cnt] = j;
                                                 stk_cnt++;
                                                 j = -1;
                                             } else if(stk_cnt != 0) {
                                                 // middle
-                                                if(stk_cnt < stk_sz && (areas[j].c.x < areas[i].d.x) &&
-                                                    (areas[j].a == areas[stk[stk_cnt - 1]].d) &&
-                                                    (areas[j].b == areas[stk[stk_cnt - 1]].c)) {
+                                                if(stk_cnt < stk_sz && areas[j].c.x < areas[i].d.x &&
+                                                    areas[j].a == areas[stk[stk_cnt - 1]].d &&
+                                                    areas[j].b == areas[stk[stk_cnt - 1]].c) {
                                                     stk[stk_cnt] = j;
                                                     stk_cnt++;
                                                     j = -1;
                                                 }
                                                 // end
                                                 if(areas[j].c == areas[i].d &&
-                                                    (areas[j].a == areas[stk[stk_cnt - 1]].d) &&
-                                                    (areas[j].b == areas[stk[stk_cnt - 1]].c)) {
+                                                    areas[j].a == areas[stk[stk_cnt - 1]].d &&
+                                                    areas[j].b == areas[stk[stk_cnt - 1]].c) {
                                                     areas[i].a = areas[stk[0]].a;
                                                     areas[i].d = areas[j].d;
                                                     areas[j].flags = W_FL_DELETED;
@@ -5316,8 +5316,8 @@ void AreaAutoMerge()
                         // x<=y so expand in the x direction
                         for(j = 0; j <= num_areas; j++) {
                             if(!(areas[j].flags & W_FL_DELETED) && i != j) {
-                                if(((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 &&
-                                       (areas[j].flags & A_FL_3) == A_FL_3 && (areas[j].flags & A_FL_4) == A_FL_4)) {
+                                if((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 &&
+	                                (areas[j].flags & A_FL_3) == A_FL_3 && (areas[j].flags & A_FL_4) == A_FL_4) {
                                     if(!a || !b) {
                                         if(areas[j].a == areas[i].d && areas[j].b == areas[i].c) {
                                             areas[i].d = areas[j].d;
@@ -5330,23 +5330,23 @@ void AreaAutoMerge()
                                         else {
                                             // start
                                             if(stk_cnt == 0 && areas[j].a == areas[i].d &&
-                                                (areas[j].b.y < areas[i].c.y)) {
+                                                areas[j].b.y < areas[i].c.y) {
                                                 stk[stk_cnt] = j;
                                                 stk_cnt++;
                                                 j = -1;
                                             } else if(stk_cnt != 0) {
                                                 // middle
-                                                if(stk_cnt < stk_sz && (areas[j].b.y < areas[i].c.y) &&
-                                                    (areas[j].a == areas[stk[stk_cnt - 1]].b) &&
-                                                    (areas[j].d == areas[stk[stk_cnt - 1]].c)) {
+                                                if(stk_cnt < stk_sz && areas[j].b.y < areas[i].c.y &&
+                                                    areas[j].a == areas[stk[stk_cnt - 1]].b &&
+                                                    areas[j].d == areas[stk[stk_cnt - 1]].c) {
                                                     stk[stk_cnt] = j;
                                                     stk_cnt++;
                                                     j = -1;
                                                 }
                                                 // end
                                                 if(areas[j].b == areas[i].c &&
-                                                    (areas[j].a == areas[stk[stk_cnt - 1]].b) &&
-                                                    (areas[j].d == areas[stk[stk_cnt - 1]].c)) {
+                                                    areas[j].a == areas[stk[stk_cnt - 1]].b &&
+                                                    areas[j].d == areas[stk[stk_cnt - 1]].c) {
                                                     areas[i].d = areas[stk[0]].d;
                                                     areas[i].c = areas[j].c;
                                                     areas[j].flags = W_FL_DELETED;
@@ -5371,23 +5371,23 @@ void AreaAutoMerge()
                                         else {
                                             // start
                                             if(stk_cnt == 0 && areas[j].d == areas[i].a &&
-                                                (areas[j].c.y < areas[i].b.y)) {
+                                                areas[j].c.y < areas[i].b.y) {
                                                 stk[stk_cnt] = j;
                                                 stk_cnt++;
                                                 j = -1;
                                             } else if(stk_cnt != 0) {
                                                 // middle
-                                                if(stk_cnt < stk_sz && (areas[j].c.y < areas[i].b.y) &&
-                                                    (areas[j].a == areas[stk[stk_cnt - 1]].b) &&
-                                                    (areas[j].d == areas[stk[stk_cnt - 1]].c)) {
+                                                if(stk_cnt < stk_sz && areas[j].c.y < areas[i].b.y &&
+                                                    areas[j].a == areas[stk[stk_cnt - 1]].b &&
+                                                    areas[j].d == areas[stk[stk_cnt - 1]].c) {
                                                     stk[stk_cnt] = j;
                                                     stk_cnt++;
                                                     j = -1;
                                                 }
                                                 // end
                                                 if(areas[j].c == areas[i].b &&
-                                                    (areas[j].a == areas[stk[stk_cnt - 1]].b) &&
-                                                    (areas[j].d == areas[stk[stk_cnt - 1]].c)) {
+                                                    areas[j].a == areas[stk[stk_cnt - 1]].b &&
+                                                    areas[j].d == areas[stk[stk_cnt - 1]].c) {
                                                     areas[i].a = areas[stk[0]].a;
                                                     areas[i].b = areas[j].b;
                                                     areas[j].flags = W_FL_DELETED;
@@ -5418,15 +5418,15 @@ void AreaAutoMerge()
     // c)same direction as first ones found
     for(i = 0; i <= num_areas; i++) {
         if(!(areas[i].flags & W_FL_DELETED)) {
-            if(((areas[i].flags & A_FL_1) == A_FL_1 && (areas[i].flags & A_FL_2) == A_FL_2 &&
-                   (areas[i].flags & A_FL_3) == A_FL_3 && (areas[i].flags & A_FL_4) == A_FL_4)) {
+            if((areas[i].flags & A_FL_1) == A_FL_1 && (areas[i].flags & A_FL_2) == A_FL_2 &&
+	            (areas[i].flags & A_FL_3) == A_FL_3 && (areas[i].flags & A_FL_4) == A_FL_4) {
                 float sx, sy;
                 sx = areas[i].d.x - areas[i].a.x;
                 sy = areas[i].b.y - areas[i].a.y;
                 for(j = 0; j <= num_areas; j++) {
                     if(!(areas[j].flags & W_FL_DELETED) && i != j) {
-                        if(((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 &&
-                               (areas[j].flags & A_FL_3) == A_FL_3 && (areas[j].flags & A_FL_4) == A_FL_4)) {
+                        if((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 &&
+	                        (areas[j].flags & A_FL_3) == A_FL_3 && (areas[j].flags & A_FL_4) == A_FL_4) {
                             // find neighbours to i
                             float z;
 
@@ -5451,10 +5451,10 @@ void AreaAutoMerge()
                                     // and same size
                                     for(k = 0; k <= num_areas; k++) {
                                         if(!(areas[k].flags & W_FL_DELETED) && j != k && i != k) {
-                                            if(((areas[k].flags & A_FL_1) == A_FL_1 &&
-                                                   (areas[k].flags & A_FL_2) == A_FL_2 &&
-                                                   (areas[k].flags & A_FL_3) == A_FL_3 &&
-                                                   (areas[k].flags & A_FL_4) == A_FL_4)) {
+                                            if((areas[k].flags & A_FL_1) == A_FL_1 &&
+	                                            (areas[k].flags & A_FL_2) == A_FL_2 &&
+	                                            (areas[k].flags & A_FL_3) == A_FL_3 &&
+	                                            (areas[k].flags & A_FL_4) == A_FL_4) {
                                                 float zz;
                                                 zz = areas[k].a.z - areas[i].d.z;
                                                 if(areas[k].b.z - areas[i].c.z != zz)
@@ -5523,10 +5523,10 @@ void AreaAutoMerge()
                                     // and same size
                                     for(k = 0; k <= num_areas; k++) {
                                         if(!(areas[k].flags & W_FL_DELETED) && j != k && i != k) {
-                                            if(((areas[k].flags & A_FL_1) == A_FL_1 &&
-                                                   (areas[k].flags & A_FL_2) == A_FL_2 &&
-                                                   (areas[k].flags & A_FL_3) == A_FL_3 &&
-                                                   (areas[k].flags & A_FL_4) == A_FL_4)) {
+                                            if((areas[k].flags & A_FL_1) == A_FL_1 &&
+	                                            (areas[k].flags & A_FL_2) == A_FL_2 &&
+	                                            (areas[k].flags & A_FL_3) == A_FL_3 &&
+	                                            (areas[k].flags & A_FL_4) == A_FL_4) {
                                                 float zz;
                                                 zz = areas[k].a.z - areas[i].d.z;
                                                 if(areas[k].b.z - areas[i].c.z != zz)

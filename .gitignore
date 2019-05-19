@@ -144,3 +144,12 @@ foxbot_mm.so
 Release/foxbot_mm.dll
 Release/FoXBot.log
 Release/foxbot.Build.CppClean.log
+*.so
+*.log
+.vs/FoXBot/v16/Browse.VC.opendb
+.vs/FoXBot/v16/Browse.VC.db
+.vs/FoXBot/v16/.suo
+.vs/FoXBot/v15/Browse.VC.db
+.vs/FoXBot/v15/.suo
+foxbot_mm.so
+*.log

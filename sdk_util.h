@@ -65,7 +65,7 @@
 inline char* ENTITY_KEYVALUE(edict_t* entity, char* key)
 {
     char* ifbuf = GET_INFOKEYBUFFER(entity);
-    return (INFOKEY_VALUE(ifbuf, key));
+    return INFOKEY_VALUE(ifbuf, key);
 }
 
 // Set a setinfo value for a player entity.
@@ -79,7 +79,7 @@ inline void ENTITY_SET_KEYVALUE(edict_t* entity, char* key, char* value)
 inline char* SERVERINFO(char* key)
 {
     edict_t* server = INDEXENT(0);
-    return (ENTITY_KEYVALUE(server, key));
+    return ENTITY_KEYVALUE(server, key);
 }
 
 // Set a "serverinfo" value.
@@ -94,7 +94,7 @@ inline void SET_SERVERINFO(char* key, char* value)
 inline char* LOCALINFO(char* key)
 {
     edict_t* server = NULL;
-    return (ENTITY_KEYVALUE(server, key));
+    return ENTITY_KEYVALUE(server, key);
 }
 
 // Set a "localinfo" value.

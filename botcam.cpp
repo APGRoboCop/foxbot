@@ -65,7 +65,7 @@ void KillCamera(edict_t* pPlayer)
     if(pPlayer != NULL) {
         edict_t* pCCamera;
         pCCamera = NULL;
-        while((pCCamera = FIND_ENTITY_BY_CLASSNAME(pCCamera, "entity_botcam")) != NULL && (!FNullEnt(pCCamera))) {
+        while((pCCamera = FIND_ENTITY_BY_CLASSNAME(pCCamera, "entity_botcam")) != NULL && !FNullEnt(pCCamera)) {
             if(pCCamera->v.owner == pPlayer)
                 pCCamera->v.flags |= FL_KILLME;
         }

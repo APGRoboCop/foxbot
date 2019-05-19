@@ -80,7 +80,7 @@ int _RTLENTRY _EXPFUNC _matherr(struct _exception* except_ptr)
 // smaller spread of numbers.
 long random_long(const long lowval, const long highval)
 {
-    const long spread = (highval - lowval) + 1;
+    const long spread = highval - lowval + 1;
 
     // make sure a sensible number was requested
     if(spread < 2) {
@@ -90,7 +90,7 @@ long random_long(const long lowval, const long highval)
 
     lseed = (lseed * 1103515245 + 12345) % 2147483647;
 
-    return ((lseed / 3) % spread) + lowval;
+    return lseed / 3 % spread + lowval;
 }
 
 //	This is a float version of rand().
@@ -103,7 +103,7 @@ float random_float(const float lowval, const float highval)
 
     lseed = (lseed * 1103515245 + 12345) % 2147483647;
 
-    return (lowval + (float)lseed / ((float)LONG_MAX / (highval - lowval)));
+    return lowval + (float)lseed / ((float)LONG_MAX / (highval - lowval));
 }
 
 // This function is a quick simple way of testing the distance between two
@@ -115,14 +115,14 @@ bool VectorsNearerThan(const Vector& r_vOne, const Vector& r_vTwo, double value)
     value = value * value;
 
     Vector distance = r_vOne - r_vTwo;
-    double temp = (distance.x * distance.x) + (distance.y * distance.y);
+    double temp = distance.x * distance.x + distance.y * distance.y;
 
     // perform an early 2 dimensional check, because most maps
     // are wider/longer than they are tall
     if(temp > value)
         return FALSE;
     else
-        temp += (distance.z * distance.z);
+        temp += distance.z * distance.z;
 
     // final check(3 dimensional)
     if(temp < value)
@@ -172,7 +172,7 @@ void UTIL_TraceLine(const Vector& vecStart,
     edict_t* pentIgnore,
     TraceResult* ptr)
 {
-    TRACE_LINE(vecStart, vecEnd, (igmon == ignore_monsters ? TRUE : FALSE), pentIgnore, ptr);
+    TRACE_LINE(vecStart, vecEnd, igmon == ignore_monsters ? TRUE : FALSE, pentIgnore, ptr);
 }
 
 void UTIL_MakeVectors(const Vector& vecAngles)
@@ -296,11 +296,11 @@ void UTIL_HostSay(edict_t* pEntity, const int teamonly, char* message)
     int sender_team = UTIL_GetTeam(pEntity);
 
     edict_t* client = NULL;
-    while(((client = UTIL_FindEntityByClassname(client, "player")) != NULL) && (!FNullEnt(client))) {
+    while((client = UTIL_FindEntityByClassname(client, "player")) != NULL && !FNullEnt(client)) {
         if(client == pEntity) // skip sender of message
             continue;
 
-        if(teamonly && (sender_team != UTIL_GetTeam(client)))
+        if(teamonly && sender_team != UTIL_GetTeam(client))
             continue;
 
         MESSAGE_BEGIN(MSG_ONE, gmsgSayText, NULL, client);
@@ -320,7 +320,7 @@ void UTIL_HostSay(edict_t* pEntity, const int teamonly, char* message)
     MESSAGE_END();
 
     if(IS_DEDICATED_SERVER())
-        printf(text); // print bot message on dedicated server
+        printf("%s", text); // print bot message on dedicated server
 }
 
 #ifdef DEBUG
@@ -349,7 +349,7 @@ int UTIL_GetTeamColor(edict_t* pEntity)
         char topcolor[32];
 
         infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
-        strcpy(topcolor, (g_engfuncs.pfnInfoKeyValue(infobuffer, "topcolor")));
+        strcpy(topcolor, g_engfuncs.pfnInfoKeyValue(infobuffer, "topcolor"));
 
         // used for spy checking
         if(strcmp(topcolor, "150") == 0 || strcmp(topcolor, "153") == 0 || strcmp(topcolor, "148") == 0 ||
@@ -379,7 +379,7 @@ int UTIL_GetTeam(edict_t* pEntity)
     if(mod_id == TFC_DLL) {
         // Check if this entity is a player and return the team number
         // of that player
-        if((pEntity->v.team - 1) > -1)
+        if(pEntity->v.team - 1 > -1)
             return pEntity->v.team - 1; // TFC teams are 0-3 based
 
         // the team number was invalid, check if this entity is a
@@ -467,7 +467,7 @@ int UTIL_GetClass(edict_t* pEntity)
     char model_name[32];
 
     infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
-    strcpy(model_name, (g_engfuncs.pfnInfoKeyValue(infobuffer, "model")));
+    strcpy(model_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "model"));
 
     return 0;
 }
@@ -487,7 +487,7 @@ bot_t* UTIL_GetBotPointer(edict_t* pEdict)
 {
     for(int index = 0; index < 32; index++) {
         if(bots[index].pEdict == pEdict)
-            return (&bots[index]);
+            return &bots[index];
     }
 
     return NULL; // return NULL if edict is not a bot
@@ -495,8 +495,8 @@ bot_t* UTIL_GetBotPointer(edict_t* pEdict)
 
 bool IsAlive(edict_t* pEdict)
 {
-    return (pEdict->v.deadflag == DEAD_NO && pEdict->v.health > 0 && !(pEdict->v.flags & FL_NOTARGET) &&
-        pEdict->v.movetype != MOVETYPE_NOCLIP);
+    return pEdict->v.deadflag == DEAD_NO && pEdict->v.health > 0 && !(pEdict->v.flags & FL_NOTARGET) &&
+	    pEdict->v.movetype != MOVETYPE_NOCLIP;
 }
 
 // Returns true if the specified entity can see the specified vector in
@@ -580,8 +580,8 @@ bool FVisible(const Vector& r_vecOrigin, edict_t* pEdict)
     // look through caller's eyes
     Vector vecLookerOrigin = pEdict->v.origin + pEdict->v.view_ofs;
 
-    int bInWater = (UTIL_PointContents(r_vecOrigin) == CONTENTS_WATER);
-    int bLookerInWater = (UTIL_PointContents(vecLookerOrigin) == CONTENTS_WATER);
+    int bInWater = UTIL_PointContents(r_vecOrigin) == CONTENTS_WATER;
+    int bLookerInWater = UTIL_PointContents(vecLookerOrigin) == CONTENTS_WATER;
 
     // don't look through surface of water
     if(bInWater != bLookerInWater)
@@ -600,7 +600,7 @@ bool FVisible(const Vector& r_vecOrigin, edict_t* pEdict)
 
 Vector GetGunPosition(const edict_t* pEdict)
 {
-    return (pEdict->v.origin + pEdict->v.view_ofs);
+    return pEdict->v.origin + pEdict->v.view_ofs;
 }
 
 void UTIL_SelectItem(edict_t* pEdict, char* item_name)
@@ -612,7 +612,7 @@ void UTIL_SelectItem(edict_t* pEdict, char* item_name)
 // Some entities have a Vector of (0, 0, 0), so you need this function.
 Vector VecBModelOrigin(edict_t* pEdict)
 {
-    return pEdict->v.absmin + (pEdict->v.size * 0.5);
+    return pEdict->v.absmin + pEdict->v.size * 0.5;
 }
 
 // This function checks if footstep sounds are on and if the indicated player
@@ -741,7 +741,7 @@ void UTIL_BuildFileName(char* filename, const int max_fn_length, char* arg1, cha
         return;
 
     // add on the directory and or filename
-    if((arg1) && (*arg1) && (arg2) && (*arg2)) {
+    if(arg1 && *arg1 && arg2 && *arg2) {
         strcat(filename, arg1);
 
 #ifndef __linux__
@@ -751,7 +751,7 @@ void UTIL_BuildFileName(char* filename, const int max_fn_length, char* arg1, cha
 #endif
 
         strcat(filename, arg2);
-    } else if((arg1) && (*arg1)) {
+    } else if(arg1 && *arg1) {
         strcat(filename, arg1);
     }
 

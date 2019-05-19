@@ -8,7 +8,7 @@ August-07-2018
 Updated by RoboCop
 --------------------------------------------------------------------------------
 
-- Removed unwanted tchar.h dependancies that are no longer required - Thanks to Globoss
+- Removed unwanted tchar.h dependencies that are no longer required - Thanks to Globoss
 
 - Linux build should now work for Assault and Capture Point maps due to syntax error fixed - Thanks to Globoss
 
@@ -47,6 +47,8 @@ Updated by RoboCop
 - Added new waypoints for bases2k3, momentum_l, mortality_l and hellion
 
 Known bugs:-  
+
+>> '[META] WARNING: Plugin didn't set meta_result: foxbot_mm.so:engClientCommand()' still appears to occur
 
 >> botdontmove, bot_chat, bot_bot_balance and bot_team_balance cvars may not be 100% operational
 

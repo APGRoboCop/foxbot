@@ -338,7 +338,7 @@ static void RefreshJobBuffer(bot_t* pBot)
 
     // make sure the job you're checking is not the current job
     if(checkJob == pBot->currentJob) {
-        for(i = 0; i < (JOB_BUFFER_MAX - 1); i++) {
+        for(i = 0; i < JOB_BUFFER_MAX - 1; i++) {
             ++checkJob;
             if(checkJob >= JOB_BUFFER_MAX)
                 checkJob = 0;
@@ -398,7 +398,7 @@ void BotRunJobs(bot_t* pBot)
     // abort if no jobs were found in the buffer
     if(pBot->jobType[pBot->currentJob] == JOB_NONE) {
         // if the buffer is completely empty, add JOB_ROAM as a backup
-        if((pBot->f_killed_time + 3.0) < pBot->f_think_time) {
+        if(pBot->f_killed_time + 3.0 < pBot->f_think_time) {
             job_struct* newJob = InitialiseNewJob(pBot, JOB_ROAM);
             if(newJob != NULL)
                 SubmitNewJob(pBot, JOB_ROAM, newJob);
@@ -467,8 +467,8 @@ void BotJobThink(bot_t* pBot)
 
     // need armor(e.g. just spawned)?
     if(PlayerArmorPercent(pBot->pEdict) < pBot->trait.health ||
-        ((pBot->f_killed_time + 3.1) > pBot->f_think_time && pBot->f_periodicAlert3 < pBot->f_think_time &&
-            random_float(1, 1000) > 600)) {
+        pBot->f_killed_time + 3.1 > pBot->f_think_time && pBot->f_periodicAlert3 < pBot->f_think_time &&
+        random_float(1, 1000) > 600) {
         newJob = InitialiseNewJob(pBot, JOB_GET_ARMOR);
         if(newJob != NULL) {
             newJob->waypoint = WaypointFindNearestGoal(pBot->current_wp, pBot->current_team, 3000, W_FL_ARMOR);
@@ -495,7 +495,7 @@ void BotJobThink(bot_t* pBot)
 
     // call for a medic?
     if(pBot->pEdict->v.playerclass != TFC_CLASS_MEDIC && PlayerHealthPercent(pBot->pEdict) < pBot->trait.health &&
-        (pBot->enemy.f_lastSeen + 3.0) < pBot->f_think_time) {
+        pBot->enemy.f_lastSeen + 3.0 < pBot->f_think_time) {
         // just call if the bot isn't going anywhere
         if(pBot->current_wp == pBot->goto_wp) {
             if(pBot->currentJob > -1 && pBot->jobType[pBot->currentJob] != JOB_GET_HEALTH &&
@@ -503,7 +503,7 @@ void BotJobThink(bot_t* pBot)
                 FakeClientCommand(pBot->pEdict, "saveme", NULL, NULL);
         }
         // if the bot saw a medic recently make it a job to call and wait for them
-        else if((pBot->f_alliedMedicSeenTime + 5.0) > pBot->f_think_time &&
+        else if(pBot->f_alliedMedicSeenTime + 5.0 > pBot->f_think_time &&
             (newJob = InitialiseNewJob(pBot, JOB_CALL_MEDIC)) != NULL) {
             const int healthJobIndex = BufferedJobIndex(pBot, JOB_GET_HEALTH);
 
@@ -527,7 +527,7 @@ void BotJobThink(bot_t* pBot)
         pBot->f_humour_time = pBot->f_think_time + random_float(60.0, 180.0);
 
         // no mucking about if enemies were recently seen or the bot spawned recently
-        if((pBot->enemy.f_lastSeen + 40.0) < pBot->f_think_time && (pBot->f_killed_time + 40.0) < pBot->f_think_time &&
+        if(pBot->enemy.f_lastSeen + 40.0 < pBot->f_think_time && pBot->f_killed_time + 40.0 < pBot->f_think_time &&
             BufferedJobIndex(pBot, JOB_MELEE_WARRIOR) == -1 && BufferedJobIndex(pBot, JOB_GRAFFITI_ARTIST) == -1 &&
             random_long(1, 200) < pBot->trait.humour) {
             // take your pick of fun things to do
@@ -583,7 +583,7 @@ void BotJobThink(bot_t* pBot)
         break;
     case TFC_CLASS_SPY:
         // time for a disguise?
-        if((pBot->enemy.f_lastSeen + 2.0) < pBot->f_think_time) {
+        if(pBot->enemy.f_lastSeen + 2.0 < pBot->f_think_time) {
             if(pBot->current_team == UTIL_GetTeamColor(pBot->pEdict)) {
                 newJob = InitialiseNewJob(pBot, JOB_DISGUISE);
                 if(newJob != NULL && SubmitNewJob(pBot, JOB_DISGUISE, newJob) == TRUE)
@@ -600,7 +600,7 @@ void BotJobThink(bot_t* pBot)
             pBot->f_spyFeignAmbushTime = pBot->f_think_time + random_float(12.0, 24.0);
 
             newJob = InitialiseNewJob(pBot, JOB_FEIGN_AMBUSH);
-            if(newJob != NULL && (pBot->enemy.f_lastSeen + 3.0) < pBot->f_think_time && pBot->current_wp > -1 &&
+            if(newJob != NULL && pBot->enemy.f_lastSeen + 3.0 < pBot->f_think_time && pBot->current_wp > -1 &&
                 spawnAreaWP[pBot->current_team] > -1 && spawnAreaWP[pBot->current_team] < num_waypoints) {
                 const int homeDistance =
                     WaypointDistanceFromTo(spawnAreaWP[pBot->current_team], pBot->current_wp, pBot->current_team);
