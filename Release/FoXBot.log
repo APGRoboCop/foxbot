@@ -7,9 +7,6 @@ E:\Dropbox\src\foxbot\cbase.h(266): warning C4458: declaration of 'pev' hides cl
   E:\Dropbox\src\foxbot\cbase.h(149): note: see declaration of 'CBaseEntity::pev'
 E:\Dropbox\src\foxbot\bot.cpp(778): warning C4456: declaration of 'index' hides previous local declaration
   E:\Dropbox\src\foxbot\bot.cpp(539): note: see declaration of 'index'
-E:\Dropbox\src\foxbot\bot.cpp(3087): warning C4554: '<<': check operator precedence for possible error; use parentheses to clarify precedence
-E:\Dropbox\src\foxbot\bot.cpp(3362): warning C4554: '<<': check operator precedence for possible error; use parentheses to clarify precedence
-E:\Dropbox\src\foxbot\bot.cpp(3473): warning C4554: '<<': check operator precedence for possible error; use parentheses to clarify precedence
 E:\Dropbox\src\foxbot\bot.cpp(3537): warning C4554: '<<': check operator precedence for possible error; use parentheses to clarify precedence
 E:\Dropbox\src\foxbot\bot.cpp(4352): warning C4456: declaration of 'newJob' hides previous local declaration
   E:\Dropbox\src\foxbot\bot.cpp(4348): note: see declaration of 'newJob'
@@ -58,9 +55,6 @@ E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'AR
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): note: see previous definition of 'ARRAYSIZE'
 E:\Dropbox\src\foxbot\cbase.h(266): warning C4458: declaration of 'pev' hides class member
   E:\Dropbox\src\foxbot\cbase.h(149): note: see declaration of 'CBaseEntity::pev'
-E:\Dropbox\src\foxbot\bot_start.cpp(164): warning C4554: '<<': check operator precedence for possible error; use parentheses to clarify precedence
-E:\Dropbox\src\foxbot\bot_start.cpp(174): warning C4554: '<<': check operator precedence for possible error; use parentheses to clarify precedence
-E:\Dropbox\src\foxbot\bot_start.cpp(388): warning C4554: '<<': check operator precedence for possible error; use parentheses to clarify precedence
   botcam.cpp
 E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417): warning C4005: 'ARRAYSIZE': macro redefinition
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): note: see previous definition of 'ARRAYSIZE'

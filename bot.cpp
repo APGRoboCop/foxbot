@@ -3084,7 +3084,7 @@ static bool BotChangeClass(bot_t* pBot, int iClass, const char* from)
 
     // Check if the class supplied is already at the limit.
     if(iClass <= 7)
-        class_not_allowed = team_class_limits[pBot->current_team] & 1 << iClass - 1;
+        class_not_allowed = team_class_limits[pBot->current_team] & 1 << (iClass - 1);
     else
         class_not_allowed = team_class_limits[pBot->current_team] & 1 << iClass;
 
@@ -3359,7 +3359,7 @@ static void BotPickNewClass(bot_t* pBot)
     // Check if the chosen class is already at the limit.
     int class_not_allowed;
     if(new_class <= 7)
-        class_not_allowed = team_class_limits[pBot->current_team] & 1 << new_class - 1;
+        class_not_allowed = team_class_limits[pBot->current_team] & 1 << (new_class - 1);
     else
         class_not_allowed = team_class_limits[pBot->current_team] & 1 << new_class;
 
@@ -3470,7 +3470,7 @@ static bool BotChooseCounterClass(bot_t* pBot)
     // Check if the chosen class is already at the limit.
     int class_not_allowed;
     if(new_class <= 7)
-        class_not_allowed = team_class_limits[pBot->current_team] & 1 << new_class - 1;
+        class_not_allowed = team_class_limits[pBot->current_team] & 1 << (new_class - 1);
     else
         class_not_allowed = team_class_limits[pBot->current_team] & 1 << new_class;
 

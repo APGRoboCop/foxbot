@@ -24,10 +24,10 @@ class Vector2D
 public:
 	inline Vector2D(void)									{ x = y = 0; }
 	inline Vector2D(float X, float Y)						{ x = X; y = Y; }
-	inline Vector2D operator+(const Vector2D& v)	const	{ return Vector2D(x+v.x, y+v.y);	}
-	inline Vector2D operator-(const Vector2D& v)	const	{ return Vector2D(x-v.x, y-v.y);	}
-	inline Vector2D operator*(float fl)				const	{ return Vector2D(x*fl, y*fl);	}
-	inline Vector2D operator/(float fl)				const	{ return Vector2D(x/fl, y/fl);	}
+	inline Vector2D operator+(const Vector2D& v)	const	{ return {x+v.x, y+v.y};	}
+	inline Vector2D operator-(const Vector2D& v)	const	{ return {x-v.x, y-v.y};	}
+	inline Vector2D operator*(float fl)				const	{ return {x*fl, y*fl};	}
+	inline Vector2D operator/(float fl)				const	{ return {x/fl, y/fl};	}
 
 	inline float Length(void)						const	{ return sqrt(x*x + y*y );		}
 
@@ -38,7 +38,7 @@ public:
 		float flLen = Length();
 		if( flLen == 0 )
 		{
-			return Vector2D( 0, 0 );
+			return {0, 0};
 		}
 		else
 		{
