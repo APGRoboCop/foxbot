@@ -59,7 +59,7 @@
 #include <meta_api.h>
 
 // new stuff for botcam
-#include <cbase.h>
+#include "cbase.h"
 #include "player.h"
 #include "botcam.h"
 
@@ -450,7 +450,7 @@ static void TeamBalanceCheck(void)
         if(!done)
             done = BotBalanceTeams(4, 2);
         if(!done)
-            done = BotBalanceTeams(4, 3);
+            BotBalanceTeams(4, 3);
     }
     if(bot_bot_balance) {
         // team 1 has more than team 2?
