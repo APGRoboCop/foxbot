@@ -37,6 +37,10 @@
 #include "bot_weapons.h"
 #include "list.h"
 
+#ifdef WIN32
+#define strncpy strncpy_s
+#endif
+
 extern bot_weapon_t weapon_defs[MAX_WEAPONS];
 extern edict_t* clients[32];
 extern bot_t bots[32];
@@ -2396,12 +2400,12 @@ static void BotCheckForRocketJump(bot_t* pBot)
         BufferContainsJobType(pBot, JOB_ROCKET_JUMP))
         return;
 
-    char* cvar_ntf = (char*)CVAR_GET_STRING("neotf");
+    char* cvar_ntf = const_cast<char*>(CVAR_GET_STRING("neotf"));
     // char *cvar_ntfexclusive = (char *)CVAR_GET_STRING("ntf_feature_exclusive");
 
     // allow Neotf spies and pyros to jump at RJ points
     if(pBot->pEdict->v.playerclass == TFC_CLASS_PYRO) {
-        char* cvar_jetpack = (char*)CVAR_GET_STRING("ntf_feature_jetpack");
+        char* cvar_jetpack = const_cast<char*>(CVAR_GET_STRING("ntf_feature_jetpack"));
         if(strcmp(cvar_ntf, "1") == 0 && strcmp(cvar_jetpack, "1") == 0) // No neotf or jetpack
         {
             // Jetpack enabled

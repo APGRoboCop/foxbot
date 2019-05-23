@@ -1,3 +1,6 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 //
 // FoXBot - AI Bot for Halflife's Team Fortress Classic
 //
@@ -53,6 +56,16 @@ extern List<char*> commanders;
 extern HINSTANCE h_Library;
 #else
 extern void* h_Library;
+#endif
+
+#ifdef WIN32
+//#define fopen fopen_s
+#define strncpy strncpy_s
+//#define strcpy strcpy_s
+#define strncat strncat_s
+#define sprintf sprintf_s
+#define _snprintf _snprintf_s
+#define stricmp _stricmp
 #endif
 
 // my global var for checking if we're using metamod or not?
@@ -207,7 +220,7 @@ inline char* GET_INFOBUFFER(edict_t* e)
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
         if(fp != NULL) {
-            fprintf(fp, "getinfobuffer: %p\n", (void*)e);
+            fprintf(fp, "getinfobuffer: %p\n", static_cast<void*>(e));
             fclose(fp);
         }
     }
@@ -384,14 +397,17 @@ void BotSpawnInit(bot_t* pBot)
     memset(&pBot->m_rgAmmo, 0, sizeof pBot->m_rgAmmo);
 }
 
+//#ifdef WIN32
+//FILE* fopen_s(char str[256], const char* text);
+//#endif
+
 void BotNameInit(void)
 {
-    FILE* bot_name_fp;
-    char bot_name_filename[256];
+	char bot_name_filename[256];
     char name_buffer[80];
 
     UTIL_BuildFileName(bot_name_filename, 255, "foxbot_names.txt", NULL);
-    bot_name_fp = fopen(bot_name_filename, "r");
+    FILE* bot_name_fp = fopen(bot_name_filename, "r");
 
     if(bot_name_fp != NULL) {
         int length, index, str_index;
@@ -1461,7 +1477,7 @@ void BotFindItem(bot_t* pBot)
                     if(pent->v.team == UTIL_GetTeam(pEdict) + 1)
                         can_pickup = TRUE;
                     else {
-                        char* cvar_ntf_capture_mg = (char*)CVAR_GET_STRING("ntf_capture_mg");
+                        char* cvar_ntf_capture_mg = const_cast<char*>(CVAR_GET_STRING("ntf_capture_mg"));
 
                         if(strcmp(cvar_ntf_capture_mg, "1") == 0)
                             can_pickup = TRUE;
@@ -3289,7 +3305,7 @@ static void BotPickNewClass(bot_t* pBot)
             return;
     }
 
-    bool defender_required = 0;
+    bool defender_required = false;
 
     // Analyse the composition of this bots team
     short i, attackers = 0, team_total = 0;
@@ -3332,7 +3348,7 @@ static void BotPickNewClass(bot_t* pBot)
 
     // does this team have too few defenders?
     if(percentOffense - errorMargin > static_cast<float>(RoleStatus[pBot->current_team]))
-        defender_required = 1;
+        defender_required = true;
 
     /*	//debug message: report what the bot is doing
             if(defender_required)

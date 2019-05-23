@@ -33,6 +33,11 @@
 #include "bot.h"
 #include "engine.h"
 
+#ifdef WIN32
+#define strcpy strcpy_s
+#define strcmpi _strcmpi
+#endif
+
 // meta mod stuff
 #include <h_export.h> // me
 #include <meta_api.h>
@@ -160,7 +165,7 @@ void WINAPI GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t* pG
     }
 #ifndef __linux__
     h_global_argv = GlobalAlloc(GMEM_SHARE, 1024);
-    g_argv = (char*)GlobalLock(h_global_argv);
+    g_argv = static_cast<char*>(GlobalLock(h_global_argv));
 #else
     g_argv = (char*)h_global_argv;
 #endif

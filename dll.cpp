@@ -42,6 +42,18 @@
 #include "bot_weapons.h"
 #include "waypoint.h"
 
+#ifdef WIN32
+//#define fopen fopen_s
+#define strncpy strncpy_s
+#define strcpy strcpy_s
+#define strcat strcat_s
+#define strncat strncat_s
+#define sprintf sprintf_s
+//#define _snprintf _snprintf_s
+#define sscanf sscanf_s
+#define stricmp _stricmp
+#endif
+
 // meta mod includes
 #include <dllapi.h>
 #include <meta_api.h>
@@ -52,7 +64,7 @@
 #include "botcam.h"
 
 #define VER_MAJOR 0
-#define VER_MINOR 791
+#define VER_MINOR 792
 #define VER_BUILD 0
 
 #define MENU_NONE  0
@@ -64,7 +76,7 @@
 #define MENU_6     6
 #define MENU_7     7
 
-cvar_t foxbot = { "foxbot", "0.791", FCVAR_SERVER | FCVAR_UNLOGGED, 0, NULL };
+cvar_t foxbot = { "foxbot", "0.792-APG", FCVAR_SERVER | FCVAR_UNLOGGED, 0, NULL };
 cvar_t enable_foxbot = { "enable_foxbot", "1", FCVAR_SERVER | FCVAR_UNLOGGED, 0, NULL };
 
 cvar_t sv_bot = { "bot", "", 0, 0, NULL };
@@ -852,11 +864,11 @@ void chatClass::pickRandomChatString(char* msg, size_t maxLength, const int chat
 int DispatchSpawn(edict_t* pent)
 {
     if(gpGlobals->deathmatch) {
-        char* pClassname = (char*)STRING(pent->v.classname);
+        char* pClassname = const_cast<char*>(STRING(pent->v.classname));
 
         if(debug_engine) {
             fp = UTIL_OpenFoxbotLog();
-            fprintf(fp, "DispatchSpawn: %p %s\n", (void*)pent, pClassname);
+            fprintf(fp, "DispatchSpawn: %p %s\n", static_cast<void*>(pent), pClassname);
             if(pent->v.model != 0)
                 fprintf(fp, " model=%s\n", STRING(pent->v.model));
             if(pent->v.target != 0)
@@ -1216,7 +1228,7 @@ void DispatchUse(edict_t* pentUsed, edict_t* pentOther)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
-        fprintf(fp, "DispatchUse: used %p other %p\n", (void*)pentUsed, (void*)pentOther);
+        fprintf(fp, "DispatchUse: used %p other %p\n", static_cast<void*>(pentUsed), static_cast<void*>(pentOther));
         fclose(fp);
     }
 
@@ -1413,7 +1425,7 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
         if(debug_engine) {
             fp = UTIL_OpenFoxbotLog();
             if(fp != NULL) {
-                fprintf(fp, "ClientConnect: pent=%p name=%s\n", (void*)pEntity, pszName);
+                fprintf(fp, "ClientConnect: pent=%p name=%s\n", static_cast<void*>(pEntity), pszName);
                 fclose(fp);
             }
         }
@@ -1460,7 +1472,7 @@ BOOL ClientConnect_Post(edict_t* pEntity, const char* pszName, const char* pszAd
         if(debug_engine) {
             fp = UTIL_OpenFoxbotLog();
             if(fp != NULL) {
-                fprintf(fp, "ClientConnect_Post: pent=%p name=%s\n", (void*)pEntity, pszName);
+                fprintf(fp, "ClientConnect_Post: pent=%p name=%s\n", static_cast<void*>(pEntity), pszName);
                 fclose(fp);
             }
         }
@@ -1485,7 +1497,7 @@ void ClientDisconnect(edict_t* pEntity)
         if(debug_engine) {
             fp = UTIL_OpenFoxbotLog();
             if(fp != NULL) {
-                fprintf(fp, "ClientDisconnect: %p\n", (void*)pEntity);
+                fprintf(fp, "ClientDisconnect: %p\n", static_cast<void*>(pEntity));
                 fclose(fp);
             }
         }
@@ -1529,7 +1541,7 @@ void ClientKill(edict_t* pEntity)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
-        fprintf(fp, "ClientKill: %p\n", (void*)pEntity);
+        fprintf(fp, "ClientKill: %p\n", static_cast<void*>(pEntity));
         fclose(fp);
     }
     if(!mr_meta)
@@ -1542,7 +1554,7 @@ void ClientPutInServer(edict_t* pEntity)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
-        fprintf(fp, "ClientPutInServer: %p\n", (void*)pEntity);
+        fprintf(fp, "ClientPutInServer: %p\n", static_cast<void*>(pEntity));
         fclose(fp);
     }
 
@@ -1564,7 +1576,7 @@ void ClientCommand(edict_t* pEntity)
         // char msg[80];
         if(debug_engine) {
             fp = UTIL_OpenFoxbotLog();
-            fprintf(fp, "ClientCommand: %s %p", pcmd, (void*)pEntity);
+            fprintf(fp, "ClientCommand: %s %p", pcmd, static_cast<void*>(pEntity));
             if(arg1 != NULL) {
                 if(*arg1 != 0)
                     fprintf(fp, " 1:%s", arg1);
@@ -1596,7 +1608,7 @@ void ClientCommand(edict_t* pEntity)
 
         if(debug_engine) {
             fp = UTIL_OpenFoxbotLog();
-            fprintf(fp, "ClientCommand: %s %p", pcmd, (void*)pEntity);
+            fprintf(fp, "ClientCommand: %s %p", pcmd, static_cast<void*>(pEntity));
             if(arg1 != NULL) {
                 if(*arg1 != 0)
                     fprintf(fp, " '%s'(1)", arg1);
@@ -2616,7 +2628,7 @@ void ClientUserInfoChanged(edict_t* pEntity, char* infobuffer)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
-        fprintf(fp, "ClientUserInfoChanged: pEntity=%p infobuffer=%s\n", (void*)pEntity, infobuffer);
+        fprintf(fp, "ClientUserInfoChanged: pEntity=%p infobuffer=%s\n", static_cast<void*>(pEntity), infobuffer);
         fclose(fp);
     }
 
@@ -3055,7 +3067,7 @@ void StartFrame(void)
         if(check_server_cmd <= gpGlobals->time && IS_DEDICATED_SERVER()) {
             check_server_cmd = gpGlobals->time + 1.0;
 
-            char* cvar_bot = (char*)CVAR_GET_STRING("bot");
+            char* cvar_bot = const_cast<char*>(CVAR_GET_STRING("bot"));
 
             if(cvar_bot && cvar_bot[0]) {
                 char cmd_line[80];
@@ -5316,7 +5328,7 @@ void PlayerCustomization(edict_t* pEntity, customization_t* pCust)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
-        fprintf(fp, "PlayerCustomization: %p\n", (void*)pEntity);
+        fprintf(fp, "PlayerCustomization: %p\n", static_cast<void*>(pEntity));
         fclose(fp);
     }
 
@@ -5367,7 +5379,7 @@ void Sys_Error(const char* error_string)
         int i;
         for(i = 0; i < 32; i++) {
             if(clients[i] != NULL && fp != NULL)
-                fprintf(fp, "%p %d\n", (void*)clients[i], i);
+                fprintf(fp, "%p %d\n", static_cast<void*>(clients[i]), i);
         }
 
         fclose(fp);
@@ -5761,7 +5773,7 @@ void FakeClientCommand(edict_t* pBot, char* arg1, char* arg2, char* arg3)
 
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
-        fprintf(fp, "FakeClientCommand=%s %p\n", g_argv, (void*)pBot);
+        fprintf(fp, "FakeClientCommand=%s %p\n", g_argv, static_cast<void*>(pBot));
         fclose(fp);
     }
 
@@ -6523,7 +6535,7 @@ void UTIL_SavePent(edict_t* pent)
     if(fp == NULL)
         return;
 
-    fprintf(fp, "*edict_t %p\n", (void*)pent);
+    fprintf(fp, "*edict_t %p\n", static_cast<void*>(pent));
     fprintf(fp, "classname %s\n", STRING(pent->v.classname));
     fprintf(fp, "globalname %s\n", STRING(pent->v.globalname));
     fprintf(fp, "origin %f %f %f\n", pent->v.origin.x, pent->v.origin.y, pent->v.origin.z);
@@ -6575,12 +6587,12 @@ void UTIL_SavePent(edict_t* pent)
     fprintf(fp, "view_ofs %f %f %f\n", pent->v.view_ofs.x, pent->v.view_ofs.y, pent->v.view_ofs.z);
     fprintf(fp, "button %d\n", pent->v.button);
     fprintf(fp, "impulse %d\n", pent->v.impulse);
-    fprintf(fp, "*chain %p\n", (void*)pent->v.chain);
-    fprintf(fp, "*dmg_inflictor %p\n", (void*)pent->v.dmg_inflictor);
-    fprintf(fp, "*enemy %p\n", (void*)pent->v.enemy);
-    fprintf(fp, "*aiment %p\n", (void*)pent->v.aiment);
-    fprintf(fp, "*owner %p\n", (void*)pent->v.owner);
-    fprintf(fp, "*grounentity %p\n", (void*)pent->v.groundentity);
+    fprintf(fp, "*chain %p\n", static_cast<void*>(pent->v.chain));
+    fprintf(fp, "*dmg_inflictor %p\n", static_cast<void*>(pent->v.dmg_inflictor));
+    fprintf(fp, "*enemy %p\n", static_cast<void*>(pent->v.enemy));
+    fprintf(fp, "*aiment %p\n", static_cast<void*>(pent->v.aiment));
+    fprintf(fp, "*owner %p\n", static_cast<void*>(pent->v.owner));
+    fprintf(fp, "*grounentity %p\n", static_cast<void*>(pent->v.groundentity));
     fprintf(fp, "spawnflags %d\n", pent->v.spawnflags);
     fprintf(fp, "flags %d\n", pent->v.flags);
     fprintf(fp, "colormap %d\n", pent->v.colormap);
@@ -6606,7 +6618,7 @@ void UTIL_SavePent(edict_t* pent)
     fprintf(fp, "speed %f\n", pent->v.speed);
     fprintf(fp, "air_finished %f\n", pent->v.air_finished);
     fprintf(fp, "pain_finished %f\n", pent->v.pain_finished);
-    fprintf(fp, "pContainingEntity %p\n", (void*)pent->v.pContainingEntity);
+    fprintf(fp, "pContainingEntity %p\n", static_cast<void*>(pent->v.pContainingEntity));
     fprintf(fp, "playerclass %d\n", pent->v.playerclass);
     fprintf(fp, "maxspeed %f\n", pent->v.maxspeed);
     fprintf(fp, "fov %f\n", pent->v.fov);
@@ -6633,10 +6645,10 @@ void UTIL_SavePent(edict_t* pent)
     fprintf(fp, "vuser2 %f %f %f\n", pent->v.vuser2.x, pent->v.vuser2.y, pent->v.vuser2.z);
     fprintf(fp, "vuser3 %f %f %f\n", pent->v.vuser3.x, pent->v.vuser3.y, pent->v.vuser3.z);
     fprintf(fp, "vuser4 %f %f %f\n", pent->v.vuser4.x, pent->v.vuser4.y, pent->v.vuser4.z);
-    fprintf(fp, "euser1 %p\n", (void*)pent->v.euser1);
-    fprintf(fp, "euser2 %p\n", (void*)pent->v.euser2);
-    fprintf(fp, "euser3 %p\n", (void*)pent->v.euser3);
-    fprintf(fp, "euser4 %p\n", (void*)pent->v.euser4);
+    fprintf(fp, "euser1 %p\n", static_cast<void*>(pent->v.euser1));
+    fprintf(fp, "euser2 %p\n", static_cast<void*>(pent->v.euser2));
+    fprintf(fp, "euser3 %p\n", static_cast<void*>(pent->v.euser3));
+    fprintf(fp, "euser4 %p\n", static_cast<void*>(pent->v.euser4));
 
     fprintf(fp, "-info buffer %s\n", g_engfuncs.pfnGetInfoKeyBuffer(pent));
     fclose(fp);
@@ -6732,7 +6744,7 @@ static void DisplayBotInfo()
         ALERT(at_logged, "[FOXBOT]: %s", msg2);
     } else {
         // have to switch developer 'on' if its not already
-        char* cvar_dev = (char*)CVAR_GET_STRING("developer");
+        char* cvar_dev = const_cast<char*>(CVAR_GET_STRING("developer"));
         int dev;
         if(strcmp(cvar_dev, "0") == 0)
             dev = 0;

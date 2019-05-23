@@ -47,6 +47,16 @@
 #include "bot.h"
 #include "waypoint.h"
 
+#ifdef WIN32
+//#define strcpy strcpy_s
+#define strcat strcat_s
+#define strncat strncat_s
+#define strncpy strncpy_s
+#define sprintf sprintf_s
+#define _snprintf _snprintf_s
+#define stricmp _stricmp
+#endif
+
 // me
 #include "engine.h"
 
@@ -278,7 +288,7 @@ int WaypointAddPath(short int add_index, short int path_index)
     // nope loop only stops when complete...
     // ignore this unless future probs arise!
 
-    p = (PATH*)malloc(sizeof(PATH));
+    p = static_cast<PATH*>(malloc(sizeof(PATH)));
 
     if(p == NULL) {
         ALERT(at_error, "FoXBot - Error, memory allocation failed for waypoint path!");
@@ -3139,12 +3149,12 @@ static void WaypointRouteInit(void)
                 sprintf(msg, "calculating FoXBot waypoint paths for team %d...\n", matrix + 1);
                 ALERT(at_console, msg);
 
-                shortest_path[matrix] = (unsigned int*)malloc(sizeof(unsigned int) * array_size);
+                shortest_path[matrix] = static_cast<unsigned int*>(malloc(sizeof(unsigned int) * array_size));
 
                 if(shortest_path[matrix] == NULL)
                     ALERT(at_error, "FoXBot - Error allocating memory for shortest path!");
 
-                from_to[matrix] = (unsigned int*)malloc(sizeof(unsigned int) * array_size);
+                from_to[matrix] = static_cast<unsigned int*>(malloc(sizeof(unsigned int) * array_size));
 
                 if(from_to[matrix] == NULL)
                     ALERT(at_error, "FoXBot - Error allocating memory for from to matrix!");
@@ -3186,7 +3196,7 @@ static void WaypointRouteInit(void)
                                         } else {
                                             offset = row * route_num_waypoints + index;
 
-                                            pShortestPath[offset] = (unsigned int)distance;
+                                            pShortestPath[offset] = static_cast<unsigned int>(distance);
                                         }
                                     }
                                 }

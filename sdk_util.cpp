@@ -31,8 +31,12 @@
 #include <extdll.h>
 #include "sdk_util.h"
 #include "cbase.h"
-#include <string.h>
+#include <cstring>
 #include "osdep.h" // win32 v_snprintf, etc
+
+#ifdef WIN32
+#define _vsnprintf _vsnprintf_s
+#endif
 
 char* UTIL_VarArgs(char* format, ...)
 {
@@ -96,5 +100,5 @@ unsigned short FixedUnsigned16(float value, float scale)
     if(output > 0xFFFF)
         output = 0xFFFF;
 
-    return (unsigned short)output;
+    return static_cast<unsigned short>(output);
 }

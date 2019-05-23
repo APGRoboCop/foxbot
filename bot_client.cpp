@@ -39,6 +39,12 @@
 
 #include <tf_defs.h>
 
+#ifdef WIN32
+#define strncpy strncpy_s
+#define sprintf sprintf_s
+#define strcpy strcpy_s
+#endif
+
 // types of damage to ignore...
 #define IGNORE_DAMAGE                                                                                              \
     (DMG_CRUSH | DMG_FREEZE | DMG_SHOCK | DMG_DROWN | DMG_NERVEGAS | DMG_RADIATION | DMG_DROWNRECOVER | DMG_ACID | \
@@ -148,32 +154,32 @@ void BotClient_Valve_WeaponList(void* p, int bot_index)
 
     if(state == 0) {
         state++;
-        strcpy(bot_weapon.szClassname, (char*)p);
+        strcpy(bot_weapon.szClassname, static_cast<char*>(p));
     } else if(state == 1) {
         state++;
-        bot_weapon.iAmmo1 = *(int*)p; // ammo index 1
+        bot_weapon.iAmmo1 = *static_cast<int*>(p); // ammo index 1
     } else if(state == 2) {
         state++;
-        bot_weapon.iAmmo1Max = *(int*)p; // max ammo1
+        bot_weapon.iAmmo1Max = *static_cast<int*>(p); // max ammo1
     } else if(state == 3) {
         state++;
-        bot_weapon.iAmmo2 = *(int*)p; // ammo index 2
+        bot_weapon.iAmmo2 = *static_cast<int*>(p); // ammo index 2
     } else if(state == 4) {
         state++;
-        bot_weapon.iAmmo2Max = *(int*)p; // max ammo2
+        bot_weapon.iAmmo2Max = *static_cast<int*>(p); // max ammo2
     } else if(state == 5) {
         state++;
-        bot_weapon.iSlot = *(int*)p; // slot for this weapon
+        bot_weapon.iSlot = *static_cast<int*>(p); // slot for this weapon
     } else if(state == 6) {
         state++;
-        bot_weapon.iPosition = *(int*)p; // position in slot
+        bot_weapon.iPosition = *static_cast<int*>(p); // position in slot
     } else if(state == 7) {
         state++;
-        bot_weapon.iId = *(int*)p; // weapon ID
+        bot_weapon.iId = *static_cast<int*>(p); // weapon ID
     } else if(state == 8) {
         state = 0;
 
-        bot_weapon.iFlags = *(int*)p; // flags for weapon (WTF???)
+        bot_weapon.iFlags = *static_cast<int*>(p); // flags for weapon (WTF???)
 
         // store away this weapon with it's ammo information...
         weapon_defs[bot_weapon.iId] = bot_weapon;
@@ -215,14 +221,14 @@ void BotClient_Valve_CurrentWeapon(void* p, int bot_index)
 
     if(g_state == 0) {
         g_state++;
-        iState = *(int*)p; // state of the current weapon
+        iState = *static_cast<int*>(p); // state of the current weapon
     } else if(g_state == 1) {
         g_state++;
-        iId = *(int*)p; // weapon ID of current weapon
+        iId = *static_cast<int*>(p); // weapon ID of current weapon
     } else if(g_state == 2) {
         // state = 0;
 
-        iClip = *(int*)p; // ammo currently in the clip for this weapon
+        iClip = *static_cast<int*>(p); // ammo currently in the clip for this weapon
 
         if(iId <= 31) {
             bots[bot_index].bot_weapons |= 1 << iId; // set this weapon bit
@@ -272,11 +278,11 @@ void BotClient_Valve_AmmoX(void* p, int bot_index)
 
     if(g_state == 0) {
         g_state++;
-        index = *(int*)p; // ammo index (for type of ammo)
+        index = *static_cast<int*>(p); // ammo index (for type of ammo)
     } else if(g_state == 1) {
         // state = 0;
 
-        ammount = *(int*)p; // the amount of ammo currently available
+        ammount = *static_cast<int*>(p); // the amount of ammo currently available
 
         bots[bot_index].m_rgAmmo[index] = ammount; // store it away
 
@@ -324,11 +330,11 @@ void BotClient_Valve_AmmoPickup(void* p, int bot_index)
 
     if(state == 0) {
         state++;
-        index = *(int*)p;
+        index = *static_cast<int*>(p);
     } else if(state == 1) {
         state = 0;
 
-        ammount = *(int*)p;
+        ammount = *static_cast<int*>(p);
 
         bots[bot_index].m_rgAmmo[index] = ammount;
 
@@ -369,7 +375,7 @@ void BotClient_Valve_WeaponPickup(void* p, int bot_index)
 {
     int index;
 
-    index = *(int*)p;
+    index = *static_cast<int*>(p);
 
     // set this weapon bit to indicate that we are carrying this weapon
     bots[bot_index].bot_weapons |= 1 << index;
@@ -411,7 +417,7 @@ void BotClient_TFC_ItemPickup(void* p, int bot_index)
     BotClient_Valve_ItemPickup(p, bot_index);
     int index;
 
-    index = *(int*)p;
+    index = *static_cast<int*>(p);
     char msg[255];
     sprintf(msg, "%d", index);
     // UTIL_HostSay(0, 0, msg);
@@ -440,7 +446,7 @@ void BotClient_FLF_ItemPickup(void* p, int bot_index)
 // This message gets sent when the bots health changes.
 void BotClient_Valve_Health(void* p, int bot_index)
 {
-    bots[bot_index].bot_real_health = *(int*)p; // health ammount
+    bots[bot_index].bot_real_health = *static_cast<int*>(p); // health ammount
 }
 
 void BotClient_TFC_Health(void* p, int bot_index)
@@ -470,7 +476,7 @@ void BotClient_FLF_Health(void* p, int bot_index)
 // This message gets sent when the bots armor changes.
 void BotClient_Valve_Battery(void* p, int bot_index)
 {
-    bots[bot_index].bot_armor = *(int*)p; // armor ammount
+    bots[bot_index].bot_armor = *static_cast<int*>(p); // armor ammount
 }
 
 void BotClient_TFC_Battery(void* p, int bot_index)
@@ -511,23 +517,23 @@ void BotClient_Valve_Damage(void* p, int bot_index)
 
     if(state == 0) {
         state++;
-        damage_armor = *(int*)p;
+        damage_armor = *static_cast<int*>(p);
     } else if(state == 1) {
         state++;
-        damage_taken = *(int*)p;
+        damage_taken = *static_cast<int*>(p);
     } else if(state == 2) {
         state++;
-        damage_bits = *(int*)p;
+        damage_bits = *static_cast<int*>(p);
     } else if(state == 3) {
         state++;
-        damage_origin.x = *(float*)p;
+        damage_origin.x = *static_cast<float*>(p);
     } else if(state == 4) {
         state++;
-        damage_origin.y = *(float*)p;
+        damage_origin.y = *static_cast<float*>(p);
     } else if(state == 5) {
         state = 0;
 
-        damage_origin.z = *(float*)p;
+        damage_origin.z = *static_cast<float*>(p);
 
         if(mod_id == TFC_DLL) {
             if((damage_bits & DMG_SONIC) == DMG_SONIC) {
@@ -628,10 +634,10 @@ void BotClient_Valve_DeathMsg(void* p, int bot_index)
 
     if(state == 0) {
         state++;
-        killer_index = *(int*)p; // ENTINDEX() of killer
+        killer_index = *static_cast<int*>(p); // ENTINDEX() of killer
     } else if(state == 1) {
         state++;
-        victim_index = *(int*)p; // ENTINDEX() of victim
+        victim_index = *static_cast<int*>(p); // ENTINDEX() of victim
     } else if(state == 2) {
         state = 0;
 
@@ -799,13 +805,13 @@ void BotClient_Valve_ScreenFade(void* p, int bot_index)
 
     if(state == 0) {
         state++;
-        duration = *(int*)p;
+        duration = *static_cast<int*>(p);
     } else if(state == 1) {
         state++;
-        hold_time = *(int*)p;
+        hold_time = *static_cast<int*>(p);
     } else if(state == 2) {
         state++;
-        fade_flags = *(int*)p;
+        fade_flags = *static_cast<int*>(p);
     } else if(state == 6) {
         state = 0;
 
@@ -888,7 +894,7 @@ void BotClient_Engineer_BuildStatus(void* p, int bot_index)
     } else if(g_state == 1) {
         //	UTIL_BotLogPrintf("%s, message %s\n", bots[bot_index].name, (char *)p);
 
-        if(strcmp((char*)p, "#Dispenser_used") == 0) // enemy is using bots dispenser
+        if(strcmp(static_cast<char*>(p), "#Dispenser_used") == 0) // enemy is using bots dispenser
         {
             if(bot_index != -1) {
                 // set up the time when the bot will detonate it's dispenser
@@ -897,22 +903,22 @@ void BotClient_Engineer_BuildStatus(void* p, int bot_index)
                         gpGlobals->time + random_float(0.5, static_cast<float>(bots[bot_index].bot_skill) + 0.5);
             }
             g_state++;
-        } else if(strcmp((char*)p, "#Teleporter_Entrance_Built") == 0) {
+        } else if(strcmp(static_cast<char*>(p), "#Teleporter_Entrance_Built") == 0) {
             teleportType = W_FL_TFC_TELEPORTER_ENTRANCE;
             g_state++;
-        } else if(strcmp((char*)p, "#Teleporter_Exit_Built") == 0) {
+        } else if(strcmp(static_cast<char*>(p), "#Teleporter_Exit_Built") == 0) {
             teleportType = W_FL_TFC_TELEPORTER_EXIT;
             g_state++;
         } else {
             // do script handling... as hunted info gets passed in here
-            script((char*)p);
+            script(static_cast<char*>(p));
         }
     } else if(g_state == 2) {
         // here we can track objects built by human players
         if(bot_index == -1) {
             // The builders name
             char builder[128];
-            strncpy(builder, (char*)p, 128);
+            strncpy(builder, static_cast<char*>(p), 128);
             builder[127] = '\0';
 
             // Loop through the humans to look for the builder
@@ -947,10 +953,10 @@ void BotClient_TFC_SentryAmmo(void* p, int bot_index)
 
     if(g_state == 0) {
         g_state++;
-        val = *(int*)p;
+        val = *static_cast<int*>(p);
     } else if(g_state == 1) {
         if(val == 4) {
-            bots[bot_index].sentry_ammo = *(int*)p;
+            bots[bot_index].sentry_ammo = *static_cast<int*>(p);
         }
     }
 }
@@ -966,7 +972,7 @@ void BotClient_TFC_DetPack(void* p, int bot_index)
             val = *(int *)p;
             }*/
 
-    bots[bot_index].detpack = *(int*)p;
+    bots[bot_index].detpack = *static_cast<int*>(p);
 
     /*	FILE *fp = UTIL_OpenFoxbotLog();
             if(fp != NULL)
@@ -982,7 +988,7 @@ void BotClient_Menu(void* p, int bot_index)
     static int val, s;
     if(g_state == 0) {
         // g_state++;
-        val = *(int*)p;
+        val = *static_cast<int*>(p);
         s = 0;
         int i = 10;
         while(!((1 << i & val) == 1 << i) && i >= 0)
@@ -1012,12 +1018,12 @@ void BotClient_TFC_Grens(void* p, int bot_index)
 
     if(g_state == 0) {
         g_state++;
-        gren = *(int*)p;
+        gren = *static_cast<int*>(p);
     } else if(g_state == 1) {
         if(gren == 0)
-            bots[bot_index].grenades[0] = *(int*)p;
+            bots[bot_index].grenades[0] = *static_cast<int*>(p);
         else if(gren == 1)
-            bots[bot_index].grenades[1] = *(int*)p;
+            bots[bot_index].grenades[1] = *static_cast<int*>(p);
     }
 }
 

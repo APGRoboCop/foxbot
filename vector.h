@@ -1,3 +1,4 @@
+#include <cmath>
 /***
 *
 *	Copyright (c) 1999, 2000 Valve LLC. All rights reserved.
@@ -29,7 +30,7 @@ public:
 	inline Vector2D operator*(float fl)				const	{ return {x*fl, y*fl};	}
 	inline Vector2D operator/(float fl)				const	{ return {x/fl, y/fl};	}
 
-	inline float Length(void)						const	{ return sqrt(x*x + y*y );		}
+	inline float Length(void)						const	{ return std::sqrt(x*x + y*y );		}
 
 	inline Vector2D Normalize ( void ) const
 	{

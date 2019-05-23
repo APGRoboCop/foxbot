@@ -33,6 +33,10 @@
 #include "bot_func.h"
 #include "bot_weapons.h"
 
+#ifdef WIN32
+#define strcpy strcpy_s
+#endif
+
 extern int mod_id;
 extern edict_t* pent_info_ctfdetect;
 
@@ -69,7 +73,7 @@ void BotStartGame(bot_t* pBot)
                 spawn_check_crash = TRUE;
                 spawn_check_crash_count = 0;
                 spawn_check_crash_edict = pEdict;
-                char* cvar_specs = (char*)CVAR_GET_STRING("allow_spectators");
+                char* cvar_specs = const_cast<char*>(CVAR_GET_STRING("allow_spectators"));
                 if(strcmp(cvar_specs, "0") == 0) {
                     CVAR_SET_STRING("allow_spectators", "1");
                     FakeClientCommand(pBot->pEdict, "spectate", NULL, NULL);
