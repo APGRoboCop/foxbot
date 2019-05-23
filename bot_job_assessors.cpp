@@ -46,6 +46,16 @@
 #include "waypoint.h"
 #include "bot_navigate.h"
 
+#ifdef WIN32
+#define strncpy strncpy_s
+#define strcpy strcpy_s
+#define strncat strncat_s
+#define sprintf sprintf_s
+#define _snprintf _snprintf_s
+#define itoa _itoa
+#endif
+
+
 extern bot_t bots[32];
 extern bot_weapon_t weapon_defs[MAX_WEAPONS];
 

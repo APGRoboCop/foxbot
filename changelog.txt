@@ -3,6 +3,28 @@
 ==============================
 
 --------------------------------------------------------------------------------
+Version 0.792
+??-??-20??
+Updated by RoboCop
+--------------------------------------------------------------------------------
+
+- Replaced most of the C style casts with C++ casts
+
+- Fixed depreciation warning for 'SpyDetect'
+
+- Fixed some potential code issues
+
+Known bugs:-  
+
+>> '[META] WARNING: Plugin didn't set meta_result: foxbot_mm.so:engClientCommand()' still appears to occur
+
+>> Soldier bots tend to struggle for rocket jumping in certain areas
+
+>> botdontmove, bot_chat, bot_bot_balance and bot_team_balance cvars may not be 100% operational
+
+>> FoxBot appears to crash sometimes on Windows Listenservers
+
+--------------------------------------------------------------------------------
 Version 0.791
 August-07-2018
 Updated by RoboCop

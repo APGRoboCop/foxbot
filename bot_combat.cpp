@@ -38,6 +38,13 @@
 #include "waypoint.h"
 #include "bot_navigate.h"
 
+#ifdef WIN32
+#define strncpy strncpy_s
+#define strncat strncat_s
+#define sprintf sprintf_s
+#define _snprintf _snprintf_s
+#endif
+
 extern WAYPOINT waypoints[MAX_WAYPOINTS];
 extern int num_waypoints; // number of waypoints currently in map
 
@@ -569,7 +576,7 @@ static edict_t* BotFindEnemy(bot_t* pBot)
                     continue;
 
                 // ntf_capture_mg 1 = ignore, we can cap it
-                char* cvar_ntf_capture_mg = (char*)CVAR_GET_STRING("ntf_capture_mg");
+                char* cvar_ntf_capture_mg = const_cast<char*>(CVAR_GET_STRING("ntf_capture_mg"));
 
                 if(strcmp(cvar_ntf_capture_mg, "1") == 0)
                     continue;
@@ -719,7 +726,7 @@ static edict_t* BotFindEnemy(bot_t* pBot)
                         pEdict->v.playerclass != TFC_CLASS_ENGINEER && FInViewCone(vecEnd, pEdict) &&
                         FVisible(vecEnd, pEdict)) {
                         // ntf_feature_antigren
-                        char* cvar_ntf_feature_antigren = (char*)CVAR_GET_STRING("ntf_feature_antigren");
+                        char* cvar_ntf_feature_antigren = const_cast<char*>(CVAR_GET_STRING("ntf_feature_antigren"));
                         if(pEdict->v.playerclass == TFC_CLASS_MEDIC && strcmp(cvar_ntf_feature_antigren, "1") == 0) {
                             FakeClientCommand(pEdict, "_special2", NULL, NULL);
                         }
@@ -757,7 +764,7 @@ static edict_t* BotFindEnemy(bot_t* pBot)
                     continue;
 
                 // ntf_capture_mg 1 = ignore, we can cap it
-                char* cvar_ntf_capture_mg = (char*)CVAR_GET_STRING("ntf_capture_mg");
+                char* cvar_ntf_capture_mg = const_cast<char*>(CVAR_GET_STRING("ntf_capture_mg"));
                 if(strcmp(cvar_ntf_capture_mg, "1") == 0)
                     continue;
 
@@ -2378,7 +2385,7 @@ void BotCheckForMultiguns(bot_t* pBot, float nearestdistance, edict_t* pNewEnemy
     // simple as adding another string to the ntfTargetChecks array.
 
     // Skip this shit if neotf isnt present
-    char* cvar_ntf = (char*)CVAR_GET_STRING("neotf");
+    char* cvar_ntf = const_cast<char*>(CVAR_GET_STRING("neotf"));
     if(strcmp(cvar_ntf, "1")) // No neotf
         return;
 
@@ -2443,8 +2450,8 @@ void UpdateFlagCarrierList(void)
 
                 // if the player is a bot set it's flag impulse to match the flag
                 // so the bot knows which flag it has
-                if(bots[botIndex].is_used) {
-                    bots[botIndex].flag_impulse = pent->v.impulse;
+                if(bots[botIndex + 2].is_used) {
+                    bots[botIndex + 2].flag_impulse = pent->v.impulse;
                 }
             }
         }

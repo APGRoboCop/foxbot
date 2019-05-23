@@ -42,6 +42,7 @@ Updated by RoboCop
 - Added new waypoints for bases2k3, momentum_l, mortality_l and hellion
 
 Known bugs:-  
+>> '[META] WARNING: Plugin didn't set meta_result: foxbot_mm.so:engClientCommand()' still appears to occur
 >> botdontmove, bot_chat, bot_bot_balance and bot_team_balance cvars may not be 100% operational
 >> FoxBot appears to crash sometimes on Windows Listenservers
 

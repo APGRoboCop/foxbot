@@ -42,6 +42,14 @@
 #include "waypoint.h"
 #include "bot_navigate.h"
 
+#ifdef WIN32
+#define strncpy strncpy_s
+#define strcpy strcpy_s
+#define strncat strncat_s
+#define _snprintf _snprintf_s
+#define itoa _itoa_s
+#endif
+
 extern chatClass chat; // bot chat stuff
 
 // team data /////////////////////////
@@ -2036,7 +2044,7 @@ int JobSnipe(bot_t* pBot)
 
         if(VectorsNearerThan(pBot->pEdict->v.origin, waypoints[job_ptr->waypoint].origin, 20.0)) {
             // drop a neoTF grenade pod if possible
-            char* cvar_ntf_feature_antimissile = (char*)CVAR_GET_STRING("ntf_feature_antimissile");
+            char* cvar_ntf_feature_antimissile = const_cast<char*>(CVAR_GET_STRING("ntf_feature_antimissile"));
             if(strcmp(cvar_ntf_feature_antimissile, "1") == 0)
                 FakeClientCommand(pBot->pEdict, "buildspecial", NULL, NULL);
 

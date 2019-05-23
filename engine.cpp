@@ -37,6 +37,17 @@
 
 #include "cbase.h"
 
+#ifdef WIN32
+#define strncpy strncpy_s
+#define strcpy strcpy_s
+#define strncat strncat_s
+#define sprintf sprintf_s
+#define vsprintf vsprintf_s
+#define _snprintf _snprintf_s
+#define stricmp _stricmp
+
+#endif
+
 extern bool mr_meta;
 
 //extern enginefuncs_t g_engfuncs; //No longer required? [APG]RoboCop[CL]
@@ -145,7 +156,7 @@ void pfnSetModel(edict_t* e, const char* m)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
-        fprintf(fp, "pfnSetModel: edict=%p %s\n", (void*)e, m);
+        fprintf(fp, "pfnSetModel: edict=%p %s\n", static_cast<void*>(e), m);
         fclose(fp);
     }
     // _snprintf(sz_error_check,250,"pfnSetModel: edict=%x %s\n",e,m);
@@ -178,7 +189,8 @@ void pfnSetSize(edict_t* e, const float* rgflMin, const float* rgflMax)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
-        fprintf(fp, "pfnSetSize: %p (%f %f %f) (%f %f %f)\n", (void*)e, (*(Vector*)rgflMin).x, (*(Vector*)rgflMin).y,
+        fprintf(fp, "pfnSetSize: %p (%f %f %f) (%f %f %f)\n", static_cast<void*>(e), (*(Vector*)rgflMin).x,
+                (*(Vector*)rgflMin).y,
             (*(Vector*)rgflMin).z, (*(Vector*)rgflMax).x, (*(Vector*)rgflMax).y, (*(Vector*)rgflMax).z);
         fclose(fp);
     }
@@ -317,7 +329,8 @@ edict_t* pfnFindEntityInSphere(edict_t* pEdictStartSearchAfter, const float* org
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
-        fprintf(fp, "pfnFindEntityInSphere:%p (%f %f %f) %f %d\n", (void*)pEdictStartSearchAfter, (*(Vector*)org).x,
+        fprintf(fp, "pfnFindEntityInSphere:%p (%f %f %f) %f %d\n", static_cast<void*>(pEdictStartSearchAfter),
+                (*(Vector*)org).x,
             (*(Vector*)org).y, (*(Vector*)org).z, rad, spawn_check_crash_count);
 
         if(pEdictStartSearchAfter != NULL)
@@ -403,16 +416,16 @@ edict_t* pfnCreateEntity_Post(void)
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
         if(fp != NULL) {
-            fprintf(fp, "pfnCreateEntity_Post: %p %d\n", (void*)pent, pent->v.spawnflags);
+            fprintf(fp, "pfnCreateEntity_Post: %p %d\n", static_cast<void*>(pent), pent->v.spawnflags);
 
             if(pent->v.classname != 0)
                 fprintf(fp, " name=%s\n", STRING(pent->v.classname));
             if(pent->v.target != 0)
                 fprintf(fp, " target=%s\n", STRING(pent->v.target));
             if(pent->v.owner != NULL)
-                fprintf(fp, " owner=%p\n", (void*)pent->v.owner);
+                fprintf(fp, " owner=%p\n", static_cast<void*>(pent->v.owner));
             if(pent->v.chain != NULL)
-                fprintf(fp, " chain=%p\n", (void*)pent->v.chain);
+                fprintf(fp, " chain=%p\n", static_cast<void*>(pent->v.chain));
             fclose(fp);
         }
     }
@@ -443,15 +456,15 @@ edict_t* pfnCreateEntity(void)
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
         if(fp != NULL) {
-            fprintf(fp, "pfnCreateEntity: %p\n", (void*)pent);
+            fprintf(fp, "pfnCreateEntity: %p\n", static_cast<void*>(pent));
             if(pent->v.classname != 0)
                 fprintf(fp, " name=%s\n", STRING(pent->v.classname));
             if(pent->v.target != 0)
                 fprintf(fp, " target=%s\n", STRING(pent->v.target));
             if(pent->v.owner != NULL)
-                fprintf(fp, " owner=%p\n", (void*)pent->v.owner);
+                fprintf(fp, " owner=%p\n", static_cast<void*>(pent->v.owner));
             if(pent->v.chain != NULL)
-                fprintf(fp, " chain=%p\n", (void*)pent->v.chain);
+                fprintf(fp, " chain=%p\n", static_cast<void*>(pent->v.chain));
             fclose(fp);
         }
     }
@@ -509,7 +522,7 @@ void pfnRemoveEntity(edict_t* e)
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
         if(fp != NULL) {
-            fprintf(fp, "pfnRemoveEntity: %p %d\n", (void*)e, e->v.spawnflags);
+            fprintf(fp, "pfnRemoveEntity: %p %d\n", static_cast<void*>(e), e->v.spawnflags);
             if(e->v.model != 0)
                 fprintf(fp, " model=%s\n", STRING(e->v.model));
             if(e->v.classname != 0)
@@ -517,9 +530,9 @@ void pfnRemoveEntity(edict_t* e)
             if(e->v.target != 0)
                 fprintf(fp, " target=%s\n", STRING(e->v.target));
             if(e->v.owner != NULL)
-                fprintf(fp, " owner=%p\n", (void*)e->v.owner);
+                fprintf(fp, " owner=%p\n", static_cast<void*>(e->v.owner));
             if(e->v.chain != NULL)
-                fprintf(fp, " chain=%p\n", (void*)e->v.chain);
+                fprintf(fp, " chain=%p\n", static_cast<void*>(e->v.chain));
             fclose(fp);
         }
     }
@@ -537,7 +550,7 @@ edict_t* pfnCreateNamedEntity_Post(int className)
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
         if(fp != NULL) {
-            fprintf(fp, "pfnCreateNamedEntity: edict=%p name=%s\n", (void*)pent, STRING(className));
+            fprintf(fp, "pfnCreateNamedEntity: edict=%p name=%s\n", static_cast<void*>(pent), STRING(className));
             fclose(fp);
         }
     }
@@ -551,7 +564,7 @@ edict_t* pfnCreateNamedEntity(int className)
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
         if(fp != NULL) {
-            fprintf(fp, "pfnCreateNamedEntity: edict=%p name=%s\n", (void*)pent, STRING(className));
+            fprintf(fp, "pfnCreateNamedEntity: edict=%p name=%s\n", static_cast<void*>(pent), STRING(className));
             fclose(fp);
         }
     }
@@ -683,7 +696,8 @@ void pfnSetOrigin(edict_t* e, const float* rgflOrigin)
 
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
-        fprintf(fp, "pfnSetOrigin: %p (%f %f %f)\n", (void*)e, (*(Vector*)rgflOrigin).x, (*(Vector*)rgflOrigin).y,
+        fprintf(fp, "pfnSetOrigin: %p (%f %f %f)\n", static_cast<void*>(e), (*(Vector*)rgflOrigin).x,
+                (*(Vector*)rgflOrigin).y,
             (*(Vector*)rgflOrigin).z);
 
         if(e->v.classname != 0)
@@ -854,10 +868,10 @@ void pfnClientCommand(edict_t* pEdict, char* szFmt, ...)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
-        fprintf(fp, "-pfnClientCommand=%s %p\n", szFmt, (void*)pEdict);
+        fprintf(fp, "-pfnClientCommand=%s %p\n", szFmt, static_cast<void*>(pEdict));
         fclose(fp);
     }
-    _snprintf(sz_error_check, 250, "-pfnClientCommand=%s %p\n", szFmt, (void*)pEdict);
+    _snprintf(sz_error_check, 250, "-pfnClientCommand=%s %p\n", szFmt, static_cast<void*>(pEdict));
     /*if(pEdict!=NULL)
        {
        if((pEdict->v.flags & FL_FAKECLIENT)==FL_FAKECLIENT)
@@ -927,10 +941,10 @@ void pfnClCom(edict_t* pEdict, char* szFmt, ...)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
-        fprintf(fp, "-pfnClientCom=%s %p\n", szFmt, (void*)pEdict);
+        fprintf(fp, "-pfnClientCom=%s %p\n", szFmt, static_cast<void*>(pEdict));
         fclose(fp);
     }
-    _snprintf(sz_error_check, 250, "-pfnClientCom=%s %p\n", szFmt, (void*)pEdict);
+    _snprintf(sz_error_check, 250, "-pfnClientCom=%s %p\n", szFmt, static_cast<void*>(pEdict));
     if(pEdict != NULL) {
         bool b = FALSE;
 
@@ -1030,7 +1044,7 @@ void pfnMessageBegin(int msg_dest, int msg_type, const float* pOrigin, edict_t* 
     if(gpGlobals->deathmatch) {
         if(debug_engine /* || dont_send_packet*/) {
             fp = UTIL_OpenFoxbotLog();
-            fprintf(fp, "pfnMessageBegin: edict=%p dest=%d type=%d\n", (void*)ed, msg_dest, msg_type);
+            fprintf(fp, "pfnMessageBegin: edict=%p dest=%d type=%d\n", static_cast<void*>(ed), msg_dest, msg_type);
             fclose(fp);
         }
 
@@ -1279,7 +1293,7 @@ void pfnWriteByte(int iValue)
 
         // if this message is for a bot, call the client message function...
         if(botMsgFunction)
-            (*botMsgFunction)((void*)&iValue, botMsgIndex);
+            (*botMsgFunction)(static_cast<void*>(&iValue), botMsgIndex);
     }
 
     if(mr_meta && MM_func) {
@@ -1314,7 +1328,7 @@ void pfnWriteChar(int iValue)
 
         // if this message is for a bot, call the client message function...
         if(botMsgFunction)
-            (*botMsgFunction)((void*)&iValue, botMsgIndex);
+            (*botMsgFunction)(static_cast<void*>(&iValue), botMsgIndex);
     }
 
     if(mr_meta && MM_func) {
@@ -1349,7 +1363,7 @@ void pfnWriteShort(int iValue)
 
         // if this message is for a bot, call the client message function...
         if(botMsgFunction)
-            (*botMsgFunction)((void*)&iValue, botMsgIndex);
+            (*botMsgFunction)(static_cast<void*>(&iValue), botMsgIndex);
     }
 
     if(mr_meta && MM_func) {
@@ -1384,7 +1398,7 @@ void pfnWriteLong(int iValue)
 
         // if this message is for a bot, call the client message function...
         if(botMsgFunction)
-            (*botMsgFunction)((void*)&iValue, botMsgIndex);
+            (*botMsgFunction)(static_cast<void*>(&iValue), botMsgIndex);
     }
 
     if(mr_meta && MM_func) {
@@ -1419,7 +1433,7 @@ void pfnWriteAngle(float flValue)
 
         // if this message is for a bot, call the client message function...
         if(botMsgFunction)
-            (*botMsgFunction)((void*)&flValue, botMsgIndex);
+            (*botMsgFunction)(static_cast<void*>(&flValue), botMsgIndex);
     }
 
     if(mr_meta && MM_func) {
@@ -1454,7 +1468,7 @@ void pfnWriteCoord(float flValue)
 
         // if this message is for a bot, call the client message function...
         if(botMsgFunction)
-            (*botMsgFunction)((void*)&flValue, botMsgIndex);
+            (*botMsgFunction)(static_cast<void*>(&flValue), botMsgIndex);
     }
 
     if(mr_meta && MM_func) {
@@ -1525,7 +1539,7 @@ void pfnWriteEntity(int iValue)
 
         // if this message is for a bot, call the client message function...
         if(botMsgFunction)
-            (*botMsgFunction)((void*)&iValue, botMsgIndex);
+            (*botMsgFunction)(static_cast<void*>(&iValue), botMsgIndex);
     }
 
     if(mr_meta && MM_func) {
@@ -1596,7 +1610,7 @@ void* pfnPvAllocEntPrivateData(edict_t* pEdict, int32 cb)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
-        fprintf(fp, "pfnPvAllocEntPrivateData: %p %d\n", (void*)pEdict, cb);
+        fprintf(fp, "pfnPvAllocEntPrivateData: %p %d\n", static_cast<void*>(pEdict), cb);
         /*if(pEdict->v.model != 0)
            fprintf(fp," model=%s\n", STRING(pEdict->v.model));
            if(pEdict->v.classname != 0)
@@ -1922,11 +1936,11 @@ void pfnClientPrintf(edict_t* pEdict, PRINT_TYPE ptype, const char* szMsg)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
-        fprintf(fp, "pfnClientPrintf: %p %s\n", (void*)pEdict, szMsg);
+        fprintf(fp, "pfnClientPrintf: %p %s\n", static_cast<void*>(pEdict), szMsg);
         fclose(fp);
     }
 
-    _snprintf(sz_error_check, 250, "CPf: %p %s\n", (void*)pEdict, szMsg);
+    _snprintf(sz_error_check, 250, "CPf: %p %s\n", static_cast<void*>(pEdict), szMsg);
 
     // only send message if its not a bot...
     if(pEdict != NULL) {
@@ -1999,10 +2013,10 @@ void pfnClPrintf(edict_t* pEdict, PRINT_TYPE ptype, const char* szMsg)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
-        fprintf(fp, "pfnClPrintf: %p %s\n", (void*)pEdict, szMsg);
+        fprintf(fp, "pfnClPrintf: %p %s\n", static_cast<void*>(pEdict), szMsg);
         fclose(fp);
     }
-    _snprintf(sz_error_check, 250, "pfnClPrintf: %p %s\n", (void*)pEdict, szMsg);
+    _snprintf(sz_error_check, 250, "pfnClPrintf: %p %s\n", static_cast<void*>(pEdict), szMsg);
 
     // only send message if its not a bot...
     if(pEdict != NULL) {
@@ -2518,7 +2532,7 @@ int pfnGetPlayerUserId(edict_t* e)
     if(gpGlobals->deathmatch) {
         if(debug_engine) {
             fp = UTIL_OpenFoxbotLog();
-            fprintf(fp, "pfnGetPlayerUserId: %p\n", (void*)e);
+            fprintf(fp, "pfnGetPlayerUserId: %p\n", static_cast<void*>(e));
             fclose(fp);
         }
         // _snprintf(sz_error_check,250,"pfnGetPlayerUserId: %x\n",e);
@@ -2595,7 +2609,7 @@ unsigned int pfnGetPlayerWONId(edict_t* e)
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
         if(fp != NULL) {
-            fprintf(fp, "pfnGetPlayerWONId: %p\n", (void*)e);
+            fprintf(fp, "pfnGetPlayerWONId: %p\n", static_cast<void*>(e));
             fclose(fp);
         }
     }
@@ -2687,8 +2701,11 @@ void pfnPlaybackEvent(int flags,
         fp = UTIL_OpenFoxbotLog();
         if(fp != NULL) {
             fprintf(fp, "pfnPlaybackEvent: %d %p %d %f (%f %f %f) (%f %f %f) %f %f %d %d %d %d\n", flags,
-                (void*)pInvoker, eventindex, delay, (*(Vector*)origin).x, (*(Vector*)origin).y, (*(Vector*)origin).z,
-                (*(Vector*)angles).x, (*(Vector*)angles).y, (*(Vector*)angles).z, fparam1, fparam2, iparam1, iparam2,
+                (void*)pInvoker, eventindex, delay, (*reinterpret_cast<Vector*>(origin)).x,
+                    (*reinterpret_cast<Vector*>(origin)).y, (*reinterpret_cast<Vector*>(origin)).z,
+                (*reinterpret_cast<Vector*>(angles)).x, (*reinterpret_cast<Vector*>(angles)).y,
+                    (*reinterpret_cast<Vector*>(angles)).z,
+                    fparam1, fparam2, iparam1, iparam2,
                 bparam1, bparam2);
             fclose(fp);
         }
@@ -2875,7 +2892,8 @@ void pfnGetPlayerStats(const edict_t* pClient, int* ping, int* packet_loss)
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
         if(fp != NULL) {
-            fprintf(fp, "pfnGetPlayerStats: %p %p %p\n", (void*)pClient, (void*)ping, (void*)packet_loss);
+            fprintf(fp, "pfnGetPlayerStats: %p %p %p\n", (void*)pClient, static_cast<void*>(ping),
+                    static_cast<void*>(packet_loss));
             fclose(fp);
         }
     }

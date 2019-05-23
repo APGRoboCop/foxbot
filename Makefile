@@ -64,7 +64,7 @@ METADIR=$(METATOP)/metamod
 DEFTARGET=Ometamod
 
 # The version number 
-VERSION=0.791
+VERSION=0.792-APG
 
 # Make sure this is the correct compiler for your system
 # 4.8 appears to compile the builds smaller but Clang appears not compatible
@@ -111,8 +111,8 @@ SHLIBEXT=so
 SA_TARGET= $(MODNAME)_.$(SHLIBEXT)
 MM_TARGET= $(MODNAME)_mm.$(SHLIBEXT)
 
-BASE_CFLAGS=-Dstricmp=strcasecmp -D_strnicmp=strncasecmp -Dstrnicmp=strncasecmp -Dstrcmpi=strcasecmp \
-            -std=gnu++11 -DLINUX -D__linux__
+BASE_CFLAGS=-Dstricmp=strcasecmp -D_strnicmp=strncasecmp -Dstrnicmp=strncasecmp -Dstrcmpi=strcasecmp
+BASE_CFLAGS+=-DLINUX -D__linux__ #-std=gnu++11 
 
 XTFLAGS= -DTZONE=$(TZONE)
 
