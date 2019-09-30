@@ -55,7 +55,6 @@ inline float DotProduct(const Vector2D& a, const Vector2D& b) { return a.x*b.x +
 inline Vector2D operator*(float fl, const Vector2D& v)	{ return v * fl; }
 
 
-
 //=========================================================
 // 3D Vector
 //=========================================================
@@ -67,9 +66,6 @@ public:
 	inline Vector(float X, float Y, float Z)		{ x = X; y = Y; z = Z;						}
 	//inline Vector(double X, double Y, double Z)		{ x = (float)X; y = (float)Y; z = (float)Z;	}
 	//inline Vector(int X, int Y, int Z)				{ x = (float)X; y = (float)Y; z = (float)Z;	}
-
-
-
 
 	inline Vector(const Vector& v)					{ x = v.x; y = v.y; z = v.z;				}
 	inline Vector(float rgfl[3])					{ x = rgfl[0]; y = rgfl[1]; z = rgfl[2];	}
@@ -113,7 +109,5 @@ public:
 inline Vector operator*(float fl, const Vector& v)	{ return v * fl; }
 inline float DotProduct(const Vector& a, const Vector& b) { return a.x*b.x+a.y*b.y+a.z*b.z; }
 inline Vector CrossProduct(const Vector& a, const Vector& b) { return Vector( a.y*b.z - a.z*b.y, a.z*b.x - a.x*b.z, a.x*b.y - a.y*b.x ); }
-
-
 
 #endif

@@ -10,6 +10,10 @@ Updated by RoboCop
 
 - Replaced most of the C style casts with C++ casts
 
+- Increased engineer maintain sentry priority
+
+- Reduced sniper accuracy for each of the 5 bot skill settings
+
 - Fixed depreciation warning for 'SpyDetect'
 
 - Fixed some potential code issues

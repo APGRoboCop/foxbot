@@ -86,7 +86,7 @@ C_DLLEXPORT int Meta_Query(char* ifvers, plugin_info_t** pPlugInfo, mutil_funcs_
 //	pFunctionTable	(requested)	table of function tables this plugin catches
 //	pMGlobals		(given)	global vars	from metamod
 //	pGamedllFuncs	(given)	copy of	function tables	from game dll
-C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now,
+C_DLLEXPORT int Meta_Attach(const PLUG_LOADTIME now,
     META_FUNCTIONS* pFunctionTable,
     meta_globals_t* pMGlobals,
     gamedll_funcs_t* pGamedllFuncs)
@@ -110,7 +110,7 @@ C_DLLEXPORT int Meta_Attach(PLUG_LOADTIME now,
 // Metamod detaching plugin	from the server.
 // now		(given)	current	phase, ie during map, etc
 // reason	(given)	why	detaching (refresh,	console	unload,	forced unload, etc)
-C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason)
+C_DLLEXPORT int Meta_Detach(const PLUG_LOADTIME now, const PL_UNLOAD_REASON reason)
 {
     if(now && reason)
 	    // to satisfy gcc -Wunused

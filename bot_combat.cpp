@@ -66,8 +66,8 @@ extern int bot_skill_1_aim;   // accuracy for skill 1 bots
 extern int bot_aim_per_skill; // accuracy modifier for bots from skill 1 downwards
 
 // accuracy levels for each bot skill level
-static float bot_max_inaccuracy[5] = { 20.0, 30.0, 40.0, 50.0, 60.0 };
-static float bot_snipe_max_inaccuracy[5] = { 10.0, 20.0, 30.0, 40.0, 50.0 };
+static float bot_max_inaccuracy[5] = { 22.0, 33.0, 44.0, 55.0, 66.0 };
+static float bot_snipe_max_inaccuracy[5] = { 15.0, 25.0, 35.0, 45.0, 55.0 };
 
 extern bool is_team[4];
 extern int team_allies[4];
@@ -377,7 +377,7 @@ void BotEnemyCheck(bot_t* pBot)
             if(!IsAlive(pBot->lastEnemySentryGun) && pBot->lastEnemySentryGun->v.origin != Vector(0, 0, 0)) {
                 edict_t* deadSG = pBot->lastEnemySentryGun;
 
-                int area = AreaInsideClosest(deadSG);
+                const int area = AreaInsideClosest(deadSG);
                 if(area != -1) {
                     char msg[MAX_CHAT_LENGTH];
                     if(pBot->current_team == 0)
@@ -431,7 +431,7 @@ void BotEnemyCheck(bot_t* pBot)
 
     // if the bot has a current enemy, check if it's still valid
     if(pBot->enemy.ptr != NULL) {
-        Vector vecEnd = pBot->enemy.ptr->v.origin + pBot->enemy.ptr->v.view_ofs;
+	    const Vector vecEnd = pBot->enemy.ptr->v.origin + pBot->enemy.ptr->v.view_ofs;
 
         // anti friendly fire
         if(pBot->pEdict->v.playerclass != TFC_CLASS_MEDIC && pBot->pEdict->v.playerclass != TFC_CLASS_ENGINEER &&
@@ -475,7 +475,7 @@ void BotEnemyCheck(bot_t* pBot)
 
             // this code segment sets up a snipers sniper rifle firing delay
             if(pBot->pEdict->v.playerclass == TFC_CLASS_SNIPER && pBot->current_weapon.iId == TF_WEAPON_SNIPERRIFLE) {
-                float timeVal = (pBot->bot_skill + 1) * 0.4;
+	            const float timeVal = (pBot->bot_skill + 1) * 0.4;
 
                 // if f_snipe_time is too high or too low reset it
                 if(pBot->f_snipe_time + 0.3 < pBot->f_think_time ||
@@ -1110,7 +1110,7 @@ int BotGuessPlayerPosition(bot_t* const pBot, const Vector& r_playerOrigin)
         return -1;
 
     // get the waypoint nearest to the player
-    int playerWP = WaypointFindNearest_S(r_playerOrigin, NULL, 700.0, pBot->current_team, W_FL_DELETED);
+    const int playerWP = WaypointFindNearest_S(r_playerOrigin, NULL, 700.0, pBot->current_team, W_FL_DELETED);
     if(playerWP == -1)
         return -1;
 
@@ -1243,7 +1243,7 @@ void BotShootAtEnemy(bot_t* pBot)
     // how far away is the enemy scum?
     const float f_distance = v_enemy.Length();
 
-    Vector vv = UTIL_VecToAngles(v_enemy);
+    const Vector vv = UTIL_VecToAngles(v_enemy);
     pBot->idle_angle = vv.y;
     pBot->pEdict->v.idealpitch = vv.x;
     pBot->pEdict->v.ideal_yaw = pBot->idle_angle;
@@ -1367,7 +1367,7 @@ static Vector BotBodyTarget(edict_t* pBotEnemy, bot_t* pBot)
             if(pBot->enemy.f_firstSeen + 2.0 > pBot->f_think_time)
                 aim_error += (pBot->bot_skill + 1) * random_float(5.0, 20.0);
 
-            float aim_offset = bot_snipe_max_inaccuracy[pBot->bot_skill] + aim_error;
+            const float aim_offset = bot_snipe_max_inaccuracy[pBot->bot_skill] + aim_error;
             switch(pBot->bot_skill) {
             case 0:
                 pBot->aimDrift.x = random_float(-aim_offset, aim_offset) * f_scale;
@@ -1409,7 +1409,7 @@ static Vector BotBodyTarget(edict_t* pBotEnemy, bot_t* pBot)
             if(pBot->enemy.f_firstSeen + 2.0 > pBot->f_think_time)
                 aim_error += (pBot->bot_skill + 1) * random_float(5.0, 20.0);
 
-            float aim_offset = bot_max_inaccuracy[pBot->bot_skill] + aim_error;
+            const float aim_offset = bot_max_inaccuracy[pBot->bot_skill] + aim_error;
             switch(pBot->bot_skill) {
             case 0:
                 pBot->aimDrift.x = random_float(-aim_offset, aim_offset) * f_scale;
@@ -1468,7 +1468,7 @@ static Vector BotBodyTarget(edict_t* pBotEnemy, bot_t* pBot)
                     pBot->f_shoot_time = pBot->f_think_time + 0.1f;*/
 
     // projectile prediction targetting & grenade arcing
-    int zDiff = static_cast<int>(pBot->enemy.ptr->v.origin.z - pBot->pEdict->v.origin.z);
+    const int zDiff = static_cast<int>(pBot->enemy.ptr->v.origin.z - pBot->pEdict->v.origin.z);
     float dist2d = (pBotEnemy->v.origin - pBot->pEdict->v.origin).Length2D();
 
     // Add some error into the distance calculation based on skill level.
@@ -1510,14 +1510,14 @@ static Vector BotBodyTarget(edict_t* pBotEnemy, bot_t* pBot)
 // specifing a weapon_choice allows you to choose the weapon the bot
 // will use (assuming enough ammo exists for that weapon)
 // BotFireWeapon will return TRUE if weapon was fired, FALSE otherwise
-bool BotFireWeapon(Vector v_enemy, bot_t* pBot, int weapon_choice)
+bool BotFireWeapon(const Vector v_enemy, bot_t* pBot, const int weapon_choice)
 {
     bot_weapon_select_t* pSelect = NULL;
     bot_fire_delay_t* pDelay = NULL;
     int iId;
 
     edict_t* pEdict = pBot->pEdict;
-    float f_distance = v_enemy.Length(); // how far away is the enemy?
+    const float f_distance = v_enemy.Length(); // how far away is the enemy?
 
     // NeoTF pyro stuff
     if(pBot->pEdict->v.playerclass == TFC_CLASS_PYRO && pBot->FreezeDelay < pBot->f_think_time && f_distance < 200.0 &&
@@ -1574,7 +1574,7 @@ bool BotFireWeapon(Vector v_enemy, bot_t* pBot, int weapon_choice)
     // demoman grenade launcher height restriction :D
     if(pEdict->v.playerclass == TFC_CLASS_DEMOMAN && mod_id == TFC_DLL && distance < 900) {
         if(pBot->enemy.ptr != NULL) {
-            int z = static_cast<int>(pBot->enemy.ptr->v.origin.z - pEdict->v.origin.z);
+	        const int z = static_cast<int>(pBot->enemy.ptr->v.origin.z - pEdict->v.origin.z);
             if(z > 0 && z < 300 && distance < 901)
                 distance = static_cast<int>((pBot->enemy.ptr->v.origin - pEdict->v.origin).Length2D()) + z * 3;
             else if(z > 300 && distance < 901)
@@ -1847,7 +1847,7 @@ bool BotFireWeapon(Vector v_enemy, bot_t* pBot, int weapon_choice)
 // checking whether or not the sentry they have in memory is viewable
 // from there. If so they will anticipate contact and prime a grenade,
 // and acquire the target early just before contact.
-int BotNadeHandler(bot_t* pBot, bool timed, char newNadeType)
+int BotNadeHandler(bot_t* pBot, bool timed, const char newNadeType)
 {
     // Lets try putting discard code in here. (dont let the engineer discard)
     if(pBot->f_discard_time < pBot->f_think_time && pBot->pEdict->v.playerclass != TFC_CLASS_ENGINEER) {

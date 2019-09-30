@@ -210,7 +210,7 @@ void BotFindCurrentWaypoint(bot_t* pBot)
     }
 }
 
-CBaseEntity* UTIL_FindEntityInSphere(CBaseEntity* pStartEntity, const Vector& vecCenter, float flRadius)
+CBaseEntity* UTIL_FindEntityInSphere(CBaseEntity* pStartEntity, const Vector& vecCenter, const float flRadius)
 {
     edict_t* pentEntity = NULL;
 
@@ -258,13 +258,13 @@ void BotFixIdealPitch(edict_t* pEdict)
 
 float BotChangePitch(edict_t* pEdict, float speed)
 {
-    float ideal = pEdict->v.idealpitch;
+	const float ideal = pEdict->v.idealpitch;
     float current = -pEdict->v.v_angle.x;
 
     // turn from the current v_angle pitch to the idealpitch by selecting
     // the quickest way to turn to face that direction
     // find the difference in the current and ideal angle
-    float diff = fabs(current - ideal);
+	const float diff = fabs(current - ideal);
 
     // check if the bot is already facing the idealpitch direction...
     if(diff <= 0.01)
@@ -334,13 +334,13 @@ void BotFixIdealYaw(edict_t* pEdict)
 
 float BotChangeYaw(edict_t* pEdict, float speed)
 {
-    float ideal = pEdict->v.ideal_yaw;
+	const float ideal = pEdict->v.ideal_yaw;
     float current = pEdict->v.v_angle.y;
 
     // turn from the current v_angle yaw to the ideal_yaw by selecting
     // the quickest way to turn to face that direction
     // find the difference in the current and ideal angle
-    float diff = fabs(current - ideal);
+	const float diff = fabs(current - ideal);
 
     // check if the bot is already facing the ideal_yaw direction...
     if(diff <= 0.01)
@@ -575,7 +575,7 @@ bool BotNavigateWaypoints(bot_t* pBot, bool navByStrafe)
                     pBot->f_duck_time = pBot->f_think_time + 0.3;
             } else // not airborne - time to try and get around an obstruction
             {
-                int jumpResult = BotShouldJumpOver(pBot);
+	            const int jumpResult = BotShouldJumpOver(pBot);
 
                 // can the bot jump over something?
                 if(jumpResult == 2) // 2 == jumpable
@@ -583,7 +583,7 @@ bool BotNavigateWaypoints(bot_t* pBot, bool navByStrafe)
                     pBot->pEdict->v.button |= IN_JUMP;
                 } else // can the bot duck under something?
                 {
-                    int duckResult = BotShouldDuckUnder(pBot);
+	                const int duckResult = BotShouldDuckUnder(pBot);
 
                     if(duckResult == 2) // 2 == duckable
                     {
@@ -770,8 +770,8 @@ bool BotHeadTowardWaypoint(bot_t* pBot, bool& r_navByStrafe)
         // if the bot is not navigating by strafing or is approaching
         // a jump waypoint then face towards the current waypoint
         if(r_navByStrafe == FALSE || waypoints[pBot->current_wp].flags & W_FL_JUMP) {
-            Vector v_direction = waypoints[pBot->current_wp].origin - pBot->pEdict->v.origin;
-            Vector bot_angles = UTIL_VecToAngles(v_direction);
+	        const Vector v_direction = waypoints[pBot->current_wp].origin - pBot->pEdict->v.origin;
+	        const Vector bot_angles = UTIL_VecToAngles(v_direction);
 
             pBot->idle_angle = bot_angles.y;
 
@@ -788,7 +788,7 @@ bool BotHeadTowardWaypoint(bot_t* pBot, bool& r_navByStrafe)
             // from the bots view angle
 
             // get the angle towards the bots current waypoint
-            Vector offset = waypoints[pBot->current_wp].origin - pBot->pEdict->v.origin;
+            const Vector offset = waypoints[pBot->current_wp].origin - pBot->pEdict->v.origin;
             Vector vang = UTIL_VecToAngles(offset);
             vang.y -= pBot->pEdict->v.v_angle.y;
             vang.y = 360.0 - vang.y;
@@ -1522,7 +1522,7 @@ int BotGetDispenserBuildWaypoint(bot_t* pBot)
         if(pBot->current_wp < 0)
             return -1;
 
-        int sentryWP = WaypointFindRandomGoal(pBot->current_wp, pBot->current_team, W_FL_TFC_SENTRY);
+        const int sentryWP = WaypointFindRandomGoal(pBot->current_wp, pBot->current_team, W_FL_TFC_SENTRY);
 
         if(sentryWP == -1)
             return -1;
@@ -1655,7 +1655,7 @@ void BotFindSideRoute(bot_t* pBot)
     if(pBot->f_side_route_time < pBot->f_think_time) {
         pBot->f_side_route_time = pBot->f_think_time + random_float(15.0, 60.0);
 
-        int randomatic = random_long(1, 1000);
+        const int randomatic = random_long(1, 1000);
         if(randomatic < 401)
             pBot->sideRouteTolerance = 400; // very short route changes
         else if(randomatic < 701)
@@ -1717,7 +1717,7 @@ void BotFindSideRoute(bot_t* pBot)
 
             if(waypoints[nextWP].flags & W_FL_PATHCHECK || waypoints[nextWP].flags & W_FL_TFC_DETPACK_CLEAR ||
                 waypoints[nextWP].flags & W_FL_TFC_DETPACK_SEAL) {
-                int endWP = WaypointRouteFromTo(nextWP, i, pBot->current_team);
+	            const int endWP = WaypointRouteFromTo(nextWP, i, pBot->current_team);
                 if(BotPathCheck(nextWP, endWP) == FALSE) {
                     //	char msg[96];
                     //	sprintf(msg, "path %d - %d blocked", nextWP, endWP);
@@ -1783,7 +1783,7 @@ bool BotChangeRoute(bot_t* pBot)
         return FALSE;
 
     // the bots current distance from it's goal
-    int currentGoalDistance = WaypointDistanceFromTo(pBot->current_wp, goalWP, pBot->current_team);
+    const int currentGoalDistance = WaypointDistanceFromTo(pBot->current_wp, goalWP, pBot->current_team);
     if(currentGoalDistance < 200)
         return FALSE;
 
@@ -2255,7 +2255,7 @@ int BotFindSuicideGoal(bot_t* pBot)
         return -1;
 
     // look for a waypoint near the target waypoint and return it
-    int goalWP = WaypointFindNearest_V(waypoints[furthestIndex].origin, REACHABLE_RANGE, pBot->current_team);
+    const int goalWP = WaypointFindNearest_V(waypoints[furthestIndex].origin, REACHABLE_RANGE, pBot->current_team);
 
     return goalWP;
 }
@@ -2472,7 +2472,7 @@ static void BotCheckForRocketJump(bot_t* pBot)
     // Check if its a good time to jump
     // Resulting waypoint closer to goal than we are now
     // (> 1000 distance savings for now)
-    int distanceSaved = WaypointDistanceFromTo(pBot->current_wp, pBot->goto_wp, pBot->current_team) -
+    const int distanceSaved = WaypointDistanceFromTo(pBot->current_wp, pBot->goto_wp, pBot->current_team) -
 	    WaypointDistanceFromTo(closestRJ, pBot->goto_wp, pBot->current_team);
 
     // Don't bother if the distance it saves us is less than this.

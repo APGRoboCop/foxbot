@@ -75,7 +75,7 @@ void UTIL_LogPrintf(char* format, ...)
     ALERT(at_logged, "%s", string);
 }
 
-short FixedSigned16(float value, float scale)
+short FixedSigned16(const float value, const float scale)
 {
     int output;
 
@@ -90,7 +90,7 @@ short FixedSigned16(float value, float scale)
     return (short)output;
 }
 
-unsigned short FixedUnsigned16(float value, float scale)
+unsigned short FixedUnsigned16(const float value, const float scale)
 {
     int output;
 

@@ -239,7 +239,7 @@ inline char *GET_INFO_KEY_VALUE( char *infobuffer, char *key )
         return (*g_engfuncs.pfnInfoKeyValue)( infobuffer, key );
 }*/
 
-inline void SET_CLIENT_KEY_VALUE(int clientIndex, char* infobuffer, char* key, char* value)
+inline void SET_CLIENT_KEY_VALUE(const int clientIndex, char* infobuffer, char* key, char* value)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
@@ -283,7 +283,8 @@ void BotSpawnInit(bot_t* pBot)
     pBot->f_current_wp_deadline = 0.0;
     pBot->current_wp = -1;
 
-    pBot->msecnum = 0;
+	//Those are needing replaced for smoother performance [APG]RoboCop[CL]
+    pBot->msecnum = 0; 
     pBot->msecdel = 0.0;
     pBot->msecval = 0.0;
 
@@ -1744,7 +1745,7 @@ edict_t* BotContactThink(bot_t* pBot)
 
             // back off if very near and the other player is
             // looking at the bot
-            Vector vecEnd = pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs;
+            const Vector vecEnd = pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs;
             if(nearestdistance <= 70.0 && FInViewCone(vecEnd, playerToAvoid))
                 pBot->f_move_speed = -pBot->f_max_speed;
         }
@@ -2059,7 +2060,7 @@ void BotSprayLogo(edict_t* pEntity, const bool sprayDownwards)
 
     UTIL_MakeVectors(pEntity->v.v_angle);
 
-    Vector v_src = pEntity->v.origin; // + pEntity->v.view_ofs;
+    const Vector v_src = pEntity->v.origin; // + pEntity->v.view_ofs;
     Vector v_dest;
 
     if(sprayDownwards)
@@ -2284,7 +2285,7 @@ static void BotAttackerCheck(bot_t* pBot)
 // responding to and push them onto a stack of sounds for the bot.
 // According to Botman some sound stuff is handled by the client(such as
 // footsteps).  But this function still works on Listen and Dedicated servers.
-void BotSoundSense(edict_t* pEdict, const char* pszSample, float fVolume)
+void BotSoundSense(edict_t* pEdict, const char* pszSample, const float fVolume)
 {
     if(pEdict == NULL)
         return;
@@ -2328,7 +2329,7 @@ void BotSoundSense(edict_t* pEdict, const char* pszSample, float fVolume)
                         if(closestWPToThreat == -1)
                             closestWPToThreat = WaypointFindNearest_V(pEdict->v.origin, 500.0, bots[i].current_team);
 
-                        int respondDist = static_cast<int>(defendMaxRespondDist[bots[i].pEdict->v.playerclass]);
+                        const int respondDist = static_cast<int>(defendMaxRespondDist[bots[i].pEdict->v.playerclass]);
 
                         // Respond if we are within range
                         if(WaypointDistanceFromTo(bots[i].current_wp, closestWPToThreat, bots[i].current_team) <
@@ -2406,7 +2407,7 @@ void BotSoundSense(edict_t* pEdict, const char* pszSample, float fVolume)
             {
                 newJob = InitialiseNewJob(&bots[nearestMedic], JOB_INVESTIGATE_AREA);
                 if(newJob != NULL) {
-                    int closestWPToSound =
+	                const int closestWPToSound =
                         WaypointFindNearest_V(pEdict->v.origin, 500.0, bots[nearestMedic].current_team);
 
                     if(closestWPToSound != -1) {
@@ -2441,7 +2442,7 @@ void BotSoundSense(edict_t* pEdict, const char* pszSample, float fVolume)
             {
                 newJob = InitialiseNewJob(&bots[nearestEngy], JOB_INVESTIGATE_AREA);
                 if(newJob != NULL) {
-                    int closestWPToSound =
+	                const int closestWPToSound =
                         WaypointFindNearest_V(pEdict->v.origin, 500.0, bots[nearestEngy].current_team);
 
                     if(closestWPToSound != -1) {
@@ -2936,7 +2937,7 @@ static void BotComms(bot_t* pBot)
                 // Get the class from the command line.
                 char theClass = pBot->message[strlen(pBot->message) - 2];
                 if(theClass != '\0' && strchr("123456789", theClass)) {
-                    int iClass = atoi(&theClass);
+	                const int iClass = atoi(&theClass);
                     if(BotChangeClass(pBot, iClass, fromName)) {
                         UTIL_HostSay(pBot->pEdict, 1, "Roger");
                         if(stricmp("changeclassnow", cmd) == 0)
@@ -3087,7 +3088,7 @@ static void BotComms(bot_t* pBot)
 // make the bot change to that class.
 // This function is used primarily when a human tells a bot to change class.
 // Returns true if successful.
-static bool BotChangeClass(bot_t* pBot, int iClass, const char* from)
+static bool BotChangeClass(bot_t* pBot, const int iClass, const char* from)
 {
     // Check for invalid input
     if(iClass > 10 || iClass < 1)
@@ -3335,13 +3336,13 @@ static void BotPickNewClass(bot_t* pBot)
     }
 
     // figure out what percentage of each team a single player represents
-    float playerPercentage = 1.0f / static_cast<float>(team_total) * 100.0f;
+    const float playerPercentage = 1.0f / static_cast<float>(team_total) * 100.0f;
 
     // figure out an error margin based on the player percentage divided by 2
     // useful when a team has an odd number of players
-    float errorMargin = playerPercentage / 2.0f;
+    const float errorMargin = playerPercentage / 2.0f;
 
-    float percentOffense = playerPercentage * static_cast<float>(attackers);
+    const float percentOffense = playerPercentage * static_cast<float>(attackers);
 
     // does this team have too few defenders?
     if(percentOffense - errorMargin > static_cast<float>(RoleStatus[pBot->current_team]))
@@ -3623,7 +3624,7 @@ bool SpyAmbushAreaCheck(bot_t* pBot, Vector& r_wallVector)
         rememberLeftWall = FALSE;
 
     // Now start checking that the bot is in some kind of narrow area.
-    Vector v_src = pBot->pEdict->v.origin;
+    const Vector v_src = pBot->pEdict->v.origin;
     TraceResult tr;
 
     UTIL_MakeVectors(pBot->pEdict->v.v_angle);
@@ -3830,8 +3831,8 @@ void BotThink(bot_t* pBot)
 
     pBot->pEdict->v.flags |= FL_FAKECLIENT;
 
-    // TheFatal - START from Advanced Bot Framework (Thanks Rich!)
-
+    // TheFatal - START from Advanced Bot Framework (Thanks Rich!) - //No longer required? [APG]RoboCop[CL]
+	
     // adjust the millisecond delay based on the frame rate interval...
     if(pBot->msecdel <= gpGlobals->time) {
         pBot->msecdel = gpGlobals->time + 0.5; // default 0.5
@@ -3848,7 +3849,7 @@ void BotThink(bot_t* pBot)
         pBot->msecval = 100;
 
     // TheFatal - END
-
+	
     // this is the only place this should be set
     // (gpGlobals->time appears to run in another thread)
     pBot->f_think_time = gpGlobals->time;

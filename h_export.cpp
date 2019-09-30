@@ -67,7 +67,7 @@ extern int mod_id;
 
 #ifndef __linux__
 // Required DLL entry point
-BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
+BOOL WINAPI DllMain(HINSTANCE hinstDLL, const DWORD fdwReason, LPVOID lpvReserved)
 {
     if(fdwReason == DLL_PROCESS_ATTACH) {
     } else if(fdwReason == DLL_PROCESS_DETACH) {

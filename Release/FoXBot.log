@@ -1,384 +1,170 @@
 ﻿  bot.cpp
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005:  'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message :  see previous definition of 'ARRAYSIZE'
-E:\Dropbox\src\metamod-p-37\metamod\comp_dep.h(79,1): warning C4005:  'va_copy': macro redefinition
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.21.27702\include\stdarg.h(20): message :  see previous definition of 'va_copy'
-E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458:  declaration of 'pev' hides class member
-E:\Dropbox\src\foxbot\cbase.h(149,16): message :  see declaration of 'CBaseEntity::pev'
-E:\Dropbox\src\foxbot\bot.cpp(410,1): warning C4996:  'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(208): message :  see declaration of 'fopen'
-E:\Dropbox\src\foxbot\bot.cpp(461,49): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(514,46): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(577,71): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(645,54): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(681,58): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(755,40): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(794,21): warning C4456:  declaration of 'index' hides previous local declaration
-E:\Dropbox\src\foxbot\bot.cpp(555,9): message :  see declaration of 'index'
-E:\Dropbox\src\foxbot\bot.cpp(894,34): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(1063,52): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(1213,55): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(2904,36): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(2925,55): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(2927,51): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(2954,55): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(2956,51): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3039,41): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3060,41): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3081,41): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3137,43): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3140,40): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3143,41): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3146,42): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3149,42): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3152,40): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3155,40): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3158,39): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3161,38): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3164,43): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3232,44): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3389,32): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3392,33): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3395,34): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3398,34): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3401,32): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3404,32): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3407,31): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3410,30): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3413,35): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3500,32): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3503,33): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3506,34): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3509,34): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3512,32): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3515,32): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3518,31): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3521,30): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3524,35): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(3553,101): warning C4554:  '<<': check operator precedence for possible error; use parentheses to clarify precedence
-E:\Dropbox\src\foxbot\bot.cpp(4004,59): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(4183,45): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\bot.cpp(4368,34): warning C4456:  declaration of 'newJob' hides previous local declaration
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
+E:\Dropbox\src\metamod-p-37\metamod\comp_dep.h(79,1): warning C4005: 'va_copy': macro redefinition
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.23.28105\include\stdarg.h(20): message : see previous definition of 'va_copy'
+E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458: declaration of 'pev' hides class member
+E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity::pev'
+E:\Dropbox\src\foxbot\bot.cpp(792,21): warning C4456: declaration of 'index' hides previous local declaration
+E:\Dropbox\src\foxbot\bot.cpp(553,9): message : see declaration of 'index'
+E:\Dropbox\src\foxbot\bot.cpp(3551,101): warning C4554: '<<': check operator precedence for possible error; use parentheses to clarify precedence
+E:\Dropbox\src\foxbot\bot.cpp(4366,34): warning C4456: declaration of 'newJob' hides previous local declaration
   bot_client.cpp
-E:\Dropbox\src\foxbot\bot.cpp(4364,21): message :  see declaration of 'newJob'
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005:  'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message :  see previous definition of 'ARRAYSIZE'
-E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458:  declaration of 'pev' hides class member
+E:\Dropbox\src\foxbot\bot.cpp(4362,21): message : see declaration of 'newJob'
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
+E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458: declaration of 'pev' hides class member
   bot_combat.cpp
-E:\Dropbox\src\foxbot\cbase.h(149,16): message :  see declaration of 'CBaseEntity::pev'
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005:  'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message :  see previous definition of 'ARRAYSIZE'
-E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458:  declaration of 'pev' hides class member
-E:\Dropbox\src\foxbot\cbase.h(149,16): message :  see declaration of 'CBaseEntity::pev'
-E:\Dropbox\src\foxbot\bot_combat.cpp(911,29): warning C4456:  declaration of 'pent' hides previous local declaration
-E:\Dropbox\src\foxbot\bot_combat.cpp(522,14): message :  see declaration of 'pent'
-E:\Dropbox\src\foxbot\bot_combat.cpp(2442,22): warning C4456:  declaration of 'i' hides previous local declaration
+E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity::pev'
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
+E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458: declaration of 'pev' hides class member
+E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity::pev'
+E:\Dropbox\src\foxbot\bot_combat.cpp(911,29): warning C4456: declaration of 'pent' hides previous local declaration
+E:\Dropbox\src\foxbot\bot_combat.cpp(522,14): message : see declaration of 'pent'
+E:\Dropbox\src\foxbot\bot_combat.cpp(2442,22): warning C4456: declaration of 'i' hides previous local declaration
   bot_job_assessors.cpp
-E:\Dropbox\src\foxbot\bot_combat.cpp(2430,9): message :  see declaration of 'i'
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005:  'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message :  see previous definition of 'ARRAYSIZE'
-E:\Dropbox\src\metamod-p-37\metamod\comp_dep.h(79,1): warning C4005:  'va_copy': macro redefinition
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.21.27702\include\stdarg.h(20): message :  see previous definition of 'va_copy'
-E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458:  declaration of 'pev' hides class member
+E:\Dropbox\src\foxbot\bot_combat.cpp(2430,9): message : see declaration of 'i'
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
+E:\Dropbox\src\metamod-p-37\metamod\comp_dep.h(79,1): warning C4005: 'va_copy': macro redefinition
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.23.28105\include\stdarg.h(20): message : see previous definition of 'va_copy'
+E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458: declaration of 'pev' hides class member
   bot_job_functions.cpp
-E:\Dropbox\src\foxbot\cbase.h(149,16): message :  see declaration of 'CBaseEntity::pev'
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005:  'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message :  see previous definition of 'ARRAYSIZE'
-E:\Dropbox\src\metamod-p-37\metamod\comp_dep.h(79,1): warning C4005:  'va_copy': macro redefinition
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.21.27702\include\stdarg.h(20): message :  see previous definition of 'va_copy'
-E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458:  declaration of 'pev' hides class member
+E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity::pev'
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
+E:\Dropbox\src\metamod-p-37\metamod\comp_dep.h(79,1): warning C4005: 'va_copy': macro redefinition
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.23.28105\include\stdarg.h(20): message : see previous definition of 'va_copy'
+E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458: declaration of 'pev' hides class member
   bot_job_think.cpp
-E:\Dropbox\src\foxbot\cbase.h(149,16): message :  see declaration of 'CBaseEntity::pev'
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005:  'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message :  see previous definition of 'ARRAYSIZE'
-E:\Dropbox\src\metamod-p-37\metamod\comp_dep.h(79,1): warning C4005:  'va_copy': macro redefinition
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.21.27702\include\stdarg.h(20): message :  see previous definition of 'va_copy'
-E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458:  declaration of 'pev' hides class member
+E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity::pev'
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
+E:\Dropbox\src\metamod-p-37\metamod\comp_dep.h(79,1): warning C4005: 'va_copy': macro redefinition
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.23.28105\include\stdarg.h(20): message : see previous definition of 'va_copy'
+E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458: declaration of 'pev' hides class member
   bot_navigate.cpp
-E:\Dropbox\src\foxbot\cbase.h(149,16): message :  see declaration of 'CBaseEntity::pev'
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005:  'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message :  see previous definition of 'ARRAYSIZE'
-E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458:  declaration of 'pev' hides class member
+E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity::pev'
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
+E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458: declaration of 'pev' hides class member
   bot_start.cpp
-E:\Dropbox\src\foxbot\cbase.h(149,16): message :  see declaration of 'CBaseEntity::pev'
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005:  'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message :  see previous definition of 'ARRAYSIZE'
-E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458:  declaration of 'pev' hides class member
+E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity::pev'
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
+E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458: declaration of 'pev' hides class member
   botcam.cpp
-E:\Dropbox\src\foxbot\cbase.h(149,16): message :  see declaration of 'CBaseEntity::pev'
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005:  'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message :  see previous definition of 'ARRAYSIZE'
-E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458:  declaration of 'pev' hides class member
+E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity::pev'
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
+E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458: declaration of 'pev' hides class member
   dll.cpp
-E:\Dropbox\src\foxbot\cbase.h(149,16): message :  see declaration of 'CBaseEntity::pev'
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005:  'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message :  see previous definition of 'ARRAYSIZE'
-E:\Dropbox\src\metamod-p-37\metamod\comp_dep.h(79,1): warning C4005:  'va_copy': macro redefinition
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.21.27702\include\stdarg.h(20): message :  see previous definition of 'va_copy'
-E:\Dropbox\src\foxbot\dll.cpp(598,1): warning C4996:  '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1961): message :  see declaration of '_snprintf'
-E:\Dropbox\src\foxbot\dll.cpp(623,1): warning C4996:  '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1961): message :  see declaration of '_snprintf'
-E:\Dropbox\src\foxbot\dll.cpp(665,1): warning C4996:  '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1961): message :  see declaration of '_snprintf'
-E:\Dropbox\src\foxbot\dll.cpp(760,1): warning C4996:  'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(208): message :  see declaration of 'fopen'
-E:\Dropbox\src\foxbot\dll.cpp(857,1): warning C4996:  '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1961): message :  see declaration of '_snprintf'
-E:\Dropbox\src\foxbot\dll.cpp(859,1): warning C4996:  '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1961): message :  see declaration of '_snprintf'
-E:\Dropbox\src\foxbot\dll.cpp(1071,30): warning C4456:  declaration of 'msg' hides previous local declaration
-E:\Dropbox\src\foxbot\dll.cpp(1011,18): message :  see declaration of 'msg'
-E:\Dropbox\src\foxbot\dll.cpp(1077,37): warning C4457:  declaration of 'pent' hides function parameter
-E:\Dropbox\src\foxbot\dll.cpp(974,29): message :  see declaration of 'pent'
-E:\Dropbox\src\foxbot\dll.cpp(1013,1): warning C4996:  '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1961): message :  see declaration of '_snprintf'
-E:\Dropbox\src\foxbot\dll.cpp(1017,1): warning C4996:  '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1961): message :  see declaration of '_snprintf'
-E:\Dropbox\src\foxbot\dll.cpp(1021,1): warning C4996:  '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1961): message :  see declaration of '_snprintf'
-E:\Dropbox\src\foxbot\dll.cpp(1144,1): warning C4996:  '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1961): message :  see declaration of '_snprintf'
-E:\Dropbox\src\foxbot\dll.cpp(1441,1): warning C4996:  '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1961): message :  see declaration of '_snprintf'
-E:\Dropbox\src\foxbot\dll.cpp(1487,1): warning C4996:  '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1961): message :  see declaration of '_snprintf'
-E:\Dropbox\src\foxbot\dll.cpp(1826,38): warning C4473:  'sscanf_s' : not enough arguments passed for format string
-E:\Dropbox\src\foxbot\dll.cpp(1826,38): message :  placeholders and their parameters expect 2 variadic arguments, but 1 were provided
-E:\Dropbox\src\foxbot\dll.cpp(1826,38): message :  the missing variadic argument 2 is required by format string '%s'
-E:\Dropbox\src\foxbot\dll.cpp(1826,38): message :  this argument is used as a buffer size
-E:\Dropbox\src\foxbot\dll.cpp(1879,34): warning C4456:  declaration of 'msg' hides previous local declaration
-E:\Dropbox\src\foxbot\dll.cpp(1607,14): message :  see declaration of 'msg'
-E:\Dropbox\src\foxbot\dll.cpp(2545,28): warning C4459:  declaration of 'fp' hides global declaration
-E:\Dropbox\src\foxbot\dll.cpp(166,14): message :  see declaration of 'fp'
-E:\Dropbox\src\foxbot\dll.cpp(2009,1): warning C4996:  '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1961): message :  see declaration of '_snprintf'
-E:\Dropbox\src\foxbot\dll.cpp(2908,25): warning C4456:  declaration of 'index' hides previous local declaration
-E:\Dropbox\src\foxbot\dll.cpp(2687,23): message :  see declaration of 'index'
-E:\Dropbox\src\foxbot\dll.cpp(3273,25): warning C4456:  declaration of 'count' hides previous local declaration
-E:\Dropbox\src\foxbot\dll.cpp(2692,13): message :  see declaration of 'count'
-E:\Dropbox\src\foxbot\dll.cpp(3508,18): warning C4456:  declaration of 'i' hides previous local declaration
-E:\Dropbox\src\foxbot\dll.cpp(3434,13): message :  see declaration of 'i'
-E:\Dropbox\src\foxbot\dll.cpp(4212,28): warning C4459:  declaration of 'fp' hides global declaration
-E:\Dropbox\src\foxbot\dll.cpp(166,14): message :  see declaration of 'fp'
-E:\Dropbox\src\foxbot\dll.cpp(4301,50): warning C4456:  declaration of 'i' hides previous local declaration
-E:\Dropbox\src\foxbot\dll.cpp(3508,17): message :  see declaration of 'i'
-E:\Dropbox\src\foxbot\dll.cpp(4812,42): warning C4456:  declaration of 'i' hides previous local declaration
-E:\Dropbox\src\foxbot\dll.cpp(3508,17): message :  see declaration of 'i'
-E:\Dropbox\src\foxbot\dll.cpp(4847,42): warning C4456:  declaration of 'i' hides previous local declaration
-E:\Dropbox\src\foxbot\dll.cpp(3508,17): message :  see declaration of 'i'
-E:\Dropbox\src\foxbot\dll.cpp(4882,42): warning C4456:  declaration of 'i' hides previous local declaration
-E:\Dropbox\src\foxbot\dll.cpp(3508,17): message :  see declaration of 'i'
-E:\Dropbox\src\foxbot\dll.cpp(4917,42): warning C4456:  declaration of 'i' hides previous local declaration
-E:\Dropbox\src\foxbot\dll.cpp(3508,17): message :  see declaration of 'i'
-E:\Dropbox\src\foxbot\dll.cpp(4955,42): warning C4456:  declaration of 'i' hides previous local declaration
-E:\Dropbox\src\foxbot\dll.cpp(3508,17): message :  see declaration of 'i'
-E:\Dropbox\src\foxbot\dll.cpp(4990,42): warning C4456:  declaration of 'i' hides previous local declaration
-E:\Dropbox\src\foxbot\dll.cpp(3508,17): message :  see declaration of 'i'
-E:\Dropbox\src\foxbot\dll.cpp(5025,42): warning C4456:  declaration of 'i' hides previous local declaration
-E:\Dropbox\src\foxbot\dll.cpp(3508,17): message :  see declaration of 'i'
-E:\Dropbox\src\foxbot\dll.cpp(5060,42): warning C4456:  declaration of 'i' hides previous local declaration
-E:\Dropbox\src\foxbot\dll.cpp(3508,17): message :  see declaration of 'i'
-E:\Dropbox\src\foxbot\dll.cpp(5104,42): warning C4456:  declaration of 'i' hides previous local declaration
-E:\Dropbox\src\foxbot\dll.cpp(3508,17): message :  see declaration of 'i'
-E:\Dropbox\src\foxbot\dll.cpp(5144,42): warning C4456:  declaration of 'i' hides previous local declaration
-E:\Dropbox\src\foxbot\dll.cpp(3508,17): message :  see declaration of 'i'
-E:\Dropbox\src\foxbot\dll.cpp(5184,42): warning C4456:  declaration of 'i' hides previous local declaration
-E:\Dropbox\src\foxbot\dll.cpp(3508,17): message :  see declaration of 'i'
-E:\Dropbox\src\foxbot\dll.cpp(5224,42): warning C4456:  declaration of 'i' hides previous local declaration
-E:\Dropbox\src\foxbot\dll.cpp(3508,17): message :  see declaration of 'i'
-E:\Dropbox\src\foxbot\dll.cpp(2714,1): warning C4996:  'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(208): message :  see declaration of 'fopen'
-E:\Dropbox\src\foxbot\dll.cpp(2718,1): warning C4996:  'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(208): message :  see declaration of 'fopen'
-E:\Dropbox\src\foxbot\dll.cpp(2966,1): warning C4996:  'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(208): message :  see declaration of 'fopen'
-E:\Dropbox\src\foxbot\dll.cpp(3005,1): warning C4996:  'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(208): message :  see declaration of 'fopen'
-E:\Dropbox\src\foxbot\dll.cpp(3023,1): warning C4996:  'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(208): message :  see declaration of 'fopen'
-E:\Dropbox\src\foxbot\dll.cpp(3499,1): warning C4996:  'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(208): message :  see declaration of 'fopen'
-E:\Dropbox\src\foxbot\dll.cpp(5762,1): warning C4996:  '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1961): message :  see declaration of '_snprintf'
-E:\Dropbox\src\foxbot\dll.cpp(5765,1): warning C4996:  '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1961): message :  see declaration of '_snprintf'
-E:\Dropbox\src\foxbot\dll.cpp(5768,1): warning C4996:  '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1961): message :  see declaration of '_snprintf'
-E:\Dropbox\src\foxbot\dll.cpp(6534,16): warning C4459:  declaration of 'fp' hides global declaration
-E:\Dropbox\src\foxbot\dll.cpp(166,14): message :  see declaration of 'fp'
-E:\Dropbox\src\foxbot\dll.cpp(6665,1): warning C4996:  '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1961): message :  see declaration of '_snprintf'
-E:\Dropbox\src\foxbot\dll.cpp(6776,1): warning C4996:  '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1961): message :  see declaration of '_snprintf'
-E:\Dropbox\src\foxbot\dll.cpp(6910,1): warning C4996:  '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1961): message :  see declaration of '_snprintf'
-E:\Dropbox\src\foxbot\dll.cpp(6928,1): warning C4996:  '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1961): message :  see declaration of '_snprintf'
-E:\Dropbox\src\foxbot\dll.cpp(6931,1): warning C4996:  '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1961): message :  see declaration of '_snprintf'
-E:\Dropbox\src\foxbot\dll.cpp(6964,1): warning C4996:  '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1961): message :  see declaration of '_snprintf'
-E:\Dropbox\src\foxbot\dll.cpp(7000,1): warning C4996:  '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity::pev'
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
+E:\Dropbox\src\metamod-p-37\metamod\comp_dep.h(79,1): warning C4005: 'va_copy': macro redefinition
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.23.28105\include\stdarg.h(20): message : see previous definition of 'va_copy'
+E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458: declaration of 'pev' hides class member
+E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity::pev'
+E:\Dropbox\src\foxbot\dll.cpp(1069,30): warning C4456: declaration of 'msg' hides previous local declaration
+E:\Dropbox\src\foxbot\dll.cpp(1009,18): message : see declaration of 'msg'
+E:\Dropbox\src\foxbot\dll.cpp(1075,37): warning C4457: declaration of 'pent' hides function parameter
+E:\Dropbox\src\foxbot\dll.cpp(972,29): message : see declaration of 'pent'
+E:\Dropbox\src\foxbot\dll.cpp(1824,38): warning C4473: 'sscanf_s' : not enough arguments passed for format string
+E:\Dropbox\src\foxbot\dll.cpp(1824,38): message : placeholders and their parameters expect 2 variadic arguments, but 1 were provided
+E:\Dropbox\src\foxbot\dll.cpp(1824,38): message : the missing variadic argument 2 is required by format string '%s'
+E:\Dropbox\src\foxbot\dll.cpp(1824,38): message : this argument is used as a buffer size
+E:\Dropbox\src\foxbot\dll.cpp(1877,34): warning C4456: declaration of 'msg' hides previous local declaration
+E:\Dropbox\src\foxbot\dll.cpp(1605,14): message : see declaration of 'msg'
+E:\Dropbox\src\foxbot\dll.cpp(2543,28): warning C4459: declaration of 'fp' hides global declaration
+E:\Dropbox\src\foxbot\dll.cpp(164,14): message : see declaration of 'fp'
+E:\Dropbox\src\foxbot\dll.cpp(2906,25): warning C4456: declaration of 'index' hides previous local declaration
+E:\Dropbox\src\foxbot\dll.cpp(2685,23): message : see declaration of 'index'
+E:\Dropbox\src\foxbot\dll.cpp(3271,25): warning C4456: declaration of 'count' hides previous local declaration
+E:\Dropbox\src\foxbot\dll.cpp(2690,13): message : see declaration of 'count'
+E:\Dropbox\src\foxbot\dll.cpp(3506,18): warning C4456: declaration of 'i' hides previous local declaration
+E:\Dropbox\src\foxbot\dll.cpp(3432,13): message : see declaration of 'i'
+E:\Dropbox\src\foxbot\dll.cpp(4210,28): warning C4459: declaration of 'fp' hides global declaration
+E:\Dropbox\src\foxbot\dll.cpp(164,14): message : see declaration of 'fp'
+E:\Dropbox\src\foxbot\dll.cpp(4299,50): warning C4456: declaration of 'i' hides previous local declaration
+E:\Dropbox\src\foxbot\dll.cpp(3506,17): message : see declaration of 'i'
+E:\Dropbox\src\foxbot\dll.cpp(4810,42): warning C4456: declaration of 'i' hides previous local declaration
+E:\Dropbox\src\foxbot\dll.cpp(3506,17): message : see declaration of 'i'
+E:\Dropbox\src\foxbot\dll.cpp(4845,42): warning C4456: declaration of 'i' hides previous local declaration
+E:\Dropbox\src\foxbot\dll.cpp(3506,17): message : see declaration of 'i'
+E:\Dropbox\src\foxbot\dll.cpp(4880,42): warning C4456: declaration of 'i' hides previous local declaration
+E:\Dropbox\src\foxbot\dll.cpp(3506,17): message : see declaration of 'i'
+E:\Dropbox\src\foxbot\dll.cpp(4915,42): warning C4456: declaration of 'i' hides previous local declaration
+E:\Dropbox\src\foxbot\dll.cpp(3506,17): message : see declaration of 'i'
+E:\Dropbox\src\foxbot\dll.cpp(4953,42): warning C4456: declaration of 'i' hides previous local declaration
+E:\Dropbox\src\foxbot\dll.cpp(3506,17): message : see declaration of 'i'
+E:\Dropbox\src\foxbot\dll.cpp(4988,42): warning C4456: declaration of 'i' hides previous local declaration
+E:\Dropbox\src\foxbot\dll.cpp(3506,17): message : see declaration of 'i'
+E:\Dropbox\src\foxbot\dll.cpp(5023,42): warning C4456: declaration of 'i' hides previous local declaration
+E:\Dropbox\src\foxbot\dll.cpp(3506,17): message : see declaration of 'i'
+E:\Dropbox\src\foxbot\dll.cpp(5058,42): warning C4456: declaration of 'i' hides previous local declaration
+E:\Dropbox\src\foxbot\dll.cpp(3506,17): message : see declaration of 'i'
+E:\Dropbox\src\foxbot\dll.cpp(5102,42): warning C4456: declaration of 'i' hides previous local declaration
+E:\Dropbox\src\foxbot\dll.cpp(3506,17): message : see declaration of 'i'
+E:\Dropbox\src\foxbot\dll.cpp(5142,42): warning C4456: declaration of 'i' hides previous local declaration
+E:\Dropbox\src\foxbot\dll.cpp(3506,17): message : see declaration of 'i'
+E:\Dropbox\src\foxbot\dll.cpp(5182,42): warning C4456: declaration of 'i' hides previous local declaration
+E:\Dropbox\src\foxbot\dll.cpp(3506,17): message : see declaration of 'i'
+E:\Dropbox\src\foxbot\dll.cpp(5222,42): warning C4456: declaration of 'i' hides previous local declaration
+E:\Dropbox\src\foxbot\dll.cpp(3506,17): message : see declaration of 'i'
+E:\Dropbox\src\foxbot\dll.cpp(6532,16): warning C4459: declaration of 'fp' hides global declaration
   engine.cpp
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1961): message :  see declaration of '_snprintf'
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005:  'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message :  see previous definition of 'ARRAYSIZE'
-E:\Dropbox\src\metamod-p-37\metamod\comp_dep.h(79,1): warning C4005:  'va_copy': macro redefinition
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.21.27702\include\stdarg.h(20): message :  see previous definition of 'va_copy'
-E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458:  declaration of 'pev' hides class member
+E:\Dropbox\src\foxbot\dll.cpp(164,14): message : see declaration of 'fp'
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
+E:\Dropbox\src\metamod-p-37\metamod\comp_dep.h(79,1): warning C4005: 'va_copy': macro redefinition
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.23.28105\include\stdarg.h(20): message : see previous definition of 'va_copy'
+E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458: declaration of 'pev' hides class member
   h_export.cpp
-E:\Dropbox\src\foxbot\cbase.h(149,16): message :  see declaration of 'CBaseEntity::pev'
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005:  'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message :  see previous definition of 'ARRAYSIZE'
-E:\Dropbox\src\metamod-p-37\metamod\comp_dep.h(79,1): warning C4005:  'va_copy': macro redefinition
+E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity::pev'
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
+E:\Dropbox\src\metamod-p-37\metamod\comp_dep.h(79,1): warning C4005: 'va_copy': macro redefinition
   linkfunc.cpp
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.21.27702\include\stdarg.h(20): message :  see previous definition of 'va_copy'
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005:  'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message :  see previous definition of 'ARRAYSIZE'
-E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458:  declaration of 'pev' hides class member
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.23.28105\include\stdarg.h(20): message : see previous definition of 'va_copy'
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
+E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458: declaration of 'pev' hides class member
   meta_api.cpp
-E:\Dropbox\src\foxbot\cbase.h(149,16): message :  see declaration of 'CBaseEntity::pev'
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005:  'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message :  see previous definition of 'ARRAYSIZE'
-E:\Dropbox\src\metamod-p-37\metamod\comp_dep.h(79,1): warning C4005:  'va_copy': macro redefinition
+E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity::pev'
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
+E:\Dropbox\src\metamod-p-37\metamod\comp_dep.h(79,1): warning C4005: 'va_copy': macro redefinition
   sdk_util.cpp
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.21.27702\include\stdarg.h(20): message :  see previous definition of 'va_copy'
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005:  'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message :  see previous definition of 'ARRAYSIZE'
-E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458:  declaration of 'pev' hides class member
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.23.28105\include\stdarg.h(20): message : see previous definition of 'va_copy'
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
+E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458: declaration of 'pev' hides class member
   util.cpp
-E:\Dropbox\src\foxbot\cbase.h(149,16): message :  see declaration of 'CBaseEntity::pev'
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005:  'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message :  see previous definition of 'ARRAYSIZE'
-E:\Dropbox\src\foxbot\util.cpp(681,1): warning C4996:  'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(208): message :  see declaration of 'fopen'
-E:\Dropbox\src\foxbot\util.cpp(685,1): warning C4996:  'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(208): message :  see declaration of 'fopen'
-E:\Dropbox\src\foxbot\util.cpp(698,1): warning C4996:  'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(208): message :  see declaration of 'fopen'
-E:\Dropbox\src\foxbot\util.cpp(753,30): warning C4996:  'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(90): message :  see declaration of 'strcat'
-E:\Dropbox\src\foxbot\util.cpp(756,30): warning C4996:  'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(90): message :  see declaration of 'strcat'
-E:\Dropbox\src\foxbot\util.cpp(761,30): warning C4996:  'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(90): message :  see declaration of 'strcat'
-E:\Dropbox\src\foxbot\util.cpp(763,30): warning C4996:  'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(90): message :  see declaration of 'strcat'
-E:\Dropbox\src\foxbot\util.cpp(746,1): warning C4996:  'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(338): message :  see declaration of 'strncpy'
-E:\Dropbox\src\foxbot\util.cpp(786,1): warning C4996:  'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(208): message :  see declaration of 'fopen'
-E:\Dropbox\src\foxbot\util.cpp(793,1): warning C4996:  'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity::pev'
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
   waypoint.cpp
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(208): message :  see declaration of 'fopen'
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005:  'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message :  see previous definition of 'ARRAYSIZE'
-E:\Dropbox\src\foxbot\waypoint.cpp(1148,52): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\waypoint.cpp(1203,22): warning C4456:  declaration of 'i' hides previous local declaration
-E:\Dropbox\src\foxbot\waypoint.cpp(1179,9): message :  see declaration of 'i'
-E:\Dropbox\src\foxbot\waypoint.cpp(1554,47): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\waypoint.cpp(1685,47): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\waypoint.cpp(1561,1): warning C4996:  'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(208): message :  see declaration of 'fopen'
-E:\Dropbox\src\foxbot\waypoint.cpp(1689,1): warning C4996:  'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(208): message :  see declaration of 'fopen'
-E:\Dropbox\src\foxbot\waypoint.cpp(1875,37): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\waypoint.cpp(1884,47): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\waypoint.cpp(1888,1): warning C4996:  'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(208): message :  see declaration of 'fopen'
-E:\Dropbox\src\foxbot\waypoint.cpp(2152,51): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\waypoint.cpp(2154,51): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\waypoint.cpp(2156,51): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\waypoint.cpp(2158,51): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\waypoint.cpp(2160,27): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\waypoint.cpp(3060,42): warning C4459:  declaration of 'shortest_path' hides global declaration
-E:\Dropbox\src\foxbot\waypoint.cpp(131,15): message :  see declaration of 'shortest_path'
-E:\Dropbox\src\foxbot\waypoint.cpp(3060,71): warning C4459:  declaration of 'from_to' hides global declaration
-E:\Dropbox\src\foxbot\waypoint.cpp(132,15): message :  see declaration of 'from_to'
-E:\Dropbox\src\foxbot\waypoint.cpp(3356,152): warning C4309:  'initializing': truncation of constant value
-E:\Dropbox\src\foxbot\waypoint.cpp(3955,37): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\waypoint.cpp(3965,47): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\waypoint.cpp(3970,1): warning C4996:  'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(208): message :  see declaration of 'fopen'
-E:\Dropbox\src\foxbot\waypoint.cpp(3993,47): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\waypoint.cpp(3997,1): warning C4996:  'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(208): message :  see declaration of 'fopen'
-E:\Dropbox\src\foxbot\waypoint.cpp(5662,31): warning C4996:  'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\string.h(133): message :  see declaration of 'strcpy'
-E:\Dropbox\src\foxbot\waypoint.cpp(5614,1): warning C4996:  'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
+E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
+E:\Dropbox\src\foxbot\waypoint.cpp(1202,22): warning C4456: declaration of 'i' hides previous local declaration
+E:\Dropbox\src\foxbot\waypoint.cpp(1178,9): message : see declaration of 'i'
+E:\Dropbox\src\foxbot\waypoint.cpp(3059,42): warning C4459: declaration of 'shortest_path' hides global declaration
+E:\Dropbox\src\foxbot\waypoint.cpp(130,15): message : see declaration of 'shortest_path'
+E:\Dropbox\src\foxbot\waypoint.cpp(3059,71): warning C4459: declaration of 'from_to' hides global declaration
+E:\Dropbox\src\foxbot\waypoint.cpp(131,15): message : see declaration of 'from_to'
   Generating Code...
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(208): message :  see declaration of 'fopen'
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(208): message : E:\Dropbox\src\foxbot\waypoint.cpp(150) : warning C4700: uninitialized local variable 'x' used
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(208): message : E:\Dropbox\src\foxbot\waypoint.cpp(151) : warning C4700: uninitialized local variable 'y' used
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(208): message : E:\Dropbox\src\foxbot\meta_api.cpp(118) : warning C4715: 'Meta_Detach': not all control paths return a value
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(208): message : E:\Dropbox\src\foxbot\dll.cpp(5550) : warning C4702: unreachable code
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(208): message : E:\Dropbox\src\foxbot\dll.cpp(4449) : warning C4701: potentially uninitialized local variable 'pnt' used
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(208): message : E:\Dropbox\src\foxbot\bot.cpp(658) : warning C4701: potentially uninitialized local variable 'max_skin_index' used
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(208): message : E:\Dropbox\src\foxbot\bot.cpp(623) : warning C4701: potentially uninitialized local variable 'index' used
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(208): message : E:\Dropbox\src\foxbot\bot.cpp(623) : warning C4701: potentially uninitialized local variable 'pSkinUsed' used
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(208): message : E:\Dropbox\src\foxbot\bot.cpp(623) : warning C4703: potentially uninitialized local pointer variable 'pSkinUsed' used
+E:\Dropbox\src\foxbot\waypoint.cpp(3355,152): warning C4309: 'initializing': truncation of constant value
+E:\Dropbox\src\foxbot\waypoint.cpp(149): warning C4700: uninitialized local variable 'x' used
+E:\Dropbox\src\foxbot\waypoint.cpp(150): warning C4700: uninitialized local variable 'y' used
+E:\Dropbox\src\foxbot\meta_api.cpp(118): warning C4715: 'Meta_Detach': not all control paths return a value
+E:\Dropbox\src\foxbot\dll.cpp(5548): warning C4702: unreachable code
+E:\Dropbox\src\foxbot\dll.cpp(4447): warning C4701: potentially uninitialized local variable 'pnt' used
+E:\Dropbox\src\foxbot\bot.cpp(656): warning C4701: potentially uninitialized local variable 'max_skin_index' used
+E:\Dropbox\src\foxbot\bot.cpp(621): warning C4701: potentially uninitialized local variable 'index' used
+E:\Dropbox\src\foxbot\bot.cpp(621): warning C4701: potentially uninitialized local variable 'pSkinUsed' used
+E:\Dropbox\src\foxbot\bot.cpp(621): warning C4703: potentially uninitialized local pointer variable 'pSkinUsed' used
      Creating library .\Release\FoXBot.lib and object .\Release\FoXBot.exp
   FoXBot.vcxproj -> E:\Dropbox\src\foxbot\.\Release\foxbot.dll
   Copy to Foxbot Folder
