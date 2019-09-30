@@ -48,8 +48,6 @@
 #define strcpy strcpy_s
 #define strcat strcat_s
 #define strncat strncat_s
-#define sprintf sprintf_s
-//#define _snprintf _snprintf_s
 #define sscanf sscanf_s
 #define stricmp _stricmp
 #endif
@@ -612,7 +610,7 @@ static void BotBalanceTeams_Casual(void)
     }
 }
 
-static bool BotBalanceTeams(int a, int b)
+static bool BotBalanceTeams(const int a, const int b)
 {
     if(playersPerTeam[a - 1] - 1 > playersPerTeam[b - 1] &&
         (max_team_players[b - 1] > playersPerTeam[b - 1] || max_team_players[b - 1] == 0) && is_team[b - 1]) {
@@ -635,7 +633,7 @@ static bool BotBalanceTeams(int a, int b)
 }
 
 // used with the bot_bot_balance setting
-static bool BBotBalanceTeams(int a, int b)
+static bool BBotBalanceTeams(const int a, const int b)
 {
     // now just set up teams to include bots in them :D
     int bteams[4] = { 0, 0, 0, 0 };
@@ -649,7 +647,7 @@ static bool BBotBalanceTeams(int a, int b)
             infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(bots[i].pEdict);
             strcpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"));
             if(cl_name[0] != '\0') {
-                int team = bots[i].pEdict->v.team - 1;
+	            const int team = bots[i].pEdict->v.team - 1;
 
                 if(team >= 0 && team < 4)
                     bteams[team] = bteams[team] + 1;
@@ -678,7 +676,7 @@ static bool BBotBalanceTeams(int a, int b)
 
 // This function will balance the human players amongst the teams by forcing
 // them to switch teams if necessary.
-static bool HBalanceTeams(int a, int b)
+static bool HBalanceTeams(const int a, const int b)
 {
     if(playersPerTeam[a - 1] - 1 > playersPerTeam[b - 1] &&
         (max_team_players[b - 1] > playersPerTeam[b - 1] || max_team_players[b - 1] == 0) && is_team[b - 1]) {
@@ -818,7 +816,7 @@ void chatClass::readChatFile(void)
 // chat message of the type defined by chatSection.
 // Some chat strings use a players name with the "%n" specifier, so you can
 // specify a players name with playerName, or set it to NULL.
-void chatClass::pickRandomChatString(char* msg, size_t maxLength, const int chatSection, const char* playerName)
+void chatClass::pickRandomChatString(char* msg, const size_t maxLength, const int chatSection, const char* playerName)
 {
     msg[0] = '\0'; // just in case
 
@@ -1324,7 +1322,7 @@ void DispatchKeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd)
             temp_pent = pentKeyvalue;
         } else if(pentKeyvalue == temp_pent) {
             if(strcmp(pkvd->szKeyName, "team_no") == 0) {
-                int value = atoi(pkvd->szValue);
+	            const int value = atoi(pkvd->szValue);
 
                 is_team[value - 1] = TRUE;
                 if(value > max_teams)
@@ -1352,7 +1350,7 @@ void DispatchSave(edict_t* pent, SAVERESTOREDATA* pSaveData)
         SET_META_RESULT(MRES_HANDLED);
 }
 
-int DispatchRestore(edict_t* pent, SAVERESTOREDATA* pSaveData, int globalEntity)
+int DispatchRestore(edict_t* pent, SAVERESTOREDATA* pSaveData, const int globalEntity)
 {
     if(!mr_meta)
         return (*other_gFunctionTable.pfnRestore)(pent, pSaveData, globalEntity);
@@ -1374,7 +1372,7 @@ void SaveWriteFields(SAVERESTOREDATA* pSaveData,
     const char* pname,
     void* pBaseData,
     TYPEDESCRIPTION* pFields,
-    int fieldCount)
+    const int fieldCount)
 {
     if(!mr_meta)
         (*other_gFunctionTable.pfnSaveWriteFields)(pSaveData, pname, pBaseData, pFields, fieldCount);
@@ -1386,7 +1384,7 @@ void SaveReadFields(SAVERESTOREDATA* pSaveData,
     const char* pname,
     void* pBaseData,
     TYPEDESCRIPTION* pFields,
-    int fieldCount)
+    const int fieldCount)
 {
     if(!mr_meta)
         (*other_gFunctionTable.pfnSaveReadFields)(pSaveData, pname, pBaseData, pFields, fieldCount);
@@ -2638,7 +2636,7 @@ void ClientUserInfoChanged(edict_t* pEntity, char* infobuffer)
         SET_META_RESULT(MRES_HANDLED);
 }
 
-void ServerActivate(edict_t* pEdictList, int edictCount, int clientMax)
+void ServerActivate(edict_t* pEdictList, const int edictCount, const int clientMax)
 {
     if(!mr_meta)
         (*other_gFunctionTable.pfnServerActivate)(pEdictList, edictCount, clientMax);
@@ -5395,7 +5393,7 @@ void Sys_Error(const char* error_string)
         SET_META_RESULT(MRES_HANDLED);
 }
 
-void PM_Move(struct playermove_s* ppmove, int server)
+void PM_Move(struct playermove_s* ppmove, const int server)
 {
     if(!mr_meta)
         (*other_gFunctionTable.pfnPM_Move)(ppmove, server);
@@ -5429,7 +5427,7 @@ void SetupVisibility(edict_t* pViewEntity, edict_t* pClient, unsigned char** pvs
         SET_META_RESULT(MRES_HANDLED);
 }
 
-void UpdateClientData(const struct edict_s* ent, int sendweapons, struct clientdata_s* cd)
+void UpdateClientData(const struct edict_s* ent, const int sendweapons, struct clientdata_s* cd)
 {
     if(!mr_meta)
         (*other_gFunctionTable.pfnUpdateClientData)(ent, sendweapons, cd);
@@ -5440,11 +5438,11 @@ void UpdateClientData(const struct edict_s* ent, int sendweapons, struct clientd
 }
 
 int AddToFullPack(struct entity_state_s* state,
-    int e,
+	const int e,
     edict_t* ent,
     edict_t* host,
-    int hostflags,
-    int player,
+	const int hostflags,
+	const int player,
     unsigned char* pSet)
 {
     if(!mr_meta)
@@ -5455,13 +5453,13 @@ int AddToFullPack(struct entity_state_s* state,
     }
 }
 
-void CreateBaseline(int player,
-    int eindex,
+void CreateBaseline(const int player,
+	const int eindex,
     struct entity_state_s* baseline,
     struct edict_s* entity,
-    int playermodelindex,
-    vec3_t player_mins,
-    vec3_t player_maxs)
+	const int playermodelindex,
+    const vec3_t player_mins,
+    const vec3_t player_maxs)
 {
     if(!mr_meta)
         (*other_gFunctionTable.pfnCreateBaseline)(
@@ -5488,7 +5486,7 @@ int GetWeaponData(struct edict_s* player, struct weapon_data_s* info)
     }
 }
 
-void CmdStart(const edict_t* player, const struct usercmd_s* cmd, unsigned int random_seed)
+void CmdStart(const edict_t* player, const struct usercmd_s* cmd, const unsigned int random_seed)
 {
     if(!mr_meta)
         (*other_gFunctionTable.pfnCmdStart)(player, cmd, random_seed);
@@ -5517,7 +5515,7 @@ int ConnectionlessPacket(const struct netadr_s* net_from,
     }
 }
 
-int GetHullBounds(int hullnumber, float* mins, float* maxs)
+int GetHullBounds(const int hullnumber, float* mins, float* maxs)
 {
     if(!mr_meta)
         return (*other_gFunctionTable.pfnGetHullBounds)(hullnumber, mins, maxs);
@@ -5631,7 +5629,7 @@ DLL_FUNCTIONS gFunctionTable = {
    extern "C" EXPORT int GetEntityAPI( DLL_FUNCTIONS *pFunctionTable, int interfaceVersion )
  #endif*/
 
-C_DLLEXPORT int GetEntityAPI(DLL_FUNCTIONS* pFunctionTable, int interfaceVersion)
+C_DLLEXPORT int GetEntityAPI(DLL_FUNCTIONS* pFunctionTable, const int interfaceVersion)
 {
     // check if engine's pointer is valid and version is correct...
 
@@ -5863,7 +5861,7 @@ const char* Cmd_Args(void)
     }
 }
 
-const char* GetArg(const char* command, int arg_number)
+const char* GetArg(const char* command, const int arg_number)
 {
     // the purpose of this function is to provide fakeclients (bots) with
     // the same Cmd_Argv convenience the engine provides to real clients.
@@ -5905,7 +5903,7 @@ const char* GetArg(const char* command, int arg_number)
     return &arg[0]; // returns the wanted argument
 }
 
-const char* Cmd_Argv(int argc)
+const char* Cmd_Argv(const int argc)
 {
     // this function returns a pointer to a certain argument of the
     // current client command. Since bots have no client DLL and we may
@@ -6117,7 +6115,7 @@ static DLL_FUNCTIONS gFunctionTable_Post = {
     NULL, //! pfnAllowLagCompensation()	(wd) SDK2
 };
 
-C_DLLEXPORT int GetEntityAPI_Post(DLL_FUNCTIONS* pFunctionTable, int interfaceVersion)
+C_DLLEXPORT int GetEntityAPI_Post(DLL_FUNCTIONS* pFunctionTable, const int interfaceVersion)
 {
     if(!pFunctionTable) {
         return FALSE;
@@ -6295,7 +6293,7 @@ static void ProcessBotCfgFile(void)
     }
 
     if(strcmp(cmd, "observer") == 0) {
-        int temp = atoi(arg1);
+	    const int temp = atoi(arg1);
 
         if(temp)
             b_observer_mode = TRUE;
@@ -6337,7 +6335,7 @@ static void ProcessBotCfgFile(void)
 
     if(strcmp(cmd, "bot_team_balance") == 0) {
         if(arg1 != NULL) {
-            int temp = atoi(arg1);
+	        const int temp = atoi(arg1);
             if(temp)
                 bot_team_balance = TRUE;
             else
@@ -6359,7 +6357,7 @@ static void ProcessBotCfgFile(void)
     }
     if(strcmp(cmd, "bot_bot_balance") == 0) {
         if(arg1 != NULL) {
-            int temp = atoi(arg1);
+	        const int temp = atoi(arg1);
             if(temp)
                 bot_bot_balance = TRUE;
             else
@@ -6381,7 +6379,7 @@ static void ProcessBotCfgFile(void)
     }
 
     if(strcmp(cmd, "bot_xmas") == 0) {
-        int temp = atoi(arg1);
+	    const int temp = atoi(arg1);
         bot_xmas = TRUE;
         if(temp == 0) {
             bot_xmas = FALSE;
@@ -6471,7 +6469,7 @@ static void ProcessBotCfgFile(void)
     }
 
     if(strcmp(cmd, "defensive_chatter") == 0) {
-        int temp = atoi(arg1);
+	    const int temp = atoi(arg1);
         if(temp == 0)
             defensive_chatter = FALSE;
         else
@@ -6486,7 +6484,7 @@ static void ProcessBotCfgFile(void)
         return;
     }
     if(strcmp(cmd, "offensive_chatter") == 0) {
-        int temp = atoi(arg1);
+	    const int temp = atoi(arg1);
         if(temp == 0)
             offensive_chatter = FALSE;
         else
@@ -6900,7 +6898,7 @@ static void changeBotSetting(const char* settingName,
 
     // if an argument was supplied change the setting with it
     if(arg1 != NULL && *arg1 != 0) {
-        int temp = atoi(arg1);
+	    const int temp = atoi(arg1);
         if(temp >= minValue && temp <= maxValue) {
             *setting = temp;
             settingWasChanged = TRUE;

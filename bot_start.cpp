@@ -107,7 +107,7 @@ void BotStartGame(bot_t* pBot)
             pBot->start_action = MSG_TFC_IDLE; // switch back to idle
 
             // reset the bots team if the team it's chosen is full already
-            int botsTeam = pBot->bot_team - 1;
+            const int botsTeam = pBot->bot_team - 1;
             if(botsTeam > -1 && botsTeam < 4 && max_team_players[botsTeam] > 0 &&
                 playersPerTeam[botsTeam] >= max_team_players[botsTeam]) {
                 pBot->bot_team = -1;
@@ -364,7 +364,7 @@ void BotStartGame(bot_t* pBot)
 // It's meant for TFC only.
 // Note: this function returns preferred team values from 0 to 3.
 // Otherwise, a return value of -1 means a failure to pick a preferred team.
-static int BotPickFavoredTeam_TFC(int faveClass)
+static int BotPickFavoredTeam_TFC(const int faveClass)
 {
     if(mod_id != TFC_DLL)
         return -1;

@@ -890,7 +890,7 @@ int JobBuildSentry(bot_t* pBot)
 
                     BotSetFacing(pBot, waypoints[aim_index].origin);
 
-                    Vector v_aim = waypoints[aim_index].origin - pBot->pEdict->v.origin;
+                    const Vector v_aim = waypoints[aim_index].origin - pBot->pEdict->v.origin;
                     if(BotInFieldOfView(pBot, v_aim) == 0) {
                         job_ptr->phase = 1;
                         job_ptr->phase_timer = pBot->f_think_time + 0.5;
@@ -1843,7 +1843,7 @@ int JobDisguise(bot_t* pBot)
     // is it time to pick a new disguise?
     if(pBot->disguise_state == DISGUISE_NONE) {
         static const int disguiseList[] = { 2, 3, 4, 5, 7, 8, 9 };
-        int new_disguise = disguiseList[random_long(0, 6)];
+        const int new_disguise = disguiseList[random_long(0, 6)];
 
         char choice[2];
         itoa(new_disguise, choice, 10);
@@ -2111,8 +2111,8 @@ int JobSnipe(bot_t* pBot)
 
             const int aim_index = WaypointFindNearestAiming(waypoints[job_ptr->waypoint].origin);
             if(aim_index != -1) {
-                Vector v_aim = waypoints[aim_index].origin - waypoints[job_ptr->waypoint].origin;
-                Vector aim_angles = UTIL_VecToAngles(v_aim);
+	            const Vector v_aim = waypoints[aim_index].origin - waypoints[job_ptr->waypoint].origin;
+	            const Vector aim_angles = UTIL_VecToAngles(v_aim);
                 pBot->pEdict->v.ideal_yaw = aim_angles.y + (random_long(0, 40) - 20);
                 pBot->pEdict->v.idealpitch = 0 + (random_long(0, 20) - 10);
             }
@@ -2162,10 +2162,10 @@ int JobGuardWaypoint(bot_t* pBot)
         if(pBot->f_view_change_time <= pBot->f_think_time) {
             pBot->f_view_change_time = pBot->f_think_time + random_float(1.0f, 4.0f);
 
-            int aim_index = WaypointFindNearestAiming(waypoints[job_ptr->waypoint].origin);
+            const int aim_index = WaypointFindNearestAiming(waypoints[job_ptr->waypoint].origin);
             if(aim_index != -1) {
-                Vector v_aim = waypoints[aim_index].origin - waypoints[pBot->current_wp].origin;
-                Vector aim_angles = UTIL_VecToAngles(v_aim);
+	            const Vector v_aim = waypoints[aim_index].origin - waypoints[pBot->current_wp].origin;
+	            const Vector aim_angles = UTIL_VecToAngles(v_aim);
                 pBot->pEdict->v.ideal_yaw = aim_angles.y + (random_long(0, 60) - 30);
                 pBot->pEdict->v.idealpitch = 0 + (random_long(0, 20) - 10);
             }
@@ -2525,7 +2525,7 @@ int JobConcussionJump(bot_t* pBot)
 
     // phase 2 - cruising through the air to the concussion jump waypoint
     if(job_ptr->phase == 2) {
-        float speed = pBot->pEdict->v.velocity.Length2D();
+	    const float speed = pBot->pEdict->v.velocity.Length2D();
 
         // debug stuff
         //	if(pBot->f_periodicAlert1 < pBot->f_think_time)
@@ -2651,7 +2651,7 @@ int JobPipetrap(bot_t* pBot)
             pBot->f_side_speed = 0.0;
 
             // make sure the bot faces the right way
-            int aim_index = WaypointFindNearestAiming(waypoints[pBot->current_wp].origin);
+            const int aim_index = WaypointFindNearestAiming(waypoints[pBot->current_wp].origin);
             if(aim_index != -1) {
                 BotSetFacing(pBot, waypoints[aim_index].origin);
 
@@ -2730,10 +2730,10 @@ int JobPipetrap(bot_t* pBot)
         if(pBot->f_view_change_time <= pBot->f_think_time) {
             pBot->f_view_change_time = pBot->f_think_time + random_float(1.0f, 4.0f);
 
-            int aim_index = WaypointFindNearestAiming(waypoints[pBot->current_wp].origin);
+            const int aim_index = WaypointFindNearestAiming(waypoints[pBot->current_wp].origin);
             if(aim_index != -1) {
-                Vector v_aim = waypoints[aim_index].origin - waypoints[pBot->current_wp].origin;
-                Vector aim_angles = UTIL_VecToAngles(v_aim);
+	            const Vector v_aim = waypoints[aim_index].origin - waypoints[pBot->current_wp].origin;
+	            const Vector aim_angles = UTIL_VecToAngles(v_aim);
                 pBot->pEdict->v.ideal_yaw = aim_angles.y + (random_long(0, 90) - 45);
                 pBot->pEdict->v.idealpitch = 0 + (random_long(0, 20) - 10);
             }
@@ -2885,7 +2885,7 @@ int JobPatrolHome(bot_t* pBot)
         // waypoint types to patrol to
         const int wantedFlags = W_FL_TFC_PL_DEFEND | W_FL_TFC_SENTRY | W_FL_TFC_PIPETRAP;
 
-        int defencePoint = WaypointFindRandomGoal(pBot->current_wp, pBot->current_team, wantedFlags);
+        const int defencePoint = WaypointFindRandomGoal(pBot->current_wp, pBot->current_team, wantedFlags);
 
         if(defencePoint != -1)
             job_ptr->waypoint = WaypointFindRandomGoal_R(waypoints[defencePoint].origin, TRUE, 500.0, -1, 0);

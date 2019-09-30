@@ -186,7 +186,7 @@ void BotClient_Valve_WeaponList(void* p, int bot_index)
     }
 }
 
-void BotClient_TFC_WeaponList(void* p, int bot_index)
+void BotClient_TFC_WeaponList(void* p, const int bot_index)
 {
     // this is just like the Valve Weapon List message
     BotClient_Valve_WeaponList(p, bot_index);
@@ -212,7 +212,7 @@ void BotClient_FLF_WeaponList(void* p, int bot_index)
 */
 // This message is sent when a weapon is selected (either by the bot chosing
 // a weapon or by the server auto assigning the bot a weapon).
-void BotClient_Valve_CurrentWeapon(void* p, int bot_index)
+void BotClient_Valve_CurrentWeapon(void* p, const int bot_index)
 {
     // static int state = 0;	// current state machine state
     static int iState;
@@ -245,7 +245,7 @@ void BotClient_Valve_CurrentWeapon(void* p, int bot_index)
     }
 }
 
-void BotClient_TFC_CurrentWeapon(void* p, int bot_index)
+void BotClient_TFC_CurrentWeapon(void* p, const int bot_index)
 {
     // this is just like the Valve Current Weapon message
     BotClient_Valve_CurrentWeapon(p, bot_index);
@@ -270,7 +270,7 @@ void BotClient_FLF_CurrentWeapon(void* p, int bot_index)
 }
 */
 // This message is sent whenever ammo ammounts are adjusted (up or down).
-void BotClient_Valve_AmmoX(void* p, int bot_index)
+void BotClient_Valve_AmmoX(void* p, const int bot_index)
 {
     // static int state = 0;	// current state machine state
     static int index;
@@ -286,7 +286,7 @@ void BotClient_Valve_AmmoX(void* p, int bot_index)
 
         bots[bot_index].m_rgAmmo[index] = ammount; // store it away
 
-        int ammo_index = bots[bot_index].current_weapon.iId;
+        const int ammo_index = bots[bot_index].current_weapon.iId;
 
         // update the ammo counts for this weapon...
         bots[bot_index].current_weapon.iAmmo1 = bots[bot_index].m_rgAmmo[weapon_defs[ammo_index].iAmmo1];
@@ -294,7 +294,7 @@ void BotClient_Valve_AmmoX(void* p, int bot_index)
     }
 }
 
-void BotClient_TFC_AmmoX(void* p, int bot_index)
+void BotClient_TFC_AmmoX(void* p, const int bot_index)
 {
     // this is just like the Valve AmmoX message
     BotClient_Valve_AmmoX(p, bot_index);
@@ -322,7 +322,7 @@ void BotClient_FLF_AmmoX(void* p, int bot_index)
 // also sent so this message is probably not really necessary except it
 // allows the HUD to draw pictures of ammo that have been picked up.  The
 // bots don't really need pictures since they don't have any eyes anyway.
-void BotClient_Valve_AmmoPickup(void* p, int bot_index)
+void BotClient_Valve_AmmoPickup(void* p, const int bot_index)
 {
     static int state = 0; // current state machine state
     static int index;
@@ -346,7 +346,7 @@ void BotClient_Valve_AmmoPickup(void* p, int bot_index)
     }
 }
 
-void BotClient_TFC_AmmoPickup(void* p, int bot_index)
+void BotClient_TFC_AmmoPickup(void* p, const int bot_index)
 {
     // this is just like the Valve Ammo Pickup message
     BotClient_Valve_AmmoPickup(p, bot_index);
@@ -371,7 +371,7 @@ void BotClient_FLF_AmmoPickup(void* p, int bot_index)
 }
 */
 // This message gets sent when the bot picks up a weapon.
-void BotClient_Valve_WeaponPickup(void* p, int bot_index)
+void BotClient_Valve_WeaponPickup(void* p, const int bot_index)
 {
     int index;
 
@@ -381,7 +381,7 @@ void BotClient_Valve_WeaponPickup(void* p, int bot_index)
     bots[bot_index].bot_weapons |= 1 << index;
 }
 
-void BotClient_TFC_WeaponPickup(void* p, int bot_index)
+void BotClient_TFC_WeaponPickup(void* p, const int bot_index)
 {
     // this is just like the Valve Weapon Pickup message
     BotClient_Valve_WeaponPickup(p, bot_index);
@@ -411,7 +411,7 @@ void BotClient_Valve_ItemPickup(void* p, int bot_index)
 {
 }
 
-void BotClient_TFC_ItemPickup(void* p, int bot_index)
+void BotClient_TFC_ItemPickup(void* p, const int bot_index)
 {
     // this is just like the Valve Item Pickup message
     BotClient_Valve_ItemPickup(p, bot_index);
@@ -444,12 +444,12 @@ void BotClient_FLF_ItemPickup(void* p, int bot_index)
 }
 */
 // This message gets sent when the bots health changes.
-void BotClient_Valve_Health(void* p, int bot_index)
+void BotClient_Valve_Health(void* p, const int bot_index)
 {
     bots[bot_index].bot_real_health = *static_cast<int*>(p); // health ammount
 }
 
-void BotClient_TFC_Health(void* p, int bot_index)
+void BotClient_TFC_Health(void* p, const int bot_index)
 {
     // this is just like the Valve Health message
     BotClient_Valve_Health(p, bot_index);
@@ -474,12 +474,12 @@ void BotClient_FLF_Health(void* p, int bot_index)
 }
 */
 // This message gets sent when the bots armor changes.
-void BotClient_Valve_Battery(void* p, int bot_index)
+void BotClient_Valve_Battery(void* p, const int bot_index)
 {
     bots[bot_index].bot_armor = *static_cast<int*>(p); // armor ammount
 }
 
-void BotClient_TFC_Battery(void* p, int bot_index)
+void BotClient_TFC_Battery(void* p, const int bot_index)
 {
     // this is just like the Valve Battery message
     BotClient_Valve_Battery(p, bot_index);
@@ -507,7 +507,7 @@ void BotClient_FLF_Battery(void* p, int bot_index)
 // Note: This message might also be sent after a bot died and has
 // respawned reporting the damage that killed it.
 // i.e. after BotSpawnInit() is called.
-void BotClient_Valve_Damage(void* p, int bot_index)
+void BotClient_Valve_Damage(void* p, const int bot_index)
 {
     static int state = 0; // current state machine state
     static int damage_armor;
@@ -580,7 +580,7 @@ void BotClient_Valve_Damage(void* p, int bot_index)
     }
 }
 
-void BotClient_TFC_Damage(void* p, int bot_index)
+void BotClient_TFC_Damage(void* p, const int bot_index)
 {
     BotClient_Valve_Damage(p, bot_index);
 }
@@ -684,7 +684,7 @@ void BotClient_Valve_DeathMsg(void* p, int bot_index)
     }
 }
 
-void BotClient_TFC_DeathMsg(void* p, int bot_index)
+void BotClient_TFC_DeathMsg(void* p, const int bot_index)
 {
     // this is just like the Valve DeathMsg message
     BotClient_Valve_DeathMsg(p, bot_index);
@@ -796,7 +796,7 @@ void BotClient_FLF_TempEntity(void *p, int bot_index)
         }
 }*/
 
-void BotClient_Valve_ScreenFade(void* p, int bot_index)
+void BotClient_Valve_ScreenFade(void* p, const int bot_index)
 {
     static int state = 0; // current state machine state
     static int duration;
@@ -815,14 +815,14 @@ void BotClient_Valve_ScreenFade(void* p, int bot_index)
     } else if(state == 6) {
         state = 0;
 
-        int length = (duration + hold_time) / 4096;
+        const int length = (duration + hold_time) / 4096;
         bots[bot_index].f_blinded_time = gpGlobals->time + length - 2.0;
     } else {
         state++;
     }
 }
 
-void BotClient_TFC_ScreenFade(void* p, int bot_index)
+void BotClient_TFC_ScreenFade(void* p, const int bot_index)
 {
     // this is just like the Valve ScreenFade message
     BotClient_Valve_ScreenFade(p, bot_index);
@@ -871,7 +871,7 @@ void BotClient_TFC_StatusIcon(void* p, int bot_index)
 // them about the status of what they are building.
 // From what I've seen a bot can be told by this function that it has
 // built a sentry gun before the sentry gun even exists!
-void BotClient_Engineer_BuildStatus(void* p, int bot_index)
+void BotClient_Engineer_BuildStatus(void* p, const int bot_index)
 {
     // here are some interesting messages(so far unused):
     // #Sentry_shellslow
@@ -929,7 +929,7 @@ void BotClient_Engineer_BuildStatus(void* p, int bot_index)
                     edict_t* pent = NULL;
                     while(
                         (pent = FIND_ENTITY_IN_SPHERE(pent, clients[i]->v.origin, 200)) != NULL && !FNullEnt(pent)) {
-                        float l = (clients[i]->v.origin - pent->v.origin).Length2D();
+	                    const float l = (clients[i]->v.origin - pent->v.origin).Length2D();
 
                         if(strcmp("building_teleporter", STRING(pent->v.classname)) == 0 && l >= 16.0 && l <= 96.0) {
                             // Set the owner on the teleport
@@ -946,7 +946,7 @@ void BotClient_Engineer_BuildStatus(void* p, int bot_index)
     }
 }
 
-void BotClient_TFC_SentryAmmo(void* p, int bot_index)
+void BotClient_TFC_SentryAmmo(void* p, const int bot_index)
 {
     // static int state = 0;	// current state machine state
     static int val;
@@ -961,7 +961,7 @@ void BotClient_TFC_SentryAmmo(void* p, int bot_index)
     }
 }
 
-void BotClient_TFC_DetPack(void* p, int bot_index)
+void BotClient_TFC_DetPack(void* p, const int bot_index)
 {
     // static int state = 0;	// current state machine state
     // static int val;
@@ -1012,7 +1012,7 @@ void BotClient_Menu(void* p, int bot_index)
 }
 
 // update the amount of grenades a bot carries
-void BotClient_TFC_Grens(void* p, int bot_index)
+void BotClient_TFC_Grens(void* p, const int bot_index)
 {
     static int gren;
 

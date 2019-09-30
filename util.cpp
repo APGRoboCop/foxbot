@@ -122,7 +122,7 @@ bool VectorsNearerThan(const Vector& r_vOne, const Vector& r_vTwo, double value)
 {
     value = value * value;
 
-    Vector distance = r_vOne - r_vTwo;
+    const Vector distance = r_vOne - r_vTwo;
     double temp = distance.x * distance.x + distance.y * distance.y;
 
     // perform an early 2 dimensional check, because most maps
@@ -165,8 +165,8 @@ Vector UTIL_VecToAngles(const Vector& vec)
 // Overloaded to add IGNORE_GLASS
 void UTIL_TraceLine(const Vector& vecStart,
     const Vector& vecEnd,
-    IGNORE_MONSTERS igmon,
-    IGNORE_GLASS ignoreGlass,
+	const IGNORE_MONSTERS igmon,
+	const IGNORE_GLASS ignoreGlass,
     edict_t* pentIgnore,
     TraceResult* ptr)
 {
@@ -176,7 +176,7 @@ void UTIL_TraceLine(const Vector& vecStart,
 
 void UTIL_TraceLine(const Vector& vecStart,
     const Vector& vecEnd,
-    IGNORE_MONSTERS igmon,
+	const IGNORE_MONSTERS igmon,
     edict_t* pentIgnore,
     TraceResult* ptr)
 {
@@ -188,7 +188,7 @@ void UTIL_MakeVectors(const Vector& vecAngles)
     MAKE_VECTORS(vecAngles);
 }
 
-edict_t* UTIL_FindEntityInSphere(edict_t* pentStart, const Vector& vecCenter, float flRadius)
+edict_t* UTIL_FindEntityInSphere(edict_t* pentStart, const Vector& vecCenter, const float flRadius)
 {
     edict_t* pentEntity = FIND_ENTITY_IN_SPHERE(pentStart, vecCenter, flRadius);
 
@@ -242,7 +242,7 @@ void HUDNotify(edict_t* pEntity, const char* msg_name)
     MESSAGE_END();
 }
 
-void ClientPrint(edict_t* pEntity, int msg_dest, const char* msg_name)
+void ClientPrint(edict_t* pEntity, const int msg_dest, const char* msg_name)
 {
     if(gmsgTextMsg == 0)
         gmsgTextMsg = REG_USER_MSG("TextMsg", -1);
@@ -301,7 +301,7 @@ void UTIL_HostSay(edict_t* pEntity, const int teamonly, char* message)
     if(gmsgSayText == 0)
         gmsgSayText = REG_USER_MSG("SayText", -1);
 
-    int sender_team = UTIL_GetTeam(pEntity);
+    const int sender_team = UTIL_GetTeam(pEntity);
 
     edict_t* client = NULL;
     while((client = UTIL_FindEntityByClassname(client, "player")) != NULL && !FNullEnt(client)) {
@@ -557,7 +557,7 @@ bool BotCanSeeOrigin(bot_t* pBot, Vector& r_dest)
 // to the destination.  Zero degrees means the destination is straight
 // ahead, 45 degrees to the left or 45 degrees to the right
 // is the limit of the normal view angle.
-int BotInFieldOfView(bot_t* pBot, Vector dest)
+int BotInFieldOfView(bot_t* pBot, const Vector dest)
 {
     // find angles from source to destination...
     Vector entity_angles = UTIL_VecToAngles(dest);
@@ -586,10 +586,10 @@ int BotInFieldOfView(bot_t* pBot, Vector dest)
 bool FVisible(const Vector& r_vecOrigin, edict_t* pEdict)
 {
     // look through caller's eyes
-    Vector vecLookerOrigin = pEdict->v.origin + pEdict->v.view_ofs;
+    const Vector vecLookerOrigin = pEdict->v.origin + pEdict->v.view_ofs;
 
-    int bInWater = UTIL_PointContents(r_vecOrigin) == CONTENTS_WATER;
-    int bLookerInWater = UTIL_PointContents(vecLookerOrigin) == CONTENTS_WATER;
+    const int bInWater = UTIL_PointContents(r_vecOrigin) == CONTENTS_WATER;
+    const int bLookerInWater = UTIL_PointContents(vecLookerOrigin) == CONTENTS_WATER;
 
     // don't look through surface of water
     if(bInWater != bLookerInWater)
@@ -650,7 +650,7 @@ bool UTIL_FootstepsHeard(edict_t* pEdict, edict_t* pPlayer)
     return FALSE;
 }
 
-void UTIL_ShowMenu(edict_t* pEdict, int slots, int displaytime, bool needmore, char* pText)
+void UTIL_ShowMenu(edict_t* pEdict, const int slots, const int displaytime, const bool needmore, char* pText)
 {
     if(gmsgShowMenu == 0)
         gmsgShowMenu = REG_USER_MSG("ShowMenu", -1);

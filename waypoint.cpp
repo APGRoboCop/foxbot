@@ -52,7 +52,6 @@
 #define strcat strcat_s
 #define strncat strncat_s
 #define strncpy strncpy_s
-#define sprintf sprintf_s
 #define _snprintf _snprintf_s
 #define stricmp _stricmp
 #endif
@@ -242,7 +241,7 @@ void WaypointInit(void)
 
 // add a path from one waypoint (add_index) to another (path_index)...
 // Returns FALSE on memory allocation failure.
-int WaypointAddPath(short int add_index, short int path_index)
+int WaypointAddPath(const short int add_index, const short int path_index)
 {
     // don't do it if its greater than max distance
     if((waypoints[add_index].origin - waypoints[path_index].origin).Length() > REACHABLE_RANGE)
@@ -312,7 +311,7 @@ int WaypointAddPath(short int add_index, short int path_index)
 }
 
 // delete all paths to this waypoint index...
-void WaypointDeletePath(short int del_index)
+void WaypointDeletePath(const short int del_index)
 {
     PATH* p;
     int index, i;
@@ -350,7 +349,7 @@ void WaypointDeletePath(short int del_index)
 
 // delete a path from a waypoint (path_index) to another waypoint
 // (del_index)...
-void WaypointDeletePath(short int path_index, short int del_index)
+void WaypointDeletePath(const short int path_index, const short int del_index)
 {
     PATH* p = paths[path_index];
     int i;
@@ -383,7 +382,7 @@ void WaypointDeletePath(short int path_index, short int del_index)
 
 // find a path from the current waypoint. (pPath MUST be NULL on the
 // initial call. subsequent calls will return other paths if they exist.)
-int WaypointFindPath(PATH** pPath, int* path_index, int waypoint_index, int team)
+int WaypointFindPath(PATH** pPath, int* path_index, const int waypoint_index, const int team)
 {
     int index;
 
@@ -521,7 +520,7 @@ int WaypointFindNearest_V(Vector v_src, const float range, const int team)
 // that waypoint.
 // If pEntity is not NULL then the waypoint found must be visible to that entity.
 // Also, you can specify waypoint flags that you wish to exclude from the search.
-int WaypointFindNearest_S(Vector v_src,
+int WaypointFindNearest_S(const Vector v_src,
     edict_t* pEntity,
     const float range,
     const int team,
@@ -848,7 +847,7 @@ int WaypointFindRandomGoal_D(const int source_WP, const int team, const int rang
 
 // find a random goal within a range of a position (v_src) matching the
 // "flags" bits and return the index of that waypoint...
-int WaypointFindRandomGoal_R(Vector v_src,
+int WaypointFindRandomGoal_R(const Vector v_src,
     const bool checkVisibility,
     const float range,
     const int team,
@@ -1063,8 +1062,8 @@ int WaypointFindNearestAiming(const Vector& r_v_origin)
 }
 
 void WaypointDrawBeam(edict_t* pEntity,
-    Vector start,
-    Vector end,
+    const Vector start,
+    const Vector end,
     int width,
     int noise,
     int red,
@@ -1103,7 +1102,7 @@ void WaypointAdd(edict_t* pEntity)
         return;
 
     edict_t* pent = NULL;
-    float radius = 40.0f;
+    const float radius = 40.0f;
     int index = 0;
 
     // find the next available slot for the new waypoint...
@@ -1251,8 +1250,8 @@ void WaypointAddAiming(edict_t* pEntity)
     // set the time that this waypoint was originally displayed...
     wp_display_time[index] = gpGlobals->time;
 
-    Vector start = pEntity->v.origin - Vector(0, 0, 10);
-    Vector end = start + Vector(0, 0, 14);
+    const Vector start = pEntity->v.origin - Vector(0, 0, 10);
+    const Vector end = start + Vector(0, 0, 14);
 
     // draw a blue waypoint
     WaypointDrawBeam(pEntity, start, end, 30, 0, 0, 0, 255, 250, 5);
@@ -1273,7 +1272,7 @@ void WaypointDelete(edict_t* pEntity)
     if(WaypointDeleteAimArtifact(pEntity))
         return;
 
-    int index = WaypointFindNearest_E(pEntity, 50.0, -1);
+    const int index = WaypointFindNearest_E(pEntity, 50.0, -1);
 
     if(index == -1)
         return;
@@ -1372,7 +1371,7 @@ static bool WaypointDeleteAimArtifact(edict_t* pEntity)
         if(waypoints[i].flags & W_FL_DELETED)
             continue; // skip any deleted waypoints
 
-        float distance = (waypoints[i].origin - pEntity->v.origin).Length();
+        const float distance = (waypoints[i].origin - pEntity->v.origin).Length();
 
         if(distance < min_distance) {
             min_index = i;
@@ -1393,7 +1392,7 @@ static bool WaypointDeleteAimArtifact(edict_t* pEntity)
         if(waypoints[j].flags & W_FL_DELETED || waypoints[j].flags & W_FL_AIMING)
             continue;
 
-        float distance = (waypoints[j].origin - waypoints[min_index].origin).Length();
+        const float distance = (waypoints[j].origin - waypoints[min_index].origin).Length();
 
         // if this waypoint is near enough to the aim waypoint
         if(distance < 125.0f) {
@@ -1428,7 +1427,7 @@ static bool WaypointDeleteAimArtifact(edict_t* pEntity)
 }
 
 // allow player to manually create a path from one waypoint to another
-void WaypointCreatePath(edict_t* pEntity, int cmd)
+void WaypointCreatePath(edict_t* pEntity, const int cmd)
 {
     static int waypoint1 = -1; // initialized to unassigned
     static int waypoint2 = -1; // initialized to unassigned
@@ -1468,7 +1467,7 @@ void WaypointCreatePath(edict_t* pEntity, int cmd)
 }
 
 // allow player to manually remove a path from one waypoint to another
-void WaypointRemovePath(edict_t* pEntity, int cmd)
+void WaypointRemovePath(edict_t* pEntity, const int cmd)
 {
     static int waypoint1 = -1; // initialized to unassigned
     static int waypoint2 = -1; // initialized to unassigned
@@ -1769,7 +1768,7 @@ bool WaypointLoad(edict_t* pEntity)
 // This function will load the waypoints from a version 4 Foxbot waypoint file.
 // Version 4 stores script flags in the main waypoint flag structure, version 5
 // stores them in their own flag variable.
-static bool WaypointLoadVersion4(FILE* bfp, int number_of_waypoints)
+static bool WaypointLoadVersion4(FILE* bfp, const int number_of_waypoints)
 {
     // version 4 of the waypoint structure
     typedef struct {
@@ -1978,7 +1977,7 @@ bool WaypointReachable(Vector v_src, Vector v_dest, edict_t* pEntity)
 
             // is dest waypoint higher than src? (45 is max jump height)
             if(v_dest.z > v_src.z + 45.0) {
-                Vector v_new_src = v_dest;
+	            const Vector v_new_src = v_dest;
                 Vector v_new_dest = v_dest;
 
                 v_new_dest.z = v_new_dest.z - 50; // straight down 50 units
@@ -1995,7 +1994,7 @@ bool WaypointReachable(Vector v_src, Vector v_dest, edict_t* pEntity)
             // check if distance to ground increases more than jump height
             // at points between source and destination...
 
-            Vector v_direction = (v_dest - v_src).Normalize(); // 1 unit long
+            const Vector v_direction = (v_dest - v_src).Normalize(); // 1 unit long
             Vector v_check = v_src;
             Vector v_down = v_src;
 
@@ -2126,7 +2125,7 @@ void WaypointPrintInfo(edict_t* pEntity)
     char msg[96];
 
     // find the nearest waypoint...
-    int index = WaypointFindNearest_E(pEntity, 50.0, -1);
+    const int index = WaypointFindNearest_E(pEntity, 50.0, -1);
 
     if(index == -1)
         return;
@@ -2143,7 +2142,7 @@ void WaypointPrintInfo(edict_t* pEntity)
         deleted_waypoint_total);
     ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 
-    WPT_INT32 flags = waypoints[index].flags;
+    const WPT_INT32 flags = waypoints[index].flags;
 
     // now to provide more specific info...
 
@@ -3113,7 +3112,7 @@ static void WaypointRouteInit(void)
     int matrix;
     unsigned int array_size;
     unsigned int row;
-    int i, offset;
+    int i;
     unsigned int a, b;
     float distance;
     unsigned int *pShortestPath, *pFromTo;
@@ -3194,7 +3193,7 @@ static void WaypointRouteInit(void)
                                             ALERT(at_console, msg);
                                             WaypointDeletePath(row, index);
                                         } else {
-                                            offset = row * route_num_waypoints + index;
+	                                        const int offset = row * route_num_waypoints + index;
 
                                             pShortestPath[offset] = static_cast<unsigned int>(distance);
                                         }
@@ -3270,7 +3269,7 @@ static void WaypointRouteInit(void)
 // going from a source waypoint index (src) to a destination waypoint
 // index (dest)...
 // It returns -1 if a suitable waypoint wasn't found.
-int WaypointRouteFromTo(int src, int dest, int team)
+int WaypointRouteFromTo(const int src, const int dest, int team)
 {
     // sanity check
     if(team < -1 || team > 3)
@@ -3306,7 +3305,7 @@ int WaypointRouteFromTo(int src, int dest, int team)
 // return the total distance (based on the Floyd matrix) of a path from
 // the source waypoint index (src) to the destination waypoint index (dest)
 // Or return -1 on failure.
-int WaypointDistanceFromTo(int src, int dest, int team)
+int WaypointDistanceFromTo(const int src, const int dest, int team)
 {
     if(team < -1 || team > 3)
         return -1;
@@ -3542,7 +3541,7 @@ bool WaypointAvailable(const int index, const int team)
 
 void WaypointRunOneWay(edict_t* pEntity)
 {
-    int temp = WaypointFindNearest_E(pEntity, 50.0, -1);
+	const int temp = WaypointFindNearest_E(pEntity, 50.0, -1);
 
     if(temp != -1) {
         if(wpt1 == -1) {
@@ -3567,7 +3566,7 @@ void WaypointRunOneWay(edict_t* pEntity)
 
 void WaypointRunTwoWay(edict_t* pEntity)
 {
-    int temp = WaypointFindNearest_E(pEntity, 50.0, -1);
+	const int temp = WaypointFindNearest_E(pEntity, 50.0, -1);
 
     if(temp != -1) {
         if(wpt1 == -1) {
@@ -3790,8 +3789,8 @@ void AreaDefCreate(edict_t* pEntity)
         // set the time that this waypoint was originally displayed...
         a_display_time[index] = gpGlobals->time;
 
-        Vector start = pEntity->v.origin - Vector(0, 0, 34);
-        Vector end = start + Vector(0, 0, 68);
+        const Vector start = pEntity->v.origin - Vector(0, 0, 34);
+        const Vector end = start + Vector(0, 0, 68);
 
         // draw a blue waypoint
         WaypointDrawBeam(pEntity, start, end, 30, 0, 255, 0, 0, 250, 5);
@@ -3806,8 +3805,8 @@ void AreaDefCreate(edict_t* pEntity)
         // set the time that this waypoint was originally displayed...
         a_display_time[index] = gpGlobals->time;
 
-        Vector start = pEntity->v.origin - Vector(0, 0, 34);
-        Vector end = start + Vector(0, 0, 68);
+        const Vector start = pEntity->v.origin - Vector(0, 0, 34);
+        const Vector end = start + Vector(0, 0, 68);
 
         // draw a blue waypoint
         WaypointDrawBeam(pEntity, start, end, 30, 0, 255, 0, 0, 250, 5);
@@ -3822,8 +3821,8 @@ void AreaDefCreate(edict_t* pEntity)
         // set the time that this waypoint was originally displayed...
         a_display_time[index] = gpGlobals->time;
 
-        Vector start = pEntity->v.origin - Vector(0, 0, 34);
-        Vector end = start + Vector(0, 0, 68);
+        const Vector start = pEntity->v.origin - Vector(0, 0, 34);
+        const Vector end = start + Vector(0, 0, 68);
 
         // draw a blue waypoint
         WaypointDrawBeam(pEntity, start, end, 30, 0, 255, 0, 0, 250, 5);
@@ -3838,8 +3837,8 @@ void AreaDefCreate(edict_t* pEntity)
         // set the time that this waypoint was originally displayed...
         a_display_time[index] = gpGlobals->time;
 
-        Vector start = pEntity->v.origin - Vector(0, 0, 34);
-        Vector end = start + Vector(0, 0, 68);
+        const Vector start = pEntity->v.origin - Vector(0, 0, 34);
+        const Vector end = start + Vector(0, 0, 68);
 
         // draw a blue waypoint
         WaypointDrawBeam(pEntity, start, end, 30, 0, 255, 0, 0, 250, 5);
@@ -3849,7 +3848,7 @@ void AreaDefCreate(edict_t* pEntity)
     }
 }
 
-int AreaDefPointFindNearest(edict_t* pEntity, float range, int flags)
+int AreaDefPointFindNearest(edict_t* pEntity, const float range, const int flags)
 {
     if(num_areas < 1)
         return -1;
@@ -4072,7 +4071,7 @@ void AreaDefPrintInfo(edict_t* pEntity)
     char msg[1024];
     // int flags;
 
-    int i = AreaInsideClosest(pEntity);
+    const int i = AreaInsideClosest(pEntity);
     if(i != -1) {
         _snprintf(msg, 1020, "Area %d of %d total\n", i, num_areas);
         ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
@@ -4123,15 +4122,15 @@ void AreaDefPrintInfo(edict_t* pEntity)
     }
 }
 
-bool AreaInside(edict_t* pEntity, int i)
+bool AreaInside(edict_t* pEntity, const int i)
 {
     bool inside = FALSE;
     if((areas[i].flags & A_FL_1) == A_FL_1 && (areas[i].flags & A_FL_2) == A_FL_2 &&
         (areas[i].flags & A_FL_3) == A_FL_3 && (areas[i].flags & A_FL_4) == A_FL_4) {
         // find highest/lowest (is x,y in bounds of polygon?)
         float lx, ly, hx, hy;
-        float x = pEntity->v.origin.x;
-        float y = pEntity->v.origin.y;
+        const float x = pEntity->v.origin.x;
+        const float y = pEntity->v.origin.y;
 
         lx = areas[i].a.x;
         if(areas[i].b.x < lx)
@@ -5640,9 +5639,10 @@ void ProcessCommanderList(void)
         bool valid = TRUE;
 
         // Search for invalid characters in the read string.
+        // strlen is being called too many times in the for loop - [APG]RoboCop[CL]
         for(int i = 0; i < static_cast<int>(strlen(buffer)); i++) {
             for(int j = 0; j < static_cast<int>(strlen(invalidChars)); j++) {
-                char ch = invalidChars[j];
+	            const char ch = invalidChars[j];
 
                 if(strchr(buffer, ch)) {
                     valid = FALSE;

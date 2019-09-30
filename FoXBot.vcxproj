@@ -102,7 +102,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <AdditionalIncludeDirectories>..\hlsdk-2.3-p4\multiplayer\common;..\hlsdk-2.3-p4\multiplayer\dlls;..\hlsdk-2.3-p4\multiplayer\engine;..\hlsdk-2.3-p4\multiplayer\pm_shared;..\hlsdk-2.3-p4\multiplayer\cl_dll;..\metamod-p-37\metamod;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_WIN32;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderOutputFile>.\Release\FoXBot.pch</PrecompiledHeaderOutputFile>

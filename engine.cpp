@@ -173,7 +173,7 @@ int pfnModelIndex(const char* m)
     return (*g_engfuncs.pfnModelIndex)(m);
 }
 
-int pfnModelFrames(int modelIndex)
+int pfnModelFrames(const int modelIndex)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
@@ -277,7 +277,7 @@ void pfnVecToAngles(const float* rgflVectorIn, float* rgflVectorOut)
     (*g_engfuncs.pfnVecToAngles)(rgflVectorIn, rgflVectorOut);
 }
 
-void pfnMoveToOrigin(edict_t* ent, const float* pflGoal, float dist, int iMoveType)
+void pfnMoveToOrigin(edict_t* ent, const float* pflGoal, const float dist, const int iMoveType)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
@@ -325,7 +325,7 @@ int pfnGetEntityIllum(edict_t* pEnt)
     return (*g_engfuncs.pfnGetEntityIllum)(pEnt);
 }
 
-edict_t* pfnFindEntityInSphere(edict_t* pEdictStartSearchAfter, const float* org, float rad)
+edict_t* pfnFindEntityInSphere(edict_t* pEdictStartSearchAfter, const float* org, const float rad)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
@@ -543,7 +543,7 @@ void pfnRemoveEntity(edict_t* e)
     (*g_engfuncs.pfnRemoveEntity)(e);
 }
 
-edict_t* pfnCreateNamedEntity_Post(int className)
+edict_t* pfnCreateNamedEntity_Post(const int className)
 {
     edict_t* pent = META_RESULT_ORIG_RET(edict_t*);
 
@@ -557,7 +557,7 @@ edict_t* pfnCreateNamedEntity_Post(int className)
     RETURN_META_VALUE(MRES_HANDLED, NULL);
 }
 
-edict_t* pfnCreateNamedEntity(int className)
+edict_t* pfnCreateNamedEntity(const int className)
 {
     edict_t* pent = (*g_engfuncs.pfnCreateNamedEntity)(className);
 
@@ -603,7 +603,7 @@ int pfnDropToFloor(edict_t* e)
     return (*g_engfuncs.pfnDropToFloor)(e);
 }
 
-int pfnWalkMove(edict_t* ent, float yaw, float dist, int iMode)
+int pfnWalkMove(edict_t* ent, const float yaw, const float dist, const int iMode)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
@@ -656,10 +656,10 @@ void pfnSetOrigin(edict_t* e, const float* rgflOrigin)
                 if(l < 0)
                     l = -l;
 
-                int xa = (int)(*(Vector*)rgflOrigin).x;
-                int ya = (int)(*(Vector*)rgflOrigin).y;
-                int xb = static_cast<int>(bots[bot_index].sentry_edict->v.origin.x);
-                int yb = static_cast<int>(bots[bot_index].sentry_edict->v.origin.y);
+                const int xa = (int)(*(Vector*)rgflOrigin).x;
+                const int ya = (int)(*(Vector*)rgflOrigin).y;
+                const int xb = static_cast<int>(bots[bot_index].sentry_edict->v.origin.x);
+                const int yb = static_cast<int>(bots[bot_index].sentry_edict->v.origin.y);
                 // FILE *fp;
                 //{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"l %d xa %d xb %d ya %d yb %d\n",l,xa,xb,ya,yb); fclose(fp); }
                 if(l >= 8 && l <= 60
@@ -719,12 +719,12 @@ void pfnSetOrigin(edict_t* e, const float* rgflOrigin)
 }
 
 void pfnEmitSound(edict_t* entity,
-    int channel,
+	const int channel,
     const char* sample,
-    float volume,
-    float attenuation,
-    int fFlags,
-    int pitch)
+	const float volume,
+	const float attenuation,
+	const int fFlags,
+	const int pitch)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
@@ -742,10 +742,10 @@ void pfnEmitSound(edict_t* entity,
 void pfnEmitAmbientSound(edict_t* entity,
     float* pos,
     const char* samp,
-    float vol,
-    float attenuation,
-    int fFlags,
-    int pitch)
+	const float vol,
+	const float attenuation,
+	const int fFlags,
+	const int pitch)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
@@ -759,7 +759,7 @@ void pfnEmitAmbientSound(edict_t* entity,
     (*g_engfuncs.pfnEmitAmbientSound)(entity, pos, samp, vol, attenuation, fFlags, pitch);
 }
 
-void pfnTraceLine(const float* v1, const float* v2, int fNoMonsters, edict_t* pentToSkip, TraceResult* ptr)
+void pfnTraceLine(const float* v1, const float* v2, const int fNoMonsters, edict_t* pentToSkip, TraceResult* ptr)
 {
     //   if(debug_engine) { fp=UTIL_OpenFoxbotLog(); fprintf(fp,"pfnTraceLine:\n"); fclose(fp); }
     if(mr_meta)
@@ -778,7 +778,7 @@ void pfnTraceToss(edict_t* pent, edict_t* pentToIgnore, TraceResult* ptr)
 int pfnTraceMonsterHull(edict_t* pEdict,
     const float* v1,
     const float* v2,
-    int fNoMonsters,
+	const int fNoMonsters,
     edict_t* pentToSkip,
     TraceResult* ptr)
 {
@@ -790,8 +790,8 @@ int pfnTraceMonsterHull(edict_t* pEdict,
 
 void pfnTraceHull(const float* v1,
     const float* v2,
-    int fNoMonsters,
-    int hullNumber,
+	const int fNoMonsters,
+	const int hullNumber,
     edict_t* pentToSkip,
     TraceResult* ptr)
 {
@@ -801,7 +801,7 @@ void pfnTraceHull(const float* v1,
     (*g_engfuncs.pfnTraceHull)(v1, v2, fNoMonsters, hullNumber, pentToSkip, ptr);
 }
 
-void pfnTraceModel(const float* v1, const float* v2, int hullNumber, edict_t* pent, TraceResult* ptr)
+void pfnTraceModel(const float* v1, const float* v2, const int hullNumber, edict_t* pent, TraceResult* ptr)
 {
     //   if(debug_engine) { fp=UTIL_OpenFoxbotLog(); fprintf(fp,"pfnTraceModel:\n"); fclose(fp); }
     if(mr_meta)
@@ -819,8 +819,8 @@ const char* pfnTraceTexture(edict_t* pTextureEntity, const float* v1, const floa
 
 void pfnTraceSphere(const float* v1,
     const float* v2,
-    int fNoMonsters,
-    float radius,
+	const int fNoMonsters,
+	const float radius,
     edict_t* pentToSkip,
     TraceResult* ptr)
 {
@@ -830,7 +830,7 @@ void pfnTraceSphere(const float* v1,
     (*g_engfuncs.pfnTraceSphere)(v1, v2, fNoMonsters, radius, pentToSkip, ptr);
 }
 
-void pfnGetAimVector(edict_t* ent, float speed, float* rgflReturn)
+void pfnGetAimVector(edict_t* ent, const float speed, float* rgflReturn)
 {
     //   if(debug_engine) { fp=UTIL_OpenFoxbotLog(); fprintf(fp,"pfnGetAimVector:\n"); fclose(fp); }
     if(mr_meta)
@@ -994,7 +994,7 @@ void pfnClCom(edict_t* pEdict, char* szFmt, ...)
     //	return;
 }
 
-void pfnParticleEffect(const float* org, const float* dir, float color, float count)
+void pfnParticleEffect(const float* org, const float* dir, const float color, const float count)
 {
     //   if(debug_engine) { fp=UTIL_OpenFoxbotLog(); fprintf(fp,"pfnParticleEffect:\n"); fclose(fp); }
     if(mr_meta)
@@ -1002,7 +1002,7 @@ void pfnParticleEffect(const float* org, const float* dir, float color, float co
     (*g_engfuncs.pfnParticleEffect)(org, dir, color, count);
 }
 
-void pfnLightStyle(int style, char* val)
+void pfnLightStyle(const int style, char* val)
 {
     //   if(debug_engine) { fp=UTIL_OpenFoxbotLog(); fprintf(fp,"pfnLightStyle:\n"); fclose(fp); }
     if(mr_meta)
@@ -1029,14 +1029,14 @@ int pfnPointContents(const float* rgflVector)
     return (*g_engfuncs.pfnPointContents)(rgflVector);
 }
 
-void MessageBegin(int msg_dest, int msg_type, const float* pOrigin, edict_t* ed)
+void MessageBegin(const int msg_dest, const int msg_type, const float* pOrigin, edict_t* ed)
 {
     MM_func = TRUE;
     pfnMessageBegin(msg_dest, msg_type, pOrigin, ed);
     MM_func = FALSE;
 }
 
-void pfnMessageBegin(int msg_dest, int msg_type, const float* pOrigin, edict_t* ed)
+void pfnMessageBegin(const int msg_dest, const int msg_type, const float* pOrigin, edict_t* ed)
 {
     /*if(ed!=NULL)
        if(ed->v.classname==NULL || ed->v.netname==NULL)
@@ -1053,7 +1053,7 @@ void pfnMessageBegin(int msg_dest, int msg_type, const float* pOrigin, edict_t* 
                 ed,msg_dest,msg_type,GETPLAYERWONID(ed),ENTINDEX(ed));*/
 
         if(ed) {
-            int index = UTIL_GetBotIndex(ed);
+	        const int index = UTIL_GetBotIndex(ed);
 
             // is this message for a bot?
             if(index != -1) {
@@ -1273,7 +1273,7 @@ void pfnMessageEnd(void)
         (*g_engfuncs.pfnMessageEnd)();
 }
 
-void WriteByte(int iValue)
+void WriteByte(const int iValue)
 {
     MM_func = TRUE;
     pfnWriteByte(iValue);
@@ -1308,7 +1308,7 @@ void pfnWriteByte(int iValue)
         (*g_engfuncs.pfnWriteByte)(iValue);
 }
 
-void WriteChar(int iValue)
+void WriteChar(const int iValue)
 {
     MM_func = TRUE;
     pfnWriteChar(iValue);
@@ -1343,7 +1343,7 @@ void pfnWriteChar(int iValue)
         (*g_engfuncs.pfnWriteChar)(iValue);
 }
 
-void WriteShort(int iValue)
+void WriteShort(const int iValue)
 {
     MM_func = TRUE;
     pfnWriteShort(iValue);
@@ -1378,7 +1378,7 @@ void pfnWriteShort(int iValue)
         (*g_engfuncs.pfnWriteShort)(iValue);
 }
 
-void WriteLong(int iValue)
+void WriteLong(const int iValue)
 {
     MM_func = TRUE;
     pfnWriteLong(iValue);
@@ -1413,7 +1413,7 @@ void pfnWriteLong(int iValue)
         (*g_engfuncs.pfnWriteLong)(iValue);
 }
 
-void WriteAngle(float flValue)
+void WriteAngle(const float flValue)
 {
     MM_func = TRUE;
     pfnWriteAngle(flValue);
@@ -1448,7 +1448,7 @@ void pfnWriteAngle(float flValue)
         (*g_engfuncs.pfnWriteAngle)(flValue);
 }
 
-void WriteCoord(float flValue)
+void WriteCoord(const float flValue)
 {
     MM_func = TRUE;
     pfnWriteCoord(flValue);
@@ -1519,7 +1519,7 @@ void pfnWriteString(const char* sz)
         (*g_engfuncs.pfnWriteString)(sz);
 }
 
-void WriteEntity(int iValue)
+void WriteEntity(const int iValue)
 {
     MM_func = TRUE;
     pfnWriteEntity(iValue);
@@ -1586,7 +1586,7 @@ const char* pfnCVarGetString(const char* szVarName)
     return (*g_engfuncs.pfnCVarGetString)(szVarName);
 }
 
-void pfnCVarSetFloat(const char* szVarName, float flValue)
+void pfnCVarSetFloat(const char* szVarName, const float flValue)
 {
     //   if(debug_engine) { fp=UTIL_OpenFoxbotLog(); fprintf(fp,"pfnCVarSetFloat:\n"); fclose(fp); }
     if(mr_meta)
@@ -1606,7 +1606,7 @@ void pfnCVarSetString(const char* szVarName, const char* szValue)
     (*g_engfuncs.pfnCVarSetString)(szVarName, szValue);
 }
 
-void* pfnPvAllocEntPrivateData(edict_t* pEdict, int32 cb)
+void* pfnPvAllocEntPrivateData(edict_t* pEdict, const int32 cb)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
@@ -1653,7 +1653,7 @@ void pfnFreeEntPrivateData(edict_t* pEdict)
     (*g_engfuncs.pfnFreeEntPrivateData)(pEdict);
 }
 
-const char* pfnSzFromIndex(int iString)
+const char* pfnSzFromIndex(const int iString)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
@@ -1690,7 +1690,7 @@ entvars_t* pfnGetVarsOfEnt(edict_t* pEdict)
     return (*g_engfuncs.pfnGetVarsOfEnt)(pEdict);
 }
 
-edict_t* pfnPEntityOfEntOffset(int iEntOffset)
+edict_t* pfnPEntityOfEntOffset(const int iEntOffset)
 {
     //   if(debug_engine) { fp=UTIL_OpenFoxbotLog(); fprintf(fp,"pfnPEntityOfEntOffset:\n"); fclose(fp); }
     if(mr_meta)
@@ -1714,7 +1714,7 @@ int pfnIndexOfEdict(const edict_t* pEdict)
     return (*g_engfuncs.pfnIndexOfEdict)(pEdict);
 }
 
-edict_t* pfnPEntityOfEntIndex(int iEntIndex)
+edict_t* pfnPEntityOfEntIndex(const int iEntIndex)
 {
     //   if(debug_engine) { fp=UTIL_OpenFoxbotLog(); fprintf(fp,"pfnPEntityOfEntIndex:\n"); fclose(fp); }
     if(mr_meta)
@@ -1738,7 +1738,7 @@ void* pfnGetModelPtr(edict_t* pEdict)
     return (*g_engfuncs.pfnGetModelPtr)(pEdict);
 }
 
-int pfnRegUserMsg(const char* pszName, int iSize)
+int pfnRegUserMsg(const char* pszName, const int iSize)
 {
     int msg;
 
@@ -1888,7 +1888,7 @@ int pfnRegUserMsg(const char* pszName, int iSize)
     return msg;
 }
 
-void pfnAnimationAutomove(const edict_t* pEdict, float flTime)
+void pfnAnimationAutomove(const edict_t* pEdict, const float flTime)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
@@ -1900,7 +1900,7 @@ void pfnAnimationAutomove(const edict_t* pEdict, float flTime)
     (*g_engfuncs.pfnAnimationAutomove)(pEdict, flTime);
 }
 
-void pfnGetBonePosition(const edict_t* pEdict, int iBone, float* rgflOrigin, float* rgflAngles)
+void pfnGetBonePosition(const edict_t* pEdict, const int iBone, float* rgflOrigin, float* rgflAngles)
 {
     //   if(debug_engine) { fp=UTIL_OpenFoxbotLog(); fprintf(fp,"pfnGetBonePosition:\n"); fclose(fp); }
     if(mr_meta)
@@ -1920,7 +1920,7 @@ uint32 pfnFunctionFromName(const char* pName)
     return (*g_engfuncs.pfnFunctionFromName)(pName);
 }
 
-const char* pfnNameForFunction(uint32 function)
+const char* pfnNameForFunction(const uint32 function)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
@@ -1932,7 +1932,7 @@ const char* pfnNameForFunction(uint32 function)
     return (*g_engfuncs.pfnNameForFunction)(function);
 }
 
-void pfnClientPrintf(edict_t* pEdict, PRINT_TYPE ptype, const char* szMsg)
+void pfnClientPrintf(edict_t* pEdict, const PRINT_TYPE ptype, const char* szMsg)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
@@ -2187,7 +2187,7 @@ static bool name_message_check(const char* msg_string, const char* name_string)
     return FALSE;
 }
 
-void pfnGetAttachment(const edict_t* pEdict, int iAttachment, float* rgflOrigin, float* rgflAngles)
+void pfnGetAttachment(const edict_t* pEdict, const int iAttachment, float* rgflOrigin, float* rgflAngles)
 {
     /*if(debug_engine)
             { fp=UTIL_OpenFoxbotLog();
@@ -2210,7 +2210,7 @@ void pfnCRC32_Init(CRC32_t* pulCRC)
     (*g_engfuncs.pfnCRC32_Init)(pulCRC);
 }
 
-void pfnCRC32_ProcessBuffer(CRC32_t* pulCRC, void* p, int len)
+void pfnCRC32_ProcessBuffer(CRC32_t* pulCRC, void* p, const int len)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
@@ -2222,7 +2222,7 @@ void pfnCRC32_ProcessBuffer(CRC32_t* pulCRC, void* p, int len)
     (*g_engfuncs.pfnCRC32_ProcessBuffer)(pulCRC, p, len);
 }
 
-void pfnCRC32_ProcessByte(CRC32_t* pulCRC, unsigned char ch)
+void pfnCRC32_ProcessByte(CRC32_t* pulCRC, const unsigned char ch)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
@@ -2234,7 +2234,7 @@ void pfnCRC32_ProcessByte(CRC32_t* pulCRC, unsigned char ch)
     (*g_engfuncs.pfnCRC32_ProcessByte)(pulCRC, ch);
 }
 
-CRC32_t pfnCRC32_Final(CRC32_t pulCRC)
+CRC32_t pfnCRC32_Final(const CRC32_t pulCRC)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
@@ -2247,7 +2247,7 @@ CRC32_t pfnCRC32_Final(CRC32_t pulCRC)
     return (*g_engfuncs.pfnCRC32_Final)(pulCRC);
 }
 
-int32 pfnRandomLong(int32 lLow, int32 lHigh)
+int32 pfnRandomLong(const int32 lLow, const int32 lHigh)
 {
     //   if(debug_engine) { fp=UTIL_OpenFoxbotLog(); fprintf(fp,"pfnRandomLong: lLow=%d lHigh=%d\n",lLow,lHigh);
     //   fclose(fp); }
@@ -2256,7 +2256,7 @@ int32 pfnRandomLong(int32 lLow, int32 lHigh)
     return (*g_engfuncs.pfnRandomLong)(lLow, lHigh);
 }
 
-float pfnRandomFloat(float flLow, float flHigh)
+float pfnRandomFloat(const float flLow, const float flHigh)
 {
     //   if(debug_engine) { fp=UTIL_OpenFoxbotLog(); fprintf(fp,"pfnRandomFloat:\n"); fclose(fp); }
     if(mr_meta)
@@ -2288,7 +2288,7 @@ float pfnTime(void)
     return (*g_engfuncs.pfnTime)();
 }
 
-void pfnCrosshairAngle(const edict_t* pClient, float pitch, float yaw)
+void pfnCrosshairAngle(const edict_t* pClient, const float pitch, const float yaw)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
@@ -2372,7 +2372,8 @@ void pfnCvar_RegisterVariable(cvar_t* variable)
     (*g_engfuncs.pfnCvar_RegisterVariable)(variable);
 }
 
-void pfnFadeClientVolume(const edict_t* pEdict, int fadePercent, int fadeOutSeconds, int holdTime, int fadeInSeconds)
+void pfnFadeClientVolume(const edict_t* pEdict, const int fadePercent, const int fadeOutSeconds, const int holdTime,
+                         const int fadeInSeconds)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
@@ -2384,7 +2385,7 @@ void pfnFadeClientVolume(const edict_t* pEdict, int fadePercent, int fadeOutSeco
     (*g_engfuncs.pfnFadeClientVolume)(pEdict, fadePercent, fadeOutSeconds, holdTime, fadeInSeconds);
 }
 
-void pfnSetClientMaxspeed(const edict_t* pEdict, float fNewMaxspeed)
+void pfnSetClientMaxspeed(const edict_t* pEdict, const float fNewMaxspeed)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
@@ -2410,12 +2411,12 @@ edict_t* pfnCreateFakeClient(const char* netname)
 
 void pfnRunPlayerMove(edict_t* fakeclient,
     const float* viewangles,
-    float forwardmove,
-    float sidemove,
-    float upmove,
-    unsigned short buttons,
-    byte impulse,
-    byte msec)
+	const float forwardmove,
+	const float sidemove,
+	const float upmove,
+	const unsigned short buttons,
+	const byte impulse,
+	const byte msec)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
@@ -2478,7 +2479,7 @@ void pfnSetKeyValue(char* infobuffer, char* key, char* value)
     (*g_engfuncs.pfnSetKeyValue)(infobuffer, key, value);
 }
 
-void pfnSetClientKeyValue(int clientIndex, char* infobuffer, char* key, char* value)
+void pfnSetClientKeyValue(const int clientIndex, char* infobuffer, char* key, char* value)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
@@ -2503,7 +2504,7 @@ int pfnIsMapValid(char* filename)
     return (*g_engfuncs.pfnIsMapValid)(filename);
 }
 
-void pfnStaticDecal(const float* origin, int decalIndex, int entityIndex, int modelIndex)
+void pfnStaticDecal(const float* origin, const int decalIndex, const int entityIndex, const int modelIndex)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
@@ -2553,14 +2554,14 @@ int pfnGetPlayerUserId(edict_t* e)
 }
 
 void pfnBuildSoundMsg(edict_t* entity,
-    int channel,
+	const int channel,
     const char* sample,
-    /*int*/ float volume,
-    float attenuation,
-    int fFlags,
-    int pitch,
-    int msg_dest,
-    int msg_type,
+    /*int*/ const float volume,
+	const float attenuation,
+	const int fFlags,
+	const int pitch,
+	const int msg_dest,
+	const int msg_type,
     const float* pOrigin,
     edict_t* ed)
 {
@@ -2670,7 +2671,7 @@ const char* pfnGetPhysicsInfoString(const edict_t* pClient)
     return (*g_engfuncs.pfnGetPhysicsInfoString)(pClient);
 }
 
-unsigned short pfnPrecacheEvent(int type, const char* psz)
+unsigned short pfnPrecacheEvent(const int type, const char* psz)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
@@ -2684,18 +2685,18 @@ unsigned short pfnPrecacheEvent(int type, const char* psz)
     return (*g_engfuncs.pfnPrecacheEvent)(type, psz);
 }
 
-void pfnPlaybackEvent(int flags,
+void pfnPlaybackEvent(const int flags,
     const edict_t* pInvoker,
-    unsigned short eventindex,
-    float delay,
+	const unsigned short eventindex,
+	const float delay,
     float* origin,
     float* angles,
-    float fparam1,
-    float fparam2,
-    int iparam1,
-    int iparam2,
-    int bparam1,
-    int bparam2)
+	const float fparam1,
+	const float fparam2,
+	const int iparam1,
+	const int iparam2,
+	const int bparam1,
+	const int bparam2)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
@@ -2809,7 +2810,7 @@ int pfnDeltaFindField(struct delta_s* pFields, const char* fieldname)
     return (*g_engfuncs.pfnDeltaFindField)(pFields, fieldname);
 }
 
-void pfnDeltaSetFieldByIndex(struct delta_s* pFields, int fieldNumber)
+void pfnDeltaSetFieldByIndex(struct delta_s* pFields, const int fieldNumber)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
@@ -2823,7 +2824,7 @@ void pfnDeltaSetFieldByIndex(struct delta_s* pFields, int fieldNumber)
     (*g_engfuncs.pfnDeltaSetFieldByIndex)(pFields, fieldNumber);
 }
 
-void pfnDeltaUnsetFieldByIndex(struct delta_s* pFields, int fieldNumber)
+void pfnDeltaUnsetFieldByIndex(struct delta_s* pFields, const int fieldNumber)
 {
     // if(debug_engine) { fp=UTIL_OpenFoxbotLog(); fprintf(fp,"pfnDeltaUnsetFieldByIndex:\n"); fclose(fp); }
     if(mr_meta)
@@ -2831,7 +2832,7 @@ void pfnDeltaUnsetFieldByIndex(struct delta_s* pFields, int fieldNumber)
     (*g_engfuncs.pfnDeltaUnsetFieldByIndex)(pFields, fieldNumber);
 }
 
-void pfnSetGroupMask(int mask, int op)
+void pfnSetGroupMask(const int mask, const int op)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
@@ -2845,7 +2846,7 @@ void pfnSetGroupMask(int mask, int op)
     (*g_engfuncs.pfnSetGroupMask)(mask, op);
 }
 
-int pfnCreateInstancedBaseline(int classname, struct entity_state_s* baseline)
+int pfnCreateInstancedBaseline(const int classname, struct entity_state_s* baseline)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
@@ -2873,7 +2874,7 @@ void pfnCvar_DirectSet(struct cvar_s* var, char* value)
     (*g_engfuncs.pfnCvar_DirectSet)(var, value);
 }
 
-void pfnForceUnmodified(FORCE_TYPE type, float* mins, float* maxs, const char* filename)
+void pfnForceUnmodified(FORCE_TYPE const type, float* mins, float* maxs, const char* filename)
 {
     if(debug_engine) {
         fp = UTIL_OpenFoxbotLog();
@@ -2925,7 +2926,7 @@ void pfnGetPlayerStats(const edict_t* pClient, int* ping, int* packet_loss)
 
 // idea for making meta mod work..add these engine calls
 
-void pfnAlertMessage(ALERT_TYPE atype, char* szFmt, ...)
+void pfnAlertMessage(ALERT_TYPE const atype, char* szFmt, ...)
 {
     if(mr_meta)
         RETURN_META(MRES_HANDLED);

@@ -804,7 +804,7 @@ int assess_JobPursueEnemy(const bot_t* pBot, const job_struct& r_job)
         if(!WaypointAvailable(r_job.waypoint, pBot->current_team))
             return PRIORITY_NONE;
 
-        int routeDistance = WaypointDistanceFromTo(pBot->current_wp, r_job.waypoint, pBot->current_team);
+        const int routeDistance = WaypointDistanceFromTo(pBot->current_wp, r_job.waypoint, pBot->current_team);
 
         if(PlayerHasFlag(r_job.player)) {
             // forget flag carriers if they are now far away
