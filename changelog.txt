@@ -10,9 +10,13 @@ Updated by RoboCop
 
 - Replaced most of the C style casts with C++ casts
 
-- Increased engineer maintain sentry priority
+- Increased engineer maintain sentry priority task
+
+- Increased collect ammo priority to allow both engineers and snipers for defensive tasks
 
 - Reduced sniper accuracy for each of the 5 bot skill settings
+
+- Enhanced the dustbowl waypoints even further to remove lame sentry deployment areas
 
 - Fixed depreciation warning for 'SpyDetect'
 

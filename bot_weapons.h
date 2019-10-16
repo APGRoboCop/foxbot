@@ -48,7 +48,6 @@
 #define VALVE_MAX_NORMAL_BATTERY   100
 #define VALVE_HORNET_MAX_CARRY      8
 
-
 // weapon ID values for Valve's Team Fortress Classic & 1.5
 #define TF_WEAPON_UNKNOWN1       1
 #define TF_WEAPON_UNKNOWN2       2
@@ -107,7 +106,6 @@
 #define CS_WEAPON_KNIFE         29
 #define CS_WEAPON_P90           30
 
-
 // weapon ID values for Gearbox's OpFor Deathmatch
 #define GEARBOX_WEAPON_CROWBAR       1
 #define GEARBOX_WEAPON_GLOCK         2
@@ -135,7 +133,6 @@
 #define GEARBOX_WEAPON_SNIPERRIFLE  24
 #define GEARBOX_WEAPON_KNIFE        25
 
-
 // weapon ID values for FrontLineForce
 #define FLF_WEAPON_AK5           10
 #define FLF_WEAPON_UNKNOWN11     11
@@ -161,17 +158,15 @@
 
 typedef struct
 {
-   char szClassname[64];
-   int  iAmmo1;     // ammo index for primary ammo
-   int  iAmmo1Max;  // max primary ammo
-   int  iAmmo2;     // ammo index for secondary ammo
-   int  iAmmo2Max;  // max secondary ammo
-   int  iSlot;      // HUD slot (0 based)
-   int  iPosition;  // slot position
-   int  iId;        // weapon ID
-   int  iFlags;     // flags???
+	char szClassname[64];
+	int  iAmmo1;     // ammo index for primary ammo
+	int  iAmmo1Max;  // max primary ammo
+	int  iAmmo2;     // ammo index for secondary ammo
+	int  iAmmo2Max;  // max secondary ammo
+	int  iSlot;      // HUD slot (0 based)
+	int  iPosition;  // slot position
+	int  iId;        // weapon ID
+	int  iFlags;     // flags???
 } bot_weapon_t;
 
-
 #endif // BOT_WEAPONS_H
-

@@ -28,7 +28,6 @@
 #ifndef BOT_JOB_THINK_H
 #define BOT_JOB_THINK_H
 
-
 // list of job types that the bots can try to accomplish
 enum knownJobTypes {
 	JOB_NONE = -1,
@@ -90,31 +89,29 @@ enum knownJobTypes {
 // a job function will return this if the job hasn't finished yet
 #define JOB_UNDERWAY 1
 
-
 // list of essential data for all known job types
 typedef struct {
 	int basePriority;
 	char jobNames[32];  // useful in debugging
-	} jobList_struct;
+} jobList_struct;
 
 extern const jobList_struct jl[JOB_TYPE_TOTAL];
 
-
 // function prototypes below /////////////
-void BotResetJobBuffer(bot_t *pBot);
+void BotResetJobBuffer(bot_t* pBot);
 
-void BlacklistJob(bot_t *pBot, const int jobType, const float timeOut);
+void BlacklistJob(bot_t* pBot, const int jobType, const float timeOut);
 
-bool BufferContainsJobType(const bot_t *pBot, const int JobType);
+bool BufferContainsJobType(const bot_t* pBot, const int JobType);
 
-int BufferedJobIndex(const bot_t *pBot, const int JobType);
+int BufferedJobIndex(const bot_t* pBot, const int JobType);
 
-job_struct *InitialiseNewJob(bot_t *pBot, const int newJobType);
+job_struct* InitialiseNewJob(bot_t* pBot, const int newJobType);
 
-bool SubmitNewJob(bot_t *pBot, const int newJobType, job_struct *newJob);
+bool SubmitNewJob(bot_t* pBot, const int newJobType, job_struct* newJob);
 
-void BotRunJobs(bot_t *pBot);
+void BotRunJobs(bot_t* pBot);
 
-void BotJobThink(bot_t *pBot);
+void BotJobThink(bot_t* pBot);
 
 #endif // BOT_JOB_THINK_H

@@ -63,7 +63,7 @@
 #define TRUE 1
 
 //Fix for GCC 7 - [APG]RoboCop[CL]
-#include <algorithm> 
+#include <algorithm>
 
 #ifndef max
 #define max(a,b) (((a) > (b)) ? (a) : (b))
@@ -75,7 +75,7 @@
 
 #undef max
 #undef min
- 
+
 using namespace std;
 
 #define itoa(a, b, c) sprintf(b, "%d", a)

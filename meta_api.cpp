@@ -22,29 +22,29 @@ extern bool mr_meta;
 
 // Must	provide	at least one of	these..
 static META_FUNCTIONS gMetaFunctionTable = {
-    GetEntityAPI,            // pfnGetEntityAPI				HL SDK;	called before game DLL
-    GetEntityAPI_Post,       // pfnGetEntityAPI_Post			META; called after game	DLL
-    NULL,                    // pfnGetEntityAPI2				HL SDK2; called	before game	DLL
-    NULL,                    // pfnGetEntityAPI2_Post		META; called after game	DLL
-    NULL,                    // pfnGetNewDLLFunctions		HL SDK2; called	before game	DLL
-    NULL,                    // pfnGetNewDLLFunctions_Post	META; called after game	DLL
-    GetEngineFunctions,      // pfnGetEngineFunctions		META; called before	HL engine
-    GetEngineFunctions_Post, // pfnGetEngineFunctions_Post	META; called after HL engine
+	GetEntityAPI,            // pfnGetEntityAPI				HL SDK;	called before game DLL
+	GetEntityAPI_Post,       // pfnGetEntityAPI_Post			META; called after game	DLL
+	NULL,                    // pfnGetEntityAPI2				HL SDK2; called	before game	DLL
+	NULL,                    // pfnGetEntityAPI2_Post		META; called after game	DLL
+	NULL,                    // pfnGetNewDLLFunctions		HL SDK2; called	before game	DLL
+	NULL,                    // pfnGetNewDLLFunctions_Post	META; called after game	DLL
+	GetEngineFunctions,      // pfnGetEngineFunctions		META; called before	HL engine
+	GetEngineFunctions_Post, // pfnGetEngineFunctions_Post	META; called after HL engine
 };
 
 // Description of plugin
 plugin_info_t Plugin_info = {
-    META_INTERFACE_VERSION,                       // ifvers
-    "FoxBot",                                     // name
-    "0.792-APG",                                    // version
-    "22/05/2019",                                  // date
-    "Tom Simpson & RoboCop <robocop@lycos.co.uk>", // author
-    "https://apg-clan.org/",                   // url
-    //"http://www.omni-bot.com/",	// url
-    //"http://www.foxbot.net/",	// url
-    "FOXBOT",   // logtag
-    PT_STARTUP, // (when) loadable
-    PT_STARTUP, // (when) unloadable
+	META_INTERFACE_VERSION,                       // ifvers
+	"FoxBot",                                     // name
+	"0.792-APG",                                    // version
+	"22/05/2019",                                  // date
+	"Tom Simpson & RoboCop <robocop@lycos.co.uk>", // author
+	"https://apg-clan.org/",                   // url
+	//"http://www.omni-bot.com/",	// url
+	//"http://www.foxbot.net/",	// url
+	"FOXBOT",   // logtag
+	PT_STARTUP, // (when) loadable
+	PT_STARTUP, // (when) unloadable
 };
 
 // Global vars from	metamod:
@@ -54,7 +54,7 @@ mutil_funcs_t* gpMetaUtilFuncs;  // metamod utility functions
 
 void Meta_Init(void)
 {
-    mr_meta = TRUE;
+	mr_meta = TRUE;
 }
 
 // Metamod requesting info about this plugin:
@@ -63,22 +63,22 @@ void Meta_Init(void)
 //	pMetaUtilFuncs	(given)	table of utility functions provided	by metamod
 C_DLLEXPORT int Meta_Query(char* ifvers, plugin_info_t** pPlugInfo, mutil_funcs_t* pMetaUtilFuncs)
 {
-    // Give metamod our plugin_info struct
-    *pPlugInfo = &Plugin_info;
-    // Get metamod utility function table.
-    gpMetaUtilFuncs = pMetaUtilFuncs;
+	// Give metamod our plugin_info struct
+	*pPlugInfo = &Plugin_info;
+	// Get metamod utility function table.
+	gpMetaUtilFuncs = pMetaUtilFuncs;
 
-    // check for interface version compatibility
-    // this bit of code was adapted from code by Pierre-Marie Baty
-    if(strcmp(ifvers, Plugin_info.ifvers) != 0) {
-        LOG_CONSOLE(PLID, "%s: meta-interface version mismatch (metamod: %s, %s: %s)", Plugin_info.name, ifvers,
-            Plugin_info.name, Plugin_info.ifvers);
+	// check for interface version compatibility
+	// this bit of code was adapted from code by Pierre-Marie Baty
+	if (strcmp(ifvers, Plugin_info.ifvers) != 0) {
+		LOG_CONSOLE(PLID, "%s: meta-interface version mismatch (metamod: %s, %s: %s)", Plugin_info.name, ifvers,
+			Plugin_info.name, Plugin_info.ifvers);
 
-        LOG_MESSAGE(PLID, "%s: meta-interface version mismatch (metamod: %s, %s: %s)", Plugin_info.name, ifvers,
-            Plugin_info.name, Plugin_info.ifvers);
-    }
+		LOG_MESSAGE(PLID, "%s: meta-interface version mismatch (metamod: %s, %s: %s)", Plugin_info.name, ifvers,
+			Plugin_info.name, Plugin_info.ifvers);
+	}
 
-    return TRUE;
+	return TRUE;
 }
 
 // Metamod attaching plugin	to the server.
@@ -87,24 +87,24 @@ C_DLLEXPORT int Meta_Query(char* ifvers, plugin_info_t** pPlugInfo, mutil_funcs_
 //	pMGlobals		(given)	global vars	from metamod
 //	pGamedllFuncs	(given)	copy of	function tables	from game dll
 C_DLLEXPORT int Meta_Attach(const PLUG_LOADTIME now,
-    META_FUNCTIONS* pFunctionTable,
-    meta_globals_t* pMGlobals,
-    gamedll_funcs_t* pGamedllFuncs)
+	META_FUNCTIONS* pFunctionTable,
+	meta_globals_t* pMGlobals,
+	gamedll_funcs_t* pGamedllFuncs)
 {
-    if(now)
-	    // to satisfy gcc -Wunused
-    if(!pMGlobals) {
-        LOG_ERROR(PLID, "Meta_Attach called	with null pMGlobals");
-        return FALSE;
-    }
-    gpMetaGlobals = pMGlobals;
-    if(!pFunctionTable) {
-        LOG_ERROR(PLID, "Meta_Attach called	with null pFunctionTable");
-        return FALSE;
-    }
-    memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));
-    gpGamedllFuncs = pGamedllFuncs;
-    return TRUE;
+	if (now)
+		// to satisfy gcc -Wunused
+		if (!pMGlobals) {
+			LOG_ERROR(PLID, "Meta_Attach called	with null pMGlobals");
+			return FALSE;
+		}
+	gpMetaGlobals = pMGlobals;
+	if (!pFunctionTable) {
+		LOG_ERROR(PLID, "Meta_Attach called	with null pFunctionTable");
+		return FALSE;
+	}
+	memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));
+	gpGamedllFuncs = pGamedllFuncs;
+	return TRUE;
 }
 
 // Metamod detaching plugin	from the server.
@@ -112,7 +112,7 @@ C_DLLEXPORT int Meta_Attach(const PLUG_LOADTIME now,
 // reason	(given)	why	detaching (refresh,	console	unload,	forced unload, etc)
 C_DLLEXPORT int Meta_Detach(const PLUG_LOADTIME now, const PL_UNLOAD_REASON reason)
 {
-    if(now && reason)
-	    // to satisfy gcc -Wunused
-    return TRUE;
+	if (now && reason)
+		// to satisfy gcc -Wunused
+		return TRUE;
 }
