@@ -15,12 +15,12 @@
  *
  */
 
-/*
- * Build type, either debugging or optimized.
- * This is set by the Makefile. Provide a default
- * in case is isn't defined by the Makefile
- *
- */
+ /*
+  * Build type, either debugging or optimized.
+  * This is set by the Makefile. Provide a default
+  * in case is isn't defined by the Makefile
+  *
+  */
 #ifndef OPT_TYPE
 # if defined(_MSC_VER) && defined(_DEBUG)
 #  define OPT_TYPE	  "debugging"
@@ -31,21 +31,20 @@
 # endif /* _MSC_VER */
 #endif
 
-
-/*
- * Version number.
- * This is also defined by the Makefile.
- * If not, we provide it here.
- */
+  /*
+   * Version number.
+   * This is also defined by the Makefile.
+   * If not, we provide it here.
+   */
 #ifndef VERSION
 #  define VERSION 0.792-APG
 #endif
 
-/*
- * Version type.
- * This is also defined by the Makefile.
- * If not, we provide it here.
- */
+   /*
+	* Version type.
+	* This is also defined by the Makefile.
+	* If not, we provide it here.
+	*/
 #ifndef MOD_VERSION
 #  ifdef USE_METAMOD
 #      define MOD_VERSION VERSION " (MM)"
@@ -54,15 +53,13 @@
 #  endif
 #endif
 
-
-/*
- * We keep the compile time and date in a static string.
- * This info gets updated on every link, indicating the
- * latest time and date the dll was compiled and linked.
- */
-extern char *COMPILE_DTTM;
-extern char *COMPILE_DATE;
-
+	/*
+	 * We keep the compile time and date in a static string.
+	 * This info gets updated on every link, indicating the
+	 * latest time and date the dll was compiled and linked.
+	 */
+extern char* COMPILE_DTTM;
+extern char* COMPILE_DATE;
 
 /*
  * We can also provide the timezone. It gets set in the
@@ -72,13 +69,12 @@ extern char *COMPILE_DATE;
 #  define TZONE ""
 #endif
 
-/*
- * This info is used as Plugin info by Metamod
- */
+ /*
+  * This info is used as Plugin info by Metamod
+  */
 #define VDATE		COMPILE_DATE
 #define VNAME		"FoxBot"
 #define VAUTHOR		"Tom Simpson & RoboCop <robocop@lycos.co.uk>"
 #define VURL		"apg-clan.org"
-
 
 #endif /* _VERSION_H_ */

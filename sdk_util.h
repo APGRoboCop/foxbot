@@ -34,8 +34,8 @@
  *
  */
 
-// Wrap util.h from SDK with ifndef/endif, to avoid problems from multiple
-// inclusions.  Dunno why Valve didn't do that in util.h themselves..
+ // Wrap util.h from SDK with ifndef/endif, to avoid problems from multiple
+ // inclusions.  Dunno why Valve didn't do that in util.h themselves..
 
 #ifndef SDK_UTIL_H
 #define SDK_UTIL_H
@@ -64,45 +64,45 @@
 // Get a setinfo value from a player entity.
 inline char* ENTITY_KEYVALUE(edict_t* entity, char* key)
 {
-    char* ifbuf = GET_INFOKEYBUFFER(entity);
-    return INFOKEY_VALUE(ifbuf, key);
+	char* ifbuf = GET_INFOKEYBUFFER(entity);
+	return INFOKEY_VALUE(ifbuf, key);
 }
 
 // Set a setinfo value for a player entity.
 inline void ENTITY_SET_KEYVALUE(edict_t* entity, char* key, char* value)
 {
-    char* ifbuf = GET_INFOKEYBUFFER(entity);
-    SET_CLIENT_KEYVALUE(ENTINDEX(entity), ifbuf, key, value);
+	char* ifbuf = GET_INFOKEYBUFFER(entity);
+	SET_CLIENT_KEYVALUE(ENTINDEX(entity), ifbuf, key, value);
 }
 
 // Get a "serverinfo" value.
 inline char* SERVERINFO(char* key)
 {
-    edict_t* server = INDEXENT(0);
-    return ENTITY_KEYVALUE(server, key);
+	edict_t* server = INDEXENT(0);
+	return ENTITY_KEYVALUE(server, key);
 }
 
 // Set a "serverinfo" value.
 inline void SET_SERVERINFO(char* key, char* value)
 {
-    edict_t* server = INDEXENT(0);
-    char* ifbuf = GET_INFOKEYBUFFER(server);
-    SET_SERVER_KEYVALUE(ifbuf, key, value);
+	edict_t* server = INDEXENT(0);
+	char* ifbuf = GET_INFOKEYBUFFER(server);
+	SET_SERVER_KEYVALUE(ifbuf, key, value);
 }
 
 // Get a "localinfo" value.
 inline char* LOCALINFO(char* key)
 {
-    edict_t* server = NULL;
-    return ENTITY_KEYVALUE(server, key);
+	edict_t* server = NULL;
+	return ENTITY_KEYVALUE(server, key);
 }
 
 // Set a "localinfo" value.
 inline void SET_LOCALINFO(char* key, char* value)
 {
-    edict_t* server = NULL;
-    char* ifbuf = GET_INFOKEYBUFFER(server);
-    SET_SERVER_KEYVALUE(ifbuf, key, value);
+	edict_t* server = NULL;
+	char* ifbuf = GET_INFOKEYBUFFER(server);
+	SET_SERVER_KEYVALUE(ifbuf, key, value);
 }
 
 short FixedSigned16(float value, float scale);

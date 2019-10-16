@@ -35,13 +35,13 @@ void KillCamera(edict_t* pPlayer);
 {
    public:
 
-      CBasePlayer *m_pPlayer;
-      CBasePlayer *m_pBot;
+	  CBasePlayer *m_pPlayer;
+	  CBasePlayer *m_pBot;
 
-      static CBotCam *Create( CBasePlayer *pPlayer, CBasePlayer *pBot );
-      void Spawn( void );
-          void EXPORT IThink( void );
-      void Disconnect( void );
+	  static CBotCam *Create( CBasePlayer *pPlayer, CBasePlayer *pBot );
+	  void Spawn( void );
+		  void EXPORT IThink( void );
+	  void Disconnect( void );
 };*/
 
 #endif

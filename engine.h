@@ -59,41 +59,41 @@ int pfnDropToFloor(edict_t* e);
 int pfnWalkMove(edict_t* ent, float yaw, float dist, int iMode);
 void pfnSetOrigin(edict_t* e, const float* rgflOrigin);
 void pfnEmitSound(edict_t* entity,
-    int channel,
-    const char* sample,
-    /*int*/ float volume,
-    float attenuation,
-    int fFlags,
-    int pitch);
+	int channel,
+	const char* sample,
+	/*int*/ float volume,
+	float attenuation,
+	int fFlags,
+	int pitch);
 void pfnEmitAmbientSound(edict_t* entity,
-    float* pos,
-    const char* samp,
-    float vol,
-    float attenuation,
-    int fFlags,
-    int pitch);
+	float* pos,
+	const char* samp,
+	float vol,
+	float attenuation,
+	int fFlags,
+	int pitch);
 void pfnTraceLine(const float* v1, const float* v2, int fNoMonsters, edict_t* pentToSkip, TraceResult* ptr);
 void pfnTraceToss(edict_t* pent, edict_t* pentToIgnore, TraceResult* ptr);
 int pfnTraceMonsterHull(edict_t* pEdict,
-    const float* v1,
-    const float* v2,
-    int fNoMonsters,
-    edict_t* pentToSkip,
-    TraceResult* ptr);
+	const float* v1,
+	const float* v2,
+	int fNoMonsters,
+	edict_t* pentToSkip,
+	TraceResult* ptr);
 void pfnTraceHull(const float* v1,
-    const float* v2,
-    int fNoMonsters,
-    int hullNumber,
-    edict_t* pentToSkip,
-    TraceResult* ptr);
+	const float* v2,
+	int fNoMonsters,
+	int hullNumber,
+	edict_t* pentToSkip,
+	TraceResult* ptr);
 void pfnTraceModel(const float* v1, const float* v2, int hullNumber, edict_t* pent, TraceResult* ptr);
 const char* pfnTraceTexture(edict_t* pTextureEntity, const float* v1, const float* v2);
 void pfnTraceSphere(const float* v1,
-    const float* v2,
-    int fNoMonsters,
-    float radius,
-    edict_t* pentToSkip,
-    TraceResult* ptr);
+	const float* v2,
+	int fNoMonsters,
+	float radius,
+	edict_t* pentToSkip,
+	TraceResult* ptr);
 void pfnGetAimVector(edict_t* ent, float speed, float* rgflReturn);
 void pfnServerCommand(char* str);
 void pfnServerExecute(void);
@@ -162,13 +162,13 @@ void pfnFadeClientVolume(const edict_t* pEdict, int fadePercent, int fadeOutSeco
 void pfnSetClientMaxspeed(const edict_t* pEdict, float fNewMaxspeed);
 edict_t* pfnCreateFakeClient(const char* netname);
 void pfnRunPlayerMove(edict_t* fakeclient,
-    const float* viewangles,
-    float forwardmove,
-    float sidemove,
-    float upmove,
-    unsigned short buttons,
-    byte impulse,
-    byte msec);
+	const float* viewangles,
+	float forwardmove,
+	float sidemove,
+	float upmove,
+	unsigned short buttons,
+	byte impulse,
+	byte msec);
 int pfnNumberOfEntities(void);
 char* pfnGetInfoKeyBuffer(edict_t* e);
 char* pfnInfoKeyValue(char* infobuffer, char* key);
@@ -179,16 +179,16 @@ void pfnStaticDecal(const float* origin, int decalIndex, int entityIndex, int mo
 int pfnPrecacheGeneric(char* s);
 int pfnGetPlayerUserId(edict_t* e);
 void pfnBuildSoundMsg(edict_t* entity,
-    int channel,
-    const char* sample,
-    /*int*/ float volume,
-    float attenuation,
-    int fFlags,
-    int pitch,
-    int msg_dest,
-    int msg_type,
-    const float* pOrigin,
-    edict_t* ed);
+	int channel,
+	const char* sample,
+	/*int*/ float volume,
+	float attenuation,
+	int fFlags,
+	int pitch,
+	int msg_dest,
+	int msg_type,
+	const float* pOrigin,
+	edict_t* ed);
 int pfnIsDedicatedServer(void);
 cvar_t* pfnCVarGetPointer(const char* szVarName);
 unsigned int pfnGetPlayerWONId(edict_t* e);
@@ -199,24 +199,24 @@ void pfnSetPhysicsKeyValue(const edict_t* pClient, const char* key, const char* 
 const char* pfnGetPhysicsInfoString(const edict_t* pClient);
 unsigned short pfnPrecacheEvent(int type, const char* psz);
 void pfnPlaybackEvent(int flags,
-    const edict_t* pInvoker,
-    unsigned short eventindex,
-    float delay,
-    float* origin,
-    float* angles,
-    float fparam1,
-    float fparam2,
-    int iparam1,
-    int iparam2,
-    int bparam1,
-    int bparam2);
+	const edict_t* pInvoker,
+	unsigned short eventindex,
+	float delay,
+	float* origin,
+	float* angles,
+	float fparam1,
+	float fparam2,
+	int iparam1,
+	int iparam2,
+	int bparam1,
+	int bparam2);
 unsigned char* pfnSetFatPVS(float* org);
 unsigned char* pfnSetFatPAS(float* org);
 int pfnCheckVisibility(const edict_t* entity, unsigned char* pset);
 void pfnDeltaSetField(struct delta_s* pFields, const char* fieldname);
 void pfnDeltaUnsetField(struct delta_s* pFields, const char* fieldname);
 void pfnDeltaAddEncoder(char* name,
-    void (*conditionalencode)(struct delta_s* pFields, const unsigned char* from, const unsigned char* to));
+	void (*conditionalencode)(struct delta_s* pFields, const unsigned char* from, const unsigned char* to));
 int pfnGetCurrentPlayer(void);
 int pfnCanSkipPlayer(const edict_t* player);
 int pfnDeltaFindField(struct delta_s* pFields, const char* fieldname);
