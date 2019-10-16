@@ -153,3 +153,5 @@ Release/foxbot.Build.CppClean.log
 .vs/FoXBot/v15/.suo
 foxbot_mm.so
 *.log
+*.log
+*.pdb
