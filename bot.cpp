@@ -44,7 +44,10 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
+
+#ifdef WIN32
 #include <wtypes.h>
+#endif
 
 //#include "list.h"
 extern List<char*> commanders;
