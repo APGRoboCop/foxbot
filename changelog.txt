@@ -4,13 +4,15 @@
 
 --------------------------------------------------------------------------------
 Version 0.792
-??-??-20??
+??-??-202?
 Updated by RoboCop
 --------------------------------------------------------------------------------
 
 - Replaced most of the C style casts with C++ casts
 
 - Increased engineer maintain sentry priority task
+
+- Increased medic priority task to buff and heal team mates
 
 - Increased collect ammo priority to allow both engineers and snipers for defensive tasks
 

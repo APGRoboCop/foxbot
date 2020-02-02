@@ -2,20 +2,20 @@
 E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
 E:\Dropbox\src\metamod-p-37\metamod\comp_dep.h(79,1): warning C4005: 'va_copy': macro redefinition
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.23.28105\include\stdarg.h(20): message : see previous definition of 'va_copy'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\include\stdarg.h(20): message : see previous definition of 'va_copy'
 E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458: declaration of 'pev' hides class member
 E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity::pev'
-E:\Dropbox\src\foxbot\bot.cpp(799,15): warning C4456: declaration of 'index' hides previous local declaration
-E:\Dropbox\src\foxbot\bot.cpp(553,6): message : see declaration of 'index'
-E:\Dropbox\src\foxbot\bot.cpp(3592,98): warning C4554: '<<': check operator precedence for possible error; use parentheses to clarify precedence
-E:\Dropbox\src\foxbot\bot.cpp(4412,25): warning C4456: declaration of 'newJob' hides previous local declaration
+E:\Dropbox\src\foxbot\bot.cpp(802,15): warning C4456: declaration of 'index' hides previous local declaration
+E:\Dropbox\src\foxbot\bot.cpp(556,6): message : see declaration of 'index'
+E:\Dropbox\src\foxbot\bot.cpp(3595,98): warning C4554: '<<': check operator precedence for possible error; use parentheses to clarify precedence
+E:\Dropbox\src\foxbot\bot.cpp(4415,25): warning C4456: declaration of 'newJob' hides previous local declaration
+E:\Dropbox\src\foxbot\bot.cpp(4410,15): message : see declaration of 'newJob'
   bot_client.cpp
-E:\Dropbox\src\foxbot\bot.cpp(4407,15): message : see declaration of 'newJob'
 E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
 E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458: declaration of 'pev' hides class member
-  bot_combat.cpp
 E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity::pev'
+  bot_combat.cpp
 E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
 E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458: declaration of 'pev' hides class member
@@ -23,48 +23,48 @@ E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity
 E:\Dropbox\src\foxbot\bot_combat.cpp(919,20): warning C4456: declaration of 'pent' hides previous local declaration
 E:\Dropbox\src\foxbot\bot_combat.cpp(528,11): message : see declaration of 'pent'
 E:\Dropbox\src\foxbot\bot_combat.cpp(2477,17): warning C4456: declaration of 'i' hides previous local declaration
-  bot_job_assessors.cpp
 E:\Dropbox\src\foxbot\bot_combat.cpp(2465,6): message : see declaration of 'i'
+  bot_job_assessors.cpp
 E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
 E:\Dropbox\src\metamod-p-37\metamod\comp_dep.h(79,1): warning C4005: 'va_copy': macro redefinition
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.23.28105\include\stdarg.h(20): message : see previous definition of 'va_copy'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\include\stdarg.h(20): message : see previous definition of 'va_copy'
 E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458: declaration of 'pev' hides class member
+E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity::pev'
   bot_job_functions.cpp
-E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity::pev'
 E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
 E:\Dropbox\src\metamod-p-37\metamod\comp_dep.h(79,1): warning C4005: 'va_copy': macro redefinition
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.23.28105\include\stdarg.h(20): message : see previous definition of 'va_copy'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\include\stdarg.h(20): message : see previous definition of 'va_copy'
 E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458: declaration of 'pev' hides class member
+E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity::pev'
   bot_job_think.cpp
-E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity::pev'
 E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
 E:\Dropbox\src\metamod-p-37\metamod\comp_dep.h(79,1): warning C4005: 'va_copy': macro redefinition
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.23.28105\include\stdarg.h(20): message : see previous definition of 'va_copy'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\include\stdarg.h(20): message : see previous definition of 'va_copy'
 E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458: declaration of 'pev' hides class member
+E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity::pev'
   bot_navigate.cpp
-E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity::pev'
 E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
 E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458: declaration of 'pev' hides class member
+E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity::pev'
   bot_start.cpp
-E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity::pev'
 E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
 E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458: declaration of 'pev' hides class member
+E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity::pev'
   botcam.cpp
-E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity::pev'
 E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
 E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458: declaration of 'pev' hides class member
-  dll.cpp
 E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity::pev'
+  dll.cpp
 E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
 E:\Dropbox\src\metamod-p-37\metamod\comp_dep.h(79,1): warning C4005: 'va_copy': macro redefinition
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.23.28105\include\stdarg.h(20): message : see previous definition of 'va_copy'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\include\stdarg.h(20): message : see previous definition of 'va_copy'
 E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458: declaration of 'pev' hides class member
 E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity::pev'
 E:\Dropbox\src\foxbot\dll.cpp(1077,18): warning C4456: declaration of 'msg' hides previous local declaration
@@ -114,38 +114,38 @@ E:\Dropbox\src\foxbot\dll.cpp(3669,8): message : see declaration of 'i'
 E:\Dropbox\src\foxbot\dll.cpp(5440,22): warning C4456: declaration of 'i' hides previous local declaration
 E:\Dropbox\src\foxbot\dll.cpp(3669,8): message : see declaration of 'i'
 E:\Dropbox\src\foxbot\dll.cpp(6775,13): warning C4459: declaration of 'fp' hides global declaration
-  engine.cpp
 E:\Dropbox\src\foxbot\dll.cpp(164,14): message : see declaration of 'fp'
+  engine.cpp
 E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
 E:\Dropbox\src\metamod-p-37\metamod\comp_dep.h(79,1): warning C4005: 'va_copy': macro redefinition
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.23.28105\include\stdarg.h(20): message : see previous definition of 'va_copy'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\include\stdarg.h(20): message : see previous definition of 'va_copy'
 E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458: declaration of 'pev' hides class member
+E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity::pev'
   h_export.cpp
-E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity::pev'
 E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
 E:\Dropbox\src\metamod-p-37\metamod\comp_dep.h(79,1): warning C4005: 'va_copy': macro redefinition
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\include\stdarg.h(20): message : see previous definition of 'va_copy'
   linkfunc.cpp
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.23.28105\include\stdarg.h(20): message : see previous definition of 'va_copy'
 E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
 E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458: declaration of 'pev' hides class member
-  meta_api.cpp
 E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity::pev'
+  meta_api.cpp
 E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
 E:\Dropbox\src\metamod-p-37\metamod\comp_dep.h(79,1): warning C4005: 'va_copy': macro redefinition
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\include\stdarg.h(20): message : see previous definition of 'va_copy'
   sdk_util.cpp
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.23.28105\include\stdarg.h(20): message : see previous definition of 'va_copy'
 E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
 E:\Dropbox\src\foxbot\cbase.h(266,40): warning C4458: declaration of 'pev' hides class member
-  util.cpp
 E:\Dropbox\src\foxbot\cbase.h(149,16): message : see declaration of 'CBaseEntity::pev'
+  util.cpp
 E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
-  waypoint.cpp
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
+  waypoint.cpp
 E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
 E:\Dropbox\src\foxbot\waypoint.cpp(1206,17): warning C4456: declaration of 'i' hides previous local declaration
@@ -154,17 +154,17 @@ E:\Dropbox\src\foxbot\waypoint.cpp(3082,42): warning C4459: declaration of 'shor
 E:\Dropbox\src\foxbot\waypoint.cpp(130,15): message : see declaration of 'shortest_path'
 E:\Dropbox\src\foxbot\waypoint.cpp(3082,71): warning C4459: declaration of 'from_to' hides global declaration
 E:\Dropbox\src\foxbot\waypoint.cpp(131,15): message : see declaration of 'from_to'
-  Generating Code...
 E:\Dropbox\src\foxbot\waypoint.cpp(3380,149): warning C4309: 'initializing': truncation of constant value
+  Generating Code...
 E:\Dropbox\src\foxbot\waypoint.cpp(149): warning C4700: uninitialized local variable 'x' used
 E:\Dropbox\src\foxbot\waypoint.cpp(150): warning C4700: uninitialized local variable 'y' used
 E:\Dropbox\src\foxbot\meta_api.cpp(118): warning C4715: 'Meta_Detach': not all control paths return a value
 E:\Dropbox\src\foxbot\dll.cpp(5767): warning C4702: unreachable code
 E:\Dropbox\src\foxbot\dll.cpp(4647): warning C4701: potentially uninitialized local variable 'pnt' used
-E:\Dropbox\src\foxbot\bot.cpp(657): warning C4701: potentially uninitialized local variable 'max_skin_index' used
-E:\Dropbox\src\foxbot\bot.cpp(621): warning C4701: potentially uninitialized local variable 'index' used
-E:\Dropbox\src\foxbot\bot.cpp(621): warning C4701: potentially uninitialized local variable 'pSkinUsed' used
-E:\Dropbox\src\foxbot\bot.cpp(621): warning C4703: potentially uninitialized local pointer variable 'pSkinUsed' used
+E:\Dropbox\src\foxbot\bot.cpp(660): warning C4701: potentially uninitialized local variable 'max_skin_index' used
+E:\Dropbox\src\foxbot\bot.cpp(624): warning C4701: potentially uninitialized local variable 'index' used
+E:\Dropbox\src\foxbot\bot.cpp(624): warning C4701: potentially uninitialized local variable 'pSkinUsed' used
+E:\Dropbox\src\foxbot\bot.cpp(624): warning C4703: potentially uninitialized local pointer variable 'pSkinUsed' used
      Creating library .\Release\FoXBot.lib and object .\Release\FoXBot.exp
   FoXBot.vcxproj -> E:\Dropbox\src\foxbot\.\Release\foxbot.dll
   Copy to Foxbot Folder
