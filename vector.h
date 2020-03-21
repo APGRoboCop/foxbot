@@ -1,4 +1,3 @@
-#include <cmath>
 /***
 *
 *	Copyright (c) 1999, 2000 Valve LLC. All rights reserved.
@@ -16,6 +15,7 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
+#include <cmath>
 //=========================================================
 // 2DVector - used for many pathfinding and many other
 // operations that are treated as planar rather than 3d.

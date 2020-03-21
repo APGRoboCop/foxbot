@@ -64,7 +64,7 @@ METADIR=$(METATOP)/metamod
 DEFTARGET=Ometamod
 
 # The version number 
-VERSION=0.792-APG
+VERSION=0.792-beta
 
 # Make sure this is the correct compiler for your system
 # 4.8 appears to compile the builds smaller but Clang appears not compatible
@@ -148,7 +148,7 @@ CFDBG+= -march=i686
 #CFOPT=  -march=i486 -O6 
 #CFOPT+= -ffast-math -funroll-loops (-ffast-math unstable?)
 
-CFOPT= -O2 -m32 -mtune=generic -march=i686 -mmmx -msse -msse2 -mfpmath=sse -s
+CFOPT= -w -O2 -m32 -mtune=generic -march=i686 -mmmx -msse -msse2 -mfpmath=sse -s
 CFOPT+= -pipe -funsafe-math-optimizations -fno-aggressive-loop-optimizations
 
 # configuration dependand setup

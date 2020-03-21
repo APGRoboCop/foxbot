@@ -8,9 +8,11 @@ Version 0.792
 Updated by RoboCop
 --------------------------------------------------------------------------------
 
+- Further optimisation fixes
+
 - Replaced most of the C style casts with C++ casts
 
-- Increased engineer maintain sentry priority task
+- Increased engineer priority task to maintain sentries
 
 - Increased medic priority task to buff and heal team mates
 
@@ -19,6 +21,8 @@ Updated by RoboCop
 - Reduced sniper accuracy for each of the 5 bot skill settings
 
 - Enhanced the dustbowl waypoints even further to remove lame sentry deployment areas
+
+- Corrected the hunted map config where Sniper assassins could not spawn
 
 - Fixed depreciation warning for 'SpyDetect'
 

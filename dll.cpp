@@ -48,7 +48,7 @@
 #define strcpy strcpy_s
 #define strcat strcat_s
 #define strncat strncat_s
-#define sscanf sscanf_s
+//#define sscanf sscanf_s
 #define stricmp _stricmp
 #endif
 
@@ -74,7 +74,7 @@
 #define MENU_6     6
 #define MENU_7     7
 
-cvar_t foxbot = { "foxbot", "0.792-APG", FCVAR_SERVER | FCVAR_UNLOGGED, 0, NULL };
+cvar_t foxbot = { "foxbot", "0.792-beta", FCVAR_SERVER | FCVAR_UNLOGGED, 0, NULL };
 cvar_t enable_foxbot = { "enable_foxbot", "1", FCVAR_SERVER | FCVAR_UNLOGGED, 0, NULL };
 
 cvar_t sv_bot = { "bot", "", 0, 0, NULL };
@@ -745,7 +745,7 @@ chatClass::chatClass(void)
 	for (i = 0; i < TOTAL_CHAT_TYPES; i++) {
 		this->stringCount[i] = 0;
 		for (j = 0; j < MAX_CHAT_STRINGS; j++) {
-			this->strings[i][j] = "";
+			this->strings[i][j].clear();
 		}
 
 		for (j = 0; j < 5; j++) {
@@ -860,7 +860,7 @@ void chatClass::pickRandomChatString(char* msg, const size_t maxLength, const in
 		_snprintf(msg, maxLength, this->strings[chatSection][randomIndex].c_str(), playerName);
 	}
 	else
-		_snprintf(msg, maxLength, this->strings[chatSection][randomIndex].c_str());
+		printf("%s", msg, maxLength, this->strings[chatSection][randomIndex].c_str());
 
 	msg[maxLength - 1] = '\0';
 }
@@ -1850,7 +1850,7 @@ void ClientCommand(edict_t* pEntity)
 
 			if (arg1 != NULL) {
 				if (*arg1 != 0) {
-					if (strstr(arg1, "\"") == NULL)
+					if (strchr(arg1, '\"') == NULL)
 						strcpy(botname, arg1);
 					else
 						sscanf(arg1, "\"%s\"", &botname[0]);
@@ -7016,7 +7016,7 @@ static void DisplayBotInfo()
 		h.y = 0;
 		sprintf(msg, "--FoxBot Loaded--\n--Visit 'www.apg-clan.org' for updates and info--\n");
 		ALERT(at_console, msg);
-		_snprintf(msg2, 511, msg);
+		printf("%s", msg2, 511, msg);
 
 		/*	sprintf(msg,"--* foxbot v%d.%d build# %d *--\n",
 						VER_MAJOR,VER_MINOR,VER_BUILD);*/
