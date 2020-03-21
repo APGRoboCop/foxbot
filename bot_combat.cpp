@@ -633,8 +633,8 @@ static edict_t* BotFindEnemy(bot_t* pBot)
 
 	if (mod_id == TFC_DLL) {
 		// get medics and engineers to heal/repair teammates
-		if (pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC ||
-			pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER &&
+		if (pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER &&
+			pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC ||
 			pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > 90) {
 			nearestDistance = 1000.0;
 			edict_t* pPlayer;

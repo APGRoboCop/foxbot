@@ -72,8 +72,8 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, const DWORD fdwReason, LPVOID lpvReserve
 	if (fdwReason == DLL_PROCESS_ATTACH) {
 	}
 	else if (fdwReason == DLL_PROCESS_DETACH) {
-		if (h_Library)
-			FreeLibrary(h_Library);
+		//if (h_Library)
+		//	FreeLibrary(h_Library);
 
 		if (h_global_argv) {
 			GlobalUnlock(h_global_argv);
@@ -113,7 +113,7 @@ void WINAPI GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t* pG
 	(*g_engfuncs.pfnGetGameDir)(game_dir);
 
 	pos = 0;
-	if (strstr(game_dir, "/") != NULL) {
+	if (strchr(game_dir, '/') != NULL) {
 		pos = strlen(game_dir) - 1;
 		// scan backwards till first directory separator...
 

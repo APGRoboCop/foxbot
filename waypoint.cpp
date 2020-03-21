@@ -146,8 +146,8 @@ void WaypointDebug(void)
 		fclose(fp);
 	}
 
-	int x = x - 1; // x is zero
-	int y = y / x; // cause an divide by zero exception
+	//int x = x - 1; // x is zero
+	//int y = y / x; // cause an divide by zero exception
 
 	return;
 }
@@ -192,10 +192,10 @@ void WaypointInit(void)
 		WaypointFree(); // must free previously allocated path memory
 
 	for (i = 0; i < 4; i++) {
-		if (shortest_path[i] != NULL)
+		//if (shortest_path[i] != NULL)
 			free(shortest_path[i]);
 
-		if (from_to[i] != NULL)
+		//if (from_to[i] != NULL)
 			free(from_to[i]);
 	}
 
@@ -5730,9 +5730,9 @@ void ProcessCommanderList(void)
 			strcpy(uId, buffer);
 
 			// Get rid of line feeds
-			if (uId[strlen(uId) - 1] == '\n' || uId[strlen(uId) - 1] == '\r' || uId[strlen(uId) - 1] == EOF) {
+			if (uId[strlen(uId) - 1] == '\n' || uId[strlen(uId) - 1] == '\r' || uId[strlen(uId) - 1] == EOF) /*{
 				uId[strlen(uId) - 1] = '\0';
-			}
+			}*/
 
 			fp = UTIL_OpenFoxbotLog();
 			if (fp != NULL) {
