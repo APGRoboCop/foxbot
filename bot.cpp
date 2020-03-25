@@ -2189,7 +2189,7 @@ static void BotAttackerCheck(bot_t* pBot)
 {
 	// stop the bot from responding to gunshot "sounds" too often,
 	// unless they've been injured very recently
-	if (pBot->f_soundReactTime > pBot->f_think_time&& pBot->f_injured_time + 0.3f < pBot->f_think_time)
+	if (pBot->f_soundReactTime > pBot->f_think_time && pBot->f_injured_time + 0.3f < pBot->f_think_time)
 		return;
 
 	// don't let feigning spies "hear" gunshots unless they've been
@@ -2795,7 +2795,7 @@ static void BotGrenadeAvoidance(bot_t* pBot)
 // by making bots switch combat roles.
 static void BotRoleCheck(bot_t* pBot)
 {
-	if (roleCheckTimer > gpGlobals->time&&
+	if (roleCheckTimer > gpGlobals->time &&
 		roleCheckTimer < gpGlobals->time + 300.0) // make sure roleCheckTimer is sane
 		return;
 
@@ -3626,7 +3626,7 @@ bool SpyAmbushAreaCheck(bot_t* pBot, Vector& r_wallVector)
 	// e.g. don't feign near a lift
 	if (pBot->pEdict->v.waterlevel != WL_NOT_IN_WATER && waypoints[pBot->current_wp].flags & W_FL_LIFT ||
 		pBot->nadePrimed == TRUE || pBot->bot_has_flag ||
-		PlayerIsInfected(pBot->pEdict) || pBot->current_wp > -1 ) {
+		PlayerIsInfected(pBot->pEdict) || pBot->current_wp > -1) {
 		return FALSE;
 	}
 
@@ -3807,6 +3807,7 @@ static void BotEnemyCarrierAlert(bot_t* pBot)
 	if (newJob == NULL)
 		return;
 
+	// Arrange the operator in the proper order [APG]RoboCop[CL]
 	// if there's only one enemy find out if the bot is outgunned
 	if (pBot->visEnemyCount < 2) {
 		if ((pBot->bot_class == TFC_CLASS_SCOUT || pBot->bot_class == TFC_CLASS_SNIPER ||
@@ -4397,7 +4398,7 @@ static void BotCombatThink(bot_t* pBot)
 
 	// make the hunted seek backup when alone(the snipers love a lone fawn in the woods!)
 	if (pBot->pEdict->v.playerclass == TFC_CLASS_CIVILIAN && pBot->bot_has_flag && pBot->visAllyCount <= 1 &&
-		pBot->f_lastAllySeenTime + 15.0 > pBot->f_think_time&& pBot->f_lastAllySeenTime > pBot->f_killed_time) {
+		pBot->f_lastAllySeenTime + 15.0 > pBot->f_think_time && pBot->f_lastAllySeenTime > pBot->f_killed_time) {
 		job_struct* newJob = InitialiseNewJob(pBot, JOB_SEEK_BACKUP);
 		if (newJob != NULL)
 			SubmitNewJob(pBot, JOB_SEEK_BACKUP, newJob);
@@ -4674,7 +4675,7 @@ static void BotSpectatorDebug(bot_t* pBot)
 					// list the jobs in the buffer
 			for (int i = 0; i < JOB_BUFFER_MAX; i++) {
 				// list one job per line
-				if (pBot->jobType[i] > JOB_NONE&& pBot->jobType[i] < JOB_TYPE_TOTAL) {
+				if (pBot->jobType[i] > JOB_NONE && pBot->jobType[i] < JOB_TYPE_TOTAL) {
 					strncat(msg, jl[pBot->jobType[i]].jobNames, 255 - strlen(msg));
 
 					// indicate the current job and how long it's been running
@@ -4701,7 +4702,7 @@ static void BotSpectatorDebug(bot_t* pBot)
 			strncat(msg, "Blacklist:\n", 255 - strlen(msg));
 			for (int i = 0; i < JOB_BLACKLIST_MAX; i++) {
 				// list one blacklisted job per line
-				if (pBot->jobBlacklist[i].type > JOB_NONE&& pBot->jobBlacklist[i].f_timeOut >= pBot->f_think_time &&
+				if (pBot->jobBlacklist[i].type > JOB_NONE && pBot->jobBlacklist[i].f_timeOut >= pBot->f_think_time &&
 					pBot->jobBlacklist[i].type < JOB_TYPE_TOTAL) {
 					strncat(msg, jl[pBot->jobBlacklist[i].type].jobNames, 255 - strlen(msg));
 					strncat(msg, "\n", 255 - strlen(msg)); // add a newline on the end

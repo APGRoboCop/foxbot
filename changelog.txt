@@ -22,6 +22,8 @@ Updated by RoboCop
 
 - Enhanced the dustbowl waypoints even further to remove lame sentry deployment areas
 
+- Altered the dustbowl map config to allow Red Engineers to spawn first
+
 - Corrected the hunted map config where Sniper assassins could not spawn
 
 - Fixed depreciation warning for 'SpyDetect'

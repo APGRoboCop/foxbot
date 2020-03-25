@@ -160,3 +160,8 @@ FoXBot.sdf
 Release/foxbot.Build.CppClean.log
 Release/FoXBot.log
 Release/vc142.pdb
+Release/vc142.pdb
+Release/FoXBot.tlog/FoXBot (user-MS-7A34's conflicted copy 2020-03-23).lastbuildstate
+Release/FoXBot.log
+Release/FoXBot (user-MS-7A34's conflicted copy 2020-03-23).lib
+*.log
