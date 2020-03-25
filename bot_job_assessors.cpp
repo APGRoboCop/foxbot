@@ -253,7 +253,7 @@ int assess_JobUseTeleport(const bot_t* pBot, const job_struct& r_job)
 		int bestIndex = -1;
 		int bestPriority = PRIORITY_NONE;
 		for (int i = 0; i < JOB_BUFFER_MAX; i++) {
-			if (pBot->jobType[i] > JOB_NONE&& pBot->jobType[i] != JOB_USE_TELEPORT // ignore this job
+			if (pBot->jobType[i] > JOB_NONE && pBot->jobType[i] != JOB_USE_TELEPORT // ignore this job
 				&& pBot->job[i].priority > bestPriority) {
 				bestIndex = i;
 				bestPriority = pBot->job[i].priority;
@@ -570,7 +570,7 @@ int assess_JobFeignAmbush(const bot_t* pBot, const job_struct& r_job)
 		return PRIORITY_NONE;
 
 	// check if the bot is in an unsuitable location
-	if (pBot->current_wp > -1 && 
+	if (pBot->current_wp > -1 &&
 		pBot->pEdict->v.waterlevel != WL_NOT_IN_WATER || waypoints[pBot->current_wp].flags & W_FL_LIFT)
 		return PRIORITY_NONE;
 
@@ -721,7 +721,7 @@ int assess_JobRocketJump(const bot_t* pBot, const job_struct& r_job)
 int assess_JobConcussionJump(const bot_t* pBot, const job_struct& r_job)
 {
 	// recommend the job be removed if it is invalid
-	if (r_job.f_bufferedTime < pBot->f_killed_time  && r_job.f_bufferedTime + 0.5 < pBot->f_think_time
+	if (r_job.f_bufferedTime < pBot->f_killed_time && r_job.f_bufferedTime + 0.5 < pBot->f_think_time
 		|| r_job.f_bufferedTime + 10.0 < pBot->f_think_time // took too long
 		|| r_job.phase == 0) {
 		return PRIORITY_NONE;
@@ -798,7 +798,7 @@ int assess_JobPursueEnemy(const bot_t* pBot, const job_struct& r_job)
 		return PRIORITY_NONE;
 
 	// still pursue the enemy after being killed? (check once after dying)
-	if (r_job.f_bufferedTime < pBot->f_killed_time && pBot->f_think_time + 3.1 > pBot->f_killed_time&&
+	if (r_job.f_bufferedTime < pBot->f_killed_time && pBot->f_think_time + 3.1 > pBot->f_killed_time &&
 		pBot->f_periodicAlert3 < pBot->f_think_time) {
 		// know where to go?
 		if (!WaypointAvailable(r_job.waypoint, pBot->current_team))
@@ -907,7 +907,7 @@ int assess_JobAttackTeleport(const bot_t* pBot, const job_struct& r_job)
 int assess_JobSeekBackup(const bot_t* pBot, const job_struct& r_job)
 {
 	// recommend the job be removed if it is invalid
-	if (r_job.f_bufferedTime < pBot->f_killed_time && 
+	if (r_job.f_bufferedTime < pBot->f_killed_time &&
 		r_job.f_bufferedTime + 4.0 < pBot->f_think_time ||
 		r_job.phase == 0 // abort if the job has been asleep in the buffer for too long
 		)

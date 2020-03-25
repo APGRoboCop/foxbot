@@ -193,10 +193,10 @@ void WaypointInit(void)
 
 	for (i = 0; i < 4; i++) {
 		//if (shortest_path[i] != NULL)
-			free(shortest_path[i]);
+		free(shortest_path[i]);
 
 		//if (from_to[i] != NULL)
-			free(from_to[i]);
+		free(from_to[i]);
 	}
 
 	// erase the name of the waypoint files author
@@ -5734,7 +5734,7 @@ void ProcessCommanderList(void)
 				uId[strlen(uId) - 1] = '\0';
 			}*/
 
-			fp = UTIL_OpenFoxbotLog();
+				fp = UTIL_OpenFoxbotLog();
 			if (fp != NULL) {
 				fprintf(fp, "LOAD USERID: %s\n", uId);
 				fclose(fp);

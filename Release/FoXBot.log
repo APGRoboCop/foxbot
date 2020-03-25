@@ -1,4 +1,5 @@
-﻿  bot.cpp
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(467,5): warning MSB8028: The intermediate directory (.\Release\) contains files shared from another project (FoXBot (user-MS-7A34's conflicted copy 2020-03-23).vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  bot.cpp
 E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
 E:\Dropbox\src\metamod-p-37\metamod\comp_dep.h(79,1): warning C4005: 'va_copy': macro redefinition
