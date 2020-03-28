@@ -28,7 +28,7 @@ Updated by RoboCop
 
 - Corrected the hunted map config where Sniper assassins could not spawn
 
-- Fixed depreciation warning for 'SpyDetect'
+- Fixed deprecation warning for 'SpyDetect'
 
 - Fixed some potential code issues
 
