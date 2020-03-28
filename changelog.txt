@@ -4,11 +4,13 @@
 
 --------------------------------------------------------------------------------
 Version 0.792
-??-??-202?
+March-29-2020
 Updated by RoboCop
 --------------------------------------------------------------------------------
 
 - Further optimisation fixes
+
+- Linux build compiled with the newer GCC/G++ 8.3
 
 - Replaced most of the C style casts with C++ casts
 

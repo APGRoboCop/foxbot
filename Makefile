@@ -56,23 +56,23 @@ SDKSRC=$(SDKTOP)/multiplayer
 
 # The directory with the metamod include files.
 # For Linux we assume a link called 'metamod' in the adminmod directory
-#METATOP=../metamod-p-32
-METATOP=../metamod-p-37
+#METATOP=../metamod-p-37
+METATOP=../metamod-p
 METADIR=$(METATOP)/metamod
 
 # The default target to build
 DEFTARGET=Ometamod
 
 # The version number 
-VERSION=0.792-beta
+VERSION=0.792
 
 # Make sure this is the correct compiler for your system
 # 4.8 appears to compile the builds smaller but Clang appears not compatible
 
-#CC=gcc
-#CXX=g++
-CC=gcc-4.8
-CXX=g++-4.8
+CC=gcc
+CXX=g++
+#CC=gcc-4.8
+#CXX=g++-4.8
 
 ################################################################################################
 # !! If you only want to compile and go you shouldn't need to edit anything below this line !! #
@@ -112,7 +112,7 @@ SA_TARGET= $(MODNAME)_.$(SHLIBEXT)
 MM_TARGET= $(MODNAME)_mm.$(SHLIBEXT)
 
 BASE_CFLAGS=-Dstricmp=strcasecmp -D_strnicmp=strncasecmp -Dstrnicmp=strncasecmp -Dstrcmpi=strcasecmp
-BASE_CFLAGS+=-DLINUX -D__linux__ #-std=gnu++11 
+BASE_CFLAGS+=-DLINUX -D__linux__
 
 XTFLAGS= -DTZONE=$(TZONE)
 
@@ -148,7 +148,7 @@ CFDBG+= -march=i686
 #CFOPT=  -march=i486 -O6 
 #CFOPT+= -ffast-math -funroll-loops (-ffast-math unstable?)
 
-CFOPT= -w -O2 -m32 -mtune=generic -march=i686 -mmmx -msse -msse2 -mfpmath=sse -s
+CFOPT= -O2 -m32 -mtune=generic -march=i686 -mmmx -msse -msse2 -mfpmath=sse -s
 CFOPT+= -pipe -funsafe-math-optimizations -fno-aggressive-loop-optimizations
 
 # configuration dependand setup

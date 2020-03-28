@@ -537,7 +537,7 @@ static edict_t* BotFindEnemy(bot_t* pBot)
 			return_null = TRUE;
 
 		// if injured whilst carrying a flag always shoot back
-		if (pBot->f_injured_time + 0.3f > pBot->f_think_time&& pBot->bot_has_flag)
+		if (pBot->f_injured_time + 0.3f > pBot->f_think_time && pBot->bot_has_flag)
 			return_null = FALSE;
 	}
 
@@ -633,8 +633,8 @@ static edict_t* BotFindEnemy(bot_t* pBot)
 
 	if (mod_id == TFC_DLL) {
 		// get medics and engineers to heal/repair teammates
-		if (pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER &&
-			pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC ||
+		if (pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC ||
+			pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER &&
 			pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > 90) {
 			nearestDistance = 1000.0;
 			edict_t* pPlayer;
