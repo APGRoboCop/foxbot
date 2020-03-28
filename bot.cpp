@@ -1678,7 +1678,7 @@ edict_t* BotContactThink(bot_t* pBot)
 				continue;
 
 			// don't avoid if going for player with one of these weapons
-			if (pBot->enemy.ptr == pPlayer && pPlayer == pBot->job[pBot->currentJob].player || pBot->currentJob > -1) {
+			if (pBot->enemy.ptr == pPlayer || pBot->currentJob > -1 && pPlayer == pBot->job[pBot->currentJob].player) {
 				if (pBot->current_weapon.iId == TF_WEAPON_KNIFE || pBot->current_weapon.iId == TF_WEAPON_MEDIKIT ||
 					pBot->current_weapon.iId == TF_WEAPON_SPANNER || pBot->current_weapon.iId == TF_WEAPON_AXE)
 					continue;
@@ -2897,11 +2897,11 @@ static void BotRoleCheck(bot_t* pBot)
 				bots[i].mission != needed_mission && !bots[i].lockMission && !bots[i].bot_has_flag) {
 				// these classes are good candidates for switching between attack and defense
 				// Engineers are also suitable here because EMP and armor repair is cool
-				if (bots[i].pEdict->v.playerclass == TFC_CLASS_DEMOMAN && !ignoreDemomen ||
-					bots[i].pEdict->v.playerclass == TFC_CLASS_SOLDIER ||
+				if (bots[i].pEdict->v.playerclass == TFC_CLASS_SOLDIER ||
 					bots[i].pEdict->v.playerclass == TFC_CLASS_PYRO ||
 					bots[i].pEdict->v.playerclass == TFC_CLASS_HWGUY ||
-					bots[i].pEdict->v.playerclass == TFC_CLASS_ENGINEER) {
+					bots[i].pEdict->v.playerclass == TFC_CLASS_ENGINEER ||
+					bots[i].pEdict->v.playerclass == TFC_CLASS_DEMOMAN && !ignoreDemomen) {
 					bots[i].mission = needed_mission;
 					/*	char msg[80];//DebugMessageOfDoom!
 							sprintf(msg, "team %d needed_mission %d totalAttackers %d",
@@ -3624,9 +3624,8 @@ bool SpyAmbushAreaCheck(bot_t* pBot, Vector& r_wallVector)
 {
 	// perform some basic checks first
 	// e.g. don't feign near a lift
-	if (pBot->pEdict->v.waterlevel != WL_NOT_IN_WATER && waypoints[pBot->current_wp].flags & W_FL_LIFT ||
-		pBot->nadePrimed == TRUE || pBot->bot_has_flag ||
-		PlayerIsInfected(pBot->pEdict) || pBot->current_wp > -1) {
+	if (pBot->pEdict->v.waterlevel != WL_NOT_IN_WATER || pBot->nadePrimed == TRUE || pBot->bot_has_flag ||
+		PlayerIsInfected(pBot->pEdict) || pBot->current_wp > -1 && waypoints[pBot->current_wp].flags & W_FL_LIFT) {
 		return FALSE;
 	}
 

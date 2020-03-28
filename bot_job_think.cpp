@@ -471,7 +471,7 @@ void BotJobThink(bot_t* pBot)
 
 	// need armor(e.g. just spawned)?
 	if (PlayerArmorPercent(pBot->pEdict) < pBot->trait.health ||
-		pBot->f_killed_time + 3.1 > pBot->f_think_time&& pBot->f_periodicAlert3 < pBot->f_think_time &&
+		pBot->f_killed_time + 3.1 > pBot->f_think_time && pBot->f_periodicAlert3 < pBot->f_think_time &&
 		random_float(1, 1000) > 600) {
 		newJob = InitialiseNewJob(pBot, JOB_GET_ARMOR);
 		if (newJob != NULL) {

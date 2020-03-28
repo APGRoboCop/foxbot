@@ -570,8 +570,8 @@ int assess_JobFeignAmbush(const bot_t* pBot, const job_struct& r_job)
 		return PRIORITY_NONE;
 
 	// check if the bot is in an unsuitable location
-	if (pBot->current_wp > -1 &&
-		pBot->pEdict->v.waterlevel != WL_NOT_IN_WATER || waypoints[pBot->current_wp].flags & W_FL_LIFT)
+	if (pBot->pEdict->v.waterlevel != WL_NOT_IN_WATER ||
+		pBot->current_wp > -1 && waypoints[pBot->current_wp].flags & W_FL_LIFT)
 		return PRIORITY_NONE;
 
 	return jl[JOB_FEIGN_AMBUSH].basePriority;
@@ -706,7 +706,7 @@ int assess_JobRocketJump(const bot_t* pBot, const job_struct& r_job)
 	// recommend the job be removed if it is invalid
 	if (r_job.f_bufferedTime < pBot->f_killed_time ||
 		pBot->m_rgAmmo[weapon_defs[TF_WEAPON_RPG].iAmmo1] < 4 // got enough rockets?
-		&& r_job.f_bufferedTime + 0.5 < pBot->f_think_time || r_job.phase == 0 ||
+		|| r_job.phase == 0 && r_job.f_bufferedTime + 0.5 < pBot->f_think_time ||
 		pBot->pEdict->v.waterlevel > WL_FEET_IN_WATER || r_job.waypoint < 0) {
 		//	UTIL_HostSay(pBot->pEdict,0,"JOB_ROCKET_JUMP invalid"); //DebugMessageOfDoom!
 		return PRIORITY_NONE;
@@ -721,9 +721,8 @@ int assess_JobRocketJump(const bot_t* pBot, const job_struct& r_job)
 int assess_JobConcussionJump(const bot_t* pBot, const job_struct& r_job)
 {
 	// recommend the job be removed if it is invalid
-	if (r_job.f_bufferedTime < pBot->f_killed_time && r_job.f_bufferedTime + 0.5 < pBot->f_think_time
-		|| r_job.f_bufferedTime + 10.0 < pBot->f_think_time // took too long
-		|| r_job.phase == 0) {
+	if (r_job.f_bufferedTime < pBot->f_killed_time || r_job.f_bufferedTime + 10.0 < pBot->f_think_time // took too long
+		|| r_job.phase == 0 && r_job.f_bufferedTime + 0.5 < pBot->f_think_time) {
 		return PRIORITY_NONE;
 	}
 
@@ -907,10 +906,9 @@ int assess_JobAttackTeleport(const bot_t* pBot, const job_struct& r_job)
 int assess_JobSeekBackup(const bot_t* pBot, const job_struct& r_job)
 {
 	// recommend the job be removed if it is invalid
-	if (r_job.f_bufferedTime < pBot->f_killed_time &&
-		r_job.f_bufferedTime + 4.0 < pBot->f_think_time ||
+	if (r_job.f_bufferedTime < pBot->f_killed_time ||
 		r_job.phase == 0 // abort if the job has been asleep in the buffer for too long
-		)
+		&& r_job.f_bufferedTime + 4.0 < pBot->f_think_time)
 		return PRIORITY_NONE;
 
 	// check the waypoints validity
@@ -927,9 +925,9 @@ int assess_JobSeekBackup(const bot_t* pBot, const job_struct& r_job)
 int assess_JobAvoidEnemy(const bot_t* pBot, const job_struct& r_job)
 {
 	// recommend the job be removed if it is invalid
-	if (r_job.f_bufferedTime < pBot->f_killed_time && r_job.f_bufferedTime + 4.0 < pBot->f_think_time ||
+	if (r_job.f_bufferedTime < pBot->f_killed_time ||
 		r_job.phase == 0 // abort if the job has been asleep in the buffer for too long
-		)
+		&& r_job.f_bufferedTime + 4.0 < pBot->f_think_time)
 		return PRIORITY_NONE;
 
 	// check the waypoints validity
@@ -947,9 +945,9 @@ int assess_JobAvoidEnemy(const bot_t* pBot, const job_struct& r_job)
 int assess_JobAvoidAreaDamage(const bot_t* pBot, const job_struct& r_job)
 {
 	// recommend the job be removed if it is invalid
-	if (r_job.f_bufferedTime < pBot->f_killed_time && r_job.f_bufferedTime + 2.0 < pBot->f_think_time ||
+	if (r_job.f_bufferedTime < pBot->f_killed_time ||
 		r_job.phase == 0 // abort if the job has been asleep in the buffer for too long
-		)
+		&& r_job.f_bufferedTime + 2.0 < pBot->f_think_time)
 		return PRIORITY_NONE;
 
 	// has the threatening object ceased to exist?

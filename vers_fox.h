@@ -21,9 +21,9 @@
 # endif /* _MSC_VER */
 #endif /* not OPT_TYPE */
 
-#define VDATE			"2020/03/21"
-#define VVERSION		"0.792-beta"
-#define RC_VERS_DWORD	"0.792-beta"	// Version Windows DLL Resources in res_meta.rc
+#define VDATE			"2020/03/29"
+#define VVERSION		"0.792"
+#define RC_VERS_DWORD	"0.792"	// Version Windows DLL Resources in res_meta.rc
 
 #define VNAME		"FoxBot"
 #define VAUTHOR		"Tom Simpson <redfox@foxbot.net>"

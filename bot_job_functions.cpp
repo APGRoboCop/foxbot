@@ -151,8 +151,8 @@ int JobSeekWaypoint(bot_t* pBot)
 		}
 
 		// wandered long enough or gotten stuck?
-		if (job_ptr->phase_timer < pBot->f_think_time && pBot->pEdict->v.velocity.Length() < 0.1 ||
-			pBot->f_move_speed > 5.0 ) {
+		if (job_ptr->phase_timer < pBot->f_think_time ||
+			pBot->f_move_speed > 5.0 && pBot->pEdict->v.velocity.Length() < 0.1) {
 			job_ptr->phase = 0;
 			return JOB_UNDERWAY;
 		}
@@ -2362,7 +2362,7 @@ int JobHarrassDefense(bot_t* pBot)
 
 			// the nearer the bot is the more likely it will go for the flag
 			if (flagDistance != -1 && (flagDistance < 800 // always when this close
-				&& random_long(1, 2000) > flagDistance) || flagDistance < 2000 ) {
+				|| flagDistance < 2000 && random_long(1, 2000) > flagDistance)) {
 				job_struct* newJob = InitialiseNewJob(pBot, JOB_GET_FLAG);
 				if (newJob != NULL) {
 					newJob->waypoint = flagWP;
@@ -2580,7 +2580,7 @@ int JobConcussionJump(bot_t* pBot)
 
 			// if the bot is descending, and lower than, or too far from the
 			// concussion jump waypoint, assume the concussion jump failed
-			if (zDiff < -50.0f && dist2d > 600.0f || zDiff < 100.0f) {
+			if (zDiff < -50.0f || zDiff < 100.0f && dist2d > 600.0f) {
 				BotFindCurrentWaypoint(pBot);
 			}
 			else

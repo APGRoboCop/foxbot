@@ -68,7 +68,7 @@ void BotStartGame(bot_t* pBot)
 		if (pBot->create_time > gpGlobals->time + 1.0 || pBot->create_time + 3.0 <= gpGlobals->time)
 			pBot->create_time = gpGlobals->time + 1.0;
 
-		if (pBot->create_time > gpGlobals->time&& pBot->create_time - 0.5 < gpGlobals->time) {
+		if (pBot->create_time > gpGlobals->time && pBot->create_time - 0.5 < gpGlobals->time) {
 			if (!spawn_check_crash) {
 				spawn_check_crash = TRUE;
 				spawn_check_crash_count = 0;

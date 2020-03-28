@@ -847,9 +847,9 @@ bool BotHeadTowardWaypoint(bot_t* pBot, bool& r_navByStrafe)
 				pBot->f_side_speed = 0.0; // not on left or right, don't strafe sideways
 
 			// now to handle vertical movement when swimming(or bobbing on the surface of water)
-			if (pBot->pEdict->v.waterlevel == WL_HEAD_IN_WATER && !(pBot->pEdict->v.flags & FL_ONGROUND) ||
+			if (pBot->pEdict->v.waterlevel == WL_HEAD_IN_WATER ||
 				pBot->pEdict->v.waterlevel == WL_WAIST_IN_WATER // on the surface
-				) {
+				&& !(pBot->pEdict->v.flags & FL_ONGROUND)) {
 				// swim up if below the waypoint
 				if (pBot->pEdict->v.origin.z < waypoints[pBot->current_wp].origin.z - 5.0) {
 					//	WaypointDrawBeam(INDEXENT(1), pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs,
@@ -1657,7 +1657,7 @@ void BotFindSideRoute(bot_t* pBot)
 			// count the path node if it's available to the bots team
 			if (p->index[i] != -1 && !(waypoints[p->index[i]].flags & ignoreFlags) &&
 				(!(waypoints[p->index[i]].flags & W_FL_TEAM_SPECIFIC) ||
-				(waypoints[p->index[i]].flags & W_FL_TEAM) == pBot->current_team))
+					(waypoints[p->index[i]].flags & W_FL_TEAM) == pBot->current_team))
 				paths_total++;
 		}
 
