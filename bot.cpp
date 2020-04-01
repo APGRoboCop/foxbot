@@ -3592,7 +3592,7 @@ static bool BotDemomanNeededCheck(bot_t* pBot)
 		return FALSE;
 
 	// Check if any more demoman are allowed on this map.
-	const int class_not_allowed = team_class_limits[pBot->current_team] & 1 << TFC_CLASS_DEMOMAN - 1;
+	const int class_not_allowed = team_class_limits[pBot->current_team] & (1 << TFC_CLASS_DEMOMAN) - 1;
 
 	if (class_not_allowed)
 		return FALSE;

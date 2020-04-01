@@ -133,9 +133,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="VTune\FoXBot.vpj" />
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="res_fox.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>

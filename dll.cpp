@@ -62,7 +62,7 @@
 #include "botcam.h"
 
 #define VER_MAJOR 0
-#define VER_MINOR 792
+#define VER_MINOR 793
 #define VER_BUILD 0
 
 #define MENU_NONE  0
@@ -74,7 +74,7 @@
 #define MENU_6     6
 #define MENU_7     7
 
-cvar_t foxbot = { "foxbot", "0.792-beta", FCVAR_SERVER | FCVAR_UNLOGGED, 0, NULL };
+cvar_t foxbot = { "foxbot", "0.793-APG", FCVAR_SERVER | FCVAR_UNLOGGED, 0, NULL };
 cvar_t enable_foxbot = { "enable_foxbot", "1", FCVAR_SERVER | FCVAR_UNLOGGED, 0, NULL };
 
 cvar_t sv_bot = { "bot", "", 0, 0, NULL };
@@ -3116,8 +3116,8 @@ void StartFrame(void)
 
 				if (IS_DEDICATED_SERVER())
 					bot_cfg_pause_time = gpGlobals->time + 2.0; // was 5
-				else
-					bot_cfg_pause_time = gpGlobals->time + 2.0; // was 20
+				//else
+				//	bot_cfg_pause_time = gpGlobals->time + 2.0; // was 20
 			}
 
 			if (need_to_open_cfg2) // have we opened foxbot.cfg file yet?
