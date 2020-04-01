@@ -5674,7 +5674,7 @@ void ProcessCommanderList(void)
 	//{
 	//}
 	commanders.clear();
-	char invalidChars[] = " abcdefghijklmnopqrstuvwxyz,./<>?;'\"[]{}-=+!@#$%^&*()";
+	//char invalidChars[] = " abcdefghijklmnopqrstuvwxyz,./<>?;'\"[]{}-=+!@#$%^&*()";
 
 	UTIL_BuildFileName(filename, 255, "foxbot_commanders.txt", NULL);
 	FILE* inFile = fopen(filename, "r");
@@ -5708,7 +5708,7 @@ void ProcessCommanderList(void)
 
 		// Search for invalid characters in the read string.
 		// strlen is being called too many times in the for loop - [APG]RoboCop[CL]
-		for (int i = 0; i < static_cast<int>(strlen(buffer)); i++) {
+		/*for (int i = 0; i < static_cast<int>(strlen(buffer)); i++) {
 			for (int j = 0; j < static_cast<int>(strlen(invalidChars)); j++) {
 				const char ch = invalidChars[j];
 
@@ -5722,7 +5722,7 @@ void ProcessCommanderList(void)
 					}
 				}
 			}
-		}
+		}*/
 
 		// The read string is valid enough.
 		if (valid) {
@@ -5730,7 +5730,7 @@ void ProcessCommanderList(void)
 			strcpy(uId, buffer);
 
 			// Get rid of line feeds
-			if (uId[strlen(uId) - 1] == '\n' || uId[strlen(uId) - 1] == '\r' || uId[strlen(uId) - 1] == EOF) /*{
+			if (uId[strlen(uId) - 1] == '\n') /*{
 				uId[strlen(uId) - 1] = '\0';
 			}*/
 
