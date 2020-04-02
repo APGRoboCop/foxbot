@@ -152,39 +152,39 @@ void WaypointInit(void);
 
 int WaypointFindPath(PATH** pPath, int* path_index, int waypoint_index, int team);
 
-int WaypointFindNearest_E(edict_t* pEntity, const float range, const int team);
+int WaypointFindNearest_E(edict_t* pEntity, float range, int team);
 
-int WaypointFindNearest_V(Vector v_src, const float range, const int team);
+int WaypointFindNearest_V(Vector v_src, float range, int team);
 
 int WaypointFindNearest_S(Vector v_src,
 	edict_t* pEntity,
-	const float range,
-	const int team,
-	const WPT_INT32 ignore_flags);
+	float range,
+	int team,
+	WPT_INT32 ignore_flags);
 
 int WaypointFindInRange(Vector v_src,
-	const float min_range,
-	const float max_range,
-	const int team,
-	const bool chooseRandom);
+                        float min_range,
+                        float max_range,
+                        int team,
+                        bool chooseRandom);
 
-int WaypointFindNearestGoal(const int srcWP, const int team, int range, const WPT_INT32 flags);
+int WaypointFindNearestGoal(int srcWP, int team, int range, WPT_INT32 flags);
 
-int WaypointFindRandomGoal(const int source_WP, const int team, const WPT_INT32 flags);
+int WaypointFindRandomGoal(int source_WP, int team, WPT_INT32 flags);
 
-int WaypointFindRandomGoal_D(const int source_WP, const int team, const int range, const WPT_INT32 flags);
+int WaypointFindRandomGoal_D(int source_WP, int team, int range, WPT_INT32 flags);
 
 int WaypointFindRandomGoal_R(Vector v_src,
-	const bool checkVisibility,
-	const float range,
-	const int team,
-	const WPT_INT32 flags);
+                             bool checkVisibility,
+                             float range,
+                             int team,
+                             WPT_INT32 flags);
 
-int WaypointFindDetpackGoal(const int srcWP, const int team);
+int WaypointFindDetpackGoal(int srcWP, int team);
 
-bool DetpackClearIsBlocked(const int index);
+bool DetpackClearIsBlocked(int index);
 
-bool DetpackSealIsClear(const int index);
+bool DetpackSealIsClear(int index);
 
 int WaypointFindNearestAiming(const Vector& r_v_origin);
 
@@ -198,7 +198,7 @@ void WaypointCreatePath(edict_t* pEntity, int cmd);
 
 void WaypointRemovePath(edict_t* pEntity, int cmd);
 
-bool WaypointTypeExists(const WPT_INT32 flags, const int team);
+bool WaypointTypeExists(WPT_INT32 flags, int team);
 
 bool WaypointLoad(edict_t* pEntity);
 
@@ -206,7 +206,7 @@ void WaypointSave(void);
 
 bool WaypointReachable(Vector v_srv, Vector v_dest, edict_t* pEntity);
 
-bool WaypointDirectPathCheck(const int srcWP, const int destWP);
+bool WaypointDirectPathCheck(int srcWP, int destWP);
 
 void WaypointPrintInfo(edict_t* pEntity);
 
@@ -227,7 +227,7 @@ void WaypointDrawBeam(edict_t* pEntity,
 	int brightness,
 	int speed);
 
-bool WaypointAvailable(const int index, const int team);
+bool WaypointAvailable(int index, int team);
 
 void WaypointRunOneWay(edict_t* pEntity);
 

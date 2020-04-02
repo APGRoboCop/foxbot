@@ -77,9 +77,7 @@ void UTIL_LogPrintf(char* format, ...)
 
 short FixedSigned16(const float value, const float scale)
 {
-	int output;
-
-	output = (int)(value * scale);
+	int output = (int)(value * scale);
 
 	if (output > 32767)
 		output = 32767;
@@ -92,9 +90,7 @@ short FixedSigned16(const float value, const float scale)
 
 unsigned short FixedUnsigned16(const float value, const float scale)
 {
-	int output;
-
-	output = (int)(value * scale);
+	int output = (int)(value * scale);
 	if (output < 0)
 		output = 0;
 	if (output > 0xFFFF)

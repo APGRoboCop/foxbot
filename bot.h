@@ -170,7 +170,7 @@ public:
 
 	// this will fill msg with a randomly selected string from the
 	// specified chat section
-	void pickRandomChatString(char* msg, size_t maxLength, const int chatSection, const char* playerName);
+	void pickRandomChatString(char* msg, size_t maxLength, int chatSection, const char* playerName);
 };
 
 // message script intercept stuff
@@ -557,7 +557,7 @@ void ClientPrint(edict_t* pEdict, int msg_dest, const char* msg_name);
 
 void UTIL_SayText(const char* pText, edict_t* pEdict);
 
-void UTIL_HostSay(edict_t* pEntity, const int teamonly, char* message);
+void UTIL_HostSay(edict_t* pEntity, int teamonly, char* message);
 
 bool VectorsNearerThan(const Vector& r_vOne, const Vector& r_vTwo, double value);
 
@@ -595,9 +595,9 @@ FILE* UTIL_OpenFoxbotLog(void);
 
 void UTIL_BotLogPrintf(char* fmt, ...);
 
-void UTIL_BuildFileName(char* filename, const int max_fn_length, char* arg1, char* arg2);
+void UTIL_BuildFileName(char* filename, int max_fn_length, char* arg1, char* arg2);
 
-bool UTIL_ReadFileLine(char* string, const unsigned int max_length, FILE* file_ptr);
+bool UTIL_ReadFileLine(char* string, unsigned int max_length, FILE* file_ptr);
 
 // my functions
 
@@ -613,21 +613,21 @@ void UTIL_SavePent(edict_t* pent);
 
 void GetEntvarsKeyvalue(entvars_t* pev, KeyValueData* pkvd);
 
-void BotSprayLogo(edict_t* pEntity, const bool sprayDownwards);
+void BotSprayLogo(edict_t* pEntity, bool sprayDownwards);
 
-void BotForgetTeleportPair(bot_t* pBot, const int index);
+void BotForgetTeleportPair(bot_t* pBot, int index);
 
-int BotRecallTeleportEntranceIndex(const bot_t* pBot, edict_t* const teleportEntrance);
+int BotRecallTeleportEntranceIndex(const bot_t* pBot, edict_t* teleportEntrance);
 
 int BotGetFreeTeleportIndex(const bot_t* pBot);
 
-short BotTeammatesNearWaypoint(const bot_t* pBot, const int waypoint);
+short BotTeammatesNearWaypoint(const bot_t* pBot, int waypoint);
 
-edict_t* BotAllyAtVector(const bot_t* pBot, const Vector& r_vecOrigin, const float range, const bool stationaryOnly);
+edict_t* BotAllyAtVector(const bot_t* pBot, const Vector& r_vecOrigin, float range, bool stationaryOnly);
 
-edict_t* BotEntityAtPoint(const char* entityName, const Vector& location, const float range);
+edict_t* BotEntityAtPoint(const char* entityName, const Vector& location, float range);
 
-bot_t* BotDefenderAtWaypoint(const bot_t* pBot, const int waypoint, const float range);
+bot_t* BotDefenderAtWaypoint(const bot_t* pBot, int waypoint, float range);
 
 bool SpyAmbushAreaCheck(bot_t* pBot, Vector& r_wallVector);
 

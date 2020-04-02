@@ -115,4 +115,5 @@ C_DLLEXPORT int Meta_Detach(const PLUG_LOADTIME now, const PL_UNLOAD_REASON reas
 	if (now && reason)
 		// to satisfy gcc -Wunused
 		return TRUE;
+	return 0;
 }

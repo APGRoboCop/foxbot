@@ -26,7 +26,11 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
+#ifndef LIST_H
+#define LIST_H
+
 // forward reference to the LIter class
+
 template <typename Type> class LIter;
 
 template <typename Type> class List
@@ -181,7 +185,7 @@ private:
 public:
 	// ctr : initialize the iterator class by specifying the list
 	//       it will be used with.
-	LIter(List<Type>* listToUse)
+	explicit LIter(List<Type>* listToUse): currentNode(nullptr)
 	{
 		list = listToUse;
 	}
@@ -314,3 +318,4 @@ template <typename Type> void List<Type>::remove(LIter<Type>& loc)
 	// delete the memory that this node was taking up
 	delete deletedNode;
 }
+#endif // LIST_H

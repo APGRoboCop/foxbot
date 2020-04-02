@@ -60,8 +60,6 @@ void BotStartGame(bot_t* pBot)
 
 	char c_team[32];
 	char c_class[32];
-	//	char c_item[32];
-	int team;
 	edict_t* pEdict = pBot->pEdict;
 
 	if (mod_id == TFC_DLL) {
@@ -157,7 +155,7 @@ void BotStartGame(bot_t* pBot)
 				pBot->bot_class = -1;
 			if (pBot->bot_class == -1)
 				pBot->bot_class = RANDOM_LONG(1, 9);
-			team = UTIL_GetTeam(pEdict);
+			int team = UTIL_GetTeam(pEdict);
 
 			if (team_class_limits[team] == -1) // civilian only?
 				pBot->bot_class = 0;          // civilian

@@ -67,22 +67,22 @@ int BotTargetDefenderWaypoint(bot_t* pBot);
 
 int BotGetDispenserBuildWaypoint(bot_t* pBot);
 
-int BotGetTeleporterBuildWaypoint(bot_t* pBot, const bool buildEntrance);
+int BotGetTeleporterBuildWaypoint(bot_t* pBot, bool buildEntrance);
 
 void BotFindSideRoute(bot_t* pBot);
 
-bool BotPathCheck(const int sourceWP, const int destWP);
+bool BotPathCheck(int sourceWP, int destWP);
 
 bool BotChangeRoute(bot_t* pBot);
 
-bool BotSetAlternativeGoalWaypoint(bot_t* const pBot, int& r_goalWP, const WPT_INT32 flags);
+bool BotSetAlternativeGoalWaypoint(bot_t* pBot, int& r_goalWP, WPT_INT32 flags);
 
 int BotFindSuicideGoal(bot_t* pBot);
 
-int BotFindRetreatPoint(bot_t* const pBot, const int min_dist,
+int BotFindRetreatPoint(bot_t* pBot, int min_dist,
 	const Vector& r_threatOrigin);
 
-int BotFindThreatAvoidPoint(bot_t* const pBot, const int min_dist, edict_t* pent);
+int BotFindThreatAvoidPoint(bot_t* pBot, int min_dist, edict_t* pent);
 
 int BotDrowningWaypointSearch(bot_t* pBot);
 

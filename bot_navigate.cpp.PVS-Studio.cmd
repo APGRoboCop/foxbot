@@ -1,0 +1,1 @@
+@call "C:\Program Files (x86)\PVS-Studio\x64\PVS-Studio.exe" --cfg "E:\Dropbox\src\foxbot\bot_navigate.cpp.PVS-Studio.cfg"

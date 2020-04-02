@@ -2059,16 +2059,13 @@ void pfnClPrintf(edict_t* pEdict, PRINT_TYPE ptype, const char* szMsg)
 		}
 		if (b) {
 			RETURN_META(MRES_HANDLED);
-			return;
 		}
 		else {
 			RETURN_META(MRES_SUPERCEDE);
-			return;
 		}
 	}
 	else {
 		RETURN_META(MRES_SUPERCEDE);
-		return;
 	}
 	//	RETURN_META(MRES_HANDLED);
 }
@@ -2086,13 +2083,12 @@ void pfnServerPrint(const char* szMsg)
 	// if were gonna deal with commands for bots (e.i.'follow user')
 	// then this is a good place to start
 
-	int i, j, k; // loop counters
 	// bool loop = TRUE;
 	char sz[1024]; // needs to be defined at max message length..is 1024 ok?
 	char msgstart[255];
 	char buffa[255];
 	char cmd[255];
-	i = 0;
+	int i = 0;
 
 	// first compare the message to all bot names, then if bots name is
 	// in message pass to bot
@@ -2114,10 +2110,10 @@ void pfnServerPrint(const char* szMsg)
 			// the message
 	while (i < 32) {
 		strncpy(buffa, sz, 253);
-		k = 1;
+		int k = 1;
 		while (k != 0) {
 			// remove start spaces
-			j = 0;
+			int j = 0;
 			while ((buffa[j] == ' ' || buffa[j] == '\n') && j < 250) {
 				j++;
 			}

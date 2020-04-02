@@ -272,12 +272,12 @@ static void ProcessBotCfgFile(void);
 static void changeBotSetting(const char* settingName,
 	int* setting,
 	const char* arg1,
-	const int minValue,
-	const int maxValue,
-	const int settingSource);
-static void kickBots(int totalToKick, const int team);
+	int minValue,
+	int maxValue,
+	int settingSource);
+static void kickBots(int totalToKick, int team);
 static void kickRandomBot(void);
-static void ClearKickedBotsData(const int botIndex, const bool eraseBotsName);
+static void ClearKickedBotsData(int botIndex, bool eraseBotsName);
 // void UTIL_CSavePent(CBaseEntity *pent);
 
 void UTIL_HudMessage(CBaseEntity* pEntity, const hudtextparms_t& textparms, const char* pMessage)
@@ -646,10 +646,9 @@ static bool BBotBalanceTeams(const int a, const int b)
 	for (int i = 0; i < 32; i++) //<32
 	{
 		if (bots[i].is_used) {
-			char* infobuffer;
 			char cl_name[128];
 			cl_name[0] = '\0';
-			infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(bots[i].pEdict);
+			char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(bots[i].pEdict);
 			strcpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"));
 			if (cl_name[0] != '\0') {
 				const int team = bots[i].pEdict->v.team - 1;
@@ -739,10 +738,10 @@ chatClass::chatClass(void)
 	this->sectionNames[CHAT_TYPE_KILLED_LOW] = "[KILLED LOSING]";
 	this->sectionNames[CHAT_TYPE_SUICIDE] = "[SUICIDE]";
 
-	int i, j;
+	int j;
 
 	// explicitly clear all the chat strings
-	for (i = 0; i < TOTAL_CHAT_TYPES; i++) {
+	for (int i = 0; i < TOTAL_CHAT_TYPES; i++) {
 		this->stringCount[i] = 0;
 		for (j = 0; j < MAX_CHAT_STRINGS; j++) {
 			this->strings[i][j].clear();
@@ -771,15 +770,10 @@ void chatClass::readChatFile(void)
 	char buffer[MAX_CHAT_LENGTH] = "";
 	char* ptr;
 	int i;
-	size_t length;
 	int chat_section = -1;
 
 	while (UTIL_ReadFileLine(buffer, MAX_CHAT_LENGTH, bfp)) {
-		// ignore comment lines
-		if (buffer[0] == '#')
-			continue;
-
-		length = strlen(buffer);
+		size_t length = strlen(buffer);
 
 		// turn '\n' into '\0'
 		if (buffer[length - 1] == '\n') {
@@ -790,19 +784,6 @@ void chatClass::readChatFile(void)
 		// change %n to %s
 		if ((ptr = strstr(buffer, "%n")) != NULL)
 			*(ptr + 1) = 's';
-
-		// watch out for the chat section headers
-		if (buffer[0] == '[') {
-			bool newSectionFound = FALSE;
-			for (i = 0; i < TOTAL_CHAT_TYPES; i++) {
-				if (buffer == this->sectionNames[i]) {
-					chat_section = i;
-					newSectionFound = TRUE;
-				}
-			}
-			if (newSectionFound)
-				continue;
-		}
 
 		// this line is not a comment, empty, or a section header
 		// so treat it as a chat string and load it up
@@ -830,13 +811,12 @@ void chatClass::pickRandomChatString(char* msg, const size_t maxLength, const in
 		return;
 
 	int i, recentCount = 0;
-	int randomIndex;
-	bool used;
+	int randomIndex = 0;
 
 	// try to pick a string that hasn't been used recently
 	while (recentCount < 5) {
 		randomIndex = random_long(0, this->stringCount[chatSection] - 1);
-		used = FALSE;
+		bool used = FALSE;
 		for (i = 0; i < 5; i++) {
 			if (this->recentStrings[chatSection][i] == randomIndex)
 				used = TRUE;
@@ -897,8 +877,7 @@ int DispatchSpawn(edict_t* pent)
 			//pent_info_frontline = NULL;
 			pent_item_tfgoal = NULL;
 
-			int index;
-			for (index = 0; index < 4; index++) {
+			for (int index = 0; index < 4; index++) {
 				max_team_players[index] = 0;  // no player limit
 				team_class_limits[index] = 0; // no class limits
 				team_allies[index] = 0;
@@ -4366,6 +4345,7 @@ void StartFrame(void)
 						if (ifsec == 2)
 							ifsec = 0; // cancel ifs before ending message section
 						break;
+					default: ;
 					};
 				}
 				if (!random_shit_error)
@@ -5490,6 +5470,7 @@ void StartFrame(void)
 							if (msgsection == 2)
 								msgsection = 0;
 							break;
+						default: ;
 						};
 					}
 					buf = buf + 1; // like i++ but for stringcmp stuff
@@ -5764,7 +5745,6 @@ int InconsistentFile(const edict_t* player, const char* filename, char* disconne
 		return (*other_gFunctionTable.pfnInconsistentFile)(player, filename, disconnect_message);
 	else {
 		RETURN_META_VALUE(MRES_HANDLED, 0);
-		return 0;
 	}
 }
 
@@ -5957,8 +5937,8 @@ C_DLLEXPORT int GetNewDLLFunctions(NEW_DLL_FUNCTIONS* pFunctionTable, int* inter
 
 void FakeClientCommand(edict_t* pBot, char* arg1, char* arg2, char* arg3)
 {
-	int length, i;
-	i = 0;
+	int length;
+	int i = 0;
 	while (i < 256) {
 		g_argv[i] = '\0';
 		i++;
@@ -6095,9 +6075,9 @@ const char* GetArg(const char* command, const int arg_number)
 	// redirects the call either to the actual engine functions
 	// (when the caller is a real client), either on our function here,
 	// which does the same thing, when the caller is a bot.
-	int length, i, index = 0, arg_count = 0, fieldstart, fieldstop;
+	int i, index = 0, arg_count = 0, fieldstart, fieldstop;
 	arg[0] = 0;               // reset arg
-	length = strlen(command); // get length of command
+	int length = strlen(command); // get length of command
 	// while we have not reached end of line
 	while (index < length && arg_count <= arg_number) {
 		while (index < length && command[index] == ' ')
@@ -6363,11 +6343,9 @@ C_DLLEXPORT int GetEntityAPI_Post(DLL_FUNCTIONS* pFunctionTable, const int inter
 
 static void ProcessBotCfgFile(void)
 {
-	int ch;
 	char cmd_line[512];
-	int cmd_index;
 	static char server_cmd[514];
-	char* cmd, * arg1, * arg2, * arg3, * arg4;
+	char * arg2, * arg3, * arg4;
 	char msg[255];
 
 	if (bot_cfg_pause_time > gpGlobals->time)
@@ -6383,11 +6361,11 @@ static void ProcessBotCfgFile(void)
 		return;
 	}
 
-	cmd_index = 0;
+	int cmd_index = 0;
 	cmd_line[cmd_index] = 0;
 	cmd_line[510] = 0;
 
-	ch = fgetc(bot_cfg_fp);
+	int ch = fgetc(bot_cfg_fp);
 
 	// skip any leading blanks
 	while (ch == ' ')
@@ -6448,8 +6426,8 @@ static void ProcessBotCfgFile(void)
 	strcat(server_cmd, "\n");
 
 	cmd_index = 0;
-	cmd = cmd_line;
-	arg1 = arg2 = arg3 = arg4 = NULL;
+	char* cmd = cmd_line;
+	char* arg1 = arg2 = arg3 = arg4 = NULL;
 
 	// skip to blank or end of string...
 	while (cmd_line[cmd_index] != ' ' && cmd_line[cmd_index] != 0 && cmd_index < 510)
@@ -6996,8 +6974,7 @@ static void DisplayBotInfo()
 		// tell the console all the bot vars
 		if (dev == 0)
 			CVAR_SET_STRING("developer", "1");
-		CBaseEntity* p;
-		p = CBaseEntity::Instance(INDEXENT(1));
+		CBaseEntity* p = CBaseEntity::Instance(INDEXENT(1));
 		hudtextparms_t h;
 		h.channel = 4;
 		h.effect = 1;

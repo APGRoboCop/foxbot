@@ -25,6 +25,9 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
+#ifndef BOT_CLIENT_H
+#define BOT_CLIENT_H
+
 void BotClient_TFC_VGUI(void* p, int bot_index);
 // void BotClient_CS_VGUI(void* p, int bot_index); // Not required for TFC - [APG]RoboCop[CL]
 // void BotClient_CS_ShowMenu(void* p, int bot_index);
@@ -106,3 +109,4 @@ void BotClient_TFC_SentryAmmo(void* p, int bot_index);
 void BotClient_TFC_DetPack(void* p, int bot_index);
 void BotClient_Menu(void* p, int bot_index);
 void BotClient_TFC_Grens(void* p, int bot_index);
+#endif // BOT_CLIENT_H
