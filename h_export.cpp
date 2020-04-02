@@ -100,7 +100,6 @@ extern "C" DLLEXPORT void EXPORT GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEn
 
 void WINAPI GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t* pGlobals)
 {
-	int pos;
 	char game_dir[256];
 	char mod_name[32];
 
@@ -112,7 +111,7 @@ void WINAPI GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t* pG
 	// find the directory name of the currently running MOD...
 	(*g_engfuncs.pfnGetGameDir)(game_dir);
 
-	pos = 0;
+	int pos = 0;
 	if (strchr(game_dir, '/') != NULL) {
 		pos = strlen(game_dir) - 1;
 		// scan backwards till first directory separator...

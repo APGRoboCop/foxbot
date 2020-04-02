@@ -353,10 +353,9 @@ int UTIL_GetTeamColor(edict_t* pEntity)
 		return -1;
 
 	if (mod_id == TFC_DLL) {
-		char* infobuffer;
 		char topcolor[32];
 
-		infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
+		char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
 		strcpy(topcolor, g_engfuncs.pfnInfoKeyValue(infobuffer, "topcolor"));
 
 		// used for spy checking
@@ -471,10 +470,9 @@ int UTIL_GetFlagsTeam(const edict_t* flag_edict)
 // return class number 0 through N
 int UTIL_GetClass(edict_t* pEntity)
 {
-	char* infobuffer;
 	char model_name[32];
 
-	infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
+	char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
 	strcpy(model_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "model"));
 
 	return 0;
@@ -843,14 +841,13 @@ static void UTIL_FindFoxbotPath(void)
 // It returns false if fgets() returned NULL.
 bool UTIL_ReadFileLine(char* string, const unsigned int max_length, FILE* file_ptr)
 {
-	unsigned int a;
 	bool line_end_found = FALSE;
 
 	if (fgets(string, max_length, file_ptr) == NULL)
 		return FALSE;
 
 	// check if the string read contains a line terminator of some sort
-	for (a = 0; a < max_length; a++) {
+	for (unsigned int a = 0; a < max_length; a++) {
 		if (string[a] == '\n' || string[a] == '\r')
 			line_end_found = TRUE;
 	}

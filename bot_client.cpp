@@ -385,9 +385,7 @@ void BotClient_FLF_AmmoPickup(void* p, int bot_index)
 // This message gets sent when the bot picks up a weapon.
 void BotClient_Valve_WeaponPickup(void* p, const int bot_index)
 {
-	int index;
-
-	index = *static_cast<int*>(p);
+	int index = *static_cast<int*>(p);
 
 	// set this weapon bit to indicate that we are carrying this weapon
 	bots[bot_index].bot_weapons |= 1 << index;
@@ -427,9 +425,8 @@ void BotClient_TFC_ItemPickup(void* p, const int bot_index)
 {
 	// this is just like the Valve Item Pickup message
 	BotClient_Valve_ItemPickup(p, bot_index);
-	int index;
 
-	index = *static_cast<int*>(p);
+	int index = *static_cast<int*>(p);
 	char msg[255];
 	sprintf(msg, "%d", index);
 	// UTIL_HostSay(0, 0, msg);

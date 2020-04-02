@@ -37,9 +37,7 @@
 void CreateCamera(edict_t* pPlayer, edict_t* pEntity)
 {
 	if (pPlayer != NULL && pEntity != NULL) {
-		edict_t* pCamera;
-
-		pCamera = CREATE_NAMED_ENTITY(MAKE_STRING("info_target"));
+		edict_t* pCamera = CREATE_NAMED_ENTITY(MAKE_STRING("info_target"));
 		DispatchSpawn(pCamera);
 		pCamera->v.origin = pEntity->v.origin + pEntity->v.view_ofs;
 		pCamera->v.angles = pEntity->v.v_angle;
@@ -63,8 +61,7 @@ void CreateCamera(edict_t* pPlayer, edict_t* pEntity)
 void KillCamera(edict_t* pPlayer)
 {
 	if (pPlayer != NULL) {
-		edict_t* pCCamera;
-		pCCamera = NULL;
+		edict_t* pCCamera = NULL;
 		while ((pCCamera = FIND_ENTITY_BY_CLASSNAME(pCCamera, "entity_botcam")) != NULL && !FNullEnt(pCCamera)) {
 			if (pCCamera->v.owner == pPlayer)
 				pCCamera->v.flags |= FL_KILLME;

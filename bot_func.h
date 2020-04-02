@@ -42,9 +42,9 @@ bool BotCanSeeOrigin(bot_t* pBot, Vector& r_dest);
 
 float BotViewAngleDiff(Vector& r_pOrigin, const edict_t* pEdict);
 
-long random_long(const long lowval, const long highval);
+long random_long(long lowval, long highval);
 
-float random_float(const float lowval, const float highval);
+float random_float(float lowval, float highval);
 
 void BotFindItem(bot_t* pBot);
 
@@ -65,17 +65,17 @@ int BotAssessThreatLevel(bot_t* pBot);
 
 int BotTeamColorCheck(const edict_t* pent);
 
-int PickRandomEnemyTeam(const int my_team);
+int PickRandomEnemyTeam(int my_team);
 
-int BotGuessPlayerPosition(bot_t* const pBot, const Vector& r_playerOrigin);
+int BotGuessPlayerPosition(bot_t* pBot, const Vector& r_playerOrigin);
 
-int BotFindGrenadePoint(bot_t* const pBot, const Vector& r_vecOrigin);
+int BotFindGrenadePoint(bot_t* pBot, const Vector& r_vecOrigin);
 
 void BotCheckForMultiguns(bot_t* pBot, float nearestdistance, edict_t* pNewEnemy, bool& rtn);
 
 void BotSoundSense(edict_t* pEdict, const char* pszSample, float fVolume);
 
-int FriendlyClassTotal(edict_t* pEdict, const int specifiedClass, const bool ignoreSelf);
+int FriendlyClassTotal(edict_t* pEdict, int specifiedClass, bool ignoreSelf);
 
 void UpdateFlagCarrierList(void);
 

@@ -419,11 +419,10 @@ int assess_JobEscortAlly(const bot_t* pBot, const job_struct& r_job)
 
 	// make sure the escorted doesn't have too many bot escorts
 	int escortCount = 0;
-	int escortIndex;
 	for (int i = 0; i < 32; i++) {
 		if (bots[i].is_used && bots[i].current_team == pBot->current_team) {
 			// only count escorts who are near enough to the escorted player
-			escortIndex = BufferedJobIndex(&bots[i], JOB_ESCORT_ALLY);
+			int escortIndex = BufferedJobIndex(&bots[i], JOB_ESCORT_ALLY);
 			if (escortIndex != -1 && bots[i].job[escortIndex].player == r_job.player &&
 				VectorsNearerThan(bots[i].pEdict->v.origin, r_job.player->v.origin, 600.0)) {
 				++escortCount;
@@ -630,13 +629,12 @@ int assess_JobDefendFlag(const bot_t* pBot, const job_struct& r_job)
 
 	// see if this flag will have too many defenders
 	if (r_job.phase == 0) {
-		int DefendJobIndex;
 		int defenderTotal = 1; // 1 = this bot
 		for (int i = 0; i < MAX_BOTS; i++) {
 			if (bots[i].is_used && bots[i].current_team == pBot->current_team &&
 				&bots[i] != pBot) // make sure the player isn't THIS bot
 			{
-				DefendJobIndex = BufferedJobIndex(&bots[i], JOB_DEFEND_FLAG);
+				int DefendJobIndex = BufferedJobIndex(&bots[i], JOB_DEFEND_FLAG);
 				if (DefendJobIndex != -1 && bots[i].job[DefendJobIndex].object == r_job.object) {
 					++defenderTotal;
 

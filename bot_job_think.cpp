@@ -70,7 +70,7 @@ extern WAYPOINT waypoints[MAX_WAYPOINTS];
 extern int num_waypoints; // number of waypoints currently in use
 
 // function prototypes //////////////
-static void DropJobFromBuffer(bot_t* pBot, const int buffer_index);
+static void DropJobFromBuffer(bot_t* pBot, int buffer_index);
 static void RefreshJobBuffer(bot_t* pBot);
 static void BotEngineerThink(bot_t* pBot);
 

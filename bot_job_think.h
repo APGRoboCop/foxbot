@@ -100,15 +100,15 @@ extern const jobList_struct jl[JOB_TYPE_TOTAL];
 // function prototypes below /////////////
 void BotResetJobBuffer(bot_t* pBot);
 
-void BlacklistJob(bot_t* pBot, const int jobType, const float timeOut);
+void BlacklistJob(bot_t* pBot, int jobType, float timeOut);
 
-bool BufferContainsJobType(const bot_t* pBot, const int JobType);
+bool BufferContainsJobType(const bot_t* pBot, int JobType);
 
-int BufferedJobIndex(const bot_t* pBot, const int JobType);
+int BufferedJobIndex(const bot_t* pBot, int JobType);
 
-job_struct* InitialiseNewJob(bot_t* pBot, const int newJobType);
+job_struct* InitialiseNewJob(bot_t* pBot, int newJobType);
 
-bool SubmitNewJob(bot_t* pBot, const int newJobType, job_struct* newJob);
+bool SubmitNewJob(bot_t* pBot, int newJobType, job_struct* newJob);
 
 void BotRunJobs(bot_t* pBot);
 
