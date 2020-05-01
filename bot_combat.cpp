@@ -131,9 +131,9 @@ char* ntfTargetChecks[] = {
 // the start of the array and least desired should be at the end
 static bot_weapon_select_t tfc_weapon_select[] = { { TF_WEAPON_KNIFE, "tf_weapon_knife", 5, 0.0, 90.0, 0.0, 0.0, 100,
 													   TRUE, 100, 0, 0, FALSE, FALSE, FALSE, FALSE, 0.0, 0.0 },
-	{ TF_WEAPON_SPANNER, "tf_weapon_spanner", 5, 0.0, 90.0, 0.0, 0.0, 100, TRUE, 100, 0, 0, FALSE, FALSE, FALSE, FALSE,
+	{ TF_WEAPON_SPANNER, "tf_weapon_spanner", 5, 0.0, 80.0, 0.0, 0.0, 100, TRUE, 100, 0, 0, FALSE, FALSE, FALSE, FALSE,
 		0.0, 0.0 },
-	{ TF_WEAPON_MEDIKIT, "tf_weapon_medikit", 5, 0.0, 90.0, 0.0, 0.0, 100, TRUE, 100, 0, 0, FALSE, FALSE, FALSE, FALSE,
+	{ TF_WEAPON_MEDIKIT, "tf_weapon_medikit", 5, 0.0, 80.0, 0.0, 0.0, 100, TRUE, 100, 0, 0, FALSE, FALSE, FALSE, FALSE,
 		0.0, 0.0 },
 	{ TF_WEAPON_SNIPERRIFLE, "tf_weapon_sniperrifle", 5, 300.0, 4000.0, 0.0, 0.0, 100, TRUE, 100, 1, 0, FALSE, FALSE,
 		TRUE, FALSE, 2.0, 0.0 },
@@ -141,29 +141,29 @@ static bot_weapon_select_t tfc_weapon_select[] = { { TF_WEAPON_KNIFE, "tf_weapon
 		FALSE, FALSE, 0.0, 0.0 },
 	{ TF_WEAPON_AC, "tf_weapon_ac", 5, 0.0, 2500.0, 0.0, 0.0, 100, TRUE, 100, 1, 0, TRUE, FALSE, FALSE, FALSE, 0.0,
 		0.0 },
-	{ TF_WEAPON_RPG, "tf_weapon_rpg", 5, 180.0, 3000.0, 0.0, 0.0, 100, TRUE, 100, 1, 0, FALSE, FALSE, FALSE, FALSE, 0.0,
+	{ TF_WEAPON_RPG, "tf_weapon_rpg", 5, 150.0, 3000.0, 0.0, 0.0, 100, TRUE, 100, 1, 0, FALSE, FALSE, FALSE, FALSE, 0.0,
 		0.0 },
 	{ TF_WEAPON_IC, "tf_weapon_ic", 5, 300.0, 2000.0, 0.0, 0.0, 100, TRUE, 100, 1, 0, FALSE, FALSE, FALSE, FALSE, 0.0,
 		0.0 },
 	{ TF_WEAPON_SUPERSHOTGUN, "tf_weapon_supershotgun", 5, 0.0, 2000.0, 0.0, 0.0, 100, TRUE, 100, 2, 0, FALSE, FALSE,
 		FALSE, FALSE, 0.0, 0.0 },
-	{ TF_WEAPON_SUPERNAILGUN, "tf_weapon_superng", 5, 40.0, 3000.0, 0.0, 0.0, 100, TRUE, 100, 1, 0, TRUE, FALSE, FALSE,
+	{ TF_WEAPON_SUPERNAILGUN, "tf_weapon_superng", 5, 40.0, 3000.0, 0.0, 0.0, 50, TRUE, 100, 1, 0, TRUE, FALSE, FALSE,
 		FALSE, 0.0, 0.0 },
-	{ TF_WEAPON_TRANQ, "tf_weapon_tranq", 5, 40.0, 1000.0, 0.0, 0.0, 100, TRUE, 100, 1, 0, FALSE, FALSE, FALSE, FALSE,
+	{ TF_WEAPON_TRANQ, "tf_weapon_tranq", 5, 0.0, 100.0, 0.0, 0.0, 20, TRUE, 100, 1, 0, FALSE, FALSE, FALSE, FALSE,
 		0.0, 0.0 },
 	{ TF_WEAPON_AUTORIFLE, "tf_weapon_autorifle", 5, 0.0, 1000.0, 0.0, 0.0, 100, TRUE, 100, 1, 0, FALSE, FALSE, FALSE,
 		FALSE, 0.0, 0.0 },
-	{ TF_WEAPON_AXE, "tf_weapon_axe", 5, 0.0, 90.0, 0.0, 0.0, 100, TRUE, 100, 0, 0, FALSE, FALSE, FALSE, FALSE, 0.0,
+	{ TF_WEAPON_AXE, "tf_weapon_axe", 5, 0.0, 80.0, 0.0, 0.0, 100, TRUE, 100, 0, 0, FALSE, FALSE, FALSE, FALSE, 0.0,
 		0.0 },
-	{ TF_WEAPON_PL, "tf_weapon_pl", 5, 400.0, 900.0, 0.0, 0.0, 100, TRUE, 100, 1, 0, FALSE, FALSE, FALSE, FALSE, 0.0,
+	{ TF_WEAPON_PL, "tf_weapon_pl", 5, 300.0, 600.0, 0.0, 0.0, 100, TRUE, 100, 1, 0, FALSE, FALSE, FALSE, FALSE, 0.0,
 		0.0 },
-	{ TF_WEAPON_GL, "tf_weapon_gl", 5, 180.0, 900.0, 0.0, 0.0, 100, TRUE, 100, 1, 0, FALSE, FALSE, FALSE, FALSE, 0.0,
+	{ TF_WEAPON_GL, "tf_weapon_gl", 5, 150.0, 600.0, 0.0, 0.0, 100, TRUE, 100, 1, 0, FALSE, FALSE, FALSE, FALSE, 0.0,
 		0.0 },
-	{ TF_WEAPON_SHOTGUN, "tf_weapon_shotgun", 5, 0.0, 4000.0, 0.0, 0.0, 100, TRUE, 100, 1, 0, FALSE, FALSE, FALSE,
+	{ TF_WEAPON_SHOTGUN, "tf_weapon_shotgun", 5, 0.0, 4000.0, 0.0, 0.0, 75, TRUE, 100, 1, 0, FALSE, FALSE, FALSE,
 		FALSE, 0.0, 0.0 },
-	{ TF_WEAPON_NAILGUN, "tf_weapon_ng", 5, 0.0, 3000.0, 0.0, 0.0, 100, TRUE, 100, 1, 0, FALSE, FALSE, FALSE, FALSE,
+	{ TF_WEAPON_NAILGUN, "tf_weapon_ng", 5, 40.0, 3000.0, 0.0, 0.0, 50, TRUE, 100, 1, 0, FALSE, FALSE, FALSE, FALSE,
 		0.0, 0.0 },
-	{ TF_WEAPON_RAILGUN, "tf_weapon_railgun", 5, 40.0, 4000.0, 0.0, 0.0, 100, TRUE, 100, 1, 0, FALSE, FALSE, FALSE,
+	{ TF_WEAPON_RAILGUN, "tf_weapon_railgun", 5, 80.0, 4000.0, 0.0, 0.0, 50, TRUE, 100, 1, 0, FALSE, FALSE, FALSE,
 		FALSE, 0.0, 0.0 },
 	/* terminator */
 	{ 0, "", 0, 0.0, 0.0, 0.0, 0.0, 0, TRUE, 0, 1, 1, FALSE, FALSE, FALSE, FALSE, 0.0, 0.0 } };
@@ -1088,7 +1088,7 @@ static void BotSGSpotted(bot_t* pBot, edict_t* sg)
 		case 3:
 			_snprintf(newJob->message, MAX_CHAT_LENGTH, "Sentry Spotted %s", areas[area].named);
 			break;
-		default: ;
+		default:;
 		}
 
 		newJob->message[MAX_CHAT_LENGTH - 1] = '\0';
@@ -2155,7 +2155,7 @@ int BotNadeHandler(bot_t* pBot, bool timed, const char newNadeType)
 						BotPrimeGrenade(pBot, PrimaryGrenade, GRENADE_FRAGMENTATION, 0);
 				}
 				break;
-			default: ;
+			default:;
 			}
 		}
 	}
@@ -2252,7 +2252,7 @@ int BotAssessThreatLevel(bot_t* pBot)
 	case TFC_CLASS_ENGINEER:
 		Threat = 17;
 		break;
-	default: ;
+	default:;
 	}
 
 	// Then add based on targets class.
@@ -2300,7 +2300,7 @@ int BotAssessThreatLevel(bot_t* pBot)
 		if (pBot->enemy.f_seenDistance < 300.0f)
 			Threat += 10;
 		break;
-	default: ;
+	default:;
 	}
 
 	// ramp up the threat level if the bot is outnumbered

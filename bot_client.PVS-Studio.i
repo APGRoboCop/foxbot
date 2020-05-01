@@ -194540,10 +194540,14 @@ typedef struct {
 	job_blacklist_struct jobBlacklist[5];
 
 	
-	int msecnum;
-	float msecdel;
-	float msecval;
 	
+	
+	
+	
+
+	
+	float fUpdateTime;
+	float fLastRunPlayerMoveTime;
 
 	
 	int current_team; 
@@ -194884,7 +194888,7 @@ void ResetBotHomeInfo(void);
 
 void BotLookAbout(bot_t* pBot);
 
-#line 639 "E:\\Dropbox\\src\\foxbot\\bot.h"
+#line 643 "E:\\Dropbox\\src\\foxbot\\bot.h"
 #line 33 "E:\\Dropbox\\src\\foxbot\\bot_client.cpp"
 #line 1 "E:\\Dropbox\\src\\foxbot\\bot_func.h"
 
@@ -195547,10 +195551,10 @@ int WaypointFindNearest_S(Vector v_src,
 	WPT_INT32 ignore_flags);
 
 int WaypointFindInRange(Vector v_src,
-                        float min_range,
-                        float max_range,
-                        int team,
-                        bool chooseRandom);
+	float min_range,
+	float max_range,
+	int team,
+	bool chooseRandom);
 
 int WaypointFindNearestGoal(int srcWP, int team, int range, WPT_INT32 flags);
 
@@ -195559,10 +195563,10 @@ int WaypointFindRandomGoal(int source_WP, int team, WPT_INT32 flags);
 int WaypointFindRandomGoal_D(int source_WP, int team, int range, WPT_INT32 flags);
 
 int WaypointFindRandomGoal_R(Vector v_src,
-                             bool checkVisibility,
-                             float range,
-                             int team,
-                             WPT_INT32 flags);
+	bool checkVisibility,
+	float range,
+	int team,
+	WPT_INT32 flags);
 
 int WaypointFindDetpackGoal(int srcWP, int team);
 

@@ -286,10 +286,13 @@ void BotSpawnInit(bot_t* pBot)
 	pBot->f_current_wp_deadline = 0.0;
 	pBot->current_wp = -1;
 
-	//Those are needing replaced for smoother performance [APG]RoboCop[CL]
-	pBot->msecnum = 0;
-	pBot->msecdel = 0.0;
-	pBot->msecval = 0.0;
+	//Fix by Cheeseh (RCBot)
+	float fUpdateTime = gpGlobals->time;
+	float fLastRunPlayerMoveTime = gpGlobals->time - 0.1f;
+
+	//pBot->msecnum = 0;
+	//pBot->msecdel = 0.0;
+	//pBot->msecval = 0.0;
 
 	pBot->bot_real_health = 0;
 	pBot->bot_armor = 0;
@@ -1638,7 +1641,7 @@ static void BotAmmoCheck(bot_t* pBot)
 	case TFC_CLASS_CIVILIAN: // my Umbrella needs ammo!
 		pBot->ammoStatus = AMMO_UNNEEDED;
 		break;
-	default: ;
+	default:;
 	}
 }
 
@@ -2114,7 +2117,7 @@ void BotSprayLogo(edict_t* pEntity, const bool sprayDownwards)
 		case 10:
 			index = DECAL_INDEX("{FOXBOT9");
 			break;
-		default: ;
+		default:;
 		}
 		count++;
 	}
@@ -2138,7 +2141,7 @@ void BotSprayLogo(edict_t* pEntity, const bool sprayDownwards)
 		case 4:
 			index = DECAL_INDEX("{GRAF004");
 			break;
-		default: ;
+		default:;
 		}
 	}
 	if (index < 0)
@@ -2830,8 +2833,8 @@ static void BotRoleCheck(bot_t* pBot)
 					teams.attackers[1].size(), teams.defenders[1].size(), teams.total[1]);
 			UTIL_HostSay(pBot->pEdict, 0, msg);*/
 
-	// need to make some adjustments to the roles based on the above figures.
-	// Only do this 1 bot per team. Don't want mass role changes.
+			// need to make some adjustments to the roles based on the above figures.
+			// Only do this 1 bot per team. Don't want mass role changes.
 	for (short team = 0; team < 4; team++) {
 		// Crash prevention //
 		if (teams.total[team] == 0)
@@ -3785,12 +3788,11 @@ static void BotEnemyCarrierAlert(bot_t* pBot)
 	// Arrange the operator in the proper order [APG]RoboCop[CL]
 	// if there's only one enemy find out if the bot is outgunned
 	if (pBot->visEnemyCount < 2) {
-		if ((pBot->enemy.ptr->v.playerclass != TFC_CLASS_SOLDIER ||
-			pBot->enemy.ptr->v.playerclass != TFC_CLASS_HWGUY || pBot->enemy.ptr->v.playerclass != TFC_CLASS_PYRO ||
-			pBot->enemy.ptr->v.playerclass != TFC_CLASS_MEDIC) && 
-			(pBot->bot_class == TFC_CLASS_SCOUT || pBot->bot_class == TFC_CLASS_SNIPER ||
+		if ((pBot->bot_class == TFC_CLASS_SCOUT || pBot->bot_class == TFC_CLASS_SNIPER ||
 			pBot->bot_class == TFC_CLASS_DEMOMAN || pBot->bot_class == TFC_CLASS_MEDIC ||
-			pBot->bot_class == TFC_CLASS_SPY || pBot->bot_class == TFC_CLASS_ENGINEER)) {
+			pBot->bot_class == TFC_CLASS_SPY || pBot->bot_class == TFC_CLASS_ENGINEER) && (pBot->enemy.ptr->v.playerclass != TFC_CLASS_SOLDIER ||
+				pBot->enemy.ptr->v.playerclass != TFC_CLASS_HWGUY || pBot->enemy.ptr->v.playerclass != TFC_CLASS_PYRO ||
+				pBot->enemy.ptr->v.playerclass != TFC_CLASS_MEDIC)) {
 			return;
 		}
 	}
@@ -3852,8 +3854,15 @@ void BotThink(bot_t* pBot)
 
 	pBot->pEdict->v.flags |= FL_FAKECLIENT;
 
-	// TheFatal - START from Advanced Bot Framework (Thanks Rich!) - //No longer required? [APG]RoboCop[CL]
+	//Fix by Cheeseh (RCBot)
+	const float msecval = (gpGlobals->time - pBot->fLastRunPlayerMoveTime) * 1000.0f;
+	pBot->fLastRunPlayerMoveTime = gpGlobals->time;
 
+	const float fUpdateInterval = 1.0f / 60.0f; // update at 60 fps
+	pBot->fUpdateTime = gpGlobals->time + fUpdateInterval;
+
+	// TheFatal - START from Advanced Bot Framework (Thanks Rich!)
+	/*
 	// adjust the millisecond delay based on the frame rate interval...
 	if (pBot->msecdel <= gpGlobals->time) {
 		pBot->msecdel = gpGlobals->time + 0.5; // default 0.5
@@ -3871,7 +3880,7 @@ void BotThink(bot_t* pBot)
 		pBot->msecval = 100;
 
 	// TheFatal - END
-
+	*/
 	// this is the only place this should be set
 	// (gpGlobals->time appears to run in another thread)
 	pBot->f_think_time = gpGlobals->time;
@@ -3888,7 +3897,7 @@ void BotThink(bot_t* pBot)
 		pBot->SGRotated = FALSE;
 		BotStartGame(pBot);
 		g_engfuncs.pfnRunPlayerMove(
-			pBot->pEdict, pBot->pEdict->v.v_angle, 0.0, 0, 0, pBot->pEdict->v.button, (byte)0, (byte)pBot->msecval);
+			pBot->pEdict, pBot->pEdict->v.v_angle, 0.0, 0, 0, pBot->pEdict->v.button, (byte)0, (byte)msecval);
 		return;
 	}
 
@@ -3974,7 +3983,7 @@ void BotThink(bot_t* pBot)
 			// crsh=true;
 		}
 		g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, pBot->f_move_speed, 0, 0,
-			pBot->pEdict->v.button, (byte)0, (byte)pBot->msecval);
+			pBot->pEdict->v.button, (byte)0, (byte)msecval);
 
 		// if(crsh)
 		//{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"returned ok(1)..\n"); fclose(fp); }
@@ -4016,7 +4025,7 @@ void BotThink(bot_t* pBot)
 		// UTIL_HostSay(pBot->pEdict,0,"a");
 
 		g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, pBot->f_move_speed, 0, 0,
-			pBot->pEdict->v.button, (byte)0, (byte)pBot->msecval);
+			pBot->pEdict->v.button, (byte)0, (byte)msecval);
 		return;
 	}
 
@@ -4138,7 +4147,7 @@ void BotThink(bot_t* pBot)
 	// THIS FUNCTION ACTUALLY MOVES THE BOT INGAME //
 	/////////////////////////////////////////////////
 	g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, pBot->f_move_speed, pBot->f_side_speed,
-		pBot->f_vertical_speed, pBot->pEdict->v.button, (byte)0, (byte)pBot->msecval);
+		pBot->f_vertical_speed, pBot->pEdict->v.button, (byte)0, (byte)msecval);
 	//////////////////////////////////////////////////
 
 	// check if bots aim should still be affected by concussion and fire etc.
@@ -4176,8 +4185,8 @@ static void BotSenseEnvironment(bot_t* pBot)
 		pBot->f_side_speed = 0;
 		pBot->f_vertical_speed = 0;
 
-		g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, 0, 0, 0,
-			pBot->pEdict->v.button, (byte)0, (byte)pBot->msecval);
+		//g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, 0, 0, 0,
+		//	pBot->pEdict->v.button, (byte)0, pBot->msecval);
 	}
 
 	if (pBot->enemy.ptr == NULL)

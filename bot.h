@@ -28,7 +28,7 @@
 #ifndef BOT_H
 #define BOT_H
 
-#include <string> //Required? [APG]RoboCop[CL]
+#include <string>
 
 #include "osdep.h"
 
@@ -291,10 +291,14 @@ typedef struct {
 	job_blacklist_struct jobBlacklist[JOB_BLACKLIST_MAX];
 
 	// TheFatal - START
-	int msecnum;
-	float msecdel;
-	float msecval;
+	//int msecnum;
+	//float msecdel;
+	//float msecval;
 	// TheFatal - END
+
+	//Fix by Cheeseh (RCBot)
+	float fUpdateTime;
+	float fLastRunPlayerMoveTime;
 
 	// things from pev in CBasePlayer...
 	int current_team; // TFC teams numbered 0 - 3

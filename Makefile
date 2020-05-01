@@ -150,8 +150,8 @@ CFDBG+= -march=i686
 #CFOPT=  -march=i486 -O6 
 #CFOPT+= -ffast-math -funroll-loops (-ffast-math unstable?)
 
-CFOPT= -O2 -m32 -mtune=generic -march=i686 -mmmx -msse -msse2 -mfpmath=sse -s
-CFOPT+= -pipe -funsafe-math-optimizations -fno-aggressive-loop-optimizations
+CFOPT= -O2 -m32 -mtune=generic -march=i686 -mmmx -msse -msse2 -mfpmath=sse
+CFOPT+= -pipe -funsafe-math-optimizations
 
 # configuration dependand setup
 ifeq "$(OPT)" "opt"

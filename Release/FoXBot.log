@@ -1,76 +1,23 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(467,5): warning MSB8028: The intermediate directory (.\Release\) contains files shared from another project (FoXBot (user-MS-7A34's conflicted copy 2020-03-23).vcxproj).  This can lead to incorrect clean and rebuild behavior.
   bot.cpp
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
-E:\Dropbox\src\metamod-p\metamod\comp_dep.h(79,1): warning C4005: 'va_copy': macro redefinition
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\include\stdarg.h(23): message : see previous definition of 'va_copy'
   bot_client.cpp
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
   bot_combat.cpp
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
   bot_job_assessors.cpp
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
-E:\Dropbox\src\metamod-p\metamod\comp_dep.h(79,1): warning C4005: 'va_copy': macro redefinition
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\include\stdarg.h(23): message : see previous definition of 'va_copy'
   bot_job_functions.cpp
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
-E:\Dropbox\src\metamod-p\metamod\comp_dep.h(79,1): warning C4005: 'va_copy': macro redefinition
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\include\stdarg.h(23): message : see previous definition of 'va_copy'
   bot_job_think.cpp
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
-E:\Dropbox\src\metamod-p\metamod\comp_dep.h(79,1): warning C4005: 'va_copy': macro redefinition
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\include\stdarg.h(23): message : see previous definition of 'va_copy'
   bot_navigate.cpp
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
   bot_start.cpp
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
   botcam.cpp
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
   dll.cpp
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
-E:\Dropbox\src\metamod-p\metamod\comp_dep.h(79,1): warning C4005: 'va_copy': macro redefinition
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\include\stdarg.h(23): message : see previous definition of 'va_copy'
-E:\Dropbox\src\foxbot\dll.cpp(772,6): warning C4101: 'i': unreferenced local variable
-E:\Dropbox\src\foxbot\dll.cpp(843,21): warning C4474: 'printf' : too many arguments passed for format string
-E:\Dropbox\src\foxbot\dll.cpp(843,21): message : placeholders and their parameters expect 1 variadic arguments, but 3 were provided
-E:\Dropbox\src\foxbot\dll.cpp(6996,22): warning C4474: 'printf' : too many arguments passed for format string
-E:\Dropbox\src\foxbot\dll.cpp(6996,22): message : placeholders and their parameters expect 1 variadic arguments, but 3 were provided
+E:\Dropbox\src\foxbot\dll.cpp(772,4): warning C5051: attribute 'maybe_unused' requires at least '/std:c++17'; ignored
+E:\Dropbox\src\foxbot\dll.cpp(772,23): warning C4101: 'i': unreferenced local variable
   engine.cpp
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
-E:\Dropbox\src\metamod-p\metamod\comp_dep.h(79,1): warning C4005: 'va_copy': macro redefinition
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\include\stdarg.h(23): message : see previous definition of 'va_copy'
   h_export.cpp
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
-E:\Dropbox\src\metamod-p\metamod\comp_dep.h(79,1): warning C4005: 'va_copy': macro redefinition
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\include\stdarg.h(23): message : see previous definition of 'va_copy'
   linkfunc.cpp
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
   meta_api.cpp
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
-E:\Dropbox\src\metamod-p\metamod\comp_dep.h(79,1): warning C4005: 'va_copy': macro redefinition
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\include\stdarg.h(23): message : see previous definition of 'va_copy'
   sdk_util.cpp
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
   util.cpp
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
   waypoint.cpp
-E:\Dropbox\src\hlsdk-2.3-p4\multiplayer\engine\eiface.h(417,1): warning C4005: 'ARRAYSIZE': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\winnt.h(1315): message : see previous definition of 'ARRAYSIZE'
-E:\Dropbox\src\foxbot\waypoint.cpp(3350,149): warning C4309: 'initializing': truncation of constant value
+E:\Dropbox\src\foxbot\waypoint.cpp(3350,143): warning C4309: 'initializing': truncation of constant value
   Generating Code...
-E:\Dropbox\src\foxbot\util.cpp : fatal error C1090: PDB API call failed, error code '3': E:\Dropbox\src\foxbot\Release\vc142.pdb
+E:\Dropbox\src\foxbot\bot_start.cpp : fatal error C1090: PDB API call failed, error code '3': E:\Dropbox\src\foxbot\Release\vc142.pdb

@@ -769,7 +769,7 @@ void chatClass::readChatFile(void)
 
 	char buffer[MAX_CHAT_LENGTH] = "";
 	char* ptr;
-	int i;
+	[[maybe_unused]] int i;
 	int chat_section = -1;
 
 	while (UTIL_ReadFileLine(buffer, MAX_CHAT_LENGTH, bfp)) {
@@ -840,7 +840,7 @@ void chatClass::pickRandomChatString(char* msg, const size_t maxLength, const in
 		_snprintf(msg, maxLength, this->strings[chatSection][randomIndex].c_str(), playerName);
 	}
 	else
-		printf("%s", msg, maxLength, this->strings[chatSection][randomIndex].c_str());
+		printf("%s", msg);
 
 	msg[maxLength - 1] = '\0';
 }
@@ -4345,7 +4345,7 @@ void StartFrame(void)
 						if (ifsec == 2)
 							ifsec = 0; // cancel ifs before ending message section
 						break;
-					default: ;
+					default:;
 					};
 				}
 				if (!random_shit_error)
@@ -5470,7 +5470,7 @@ void StartFrame(void)
 							if (msgsection == 2)
 								msgsection = 0;
 							break;
-						default: ;
+						default:;
 						};
 					}
 					buf = buf + 1; // like i++ but for stringcmp stuff
@@ -6345,7 +6345,7 @@ static void ProcessBotCfgFile(void)
 {
 	char cmd_line[512];
 	static char server_cmd[514];
-	char * arg2, * arg3, * arg4;
+	char* arg2, * arg3, * arg4;
 	char msg[255];
 
 	if (bot_cfg_pause_time > gpGlobals->time)
@@ -6993,7 +6993,7 @@ static void DisplayBotInfo()
 		h.y = 0;
 		sprintf(msg, "--FoxBot Loaded--\n--Visit 'www.apg-clan.org' for updates and info--\n");
 		ALERT(at_console, msg);
-		printf("%s", msg2, 511, msg);
+		printf("%s", msg2);
 
 		/*	sprintf(msg,"--* foxbot v%d.%d build# %d *--\n",
 						VER_MAJOR,VER_MINOR,VER_BUILD);*/

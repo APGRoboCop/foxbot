@@ -200,3 +200,8 @@ bot_job_think.cpp.PVS-Studio.cfg
 bot_job_think.cpp.PVS-Studio.cmd
 bot_job_think.cpp.PVS-Studio.preprocess.cmd.rsp
 bot_job_think.PVS-Studio.i
+*.cfg
+*.cmd
+*.rsp
+*.i
+*.cfg
