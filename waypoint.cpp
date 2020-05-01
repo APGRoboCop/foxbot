@@ -3347,7 +3347,7 @@ bool WaypointAvailable(const int index, const int team)
 
 	// a bit field of all script number waypoint flags
 	// to speed the checking operation up
-	static const WPT_INT8 validFlags = (S_FL_POINT1 | S_FL_POINT2 | S_FL_POINT3 | S_FL_POINT4 | S_FL_POINT5 | S_FL_POINT6 | S_FL_POINT7 | S_FL_POINT8) +
+	static WPT_INT8 validFlags = (S_FL_POINT1 | S_FL_POINT2 | S_FL_POINT3 | S_FL_POINT4 | S_FL_POINT5 | S_FL_POINT6 | S_FL_POINT7 | S_FL_POINT8) +
 		0;
 
 	// Report true if this waypoint is scripted and currently

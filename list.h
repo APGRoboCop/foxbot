@@ -185,7 +185,7 @@ private:
 public:
 	// ctr : initialize the iterator class by specifying the list
 	//       it will be used with.
-	explicit LIter(List<Type>* listToUse): currentNode(nullptr)
+	explicit LIter(List<Type>* listToUse) : currentNode(nullptr)
 	{
 		list = listToUse;
 	}

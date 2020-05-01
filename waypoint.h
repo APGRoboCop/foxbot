@@ -163,10 +163,10 @@ int WaypointFindNearest_S(Vector v_src,
 	WPT_INT32 ignore_flags);
 
 int WaypointFindInRange(Vector v_src,
-                        float min_range,
-                        float max_range,
-                        int team,
-                        bool chooseRandom);
+	float min_range,
+	float max_range,
+	int team,
+	bool chooseRandom);
 
 int WaypointFindNearestGoal(int srcWP, int team, int range, WPT_INT32 flags);
 
@@ -175,10 +175,10 @@ int WaypointFindRandomGoal(int source_WP, int team, WPT_INT32 flags);
 int WaypointFindRandomGoal_D(int source_WP, int team, int range, WPT_INT32 flags);
 
 int WaypointFindRandomGoal_R(Vector v_src,
-                             bool checkVisibility,
-                             float range,
-                             int team,
-                             WPT_INT32 flags);
+	bool checkVisibility,
+	float range,
+	int team,
+	WPT_INT32 flags);
 
 int WaypointFindDetpackGoal(int srcWP, int team);
 
