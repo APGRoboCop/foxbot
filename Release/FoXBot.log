@@ -9,8 +9,7 @@
   bot_start.cpp
   botcam.cpp
   dll.cpp
-E:\Dropbox\src\foxbot\dll.cpp(772,4): warning C5051: attribute 'maybe_unused' requires at least '/std:c++17'; ignored
-E:\Dropbox\src\foxbot\dll.cpp(772,23): warning C4101: 'i': unreferenced local variable
+E:\Dropbox\src\foxbot\dll.cpp(772,6): warning C4101: 'i': unreferenced local variable
   engine.cpp
   h_export.cpp
   linkfunc.cpp
@@ -20,4 +19,4 @@ E:\Dropbox\src\foxbot\dll.cpp(772,23): warning C4101: 'i': unreferenced local va
   waypoint.cpp
 E:\Dropbox\src\foxbot\waypoint.cpp(3350,143): warning C4309: 'initializing': truncation of constant value
   Generating Code...
-E:\Dropbox\src\foxbot\bot_start.cpp : fatal error C1090: PDB API call failed, error code '3': E:\Dropbox\src\foxbot\Release\vc142.pdb
+E:\Dropbox\src\foxbot\sdk_util.cpp : fatal error C1090: PDB API call failed, error code '3': E:\Dropbox\src\foxbot\Release\vc142.pdb

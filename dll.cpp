@@ -769,7 +769,7 @@ void chatClass::readChatFile(void)
 
 	char buffer[MAX_CHAT_LENGTH] = "";
 	char* ptr;
-	[[maybe_unused]] int i;
+	int i;
 	int chat_section = -1;
 
 	while (UTIL_ReadFileLine(buffer, MAX_CHAT_LENGTH, bfp)) {

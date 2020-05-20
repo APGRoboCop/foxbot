@@ -32,7 +32,7 @@ Known bugs:-
 
 >> Sniper bots tend to TK when Friendly Fire is on, when interacting with their team's sentries and teleports
 
->> botdontmove, bot_chat, bot_bot_balance and bot_team_balance cvars may not be 100% operational
+>> botdontmove, bot_chat, min_bots, max_bots, bot_bot_balance and bot_team_balance cvars may not be 100% operational
 
 >> FoxBot appears to crash sometimes on Windows Listenservers
 
