@@ -272,12 +272,12 @@ static void ProcessBotCfgFile(void);
 static void changeBotSetting(const char* settingName,
 	int* setting,
 	const char* arg1,
-	int minValue,
-	int maxValue,
-	int settingSource);
+	const int minValue,
+	const int maxValue,
+	const int settingSource);
 static void kickBots(int totalToKick, int team);
 static void kickRandomBot(void);
-static void ClearKickedBotsData(int botIndex, bool eraseBotsName);
+static void ClearKickedBotsData(const int botIndex, bool eraseBotsName);
 // void UTIL_CSavePent(CBaseEntity *pent);
 
 void UTIL_HudMessage(CBaseEntity* pEntity, const hudtextparms_t& textparms, const char* pMessage)
@@ -1436,7 +1436,7 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 		// check if this is NOT a bot joining the server...
 		if (strcmp(pszAddress, "127.0.0.1") != 0) {
 			int i = 0;
-			while (i < 32 && (clients[i] != NULL && clients[i] != pEntity))
+			while ((i < 32) && (clients[i] != NULL && clients[i] != pEntity))
 				i++;
 			if (i < 32)
 				clients[i] = pEntity;
@@ -1511,7 +1511,7 @@ void ClientDisconnect(edict_t* pEntity)
 		else {
 			i = 0;
 
-			while (i < 32 && clients[i] != pEntity)
+			while ((i < 32) && (clients[i] != pEntity))
 				i++;
 
 			if (i < 32)
