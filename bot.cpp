@@ -812,7 +812,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 		// (for Admin Mod)only helps if we've just created a bot
 		// probably never used
 		i = 0;
-		while ((i < 32 && clients[i]) != (BotEnt))
+		while (i < 32 && clients[i] != BotEnt)
 			i++;
 
 		if (i < 32)
