@@ -64,7 +64,7 @@
 
 //Fix for GCC 7 - [APG]RoboCop[CL]
 #include <algorithm>
-
+/*
 #ifndef max
 #define max(a,b) (((a) > (b)) ? (a) : (b))
 #endif
@@ -77,7 +77,8 @@
 #undef min
 
 using namespace std;
-
+*/
+#define _vsnprintf(a,b,c,d) vsnprintf(a,b,c,d)
 #define itoa(a, b, c) sprintf(b, "%d", a)
 
 typedef unsigned char BYTE;
