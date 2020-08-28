@@ -11,40 +11,47 @@ compile and/or modify the Foxbot source code.
 Most of the guide is Operating System independant but there is also
 a section specifically about compiling the Linux version of Foxbot.
 
-==============================
-   FoxBot Version History
-==============================
-
 --------------------------------------------------------------------------------
-Version 0.791
-August-07-2018
+Version 0.792
+March-29-2020
 Updated by RoboCop
 --------------------------------------------------------------------------------
 
-- Removed unwanted tchar.h dependancies that are no longer required - Thanks to Globoss
-- Linux build should now work for Assault and Capture Point maps due to syntax error fixed - Thanks to Globoss
-- Fixed Write Strings and compile time for version.cpp that fails on GCC 6+
-- Fixed extdll.h that appears to fail to compile on GCC 6+ for #ifndef min and max
-- Added optimisation for faster float point for Win32 build
-- Linux build optimised for floating-point arithmetic and tuned for newer arch
-- bot_job_think.cpp should be fairly adjusted for the bots to choose their paths and tasks wisely
-- h_export.cpp Linux 'h_Library' can now detect both old and new TFC server build (tfc.so or tfc_i386.so)
-- Added teleport waypoints for baconbowl_r, chimkey_l and siege
-- Added more map configs for rats maps, plus turkeyburgers2002, fishburgers and donutburgers to spawn 1 sniper per 4 teams
-- Enhanced the map configs for the Assault & Defend maps, rock2 and flagrun to spawn the recommended bot classes for each team
-- Enhanced the hunted waypoints to prevent the Red team and the Hunted wondering back and forth in entrance tunnel
-- Added some more defensive waypoints for avanti, casbah, flagrun, chimkey_l and warpath
-- Added some important conc/rocket jump waypoints for the stock maps, palermo, ksour, cornfield, baconbowl_r and sandbowl_r2
-- Reduced the risk of bots invading enemy spawns for the stock maps, chimkey_l, tf2fort and ksour
-- Reduced excessive waypoint and pathwaypoint quantity for rats, rats2 and rats3, rats_cmd, palermo and baconbowl_r
-- Removed non recommended waypoints for dustbowl that includes sentry that are not suitable for defending CP3
-- Fixed the waypoint problems for 55, openfire_lowgrens, xpress2k4, destroy_l, phantom, shutdown2, sandbowl_r2 and tf2fort
-- Added new waypoints for bases2k3, momentum_l, mortality_l and hellion
+- Further optimisation fixes
+
+- Linux build compiled with the newer GCC/G++ 8.3
+
+- Replaced most of the C style casts with C++ casts
+
+- Increased engineer priority task to maintain sentries
+
+- Increased medic priority task to buff and heal team mates
+
+- Increased collect ammo priority to allow both engineers and snipers for defensive tasks
+
+- Reduced sniper accuracy for each of the 5 bot skill settings
+
+- Enhanced the dustbowl waypoints even further to remove lame sentry deployment areas
+
+- Altered the dustbowl map config to allow Red Engineers to spawn first
+
+- Corrected the hunted map config where Sniper assassins could not spawn
+
+- Fixed deprecation warning for 'SpyDetect'
+
+- Fixed some potential code issues
 
 Known bugs:-  
+
 >> '[META] WARNING: Plugin didn't set meta_result: foxbot_mm.so:engClientCommand()' still appears to occur
+
+>> Soldier bots tend to struggle for rocket jumping in certain areas
+
 >> botdontmove, bot_chat, bot_bot_balance and bot_team_balance cvars may not be 100% operational
+
 >> FoxBot appears to crash sometimes on Windows Listenservers
+
+--------------------------------------------------------------------------------
 
 ____________________________________________________________
 
