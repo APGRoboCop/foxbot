@@ -10,13 +10,15 @@ Updated by RoboCop
 
 - Removed redundant codes
 
+- Repaired some rogue pathwaypoints for 2fort, cz2, rock2 and well
+
 - Allowing bots to avoid firing lame weapons like nailguns, laser railguns and dart guns too often
 
 - Limited the bot frame rate movement to 60Hz
 
-- Increased bot job priority for collecting ammo
+- Increased bot job priority for collecting ammo and healing teammates
 
-- Added script for the bots to know to disable flag room security
+- Added script for the bots to know how to disable flag room security
 
 - Reduced bot job priority for solders to avoid rocket jumping too often
 
@@ -28,7 +30,7 @@ Known bugs:-
 
 >> '[META] WARNING: Plugin didn't set meta_result: foxbot_mm.so:engClientCommand()' may occur occasionally
 
->> Soldier bots tend to struggle for rocket jumping in certain areas
+>> Soldier bots tend to struggle for rocket jumping in certain areas that can block its way
 
 >> Sniper bots tend to TK when Friendly Fire is on, when interacting with their team's sentries and teleports
 
