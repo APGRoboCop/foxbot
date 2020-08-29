@@ -10,7 +10,7 @@ Updated by RoboCop
 
 - Removed redundant codes
 
-- Repaired some rogue pathwaypoints for 2fort, cz2, rock2 and well
+- Repaired some rogue pathwaypoints for 2fort, avanti, cz2, palermo, rock2, sandbowl_r2, shutdown2 and well
 
 - Allowing bots to avoid firing lame weapons like nailguns, laser railguns and dart guns too often
 

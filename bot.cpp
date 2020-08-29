@@ -604,7 +604,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 		//	max_skin_index = GEARBOX_MAX_SKINS;
 
 		if (arg1 == NULL || *arg1 == 0) {
-			bool* pSkinUsed = nullptr;
+			bool* pSkinUsed;
 
 			// pick a random skin
 			if (mod_id == VALVE_DLL) {
