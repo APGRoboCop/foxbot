@@ -147,9 +147,9 @@ static bot_weapon_select_t tfc_weapon_select[] = { { TF_WEAPON_KNIFE, "tf_weapon
 		0.0 },
 	{ TF_WEAPON_SUPERSHOTGUN, "tf_weapon_supershotgun", 5, 0.0, 2000.0, 0.0, 0.0, 100, TRUE, 100, 2, 0, FALSE, FALSE,
 		FALSE, FALSE, 0.0, 0.0 },
-	{ TF_WEAPON_SUPERNAILGUN, "tf_weapon_superng", 5, 40.0, 3000.0, 0.0, 0.0, 50, TRUE, 100, 1, 0, TRUE, FALSE, FALSE,
+	{ TF_WEAPON_SUPERNAILGUN, "tf_weapon_superng", 5, 40.0, 200.0, 0.0, 0.0, 50, TRUE, 50, 1, 0, TRUE, FALSE, FALSE,
 		FALSE, 0.0, 0.0 },
-	{ TF_WEAPON_TRANQ, "tf_weapon_tranq", 5, 0.0, 100.0, 0.0, 0.0, 20, TRUE, 100, 1, 0, FALSE, FALSE, FALSE, FALSE,
+	{ TF_WEAPON_TRANQ, "tf_weapon_tranq", 5, 0.0, 100.0, 0.0, 0.0, 50, TRUE, 50, 1, 0, FALSE, FALSE, FALSE, FALSE,
 		0.0, 0.0 },
 	{ TF_WEAPON_AUTORIFLE, "tf_weapon_autorifle", 5, 0.0, 1000.0, 0.0, 0.0, 100, TRUE, 100, 1, 0, FALSE, FALSE, FALSE,
 		FALSE, 0.0, 0.0 },
@@ -161,9 +161,9 @@ static bot_weapon_select_t tfc_weapon_select[] = { { TF_WEAPON_KNIFE, "tf_weapon
 		0.0 },
 	{ TF_WEAPON_SHOTGUN, "tf_weapon_shotgun", 5, 0.0, 4000.0, 0.0, 0.0, 75, TRUE, 100, 1, 0, FALSE, FALSE, FALSE,
 		FALSE, 0.0, 0.0 },
-	{ TF_WEAPON_NAILGUN, "tf_weapon_ng", 5, 40.0, 3000.0, 0.0, 0.0, 50, TRUE, 100, 1, 0, FALSE, FALSE, FALSE, FALSE,
+	{ TF_WEAPON_NAILGUN, "tf_weapon_ng", 5, 40.0, 300.0, 0.0, 0.0, 50, TRUE, 50, 1, 0, FALSE, FALSE, FALSE, FALSE,
 		0.0, 0.0 },
-	{ TF_WEAPON_RAILGUN, "tf_weapon_railgun", 5, 80.0, 4000.0, 0.0, 0.0, 50, TRUE, 100, 1, 0, FALSE, FALSE, FALSE,
+	{ TF_WEAPON_RAILGUN, "tf_weapon_railgun", 5, 80.0, 200.0, 0.0, 0.0, 50, TRUE, 50, 1, 0, FALSE, FALSE, FALSE,
 		FALSE, 0.0, 0.0 },
 	/* terminator */
 	{ 0, "", 0, 0.0, 0.0, 0.0, 0.0, 0, TRUE, 0, 1, 1, FALSE, FALSE, FALSE, FALSE, 0.0, 0.0 } };
