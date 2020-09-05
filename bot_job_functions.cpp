@@ -1866,7 +1866,7 @@ int JobDisguise(bot_t* pBot)
 
 	// is it time to pick a new disguise?
 	if (pBot->disguise_state == DISGUISE_NONE) {
-		static const int disguiseList[] = { 2, 3, 4, 5, 7, 8, 9 };
+		static const int disguiseList[] = { 2, 3, 4, 7, 8, };
 		const int new_disguise = disguiseList[random_long(0, 6)];
 
 		char choice[2];
