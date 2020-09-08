@@ -1436,8 +1436,9 @@ static bool BotFallenOffCheck(bot_t* const pBot)
 			PATH* p = paths[index];
 			bool waypointIsConnected = FALSE;
 			while (p != NULL && !waypointIsConnected) {
-				for (int i = 0; i < MAX_PATH_INDEX; i++) {
-					if (p->index[i] == pBot->current_wp) {
+				for (short i : p->index)
+				{
+					if (i == pBot->current_wp) {
 						waypointIsConnected = TRUE;
 						break;
 					}
@@ -2441,24 +2442,25 @@ static void BotCheckForRocketJump(bot_t* pBot)
 	const float maxJumpHeight = random_float(340.0, 440.0);
 
 	// find the closest rocket jump point
-	for (int i = 0; i < MAXRJWAYPOINTS; i++) {
+	for (auto& RJPoint : RJPoints)
+	{
 		// -1 means we are at the end of the list.
-		if (RJPoints[i][RJ_WP_INDEX] == -1)
+		if (RJPoint[RJ_WP_INDEX] == -1)
 			break;
 
 		// If its our team or not team specific.
-		if (RJPoints[i][RJ_WP_TEAM] == -1 || RJPoints[i][RJ_WP_TEAM] == pBot->current_team) {
-			zDiff = waypoints[RJPoints[i][RJ_WP_INDEX]].origin.z - pBot->pEdict->v.origin.z;
+		if (RJPoint[RJ_WP_TEAM] == -1 || RJPoint[RJ_WP_TEAM] == pBot->current_team) {
+			zDiff = waypoints[RJPoint[RJ_WP_INDEX]].origin.z - pBot->pEdict->v.origin.z;
 
 			// is this RJ waypoints height reachable with a rocket jump?
 			// on a server with 800 gravity rocket jumps can reach a height of about 440
 			if (zDiff > 54.0 && zDiff < maxJumpHeight) {
-				float distance2D = (pBot->pEdict->v.origin - waypoints[RJPoints[i][RJ_WP_INDEX]].origin).Length2D();
+				float distance2D = (pBot->pEdict->v.origin - waypoints[RJPoint[RJ_WP_INDEX]].origin).Length2D();
 
 				if (distance2D > 150.0 // don't want RJ points that are too close
 					&& distance2D < closest2D) {
 					closest2D = distance2D;
-					closestRJ = RJPoints[i][RJ_WP_INDEX];
+					closestRJ = RJPoint[RJ_WP_INDEX];
 				}
 			}
 		}
@@ -2594,24 +2596,25 @@ static void BotCheckForConcJump(bot_t* pBot)
 	float zDiff;
 
 	// Find the closest RJ point from the bots predicted waypoint location
-	for (int i = 0; i < MAXRJWAYPOINTS; i++) {
+	for (auto& RJPoint : RJPoints)
+	{
 		// -1 means we are at the end of the list.
-		if (RJPoints[i][RJ_WP_INDEX] == -1)
+		if (RJPoint[RJ_WP_INDEX] == -1)
 			break;
 
 		// If its our team or not team specific.
-		if ((RJPoints[i][RJ_WP_TEAM] == -1 || RJPoints[i][RJ_WP_TEAM] == pBot->current_team) &&
-			RJPoints[i][RJ_WP_INDEX] != -1) {
-			zDiff = waypoints[RJPoints[i][RJ_WP_INDEX]].origin.z - waypoints[endWP].origin.z;
+		if ((RJPoint[RJ_WP_TEAM] == -1 || RJPoint[RJ_WP_TEAM] == pBot->current_team) &&
+			RJPoint[RJ_WP_INDEX] != -1) {
+			zDiff = waypoints[RJPoint[RJ_WP_INDEX]].origin.z - waypoints[endWP].origin.z;
 
 			// is this RJ waypoints height reachable with a concussion jump?
 			// on a server with 800 gravity concussion jumps can reach a height of about 490
 			if (zDiff > 54.0 && zDiff < 450.0) {
-				float distance2D = (waypoints[endWP].origin - waypoints[RJPoints[i][RJ_WP_INDEX]].origin).Length2D();
+				float distance2D = (waypoints[endWP].origin - waypoints[RJPoint[RJ_WP_INDEX]].origin).Length2D();
 
 				if (distance2D < closest2D) {
 					closest2D = distance2D;
-					closestJumpWP = RJPoints[i][RJ_WP_INDEX];
+					closestJumpWP = RJPoint[RJ_WP_INDEX];
 				}
 			}
 		}

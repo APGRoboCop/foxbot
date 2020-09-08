@@ -155,13 +155,14 @@ void WaypointDebug(void)
 // free the linked list of waypoint path nodes...
 void WaypointFree(void)
 {
-	for (int i = 0; i < MAX_WAYPOINTS; i++) {
+	for (auto& i : paths)
+	{
 #ifdef _DEBUG
 		int count = 0;
 #endif
 
-		if (paths[i]) {
-			PATH* p = paths[i];
+		if (i) {
+			PATH* p = i;
 
 			while (p) // free the linked list
 			{
@@ -176,7 +177,7 @@ void WaypointFree(void)
 #endif
 			}
 
-			paths[i] = NULL;
+			i = NULL;
 		}
 	}
 }
@@ -969,11 +970,12 @@ bool DetpackClearIsBlocked(const int index)
 	PATH* p = paths[index];
 	int path_total = 0;
 	while (p != NULL) {
-		for (int i = 0; i < MAX_PATH_INDEX; i++) {
+		for (short i : p->index)
+		{
 			// test for an obstruction
-			if (p->index[i] != -1) {
+			if (i != -1) {
 				++path_total;
-				UTIL_TraceLine(waypoints[index].origin, waypoints[p->index[i]].origin, ignore_monsters, NULL, &tr);
+				UTIL_TraceLine(waypoints[index].origin, waypoints[i].origin, ignore_monsters, NULL, &tr);
 
 				if (tr.flFraction < 1.0)
 					return TRUE; // a path is blocked by something
@@ -1002,10 +1004,11 @@ bool DetpackSealIsClear(const int index)
 	// start checking
 	PATH* p = paths[index];
 	while (p != NULL) {
-		for (int i = 0; i < MAX_PATH_INDEX; i++) {
+		for (short i : p->index)
+		{
 			// test for an obstruction
-			if (p->index[i] != -1) {
-				UTIL_TraceLine(waypoints[index].origin, waypoints[p->index[i]].origin, ignore_monsters, NULL, &tr);
+			if (i != -1) {
+				UTIL_TraceLine(waypoints[index].origin, waypoints[i].origin, ignore_monsters, NULL, &tr);
 
 				if (tr.flFraction < 1.0)
 					return FALSE; // a path is blocked by something
@@ -2044,8 +2047,9 @@ bool WaypointDirectPathCheck(const int srcWP, const int destWP)
 	PATH* p = paths[srcWP];
 
 	while (p != NULL) {
-		for (int i = 0; i < MAX_PATH_INDEX; i++) {
-			if (p->index[i] == destWP)
+		for (short i : p->index)
+		{
+			if (i == destWP)
 				return TRUE;
 		}
 

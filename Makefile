@@ -61,7 +61,7 @@ METATOP=../metamod-p
 METADIR=$(METATOP)/metamod
 
 # The default target to build
-DEFTARGET=Ometamod
+DEFTARGET=metamod
 
 # The version number 
 VERSION=0.793-APG

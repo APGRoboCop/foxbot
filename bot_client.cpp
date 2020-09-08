@@ -951,18 +951,19 @@ void BotClient_Engineer_BuildStatus(void* p, const int bot_index)
 			builder[127] = '\0';
 
 			// Loop through the humans to look for the builder
-			for (int i = 0; i < 32; i++) {
+			for (auto& client : clients)
+			{
 				// is this client the builder?
-				if (clients[i] && strcmp(STRING(clients[i]->v.netname), builder) == 0) {
+				if (client && strcmp(STRING(client->v.netname), builder) == 0) {
 					// Get the teleporter ent
 					edict_t* pent = NULL;
 					while (
-						(pent = FIND_ENTITY_IN_SPHERE(pent, clients[i]->v.origin, 200)) != NULL && !FNullEnt(pent)) {
-						const float l = (clients[i]->v.origin - pent->v.origin).Length2D();
+						(pent = FIND_ENTITY_IN_SPHERE(pent, client->v.origin, 200)) != NULL && !FNullEnt(pent)) {
+						const float l = (client->v.origin - pent->v.origin).Length2D();
 
 						if (strcmp("building_teleporter", STRING(pent->v.classname)) == 0 && l >= 16.0 && l <= 96.0) {
 							// Set the owner on the teleport
-							pent->v.euser1 = clients[i];
+							pent->v.euser1 = client;
 							pent->v.iuser1 = teleportType;
 							teleportType = 0;
 							break;
