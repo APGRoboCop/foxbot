@@ -169,7 +169,7 @@ int assess_JobPickUpFlag(const bot_t* pBot, const job_struct& r_job)
 {
 	// recommend the job be removed if it is invalid
 	if (pBot->bot_has_flag == TRUE || FNullEnt(r_job.object) ||
-		r_job.object->v.owner != NULL // i.e. someone is carrying it
+		r_job.object->v.owner != nullptr // i.e. someone is carrying it
 		|| r_job.f_bufferedTime + 300.0 < pBot->f_think_time)
 		return PRIORITY_NONE;
 
@@ -760,7 +760,7 @@ int assess_JobDetpackWaypoint(const bot_t* pBot, const job_struct& r_job)
 int assess_JobPipetrap(const bot_t* pBot, const job_struct& r_job)
 {
 	// recommend the job be removed if it is invalid
-	if (pBot->pEdict->v.playerclass != TFC_CLASS_DEMOMAN || pBot->mission != ROLE_DEFENDER || pBot->enemy.ptr != NULL)
+	if (pBot->pEdict->v.playerclass != TFC_CLASS_DEMOMAN || pBot->mission != ROLE_DEFENDER || pBot->enemy.ptr != nullptr)
 		return PRIORITY_NONE;
 
 	// check the waypoints validity
@@ -872,7 +872,7 @@ int assess_JobAttackBreakable(const bot_t* pBot, const job_struct& r_job)
 {
 	// recommend the job be removed if it is invalid
 	if (FNullEnt(r_job.object) || r_job.object->v.flags & FL_KILLME || r_job.object->v.health < 0 ||
-		pBot->enemy.ptr != NULL || r_job.f_bufferedTime < pBot->f_killed_time || pBot->ammoStatus <= AMMO_LOW)
+		pBot->enemy.ptr != nullptr || r_job.f_bufferedTime < pBot->f_killed_time || pBot->ammoStatus <= AMMO_LOW)
 		return PRIORITY_NONE;
 
 	// too far away to be concerned with?
@@ -888,7 +888,7 @@ int assess_JobAttackBreakable(const bot_t* pBot, const job_struct& r_job)
 int assess_JobAttackTeleport(const bot_t* pBot, const job_struct& r_job)
 {
 	// recommend the job be removed if it is invalid
-	if (pBot->enemy.ptr != NULL || pBot->ammoStatus < AMMO_UNNEEDED || pBot->bot_has_flag || FNullEnt(r_job.object) ||
+	if (pBot->enemy.ptr != nullptr || pBot->ammoStatus < AMMO_UNNEEDED || pBot->bot_has_flag || FNullEnt(r_job.object) ||
 		!IsAlive(r_job.object) // the dead somehow live on...
 		|| r_job.object->v.flags & FL_KILLME || pBot->pEdict->v.playerclass == TFC_CLASS_CIVILIAN ||
 		pBot->pEdict->v.playerclass == TFC_CLASS_SNIPER || r_job.f_bufferedTime < pBot->f_killed_time)
@@ -975,7 +975,7 @@ int assess_JobInfectedAttack(const bot_t* pBot, const job_struct& r_job)
 int assess_JobBinGrenade(const bot_t* pBot, const job_struct& r_job)
 {
 	// recommend the job be removed if it is invalid
-	if (r_job.phase == 0 && pBot->nadePrimed == FALSE || pBot->enemy.ptr != NULL ||
+	if (r_job.phase == 0 && pBot->nadePrimed == FALSE || pBot->enemy.ptr != nullptr ||
 		r_job.f_bufferedTime < pBot->f_killed_time || r_job.f_bufferedTime + 5.0 < pBot->f_think_time) {
 		return PRIORITY_NONE;
 	}

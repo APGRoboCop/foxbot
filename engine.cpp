@@ -83,10 +83,10 @@ int debug_engine = 0;
 
 bool spawn_check_crash = FALSE;
 int spawn_check_crash_count = 0;
-edict_t* spawn_check_crash_edict = NULL;
+edict_t* spawn_check_crash_edict = nullptr;
 
-void (*botMsgFunction)(void*, int) = NULL;
-void (*botMsgEndFunction)(void*, int) = NULL;
+void (*botMsgFunction)(void*, int) = nullptr;
+void (*botMsgEndFunction)(void*, int) = nullptr;
 int botMsgIndex;
 
 // g_state from bot_clients
@@ -333,7 +333,7 @@ edict_t* pfnFindEntityInSphere(edict_t* pEdictStartSearchAfter, const float* org
 			(*(Vector*)org).x,
 			(*(Vector*)org).y, (*(Vector*)org).z, rad, spawn_check_crash_count);
 
-		if (pEdictStartSearchAfter != NULL)
+		if (pEdictStartSearchAfter != nullptr)
 			if (pEdictStartSearchAfter->v.classname != 0)
 				fprintf(fp, "classname %s\n", STRING(pEdictStartSearchAfter->v.classname));
 		fclose(fp);
@@ -415,16 +415,16 @@ edict_t* pfnCreateEntity_Post(void)
 
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
-		if (fp != NULL) {
+		if (fp != nullptr) {
 			fprintf(fp, "pfnCreateEntity_Post: %p %d\n", static_cast<void*>(pent), pent->v.spawnflags);
 
 			if (pent->v.classname != 0)
 				fprintf(fp, " name=%s\n", STRING(pent->v.classname));
 			if (pent->v.target != 0)
 				fprintf(fp, " target=%s\n", STRING(pent->v.target));
-			if (pent->v.owner != NULL)
+			if (pent->v.owner != nullptr)
 				fprintf(fp, " owner=%p\n", static_cast<void*>(pent->v.owner));
-			if (pent->v.chain != NULL)
+			if (pent->v.chain != nullptr)
 				fprintf(fp, " chain=%p\n", static_cast<void*>(pent->v.chain));
 			fclose(fp);
 		}
@@ -455,15 +455,15 @@ edict_t* pfnCreateEntity(void)
 
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
-		if (fp != NULL) {
+		if (fp != nullptr) {
 			fprintf(fp, "pfnCreateEntity: %p\n", static_cast<void*>(pent));
 			if (pent->v.classname != 0)
 				fprintf(fp, " name=%s\n", STRING(pent->v.classname));
 			if (pent->v.target != 0)
 				fprintf(fp, " target=%s\n", STRING(pent->v.target));
-			if (pent->v.owner != NULL)
+			if (pent->v.owner != nullptr)
 				fprintf(fp, " owner=%p\n", static_cast<void*>(pent->v.owner));
-			if (pent->v.chain != NULL)
+			if (pent->v.chain != nullptr)
 				fprintf(fp, " chain=%p\n", static_cast<void*>(pent->v.chain));
 			fclose(fp);
 		}
@@ -479,29 +479,29 @@ void pfnRemoveEntity(edict_t* e)
 	{
 		if (bot.is_used) {
 			if (bot.lastEnemySentryGun == e)
-				bot.lastEnemySentryGun = NULL;
+				bot.lastEnemySentryGun = nullptr;
 			if (bot.enemy.ptr == e)
-				bot.enemy.ptr = NULL;
+				bot.enemy.ptr = nullptr;
 
 			if (bot.pEdict->v.playerclass == TFC_CLASS_ENGINEER) {
 				if (bot.sentry_edict == e) {
 					bot.has_sentry = FALSE;
-					bot.sentry_edict = NULL;
+					bot.sentry_edict = nullptr;
 					bot.SGRotated = FALSE;
 				}
 
 				if (bot.dispenser_edict == e) {
 					bot.has_dispenser = FALSE;
-					bot.dispenser_edict = NULL;
+					bot.dispenser_edict = nullptr;
 				}
 
 				if (bot.tpEntrance == e) {
-					bot.tpEntrance = NULL;
+					bot.tpEntrance = nullptr;
 					bot.tpEntranceWP = -1;
 				}
 
 				if (bot.tpExit == e) {
-					bot.tpExit = NULL;
+					bot.tpExit = nullptr;
 					bot.tpExitWP = -1;
 				}
 			}
@@ -522,7 +522,7 @@ void pfnRemoveEntity(edict_t* e)
 
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
-		if (fp != NULL) {
+		if (fp != nullptr) {
 			fprintf(fp, "pfnRemoveEntity: %p %d\n", static_cast<void*>(e), e->v.spawnflags);
 			if (e->v.model != 0)
 				fprintf(fp, " model=%s\n", STRING(e->v.model));
@@ -530,9 +530,9 @@ void pfnRemoveEntity(edict_t* e)
 				fprintf(fp, " name=%s\n", STRING(e->v.classname));
 			if (e->v.target != 0)
 				fprintf(fp, " target=%s\n", STRING(e->v.target));
-			if (e->v.owner != NULL)
+			if (e->v.owner != nullptr)
 				fprintf(fp, " owner=%p\n", static_cast<void*>(e->v.owner));
-			if (e->v.chain != NULL)
+			if (e->v.chain != nullptr)
 				fprintf(fp, " chain=%p\n", static_cast<void*>(e->v.chain));
 			fclose(fp);
 		}
@@ -550,7 +550,7 @@ edict_t* pfnCreateNamedEntity_Post(const int className)
 
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
-		if (fp != NULL) {
+		if (fp != nullptr) {
 			fprintf(fp, "pfnCreateNamedEntity: edict=%p name=%s\n", static_cast<void*>(pent), STRING(className));
 			fclose(fp);
 		}
@@ -564,7 +564,7 @@ edict_t* pfnCreateNamedEntity(const int className)
 
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
-		if (fp != NULL) {
+		if (fp != nullptr) {
 			fprintf(fp, "pfnCreateNamedEntity: edict=%p name=%s\n", static_cast<void*>(pent), STRING(className));
 			fclose(fp);
 		}
@@ -630,7 +630,7 @@ void pfnSetOrigin(edict_t* e, const float* rgflOrigin)
 				const edict_t* teleExit =
 					BotEntityAtPoint("building_teleporter", bot.pEdict->v.origin, 90.0);
 
-				if (teleExit == NULL) {
+				if (teleExit == nullptr) {
 					//	UTIL_BotLogPrintf("%s Non-teleport translocation, time %f\n",
 					//		bots[bot_index].name, gpGlobals->time);
 
@@ -654,7 +654,7 @@ void pfnSetOrigin(edict_t* e, const float* rgflOrigin)
 
 		for (auto& bot : bots)
 		{
-			if (bot.sentry_edict != NULL && bot.has_sentry) {
+			if (bot.sentry_edict != nullptr && bot.has_sentry) {
 				edict_t* pent = e;
 				int l = static_cast<int>(bot.sentry_edict->v.origin.z - (*(Vector*)rgflOrigin).z);
 				if (l < 0)
@@ -892,7 +892,7 @@ void pfnClientCommand(edict_t* pEdict, char* szFmt, ...)
 	va_start(argp, szFmt);
 	vsprintf(tempFmt, szFmt, argp);
 
-	if (pEdict != NULL) {
+	if (pEdict != nullptr) {
 		// if(!((pEdict->v.flags & FL_FAKECLIENT)==FL_FAKECLIENT))
 		bool b = FALSE;
 		if (!((pEdict->v.flags & FL_FAKECLIENT) == FL_FAKECLIENT)) {
@@ -917,7 +917,7 @@ void pfnClientCommand(edict_t* pEdict, char* szFmt, ...)
 			char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEdict);
 			strncpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"), 120);
 			//{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"cl %d name %s\n",i,cl_name); fclose(fp); }
-			if (cl_name[0] == '\0' || infobuffer == NULL)
+			if (cl_name[0] == '\0' || infobuffer == nullptr)
 				b = FALSE;
 			//	unsigned int u=GETPLAYERWONID(pEdict);
 			//	if((u==0 || ENTINDEX(pEdict)==-1))
@@ -952,7 +952,7 @@ void pfnClCom(edict_t* pEdict, char* szFmt, ...)
 		fclose(fp);
 	}
 	_snprintf(sz_error_check, 250, "-pfnClientCom=%s %p\n", szFmt, static_cast<void*>(pEdict));
-	if (pEdict != NULL) {
+	if (pEdict != nullptr) {
 		bool b = FALSE;
 
 		if (!((pEdict->v.flags & FL_FAKECLIENT) == FL_FAKECLIENT)) {
@@ -974,7 +974,7 @@ void pfnClCom(edict_t* pEdict, char* szFmt, ...)
 			char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEdict);
 			strncpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"), 120);
 			//{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"cl %d name %s\n",i,cl_name); fclose(fp); }
-			if (cl_name[0] == '\0' || infobuffer == NULL)
+			if (cl_name[0] == '\0' || infobuffer == nullptr)
 				b = FALSE;
 			// unsigned int u=GETPLAYERWONID(pEdict);
 			// if((u==0 || ENTINDEX(pEdict)==-1))
@@ -1067,8 +1067,8 @@ void pfnMessageBegin(const int msg_dest, const int msg_type, const float* pOrigi
 			// is this message for a bot?
 			if (index != -1) {
 				g_state = 0;              // reset global message state..where we at!
-				botMsgFunction = NULL;    // no msg function until known otherwise
-				botMsgEndFunction = NULL; // no msg end function until known otherwise
+				botMsgFunction = nullptr;    // no msg function until known otherwise
+				botMsgEndFunction = nullptr; // no msg end function until known otherwise
 				botMsgIndex = index;      // index of bot receiving message
 
 				if (mod_id == TFC_DLL) {
@@ -1195,8 +1195,8 @@ void pfnMessageBegin(const int msg_dest, const int msg_type, const float* pOrigi
 			else {
 				// (index == -1)
 				g_state = 0;              // reset global message state..where we at!
-				botMsgFunction = NULL;    // no msg function until known otherwise
-				botMsgEndFunction = NULL; // no msg end function until known otherwise
+				botMsgFunction = nullptr;    // no msg function until known otherwise
+				botMsgEndFunction = nullptr; // no msg end function until known otherwise
 				botMsgIndex = index;      // index of bot receiving message
 				if (mod_id == TFC_DLL) {
 					if (msg_type == message_TextMsg || msg_type == message_StatusText)
@@ -1205,7 +1205,7 @@ void pfnMessageBegin(const int msg_dest, const int msg_type, const float* pOrigi
 			}
 		}
 		else if (msg_dest == MSG_ALL) {
-			botMsgFunction = NULL; // no msg function until known otherwise
+			botMsgFunction = nullptr; // no msg function until known otherwise
 			botMsgIndex = -1;      // index of bot receiving message (none)
 
 			if (mod_id == TFC_DLL) {
@@ -1263,11 +1263,11 @@ void pfnMessageEnd(void)
 		}
 
 		if (botMsgEndFunction)
-			(*botMsgEndFunction)(NULL, botMsgIndex); // NULL indicated msg end
+			(*botMsgEndFunction)(nullptr, botMsgIndex); // NULL indicated msg end
 
 		// clear out the bot message function pointers...
-		botMsgFunction = NULL;
-		botMsgEndFunction = NULL;
+		botMsgFunction = nullptr;
+		botMsgEndFunction = nullptr;
 	}
 
 	if (mr_meta && MM_func) {
@@ -1595,7 +1595,7 @@ const char* pfnCVarGetString(const char* szVarName)
 		fclose(fp);
 	}
 	if (mr_meta)
-		RETURN_META_VALUE(MRES_HANDLED, 0);
+		RETURN_META_VALUE(MRES_HANDLED, nullptr);
 	return (*g_engfuncs.pfnCVarGetString)(szVarName);
 }
 
@@ -1956,7 +1956,7 @@ void pfnClientPrintf(edict_t* pEdict, const PRINT_TYPE ptype, const char* szMsg)
 	_snprintf(sz_error_check, 250, "CPf: %p %s\n", static_cast<void*>(pEdict), szMsg);
 
 	// only send message if its not a bot...
-	if (pEdict != NULL) {
+	if (pEdict != nullptr) {
 		bool b = FALSE;
 		if (!(pEdict->v.flags & FL_FAKECLIENT)) {
 			for (auto& client : clients)
@@ -1985,7 +1985,7 @@ void pfnClientPrintf(edict_t* pEdict, const PRINT_TYPE ptype, const char* szMsg)
 			strncat(cl_name, "-\n", 127 - strlen(cl_name));
 
 			//{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"cl %d name %s\n",i,cl_name); fclose(fp); }
-			if (infobuffer == NULL)
+			if (infobuffer == nullptr)
 				b = FALSE;
 			//	unsigned int u=GETPLAYERWONID(pEdict);
 			//	if((u==0 || ENTINDEX(pEdict)==-1))
@@ -2035,7 +2035,7 @@ void pfnClPrintf(edict_t* pEdict, PRINT_TYPE ptype, const char* szMsg)
 	_snprintf(sz_error_check, 250, "pfnClPrintf: %p %s\n", static_cast<void*>(pEdict), szMsg);
 
 	// only send message if its not a bot...
-	if (pEdict != NULL) {
+	if (pEdict != nullptr) {
 		bool b = FALSE;
 		if (!((pEdict->v.flags & FL_FAKECLIENT) == FL_FAKECLIENT)) {
 			for (auto& client : clients)
@@ -2058,7 +2058,7 @@ void pfnClPrintf(edict_t* pEdict, PRINT_TYPE ptype, const char* szMsg)
 			strncpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"), 120);
 			/*{ fp=UTIL_OpenFoxbotLog();
 					fprintf(fp,"cl %d name %s\n",i,cl_name); fclose(fp);}*/
-			if (cl_name[0] == '\0' || infobuffer == NULL)
+			if (cl_name[0] == '\0' || infobuffer == nullptr)
 				b = FALSE;
 			//	unsigned int u=GETPLAYERWONID(pEdict);
 			//	if((u==0 || ENTINDEX(pEdict)==-1))
@@ -2324,7 +2324,7 @@ byte* pfnLoadFileForMe(char* filename, int* pLength)
 		fclose(fp);
 	}
 	if (mr_meta)
-		RETURN_META_VALUE(MRES_HANDLED, 0);
+		RETURN_META_VALUE(MRES_HANDLED, nullptr);
 	return (*g_engfuncs.pfnLoadFileForMe)(filename, pLength);
 }
 
@@ -2596,7 +2596,7 @@ int pfnIsDedicatedServer(void)
 {
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
-		if (fp != NULL) {
+		if (fp != nullptr) {
 			fprintf(fp, "pfnIsDedicatedServer:\n");
 			fclose(fp);
 		}
@@ -2610,7 +2610,7 @@ cvar_t* pfnCVarGetPointer(const char* szVarName)
 {
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
-		if (fp != NULL) {
+		if (fp != nullptr) {
 			fprintf(fp, "pfnCVarGetPointer: %s\n", szVarName);
 			fclose(fp);
 		}
@@ -2625,7 +2625,7 @@ unsigned int pfnGetPlayerWONId(edict_t* e)
 {
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
-		if (fp != NULL) {
+		if (fp != nullptr) {
 			fprintf(fp, "pfnGetPlayerWONId: %p\n", static_cast<void*>(e));
 			fclose(fp);
 		}
@@ -2642,7 +2642,7 @@ void pfnInfo_RemoveKey(char* s, const char* key)
 {
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
-		if (fp != NULL) {
+		if (fp != nullptr) {
 			fprintf(fp, "pfnInfo_RemoveKey:\n");
 			fclose(fp);
 		}
@@ -2656,7 +2656,7 @@ const char* pfnGetPhysicsKeyValue(const edict_t* pClient, const char* key)
 {
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
-		if (fp != NULL) {
+		if (fp != nullptr) {
 			fprintf(fp, "pfnGetPhysicsKeyValue:\n");
 			fclose(fp);
 		}
@@ -2670,7 +2670,7 @@ void pfnSetPhysicsKeyValue(const edict_t* pClient, const char* key, const char* 
 {
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
-		if (fp != NULL) {
+		if (fp != nullptr) {
 			fprintf(fp, "pfnSetPhysicsKeyValue:\n");
 			fclose(fp);
 		}
@@ -2691,7 +2691,7 @@ unsigned short pfnPrecacheEvent(const int type, const char* psz)
 {
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
-		if (fp != NULL) {
+		if (fp != nullptr) {
 			fprintf(fp, "pfnPrecacheEvent:\n");
 			fclose(fp);
 		}
@@ -2716,7 +2716,7 @@ void pfnPlaybackEvent(const int flags,
 {
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
-		if (fp != NULL) {
+		if (fp != nullptr) {
 			fprintf(fp, "pfnPlaybackEvent: %d %p %d %f (%f %f %f) (%f %f %f) %f %f %d %d %d %d\n", flags,
 				(void*)pInvoker, eventindex, delay, (*reinterpret_cast<Vector*>(origin)).x,
 				(*reinterpret_cast<Vector*>(origin)).y, (*reinterpret_cast<Vector*>(origin)).z,
@@ -2815,7 +2815,7 @@ int pfnDeltaFindField(struct delta_s* pFields, const char* fieldname)
 {
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
-		if (fp != NULL) {
+		if (fp != nullptr) {
 			fprintf(fp, "pfnDeltaFindField:\n");
 			fclose(fp);
 		}
@@ -2830,7 +2830,7 @@ void pfnDeltaSetFieldByIndex(struct delta_s* pFields, const int fieldNumber)
 {
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
-		if (fp != NULL) {
+		if (fp != nullptr) {
 			fprintf(fp, "pfnDeltaSetFieldByIndex:\n");
 			fclose(fp);
 		}
@@ -2852,7 +2852,7 @@ void pfnSetGroupMask(const int mask, const int op)
 {
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
-		if (fp != NULL) {
+		if (fp != nullptr) {
 			fprintf(fp, "pfnSetGroupMask:\n");
 			fclose(fp);
 		}
@@ -2866,7 +2866,7 @@ int pfnCreateInstancedBaseline(const int classname, struct entity_state_s* basel
 {
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
-		if (fp != NULL) {
+		if (fp != nullptr) {
 			fprintf(fp, "pfnCreateInstancedBaseline:\n");
 			fclose(fp);
 		}
@@ -2880,7 +2880,7 @@ void pfnCvar_DirectSet(struct cvar_s* var, char* value)
 {
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
-		if (fp != NULL) {
+		if (fp != nullptr) {
 			fprintf(fp, "pfnCvar_DirectSet: %s %s\n", var->name, value);
 			fclose(fp);
 		}
@@ -2894,7 +2894,7 @@ void pfnForceUnmodified(FORCE_TYPE const type, float* mins, float* maxs, const c
 {
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
-		if (fp != NULL) {
+		if (fp != nullptr) {
 			fprintf(fp, "pfnForceUnmodified:\n");
 			fclose(fp);
 		}
@@ -2908,7 +2908,7 @@ void pfnGetPlayerStats(const edict_t* pClient, int* ping, int* packet_loss)
 {
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
-		if (fp != NULL) {
+		if (fp != nullptr) {
 			fprintf(fp, "pfnGetPlayerStats: %p %p %p\n", (void*)pClient, static_cast<void*>(ping),
 				static_cast<void*>(packet_loss));
 			fclose(fp);
@@ -2997,9 +2997,9 @@ enginefuncs_t meta_engfuncs = {
 	pfnMakeVectors,  // pfnMakeVectors()
 	pfnAngleVectors, // pfnAngleVectors()
 
-	NULL,            // pfnCreateEntity()
+	nullptr,            // pfnCreateEntity()
 	pfnRemoveEntity, // pfnRemoveEntity()
-	NULL,            // pfnCreateNamedEntity()
+	nullptr,            // pfnCreateNamedEntity()
 
 	pfnMakeStatic,   // pfnMakeStatic()
 	pfnEntIsOnFloor, // pfnEntIsOnFloor()
@@ -3041,7 +3041,7 @@ enginefuncs_t meta_engfuncs = {
 	WriteString, // pfnWriteString()
 	WriteEntity, // pfnWriteEntity()
 
-	NULL,             // pfnCVarRegister,			// pfnCVarRegister()
+	nullptr,             // pfnCVarRegister,			// pfnCVarRegister()
 	pfnCVarGetFloat,  // pfnCVarGetFloat()
 	pfnCVarGetString, // pfnCVarGetString()
 	pfnCVarSetFloat,  // pfnCVarSetFloat()
@@ -3065,7 +3065,7 @@ enginefuncs_t meta_engfuncs = {
 	pfnFindEntityByVars,   // pfnFindEntityByVars()
 	pfnGetModelPtr,        // pfnGetModelPtr()
 
-	NULL, // pfnRegUserMsg()
+	nullptr, // pfnRegUserMsg()
 
 	pfnAnimationAutomove, // pfnAnimationAutomove()
 	pfnGetBonePosition,   // pfnGetBonePosition()
@@ -3157,8 +3157,8 @@ enginefuncs_t meta_engfuncs = {
 	pfnGetPlayerStats, // pfnGetPlayerStats()
 
 	pfnAddServerCommand, // pfnAddServerCommand()
-	NULL, NULL,
-	NULL, // pfnGetPlayerAuthID,
+	nullptr, nullptr,
+	nullptr, // pfnGetPlayerAuthID,
 };
 
 C_DLLEXPORT int GetEngineFunctions(enginefuncs_t* pengfuncsFromEngine, int* interfaceVersion)
@@ -3179,191 +3179,191 @@ C_DLLEXPORT int GetEngineFunctions(enginefuncs_t* pengfuncsFromEngine, int* inte
 }
 
 enginefuncs_t meta_engfuncs_post = {
-	NULL, // pfnPrecacheModel()
-	NULL, // pfnPrecacheSound()
-	NULL, // pfnSetModel()
-	NULL, // pfnModelIndex()
-	NULL, // pfnModelFrames()
+	nullptr, // pfnPrecacheModel()
+	nullptr, // pfnPrecacheSound()
+	nullptr, // pfnSetModel()
+	nullptr, // pfnModelIndex()
+	nullptr, // pfnModelFrames()
 
-	NULL, // pfnSetSize()
-	NULL, // pfnChangeLevel()
-	NULL, // pfnGetSpawnParms()
-	NULL, // pfnSaveSpawnParms()
+	nullptr, // pfnSetSize()
+	nullptr, // pfnChangeLevel()
+	nullptr, // pfnGetSpawnParms()
+	nullptr, // pfnSaveSpawnParms()
 
-	NULL, // pfnVecToYaw()
-	NULL, // pfnVecToAngles()
-	NULL, // pfnMoveToOrigin()
-	NULL, // pfnChangeYaw()
-	NULL, // pfnChangePitch()
+	nullptr, // pfnVecToYaw()
+	nullptr, // pfnVecToAngles()
+	nullptr, // pfnMoveToOrigin()
+	nullptr, // pfnChangeYaw()
+	nullptr, // pfnChangePitch()
 
-	NULL, // pfnFindEntityByString()
-	NULL, // pfnGetEntityIllum()
-	NULL, // pfnFindEntityInSphere()
-	NULL, // pfnFindClientInPVS()
-	NULL, // pfnEntitiesInPVS()
+	nullptr, // pfnFindEntityByString()
+	nullptr, // pfnGetEntityIllum()
+	nullptr, // pfnFindEntityInSphere()
+	nullptr, // pfnFindClientInPVS()
+	nullptr, // pfnEntitiesInPVS()
 
-	NULL, // pfnMakeVectors()
-	NULL, // pfnAngleVectors()
+	nullptr, // pfnMakeVectors()
+	nullptr, // pfnAngleVectors()
 
 	pfnCreateEntity_Post,      // pfnCreateEntity()
-	NULL,                      // pfnRemoveEntity()
+	nullptr,                      // pfnRemoveEntity()
 	pfnCreateNamedEntity_Post, // pfnCreateNamedEntity()
 
-	NULL, // pfnMakeStatic()
-	NULL, // pfnEntIsOnFloor()
-	NULL, // pfnDropToFloor()
+	nullptr, // pfnMakeStatic()
+	nullptr, // pfnEntIsOnFloor()
+	nullptr, // pfnDropToFloor()
 
-	NULL, // pfnWalkMove()
-	NULL, // pfnSetOrigin()
+	nullptr, // pfnWalkMove()
+	nullptr, // pfnSetOrigin()
 
-	NULL, // pfnEmitSound()
-	NULL, // pfnEmitAmbientSound()
+	nullptr, // pfnEmitSound()
+	nullptr, // pfnEmitAmbientSound()
 
-	NULL, // pfnTraceLine()
-	NULL, // pfnTraceToss()
-	NULL, // pfnTraceMonsterHull()
-	NULL, // pfnTraceHull()
-	NULL, // pfnTraceModel()
-	NULL, // pfnTraceTexture()
-	NULL, // pfnTraceSphere()
-	NULL, // pfnGetAimVector()
+	nullptr, // pfnTraceLine()
+	nullptr, // pfnTraceToss()
+	nullptr, // pfnTraceMonsterHull()
+	nullptr, // pfnTraceHull()
+	nullptr, // pfnTraceModel()
+	nullptr, // pfnTraceTexture()
+	nullptr, // pfnTraceSphere()
+	nullptr, // pfnGetAimVector()
 
-	NULL, // pfnServerCommand()
-	NULL, // pfnServerExecute()
-	NULL, // pfnClientCommand()
+	nullptr, // pfnServerCommand()
+	nullptr, // pfnServerExecute()
+	nullptr, // pfnClientCommand()
 
-	NULL, // pfnParticleEffect()
-	NULL, // pfnLightStyle()
-	NULL, // pfnDecalIndex()
-	NULL, // pfnPointContents()
+	nullptr, // pfnParticleEffect()
+	nullptr, // pfnLightStyle()
+	nullptr, // pfnDecalIndex()
+	nullptr, // pfnPointContents()
 
-	NULL, // pfnMessageBegin()
-	NULL, // pfnMessageEnd()
+	nullptr, // pfnMessageBegin()
+	nullptr, // pfnMessageEnd()
 
-	NULL, // pfnWriteByte()
-	NULL, // pfnWriteChar()
-	NULL, // pfnWriteShort()
-	NULL, // pfnWriteLong()
-	NULL, // pfnWriteAngle()
-	NULL, // pfnWriteCoord()
-	NULL, // pfnWriteString()
-	NULL, // pfnWriteEntity()
+	nullptr, // pfnWriteByte()
+	nullptr, // pfnWriteChar()
+	nullptr, // pfnWriteShort()
+	nullptr, // pfnWriteLong()
+	nullptr, // pfnWriteAngle()
+	nullptr, // pfnWriteCoord()
+	nullptr, // pfnWriteString()
+	nullptr, // pfnWriteEntity()
 
-	NULL, // pfnCVarRegister()
-	NULL, // pfnCVarGetFloat()
-	NULL, // pfnCVarGetString()
-	NULL, // pfnCVarSetFloat()
-	NULL, // pfnCVarSetString()
+	nullptr, // pfnCVarRegister()
+	nullptr, // pfnCVarGetFloat()
+	nullptr, // pfnCVarGetString()
+	nullptr, // pfnCVarSetFloat()
+	nullptr, // pfnCVarSetString()
 
-	NULL, // pfnAlertMessage()
-	NULL, // pfnEngineFprintf()
+	nullptr, // pfnAlertMessage()
+	nullptr, // pfnEngineFprintf()
 
-	NULL, // pfnPvAllocEntPrivateData()
-	NULL, // pfnPvEntPrivateData()
-	NULL, // pfnFreeEntPrivateData()
+	nullptr, // pfnPvAllocEntPrivateData()
+	nullptr, // pfnPvEntPrivateData()
+	nullptr, // pfnFreeEntPrivateData()
 
-	NULL, // pfnSzFromIndex()
-	NULL, // pfnAllocString()
+	nullptr, // pfnSzFromIndex()
+	nullptr, // pfnAllocString()
 
-	NULL, // pfnGetVarsOfEnt()
-	NULL, // pfnPEntityOfEntOffset()
-	NULL, // pfnEntOffsetOfPEntity()
-	NULL, // pfnIndexOfEdict()
-	NULL, // pfnPEntityOfEntIndex()
-	NULL, // pfnFindEntityByVars()
-	NULL, // pfnGetModelPtr()
+	nullptr, // pfnGetVarsOfEnt()
+	nullptr, // pfnPEntityOfEntOffset()
+	nullptr, // pfnEntOffsetOfPEntity()
+	nullptr, // pfnIndexOfEdict()
+	nullptr, // pfnPEntityOfEntIndex()
+	nullptr, // pfnFindEntityByVars()
+	nullptr, // pfnGetModelPtr()
 
 	pfnRegUserMsg, // pfnRegUserMsg()
 
-	NULL, // pfnAnimationAutomove()
-	NULL, // pfnGetBonePosition()
+	nullptr, // pfnAnimationAutomove()
+	nullptr, // pfnGetBonePosition()
 
-	NULL, // pfnFunctionFromName()
-	NULL, // pfnNameForFunction()
+	nullptr, // pfnFunctionFromName()
+	nullptr, // pfnNameForFunction()
 
-	NULL, // pfnClientPrintf()			//! JOHN: engine callbacks so game DLL can print messages to individual
+	nullptr, // pfnClientPrintf()			//! JOHN: engine callbacks so game DLL can print messages to individual
 		  // clients
-	NULL, // pfnServerPrint()
+	nullptr, // pfnServerPrint()
 
-	NULL, // pfnCmd_Args()	//! these 3 added
-	NULL, // pfnCmd_Argv()	//! so game DLL can easily
-	NULL, // pfnCmd_Argc()	//! access client 'cmd' strings
+	nullptr, // pfnCmd_Args()	//! these 3 added
+	nullptr, // pfnCmd_Argv()	//! so game DLL can easily
+	nullptr, // pfnCmd_Argc()	//! access client 'cmd' strings
 
-	NULL, // pfnGetAttachment()
+	nullptr, // pfnGetAttachment()
 
-	NULL, // pfnCRC32_Init()
-	NULL, // pfnCRC32_ProcessBuffer()
-	NULL, // pfnCRC32_ProcessByte()
-	NULL, // pfnCRC32_Final()
+	nullptr, // pfnCRC32_Init()
+	nullptr, // pfnCRC32_ProcessBuffer()
+	nullptr, // pfnCRC32_ProcessByte()
+	nullptr, // pfnCRC32_Final()
 
-	NULL, // pfnRandomLong()
-	NULL, // pfnRandomFloat()
+	nullptr, // pfnRandomLong()
+	nullptr, // pfnRandomFloat()
 
-	NULL, // pfnSetView()
-	NULL, // pfnTime()
-	NULL, // pfnCrosshairAngle()
+	nullptr, // pfnSetView()
+	nullptr, // pfnTime()
+	nullptr, // pfnCrosshairAngle()
 
-	NULL, // pfnLoadFileForMe()
-	NULL, // pfnFreeFile()
+	nullptr, // pfnLoadFileForMe()
+	nullptr, // pfnFreeFile()
 
-	NULL, // pfnEndSection()				//! trigger_endsection
-	NULL, // pfnCompareFileTime()
-	NULL, // pfnGetGameDir()
-	NULL, // pfnCvar_RegisterVariable()
-	NULL, // pfnFadeClientVolume()
-	NULL, // pfnSetClientMaxspeed()
-	NULL, // pfnCreateFakeClient()                //! returns NULL if fake client can't be created
-	NULL, // pfnRunPlayerMove()
-	NULL, // pfnNumberOfEntities()
+	nullptr, // pfnEndSection()				//! trigger_endsection
+	nullptr, // pfnCompareFileTime()
+	nullptr, // pfnGetGameDir()
+	nullptr, // pfnCvar_RegisterVariable()
+	nullptr, // pfnFadeClientVolume()
+	nullptr, // pfnSetClientMaxspeed()
+	nullptr, // pfnCreateFakeClient()                //! returns NULL if fake client can't be created
+	nullptr, // pfnRunPlayerMove()
+	nullptr, // pfnNumberOfEntities()
 
-	NULL, // pfnGetInfoKeyBuffer()		//! passing in NULL gets the serverinfo
-	NULL, // pfnInfoKeyValue()
-	NULL, // pfnSetKeyValue()
-	NULL, // pfnSetClientKeyValue()
+	nullptr, // pfnGetInfoKeyBuffer()		//! passing in NULL gets the serverinfo
+	nullptr, // pfnInfoKeyValue()
+	nullptr, // pfnSetKeyValue()
+	nullptr, // pfnSetClientKeyValue()
 
-	NULL, // pfnIsMapValid()
-	NULL, // pfnStaticDecal()
-	NULL, // pfnPrecacheGeneric()
-	NULL, // pfnGetPlayerUserId()			//! returns the server assigned userid for this player.
-	NULL, // pfnBuildSoundMsg()
-	NULL, // pfnIsDedicatedServer()		//! is this a dedicated server?
-	NULL, // pfnCVarGetPointer()
-	NULL, // pfnGetPlayerWONId()			//! returns the server assigned WONid for this player.
+	nullptr, // pfnIsMapValid()
+	nullptr, // pfnStaticDecal()
+	nullptr, // pfnPrecacheGeneric()
+	nullptr, // pfnGetPlayerUserId()			//! returns the server assigned userid for this player.
+	nullptr, // pfnBuildSoundMsg()
+	nullptr, // pfnIsDedicatedServer()		//! is this a dedicated server?
+	nullptr, // pfnCVarGetPointer()
+	nullptr, // pfnGetPlayerWONId()			//! returns the server assigned WONid for this player.
 
 	//! YWB 8/1/99 TFF Physics additions
-	NULL, // pfnInfo_RemoveKey()
-	NULL, // pfnGetPhysicsKeyValue()
-	NULL, // pfnSetPhysicsKeyValue()
-	NULL, // pfnGetPhysicsInfoString()
-	NULL, // pfnPrecacheEvent()
-	NULL, // pfnPlaybackEvent()
+	nullptr, // pfnInfo_RemoveKey()
+	nullptr, // pfnGetPhysicsKeyValue()
+	nullptr, // pfnSetPhysicsKeyValue()
+	nullptr, // pfnGetPhysicsInfoString()
+	nullptr, // pfnPrecacheEvent()
+	nullptr, // pfnPlaybackEvent()
 
-	NULL, // pfnSetFatPVS()
-	NULL, // pfnSetFatPAS()
+	nullptr, // pfnSetFatPVS()
+	nullptr, // pfnSetFatPAS()
 
-	NULL, // pfnCheckVisibility()
+	nullptr, // pfnCheckVisibility()
 
-	NULL, // pfnDeltaSetField()
-	NULL, // pfnDeltaUnsetField()
-	NULL, // pfnDeltaAddEncoder()
-	NULL, // pfnGetCurrentPlayer()
-	NULL, // pfnCanSkipPlayer()
-	NULL, // pfnDeltaFindField()
-	NULL, // pfnDeltaSetFieldByIndex()
-	NULL, // pfnDeltaUnsetFieldByIndex()
+	nullptr, // pfnDeltaSetField()
+	nullptr, // pfnDeltaUnsetField()
+	nullptr, // pfnDeltaAddEncoder()
+	nullptr, // pfnGetCurrentPlayer()
+	nullptr, // pfnCanSkipPlayer()
+	nullptr, // pfnDeltaFindField()
+	nullptr, // pfnDeltaSetFieldByIndex()
+	nullptr, // pfnDeltaUnsetFieldByIndex()
 
-	NULL, // pfnSetGroupMask()
+	nullptr, // pfnSetGroupMask()
 
-	NULL, // pfnCreateInstancedBaseline()		// d'oh, CreateInstancedBaseline in dllapi too
-	NULL, // pfnCvar_DirectSet()
+	nullptr, // pfnCreateInstancedBaseline()		// d'oh, CreateInstancedBaseline in dllapi too
+	nullptr, // pfnCvar_DirectSet()
 
-	NULL, // pfnForceUnmodified()
+	nullptr, // pfnForceUnmodified()
 
-	NULL, // pfnGetPlayerStats()
+	nullptr, // pfnGetPlayerStats()
 
-	NULL, // pfnAddServerCommand()
+	nullptr, // pfnAddServerCommand()
 
-	NULL, NULL, NULL,
+	nullptr, nullptr, nullptr,
 };
 
 int GetEngineFunctions_Post(enginefuncs_t* pengfuncsFromEngine, int* interfaceVersion)

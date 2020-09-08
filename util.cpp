@@ -56,7 +56,7 @@ int gmsgTextMsg = 0;
 int gmsgSayText = 0;
 int gmsgShowMenu = 0;
 
-static unsigned long lseed = static_cast<long>(time(0));
+static unsigned long lseed = static_cast<long>(time(nullptr));
 
 // FUNCTION PROTOTYPES
 static void UTIL_FindFoxbotPath(void);
@@ -195,7 +195,7 @@ edict_t* UTIL_FindEntityInSphere(edict_t* pentStart, const Vector& vecCenter, co
 	if (!FNullEnt(pentEntity))
 		return pentEntity;
 
-	return NULL;
+	return nullptr;
 }
 
 edict_t* UTIL_FindEntityByString(edict_t* pentStart, const char* szKeyword, const char* szValue)
@@ -204,7 +204,7 @@ edict_t* UTIL_FindEntityByString(edict_t* pentStart, const char* szKeyword, cons
 
 	if (!FNullEnt(pentEntity))
 		return pentEntity;
-	return NULL;
+	return nullptr;
 }
 
 edict_t* UTIL_FindEntityByClassname(edict_t* pentStart, const char* szName)
@@ -237,7 +237,7 @@ void HUDNotify(edict_t* pEntity, const char* msg_name)
 	if (gmsgHUDNotify == 0)
 		gmsgHUDNotify = REG_USER_MSG("HudText", -1);
 
-	MESSAGE_BEGIN(MSG_ONE, gmsgHUDNotify, NULL, pEntity);
+	MESSAGE_BEGIN(MSG_ONE, gmsgHUDNotify, nullptr, pEntity);
 	WRITE_STRING(msg_name);
 	MESSAGE_END();
 }
@@ -247,7 +247,7 @@ void ClientPrint(edict_t* pEntity, const int msg_dest, const char* msg_name)
 	if (gmsgTextMsg == 0)
 		gmsgTextMsg = REG_USER_MSG("TextMsg", -1);
 
-	MESSAGE_BEGIN(MSG_ONE, gmsgTextMsg, NULL, pEntity);
+	MESSAGE_BEGIN(MSG_ONE, gmsgTextMsg, nullptr, pEntity);
 
 	WRITE_BYTE(msg_dest);
 	WRITE_STRING(msg_name);
@@ -259,7 +259,7 @@ void UTIL_SayText(const char* pText, edict_t* pEdict)
 	if (gmsgSayText == 0)
 		gmsgSayText = REG_USER_MSG("SayText", -1);
 
-	MESSAGE_BEGIN(MSG_ONE, gmsgSayText, NULL, pEdict);
+	MESSAGE_BEGIN(MSG_ONE, gmsgSayText, nullptr, pEdict);
 	WRITE_BYTE(ENTINDEX(pEdict));
 	// if(mod_id == FRONTLINE_DLL)
 	//    WRITE_SHORT(0);
@@ -272,15 +272,15 @@ void UTIL_HostSay(edict_t* pEntity, const int teamonly, char* message)
 	char* pc;
 
 	// make sure the text has content
-	for (pc = message; pc != NULL && *pc != 0; pc++) {
+	for (pc = message; pc != nullptr && *pc != 0; pc++) {
 		if (isprint(*pc) && !isspace(*pc)) {
 			// we've found an alphanumeric character, so text is valid
-			pc = NULL;
+			pc = nullptr;
 			break;
 		}
 	}
 
-	if (pc != NULL)
+	if (pc != nullptr)
 		return; // no character found, so say nothing
 
 	char text[128];
@@ -303,15 +303,15 @@ void UTIL_HostSay(edict_t* pEntity, const int teamonly, char* message)
 
 	const int sender_team = UTIL_GetTeam(pEntity);
 
-	edict_t* client = NULL;
-	while ((client = UTIL_FindEntityByClassname(client, "player")) != NULL && !FNullEnt(client)) {
+	edict_t* client = nullptr;
+	while ((client = UTIL_FindEntityByClassname(client, "player")) != nullptr && !FNullEnt(client)) {
 		if (client == pEntity) // skip sender of message
 			continue;
 
 		if (teamonly && sender_team != UTIL_GetTeam(client))
 			continue;
 
-		MESSAGE_BEGIN(MSG_ONE, gmsgSayText, NULL, client);
+		MESSAGE_BEGIN(MSG_ONE, gmsgSayText, nullptr, client);
 		WRITE_BYTE(ENTINDEX(pEntity));
 		// if(mod_id == FRONTLINE_DLL)
 		//    WRITE_SHORT(0);
@@ -320,7 +320,7 @@ void UTIL_HostSay(edict_t* pEntity, const int teamonly, char* message)
 	}
 
 	// print to the sending client
-	MESSAGE_BEGIN(MSG_ONE, gmsgSayText, NULL, pEntity);
+	MESSAGE_BEGIN(MSG_ONE, gmsgSayText, nullptr, pEntity);
 	WRITE_BYTE(ENTINDEX(pEntity));
 	// if(mod_id == FRONTLINE_DLL)
 	//    WRITE_SHORT(0);
@@ -497,7 +497,7 @@ bot_t* UTIL_GetBotPointer(edict_t* pEdict)
 			return &bot;
 	}
 
-	return NULL; // return NULL if edict is not a bot
+	return nullptr; // return NULL if edict is not a bot
 }
 
 bool IsAlive(edict_t* pEdict)
@@ -613,7 +613,7 @@ Vector GetGunPosition(const edict_t* pEdict)
 void UTIL_SelectItem(edict_t* pEdict, char* item_name)
 {
 	// UTIL_HostSay(pEdict, 0, item_name);
-	FakeClientCommand(pEdict, item_name, NULL, NULL);
+	FakeClientCommand(pEdict, item_name, nullptr, nullptr);
 }
 
 // Some entities have a Vector of (0, 0, 0), so you need this function.
@@ -654,7 +654,7 @@ void UTIL_ShowMenu(edict_t* pEdict, const int slots, const int displaytime, cons
 	if (gmsgShowMenu == 0)
 		gmsgShowMenu = REG_USER_MSG("ShowMenu", -1);
 
-	MESSAGE_BEGIN(MSG_ONE, gmsgShowMenu, NULL, pEdict);
+	MESSAGE_BEGIN(MSG_ONE, gmsgShowMenu, nullptr, pEdict);
 
 	WRITE_SHORT(slots);
 	WRITE_CHAR(displaytime);
@@ -683,7 +683,7 @@ FILE* UTIL_OpenFoxbotLog(void)
 	{
 		// rename the last log as old if it exists
 		file_ptr = fopen(foxbot_logname, "r");
-		if (file_ptr != NULL) {
+		if (file_ptr != nullptr) {
 			fclose(file_ptr);
 
 			char old_logname[160];
@@ -698,7 +698,7 @@ FILE* UTIL_OpenFoxbotLog(void)
 		file_ptr = fopen(foxbot_logname, "w");
 
 		// warn the player if the log file couldn't be created
-		if (file_ptr == NULL) {
+		if (file_ptr == nullptr) {
 			if (IS_DEDICATED_SERVER())
 				printf("\nWARNING: Couldn't create log file: foxbot.log\n");
 			else
@@ -716,7 +716,7 @@ FILE* UTIL_OpenFoxbotLog(void)
 void UTIL_BotLogPrintf(char* fmt, ...)
 {
 	FILE* lfp = UTIL_OpenFoxbotLog();
-	if (lfp == NULL)
+	if (lfp == nullptr)
 		return;
 
 	va_list argptr;
@@ -786,7 +786,7 @@ static void UTIL_FindFoxbotPath(void)
 	if (strcmp(foxbot_path, "") == 0) {
 		// try the addons directory first(for Foxbot 0.76 and newer)
 		FILE* fptr = fopen(R"(tfc\addons\foxbot\tfc\foxbot.cfg)", "r");
-		if (fptr != NULL) {
+		if (fptr != nullptr) {
 			strcpy(foxbot_path, R"(tfc\addons\foxbot\tfc\)");
 			strcpy(foxbot_logname, R"(tfc\addons\foxbot\foxbot.log)");
 			fclose(fptr);
@@ -794,7 +794,7 @@ static void UTIL_FindFoxbotPath(void)
 		else // try the older directory location(Foxbot 0.75 and older)
 		{
 			fptr = fopen("foxbot\\tfc\\foxbot.cfg", "r");
-			if (fptr != NULL) {
+			if (fptr != nullptr) {
 				strcpy(foxbot_path, "foxbot\\tfc\\");
 				strcpy(foxbot_logname, "foxbot\\foxbot.log");
 				fclose(fptr);
@@ -844,7 +844,7 @@ bool UTIL_ReadFileLine(char* string, const unsigned int max_length, FILE* file_p
 {
 	bool line_end_found = FALSE;
 
-	if (fgets(string, max_length, file_ptr) == NULL)
+	if (fgets(string, max_length, file_ptr) == nullptr)
 		return FALSE;
 
 	// check if the string read contains a line terminator of some sort

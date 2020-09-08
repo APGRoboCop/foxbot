@@ -93,14 +93,14 @@ inline void SET_SERVERINFO(char* key, char* value)
 // Get a "localinfo" value.
 inline char* LOCALINFO(char* key)
 {
-	edict_t* server = NULL;
+	edict_t* server = nullptr;
 	return ENTITY_KEYVALUE(server, key);
 }
 
 // Set a "localinfo" value.
 inline void SET_LOCALINFO(char* key, char* value)
 {
-	edict_t* server = NULL;
+	edict_t* server = nullptr;
 	char* ifbuf = GET_INFOKEYBUFFER(server);
 	SET_SERVER_KEYVALUE(ifbuf, key, value);
 }

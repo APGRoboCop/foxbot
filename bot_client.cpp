@@ -573,7 +573,7 @@ void BotClient_Valve_Damage(void* p, const int bot_index)
 				//	&& bots[bot_index].pEdict->v.waterlevel == WL_HEAD_IN_WATER
 				&& bots[bot_index].bot_skill < 3) {
 				job_struct* newJob = InitialiseNewJob(&bots[bot_index], JOB_DROWN_RECOVER);
-				if (newJob != NULL) {
+				if (newJob != nullptr) {
 					newJob->waypoint = BotDrowningWaypointSearch(&bots[bot_index]);
 					if (newJob->waypoint != -1)
 						SubmitNewJob(&bots[bot_index], JOB_DROWN_RECOVER, newJob);
@@ -675,7 +675,7 @@ void BotClient_Valve_DeathMsg(void* p, int bot_index)
 			else {
 				killer_edict = INDEXENT(killer_index);
 				indexb = UTIL_GetBotIndex(killer_edict);
-				if (indexb != -1 && victim_edict != NULL) {
+				if (indexb != -1 && victim_edict != nullptr) {
 					if (UTIL_GetTeam(killer_edict) != UTIL_GetTeam(victim_edict)) {
 						bots[indexb].killed_edict = victim_edict;
 					}
@@ -687,14 +687,14 @@ void BotClient_Valve_DeathMsg(void* p, int bot_index)
 		if (index != -1) {
 			if (killer_index == 0 || killer_index == victim_index) {
 				// bot killed by world (worldspawn) or bot killed self...
-				bots[index].killer_edict = NULL;
+				bots[index].killer_edict = nullptr;
 			}
 			else {
 				// store edict of player that killed this bot...
 				bots[index].killer_edict = INDEXENT(killer_index);
 				killer_edict = INDEXENT(killer_index);
 				indexb = UTIL_GetBotIndex(killer_edict);
-				if (indexb != -1 && victim_edict != NULL) {
+				if (indexb != -1 && victim_edict != nullptr) {
 					if (UTIL_GetTeam(killer_edict) != UTIL_GetTeam(victim_edict)) {
 						bots[indexb].killed_edict = victim_edict;
 					}
@@ -956,9 +956,9 @@ void BotClient_Engineer_BuildStatus(void* p, const int bot_index)
 				// is this client the builder?
 				if (client && strcmp(STRING(client->v.netname), builder) == 0) {
 					// Get the teleporter ent
-					edict_t* pent = NULL;
+					edict_t* pent = nullptr;
 					while (
-						(pent = FIND_ENTITY_IN_SPHERE(pent, client->v.origin, 200)) != NULL && !FNullEnt(pent)) {
+						(pent = FIND_ENTITY_IN_SPHERE(pent, client->v.origin, 200)) != nullptr && !FNullEnt(pent)) {
 						const float l = (client->v.origin - pent->v.origin).Length2D();
 
 						if (strcmp("building_teleporter", STRING(pent->v.classname)) == 0 && l >= 16.0 && l <= 96.0) {

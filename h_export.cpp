@@ -46,8 +46,8 @@ extern bool mr_meta;
 // extern engine_t Engine;
 
 #ifndef __linux__
-HINSTANCE h_Library = NULL;
-HGLOBAL h_global_argv = NULL;
+HINSTANCE h_Library = nullptr;
+HGLOBAL h_global_argv = nullptr;
 #else
 void* h_Library = NULL;
 char h_global_argv[1024];
@@ -59,9 +59,9 @@ char* g_argv;
 
 // static FILE *fp;
 
-GETENTITYAPI other_GetEntityAPI = NULL;
-GETNEWDLLFUNCTIONS other_GetNewDLLFunctions = NULL;
-GIVEFNPTRSTODLL other_GiveFnptrsToDll = NULL;
+GETENTITYAPI other_GetEntityAPI = nullptr;
+GETNEWDLLFUNCTIONS other_GetNewDLLFunctions = nullptr;
+GIVEFNPTRSTODLL other_GiveFnptrsToDll = nullptr;
 
 extern int mod_id;
 
@@ -112,7 +112,7 @@ void WINAPI GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t* pG
 	(*g_engfuncs.pfnGetGameDir)(game_dir);
 
 	int pos = 0;
-	if (strchr(game_dir, '/') != NULL) {
+	if (strchr(game_dir, '/') != nullptr) {
 		pos = strlen(game_dir) - 1;
 		// scan backwards till first directory separator...
 
@@ -158,7 +158,7 @@ void WINAPI GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t* pG
 	#endif
 		}
 	*/
-	if (h_Library == NULL) {
+	if (h_Library == nullptr) {
 		// Directory error or Unsupported MOD!
 
 		ALERT(at_error, "FoXBot - MOD dll not found (or unsupported MOD)!");
@@ -173,7 +173,7 @@ void WINAPI GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t* pG
 	if (!mr_meta) {
 		other_GetEntityAPI = (GETENTITYAPI)GetProcAddress(h_Library, "GetEntityAPI");
 
-		if (other_GetEntityAPI == NULL) {
+		if (other_GetEntityAPI == nullptr) {
 			// Can't find GetEntityAPI!
 
 			ALERT(at_error, "FoXBot - Can't get MOD's GetEntityAPI!");
@@ -190,7 +190,7 @@ void WINAPI GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t* pG
 
 		other_GiveFnptrsToDll = (GIVEFNPTRSTODLL)GetProcAddress(h_Library, "GiveFnptrsToDll");
 
-		if (other_GiveFnptrsToDll == NULL) {
+		if (other_GiveFnptrsToDll == nullptr) {
 			// Can't find GiveFnptrsToDll!
 
 			ALERT(at_error, "FoXBot - Can't get MOD's GiveFnptrsToDll!");
