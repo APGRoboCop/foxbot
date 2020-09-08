@@ -28,7 +28,7 @@
 #ifndef WAYPOINT_H
 #define WAYPOINT_H
 
-#include <limits.h>
+#include <climits>
 
 // standard variable sizes, useful for the waypoint code because the waypoint files
 // are saved in binary format

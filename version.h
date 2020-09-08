@@ -37,7 +37,7 @@
    * If not, we provide it here.
    */
 #ifndef VERSION
-#  define VERSION 0.792
+#  define VERSION 0.793
 #endif
 
    /*
@@ -66,7 +66,7 @@ extern char* COMPILE_DATE;
  * Makefile. If not, we can provide it here.
  */
 #ifndef TZONE
-#  define TZONE ""
+#  define TZONE "GMT"
 #endif
 
  /*

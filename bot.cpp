@@ -2637,7 +2637,7 @@ bot_t* BotDefenderAtWaypoint(const bot_t* pBot, const int waypoint, const float 
 {
 	// sanity check
 	if (waypoint < 0)
-		return FALSE;
+		return nullptr;
 
 	for (auto& bot : bots)
 	{
@@ -3794,11 +3794,12 @@ static void BotEnemyCarrierAlert(bot_t* pBot)
 	// Arrange the operator in the proper order [APG]RoboCop[CL]
 	// if there's only one enemy find out if the bot is outgunned
 	if (pBot->visEnemyCount < 2) {
-		if ((pBot->bot_class == TFC_CLASS_SCOUT || pBot->bot_class == TFC_CLASS_SNIPER ||
+		if ((pBot->enemy.ptr->v.playerclass != TFC_CLASS_SOLDIER ||
+			pBot->enemy.ptr->v.playerclass != TFC_CLASS_HWGUY || pBot->enemy.ptr->v.playerclass != TFC_CLASS_PYRO ||
+			pBot->enemy.ptr->v.playerclass != TFC_CLASS_MEDIC) && (pBot->bot_class == TFC_CLASS_SCOUT ||
+			pBot->bot_class	== TFC_CLASS_SNIPER ||
 			pBot->bot_class == TFC_CLASS_DEMOMAN || pBot->bot_class == TFC_CLASS_MEDIC ||
-			pBot->bot_class == TFC_CLASS_SPY || pBot->bot_class == TFC_CLASS_ENGINEER) && (pBot->enemy.ptr->v.playerclass != TFC_CLASS_SOLDIER ||
-				pBot->enemy.ptr->v.playerclass != TFC_CLASS_HWGUY || pBot->enemy.ptr->v.playerclass != TFC_CLASS_PYRO ||
-				pBot->enemy.ptr->v.playerclass != TFC_CLASS_MEDIC)) {
+			pBot->bot_class == TFC_CLASS_SPY || pBot->bot_class == TFC_CLASS_ENGINEER)) {
 			return;
 		}
 	}

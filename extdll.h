@@ -44,16 +44,16 @@
 #include <windows.h>
 
 // Misc C-runtime library headers
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
+#include <stdio>
+#include <stdlib>
+#include <math>
 
 #else
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <string.h>
+#include <cstring>
 #include <ctype.h>
 #include <limits.h>
 

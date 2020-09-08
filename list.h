@@ -73,7 +73,7 @@ public:
 	// isEmpty : test if list is empty
 	bool isEmpty()
 	{
-		return (head == NULL);
+		return (head == nullptr);
 	}
 
 	// add : insert a new node to the beginning / end
@@ -105,7 +105,7 @@ template <typename Type> void List<Type>::addHead(const Type& v)
 
 	// attach to the head, and update the head ptr.
 	n->next = head;
-	if (head != NULL)
+	if (head != nullptr)
 		head->prev = n;
 	head = n;
 
@@ -113,7 +113,7 @@ template <typename Type> void List<Type>::addHead(const Type& v)
 
 	// special case : set tail pointer to n if node is only one
 	//                in the list.
-	if (tail == NULL)
+	if (tail == nullptr)
 		tail = n;
 }
 
@@ -130,7 +130,7 @@ template <typename Type> void List<Type>::addTail(const Type& v)
 
 	// attach to the end of tail (if there is one)
 	// and update the tail ptr.
-	if (tail != NULL)
+	if (tail != nullptr)
 		tail->next = n;
 	n->prev = tail;
 	tail = n;
@@ -139,7 +139,7 @@ template <typename Type> void List<Type>::addTail(const Type& v)
 
 	// special case : set head pointer to n if node is only one
 	//                in the list.
-	if (head == NULL)
+	if (head == nullptr)
 		head = n;
 }
 
@@ -206,7 +206,7 @@ public:
 	//       through all of the nodes
 	bool end()
 	{
-		return (currentNode == NULL);
+		return (currentNode == nullptr);
 	}
 
 	// ++operator : increment the current node.
@@ -214,7 +214,7 @@ public:
 	// Note : prefix use only (++iter).  Postfix not supported.
 	LIter<Type>& operator++()
 	{
-		if (currentNode != NULL)
+		if (currentNode != nullptr)
 			currentNode = currentNode->next;
 		return *this;
 	}
@@ -224,7 +224,7 @@ public:
 	// Note : prefix use only (--iter).  Postfix not supported.
 	LIter<Type>& operator--()
 	{
-		if (currentNode != NULL)
+		if (currentNode != nullptr)
 			currentNode = currentNode->prev;
 		return *this;
 	}
@@ -233,8 +233,8 @@ public:
 	//
 	Type* current()
 	{
-		if (currentNode == NULL)
-			return NULL;
+		if (currentNode == nullptr)
+			return nullptr;
 		return &(currentNode->element);
 	}
 };
@@ -250,7 +250,7 @@ template <typename Type> void List<Type>::insert(const Type& v, LIter<Type>& loc
 	Node* nextNode = loc.currentNode;
 	// inserting on a NULL location (beyond ends of the list)
 	// is invalid, simply return -> addHead or addTail should be called.
-	if (nextNode == NULL)
+	if (nextNode == nullptr)
 		return;
 
 	// create the new node and fill it.
@@ -263,7 +263,7 @@ template <typename Type> void List<Type>::insert(const Type& v, LIter<Type>& loc
 
 	// attach the new node into the list.
 	// connections between prevNode and newNode
-	if (prevNode != NULL)
+	if (prevNode != nullptr)
 		prevNode->next = newNode;
 	newNode->prev = prevNode;
 	// connections between newNode and nextNode
@@ -274,7 +274,7 @@ template <typename Type> void List<Type>::insert(const Type& v, LIter<Type>& loc
 
 	// special case : handle adding to the beginning of the
 	//                list.  If prevNode is NULL, newNode is the head.
-	if (prevNode == NULL)
+	if (prevNode == nullptr)
 		head = newNode;
 
 	// fix the iterator to make it point to the new location
@@ -297,9 +297,9 @@ template <typename Type> void List<Type>::remove(LIter<Type>& loc)
 	// be nodes to the right and left.
 	Node* leftNode = deletedNode->prev;
 	Node* rightNode = deletedNode->next;
-	if (leftNode != NULL)
+	if (leftNode != nullptr)
 		leftNode->next = rightNode;
-	if (rightNode != NULL)
+	if (rightNode != nullptr)
 		rightNode->prev = leftNode;
 
 	// special cases : we are possibly deleting

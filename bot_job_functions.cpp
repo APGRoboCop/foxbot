@@ -84,7 +84,7 @@ int JobSeekWaypoint(bot_t* pBot)
 	job_struct* job_ptr = &pBot->job[pBot->currentJob];
 
 	// never ignore enemies even though the bot is lost somewhere
-	if (pBot->enemy.ptr != NULL) {
+	if (pBot->enemy.ptr != nullptr) {
 		BotSetFacing(pBot, pBot->enemy.ptr->v.origin);
 		BotNavigateWaypointless(pBot);
 		return JOB_UNDERWAY;
@@ -287,7 +287,7 @@ int JobChat(bot_t* pBot)
 
 	// phase zero - job initialisation
 	if (job_ptr->phase == 0) {
-		if (pBot->enemy.ptr == NULL) {
+		if (pBot->enemy.ptr == nullptr) {
 			job_ptr->phase = 1;
 
 			// create a delay so the bot can "type"
@@ -322,7 +322,7 @@ int JobReport(bot_t* pBot)
 
 	// phase zero - initialisation
 	if (job_ptr->phase == 0) {
-		if (pBot->enemy.ptr == NULL) {
+		if (pBot->enemy.ptr == nullptr) {
 			job_ptr->phase = 1;
 
 			// create a delay so the bot can "type"
@@ -465,7 +465,7 @@ int JobPickUpFlag(bot_t* pBot)
 	if (job_ptr->phase == 2) {
 		// set up a job for defending the dropped flag
 		job_struct* newJob = InitialiseNewJob(pBot, JOB_DEFEND_FLAG);
-		if (newJob != NULL) {
+		if (newJob != nullptr) {
 			newJob->object = job_ptr->object;
 			newJob->origin = job_ptr->object->v.origin; // remember where it was seen
 			SubmitNewJob(pBot, JOB_DEFEND_FLAG, newJob);
@@ -483,7 +483,7 @@ int JobPickUpFlag(bot_t* pBot)
 			//	UTIL_HostSay(pBot->pEdict, 0, "Found dropped flag"); //DebugMessageOfDoom!
 
 			newJob = InitialiseNewJob(pBot, JOB_REPORT);
-			if (newJob != NULL) {
+			if (newJob != nullptr) {
 				const int area = AreaInsideClosest(pBot->pEdict);
 				if (area != -1) {
 					switch (pBot->current_team) {
@@ -638,8 +638,8 @@ int JobUseTeleport(bot_t* pBot)
 
 		// is there some reason to abort?
 		// e.g. took too long, teleport is occupied, or bot is fighting
-		if (pBot->enemy.ptr != NULL || job_ptr->phase_timer < pBot->f_think_time ||
-			BotAllyAtVector(pBot, TeleportCenter, 70.0, FALSE) != NULL) {
+		if (pBot->enemy.ptr != nullptr || job_ptr->phase_timer < pBot->f_think_time ||
+			BotAllyAtVector(pBot, TeleportCenter, 70.0, FALSE) != nullptr) {
 			BlacklistJob(pBot, JOB_USE_TELEPORT, 6.0);
 			return JOB_TERMINATED;
 		}
@@ -734,7 +734,7 @@ int JobUseTeleport(bot_t* pBot)
 		const edict_t* teleExit = BotEntityAtPoint("building_teleporter", pBot->pEdict->v.origin, 90.0);
 
 		// look for a waypoint near the exit
-		if (teleExit != NULL) {
+		if (teleExit != nullptr) {
 			pBot->current_wp = WaypointFindNearest_E(pBot->pEdict, REACHABLE_RANGE, pBot->current_team);
 
 			// welcome space cadet!
@@ -837,7 +837,7 @@ int JobMaintainObject(bot_t* pBot)
 			BotNavigateWaypointless(pBot);
 			pBot->f_current_wp_deadline = pBot->f_think_time + BOT_WP_DEADLINE;
 
-			if (pBot->enemy.ptr == NULL && pBot->current_weapon.iId != TF_WEAPON_SPANNER)
+			if (pBot->enemy.ptr == nullptr && pBot->current_weapon.iId != TF_WEAPON_SPANNER)
 				UTIL_SelectItem(pBot->pEdict, "tf_weapon_spanner");
 
 			if (VectorsNearerThan(pBot->pEdict->v.origin, job_ptr->object->v.origin, 60.0)) {
@@ -903,7 +903,7 @@ int JobBuildSentry(bot_t* pBot)
 					if (BotInFieldOfView(pBot, v_aim) == 0) {
 						job_ptr->phase = 1;
 						job_ptr->phase_timer = pBot->f_think_time + 0.5;
-						FakeClientCommand(pBot->pEdict, "build", "2", NULL);
+						FakeClientCommand(pBot->pEdict, "build", "2", nullptr);
 					}
 
 					return JOB_UNDERWAY;
@@ -926,13 +926,13 @@ int JobBuildSentry(bot_t* pBot)
 	// phase 1 - walk backwards for a second whilst trying to start the build
 	if (job_ptr->phase == 1) {
 		if (pBot->f_periodicAlertFifth < pBot->f_think_time)
-			FakeClientCommand(pBot->pEdict, "build", "2", NULL);
+			FakeClientCommand(pBot->pEdict, "build", "2", nullptr);
 
 		pBot->f_move_speed = -(pBot->f_max_speed / 2);
 
 		// find the sentry gun being built(if it is) and remember it's location
-		edict_t* pent = NULL;
-		while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "building_sentrygun_base")) != NULL && !FNullEnt(pent)) {
+		edict_t* pent = nullptr;
+		while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "building_sentrygun_base")) != nullptr && !FNullEnt(pent)) {
 			//	UTIL_BotLogPrintf("%s: sentry gun base distance %f\n",
 			//		pBot->name, (pBot->pEdict->v.origin - pent->v.origin).Length());
 
@@ -953,7 +953,7 @@ int JobBuildSentry(bot_t* pBot)
 			BlacklistJob(pBot, JOB_BUILD_SENTRY, random_float(20.0, 40.0));
 
 			// in case bot didn't know it already had a sentry(rare but possible)
-			FakeClientCommand(pBot->pEdict, "detsentry", NULL, NULL);
+			FakeClientCommand(pBot->pEdict, "detsentry", nullptr, nullptr);
 			return JOB_TERMINATED;
 		}
 	}
@@ -963,8 +963,8 @@ int JobBuildSentry(bot_t* pBot)
 		if (job_ptr->phase_timer < pBot->f_think_time) {
 			// find and remember the sentry gun the bot just built
 			bool success = FALSE;
-			edict_t* pent = NULL;
-			while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "building_sentrygun")) != NULL && !FNullEnt(pent)) {
+			edict_t* pent = nullptr;
+			while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "building_sentrygun")) != nullptr && !FNullEnt(pent)) {
 				//	UTIL_BotLogPrintf("%s: sentry gun distance %f\n",
 				//		pBot->name, (job_ptr->origin - pent->v.origin).Length());
 
@@ -980,7 +980,7 @@ int JobBuildSentry(bot_t* pBot)
 					// rotate the sentry if necessary
 					if (waypoints[job_ptr->waypoint].flags & W_FL_TFC_SENTRY_180) {
 						//	UTIL_HostSay(pBot->pEdict, 0, "rotating SG"); //DebugMessageOfDoom!
-						FakeClientCommand(pBot->pEdict, "rotatesentry180", NULL, NULL);
+						FakeClientCommand(pBot->pEdict, "rotatesentry180", nullptr, nullptr);
 						pBot->SGRotated = TRUE;
 					}
 
@@ -1003,7 +1003,7 @@ int JobBuildSentry(bot_t* pBot)
 			const int bot_area = AreaInsideClosest(pBot->pEdict);
 			if (bot_area != -1) {
 				job_struct* newJob = InitialiseNewJob(pBot, JOB_REPORT);
-				if (newJob != NULL) {
+				if (newJob != nullptr) {
 					switch (pBot->current_team) {
 					case 0:
 						snprintf(newJob->message, MAX_CHAT_LENGTH, "Sentry gun built: %s", areas[bot_area].namea);
@@ -1054,7 +1054,7 @@ int JobBuildDispenser(bot_t* pBot)
 			else {
 				job_ptr->phase = 1;
 				job_ptr->phase_timer = pBot->f_think_time + 0.5;
-				FakeClientCommand(pBot->pEdict, "build", "1", NULL);
+				FakeClientCommand(pBot->pEdict, "build", "1", nullptr);
 				return JOB_UNDERWAY;
 			}
 		}
@@ -1069,13 +1069,13 @@ int JobBuildDispenser(bot_t* pBot)
 	// phase 1 - walk backwards for a second whilst trying to start the build
 	if (job_ptr->phase == 1) {
 		if (pBot->f_periodicAlertFifth < pBot->f_think_time)
-			FakeClientCommand(pBot->pEdict, "build", "1", NULL);
+			FakeClientCommand(pBot->pEdict, "build", "1", nullptr);
 
 		pBot->f_move_speed = -(pBot->f_max_speed / 2);
 
 		// find the dispenser being built(if it is) and remember it's location
-		edict_t* pent = NULL;
-		while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "building_dispenser")) != NULL && !FNullEnt(pent)) {
+		edict_t* pent = nullptr;
+		while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "building_dispenser")) != nullptr && !FNullEnt(pent)) {
 			//	UTIL_BotLogPrintf("%s: dispenser distance %f\n",
 			//		pBot->name, (pBot->pEdict->v.origin - pent->v.origin).Length());
 
@@ -1096,7 +1096,7 @@ int JobBuildDispenser(bot_t* pBot)
 			BlacklistJob(pBot, JOB_BUILD_DISPENSER, random_float(20.0, 40.0));
 
 			// in case bot didn't know it already had a dispenser(rare but possible)
-			FakeClientCommand(pBot->pEdict, "detdispenser", NULL, NULL);
+			FakeClientCommand(pBot->pEdict, "detdispenser", nullptr, nullptr);
 			return JOB_TERMINATED;
 		}
 	}
@@ -1105,9 +1105,9 @@ int JobBuildDispenser(bot_t* pBot)
 	if (job_ptr->phase == 2) {
 		if (job_ptr->phase_timer < pBot->f_think_time) {
 			// find and remember the dispenser the bot just built
-			edict_t* pent = NULL;
+			edict_t* pent = nullptr;
 			bool success = FALSE;
-			while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "building_dispenser")) != NULL && !FNullEnt(pent)) {
+			while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "building_dispenser")) != nullptr && !FNullEnt(pent)) {
 				//	UTIL_BotLogPrintf("%s: dispenser distance %f\n",
 				//		pBot->name, (job_ptr->origin - pent->v.origin).Length());
 
@@ -1178,9 +1178,9 @@ int JobBuildTeleport(bot_t* pBot)
 						job_ptr->phase_timer = pBot->f_think_time + 0.5;
 
 						if (buildExit)
-							FakeClientCommand(pBot->pEdict, "build", "5", NULL);
+							FakeClientCommand(pBot->pEdict, "build", "5", nullptr);
 						else
-							FakeClientCommand(pBot->pEdict, "build", "4", NULL);
+							FakeClientCommand(pBot->pEdict, "build", "4", nullptr);
 					}
 
 					return JOB_UNDERWAY;
@@ -1205,16 +1205,16 @@ int JobBuildTeleport(bot_t* pBot)
 	if (job_ptr->phase == 1) {
 		if (pBot->f_periodicAlertFifth < pBot->f_think_time) {
 			if (buildExit)
-				FakeClientCommand(pBot->pEdict, "build", "5", NULL);
+				FakeClientCommand(pBot->pEdict, "build", "5", nullptr);
 			else
-				FakeClientCommand(pBot->pEdict, "build", "4", NULL);
+				FakeClientCommand(pBot->pEdict, "build", "4", nullptr);
 		}
 
 		pBot->f_move_speed = -(pBot->f_max_speed / 2);
 
 		// find the teleport being built(if it is) and remember it's location
-		edict_t* pent = NULL;
-		while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "building_teleporter")) != NULL && !FNullEnt(pent)) {
+		edict_t* pent = nullptr;
+		while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "building_teleporter")) != nullptr && !FNullEnt(pent)) {
 			//	UTIL_BotLogPrintf("%s: Teleport distance %f\n",
 			//		pBot->name, (pBot->pEdict->v.origin - pent->v.origin).Length());
 
@@ -1236,9 +1236,9 @@ int JobBuildTeleport(bot_t* pBot)
 
 			// in case bot didn't know it already had a teleporter(rare but possible)
 			if (buildExit)
-				FakeClientCommand(pBot->pEdict, "detexitteleporter", NULL, NULL);
+				FakeClientCommand(pBot->pEdict, "detexitteleporter", nullptr, nullptr);
 			else
-				FakeClientCommand(pBot->pEdict, "detentryteleporter", NULL, NULL);
+				FakeClientCommand(pBot->pEdict, "detentryteleporter", nullptr, nullptr);
 			return JOB_TERMINATED;
 		}
 	}
@@ -1247,9 +1247,9 @@ int JobBuildTeleport(bot_t* pBot)
 	if (job_ptr->phase == 2) {
 		if (job_ptr->phase_timer < pBot->f_think_time) {
 			// find and remember the teleport the bot just built
-			edict_t* pent = NULL;
+			edict_t* pent = nullptr;
 			bool success = FALSE;
-			while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "building_teleporter")) != NULL && !FNullEnt(pent)) {
+			while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "building_teleporter")) != nullptr && !FNullEnt(pent)) {
 				//	UTIL_BotLogPrintf("%s: Teleport distance %f\n",
 				//		pBot->name, (job_ptr->origin - pent->v.origin).Length());
 
@@ -1298,7 +1298,7 @@ int JobBuildTeleport(bot_t* pBot)
 			const int bot_area = AreaInsideClosest(pBot->pEdict);
 			if (bot_area != -1) {
 				job_struct* newJob = InitialiseNewJob(pBot, JOB_REPORT);
-				if (newJob != NULL) {
+				if (newJob != nullptr) {
 					char tpType[24] = "Teleporter Entrance";
 					if (waypoints[job_ptr->waypoint].flags & W_FL_TFC_TELEPORTER_EXIT)
 						strcpy(tpType, "Teleporter Exit");
@@ -1353,7 +1353,7 @@ int JobBuffAlly(bot_t* pBot)
 	// phase zero - set a waypoint near where the patient was last seen
 	// useful when the patient is far away or not visible
 	if (job_ptr->phase == 0) {
-		job_ptr->waypoint = WaypointFindNearest_S(job_ptr->origin, NULL, 500.0, pBot->current_team, W_FL_DELETED);
+		job_ptr->waypoint = WaypointFindNearest_S(job_ptr->origin, nullptr, 500.0, pBot->current_team, W_FL_DELETED);
 
 		job_ptr->phase = 1;
 		return JOB_UNDERWAY;
@@ -1544,7 +1544,7 @@ int JobCallMedic(bot_t* pBot)
 
 	// phase zero - call and decide how long to wait initially
 	if (job_ptr->phase == 0) {
-		FakeClientCommand(pBot->pEdict, "saveme", NULL, NULL);
+		FakeClientCommand(pBot->pEdict, "saveme", nullptr, nullptr);
 		job_ptr->phase = 1;
 		job_ptr->phase_timer = pBot->f_think_time + random_float(5.0, 7.0);
 	}
@@ -1567,7 +1567,7 @@ int JobCallMedic(bot_t* pBot)
 
 		// call again?
 		if (pBot->f_periodicAlert3 < pBot->f_think_time && random_long(0, 1000) < 500)
-			FakeClientCommand(pBot->pEdict, "saveme", NULL, NULL);
+			FakeClientCommand(pBot->pEdict, "saveme", nullptr, nullptr);
 	}
 
 	// phase 2 - wait for a visible medic to come over and do their magic
@@ -1871,7 +1871,7 @@ int JobDisguise(bot_t* pBot)
 
 		char choice[2];
 		itoa(new_disguise, choice, 10);
-		FakeClientCommand(pBot->pEdict, "disguise_enemy", choice, NULL);
+		FakeClientCommand(pBot->pEdict, "disguise_enemy", choice, nullptr);
 		pBot->disguise_state = DISGUISE_UNDERWAY;
 		pBot->f_disguise_time = pBot->f_think_time + 12.0f;
 	}
@@ -1974,7 +1974,7 @@ int JobFeignAmbush(bot_t* pBot)
 		// play dead
 		pBot->f_feigningTime = pBot->f_think_time + 0.2;
 
-		if (pBot->enemy.ptr != NULL)
+		if (pBot->enemy.ptr != nullptr)
 			return JOB_TERMINATED; // success - victim found
 	}
 
@@ -2023,13 +2023,13 @@ int JobSnipe(bot_t* pBot)
 	// phase 1 - stop moving and start charging the rifle
 	if (job_ptr->phase == 1) {
 		// give up if an ally is waiting here already
-		if (BotAllyAtVector(pBot, waypoints[job_ptr->waypoint].origin, 60.0, TRUE) != NULL) {
+		if (BotAllyAtVector(pBot, waypoints[job_ptr->waypoint].origin, 60.0, TRUE) != nullptr) {
 			BlacklistJob(pBot, JOB_SNIPE, random_float(20.0, 40.0));
 			return JOB_TERMINATED;
 		}
 
 		// make sure the sniper rifle is selected and charging if possible
-		if (pBot->enemy.ptr == NULL) {
+		if (pBot->enemy.ptr == nullptr) {
 			if (pBot->current_weapon.iId != TF_WEAPON_SNIPERRIFLE)
 				UTIL_SelectItem(pBot->pEdict, "tf_weapon_sniperrifle");
 			else {
@@ -2039,7 +2039,7 @@ int JobSnipe(bot_t* pBot)
 		}
 
 		// been charging the rifle for a few seconds?
-		if (job_ptr->phase_timer < pBot->f_think_time || pBot->enemy.ptr != NULL) {
+		if (job_ptr->phase_timer < pBot->f_think_time || pBot->enemy.ptr != nullptr) {
 			// give the bot time to get into position
 			pBot->f_current_wp_deadline = pBot->f_think_time + 8.0;
 
@@ -2072,14 +2072,14 @@ int JobSnipe(bot_t* pBot)
 			// drop a neoTF grenade pod if possible
 			char* cvar_ntf_feature_antimissile = const_cast<char*>(CVAR_GET_STRING("ntf_feature_antimissile"));
 			if (strcmp(cvar_ntf_feature_antimissile, "1") == 0)
-				FakeClientCommand(pBot->pEdict, "buildspecial", NULL, NULL);
+				FakeClientCommand(pBot->pEdict, "buildspecial", nullptr, nullptr);
 
 			job_ptr->phase = 3;
 			job_ptr->phase_timer = pBot->f_think_time + random_float(180.0, 300.0);
 		}
 		else {
 			// make sure the sniper rifle is selected and charging if possible
-			if (pBot->enemy.ptr == NULL) {
+			if (pBot->enemy.ptr == nullptr) {
 				if (pBot->current_weapon.iId != TF_WEAPON_SNIPERRIFLE)
 					UTIL_SelectItem(pBot->pEdict, "tf_weapon_sniperrifle");
 				else
@@ -2103,7 +2103,7 @@ int JobSnipe(bot_t* pBot)
 		else
 			job_ptr->phase_timer = pBot->f_think_time + random_float(180.0, 300.0);
 
-		if (pBot->enemy.ptr != NULL) {
+		if (pBot->enemy.ptr != nullptr) {
 			// non-campers don't like to stay if their enemy has lived long
 			// enough to discover their location
 			if (!pBot->trait.camper && pBot->enemy.f_firstSeen + 3.0 < pBot->f_think_time &&
@@ -2175,7 +2175,7 @@ int JobGuardWaypoint(bot_t* pBot)
 	if (pBot->current_wp == job_ptr->waypoint &&
 		VectorsNearerThan(pBot->pEdict->v.origin, waypoints[job_ptr->waypoint].origin, 50.0)) {
 		// don't guard here if another bot already is
-		if (BotDefenderAtWaypoint(pBot, job_ptr->waypoint, 300) != NULL)
+		if (BotDefenderAtWaypoint(pBot, job_ptr->waypoint, 300) != nullptr)
 			return JOB_TERMINATED;
 
 		// remain paused and looking in the right direction.
@@ -2198,7 +2198,7 @@ int JobGuardWaypoint(bot_t* pBot)
 			}
 		}
 	}
-	else if (pBot->enemy.ptr == NULL) {
+	else if (pBot->enemy.ptr == nullptr) {
 		pBot->goto_wp = job_ptr->waypoint;
 		if (!BotNavigateWaypoints(pBot, FALSE)) {
 			BlacklistJob(pBot, JOB_GUARD_WAYPOINT, random_float(5.0, 20.0));
@@ -2265,7 +2265,7 @@ int JobGetFlag(bot_t* pBot)
 				return JOB_UNDERWAY;
 			}
 			// don't repeat the job for a while, if this flag waypoint is occupied
-			else if (BotAllyAtVector(pBot, waypoints[job_ptr->waypoint].origin, 100.0, TRUE) != NULL) {
+			else if (BotAllyAtVector(pBot, waypoints[job_ptr->waypoint].origin, 100.0, TRUE) != nullptr) {
 				BlacklistJob(pBot, JOB_GET_FLAG, random_float(15.0, 35.0));
 				return JOB_TERMINATED;
 			}
@@ -2364,7 +2364,7 @@ int JobHarrassDefense(bot_t* pBot)
 			if (flagDistance != -1 && (flagDistance < 800 // always when this close
 				|| flagDistance < 2000 && random_long(1, 2000) > flagDistance)) {
 				job_struct* newJob = InitialiseNewJob(pBot, JOB_GET_FLAG);
-				if (newJob != NULL) {
+				if (newJob != nullptr) {
 					newJob->waypoint = flagWP;
 					if (SubmitNewJob(pBot, JOB_GET_FLAG, newJob) == TRUE)
 						return JOB_TERMINATED; // end this job so the bot can go for the flag instead
@@ -2519,7 +2519,7 @@ int JobConcussionJump(bot_t* pBot)
 	// phase zero - prime the grenade
 	if (job_ptr->phase == 0) {
 		job_ptr->phase = 1;
-		FakeClientCommand(pBot->pEdict, "+gren2", "101", NULL);
+		FakeClientCommand(pBot->pEdict, "+gren2", "101", nullptr);
 		pBot->primeTime = pBot->f_think_time;
 		//	UTIL_HostSay(pBot->pEdict, 0, "Starting concussion jump!"); //DebugMessageOfDoom!
 	}
@@ -2607,8 +2607,8 @@ int JobDetpackWaypoint(bot_t* pBot)
 		if (pBot->current_wp == job_ptr->waypoint &&
 			VectorsNearerThan(waypoints[pBot->current_wp].origin, pBot->pEdict->v.origin, 30.0)) {
 			// abort if there's a detpack here already
-			edict_t* pent = NULL;
-			while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "detpack")) != NULL && !FNullEnt(pent)) {
+			edict_t* pent = nullptr;
+			while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "detpack")) != nullptr && !FNullEnt(pent)) {
 				if (VectorsNearerThan(pBot->pEdict->v.origin, pent->v.origin, 200.0))
 					return JOB_TERMINATED;
 			}
@@ -2636,7 +2636,7 @@ int JobDetpackWaypoint(bot_t* pBot)
 	if (job_ptr->phase == 1) {
 		// you can only detpack while touching land beneath you
 		if (pBot->pEdict->v.flags & FL_ONGROUND) {
-			FakeClientCommand(pBot->pEdict, "+det5", NULL, NULL);
+			FakeClientCommand(pBot->pEdict, "+det5", nullptr, nullptr);
 
 			// find somewhere to run away to
 			if (pBot->current_team > -1 && pBot->current_team < 4 && spawnAreaWP[pBot->current_team] != -1)
@@ -2731,8 +2731,8 @@ int JobPipetrap(bot_t* pBot)
 		// count the number of pipebombs the bot owns
 		// ignore visibility because pipebombs can bounce behind other things
 		int pipeBombTally = 0;
-		edict_t* pent = NULL;
-		while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "tf_gl_pipebomb")) != NULL && !FNullEnt(pent)) {
+		edict_t* pent = nullptr;
+		while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "tf_gl_pipebomb")) != nullptr && !FNullEnt(pent)) {
 			if (pBot->pEdict == pent->v.owner)
 				++pipeBombTally;
 		}
@@ -2754,8 +2754,8 @@ int JobPipetrap(bot_t* pBot)
 
 		// reset the job if the bots pipebombs have been destroyed for any reason
 		int pipeBombTally = 0;
-		edict_t* pent = NULL;
-		while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "tf_gl_pipebomb")) != NULL && !FNullEnt(pent)) {
+		edict_t* pent = nullptr;
+		while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "tf_gl_pipebomb")) != nullptr && !FNullEnt(pent)) {
 			if (pBot->pEdict == pent->v.owner)
 				++pipeBombTally;
 		}
@@ -2839,7 +2839,7 @@ int JobPursueEnemy(bot_t* pBot)
 
 	// phase zero - we assume the enemy is visible and must find a waypoint near them
 	if (job_ptr->phase == SET_WAYPOINT_VISIBLE_ENEMY) {
-		job_ptr->waypoint = WaypointFindNearest_S(job_ptr->origin, NULL, 700.0, pBot->current_team, W_FL_DELETED);
+		job_ptr->waypoint = WaypointFindNearest_S(job_ptr->origin, nullptr, 700.0, pBot->current_team, W_FL_DELETED);
 
 		job_ptr->phase = PURSUE_VISIBLE_ENEMY;
 		return JOB_UNDERWAY;
@@ -3196,7 +3196,7 @@ int JobSeekBackup(bot_t* pBot)
 	// phase zero - set a waypoint near the last seen allies last known location
 	if (job_ptr->phase == 0) {
 		//	UTIL_HostSay(pBot->pEdict, 0, "JOB_SEEK_BACKUP started");
-		job_ptr->waypoint = WaypointFindNearest_S(pBot->lastAllyVector, NULL, 700.0, pBot->current_team, W_FL_DELETED);
+		job_ptr->waypoint = WaypointFindNearest_S(pBot->lastAllyVector, nullptr, 700.0, pBot->current_team, W_FL_DELETED);
 
 		job_ptr->phase = 1;
 		return JOB_UNDERWAY;
@@ -3210,7 +3210,7 @@ int JobSeekBackup(bot_t* pBot)
 						10, 2, 50, 250, 250, 200, 10);*/
 
 						// check if an enemy is blocking the route to the bots backup
-		if (pBot->enemy.ptr != NULL) {
+		if (pBot->enemy.ptr != nullptr) {
 			const int nextWP = WaypointRouteFromTo(pBot->current_wp, job_ptr->waypoint, pBot->current_team);
 
 			// is the waypoint the bot is going to nearer to the enemy?
@@ -3265,7 +3265,7 @@ int JobAvoidEnemy(bot_t* pBot)
 	// phase 1 - get to the waypoint the bot is retreating to
 	if (job_ptr->phase == 1) {
 		// check if an enemy is blocking the route to the bots backup
-		if (pBot->enemy.ptr != NULL) {
+		if (pBot->enemy.ptr != nullptr) {
 			const int nextWP = WaypointRouteFromTo(pBot->current_wp, job_ptr->waypoint, pBot->current_team);
 
 			// is the waypoint the bot is going to nearer to the enemy?
@@ -3286,7 +3286,7 @@ int JobAvoidEnemy(bot_t* pBot)
 		if (pBot->current_wp == job_ptr->waypoint &&
 			VectorsNearerThan(waypoints[pBot->current_wp].origin, pBot->pEdict->v.origin, 60.0)) {
 			// don't wait here if the bot is fighting
-			if (pBot->enemy.ptr != NULL)
+			if (pBot->enemy.ptr != nullptr)
 				return JOB_TERMINATED;
 
 			// don't wait here if the bot is underwater and injured much
@@ -3578,7 +3578,7 @@ int JobMeleeWarrior(bot_t* pBot)
 		UTIL_SelectItem(pBot->pEdict, "tf_weapon_axe");
 
 	// always go for your enemies
-	if (pBot->enemy.ptr != NULL) {
+	if (pBot->enemy.ptr != nullptr) {
 		BotSetFacing(pBot, pBot->enemy.ptr->v.origin);
 		BotNavigateWaypointless(pBot);
 		pBot->f_current_wp_deadline = pBot->f_think_time + BOT_WP_DEADLINE;
@@ -3697,7 +3697,7 @@ int JobGraffitiArtist(bot_t* pBot)
 			const Vector v_forwards = pBot->pEdict->v.origin + gpGlobals->v_forward * 400.0;
 
 			TraceResult tr;
-			UTIL_TraceLine(pBot->pEdict->v.origin, v_forwards, ignore_monsters, NULL, &tr);
+			UTIL_TraceLine(pBot->pEdict->v.origin, v_forwards, ignore_monsters, nullptr, &tr);
 
 			// if the new view angle is blocked assume the bot can spray here
 			if (tr.flFraction < 1.0) {
