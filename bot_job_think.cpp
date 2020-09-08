@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // FoXBot - AI Bot for Halflife's Team Fortress Classic
 //
@@ -117,14 +119,14 @@ const jobList_struct jl[JOB_TYPE_TOTAL] = {
 	{ 470, "JOB_CALL_MEDIC" }, // this should be a higher priority than JOB_GET_HEALTH
 	{ 460, "JOB_GET_HEALTH" }, { 450, "JOB_GET_ARMOR" }, { 660, "JOB_GET_AMMO" }, { 610, "JOB_DISGUISE" },
 	{ 190, "JOB_FEIGN_AMBUSH" }, { 560, "JOB_SNIPE" }, { 250, "JOB_GUARD_WAYPOINT" }, { 670, "JOB_DEFEND_FLAG" },
-	{ 650, "JOB_GET_FLAG" }, { 750, "JOB_CAPTURE_FLAG" }, { 340, "JOB_HARRASS_DEFENSE" },
+	{ 650, "JOB_GET_FLAG" }, { 780, "JOB_CAPTURE_FLAG" }, { 340, "JOB_HARRASS_DEFENSE" },
 	{ 580, "JOB_ROCKET_JUMP" }, { 720, "JOB_CONCUSSION_JUMP" },
 	{ 390, "JOB_DETPACK_WAYPOINT" }, { 430, "JOB_PIPETRAP" }, { 590, "JOB_INVESTIGATE_AREA" },
 	{ 640, "JOB_PURSUE_ENEMY" }, { 210, "JOB_PATROL_HOME" }, { 700, "JOB_SPOT_STIMULUS" },
 	{ 620, "JOB_ATTACK_BREAKABLE" }, { 440, "JOB_ATTACK_TELEPORT" }, { 630, "JOB_SEEK_BACKUP" },
 	{ 300, "JOB_AVOID_ENEMY" }, { 730, "JOB_AVOID_AREA_DAMAGE" },
 	{ 710, "JOB_INFECTED_ATTACK" }, { 740, "JOB_BIN_GRENADE" },
-	{ 780, "JOB_DROWN_RECOVER" }, { 240, "JOB_MELEE_WARRIOR" }, { 200, "JOB_GRAFFITI_ARTIST" },
+	{ 760, "JOB_DROWN_RECOVER" }, { 240, "JOB_MELEE_WARRIOR" }, { 200, "JOB_GRAFFITI_ARTIST" },
 };
 
 // This function clears the specified bots job buffer, and thus should
@@ -189,8 +191,9 @@ void BlacklistJob(bot_t* pBot, const int jobType, const float timeOut)
 // job buffer.
 bool BufferContainsJobType(const bot_t* pBot, const int JobType)
 {
-	for (int i = 0; i < JOB_BUFFER_MAX; i++) {
-		if (pBot->jobType[i] == JobType)
+	for (int i : pBot->jobType)
+	{
+		if (i == JobType)
 			return TRUE;
 	}
 
@@ -265,8 +268,8 @@ bool SubmitNewJob(bot_t* pBot, const int newJobType, job_struct* newJob)
 		if (newJobType == pBot->jobBlacklist[i].type) {
 			if (pBot->jobBlacklist[i].f_timeOut >= pBot->f_think_time)
 				return FALSE;
-			else
-				pBot->jobBlacklist[i].type = JOB_NONE; // job has timed out de-blacklist it
+			pBot->jobBlacklist[i].type = JOB_NONE;
+			// job has timed out de-blacklist it
 		}
 	}
 
@@ -670,10 +673,11 @@ void BotJobThink(bot_t* pBot)
 				int guardChance = 750;
 
 				// find out if any bot teammates are guarding already
-				for (int i = 0; i < MAX_BOTS; i++) {
-					if (bots[i].is_used && bots[i].current_team == pBot->current_team &&
-						(BufferedJobIndex(&bots[i], JOB_GUARD_WAYPOINT) != -1 ||
-							BufferedJobIndex(&bots[i], JOB_PIPETRAP) != -1)) {
+				for (auto& bot : bots)
+				{
+					if (bot.is_used && bot.current_team == pBot->current_team &&
+						(BufferedJobIndex(&bot, JOB_GUARD_WAYPOINT) != -1 ||
+							BufferedJobIndex(&bot, JOB_PIPETRAP) != -1)) {
 						guardChance = 500; // only 50% chance the bot will guard
 						break;
 					}

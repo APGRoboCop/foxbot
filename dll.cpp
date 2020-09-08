@@ -643,15 +643,15 @@ static bool BBotBalanceTeams(const int a, const int b)
 	// now just set up teams to include bots in them :D
 	int bteams[4] = { 0, 0, 0, 0 };
 
-	for (int i = 0; i < 32; i++) //<32
+	for (auto& bot : bots) //<32
 	{
-		if (bots[i].is_used) {
+		if (bot.is_used) {
 			char cl_name[128];
 			cl_name[0] = '\0';
-			char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(bots[i].pEdict);
+			char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(bot.pEdict);
 			strcpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"));
 			if (cl_name[0] != '\0') {
-				const int team = bots[i].pEdict->v.team - 1;
+				const int team = bot.pEdict->v.team - 1;
 
 				if (team >= 0 && team < 4)
 					bteams[team] = bteams[team] + 1;
@@ -709,8 +709,8 @@ void GameDLLInit(void)
 	CVAR_REGISTER(&sv_bot);
 	CVAR_REGISTER(&enable_foxbot);
 
-	for (int i = 0; i < 32; i++)
-		clients[i] = NULL;
+	for (auto& client : clients)
+		client = NULL;
 
 	// initialize the bots array of structures...
 	memset(bots, 0, sizeof bots);
@@ -1048,8 +1048,9 @@ void DispatchThink(edict_t* pent)
 				if (scanpos > 7) // 7
 					scanpos = 0;
 				float p_vis = 0;
-				for (int i = 0; i < 8; i++) {
-					if (player_vis[i])
+				for (bool player_vi : player_vis)
+				{
+					if (player_vi)
 						p_vis = p_vis + 12.5;
 				}
 
@@ -4621,20 +4622,23 @@ void StartFrame(void)
 								buf = buf + 1;
 							} // move to end
 							if (start == 2) {
-								for (int j = 0; j < 8; j++) {
-									blue_av[j] = FALSE;
+								for (bool& j : blue_av)
+								{
+									j = FALSE;
 								}
 								blue_av[pnt] = TRUE;
 							}
 							if (msgsection == 2 && ifsec == 0) {
-								for (int j = 0; j < 8; j++) {
-									msg_com[current_msg].blue_av[j] = 0; // false
+								for (int& j : msg_com[current_msg].blue_av)
+								{
+									j = 0; // false
 								}
 								msg_com[current_msg].blue_av[pnt] = 1; // true
 							}
 							if (msgsection == 2 && ifsec == 2) {
-								for (int j = 0; j < 8; j++) {
-									curr->blue_av[j] = 0; // false
+								for (int& j : curr->blue_av)
+								{
+									j = 0; // false
 								}
 								curr->blue_av[pnt] = 1; // true
 							}
@@ -4657,20 +4661,23 @@ void StartFrame(void)
 								buf = buf + 1;
 							} // move to end
 							if (start == 2) {
-								for (int j = 0; j < 8; j++) {
-									red_av[j] = FALSE;
+								for (bool& j : red_av)
+								{
+									j = FALSE;
 								}
 								red_av[pnt] = TRUE;
 							}
 							if (msgsection == 2 && ifsec == 0) {
-								for (int j = 0; j < 8; j++) {
-									msg_com[current_msg].red_av[j] = 0; // false
+								for (int& j : msg_com[current_msg].red_av)
+								{
+									j = 0; // false
 								}
 								msg_com[current_msg].red_av[pnt] = 1; // true
 							}
 							if (msgsection == 2 && ifsec == 2) {
-								for (int j = 0; j < 8; j++) {
-									curr->red_av[j] = 0; // false
+								for (int& j : curr->red_av)
+								{
+									j = 0; // false
 								}
 								curr->red_av[pnt] = 1; // true
 							}
@@ -4693,20 +4700,23 @@ void StartFrame(void)
 								buf = buf + 1;
 							} // move to end
 							if (start == 2) {
-								for (int j = 0; j < 8; j++) {
-									green_av[j] = FALSE;
+								for (bool& j : green_av)
+								{
+									j = FALSE;
 								}
 								green_av[pnt] = TRUE;
 							}
 							if (msgsection == 2 && ifsec == 0) {
-								for (int j = 0; j < 8; j++) {
-									msg_com[current_msg].green_av[j] = 0; // false
+								for (int& j : msg_com[current_msg].green_av)
+								{
+									j = 0; // false
 								}
 								msg_com[current_msg].green_av[pnt] = 1; // true
 							}
 							if (msgsection == 2 && ifsec == 2) {
-								for (int j = 0; j < 8; j++) {
-									curr->green_av[j] = 0; // false
+								for (int& j : curr->green_av)
+								{
+									j = 0; // false
 								}
 								curr->green_av[pnt] = 1; // true
 							}
@@ -4729,20 +4739,23 @@ void StartFrame(void)
 								buf = buf + 1;
 							} // move to end
 							if (start == 2) {
-								for (int j = 0; j < 8; j++) {
-									yellow_av[j] = FALSE;
+								for (bool& j : yellow_av)
+								{
+									j = FALSE;
 								}
 								yellow_av[pnt] = TRUE;
 							}
 							if (msgsection == 2 && ifsec == 0) {
-								for (int j = 0; j < 8; j++) {
-									msg_com[current_msg].yellow_av[j] = 0; // false
+								for (int& j : msg_com[current_msg].yellow_av)
+								{
+									j = 0; // false
 								}
 								msg_com[current_msg].yellow_av[pnt] = 1; // true
 							}
 							if (msgsection == 2 && ifsec == 2) {
-								for (int j = 0; j < 8; j++) {
-									curr->yellow_av[j] = 0; // false
+								for (int& j : curr->yellow_av)
+								{
+									j = 0; // false
 								}
 								curr->yellow_av[pnt] = 1; // true
 							}

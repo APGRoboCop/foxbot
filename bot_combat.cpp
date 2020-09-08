@@ -388,24 +388,25 @@ void BotEnemyCheck(bot_t* pBot)
 
 					bool destruction_reported = FALSE;
 
-					for (int i = 0; i < 32; i++) {
-						if (bots[i].is_used && bots[i].lastEnemySentryGun == deadSG) {
+					for (auto& bot : bots)
+					{
+						if (bot.is_used && bot.lastEnemySentryGun == deadSG) {
 							// get one bot that saw the sentry get destroyed to report it
-							if (!destruction_reported && bots[i].current_team == pBot->current_team &&
-								!BufferContainsJobType(&bots[i], JOB_REPORT) &&
-								VectorsNearerThan(deadSG->v.origin, bots[i].pEdict->v.origin, 1400.0f) &&
-								FVisible(deadSG->v.origin + deadSG->v.view_ofs, bots[i].pEdict)) {
-								job_struct* newJob = InitialiseNewJob(&bots[i], JOB_REPORT);
+							if (!destruction_reported && bot.current_team == pBot->current_team &&
+								!BufferContainsJobType(&bot, JOB_REPORT) &&
+								VectorsNearerThan(deadSG->v.origin, bot.pEdict->v.origin, 1400.0f) &&
+								FVisible(deadSG->v.origin + deadSG->v.view_ofs, bot.pEdict)) {
+								job_struct* newJob = InitialiseNewJob(&bot, JOB_REPORT);
 								if (newJob != NULL) {
 									strncpy(newJob->message, msg, MAX_CHAT_LENGTH);
 									newJob->message[MAX_CHAT_LENGTH - 1] = '\0';
-									SubmitNewJob(&bots[i], JOB_REPORT, newJob);
+									SubmitNewJob(&bot, JOB_REPORT, newJob);
 
 									destruction_reported = TRUE;
 								}
 							}
 
-							bots[i].lastEnemySentryGun = NULL;
+							bot.lastEnemySentryGun = NULL;
 						}
 					}
 				}
@@ -1094,13 +1095,14 @@ static void BotSGSpotted(bot_t* pBot, edict_t* sg)
 		newJob->message[MAX_CHAT_LENGTH - 1] = '\0';
 		if (SubmitNewJob(pBot, JOB_REPORT, newJob) == TRUE) {
 			// get the other bots to know about this sg if they dont know of one already.
-			for (int i = 0; i < MAX_BOTS; i++) {
-				if (bots[i].is_used && bots[i].current_team == pBot->current_team &&
-					bots[i].lastEnemySentryGun == NULL && bots[i].bot_skill < 3) // skill 5's are too dumb
+			for (auto& bot : bots)
+			{
+				if (bot.is_used && bot.current_team == pBot->current_team &&
+					bot.lastEnemySentryGun == NULL && bot.bot_skill < 3) // skill 5's are too dumb
 				{
 					// everyone else has 1 in 10 chance of not "getting it"
 					if (random_long(1, 1000) < 901)
-						bots[i].lastEnemySentryGun = pBot->lastEnemySentryGun;
+						bot.lastEnemySentryGun = pBot->lastEnemySentryGun;
 				}
 			}
 		}
@@ -2412,9 +2414,10 @@ void BotCheckForMultiguns(bot_t* pBot, float nearestdistance, edict_t* pNewEnemy
 
 	// Loop through all the multigun types, checking for a closer target
 	// and storing it in nearestdistance, and pNewEnemy
-	for (int i = 0; i < NumNTFGuns; i++) {
+	for (auto& ntfTargetCheck : ntfTargetChecks)
+	{
 		edict_t* pent = NULL;
-		while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, ntfTargetChecks[i])) != NULL && !FNullEnt(pent)) {
+		while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, ntfTargetCheck)) != NULL && !FNullEnt(pent)) {
 			int sentry_team = pent->v.team - 1;
 
 			// flagged for deletion by the engine?
@@ -2444,8 +2447,9 @@ void BotCheckForMultiguns(bot_t* pBot, float nearestdistance, edict_t* pNewEnemy
 void UpdateFlagCarrierList(void)
 {
 	// reset the list before updating it
-	for (int i = 0; i < 32; i++) {
-		playerHasFlag[i] = FALSE;
+	for (bool& i : playerHasFlag)
+	{
+		i = FALSE;
 	}
 
 	// search for visible friendly flag carriers and track them.

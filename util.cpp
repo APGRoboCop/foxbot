@@ -491,9 +491,10 @@ int UTIL_GetBotIndex(edict_t* pEdict)
 
 bot_t* UTIL_GetBotPointer(edict_t* pEdict)
 {
-	for (int index = 0; index < 32; index++) {
-		if (bots[index].pEdict == pEdict)
-			return &bots[index];
+	for (auto& bot : bots)
+	{
+		if (bot.pEdict == pEdict)
+			return &bot;
 	}
 
 	return NULL; // return NULL if edict is not a bot
@@ -784,10 +785,10 @@ static void UTIL_FindFoxbotPath(void)
 #ifndef __linux__ // must be a Windows machine
 	if (strcmp(foxbot_path, "") == 0) {
 		// try the addons directory first(for Foxbot 0.76 and newer)
-		FILE* fptr = fopen("tfc\\addons\\foxbot\\tfc\\foxbot.cfg", "r");
+		FILE* fptr = fopen(R"(tfc\addons\foxbot\tfc\foxbot.cfg)", "r");
 		if (fptr != NULL) {
-			strcpy(foxbot_path, "tfc\\addons\\foxbot\\tfc\\");
-			strcpy(foxbot_logname, "tfc\\addons\\foxbot\\foxbot.log");
+			strcpy(foxbot_path, R"(tfc\addons\foxbot\tfc\)");
+			strcpy(foxbot_logname, R"(tfc\addons\foxbot\foxbot.log)");
 			fclose(fptr);
 		}
 		else // try the older directory location(Foxbot 0.75 and older)

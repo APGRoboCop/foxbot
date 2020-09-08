@@ -191,7 +191,6 @@
       <AdditionalOptions>
       </AdditionalOptions>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
-      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <SDLCheck>false</SDLCheck>
@@ -203,7 +202,7 @@
     </ClCompile>
     <Link>
       <OutputFile>.\Release\foxbot.dll</OutputFile>
-      <Version>0.791</Version>
+      <Version>0.793</Version>
       <ModuleDefinitionFile>.\FoXBot.def</ModuleDefinitionFile>
       <ProgramDatabaseFile>.\Release\FoXBot.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
