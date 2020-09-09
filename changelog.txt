@@ -8,7 +8,9 @@ Version 0.793
 Updated by RoboCop
 --------------------------------------------------------------------------------
 
-- Removed some redundant codes
+- Removed some more redundant codes
+
+- Added some Clang compiler fixes and performance fixes
 
 - Spies won't select enemy Scouts, Medics, HWs and Engineers disguises as their speeds and lame default weapons can easily blow their covers
 

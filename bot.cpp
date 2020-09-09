@@ -259,7 +259,7 @@ void player(entvars_t* pev)
 {
 	static LINK_ENTITY_FUNC otherClassName = nullptr;
 	if (otherClassName == nullptr) {
-		otherClassName = (LINK_ENTITY_FUNC)GetProcAddress(h_Library, "player");
+		otherClassName = LINK_ENTITY_FUNC(GetProcAddress(h_Library, "player"));
 	}
 	if (otherClassName != nullptr) {
 		(*otherClassName)(pev);
@@ -788,8 +788,6 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 
 		if (IS_DEDICATED_SERVER())
 			printf("Max. Players reached.  Can't create bot!\n");
-
-		return;
 	}
 	else {
 		char ptr[256]; // allocate space for message from ClientConnect
@@ -1223,7 +1221,7 @@ void BotFindItem(bot_t* pBot)
 					strcpy(temp, STRING(pent->v.model));
 
 					if (strlen(temp) >= 8)
-						strncpy(mdlname, temp + ((int)strlen(temp) - 8), 4);
+						strncpy(mdlname, temp + (int(strlen(temp)) - 8), 4);
 					else
 						continue;
 
@@ -1257,7 +1255,7 @@ void BotFindItem(bot_t* pBot)
 					// cut pent->v.model down in size from:
 					// "models/backpack.mdl"
 					if (strlen(temp) >= 8) {
-						strncpy(mdlname, temp + ((int)strlen(temp) - 8), 4);
+						strncpy(mdlname, temp + (int(strlen(temp)) - 8), 4);
 						mdlname[63] = '\0';
 					}
 
@@ -1852,7 +1850,7 @@ void script(const char* sz)
 						fprintf(fp,"b %d\n",current_msg); fclose(fp); }*/
 
 				msg_com_struct* curr = &msg_com[current_msg];
-				while (curr != nullptr && (int)curr != -1) {
+				while (curr != nullptr && int(curr) != -1) {
 					/*{ fp=UTIL_OpenFoxbotLog();
 							fprintf(fp,"Started while %s %d\n",sz,current_msg);
 							fclose(fp); }*/
@@ -2703,9 +2701,11 @@ static void BotGrenadeAvoidance(bot_t* pBot)
 
 		// beware MIRVIN Marvin!
 		if (strncmp("tf_weapon_mirvgrenade", classname, 29) == 0 ||
-			strncmp("tf_weapon_mirvbomblet", classname, 29) == 0) {
+			strncmp("tf_weapon_mirvbomblet", classname, 29) == 0)
+		{
 			entity_origin = pent->v.origin;
-			if (FInViewCone(entity_origin, pBot->pEdict) && FVisible(entity_origin, pBot->pEdict)) {
+			if (FInViewCone(entity_origin, pBot->pEdict) && FVisible(entity_origin, pBot->pEdict))
+			{
 				avoid_action = avoid_retreat;
 				threatEnt = pent;
 			}
@@ -3904,7 +3904,7 @@ void BotThink(bot_t* pBot)
 		pBot->SGRotated = FALSE;
 		BotStartGame(pBot);
 		g_engfuncs.pfnRunPlayerMove(
-			pBot->pEdict, pBot->pEdict->v.v_angle, 0.0, 0, 0, pBot->pEdict->v.button, (byte)0, (byte)msecval);
+			pBot->pEdict, pBot->pEdict->v.v_angle, 0.0, 0, 0, pBot->pEdict->v.button, byte(0), byte(msecval));
 		return;
 	}
 
@@ -3990,7 +3990,7 @@ void BotThink(bot_t* pBot)
 			// crsh=true;
 		}
 		g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, pBot->f_move_speed, 0, 0,
-			pBot->pEdict->v.button, (byte)0, (byte)msecval);
+			pBot->pEdict->v.button, byte(0), byte(msecval));
 
 		// if(crsh)
 		//{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"returned ok(1)..\n"); fclose(fp); }
@@ -4032,7 +4032,7 @@ void BotThink(bot_t* pBot)
 		// UTIL_HostSay(pBot->pEdict,0,"a");
 
 		g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, pBot->f_move_speed, 0, 0,
-			pBot->pEdict->v.button, (byte)0, (byte)msecval);
+			pBot->pEdict->v.button, byte(0), byte(msecval));
 		return;
 	}
 
@@ -4154,7 +4154,7 @@ void BotThink(bot_t* pBot)
 	// THIS FUNCTION ACTUALLY MOVES THE BOT INGAME //
 	/////////////////////////////////////////////////
 	g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, pBot->f_move_speed, pBot->f_side_speed,
-		pBot->f_vertical_speed, pBot->pEdict->v.button, (byte)0, (byte)msecval);
+		pBot->f_vertical_speed, pBot->pEdict->v.button, byte(0), byte(msecval));
 	//////////////////////////////////////////////////
 
 	// check if bots aim should still be affected by concussion and fire etc.
@@ -4782,7 +4782,5 @@ static void BotSpectatorDebug(bot_t* pBot)
 				WaypointDrawBeam(INDEXENT(1), pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs,
 					waypoints[pBot->branch_waypoint].origin + Vector(0, 0, 35.0), 10, 2, 250, 250, 50, 200, 10);
 		}
-
-		return;
 	}
 }

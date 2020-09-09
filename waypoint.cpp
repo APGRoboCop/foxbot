@@ -148,8 +148,6 @@ void WaypointDebug(void)
 
 	//int x = x - 1; // x is zero
 	//int y = y / x; // cause an divide by zero exception
-
-	return;
 }
 
 // free the linked list of waypoint path nodes...
@@ -441,7 +439,7 @@ int WaypointFindPath(PATH** pPath, int* path_index, const int waypoint_index, co
 // find the index of the nearest waypoint to the indicated player
 // (-1 if not found)
 // This function also checks that the waypoint is visible to the specified entity.
-int WaypointFindNearest_E(edict_t* pEntity, const float range, const int team)
+int WaypointFindNearest_E(edict_t* pEntity, const double range, const int team)
 {
 	int min_index = -1;
 	double min_distance_squared = range * range + 0.1f;
@@ -481,7 +479,7 @@ int WaypointFindNearest_E(edict_t* pEntity, const float range, const int team)
 
 // pick an origin, and find the nearest waypoint to it
 // This wont check for visibility.
-int WaypointFindNearest_V(Vector v_src, const float range, const int team)
+int WaypointFindNearest_V(const Vector v_src, const float range, const int team)
 {
 	if (num_waypoints < 1)
 		return -1;
@@ -518,7 +516,7 @@ int WaypointFindNearest_V(Vector v_src, const float range, const int team)
 // Also, you can specify waypoint flags that you wish to exclude from the search.
 int WaypointFindNearest_S(const Vector v_src,
 	edict_t* pEntity,
-	const float range,
+	const double range,
 	const int team,
 	const WPT_INT32 ignore_flags)
 {
@@ -570,11 +568,11 @@ int WaypointFindNearest_S(const Vector v_src,
 // waypoint it found instead.
 // If chooseRandom is TRUE then the search starts from a random waypoint.
 // Returns -1 if no waypoint was found that is in visible range.
-int WaypointFindInRange(Vector v_src,
-	const float min_range,
-	const float max_range,
-	const int team,
-	const bool chooseRandom)
+int WaypointFindInRange(const Vector v_src,
+                        const float min_range,
+                        const float max_range,
+                        const int team,
+                        const bool chooseRandom)
 {
 	TraceResult tr;
 	int nextBestWP = -1; // just in case one wasn't found in ideal range
@@ -1998,7 +1996,7 @@ bool WaypointReachable(Vector v_src, Vector v_dest, edict_t* pEntity)
 
 			UTIL_TraceLine(v_check, v_down, ignore_monsters, pEntity->v.pContainingEntity, &tr);
 
-			float last_height = tr.flFraction * 1000.0; // height from ground
+			double last_height = tr.flFraction * 1000.0; // height from ground
 
 			distance = (v_dest - v_check).Length(); // distance from goal
 
@@ -3547,7 +3545,6 @@ void WaypointRunOneWay(edict_t* pEntity)
 			// play "cancelled" sound...
 			EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "common/wpn_moveselect.wav", 1.0, ATTN_NORM, 0, 100);
 			wpt1 = temp;
-			return;
 		}
 		else {
 			wpt2 = wpt1;
@@ -3558,10 +3555,8 @@ void WaypointRunOneWay(edict_t* pEntity)
 
 				WaypointAddPath(wpt2, wpt1);
 			}
-			return;
 		}
 	}
-	return;
 }
 
 void WaypointRunTwoWay(edict_t* pEntity)
@@ -3573,7 +3568,6 @@ void WaypointRunTwoWay(edict_t* pEntity)
 			// play "cancelled" sound...
 			EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "common/wpn_moveselect.wav", 1.0, ATTN_NORM, 0, 100);
 			wpt1 = temp;
-			return;
 		}
 		else {
 			wpt2 = wpt1;
@@ -3585,10 +3579,8 @@ void WaypointRunTwoWay(edict_t* pEntity)
 				WaypointAddPath(wpt1, wpt2);
 				WaypointAddPath(wpt2, wpt1);
 			}
-			return;
 		}
 	}
-	return;
 }
 
 void WaypointAutoBuild(edict_t* pEntity)
@@ -3841,7 +3833,6 @@ void AreaDefCreate(edict_t* pEntity)
 		WaypointDrawBeam(pEntity, start, end, 30, 0, 255, 0, 0, 250, 5);
 
 		EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "weapons/xbow_hit1.wav", 1.0, ATTN_NORM, 0, 100);
-		return;
 	}
 }
 
@@ -3936,7 +3927,6 @@ void AreaDefDelete(edict_t* pEntity)
 		areas[index].d = Vector(0, 0, 0);
 
 		EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "weapons/mine_activate.wav", 1.0, ATTN_NORM, 0, 100);
-		return;
 	}
 }
 
@@ -4115,7 +4105,6 @@ void AreaDefPrintInfo(edict_t* pEntity)
 		sprintf(msg, "Area %d of %d total\n", index, num_areas);
 		ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 		ClientPrint(pEntity, HUD_PRINTNOTIFY, "Area corner 4\n");
-		return;
 	}
 }
 
