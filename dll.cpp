@@ -272,12 +272,12 @@ static void ProcessBotCfgFile(void);
 static void changeBotSetting(const char* settingName,
 	int* setting,
 	const char* arg1,
-	const int minValue,
-	const int maxValue,
-	const int settingSource);
+	int minValue,
+	int maxValue,
+	int settingSource);
 static void kickBots(int totalToKick, int team);
 static void kickRandomBot(void);
-static void ClearKickedBotsData(const int botIndex, bool eraseBotsName);
+static void ClearKickedBotsData(int botIndex, bool eraseBotsName);
 // void UTIL_CSavePent(CBaseEntity *pent);
 
 void UTIL_HudMessage(CBaseEntity* pEntity, const hudtextparms_t& textparms, const char* pMessage)
@@ -769,7 +769,7 @@ void chatClass::readChatFile(void)
 
 	char buffer[MAX_CHAT_LENGTH] = "";
 	char* ptr;
-	int i;
+	
 	int chat_section = -1;
 
 	while (UTIL_ReadFileLine(buffer, MAX_CHAT_LENGTH, bfp)) {
@@ -3521,32 +3521,32 @@ void StartFrame(void)
 					else // is info goal
 					{
 						int max = 0;
-						int t = (int)pent->v.mins.x;
+						int t = int(pent->v.mins.x);
 						if (t < 0)
 							t = -t;
 						if (t > max)
 							max = t;
-						t = (int)pent->v.mins.y;
+						t = int(pent->v.mins.y);
 						if (t < 0)
 							t = -t;
 						if (t > max)
 							max = t;
-						t = (int)pent->v.mins.z;
+						t = int(pent->v.mins.z);
 						if (t < 0)
 							t = -t;
 						if (t > max)
 							max = t;
-						t = (int)pent->v.maxs.x;
+						t = int(pent->v.maxs.x);
 						if (t < 0)
 							t = -t;
 						if (t > max)
 							max = t;
-						t = (int)pent->v.maxs.y;
+						t = int(pent->v.maxs.y);
 						if (t < 0)
 							t = -t;
 						if (t > max)
 							max = t;
-						t = (int)pent->v.maxs.z;
+						t = int(pent->v.maxs.z);
 						if (t < 0)
 							t = -t;
 						if (t > max)
@@ -3616,7 +3616,7 @@ void StartFrame(void)
 				curr = &msg_com[i];
 				// UTIL_BotLogPrintf("StartFrame-del %d\n", curr->next);
 
-				while (curr->next != nullptr && (int)curr->next != -1) {
+				while (curr->next != nullptr && int(curr->next) != -1) {
 					prev = curr;
 					curr = curr->next;
 				}
@@ -3649,7 +3649,7 @@ void StartFrame(void)
 			int i;
 			char buffer[14097];
 			for (i = 0; i < 14096 && feof(bfp) == 0; i++) {
-				buffer[i] = (char)ch;
+				buffer[i] = char(ch);
 				if (buffer[i] == '\t')
 					buffer[i] = ' ';
 				ch = fgetc(bfp);
@@ -4347,7 +4347,7 @@ void StartFrame(void)
 							ifsec = 0; // cancel ifs before ending message section
 						break;
 					default:;
-					};
+					}
 				}
 				if (!random_shit_error)
 					buf = buf + 1; // like i++ but for stringcmp stuff
@@ -5002,7 +5002,7 @@ void StartFrame(void)
 								i++;
 								buf = buf + 1;
 							} // move to end
-							while (curr->next != nullptr && (int)curr->next != -1)
+							while (curr->next != nullptr && int(curr->next) != -1)
 								curr = curr->next; // get to null
 
 							curr->next = new msg_com_struct;
@@ -5038,7 +5038,7 @@ void StartFrame(void)
 								i++;
 								buf = buf + 1;
 							} // move to end
-							while (curr->next != nullptr && (int)curr->next != -1)
+							while (curr->next != nullptr && int(curr->next) != -1)
 								curr = curr->next; // get to null
 
 							curr->next = new msg_com_struct;
@@ -5074,7 +5074,7 @@ void StartFrame(void)
 								i++;
 								buf = buf + 1;
 							} // move to end
-							while (curr->next != nullptr && (int)curr->next != -1)
+							while (curr->next != nullptr && int(curr->next) != -1)
 								curr = curr->next; // get to null
 
 							curr->next = new msg_com_struct;
@@ -5110,7 +5110,7 @@ void StartFrame(void)
 								i++;
 								buf = buf + 1;
 							} // move to end
-							while (curr->next != nullptr && (int)curr->next != -1)
+							while (curr->next != nullptr && int(curr->next) != -1)
 								curr = curr->next; // get to null
 
 							curr->next = new msg_com_struct;
@@ -5148,7 +5148,7 @@ void StartFrame(void)
 								i++;
 								buf = buf + 1;
 							} // move to end
-							while (curr->next != nullptr && (int)curr->next != -1)
+							while (curr->next != nullptr && int(curr->next) != -1)
 								curr = curr->next; // get to null
 
 							curr->next = new msg_com_struct;
@@ -5184,7 +5184,7 @@ void StartFrame(void)
 								i++;
 								buf = buf + 1;
 							} // move to end
-							while (curr->next != nullptr && (int)curr->next != -1)
+							while (curr->next != nullptr && int(curr->next) != -1)
 								curr = curr->next; // get to null
 
 							curr->next = new msg_com_struct;
@@ -5220,7 +5220,7 @@ void StartFrame(void)
 								i++;
 								buf = buf + 1;
 							} // move to end
-							while (curr->next != nullptr && (int)curr->next != -1)
+							while (curr->next != nullptr && int(curr->next) != -1)
 								curr = curr->next; // get to null
 
 							curr->next = new msg_com_struct;
@@ -5256,7 +5256,7 @@ void StartFrame(void)
 								i++;
 								buf = buf + 1;
 							} // move to end
-							while (curr->next != nullptr && (int)curr->next != -1)
+							while (curr->next != nullptr && int(curr->next) != -1)
 								curr = curr->next; // get to null
 
 							curr->next = new msg_com_struct;
@@ -5300,7 +5300,7 @@ void StartFrame(void)
 									buf = buf + 1;
 								} // move to end
 							}
-							while (curr->next != nullptr && (int)curr->next != -1)
+							while (curr->next != nullptr && int(curr->next) != -1)
 								curr = curr->next; // get to null
 
 							curr->next = new msg_com_struct;
@@ -5382,7 +5382,7 @@ void StartFrame(void)
 									buf = buf + 1;
 								} // move to end
 							}
-							while (curr->next != nullptr && (int)curr->next != -1)
+							while (curr->next != nullptr && int(curr->next) != -1)
 								curr = curr->next; // get to null
 
 							curr->next = new msg_com_struct;
@@ -5423,7 +5423,7 @@ void StartFrame(void)
 									buf = buf + 1;
 								} // move to end
 							}
-							while (curr->next != nullptr && (int)curr->next != -1)
+							while (curr->next != nullptr && int(curr->next) != -1)
 								curr = curr->next; // get to null
 
 							curr->next = new msg_com_struct;
@@ -5484,7 +5484,7 @@ void StartFrame(void)
 								msgsection = 0;
 							break;
 						default:;
-						};
+						}
 					}
 					buf = buf + 1; // like i++ but for stringcmp stuff
 				}

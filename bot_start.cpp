@@ -207,8 +207,6 @@ void BotStartGame(bot_t* pBot)
 
 			// bot has now joined the game (doesn't need to be started)
 			pBot->not_started = FALSE;
-			//	UTIL_BotLogPrintf("%p chosen class %d\n", pBot, pBot->bot_class);
-			return;
 		}
 	} /* else if(mod_id == CSTRIKE_DLL) {
 		// handle Counter-Strike stuff here...

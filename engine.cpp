@@ -660,8 +660,8 @@ void pfnSetOrigin(edict_t* e, const float* rgflOrigin)
 				if (l < 0)
 					l = -l;
 
-				const int xa = (int)(*(Vector*)rgflOrigin).x;
-				const int ya = (int)(*(Vector*)rgflOrigin).y;
+				const int xa = int((*(Vector*)rgflOrigin).x);
+				const int ya = int((*(Vector*)rgflOrigin).y);
 				const int xb = static_cast<int>(bot.sentry_edict->v.origin.x);
 				const int yb = static_cast<int>(bot.sentry_edict->v.origin.y);
 				// FILE *fp;
@@ -940,8 +940,6 @@ void pfnClientCommand(edict_t* pEdict, char* szFmt, ...)
 	}
 	(*g_engfuncs.pfnClientCommand)(pEdict, tempFmt);
 	va_end(argp);
-	// if(mr_meta) RETURN_META(MRES_HANDLED);
-	return;
 }
 
 void pfnClCom(edict_t* pEdict, char* szFmt, ...)
@@ -988,7 +986,6 @@ void pfnClCom(edict_t* pEdict, char* szFmt, ...)
 			//{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"!b\n"); fclose(fp); }
 			if (mr_meta)
 				RETURN_META(MRES_SUPERCEDE);
-			return;
 		}
 		else
 			//	_snprintf(sz_error_check,250,"%s b = %d %d\n",sz_error_check,GETPLAYERWONID(pEdict),ENTINDEX(pEdict));
@@ -997,7 +994,6 @@ void pfnClCom(edict_t* pEdict, char* szFmt, ...)
 	else {
 		if (mr_meta)
 			RETURN_META(MRES_SUPERCEDE);
-		return;
 	}
 	//	if(mr_meta) RETURN_META(MRES_HANDLED);  // unreachable code
 	//	return;
@@ -1280,7 +1276,6 @@ void pfnMessageEnd(void)
 	}
 	if (dont_send_packet) {
 		dont_send_packet = FALSE;
-		return;
 	}
 	else
 		(*g_engfuncs.pfnMessageEnd)();
@@ -2172,7 +2167,7 @@ void pfnServerPrint(const char* szMsg)
 static bool name_message_check(const char* msg_string, const char* name_string)
 {
 	const size_t msg_length = strlen(msg_string);
-	const size_t name_end = strlen(name_string) - (size_t)1;
+	const size_t name_end = strlen(name_string) - size_t(1);
 
 	if (msg_length < name_end)
 		return FALSE;
@@ -2259,7 +2254,7 @@ CRC32_t pfnCRC32_Final(const CRC32_t pulCRC)
 	}
 	if (mr_meta)
 		//RETURN_META_VALUE(MRES_HANDLED, NULL);//[APG]RoboCop[CL]
-		do { gpMetaGlobals->mres = MRES_HANDLED; return(0); } while (false);
+		do { gpMetaGlobals->mres = MRES_HANDLED; return 0; } while (false);
 	return (*g_engfuncs.pfnCRC32_Final)(pulCRC);
 }
 

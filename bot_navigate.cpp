@@ -1078,7 +1078,6 @@ void BotUseLift(bot_t* pBot)
 						// stop and wait when in line with the lift waypoint
 		if (distanceWP2D < 25.0)
 			pBot->f_pause_time = pBot->f_think_time + 0.2;
-		return;
 	}
 	else // current waypoint is a lift waypoint, as is the next waypoint on the route
 	{

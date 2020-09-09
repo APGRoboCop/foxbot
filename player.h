@@ -194,7 +194,8 @@ public:
 	Vector BodyTarget(const Vector& posSrc) override
 	{
 		return Center() + pev->view_ofs * RANDOM_FLOAT(0.5, 1.1);
-	}; // position to shoot at
+	}
+
 	void StartSneaking(void) override
 	{
 		m_tSneaking = gpGlobals->time - 1;

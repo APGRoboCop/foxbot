@@ -111,7 +111,7 @@ float random_float(const float lowval, const float highval)
 
 	lseed = (lseed * 1103515245 + 12345) % 2147483647;
 
-	return lowval + (float)lseed / ((float)LONG_MAX / (highval - lowval));
+	return lowval + float(lseed) / (float(LONG_MAX) / (highval - lowval));
 }
 
 // This function is a quick simple way of testing the distance between two
@@ -742,7 +742,7 @@ void UTIL_BuildFileName(char* filename, const int max_fn_length, char* arg1, cha
 		return;
 
 	// add the foxbot directory path, unless it is not valid
-	if (strcmp(foxbot_path, "") != 0 && strlen(foxbot_path) < (unsigned)max_fn_length) {
+	if (strcmp(foxbot_path, "") != 0 && strlen(foxbot_path) < unsigned(max_fn_length)) {
 		strncpy(filename, foxbot_path, max_fn_length);
 		filename[max_fn_length - 1] = '\0';
 	}

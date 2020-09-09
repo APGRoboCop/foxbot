@@ -171,7 +171,7 @@ void WINAPI GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t* pG
 #endif
 
 	if (!mr_meta) {
-		other_GetEntityAPI = (GETENTITYAPI)GetProcAddress(h_Library, "GetEntityAPI");
+		other_GetEntityAPI = GETENTITYAPI(GetProcAddress(h_Library, "GetEntityAPI"));
 
 		if (other_GetEntityAPI == nullptr) {
 			// Can't find GetEntityAPI!
@@ -179,7 +179,7 @@ void WINAPI GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t* pG
 			ALERT(at_error, "FoXBot - Can't get MOD's GetEntityAPI!");
 		}
 
-		other_GetNewDLLFunctions = (GETNEWDLLFUNCTIONS)GetProcAddress(h_Library, "GetNewDLLFunctions");
+		other_GetNewDLLFunctions = GETNEWDLLFUNCTIONS(GetProcAddress(h_Library, "GetNewDLLFunctions"));
 
 		//	if (other_GetNewDLLFunctions == NULL)
 		//	{
@@ -188,7 +188,7 @@ void WINAPI GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t* pG
 		//		ALERT( at_error, "FoXBot - Can't get MOD's GetNewDLLFunctions!" );
 		//	}
 
-		other_GiveFnptrsToDll = (GIVEFNPTRSTODLL)GetProcAddress(h_Library, "GiveFnptrsToDll");
+		other_GiveFnptrsToDll = GIVEFNPTRSTODLL(GetProcAddress(h_Library, "GiveFnptrsToDll"));
 
 		if (other_GiveFnptrsToDll == nullptr) {
 			// Can't find GiveFnptrsToDll!
