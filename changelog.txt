@@ -16,7 +16,7 @@ Updated by RoboCop
 
 - Repaired some rogue pathwaypoints for 2fort, avanti, cz2, palermo, rock2, sandbowl_r2, shutdown2 and well
 
-- Allowing bots to avoid firing lame weapons like nailguns, laser railguns and dart guns too often
+- Allowing bots to avoid firing lame weapons like nailguns, laser railguns and dart tranq guns too often
 
 - Limited the bot frame rate movement to 60Hz
 
