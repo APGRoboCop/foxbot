@@ -48,11 +48,6 @@
 #include "waypoint.h"
 
 #ifdef WIN32
-//#define strcpy strcpy_s
-#define strcat strcat_s
-#define strncat strncat_s
-#define strncpy strncpy_s
-#define _snprintf _snprintf_s
 #define stricmp _stricmp
 #endif
 
@@ -4214,7 +4209,7 @@ int AreaInsideClosest(edict_t* pEntity)
 			// we want the mid point between hz and lz.. that will be
 			// our distance..
 			// nearly forgot, the distance revolves around the player!
-			float a = fabs((hz - lz) / 2 + lz - pEntity->v.origin.z);
+			const float a = std::fabs((hz - lz) / 2 + lz - pEntity->v.origin.z);
 			if (a < distance) {
 				distance = a;
 				index = i;

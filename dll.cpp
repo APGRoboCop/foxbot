@@ -43,12 +43,6 @@
 #include "waypoint.h"
 
 #ifdef WIN32
-//#define fopen fopen_s
-#define strncpy strncpy_s
-#define strcpy strcpy_s
-#define strcat strcat_s
-#define strncat strncat_s
-//#define sscanf sscanf_s
 #define stricmp _stricmp
 #endif
 
@@ -769,7 +763,7 @@ void chatClass::readChatFile(void)
 
 	char buffer[MAX_CHAT_LENGTH] = "";
 	char* ptr;
-	int i;
+	//int i;
 	int chat_section = -1;
 
 	while (UTIL_ReadFileLine(buffer, MAX_CHAT_LENGTH, bfp)) {
@@ -3615,7 +3609,7 @@ void StartFrame(void)
 				curr = &msg_com[i];
 				// UTIL_BotLogPrintf("StartFrame-del %d\n", curr->next);
 
-				while (curr->next != NULL && curr->next != 0 && (int)curr->next != -1) {
+				while (curr->next != NULL && (int)curr->next != -1) {
 					prev = curr;
 					curr = curr->next;
 				}
@@ -4989,7 +4983,7 @@ void StartFrame(void)
 								i++;
 								buf = buf + 1;
 							} // move to end
-							while (curr->next != NULL && curr->next != 0 && (int)curr->next != -1)
+							while (curr->next != NULL && (int)curr->next != -1)
 								curr = curr->next; // get to null
 
 							curr->next = new msg_com_struct;
@@ -5025,7 +5019,7 @@ void StartFrame(void)
 								i++;
 								buf = buf + 1;
 							} // move to end
-							while (curr->next != NULL && curr->next != 0 && (int)curr->next != -1)
+							while (curr->next != NULL && (int)curr->next != -1)
 								curr = curr->next; // get to null
 
 							curr->next = new msg_com_struct;
@@ -5061,7 +5055,7 @@ void StartFrame(void)
 								i++;
 								buf = buf + 1;
 							} // move to end
-							while (curr->next != NULL && curr->next != 0 && (int)curr->next != -1)
+							while (curr->next != NULL && (int)curr->next != -1)
 								curr = curr->next; // get to null
 
 							curr->next = new msg_com_struct;
@@ -5097,7 +5091,7 @@ void StartFrame(void)
 								i++;
 								buf = buf + 1;
 							} // move to end
-							while (curr->next != NULL && curr->next != 0 && (int)curr->next != -1)
+							while (curr->next != NULL && (int)curr->next != -1)
 								curr = curr->next; // get to null
 
 							curr->next = new msg_com_struct;
@@ -5135,7 +5129,7 @@ void StartFrame(void)
 								i++;
 								buf = buf + 1;
 							} // move to end
-							while (curr->next != NULL && curr->next != 0 && (int)curr->next != -1)
+							while (curr->next != NULL && (int)curr->next != -1)
 								curr = curr->next; // get to null
 
 							curr->next = new msg_com_struct;
@@ -5171,7 +5165,7 @@ void StartFrame(void)
 								i++;
 								buf = buf + 1;
 							} // move to end
-							while (curr->next != NULL && curr->next != 0 && (int)curr->next != -1)
+							while (curr->next != NULL && (int)curr->next != -1)
 								curr = curr->next; // get to null
 
 							curr->next = new msg_com_struct;
@@ -5207,7 +5201,7 @@ void StartFrame(void)
 								i++;
 								buf = buf + 1;
 							} // move to end
-							while (curr->next != NULL && curr->next != 0 && (int)curr->next != -1)
+							while (curr->next != NULL && (int)curr->next != -1)
 								curr = curr->next; // get to null
 
 							curr->next = new msg_com_struct;
@@ -5243,7 +5237,7 @@ void StartFrame(void)
 								i++;
 								buf = buf + 1;
 							} // move to end
-							while (curr->next != NULL && curr->next != 0 && (int)curr->next != -1)
+							while (curr->next != NULL && (int)curr->next != -1)
 								curr = curr->next; // get to null
 
 							curr->next = new msg_com_struct;
@@ -5287,7 +5281,7 @@ void StartFrame(void)
 									buf = buf + 1;
 								} // move to end
 							}
-							while (curr->next != NULL && curr->next != 0 && (int)curr->next != -1)
+							while (curr->next != NULL && (int)curr->next != -1)
 								curr = curr->next; // get to null
 
 							curr->next = new msg_com_struct;
@@ -5328,7 +5322,7 @@ void StartFrame(void)
 									buf = buf + 1;
 								} // move to end
 							}
-							while (curr->next != NULL && curr->next != 0 && (int)curr->next != -1)
+							while (curr->next != NULL && (int)curr->next != -1)
 								curr = curr->next; // get to null
 
 							curr->next = new msg_com_struct;
@@ -5369,7 +5363,7 @@ void StartFrame(void)
 									buf = buf + 1;
 								} // move to end
 							}
-							while (curr->next != NULL && curr->next != 0 && (int)curr->next != -1)
+							while (curr->next != NULL && (int)curr->next != -1)
 								curr = curr->next; // get to null
 
 							curr->next = new msg_com_struct;
@@ -5410,7 +5404,7 @@ void StartFrame(void)
 									buf = buf + 1;
 								} // move to end
 							}
-							while (curr->next != NULL && curr->next != 0 && (int)curr->next != -1)
+							while (curr->next != NULL && (int)curr->next != -1)
 								curr = curr->next; // get to null
 
 							curr->next = new msg_com_struct;

@@ -69,10 +69,10 @@ VERSION=0.793-APG
 # Make sure this is the correct compiler for your system
 # 4.8 appears to compile the builds smaller but Clang appears not compatible
 
-CC=gcc
-CXX=g++
-#CC=gcc-4.8
-#CXX=g++-4.8
+#CC=gcc
+#CXX=g++
+CC=gcc-4.8
+CXX=g++-4.8
 
 ################################################################################################
 # !! If you only want to compile and go you shouldn't need to edit anything below this line !! #

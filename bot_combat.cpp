@@ -38,13 +38,6 @@
 #include "waypoint.h"
 #include "bot_navigate.h"
 
-#ifdef WIN32
-#define strncpy strncpy_s
-#define strncat strncat_s
-#define sprintf sprintf_s
-#define _snprintf _snprintf_s
-#endif
-
 extern WAYPOINT waypoints[MAX_WAYPOINTS];
 extern int num_waypoints; // number of waypoints currently in map
 
@@ -628,9 +621,9 @@ static edict_t* BotFindEnemy(bot_t* pBot)
 
 	if (mod_id == TFC_DLL) {
 		// get medics and engineers to heal/repair teammates
-		if (pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC ||
-			pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER &&
-			pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > 90) {
+		if (pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER &&
+			pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > 90 ||
+			pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC) {
 			nearestDistance = 1000.0;
 			edict_t* pPlayer;
 			int player_team;
@@ -1922,7 +1915,7 @@ int BotNadeHandler(bot_t* pBot, bool timed, const char newNadeType)
 		const float distanceThrown = NADEVELOCITY * timeToDet;
 
 		// Throw it if we got a good chance at landing good splash damage.
-		if (fabs(distanceThrown - pBot->enemy.f_seenDistance) < 20.0f ||
+		if (std::fabs(distanceThrown - pBot->enemy.f_seenDistance) < 20.0f ||
 			distanceThrown - pBot->enemy.f_seenDistance < -200.0f) {
 			toss = TRUE;
 			pBot->tossNade = 1;
