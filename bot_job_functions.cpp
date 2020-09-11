@@ -43,11 +43,7 @@
 #include "bot_navigate.h"
 
 #ifdef WIN32
-#define strncpy strncpy_s
-#define strcpy strcpy_s
-#define strncat strncat_s
-#define _snprintf _snprintf_s
-#define itoa _itoa_s
+#define itoa _itoa
 #endif
 
 extern chatClass chat; // bot chat stuff

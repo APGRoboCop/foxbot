@@ -38,14 +38,7 @@
 #include "cbase.h"
 
 #ifdef WIN32
-#define strncpy strncpy_s
-#define strcpy strcpy_s
-#define strncat strncat_s
-#define sprintf sprintf_s
-#define vsprintf vsprintf_s
-#define _snprintf _snprintf_s
 #define stricmp _stricmp
-
 #endif
 
 extern bool mr_meta;

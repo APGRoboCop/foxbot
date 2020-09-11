@@ -1672,22 +1672,22 @@ edict_t* BotContactThink(bot_t* pBot)
 			}
 
 			vang = pPlayer->v.origin - pBot->pEdict->v.origin;
-			float distanceToPlayer = vang.Length();
+			const float distanceToPlayer = vang.Length();
 
 			// nearest player to the bot so far?
 			if (distanceToPlayer >= nearestdistance)
 				continue;
 
 			vang = UTIL_VecToAngles(vang);
-			float pv = pBot->pEdict->v.v_angle.y + 180.0;
+			const float pv = pBot->pEdict->v.v_angle.y + 180.0;
 
 			vang.y -= pv;
 			if (vang.y < 0.0)
 				vang.y += 360.0;
 
-			if (!((UTIL_GetTeamColor(pBot->pEdict) == UTIL_GetTeamColor(pPlayer) ||
-				team_allies[pBot->current_team] & 1 << UTIL_GetTeam(pPlayer)) &&
-				pPlayer == pBot->enemy.ptr)) {
+			if (!(pPlayer == pBot->enemy.ptr &&
+				(UTIL_GetTeamColor(pBot->pEdict) == UTIL_GetTeamColor(pPlayer) ||
+					team_allies[pBot->current_team] & 1 << UTIL_GetTeam(pPlayer)))) {
 				Vector vecEnd = pPlayer->v.origin + pPlayer->v.view_ofs;
 
 				if (FInViewCone(vecEnd, pBot->pEdict) && FVisible(vecEnd, pBot->pEdict)) {
@@ -1845,7 +1845,7 @@ void script(const char* sz)
 						fprintf(fp,"b %d\n",current_msg); fclose(fp); }*/
 
 				msg_com_struct* curr = &msg_com[current_msg];
-				while (curr != NULL && curr != 0 && (int)curr != -1) {
+				while (curr != NULL && (int)curr != -1) {
 					/*{ fp=UTIL_OpenFoxbotLog();
 							fprintf(fp,"Started while %s %d\n",sz,current_msg);
 							fclose(fp); }*/
@@ -2214,7 +2214,7 @@ static void BotAttackerCheck(bot_t* pBot)
 
 			// is team play enabled?
 			if (mod_id == TFC_DLL) {
-				int player_team = UTIL_GetTeam(pPlayer);
+				const int player_team = UTIL_GetTeam(pPlayer);
 
 				// don't target your teammates or allies
 				if (pBot->current_team == player_team || team_allies[pBot->current_team] & 1 << player_team)
@@ -2328,7 +2328,7 @@ void BotSoundSense(edict_t* pEdict, const char* pszSample, const float fVolume)
 			if (bots[i].is_used // Is this a bot?
 				&& bots[i].visEnemyCount < 1 && bots[i].mission == ROLE_DEFENDER && bots[i].current_wp != -1 &&
 				(bots[i].current_team != sourceTeam || random_long(0, 1000) < 333)) {
-				float botDistance = (bots[i].pEdict->v.origin - pEdict->v.origin).Length();
+				const float botDistance = (bots[i].pEdict->v.origin - pEdict->v.origin).Length();
 				if (botDistance < hearingDistance) {
 					// This bot can hear it. Try going to it
 					if (random_long(1, 100) < 100 - bots[i].bot_skill * 10) {
@@ -2484,7 +2484,7 @@ void BotSoundSense(edict_t* pEdict, const char* pszSample, const float fVolume)
 			if (bots[i].current_team == sourceTeam && random_long(0, 1000) < 400)
 				continue;
 
-			float botDistance = (bots[i].pEdict->v.origin - pEdict->v.origin).Length();
+			const float botDistance = (bots[i].pEdict->v.origin - pEdict->v.origin).Length();
 
 			if (botDistance < hearingDistance && botDistance > 100.0f) {
 				// if this bot can hear the sound, but is not looking at its source
@@ -2845,7 +2845,7 @@ static void BotRoleCheck(bot_t* pBot)
 		const int totalAttackers = teams.attackers[team].size() + teams.humanAttackers[team].size();
 		const float percentOffense = playerPercentage * totalAttackers;
 
-		char needed_mission;
+		unsigned char needed_mission;
 
 		// decide if attackers or defenders are needed
 		if (percentOffense - errorMargin > static_cast<float>(RoleStatus[team]))
@@ -3619,7 +3619,7 @@ bool SpyAmbushAreaCheck(bot_t* pBot, Vector& r_wallVector)
 				continue;
 
 			// ignore allied players
-			int player_team = UTIL_GetTeam(pPlayer);
+			const int player_team = UTIL_GetTeam(pPlayer);
 			if (player_team > -1 &&
 				(player_team == pBot->current_team || team_allies[pBot->current_team] & 1 << player_team))
 				continue;
@@ -4111,9 +4111,9 @@ void BotThink(bot_t* pBot)
 	if (diff > 180)
 		diff = diff - 360;
 	if (diff > -10 && diff < 10)
-		speed = 3;
+		speed = 2;
 	else if (diff > -20 && diff < 20)
-		speed = 4;
+		speed = 3;
 	else if (diff > -40 && diff < 40)
 		speed = 4;
 	else if (diff > -60 && diff < 60)

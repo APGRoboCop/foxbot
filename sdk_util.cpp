@@ -34,10 +34,6 @@
 #include <cstring>
 #include "osdep.h" // win32 v_snprintf, etc
 
-#ifdef WIN32
-#define _vsnprintf _vsnprintf_s
-#endif
-
 char* UTIL_VarArgs(char* format, ...)
 {
 	va_list argptr;

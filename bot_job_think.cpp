@@ -44,10 +44,6 @@
 #include "waypoint.h"
 #include "bot_navigate.h"
 
-#ifdef WIN32
-#define strncpy strncpy_s
-#endif
-
 // team data /////////////////////////
 extern int RoleStatus[];
 extern int team_allies[4];

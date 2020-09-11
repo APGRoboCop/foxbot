@@ -454,8 +454,8 @@ int WaypointFindNearest_E(edict_t* pEntity, const float range, const int team)
 		if (team != -1 && waypoints[i].flags & W_FL_TEAM_SPECIFIC && (waypoints[i].flags & W_FL_TEAM) != team)
 			continue;
 
-		Vector distance = waypoints[i].origin - pEntity->v.origin;
-		double distance_squared = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
+		const Vector distance = waypoints[i].origin - pEntity->v.origin;
+		const double distance_squared = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
 
 		if (distance_squared < min_distance_squared) {
 			// if waypoint is visible from current position
@@ -496,7 +496,7 @@ int WaypointFindNearest_V(Vector v_src, const float range, const int team)
 		if (team != -1 && waypoints[index].flags & W_FL_TEAM_SPECIFIC && (waypoints[index].flags & W_FL_TEAM) != team)
 			continue;
 
-		float distance = (waypoints[index].origin - v_src).Length();
+		const float distance = (waypoints[index].origin - v_src).Length();
 
 		if (distance < min_distance) {
 			min_index = index;
@@ -535,8 +535,8 @@ int WaypointFindNearest_S(const Vector v_src,
 			continue;
 
 		// square the Manhattan distance
-		Vector distance = waypoints[index].origin - v_src;
-		double distance_squared = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
+		const Vector distance = waypoints[index].origin - v_src;
+		const double distance_squared = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
 
 		// if it's the nearest found so far
 		if (distance_squared < min_distance_squared) {
@@ -596,7 +596,7 @@ int WaypointFindInRange(Vector v_src,
 		if (team != -1 && waypoints[i].flags & W_FL_TEAM_SPECIFIC && (waypoints[i].flags & W_FL_TEAM) != team)
 			continue;
 
-		float distance = (waypoints[i].origin - v_src).Length();
+		const float distance = (waypoints[i].origin - v_src).Length();
 
 		// if this waypoint is within range
 		if (distance < max_range) {
@@ -658,7 +658,7 @@ int WaypointFindNearestGoal(const int srcWP, const int team, int range, const WP
 		if (index == srcWP)
 			continue; // skip the source waypoint
 
-		int distance = WaypointDistanceFromTo(srcWP, index, team);
+		const int distance = WaypointDistanceFromTo(srcWP, index, team);
 
 		if (distance < range && distance > 0) {
 			min_index = index;
@@ -809,7 +809,7 @@ int WaypointFindRandomGoal_D(const int source_WP, const int team, const int rang
 		if (index == source_WP)
 			continue; // we're looking for a new waypoint, duh!
 
-		int routeDistance = WaypointDistanceFromTo(source_WP, index, team);
+		const int routeDistance = WaypointDistanceFromTo(source_WP, index, team);
 
 		// need to skip wpt if not available to the bots team
 		// or it's too far away
@@ -932,7 +932,7 @@ int WaypointFindDetpackGoal(const int srcWP, const int team)
 	if (total > 0) {
 		while (total > 0) {
 			// pick a waypoint from the list at random
-			int rand_index = RANDOM_LONG(0, total - 1);
+			const int rand_index = RANDOM_LONG(0, total - 1);
 
 			// check if it needs clearing
 			if (waypoints[WP_list[rand_index]].flags & W_FL_TFC_DETPACK_CLEAR &&
@@ -1037,7 +1037,7 @@ int WaypointFindNearestAiming(const Vector& r_v_origin)
 			continue;
 
 		// find the nearest of the near
-		float distance = (r_v_origin - waypoints[index].origin).Length();
+		const float distance = (r_v_origin - waypoints[index].origin).Length();
 		if (distance < min_distance) {
 			min_index = index;
 			min_distance = distance;
@@ -1278,7 +1278,7 @@ void WaypointDelete(edict_t* pEntity)
 			if ((waypoints[i].flags & W_FL_AIMING) == 0)
 				continue;
 
-			float distance = (waypoints[i].origin - waypoints[index].origin).Length();
+			const float distance = (waypoints[i].origin - waypoints[index].origin).Length();
 
 			if (distance < min_distance && distance < 40.0f) {
 				min_index = i;
@@ -2003,7 +2003,7 @@ bool WaypointReachable(Vector v_src, Vector v_dest, edict_t* pEntity)
 
 				UTIL_TraceLine(v_check, v_down, ignore_monsters, pEntity->v.pContainingEntity, &tr);
 
-				float curr_height = tr.flFraction * 1000.0; // height from ground
+				const float curr_height = tr.flFraction * 1000.0; // height from ground
 
 				// is the difference in the last height and the current
 				// height higher that the jump height?
@@ -3068,12 +3068,12 @@ static void WaypointFloyds(unsigned int* shortest_path, unsigned int* from_to)
 		changed = FALSE;
 		for (unsigned int x = 0; x < route_num_waypoints; x++) {
 			for (y = 0; y < route_num_waypoints; y++) {
-				unsigned int yRx = y * route_num_waypoints + x;
+				const unsigned int yRx = y * route_num_waypoints + x;
 				for (z = 0; z < route_num_waypoints; z++) {
 					// Optimization - didn't need to do that math all over
 					// the place in the [], just do it once.
-					unsigned int yRz = y * route_num_waypoints + z;
-					unsigned int xRz = x * route_num_waypoints + z;
+					const unsigned int yRz = y * route_num_waypoints + z;
+					const unsigned int xRz = x * route_num_waypoints + z;
 
 					if (shortest_path[yRx] == WAYPOINT_UNREACHABLE || shortest_path[xRz] == WAYPOINT_UNREACHABLE)
 						continue;
@@ -3128,7 +3128,7 @@ static void WaypointRouteInit(void)
 		}
 	}
 
-	unsigned int array_size = route_num_waypoints * route_num_waypoints;
+	const unsigned int array_size = route_num_waypoints * route_num_waypoints;
 
 	for (int matrix = 0; matrix < 4; matrix++) {
 		if (build_matrix[matrix]) {
@@ -5660,7 +5660,7 @@ void ProcessCommanderList(void)
 			if (buffer[0] == '/' && buffer[1] == '/')
 				continue;
 		}
-		bool valid = TRUE;
+		const bool valid = TRUE;
 
 		// Search for invalid characters in the read string.
 		// strlen is being called too many times in the for loop - [APG]RoboCop[CL]

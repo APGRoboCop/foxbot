@@ -152,8 +152,8 @@ void BotFindCurrentWaypoint(bot_t* pBot)
 			continue;
 
 		// square the Manhattan distance, this way we can avoid using sqrt()
-		Vector distance = waypoints[index].origin - pBot->pEdict->v.origin;
-		double distance_squared = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
+		const Vector distance = waypoints[index].origin - pBot->pEdict->v.origin;
+		const double distance_squared = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
 
 		// if the waypoint is above the bot only remember it in case no
 		// other waypoint could be found(higher waypoints may be unreachable)
@@ -1448,7 +1448,7 @@ static bool BotFallenOffCheck(bot_t* const pBot)
 				//	WaypointDrawBeam(INDEXENT(1), pBot->pEdict->v.origin,
 				//		waypoints[index].origin, 10, 2, 250, 250, 250, 200, 10);
 
-				float distanceToCurr = (pBot->pEdict->v.origin - waypoints[pBot->current_wp].origin).Length();
+				const float distanceToCurr = (pBot->pEdict->v.origin - waypoints[pBot->current_wp].origin).Length();
 
 				if (VectorsNearerThan(pBot->pEdict->v.origin, waypoints[index].origin, distanceToCurr) &&
 					BotCanSeeOrigin(pBot, waypoints[index].origin))
@@ -1696,19 +1696,19 @@ void BotFindSideRoute(bot_t* pBot)
 		if (i == pBot->current_wp)
 			continue;
 
-		int newPredictedWP = WaypointRouteFromTo(pBot->current_wp, i, pBot->current_team);
+		const int newPredictedWP = WaypointRouteFromTo(pBot->current_wp, i, pBot->current_team);
 
 		// skip waypoints that do not branch off from the bots current route
 		if (newPredictedWP == nextPredictedWP || newPredictedWP == -1)
 			continue;
 
-		int newGoalDistance = WaypointDistanceFromTo(i, pBot->goto_wp, pBot->current_team);
+		const int newGoalDistance = WaypointDistanceFromTo(i, pBot->goto_wp, pBot->current_team);
 
 		// skip waypoints that are not nearer to the goal than the bot already is
 		if (newGoalDistance > currentGoalDistance || newGoalDistance == -1)
 			continue;
 
-		int excessDistance = newGoalDistance + WaypointDistanceFromTo(pBot->current_wp, i, pBot->current_team) -
+		const int excessDistance = newGoalDistance + WaypointDistanceFromTo(pBot->current_wp, i, pBot->current_team) -
 			currentGoalDistance;
 
 		// find out if the extra travel is more than the bot is currently
@@ -1823,7 +1823,7 @@ bool BotChangeRoute(bot_t* pBot)
 		if (waypoints[index].flags & ignoreFlags || !WaypointAvailable(index, pBot->current_team))
 			continue;
 
-		int newPredictedWP = WaypointRouteFromTo(pBot->current_wp, index, pBot->current_team);
+		const int newPredictedWP = WaypointRouteFromTo(pBot->current_wp, index, pBot->current_team);
 
 		// skip waypoints that do not branch off from the bots current route
 		// or that don't have a route to the goal
@@ -1831,7 +1831,7 @@ bool BotChangeRoute(bot_t* pBot)
 			continue;
 
 		// distance from this new waypoint to the bots current waypoint
-		int interimDist = WaypointDistanceFromTo(index, pBot->current_wp, pBot->current_team);
+		const int interimDist = WaypointDistanceFromTo(index, pBot->current_wp, pBot->current_team);
 
 		// the best waypoints have no route back through the bot's current waypoint
 		if (interimDist == -1) {
@@ -1840,10 +1840,10 @@ bool BotChangeRoute(bot_t* pBot)
 		}
 		else {
 			// distance from this waypoint to the bots goal
-			int newGoalDistance = WaypointDistanceFromTo(index, goalWP, pBot->current_team);
+			const int newGoalDistance = WaypointDistanceFromTo(index, goalWP, pBot->current_team);
 
 			// distance from waypoint to bot + bots current distance from goal
-			int maxRouteDistance = interimDist + currentGoalDistance;
+			const int maxRouteDistance = interimDist + currentGoalDistance;
 
 			// look for a waypoint that will take the bot nearer to it's goal
 			// without coming back through the bots current waypoint
@@ -1905,7 +1905,7 @@ bool BotSetAlternativeGoalWaypoint(bot_t* const pBot, int& r_goalWP, const WPT_I
 			continue;
 
 		// ignore if this new waypoint goes on the same route as the old one
-		int routeNextWP = WaypointRouteFromTo(pBot->current_wp, index, pBot->current_team);
+		const int routeNextWP = WaypointRouteFromTo(pBot->current_wp, index, pBot->current_team);
 		if (routeNextWP == nextWP)
 			continue;
 
@@ -1965,7 +1965,7 @@ static bool BotEscapeWaypointTrap(bot_t* const pBot, const int goalWP)
 		// make sure a route exists from this waypoint to the goal waypoint,
 		// and that the bot can see it
 		if (WaypointAvailable(index, pBot->current_team)) {
-			int routeDistance = WaypointDistanceFromTo(index, goalWP, pBot->current_team);
+			const int routeDistance = WaypointDistanceFromTo(index, goalWP, pBot->current_team);
 
 			if (routeDistance > -1 && (currentRoutDist == -1 || routeDistance < currentRoutDist) &&
 				VectorsNearerThan(pBot->pEdict->v.origin, waypoints[index].origin, 800.0) &&
@@ -2019,7 +2019,7 @@ int BotFindRetreatPoint(bot_t* const pBot, const int min_dist, const Vector& r_t
 		if (index == pBot->current_wp)
 			continue; // skip the bots current waypoint
 
-		int routeDistance = WaypointDistanceFromTo(pBot->current_wp, index, pBot->current_team);
+		const int routeDistance = WaypointDistanceFromTo(pBot->current_wp, index, pBot->current_team);
 
 		if (routeDistance < min_dist || routeDistance > max_dist)
 			continue; // ignore waypoints that are too near or too far away
@@ -2101,13 +2101,13 @@ int BotFindThreatAvoidPoint(bot_t* const pBot, const int min_dist, edict_t* pent
 		if (index == pBot->current_wp)
 			continue; // skip the bots current waypoint
 
-		int routeDistance = WaypointDistanceFromTo(pBot->current_wp, index, pBot->current_team);
+		const int routeDistance = WaypointDistanceFromTo(pBot->current_wp, index, pBot->current_team);
 
 		if (routeDistance < min_dist || routeDistance > max_dist)
 			continue; // ignore waypoints that are too near or too far away
 
 		// pick the next waypoint on the route to this waypoint
-		int nextWP = WaypointRouteFromTo(pBot->current_wp, index, pBot->current_team);
+		const int nextWP = WaypointRouteFromTo(pBot->current_wp, index, pBot->current_team);
 
 		// we've found the right waypoint if the next waypoint on the route is further
 		// from the threat than the bot is, and the end waypoint is far enough from the threat
@@ -2188,7 +2188,7 @@ int BotTargetDefenderWaypoint(bot_t* pBot)
 			continue;
 
 		// look for a waypoint near the target and return true
-		int goalWP = WaypointFindRandomGoal_R(waypoints[index].origin, TRUE, 500.0, -1, 0);
+		const int goalWP = WaypointFindRandomGoal_R(waypoints[index].origin, TRUE, 500.0, -1, 0);
 
 		if (goalWP != -1) {
 			//	char msg[80]; //DebugMessageOfDoom!
@@ -2244,7 +2244,7 @@ int BotFindSuicideGoal(bot_t* pBot)
 		if (index == pBot->current_wp)
 			continue; // skip the bots current waypoint
 
-		float distance = (waypoints[index].origin - waypoints[waypoint_from].origin).Length();
+		const float distance = (waypoints[index].origin - waypoints[waypoint_from].origin).Length();
 		if (distance > furthestDistance) {
 			furthestDistance = distance;
 			furthestIndex = index;
@@ -2313,7 +2313,7 @@ int BotDrowningWaypointSearch(bot_t* pBot)
 		if (waypoints[index].origin.z <= pBot->pEdict->v.origin.z)
 			continue;
 
-		int routeDistance = WaypointDistanceFromTo(pBot->current_wp, index, pBot->current_team);
+		const int routeDistance = WaypointDistanceFromTo(pBot->current_wp, index, pBot->current_team);
 		if (routeDistance < minDistance && routeDistance != -1) {
 			// accept the waypoint if there is empty space just above it
 			if (UTIL_PointContents(waypoints[index].origin + Vector(0.0, 0.0, 40.0)) == CONTENTS_EMPTY) {
@@ -2352,7 +2352,7 @@ bool BotFindTeleportShortCut(bot_t* pBot)
 			pBot->telePair[i].exitWP > -1 && pBot->telePair[i].exitWP < num_waypoints &&
 			pBot->telePair[i].entrance != NULL) {
 			// distance via this known teleporter pair
-			int totalDistance = WaypointDistanceFromTo(pBot->current_wp, pBot->telePair[i].entranceWP, pBot->current_team) +
+			const int totalDistance = WaypointDistanceFromTo(pBot->current_wp, pBot->telePair[i].entranceWP, pBot->current_team) +
 				WaypointDistanceFromTo(pBot->telePair[i].exitWP, pBot->goto_wp, pBot->current_team);
 
 			// shortest route yet?
@@ -2449,7 +2449,7 @@ static void BotCheckForRocketJump(bot_t* pBot)
 			// is this RJ waypoints height reachable with a rocket jump?
 			// on a server with 800 gravity rocket jumps can reach a height of about 440
 			if (zDiff > 54.0 && zDiff < maxJumpHeight) {
-				float distance2D = (pBot->pEdict->v.origin - waypoints[RJPoints[i][RJ_WP_INDEX]].origin).Length2D();
+				const float distance2D = (pBot->pEdict->v.origin - waypoints[RJPoints[i][RJ_WP_INDEX]].origin).Length2D();
 
 				if (distance2D > 150.0 // don't want RJ points that are too close
 					&& distance2D < closest2D) {
@@ -2603,7 +2603,7 @@ static void BotCheckForConcJump(bot_t* pBot)
 			// is this RJ waypoints height reachable with a concussion jump?
 			// on a server with 800 gravity concussion jumps can reach a height of about 490
 			if (zDiff > 54.0 && zDiff < 450.0) {
-				float distance2D = (waypoints[endWP].origin - waypoints[RJPoints[i][RJ_WP_INDEX]].origin).Length2D();
+				const float distance2D = (waypoints[endWP].origin - waypoints[RJPoints[i][RJ_WP_INDEX]].origin).Length2D();
 
 				if (distance2D < closest2D) {
 					closest2D = distance2D;
