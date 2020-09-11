@@ -74,14 +74,14 @@ void BotStartGame(bot_t* pBot)
 				char* cvar_specs = const_cast<char*>(CVAR_GET_STRING("allow_spectators"));
 				if (strcmp(cvar_specs, "0") == 0) {
 					CVAR_SET_STRING("allow_spectators", "1");
-					FakeClientCommand(pBot->pEdict, "spectate", nullptr, nullptr);
+					FakeClientCommand(pBot->pEdict, "spectate", NULL, NULL);
 					CVAR_SET_STRING("allow_spectators", "0");
 				}
 				else
-					FakeClientCommand(pBot->pEdict, "spectate", nullptr, nullptr);
+					FakeClientCommand(pBot->pEdict, "spectate", NULL, NULL);
 
 				spawn_check_crash = FALSE;
-				spawn_check_crash_edict = nullptr;
+				spawn_check_crash_edict = NULL;
 			}
 
 			pBot->create_time = gpGlobals->time;
@@ -144,7 +144,7 @@ void BotStartGame(bot_t* pBot)
 
 			//	UTIL_BotLogPrintf("%p joining team %d\n", pBot, pBot->bot_team);
 
-			FakeClientCommand(pEdict, "jointeam", c_team, nullptr);
+			FakeClientCommand(pEdict, "jointeam", c_team, NULL);
 
 			return;
 		}
@@ -203,10 +203,12 @@ void BotStartGame(bot_t* pBot)
 			else if (pBot->bot_class == 9)
 				strcpy(c_class, "engineer");
 
-			FakeClientCommand(pEdict, c_class, nullptr, nullptr);
+			FakeClientCommand(pEdict, c_class, NULL, NULL);
 
 			// bot has now joined the game (doesn't need to be started)
 			pBot->not_started = FALSE;
+			//	UTIL_BotLogPrintf("%p chosen class %d\n", pBot, pBot->bot_class);
+			return;
 		}
 	} /* else if(mod_id == CSTRIKE_DLL) {
 		// handle Counter-Strike stuff here...
