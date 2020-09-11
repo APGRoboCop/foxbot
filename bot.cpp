@@ -59,12 +59,6 @@ extern void* h_Library;
 #endif
 
 #ifdef WIN32
-//#define fopen fopen_s
-#define strncpy strncpy_s
-//#define strcpy strcpy_s
-#define strncat strncat_s
-#define sprintf sprintf_s
-#define _snprintf _snprintf_s
 #define stricmp _stricmp
 #endif
 
@@ -1671,7 +1665,7 @@ edict_t* BotContactThink(bot_t* pBot)
 				continue;
 
 			// don't avoid if going for player with one of these weapons
-			if (pBot->enemy.ptr == pPlayer || pBot->currentJob > -1 && pPlayer == pBot->job[pBot->currentJob].player) {
+			if (pBot->currentJob > -1 && pPlayer == pBot->job[pBot->currentJob].player || pBot->enemy.ptr == pPlayer) {
 				if (pBot->current_weapon.iId == TF_WEAPON_KNIFE || pBot->current_weapon.iId == TF_WEAPON_MEDIKIT ||
 					pBot->current_weapon.iId == TF_WEAPON_SPANNER || pBot->current_weapon.iId == TF_WEAPON_AXE)
 					continue;
@@ -2731,9 +2725,9 @@ static void BotGrenadeAvoidance(bot_t* pBot)
 				threatEnt = pent;
 			}
 		}
-		else if (strncmp("tf_weapon_nailgrenade", classname, 29) == 0 ||
-			strncmp("tf_weapon_napalmgrenade", classname, 29) == 0 ||
-			strncmp("tf_gl_grenade", classname, 29) == 0 && pBot->pEdict->v.playerclass != TFC_CLASS_DEMOMAN) {
+		else if (strncmp("tf_gl_grenade", classname, 29) == 0 && pBot->pEdict->v.playerclass != TFC_CLASS_DEMOMAN ||
+			(strncmp("tf_weapon_nailgrenade", classname, 29) == 0 ||
+				strncmp("tf_weapon_napalmgrenade", classname, 29) == 0)) {
 			entity_origin = pent->v.origin;
 			if (FInViewCone(entity_origin, pBot->pEdict) && FVisible(entity_origin, pBot->pEdict)) {
 				if (pBot->trait.aggression < 33 || static_cast<int>(pBot->pEdict->v.health) > 70)
@@ -2881,11 +2875,11 @@ static void BotRoleCheck(bot_t* pBot)
 				bots[i].mission != needed_mission && !bots[i].lockMission && !bots[i].bot_has_flag) {
 				// these classes are good candidates for switching between attack and defense
 				// Engineers are also suitable here because EMP and armor repair is cool
-				if (bots[i].pEdict->v.playerclass == TFC_CLASS_SOLDIER ||
-					bots[i].pEdict->v.playerclass == TFC_CLASS_PYRO ||
-					bots[i].pEdict->v.playerclass == TFC_CLASS_HWGUY ||
-					bots[i].pEdict->v.playerclass == TFC_CLASS_ENGINEER ||
-					bots[i].pEdict->v.playerclass == TFC_CLASS_DEMOMAN && !ignoreDemomen) {
+				if (bots[i].pEdict->v.playerclass == TFC_CLASS_DEMOMAN && !ignoreDemomen ||
+					(bots[i].pEdict->v.playerclass == TFC_CLASS_SOLDIER ||
+						bots[i].pEdict->v.playerclass == TFC_CLASS_PYRO ||
+						bots[i].pEdict->v.playerclass == TFC_CLASS_HWGUY ||
+						bots[i].pEdict->v.playerclass == TFC_CLASS_ENGINEER)) {
 					bots[i].mission = needed_mission;
 					/*	char msg[80];//DebugMessageOfDoom!
 							sprintf(msg, "team %d needed_mission %d totalAttackers %d",
@@ -3608,8 +3602,9 @@ bool SpyAmbushAreaCheck(bot_t* pBot, Vector& r_wallVector)
 {
 	// perform some basic checks first
 	// e.g. don't feign near a lift
-	if (pBot->pEdict->v.waterlevel != WL_NOT_IN_WATER || pBot->nadePrimed == TRUE || pBot->bot_has_flag ||
-		PlayerIsInfected(pBot->pEdict) || pBot->current_wp > -1 && waypoints[pBot->current_wp].flags & W_FL_LIFT) {
+	if (pBot->current_wp > -1 && waypoints[pBot->current_wp].flags & W_FL_LIFT || (pBot->pEdict->v.waterlevel !=
+		WL_NOT_IN_WATER || pBot->nadePrimed == TRUE || pBot->bot_has_flag ||
+		PlayerIsInfected(pBot->pEdict))) {
 		return FALSE;
 	}
 
@@ -3914,8 +3909,8 @@ void BotThink(bot_t* pBot)
 	//{ FILE *fp=UTIL_OpenFoxbotLog(); fprintf(fp,"%d\n",pBot->pEdict->v.flags); fclose(fp); }
 
 	// if the bot is dead, randomly press fire to respawn...
-	if (pBot->pEdict->v.health < 1 ||
-		pBot->pEdict->v.deadflag != DEAD_NO && pBot->pEdict->v.deadflag != 5 // not a spy feigning death
+	if (pBot->pEdict->v.deadflag != DEAD_NO && pBot->pEdict->v.deadflag != 5 ||
+		pBot->pEdict->v.health < 1 // not a spy feigning death
 		|| pBot->pEdict->v.playerclass == 0) {
 		if (pBot->bot_start2 > 0 && pBot->bot_start3 == 0)
 			pBot->bot_start3 = pBot->f_think_time;

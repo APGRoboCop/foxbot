@@ -37,10 +37,6 @@
 #include "bot_weapons.h"
 #include "list.h"
 
-#ifdef WIN32
-#define strncpy strncpy_s
-#endif
-
 extern bot_weapon_t weapon_defs[MAX_WEAPONS];
 extern edict_t* clients[32];
 extern bot_t bots[32];
@@ -262,7 +258,7 @@ float BotChangePitch(edict_t* pEdict, float speed)
 	// turn from the current v_angle pitch to the idealpitch by selecting
 	// the quickest way to turn to face that direction
 	// find the difference in the current and ideal angle
-	const float diff = fabs(current - ideal);
+	const float diff = std::fabs(current - ideal);
 
 	// check if the bot is already facing the idealpitch direction...
 	if (diff <= 0.01)
@@ -341,7 +337,7 @@ float BotChangeYaw(edict_t* pEdict, float speed)
 	// turn from the current v_angle yaw to the ideal_yaw by selecting
 	// the quickest way to turn to face that direction
 	// find the difference in the current and ideal angle
-	const float diff = fabs(current - ideal);
+	const float diff = std::fabs(current - ideal);
 
 	// check if the bot is already facing the ideal_yaw direction...
 	if (diff <= 0.01)
@@ -845,9 +841,9 @@ bool BotHeadTowardWaypoint(bot_t* pBot, bool& r_navByStrafe)
 				pBot->f_side_speed = 0.0; // not on left or right, don't strafe sideways
 
 			// now to handle vertical movement when swimming(or bobbing on the surface of water)
-			if (pBot->pEdict->v.waterlevel == WL_HEAD_IN_WATER ||
-				pBot->pEdict->v.waterlevel == WL_WAIST_IN_WATER // on the surface
-				&& !(pBot->pEdict->v.flags & FL_ONGROUND)) {
+			if (pBot->pEdict->v.waterlevel == WL_WAIST_IN_WATER // on the surface
+				&& !(pBot->pEdict->v.flags & FL_ONGROUND) ||
+				pBot->pEdict->v.waterlevel == WL_HEAD_IN_WATER) {
 				// swim up if below the waypoint
 				if (pBot->pEdict->v.origin.z < waypoints[pBot->current_wp].origin.z - 5.0) {
 					//	WaypointDrawBeam(INDEXENT(1), pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs,
