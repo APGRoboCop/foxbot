@@ -127,8 +127,8 @@ int num_areas;
 static bool is_junction[MAX_WAYPOINTS];
 
 static unsigned int route_num_waypoints;
-unsigned int* shortest_path[4] = {nullptr, nullptr, nullptr, nullptr };
-unsigned int* from_to[4] = {nullptr, nullptr, nullptr, nullptr };
+unsigned int* shortest_path[4] = { NULL, NULL, NULL, NULL };
+unsigned int* from_to[4] = { NULL, NULL, NULL, NULL };
 
 static FILE* fp;
 
@@ -141,26 +141,27 @@ static bool WaypointDeleteAimArtifact(edict_t* pEntity);
 void WaypointDebug(void)
 {
 	fp = UTIL_OpenFoxbotLog();
-	if (fp != nullptr) {
+	if (fp != NULL) {
 		fprintf(fp, "WaypointDebug: LINKED LIST ERROR!!!\n");
 		fclose(fp);
 	}
 
 	//int x = x - 1; // x is zero
 	//int y = y / x; // cause an divide by zero exception
+
+	return;
 }
 
 // free the linked list of waypoint path nodes...
 void WaypointFree(void)
 {
-	for (auto& i : paths)
-	{
+	for (int i = 0; i < MAX_WAYPOINTS; i++) {
 #ifdef _DEBUG
 		int count = 0;
 #endif
 
-		if (i) {
-			PATH* p = i;
+		if (paths[i]) {
+			PATH* p = paths[i];
 
 			while (p) // free the linked list
 			{
@@ -175,7 +176,7 @@ void WaypointFree(void)
 #endif
 			}
 
-			i = nullptr;
+			paths[i] = NULL;
 		}
 	}
 }
@@ -208,7 +209,7 @@ void WaypointInit(void)
 
 		wp_display_time[i] = 0.0;
 
-		paths[i] = nullptr; // no paths allocated yet
+		paths[i] = NULL; // no paths allocated yet
 
 		a_display_time[i] = 0.0;
 		areas[i].flags = 0;
@@ -232,8 +233,8 @@ void WaypointInit(void)
 	last_waypoint = Vector(0, 0, 0);
 
 	for (i = 0; i < 4; i++) {
-		shortest_path[i] = nullptr;
-		from_to[i] = nullptr;
+		shortest_path[i] = NULL;
+		from_to[i] = NULL;
 	}
 }
 
@@ -246,7 +247,7 @@ int WaypointAddPath(const short int add_index, const short int path_index)
 		return TRUE;
 
 	PATH* p = paths[add_index];
-	PATH* prev = nullptr;
+	PATH* prev = NULL;
 	int i;
 
 #ifdef _DEBUG
@@ -254,7 +255,7 @@ int WaypointAddPath(const short int add_index, const short int path_index)
 #endif
 
 	// find an empty slot for new path_index...
-	while (p != nullptr) {
+	while (p != NULL) {
 		i = 0;
 
 		while (i < MAX_PATH_INDEX) {
@@ -287,7 +288,7 @@ int WaypointAddPath(const short int add_index, const short int path_index)
 
 	p = static_cast<PATH*>(malloc(sizeof(PATH)));
 
-	if (p == nullptr) {
+	if (p == NULL) {
 		ALERT(at_error, "FoXBot - Error, memory allocation failed for waypoint path!");
 		UTIL_BotLogPrintf("Memory allocation failed for waypoint path!\n");
 		return FALSE;
@@ -297,12 +298,12 @@ int WaypointAddPath(const short int add_index, const short int path_index)
 	p->index[1] = -1;
 	p->index[2] = -1;
 	p->index[3] = -1;
-	p->next = nullptr;
+	p->next = NULL;
 
-	if (prev != nullptr)
+	if (prev != NULL)
 		prev->next = p; // link new node into existing list
 
-	if (paths[add_index] == nullptr)
+	if (paths[add_index] == NULL)
 		paths[add_index] = p; // save head point if necessary
 
 	return TRUE;
@@ -322,7 +323,7 @@ void WaypointDeletePath(const short int del_index)
 #endif
 
 		// search linked list for del_index...
-		while (p != nullptr) {
+		while (p != NULL) {
 			i = 0;
 
 			while (i < MAX_PATH_INDEX) {
@@ -356,7 +357,7 @@ void WaypointDeletePath(const short int path_index, const short int del_index)
 #endif
 
 	// search linked list for del_index...
-	while (p != nullptr) {
+	while (p != NULL) {
 		i = 0;
 
 		while (i < MAX_PATH_INDEX) {
@@ -383,7 +384,7 @@ int WaypointFindPath(PATH** pPath, int* path_index, const int waypoint_index, co
 {
 	int index;
 
-	if (*pPath == nullptr) {
+	if (*pPath == NULL) {
 		*pPath = paths[waypoint_index];
 		*path_index = 0;
 	}
@@ -398,7 +399,7 @@ int WaypointFindPath(PATH** pPath, int* path_index, const int waypoint_index, co
 	int count = 0;
 #endif
 
-	while (*pPath != nullptr) {
+	while (*pPath != NULL) {
 		while (*path_index < MAX_PATH_INDEX) {
 			if ((*pPath)->index[*path_index] != -1) // found a path?
 			{
@@ -439,7 +440,7 @@ int WaypointFindPath(PATH** pPath, int* path_index, const int waypoint_index, co
 // find the index of the nearest waypoint to the indicated player
 // (-1 if not found)
 // This function also checks that the waypoint is visible to the specified entity.
-int WaypointFindNearest_E(edict_t* pEntity, const double range, const int team)
+int WaypointFindNearest_E(edict_t* pEntity, const float range, const int team)
 {
 	int min_index = -1;
 	double min_distance_squared = range * range + 0.1f;
@@ -479,7 +480,7 @@ int WaypointFindNearest_E(edict_t* pEntity, const double range, const int team)
 
 // pick an origin, and find the nearest waypoint to it
 // This wont check for visibility.
-int WaypointFindNearest_V(const Vector v_src, const float range, const int team)
+int WaypointFindNearest_V(Vector v_src, const float range, const int team)
 {
 	if (num_waypoints < 1)
 		return -1;
@@ -516,7 +517,7 @@ int WaypointFindNearest_V(const Vector v_src, const float range, const int team)
 // Also, you can specify waypoint flags that you wish to exclude from the search.
 int WaypointFindNearest_S(const Vector v_src,
 	edict_t* pEntity,
-	const double range,
+	const float range,
 	const int team,
 	const WPT_INT32 ignore_flags)
 {
@@ -546,10 +547,10 @@ int WaypointFindNearest_S(const Vector v_src,
 		if (distance_squared < min_distance_squared) {
 			// check if the waypoint is visible from
 			// the source position or a specified entity
-			if (pEntity != nullptr)
+			if (pEntity != NULL)
 				UTIL_TraceLine(v_src, waypoints[index].origin, dont_ignore_monsters, pEntity->v.pContainingEntity, &tr);
 			else
-				UTIL_TraceLine(waypoints[index].origin, v_src, ignore_monsters, nullptr, &tr);
+				UTIL_TraceLine(waypoints[index].origin, v_src, ignore_monsters, NULL, &tr);
 
 			// it is visible, so store it
 			if (tr.flFraction >= 1.0) {
@@ -568,11 +569,11 @@ int WaypointFindNearest_S(const Vector v_src,
 // waypoint it found instead.
 // If chooseRandom is TRUE then the search starts from a random waypoint.
 // Returns -1 if no waypoint was found that is in visible range.
-int WaypointFindInRange(const Vector v_src,
-                        const float min_range,
-                        const float max_range,
-                        const int team,
-                        const bool chooseRandom)
+int WaypointFindInRange(Vector v_src,
+	const float min_range,
+	const float max_range,
+	const int team,
+	const bool chooseRandom)
 {
 	TraceResult tr;
 	int nextBestWP = -1; // just in case one wasn't found in ideal range
@@ -604,7 +605,7 @@ int WaypointFindInRange(const Vector v_src,
 
 		// if this waypoint is within range
 		if (distance < max_range) {
-			UTIL_TraceLine(waypoints[i].origin, v_src, ignore_monsters, nullptr, &tr);
+			UTIL_TraceLine(waypoints[i].origin, v_src, ignore_monsters, NULL, &tr);
 
 			// if the source is visible from this waypoint
 			if (tr.flFraction >= 1.0) {
@@ -880,7 +881,7 @@ int WaypointFindRandomGoal_R(const Vector v_src,
 
 		if (VectorsNearerThan(waypoints[index].origin, v_src, range)) {
 			if (checkVisibility)
-				UTIL_TraceLine(v_src, waypoints[index].origin, ignore_monsters, nullptr, &tr);
+				UTIL_TraceLine(v_src, waypoints[index].origin, ignore_monsters, NULL, &tr);
 
 			if (!checkVisibility || tr.flFraction >= 1.0) {
 				indexes[count] = index;
@@ -967,13 +968,12 @@ bool DetpackClearIsBlocked(const int index)
 	// start checking
 	PATH* p = paths[index];
 	int path_total = 0;
-	while (p != nullptr) {
-		for (short i : p->index)
-		{
+	while (p != NULL) {
+		for (int i = 0; i < MAX_PATH_INDEX; i++) {
 			// test for an obstruction
-			if (i != -1) {
+			if (p->index[i] != -1) {
 				++path_total;
-				UTIL_TraceLine(waypoints[index].origin, waypoints[i].origin, ignore_monsters, nullptr, &tr);
+				UTIL_TraceLine(waypoints[index].origin, waypoints[p->index[i]].origin, ignore_monsters, NULL, &tr);
 
 				if (tr.flFraction < 1.0)
 					return TRUE; // a path is blocked by something
@@ -1001,12 +1001,11 @@ bool DetpackSealIsClear(const int index)
 
 	// start checking
 	PATH* p = paths[index];
-	while (p != nullptr) {
-		for (short i : p->index)
-		{
+	while (p != NULL) {
+		for (int i = 0; i < MAX_PATH_INDEX; i++) {
 			// test for an obstruction
-			if (i != -1) {
-				UTIL_TraceLine(waypoints[index].origin, waypoints[i].origin, ignore_monsters, nullptr, &tr);
+			if (p->index[i] != -1) {
+				UTIL_TraceLine(waypoints[index].origin, waypoints[p->index[i]].origin, ignore_monsters, NULL, &tr);
 
 				if (tr.flFraction < 1.0)
 					return FALSE; // a path is blocked by something
@@ -1064,7 +1063,7 @@ void WaypointDrawBeam(edict_t* pEntity,
 	int brightness,
 	int speed)
 {
-	MESSAGE_BEGIN(MSG_ONE, SVC_TEMPENTITY, nullptr, pEntity);
+	MESSAGE_BEGIN(MSG_ONE, SVC_TEMPENTITY, NULL, pEntity);
 	WRITE_BYTE(TE_BEAMPOINTS);
 	WRITE_COORD(start.x);
 	WRITE_COORD(start.y);
@@ -1093,7 +1092,7 @@ void WaypointAdd(edict_t* pEntity)
 	if (num_waypoints >= MAX_WAYPOINTS)
 		return;
 
-	edict_t* pent = nullptr;
+	edict_t* pent = NULL;
 	const float radius = 40.0f;
 	int index = 0;
 
@@ -1135,7 +1134,7 @@ void WaypointAdd(edict_t* pEntity)
 	//********************************************************
 
 	char item_name[64];
-	while ((pent = FIND_ENTITY_IN_SPHERE(pent, pEntity->v.origin, radius)) != nullptr && !FNullEnt(pent)) {
+	while ((pent = FIND_ENTITY_IN_SPHERE(pent, pEntity->v.origin, radius)) != NULL && !FNullEnt(pent)) {
 		strcpy(item_name, STRING(pent->v.classname));
 
 		if (strcmp("item_healthkit", item_name) == 0) {
@@ -1174,7 +1173,7 @@ void WaypointAdd(edict_t* pEntity)
 #endif
 
 	// search linked list for del_index...
-	while (p != nullptr) {
+	while (p != NULL) {
 		i = 0;
 		while (i < MAX_PATH_INDEX) {
 			p->index[i] = -1; // unassign this path
@@ -1311,7 +1310,7 @@ void WaypointDelete(edict_t* pEntity)
 
 	// free the path for this index...
 
-	if (paths[index] != nullptr) {
+	if (paths[index] != NULL) {
 		PATH* p = paths[index];
 
 		while (p) // free the linked list
@@ -1327,7 +1326,7 @@ void WaypointDelete(edict_t* pEntity)
 #endif
 		}
 
-		paths[index] = nullptr;
+		paths[index] = NULL;
 	}
 
 	// delete the waypoint
@@ -1385,7 +1384,7 @@ static bool WaypointDeleteAimArtifact(edict_t* pEntity)
 
 		// if this waypoint is near enough to the aim waypoint
 		if (distance < 125.0f) {
-			UTIL_TraceLine(waypoints[min_index].origin, waypoints[j].origin, ignore_monsters, nullptr, &tr);
+			UTIL_TraceLine(waypoints[min_index].origin, waypoints[j].origin, ignore_monsters, NULL, &tr);
 
 			// if there is line of sight from this waypoint to the
 			// aim waypoint
@@ -1550,7 +1549,7 @@ bool WaypointLoad(edict_t* pEntity)
 	FILE* bfp = fopen(filename, "rb");
 
 	// if file exists, read the waypoint data from it
-	if (bfp != nullptr) {
+	if (bfp != NULL) {
 		if (IS_DEDICATED_SERVER())
 			printf("loading waypoint file: %s\n", filename);
 
@@ -1681,7 +1680,7 @@ bool WaypointLoad(edict_t* pEntity)
 	bfp = fopen(filename, "rb");
 
 	// if file exists, read the waypoint structure from it
-	if (bfp != nullptr) {
+	if (bfp != NULL) {
 		if (IS_DEDICATED_SERVER())
 			printf("loading waypoint file: %s\n", filename);
 		fread(&header, sizeof header, 1, bfp);
@@ -1883,7 +1882,7 @@ void WaypointSave(void)
 	UTIL_BuildFileName(filename, 255, "waypoints", mapname);
 	FILE* bfp = fopen(filename, "wb");
 
-	if (bfp == nullptr) {
+	if (bfp == NULL) {
 		ALERT(at_console, "Couldn't open a waypoint file to save waypoint data into.\n");
 		return;
 	}
@@ -1906,7 +1905,7 @@ void WaypointSave(void)
 		PATH* p = paths[index];
 		num = 0;
 
-		while (p != nullptr) {
+		while (p != NULL) {
 			i = 0;
 
 			while (i < MAX_PATH_INDEX) {
@@ -1925,7 +1924,7 @@ void WaypointSave(void)
 
 		p = paths[index];
 
-		while (p != nullptr) {
+		while (p != NULL) {
 			i = 0;
 
 			while (i < MAX_PATH_INDEX) {
@@ -1996,7 +1995,7 @@ bool WaypointReachable(Vector v_src, Vector v_dest, edict_t* pEntity)
 
 			UTIL_TraceLine(v_check, v_down, ignore_monsters, pEntity->v.pContainingEntity, &tr);
 
-			double last_height = tr.flFraction * 1000.0; // height from ground
+			float last_height = tr.flFraction * 1000.0; // height from ground
 
 			distance = (v_dest - v_check).Length(); // distance from goal
 
@@ -2044,10 +2043,9 @@ bool WaypointDirectPathCheck(const int srcWP, const int destWP)
 
 	PATH* p = paths[srcWP];
 
-	while (p != nullptr) {
-		for (short i : p->index)
-		{
-			if (i == destWP)
+	while (p != NULL) {
+		for (int i = 0; i < MAX_PATH_INDEX; i++) {
+			if (p->index[i] == destWP)
 				return TRUE;
 		}
 
@@ -2823,7 +2821,7 @@ void WaypointThink(edict_t* pEntity)
 				// only include ones close enough
 				if ((waypoints[index].origin - waypoints[ii].origin).Length() < 800) {
 					p = paths[ii];
-					while (p != nullptr) {
+					while (p != NULL) {
 						i = 0;
 						while (i < MAX_PATH_INDEX) {
 							// goes to waypoint were standing at
@@ -2841,7 +2839,7 @@ void WaypointThink(edict_t* pEntity)
 
 			p = paths[index];
 
-			while (p != nullptr) {
+			while (p != NULL) {
 				i = 0;
 
 				while (i < MAX_PATH_INDEX) {
@@ -2880,7 +2878,7 @@ void WaypointThink(edict_t* pEntity)
 				(waypoints[g_find_wp].origin - pPlayer->v.origin).Length(), routeDistance);
 			msg[127] = '\0';
 
-			MESSAGE_BEGIN(MSG_ONE, SVC_TEMPENTITY, nullptr, pPlayer);
+			MESSAGE_BEGIN(MSG_ONE, SVC_TEMPENTITY, NULL, pPlayer);
 			WRITE_BYTE(TE_TEXTMESSAGE);
 			WRITE_BYTE(2 & 0xFF);
 			WRITE_SHORT(-12500);
@@ -3139,18 +3137,18 @@ static void WaypointRouteInit(void)
 
 	for (int matrix = 0; matrix < 4; matrix++) {
 		if (build_matrix[matrix]) {
-			if (shortest_path[matrix] == nullptr) {
+			if (shortest_path[matrix] == NULL) {
 				sprintf(msg, "calculating FoXBot waypoint paths for team %d...\n", matrix + 1);
 				ALERT(at_console, msg);
 
 				shortest_path[matrix] = static_cast<unsigned int*>(malloc(sizeof(unsigned int) * array_size));
 
-				if (shortest_path[matrix] == nullptr)
+				if (shortest_path[matrix] == NULL)
 					ALERT(at_error, "FoXBot - Error allocating memory for shortest path!");
 
 				from_to[matrix] = static_cast<unsigned int*>(malloc(sizeof(unsigned int) * array_size));
 
-				if (from_to[matrix] == nullptr)
+				if (from_to[matrix] == NULL)
 					ALERT(at_error, "FoXBot - Error allocating memory for from to matrix!");
 
 				unsigned int* pShortestPath = shortest_path[matrix];
@@ -3163,7 +3161,7 @@ static void WaypointRouteInit(void)
 					pShortestPath[index * route_num_waypoints + index] = 0; // zero diagonal
 
 				for (unsigned int row = 0; row < route_num_waypoints; row++) {
-					if (paths[row] != nullptr) {
+					if (paths[row] != NULL) {
 						PATH* p = paths[row];
 
 						while (p) {
@@ -3287,11 +3285,11 @@ int WaypointRouteFromTo(const int src, const int dest, int team)
 		team = 0;
 
 	// if no team specific waypoints use team 0
-	if (from_to[team] == nullptr)
+	if (from_to[team] == NULL)
 		team = 0;
 
 	// if no route information just return
-	if (from_to[team] == nullptr)
+	if (from_to[team] == NULL)
 		return -1;
 
 	unsigned int* pFromTo = from_to[team];
@@ -3322,11 +3320,11 @@ int WaypointDistanceFromTo(const int src, const int dest, int team)
 		team = 0;
 
 	// if no team specific waypoints use team 0
-	if (from_to[team] == nullptr)
+	if (from_to[team] == NULL)
 		team = 0;
 
 	// if no route information just return
-	if (from_to[team] == nullptr)
+	if (from_to[team] == NULL)
 		return -1;
 
 	unsigned int* pShortestPath = shortest_path[team];
@@ -3545,6 +3543,7 @@ void WaypointRunOneWay(edict_t* pEntity)
 			// play "cancelled" sound...
 			EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "common/wpn_moveselect.wav", 1.0, ATTN_NORM, 0, 100);
 			wpt1 = temp;
+			return;
 		}
 		else {
 			wpt2 = wpt1;
@@ -3555,8 +3554,10 @@ void WaypointRunOneWay(edict_t* pEntity)
 
 				WaypointAddPath(wpt2, wpt1);
 			}
+			return;
 		}
 	}
+	return;
 }
 
 void WaypointRunTwoWay(edict_t* pEntity)
@@ -3568,6 +3569,7 @@ void WaypointRunTwoWay(edict_t* pEntity)
 			// play "cancelled" sound...
 			EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "common/wpn_moveselect.wav", 1.0, ATTN_NORM, 0, 100);
 			wpt1 = temp;
+			return;
 		}
 		else {
 			wpt2 = wpt1;
@@ -3579,8 +3581,10 @@ void WaypointRunTwoWay(edict_t* pEntity)
 				WaypointAddPath(wpt1, wpt2);
 				WaypointAddPath(wpt2, wpt1);
 			}
+			return;
 		}
 	}
+	return;
 }
 
 void WaypointAutoBuild(edict_t* pEntity)
@@ -3689,7 +3693,7 @@ void WaypointAutoBuild(edict_t* pEntity)
 						PATH* p = paths[index];
 						// int count = 0;
 						// search linked list for del_index...
-						while (p != nullptr) {
+						while (p != NULL) {
 							int i = 0;
 							while (i < MAX_PATH_INDEX) {
 								p->index[i] = -1; // unassign this path
@@ -3833,6 +3837,7 @@ void AreaDefCreate(edict_t* pEntity)
 		WaypointDrawBeam(pEntity, start, end, 30, 0, 255, 0, 0, 250, 5);
 
 		EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "weapons/xbow_hit1.wav", 1.0, ATTN_NORM, 0, 100);
+		return;
 	}
 }
 
@@ -3927,6 +3932,7 @@ void AreaDefDelete(edict_t* pEntity)
 		areas[index].d = Vector(0, 0, 0);
 
 		EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "weapons/mine_activate.wav", 1.0, ATTN_NORM, 0, 100);
+		return;
 	}
 }
 
@@ -3980,7 +3986,7 @@ bool AreaDefLoad(edict_t* pEntity)
 	UTIL_BuildFileName(filename, 255, "areas", mapname);
 	FILE* bfp = fopen(filename, "rb");
 
-	if (bfp != nullptr) {
+	if (bfp != NULL) {
 		if (IS_DEDICATED_SERVER())
 			printf("loading area file: %s\n", filename);
 		fread(&header, sizeof header, 1, bfp);
@@ -4105,6 +4111,7 @@ void AreaDefPrintInfo(edict_t* pEntity)
 		sprintf(msg, "Area %d of %d total\n", index, num_areas);
 		ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 		ClientPrint(pEntity, HUD_PRINTNOTIFY, "Area corner 4\n");
+		return;
 	}
 }
 
@@ -5630,7 +5637,7 @@ void ProcessCommanderList(void)
 	commanders.clear();
 	//char invalidChars[] = " abcdefghijklmnopqrstuvwxyz,./<>?;'\"[]{}-=+!@#$%^&*()";
 
-	UTIL_BuildFileName(filename, 255, "foxbot_commanders.txt", nullptr);
+	UTIL_BuildFileName(filename, 255, "foxbot_commanders.txt", NULL);
 	FILE* inFile = fopen(filename, "r");
 
 	if (inFile) {
@@ -5689,7 +5696,7 @@ void ProcessCommanderList(void)
 			}*/
 
 				fp = UTIL_OpenFoxbotLog();
-			if (fp != nullptr) {
+			if (fp != NULL) {
 				fprintf(fp, "LOAD USERID: %s\n", uId);
 				fclose(fp);
 			}

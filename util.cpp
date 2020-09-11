@@ -56,7 +56,7 @@ int gmsgTextMsg = 0;
 int gmsgSayText = 0;
 int gmsgShowMenu = 0;
 
-static unsigned long lseed = static_cast<long>(time(nullptr));
+static unsigned long lseed = static_cast<long>(time(0));
 
 // FUNCTION PROTOTYPES
 static void UTIL_FindFoxbotPath(void);
@@ -111,7 +111,7 @@ float random_float(const float lowval, const float highval)
 
 	lseed = (lseed * 1103515245 + 12345) % 2147483647;
 
-	return lowval + float(lseed) / (float(LONG_MAX) / (highval - lowval));
+	return lowval + (float)lseed / ((float)LONG_MAX / (highval - lowval));
 }
 
 // This function is a quick simple way of testing the distance between two
@@ -195,7 +195,7 @@ edict_t* UTIL_FindEntityInSphere(edict_t* pentStart, const Vector& vecCenter, co
 	if (!FNullEnt(pentEntity))
 		return pentEntity;
 
-	return nullptr;
+	return NULL;
 }
 
 edict_t* UTIL_FindEntityByString(edict_t* pentStart, const char* szKeyword, const char* szValue)
@@ -204,7 +204,7 @@ edict_t* UTIL_FindEntityByString(edict_t* pentStart, const char* szKeyword, cons
 
 	if (!FNullEnt(pentEntity))
 		return pentEntity;
-	return nullptr;
+	return NULL;
 }
 
 edict_t* UTIL_FindEntityByClassname(edict_t* pentStart, const char* szName)
@@ -237,7 +237,7 @@ void HUDNotify(edict_t* pEntity, const char* msg_name)
 	if (gmsgHUDNotify == 0)
 		gmsgHUDNotify = REG_USER_MSG("HudText", -1);
 
-	MESSAGE_BEGIN(MSG_ONE, gmsgHUDNotify, nullptr, pEntity);
+	MESSAGE_BEGIN(MSG_ONE, gmsgHUDNotify, NULL, pEntity);
 	WRITE_STRING(msg_name);
 	MESSAGE_END();
 }
@@ -247,7 +247,7 @@ void ClientPrint(edict_t* pEntity, const int msg_dest, const char* msg_name)
 	if (gmsgTextMsg == 0)
 		gmsgTextMsg = REG_USER_MSG("TextMsg", -1);
 
-	MESSAGE_BEGIN(MSG_ONE, gmsgTextMsg, nullptr, pEntity);
+	MESSAGE_BEGIN(MSG_ONE, gmsgTextMsg, NULL, pEntity);
 
 	WRITE_BYTE(msg_dest);
 	WRITE_STRING(msg_name);
@@ -259,7 +259,7 @@ void UTIL_SayText(const char* pText, edict_t* pEdict)
 	if (gmsgSayText == 0)
 		gmsgSayText = REG_USER_MSG("SayText", -1);
 
-	MESSAGE_BEGIN(MSG_ONE, gmsgSayText, nullptr, pEdict);
+	MESSAGE_BEGIN(MSG_ONE, gmsgSayText, NULL, pEdict);
 	WRITE_BYTE(ENTINDEX(pEdict));
 	// if(mod_id == FRONTLINE_DLL)
 	//    WRITE_SHORT(0);
@@ -272,15 +272,15 @@ void UTIL_HostSay(edict_t* pEntity, const int teamonly, char* message)
 	char* pc;
 
 	// make sure the text has content
-	for (pc = message; pc != nullptr && *pc != 0; pc++) {
+	for (pc = message; pc != NULL && *pc != 0; pc++) {
 		if (isprint(*pc) && !isspace(*pc)) {
 			// we've found an alphanumeric character, so text is valid
-			pc = nullptr;
+			pc = NULL;
 			break;
 		}
 	}
 
-	if (pc != nullptr)
+	if (pc != NULL)
 		return; // no character found, so say nothing
 
 	char text[128];
@@ -303,15 +303,15 @@ void UTIL_HostSay(edict_t* pEntity, const int teamonly, char* message)
 
 	const int sender_team = UTIL_GetTeam(pEntity);
 
-	edict_t* client = nullptr;
-	while ((client = UTIL_FindEntityByClassname(client, "player")) != nullptr && !FNullEnt(client)) {
+	edict_t* client = NULL;
+	while ((client = UTIL_FindEntityByClassname(client, "player")) != NULL && !FNullEnt(client)) {
 		if (client == pEntity) // skip sender of message
 			continue;
 
 		if (teamonly && sender_team != UTIL_GetTeam(client))
 			continue;
 
-		MESSAGE_BEGIN(MSG_ONE, gmsgSayText, nullptr, client);
+		MESSAGE_BEGIN(MSG_ONE, gmsgSayText, NULL, client);
 		WRITE_BYTE(ENTINDEX(pEntity));
 		// if(mod_id == FRONTLINE_DLL)
 		//    WRITE_SHORT(0);
@@ -320,7 +320,7 @@ void UTIL_HostSay(edict_t* pEntity, const int teamonly, char* message)
 	}
 
 	// print to the sending client
-	MESSAGE_BEGIN(MSG_ONE, gmsgSayText, nullptr, pEntity);
+	MESSAGE_BEGIN(MSG_ONE, gmsgSayText, NULL, pEntity);
 	WRITE_BYTE(ENTINDEX(pEntity));
 	// if(mod_id == FRONTLINE_DLL)
 	//    WRITE_SHORT(0);
@@ -491,13 +491,12 @@ int UTIL_GetBotIndex(edict_t* pEdict)
 
 bot_t* UTIL_GetBotPointer(edict_t* pEdict)
 {
-	for (auto& bot : bots)
-	{
-		if (bot.pEdict == pEdict)
-			return &bot;
+	for (int index = 0; index < 32; index++) {
+		if (bots[index].pEdict == pEdict)
+			return &bots[index];
 	}
 
-	return nullptr; // return NULL if edict is not a bot
+	return NULL; // return NULL if edict is not a bot
 }
 
 bool IsAlive(edict_t* pEdict)
@@ -613,7 +612,7 @@ Vector GetGunPosition(const edict_t* pEdict)
 void UTIL_SelectItem(edict_t* pEdict, char* item_name)
 {
 	// UTIL_HostSay(pEdict, 0, item_name);
-	FakeClientCommand(pEdict, item_name, nullptr, nullptr);
+	FakeClientCommand(pEdict, item_name, NULL, NULL);
 }
 
 // Some entities have a Vector of (0, 0, 0), so you need this function.
@@ -654,7 +653,7 @@ void UTIL_ShowMenu(edict_t* pEdict, const int slots, const int displaytime, cons
 	if (gmsgShowMenu == 0)
 		gmsgShowMenu = REG_USER_MSG("ShowMenu", -1);
 
-	MESSAGE_BEGIN(MSG_ONE, gmsgShowMenu, nullptr, pEdict);
+	MESSAGE_BEGIN(MSG_ONE, gmsgShowMenu, NULL, pEdict);
 
 	WRITE_SHORT(slots);
 	WRITE_CHAR(displaytime);
@@ -683,7 +682,7 @@ FILE* UTIL_OpenFoxbotLog(void)
 	{
 		// rename the last log as old if it exists
 		file_ptr = fopen(foxbot_logname, "r");
-		if (file_ptr != nullptr) {
+		if (file_ptr != NULL) {
 			fclose(file_ptr);
 
 			char old_logname[160];
@@ -698,7 +697,7 @@ FILE* UTIL_OpenFoxbotLog(void)
 		file_ptr = fopen(foxbot_logname, "w");
 
 		// warn the player if the log file couldn't be created
-		if (file_ptr == nullptr) {
+		if (file_ptr == NULL) {
 			if (IS_DEDICATED_SERVER())
 				printf("\nWARNING: Couldn't create log file: foxbot.log\n");
 			else
@@ -716,7 +715,7 @@ FILE* UTIL_OpenFoxbotLog(void)
 void UTIL_BotLogPrintf(char* fmt, ...)
 {
 	FILE* lfp = UTIL_OpenFoxbotLog();
-	if (lfp == nullptr)
+	if (lfp == NULL)
 		return;
 
 	va_list argptr;
@@ -742,7 +741,7 @@ void UTIL_BuildFileName(char* filename, const int max_fn_length, char* arg1, cha
 		return;
 
 	// add the foxbot directory path, unless it is not valid
-	if (strcmp(foxbot_path, "") != 0 && strlen(foxbot_path) < unsigned(max_fn_length)) {
+	if (strcmp(foxbot_path, "") != 0 && strlen(foxbot_path) < (unsigned)max_fn_length) {
 		strncpy(filename, foxbot_path, max_fn_length);
 		filename[max_fn_length - 1] = '\0';
 	}
@@ -785,16 +784,16 @@ static void UTIL_FindFoxbotPath(void)
 #ifndef __linux__ // must be a Windows machine
 	if (strcmp(foxbot_path, "") == 0) {
 		// try the addons directory first(for Foxbot 0.76 and newer)
-		FILE* fptr = fopen(R"(tfc\addons\foxbot\tfc\foxbot.cfg)", "r");
-		if (fptr != nullptr) {
-			strcpy(foxbot_path, R"(tfc\addons\foxbot\tfc\)");
-			strcpy(foxbot_logname, R"(tfc\addons\foxbot\foxbot.log)");
+		FILE* fptr = fopen("tfc\\addons\\foxbot\\tfc\\foxbot.cfg", "r");
+		if (fptr != NULL) {
+			strcpy(foxbot_path, "tfc\\addons\\foxbot\\tfc\\");
+			strcpy(foxbot_logname, "tfc\\addons\\foxbot\\foxbot.log");
 			fclose(fptr);
 		}
 		else // try the older directory location(Foxbot 0.75 and older)
 		{
 			fptr = fopen("foxbot\\tfc\\foxbot.cfg", "r");
-			if (fptr != nullptr) {
+			if (fptr != NULL) {
 				strcpy(foxbot_path, "foxbot\\tfc\\");
 				strcpy(foxbot_logname, "foxbot\\foxbot.log");
 				fclose(fptr);
@@ -844,7 +843,7 @@ bool UTIL_ReadFileLine(char* string, const unsigned int max_length, FILE* file_p
 {
 	bool line_end_found = FALSE;
 
-	if (fgets(string, max_length, file_ptr) == nullptr)
+	if (fgets(string, max_length, file_ptr) == NULL)
 		return FALSE;
 
 	// check if the string read contains a line terminator of some sort

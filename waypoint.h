@@ -28,7 +28,9 @@
 #ifndef WAYPOINT_H
 #define WAYPOINT_H
 
+#ifdef __linux__
 #include <climits>
+#endif
 
 // standard variable sizes, useful for the waypoint code because the waypoint files
 // are saved in binary format
@@ -152,13 +154,13 @@ void WaypointInit(void);
 
 int WaypointFindPath(PATH** pPath, int* path_index, int waypoint_index, int team);
 
-int WaypointFindNearest_E(edict_t* pEntity, double range, int team);
+int WaypointFindNearest_E(edict_t* pEntity, float range, int team);
 
 int WaypointFindNearest_V(Vector v_src, float range, int team);
 
 int WaypointFindNearest_S(Vector v_src,
 	edict_t* pEntity,
-	double range,
+	float range,
 	int team,
 	WPT_INT32 ignore_flags);
 

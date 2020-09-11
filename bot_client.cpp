@@ -573,7 +573,7 @@ void BotClient_Valve_Damage(void* p, const int bot_index)
 				//	&& bots[bot_index].pEdict->v.waterlevel == WL_HEAD_IN_WATER
 				&& bots[bot_index].bot_skill < 3) {
 				job_struct* newJob = InitialiseNewJob(&bots[bot_index], JOB_DROWN_RECOVER);
-				if (newJob != nullptr) {
+				if (newJob != NULL) {
 					newJob->waypoint = BotDrowningWaypointSearch(&bots[bot_index]);
 					if (newJob->waypoint != -1)
 						SubmitNewJob(&bots[bot_index], JOB_DROWN_RECOVER, newJob);
@@ -675,7 +675,7 @@ void BotClient_Valve_DeathMsg(void* p, int bot_index)
 			else {
 				killer_edict = INDEXENT(killer_index);
 				indexb = UTIL_GetBotIndex(killer_edict);
-				if (indexb != -1 && victim_edict != nullptr) {
+				if (indexb != -1 && victim_edict != NULL) {
 					if (UTIL_GetTeam(killer_edict) != UTIL_GetTeam(victim_edict)) {
 						bots[indexb].killed_edict = victim_edict;
 					}
@@ -687,14 +687,14 @@ void BotClient_Valve_DeathMsg(void* p, int bot_index)
 		if (index != -1) {
 			if (killer_index == 0 || killer_index == victim_index) {
 				// bot killed by world (worldspawn) or bot killed self...
-				bots[index].killer_edict = nullptr;
+				bots[index].killer_edict = NULL;
 			}
 			else {
 				// store edict of player that killed this bot...
 				bots[index].killer_edict = INDEXENT(killer_index);
 				killer_edict = INDEXENT(killer_index);
 				indexb = UTIL_GetBotIndex(killer_edict);
-				if (indexb != -1 && victim_edict != nullptr) {
+				if (indexb != -1 && victim_edict != NULL) {
 					if (UTIL_GetTeam(killer_edict) != UTIL_GetTeam(victim_edict)) {
 						bots[indexb].killed_edict = victim_edict;
 					}
@@ -951,19 +951,18 @@ void BotClient_Engineer_BuildStatus(void* p, const int bot_index)
 			builder[127] = '\0';
 
 			// Loop through the humans to look for the builder
-			for (auto& client : clients)
-			{
+			for (int i = 0; i < 32; i++) {
 				// is this client the builder?
-				if (client && strcmp(STRING(client->v.netname), builder) == 0) {
+				if (clients[i] && strcmp(STRING(clients[i]->v.netname), builder) == 0) {
 					// Get the teleporter ent
-					edict_t* pent = nullptr;
+					edict_t* pent = NULL;
 					while (
-						(pent = FIND_ENTITY_IN_SPHERE(pent, client->v.origin, 200)) != nullptr && !FNullEnt(pent)) {
-						const float l = (client->v.origin - pent->v.origin).Length2D();
+						(pent = FIND_ENTITY_IN_SPHERE(pent, clients[i]->v.origin, 200)) != NULL && !FNullEnt(pent)) {
+						const float l = (clients[i]->v.origin - pent->v.origin).Length2D();
 
 						if (strcmp("building_teleporter", STRING(pent->v.classname)) == 0 && l >= 16.0 && l <= 96.0) {
 							// Set the owner on the teleport
-							pent->v.euser1 = client;
+							pent->v.euser1 = clients[i];
 							pent->v.iuser1 = teleportType;
 							teleportType = 0;
 							break;
