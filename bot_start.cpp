@@ -33,10 +33,6 @@
 #include "bot_func.h"
 #include "bot_weapons.h"
 
-#ifdef WIN32
-#define strcpy strcpy_s
-#endif
-
 extern int mod_id;
 extern edict_t* pent_info_ctfdetect;
 
@@ -155,7 +151,7 @@ void BotStartGame(bot_t* pBot)
 				pBot->bot_class = -1;
 			if (pBot->bot_class == -1)
 				pBot->bot_class = RANDOM_LONG(1, 9);
-			int team = UTIL_GetTeam(pEdict);
+			const int team = UTIL_GetTeam(pEdict);
 
 			if (team_class_limits[team] == -1) // civilian only?
 				pBot->bot_class = 0;          // civilian

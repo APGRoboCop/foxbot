@@ -47,11 +47,6 @@
 #include "bot_navigate.h"
 
 #ifdef WIN32
-#define strncpy strncpy_s
-#define strcpy strcpy_s
-#define strncat strncat_s
-#define sprintf sprintf_s
-#define _snprintf _snprintf_s
 #define itoa _itoa
 #endif
 
@@ -422,7 +417,7 @@ int assess_JobEscortAlly(const bot_t* pBot, const job_struct& r_job)
 	for (int i = 0; i < 32; i++) {
 		if (bots[i].is_used && bots[i].current_team == pBot->current_team) {
 			// only count escorts who are near enough to the escorted player
-			int escortIndex = BufferedJobIndex(&bots[i], JOB_ESCORT_ALLY);
+			const int escortIndex = BufferedJobIndex(&bots[i], JOB_ESCORT_ALLY);
 			if (escortIndex != -1 && bots[i].job[escortIndex].player == r_job.player &&
 				VectorsNearerThan(bots[i].pEdict->v.origin, r_job.player->v.origin, 600.0)) {
 				++escortCount;
@@ -634,7 +629,7 @@ int assess_JobDefendFlag(const bot_t* pBot, const job_struct& r_job)
 			if (bots[i].is_used && bots[i].current_team == pBot->current_team &&
 				&bots[i] != pBot) // make sure the player isn't THIS bot
 			{
-				int DefendJobIndex = BufferedJobIndex(&bots[i], JOB_DEFEND_FLAG);
+				const int DefendJobIndex = BufferedJobIndex(&bots[i], JOB_DEFEND_FLAG);
 				if (DefendJobIndex != -1 && bots[i].job[DefendJobIndex].object == r_job.object) {
 					++defenderTotal;
 

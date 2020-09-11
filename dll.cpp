@@ -764,7 +764,7 @@ void chatClass::readChatFile(void)
 	char buffer[MAX_CHAT_LENGTH] = "";
 	char* ptr;
 	//int i;
-	int chat_section = -1;
+	const int chat_section = -1;
 
 	while (UTIL_ReadFileLine(buffer, MAX_CHAT_LENGTH, bfp)) {
 		size_t length = strlen(buffer);
@@ -6071,7 +6071,7 @@ const char* GetArg(const char* command, const int arg_number)
 	// which does the same thing, when the caller is a bot.
 	int i, index = 0, arg_count = 0, fieldstart, fieldstop;
 	arg[0] = 0;               // reset arg
-	int length = strlen(command); // get length of command
+	const int length = strlen(command); // get length of command
 	// while we have not reached end of line
 	while (index < length && arg_count <= arg_number) {
 		while (index < length && command[index] == ' ')

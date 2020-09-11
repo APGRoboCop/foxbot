@@ -77,7 +77,7 @@ static void BotPipeBombCheck(bot_t* pBot);
 static edict_t* BotFindEnemy(bot_t* pBot);
 static bool BotSpyDetectCheck(bot_t* pBot, edict_t* pNewEnemy);
 static void BotSGSpotted(bot_t* pBot, edict_t* sg);
-static bool BotPrimeGrenade(bot_t* pBot, int slot, char nadeType, unsigned short reserve);
+static bool BotPrimeGrenade(bot_t* pBot, int slot, unsigned char nadeType, unsigned short reserve);
 static bool BotClearShotCheck(bot_t* pBot);
 static Vector BotBodyTarget(edict_t* pBotEnemy, bot_t* pBot);
 static int BotLeadTarget(edict_t* pBotEnemy, bot_t* pBot, int projSpeed, float& d_x, float& d_y, float& d_z);
@@ -241,7 +241,7 @@ int FriendlyClassTotal(edict_t* pEdict, const int specifiedClass, const bool ign
 					++classTotal;
 			}
 			else if (IsAlive(pPlayer) && pPlayer->v.playerclass == specifiedClass) {
-				int player_team = UTIL_GetTeam(pPlayer);
+				const int player_team = UTIL_GetTeam(pPlayer);
 
 				// add another if the player is a teammate or ally
 				if (my_team == player_team || team_allies[my_team] & 1 << player_team)
@@ -309,7 +309,7 @@ static void BotFeigningEnemyCheck(bot_t* pBot)
 				continue;
 
 			// ignore allied players
-			int player_team = UTIL_GetTeam(pPlayer);
+			const int player_team = UTIL_GetTeam(pPlayer);
 			if (player_team > -1 &&
 				(player_team == pBot->current_team || team_allies[pBot->current_team] & 1 << player_team))
 				continue;
@@ -1131,10 +1131,10 @@ int BotGuessPlayerPosition(bot_t* const pBot, const Vector& r_playerOrigin)
 		if (!WaypointAvailable(index, pBot->current_team))
 			continue;
 
-		int playerRouteDistance = WaypointDistanceFromTo(playerWP, index, pBot->current_team);
+		const int playerRouteDistance = WaypointDistanceFromTo(playerWP, index, pBot->current_team);
 
 		if (playerRouteDistance > 100 && playerRouteDistance < 2000) {
-			int botRouteDistance = WaypointDistanceFromTo(pBot->current_wp, index, pBot->current_team);
+			const int botRouteDistance = WaypointDistanceFromTo(pBot->current_wp, index, pBot->current_team);
 
 			// ideally the resulting waypoint should be physically nearer to the
 			// specified player than to the bot too
@@ -1208,7 +1208,7 @@ static bool BotClearShotCheck(bot_t* pBot)
 
 	// trace a line out directly in front of the bot (it would probably
 	// help if this matched the minimum safe range of the RPG launcher)
-	Vector endpoint = pBot->pEdict->v.origin + gpGlobals->v_forward * 180;
+	const Vector endpoint = pBot->pEdict->v.origin + gpGlobals->v_forward * 180;
 
 	// un-comment the WaypointDrawBeam call below if you want to see this
 	// function in action
@@ -1683,7 +1683,7 @@ bool BotFireWeapon(const Vector v_enemy, bot_t* pBot, const int weapon_choice)
 				continue;
 			}
 
-			int use_percent = 0;
+			const int use_percent = 0;
 
 			// is use percent greater than weapon use percent?
 			if (use_percent > pSelect[select_index].use_percent) {
@@ -1703,7 +1703,7 @@ bool BotFireWeapon(const Vector v_enemy, bot_t* pBot, const int weapon_choice)
 
 			iId = pSelect[select_index].iId;
 			use_primary = use_secondary = FALSE;
-			int primary_percent = 0;
+			const int primary_percent = 0;
 
 			// check if this weapon uses ammo and is running low
 			if (pBot->m_rgAmmo[weapon_defs[iId].iAmmo1] < pSelect[select_index].min_primary_ammo)
@@ -2169,7 +2169,7 @@ int BotNadeHandler(bot_t* pBot, bool timed, const char newNadeType)
 // The reserve parameter lets you specify how many grenades you want the bot
 // to keep in reserve(for other occasions).
 // Returns true if a grenade was primed, false otherwise.
-static bool BotPrimeGrenade(bot_t* pBot, const int slot, const char nadeType, const unsigned short reserve)
+static bool BotPrimeGrenade(bot_t* pBot, const int slot, const unsigned char nadeType, const unsigned short reserve)
 {
 	// abort if the bot has run out of the requested grenade type
 	if (slot == PrimaryGrenade && pBot->grenades[PrimaryGrenade] > static_cast<int>(reserve))
@@ -2408,7 +2408,7 @@ void BotCheckForMultiguns(bot_t* pBot, float nearestdistance, edict_t* pNewEnemy
 	for (int i = 0; i < NumNTFGuns; i++) {
 		edict_t* pent = NULL;
 		while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, ntfTargetChecks[i])) != NULL && !FNullEnt(pent)) {
-			int sentry_team = pent->v.team - 1;
+			const int sentry_team = pent->v.team - 1;
 
 			// flagged for deletion by the engine?
 			if ((pent->v.flags & FL_KILLME) == FL_KILLME)
@@ -2419,7 +2419,7 @@ void BotCheckForMultiguns(bot_t* pBot, float nearestdistance, edict_t* pNewEnemy
 				continue;
 
 			// is this the closest visible sentry gun?
-			float distance = (pent->v.origin - pBot->pEdict->v.origin).Length();
+			const float distance = (pent->v.origin - pBot->pEdict->v.origin).Length();
 			Vector vecEnd = pent->v.origin + pent->v.view_ofs;
 			if (distance < nearestdistance && FInViewCone(vecEnd, pBot->pEdict) && FVisible(vecEnd, pBot->pEdict)) {
 				nearestdistance = distance;

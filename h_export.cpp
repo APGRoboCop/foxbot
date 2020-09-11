@@ -34,7 +34,6 @@
 #include "engine.h"
 
 #ifdef WIN32
-#define strcpy strcpy_s
 #define strcmpi _strcmpi
 #endif
 

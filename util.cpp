@@ -32,14 +32,6 @@
 #include "bot.h"
 #include "bot_func.h"
 
-#ifdef WIN32
-//#define fopen fopen_s
-#define strcpy strcpy_s
-//#define strcat strcat_s
-#define strncat strncat_s
-#define _snprintf _snprintf_s
-#endif
-
 // this is used to store the current Foxbot directory path
 static char foxbot_path[160] = "";
 
