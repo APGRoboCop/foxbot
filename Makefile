@@ -8,7 +8,7 @@
 
 ifeq ($(OSTYPE),win32)
 	CPP = i686-w64-mingw32-gcc -m32
-	LINKFLAGS = -mdll -lm -Xlinker -add-stdcall-alias -s -Wl,--no-undefined
+	LINKFLAGS = -mdll -lm -Xlinker -add-stdcall-alias -s
 	DLLEND = .dll
 else
 	CPP = gcc -m32
