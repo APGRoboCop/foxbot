@@ -1,0 +1,321 @@
+# FoxBot Chat File
+# Lines starting with '#' are comments and are therefore ignored.
+# Each line of chat should be no longer than 80 characters.
+# Each chat section begins with a header enclosed with '[' and ']'.
+
+[GREETINGS]
+Hi!
+Hello
+How's it going?
+Wasup
+Wazzzaaaaap!
+Waaaaazzzzzaaaaaaap!
+Waaaaaaaaaazzzzzzzzzzzaaaaaaaaaaap!
+Shup up!!!
+Time to kick some ass!
+Hey all...
+Lo
+What's happinnnng!
+What's happinnnnnnnnnnnnn!
+Yo!
+Wassup!
+Wars UP
+Hey
+Hi
+aWOOoo ...
+rrr...
+hihi
+*sniff*
+shh !!!!!!!
+Greetings
+I'm back!
+Welcome aboard.
+How do you turn this aimbot on?
+Howdy.
+Konnichiwa!
+Y'all better not suck.
+Wait... what color am I?
+Let's see what you can do.
+Present!
+Here!
+Whoa!
+I've got 15 minutes till my other half gets back.
+Must... play... TFC...
+TFC. Noon, more TFC.  Get food, then play TFC...
+I'm feelin' saucy today
+Kick it!
+... Back from the dead...
+I'm on a break, let's go!
+Ok, let's go!
+I want play TFC!!!
+Is anyone here any good at this game?
+Hi everyone
+*A mysterious stranger has entered the room*
+Finally i play Team Fortress Classic...
+Anyone else here from Antarctica?
+Ned Sheridan here, and I'm looking for the big win.
+My therapist said this would be good for me...
+Another day, another map.
+Helll-oo, I'm crrr-azz-y...
+stfu! lol gghf! brb hf!
+I SMELL TROUBLE !
+OMFG! Simulated sunlight!
+I hear this game is like, y'know, totally awesome and stuff.
+The legend returns ...
+Who's in command here? I want to see some authority.
+11000101 11110100 0110
+Did someone say free nachos?
+Hey! I know some of you!
+This server is a special place...
+Hey, cool server, can someone turn the gravity down?
+Cursed with destruction, I must play on...
+What is this infernal game called again?
+Attack of the killer TFC players!
+Ah! The pitter-patter of booted frag-junkies ..
+Finally, I get a connection
+UH! what time is it?
+Garrotings... I mean greetings.  :-)
+
+# killed a player (we are winning)
+[KILL WINNING]
+It'll build character %n
+Perhaps you should try shooting :)
+Are you sure you're holding that gun the right way around?
+You gonna start playing or what %n?
+Keep practicing %n
+I see you %n!
+Ain't nobody stoppin me!
+Try strafing sometime %n.
+Can I be killed? I'm beginning to wonder.
+Next time, make me work for it %n.
+Am I a giant or did everyone else shrink?
+Why do you people even bother?
+Next time %n, don't bother dodging. Why prolong your agony?
+What happened %n?  >:)
+Mental note to self: Find server with better opponents.
+Christ people... try playing with a mouse.
+It *hurts* to be this kick-ass!  It really *hurts*!
+I'm like the freaking energizer bunny over here.
+Why do they ALWAYS try to run??
+Just like cuttin' down weeds.
+Get the hell out of my way!
+Play dead %n... good boy.
+Step aside %n more of your teammates await my wrath.
+Did I get your attention %n?
+Am I evil?  Why, yes I am.
+Some people just don't die well.
+Hey look, I can chat while running full tilt!
+One lump or two %n?
+BOW DOWN!
+BAAAMMMM!
+Hope you have death and dismemberment insurance %n.
+Sorry sir, but thank you for playing.
+Come on in %n... the slaughter's fine.
+Ha! %n smeared like a red crayon!
+Hello %n... I'm the enemy.
+Making people feel bad feels SO good.
+Sorry %n.  Time to respawn.
+Another one bites the dust.
+Pick a real class %n...
+I must kill you %n, the Antelopes on the wall told me to.
+You should stick to Chess %n.
+Walk into the light, %n!
+He chose...poorly.
+I'm immortal!...So far.
+I must be butter cause I'm on a roll!
+DEATH FROM ABOVE!!!
+I'm not even working up a sweat, %n!
+I'd trash talk, but I'm too tired...*yawn*
+%n... I'm your father!
+Come strong or don't come at all!
+Damnit %n! You messed my hair up!
+Good catch %n!
+Let me guess.. LAG?
+splat.. hehe
+How's my fragging?  Call 050 121 F-R-A-G
+I got your number %n
+I press a button, %n gets fragged.  I press a button...
+Stand still and say CHEESE!
+Did anyone see where %n went?
+Roll over. Sit!  Good dawg.
+The faster you go the faster I can stop you. :oP
+With only 4 points down on the leaderboard %n needs to up his game
+DO stop on my account. >:-D
+Bazinga !
+F'sure...
+
+# killed a player (we are losing)
+[KILL LOSING]
+Frags are cheap, but then so am I
+Wow, I killed someone, %n must suck more than me!
+Hey %n, are you ok?
+Aww, you ded
+Did I do that?, hehe.
+Time to start trying.
+Wow! a Frag!, Thanks %n
+Kewl!
+I'd like a Strawberry milkshake ta go with that.
+Phear me!
+My 133tness 0\/\/ns j00 y0u %n
+Oh my god!, I killed %n! You Bastard!
+Huh? What happened? %n has stopped breathing
+Oh my god! A dead body! And its not mine!
+Make war... not something... I forget the rest.
+The war has just begun...
+You suck d00d
+Holly shit, I killed %n!!
+I think I'm getting the hang of this :)
+Thats right.. who's your daddy
+You're just another statistic %n
+Enjoy your short lived lead.
+Yeaaah!
+Here, have some humble pie %n
+Next time I'll use a crowbar!
+Entropy owns you!
+I'd buy you a drink %n, but you're dead  :-(
+Don't get mad, get even %n
+Fragtastic!
+Feel the burn %n
+30 percent hot-air, 75 percent mad skillz!
+All donations of ammo gratefully received.
+Ass whuppins', get yer ass whuppins!
+Score!
+I didn't do it  >:-D
+Neckshot! That'll slow him down.
+F'ckin A!
+Jeeze! Lookit the mess!
+Someone required to clean up in aisle 5
+Ooh, giblets...
+Fear the adjustable wrench of indiscriminate justice!
+I'm brushing up on my evil skills.  >:-D
+Never bring a crowbar to a knife fight!
+Yo momma was a tree goat and yo pappa was a 4 dolla bill
+Gotta remember - I can win at this...
+This server - it is not big enough for the two of us!
+Get outta my house!
+tub of margerine, bag of popcorn, some salsa, eggs. What else do I need?
+Oh yeah !
+huhuhu hu hu
+That one kinda surprised me too %n
+
+# get killed (we are winning)
+[KILLED WINNING]
+Dont frag me now, I am teh big winnar!
+Its just a flesh wound
+I forgot I left the oven on.
+Ok, now its my turn %n :)
+Impressive, my score is.
+Make way, victim coming through!
+Oh dear, gonna have to kill you now %n.
+I demand a recount.
+Don't say a damn word.
+Cheater -->%n<--
+Can you do that?
+I can't believe you just did that.
+Its only a glitch in my winning streak %n
+Tripped and your gun went off did it %n?
+Damn sticky substance on keyboard!
+I'll let you have that one %n, I was resting my mouse hand.
+So %n, you've decided to use your gun huh?
+Keep trying %n, one day you'll be as good as me...
+Lots of blinking, flashing lights...
+That actually hurt %n
+I'll be back >:]
+You try eating pizza and kicking ass at the same time...
+S O B
+I always wonderd what that was like, cheers %n.
+Hey %n could I talk you into being my personal trainer?
+Back from afk...
+O M G
+Its gonna take a lot more than that %n
+I'll be back for your flag
+*BEEP* Target acquired!
+The floor is actually a pretty interesting place to be
+The first one is always free...
+Outstanding kill!
+My score speaks for itself %n
+When will I learn? You pull the pin, then you throw it.
+I didn't say Simon says...
+Now that's not how to treat your new overlords.
+I was getting low on grenades anyhow.
+C'mon!
+Next time I wont be wearing a bullseye!
+If you didn't like my driving why didn't you just say so?
+Designation: %n.  Target is considered armed and dangerous.
+Feck, feck and more feck!
+A challenge at last.
+That was different
+Alrighty then
+Group leader to control, there are tango's on the roof ..
+But what about the incumbent quark density ratio?
+>:-{}
+...
+
+# get killed (we are losing)
+[KILLED LOSING]
+Hey! I'm taking a nap here!
+Grr! :-D
+Dead.  Again...
+asdfasdfasdf!
+Hey everyone, %n is cheating.
+Crap!
+Shit!
+May I borrow your flag %n?
+One day I'll be more than target practice...
+That did NOT hurt... well maybe a little.
+Go sit on a pipebomb %n
+Make the most of it %n.
+That's right %n, stomp on the little guy.
+Unholy crud on a stick!
+Okay %n, you and me, lets go.
+Skin that smokewagon!  Bring it on bitch!
+One of these days I'm gonna catch your ass typing.
+Bite me.
+Forsooth, thine own days appear as if numbered. >:-P
+Why do I keep seeing monkeys...
+Talk your shit over here %n.
+That was most un-gentlemanly of you sir.  I protest!
+I got somethin' for your ass %n.
+I can act like I care ...
+You gonna do something other than talk?
+You talkin' to me?
+I am going to sue you for deformation %n.
+Okay %n, let's dance.
+Come learn to die
+My aiming is worse than ny tpying.
+Dagnabbit!
+Medic!
+Damned phonejack.
+Lllaaaagggg!
+Don't let your mouth overload your ass %n.
+Now with the added flavor of ascorbic peptides!
+I aint playin' with you %n.
+Come on %n.  Let's go!  You afraid?
+Whatdoyouwanttokillmefor%n!?
+You kill me, I kill you - it's all good!
+What?  You think you can play now?
+Nice shot %n...
+I ain't gonna waste my hate on you, %n.
+Ahh, shiiit.
+Its all a conspiricy!
+My God, are you still talking!?
+Its not my fault- my gamma correction is screwy!
+My clan usually scores better than this.
+Gimme a frag.  Must have... a frag...
+Well aren't you full of piss and vinegar
+By this time, my lungs were aching for air
+My keyboard's missing a few keys
+Does the phrase, 'Nut Case' mean anything to you, %n?
+You need to grow up, %n!
+Go reds, go reds!  Wait.  Go blues, go blues! er...
+Now I'll start trying..
+You're not allowed to use guns on this map!
+Good shot cadet.  Unfortunately I'm gonna have to fail you.
+Am I the only one here still on dial-up?
+My ISP is trying to disconnect me.
+Damn, my mouse is sticking!
+I may be the underdog, but I WILL bite you.
+Someone get a Doc, I'm hurt bad  :O
+Excuse me, I'm in need of resurrection!
+Hey %n, can I take some of your sharp edges off?
+I'm a member of the scientific community.  You can't do that to me.

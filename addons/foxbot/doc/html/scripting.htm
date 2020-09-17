@@ -1,0 +1,235 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+   <title>Scripting</title>
+   <meta name="generator" content="Help &amp; Manual" />
+   <meta name="keywords" content="" />
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+   <meta http-equiv="Content-Style-Type" content="text/css" />
+   <link type="text/css" href="default.css" rel="stylesheet" />
+</head>
+<body style="margin: 0px 0px 0px 0px; background: #FFFFFF;">
+
+
+<table width="100%" border="0" cellspacing="0" cellpadding="5" bgcolor="#DCDCBA">
+  <tr valign="middle">
+    <td align="left">
+      <p class="p_Heading1" style="text-align: center;"><img src="logoheader.jpg" width="535" height="134" border="0" alt="LogoHeader"></p>
+<p class="p_Heading1" style="text-align: center;"><span class="f_Heading1" style="color: #ff6600;">Scripting</span></p>
+
+    </td>
+  </tr>
+</table>
+
+<script>
+function CopyToClip()
+{
+clipboardData.setData('TEXT',S1.outerText)
+}
+</script>
+<style><!--
+BODY {
+      background: 4C5844;
+      color: 99A591;
+      scrollbar-track-color: 4C5844;
+      scrollbar-face-color: 4D5945;
+      scrollbar-highlight-color: 6C7666;
+      scrollbar-3dlight-color: 8C9487;
+      scrollbar-darkshadow-color: 31392C;
+      scrollbar-shadow-color: 3F4938;
+      scrollbar-arrow-color: 99A591;
+     }
+--></style>
+
+<!-- Placeholder for topic body. -->
+<table width="100%" border="0" cellspacing="0" cellpadding="5"><tr valign="top"><td align="left">
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">About Scripting</span></p>
+<p>Creating a script for a map can be quite a challenging process. It depends on how complex the map is.  However, once you learn the basics you'll find that a good script can make a huge difference to how well the bots can play a specific map. </p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Why do we need scripts?</span></p>
+<p>Team Fortress Classic allows for a wide variety of map types, not just plain Capture The Flag.  The most direct way to make Foxbot play all these map types well is to implement a script based system.  Scripts can tell the bots what waypoints they should use based on what events happen in the map.</p>
+<p>In order for a map to be "scriptable", the events in the map that you want to script must have messages that you can use to trigger the events in a script. </p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">How can you tell if there are scriptable events in a map?</span></p>
+<p>Some of the indications that the map is scriptable are simple to see. Is there a message broadcasted when the event occurs? (Blue grate destroyed in well for example) Or is there a sound played when a certain event occurs? (captured points in samurai for example) Those are a couple indicators that you can script those events. The best way to find scriptable events are by looking in bot_debug mode, which I will talk about more shortly.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Basic Scripting</span></p>
+<p>First, I recommend that you have area and waypointing modes off, and no bots in the game. The reason for this is simple, you want as little going on in the map as possible, so that you don't get a lot of console spam while in bot_debug mode looking for the messages you will need to create the script triggers.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Step 1: Setup</span></p>
+<p>Before you start your script, you need to have your waypoints mostly done, and the goals in the map should have command points assigned to them.</p>
+<p>Command point tags are the foundation of a script, and all events that are triggered adjust the availability of the waypoints that have a command point tag on it.</p>
+<p><span style="font-style: italic;">Example:</span></p>
+<p>For the map cz2, all the command points have the appropriate command point tag on the waypoint flag goal locations, so command point 1 is on the flag goal for checkpoint1 and so on, so all 5 points have command point tags on the waypoints from 1 to 5 that make them unique and that makes them scriptable.</p>
+<p>&nbsp;</p>
+<p>A waypoint without a command point tag is considered ALWAYS available to the bot.</p>
+<p>&nbsp;</p>
+<p>You should place command points on any items that will need to be made unavailable at any point during the map.</p>
+<p>Any items that are always available to the bots, don't put a command point tag on them.</p>
+<p>&nbsp;</p>
+<p><span style="font-style: italic;">Example:</span></p>
+<p>In the map openfire, for those that don't know, there is a button that turns off security lasers, and that must be done before you can get the flag. In a map like this, you would need to place a flag waypoint at the button, and a flag waypoint at the flag for each team. You would then place different command point tags on each of them... so 1,2,3,4 to make them all independent of each other, and so you can manipulate them with the script.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Step 2: Setting up the on_start section</span></p>
+<p>The first part of any script is the on_start section. This section is executed when the map first loads, and is used to set the initial states of all the command points, to available or unavailable. Now would be a good time to go through the available script commands, since they are the meat of any script.</p>
+<p>&nbsp;</p>
+<p>The basic commands work like so:</p>
+<p><span style="font-style: italic;">color_available_pointx</span> - pointx available to specified team</p>
+<p><span style="font-style: italic;">color_notavailable_pointx</span> - pointx unavailable to specified team color_available_only_pointx - pointx available to specified team AND makes all other points unavailable.</p>
+<p>&nbsp;</p>
+<p>Color would be of course for whatever team, blue, red, yellow, green. And the x at the end would be for whatever command point.</p>
+<p>&nbsp;</p>
+<p><span style="font-style: italic;">Example</span>:</p>
+<div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table cellspacing="0" cellpadding="0" border="0" style="border: none; border-spacing:0px; border-collapse: collapse;">
+<tr style="text-align:left;vertical-align:top;">
+<td valign="top" style="border: solid 1px #000000;"><p><span style="color: #ff0000;">on_start</span></p>
+<p>{ </p>
+<p>blue_available_point1</p>
+<p>red_available_point2</p>
+<p> }</p>
+</td>
+</tr>
+</table>
+</div>
+<p>&nbsp;</p>
+<p>So a section like this would begin the map with all waypoints with command point 1 on them available to blue team, and all waypoints with command point 2 on them available to red team. The default for all points is unavailable, so you don't have to declare unavailable waypoints in the on_start section, though I usually do. You want to set all points available that you want the bots to be able to go to when the map is loaded. This will all depend on the map and waypoint setup.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Step 3: Adding the on_msg triggers</span></p>
+<p>The on_msg triggers are the main part of any script. This is where you will put in the messages that the script will respond to. All triggers need to be part of an on_msg. Here is an example of an on_msg trigger taken from the script for cz2:</p>
+<p>&nbsp;</p>
+<div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table cellspacing="0" cellpadding="0" border="1" style="border: solid 1px #000000; border-spacing:0px;">
+<tr style="text-align:left;vertical-align:top;">
+<td valign="top" style="border: none"><p><span style="color: #ff0000;">on_msg</span>(#CZ_bcap1 )</p>
+<p>{</p>
+<p> blue_notavailable_point1</p>
+<p> red_available_point1</p>
+<p>}</p>
+</td>
+</tr>
+</table>
+</div>
+<p>&nbsp;</p>
+<p>Notice it looks a lot like the on_start section, but this time you have some parenthesis after on_msg and inside those is where you put the message that you want the script to look out for. This particular message is broadcasted in the cz2 map when blue team captures point1.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">How do you find out what the messages are in a map?</span></p>
+<p>&nbsp;</p>
+<p>Easy, bring down the console and type: bot_debug on and hit enter. And you should see the following message in the console.</p>
+<p>When you are in bot_debug mode, you will start to see many new messages in the console that look like: msg (some shit in here)</p>
+<p>The messages that are in the parenthesis in the console are the messages that you will need to use in your script.</p>
+<p>&nbsp;</p>
+<p>Lets do an example of this. If you wanted to script something to happen when the grate in well is blown you would first enter bot_debug on to turn on debug mode, then, you would go and perform the event yourself... remember to have no one else in the game including bots when you do this. As you place the detpack and as it counts down you should be seeing the following messages when it detonates.</p>
+<p>&nbsp;</p>
+<p>There are quite a few scriptable messages in this situation, the hardest thing about creating a script for a map is deciding what message you are going to script. The messages you are looking for are messages that make that particular situation unique. You wouldn't want to use the #detpack_countdown message because it would be triggered any time someone set a detpack. You wouldn't use any of the msg (1), msg (2), msg (0), or the msg (#FITH) to trigger the event either, because again these would trigger any time someone sets a detpack.</p>
+<p>&nbsp;</p>
+<p>At the bottom of the screen, you see msg (#weIl_bgrate_destroyed). Any time you see messages that begin with # you can see what the message is by opening the file called titles.txt in notepad and finding the entry. So if you opened titles.txt and did a search for well_bgrate_destroyed (without the #), you would see that the message matches up to "Blue's GRATE has been destroyed." This makes that message unique to that situation. By unique I mean that the msg (#weIl_bgrate_destroyed) only happens when blues grate has been destroyed and no other time.</p>
+<p>&nbsp;</p>
+<p>Now that you have found a unique message for the event you want to script you need to determine what you want to happen. Since this trigger involves blues grate being destroyed you might want to make a new point available to red team to go to, that started out as unavailable.</p>
+<p>&nbsp;</p>
+<p>NOTE: Not all maps have scriptable messages, there are some maps that show no unique messages in the console when you perform the actions. Sometimes det-packable paths aren't scriptable or in the case of paths that can be opened and closed repeatedly (warpath &amp; rock2) there isn't a message every time the paths are opened or closed, so you cant write the script with the ability to toggle on and off a point each time its opened or closed. This will be addressed in the future as the scripting system expands.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Scripting Buttons</span></p>
+<p>Another point to address, is that if you hit buttons, sometimes you will see messages in the console that can indicate that a button is scriptable. If you were to have bot_debug on when you hit the button in the map openfire you would see this in the console.</p>
+<p>&nbsp;</p>
+<p>Since this map requires the button to be pushed to turn off the security lasers, you would start the map off so that both teams have only the button waypoints available, but you want their goal to change when they hit the button. The most important thing to check when scripting buttons is that the button toggles back at the same time the event turns back on. For instance in the case of openfire, you want to check to make sure that you see another button toggle message when the lasers come back on. In a lot of cases, you will notice that when you push a button, it immediately toggle back to its other state after a second or two, and not when the event it controls turns back. An example of this is the front doors in well, when you push the button you will notice that you will see the button toggle on and off quickly, and it is not synched with the door closing, so you couldn't use it in a script to control bot goals because the button toggle doesn't accurately represent the door closing again. Hope that's clear.</p>
+<p>So how do you check it? Simple, in openfire I push the buttons, then keep an eye on the lasers and the console. If I see the button message toggle back to 1 in the console at the same time that the lasers come back on, then I can use that for my script.</p>
+<p>&nbsp;</p>
+<p>You see the top line shows the message when I hit the button to turn off the lasers. msg (target rtrigger2, toggle 0). I then went and waited by the lasers until they turned back on. Right as the lasers turned back on I see the msg (target rtrigger2, toggle 1) which tells me the button is toggling back right as the lasers come back on. All this means is that the button presses are synched with the events it controls. When it is synched, then you can use it in your script because it accurately represents the state of the lasers. So you can now script the bots to go for the flag when the lasers are down, and when the lasers are back up they will go for the button again.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Scripting Sounds</span></p>
+<p>You might have noticed in the screenshot above that there are messages about sounds that are being played. You will probably rarely use sounds as triggers because they are almost always not very specific. Sounds were added to be scriptable because a map called samurai used unique sounds when each command point was captured, and there was no other messages that could be used. Scripting sounds works just like messages, you would use an on_msg (buttons/spark3,wav) or whatever the specific sound was that you wanted to script. Best advice is to only use sounds as triggers when they are specific enough to use, and when they are the last option, meaning If there is no text messages to use.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Other script commands</span></p>
+<p>There are several other commands that you can use in your scripts to control triggers. One of them is here:</p>
+<div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table cellspacing="0" cellpadding="0" border="0" style="border: none; border-spacing:0px; border-collapse: collapse;">
+<tr style="text-align:left;vertical-align:top;">
+<td valign="top" style="border: solid 1px #000000;"><p>If_color_pointx</p>
+<p>{</p>
+<p> &nbsp; &nbsp; &nbsp; &nbsp;commands here</p>
+<p>}</p>
+</td>
+</tr>
+</table>
+</div>
+<p>&nbsp;</p>
+<p>This line checks to see if pointx is available to the specified color. Look at the following example:</p>
+<div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table cellspacing="0" cellpadding="0" border="0" style="border: none; border-spacing:0px; border-collapse: collapse;">
+<tr style="text-align:left;vertical-align:top;">
+<td valign="top" style="border: solid 1px #000000;"><p>if_blue_point7</p>
+<p>{</p>
+<p>red_notavailable_point6</p>
+<p>blue_available_point6</p>
+<p>}</p>
+</td>
+</tr>
+</table>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>In this case, it checks to see if point7 is currently available to the blue team. If it is, then it will execute the commands afterwards. If not, the commands won't be executed.</p>
+<p>&nbsp;</p>
+<p>NOTE: It is important to keep in mind that ALL commands must be within an on_msg statement. Also, there can only be 1 if statement in an on_msg and it must be at the end. Here is an example from the avanti script.</p>
+<p>&nbsp;</p>
+<div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table cellspacing="0" cellpadding="0" border="0" style="border: none; border-spacing:0px; border-collapse: collapse;">
+<tr style="text-align:left;vertical-align:top;">
+<td valign="top" style="border: solid 1px #000000;"><p>on - <span style="color: #ff0000;">msg</span>(#italy_you_secure_cp3)</p>
+<p>{</p>
+<p>blue_notavailable_point1</p>
+<p>blue_notavailable_point2</p>
+<p>blue_notavailable_point3</p>
+<p>blue_available_point4</p>
+<p>red_notavailable_point1</p>
+<p>red_notavailable_point2 </p>
+<p>red- notavailable_point3</p>
+<p>red_available_point4</p>
+<p>if_blue_point7</p>
+<p> {</p>
+<p>red_notavailable _point6</p>
+<p>blue_available_point6</p>
+<p>}</p>
+<p>}</p>
+</td>
+</tr>
+</table>
+</div>
+<p>&nbsp;</p>
+<p>Notice how everything here is nested within the brackets for the on_msg. Also notice how there is only 1 if statement and its at the end after all the other commands. Any time an if statement is performed, it will not execute any commands after it, which is why you can only put 1 of them in a script, and also why you need to put it at the end of the on_msg before the close bracket.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Step 4: Testing the script</span></p>
+<p>There is a couple tools you will use to test your script to make sure it is working. The first is a simple command. If you type available in the console, you will see a list generated in the console for all 4 teams of which points are available for them at that exact moment. You may need to page up to see them all, this will be improved later.</p>
+<p>&nbsp;</p>
+<p>The other thing you are going to use when testing your script is the bot_debug mode. When you have a script loaded, you can test and see if it is working if you see the message followed by *** followed by the message again.</p>
+<p>&nbsp;</p>
+<p>See the line that says no if target rtrigger2, toggle 1 *** target rtrigger2 toggle 1 ?</p>
+<p>Just the fact that you see the command twice, separated by the *** means that the</p>
+<p>script has intercepted that command, and performed whatever actions that were associated with that trigger.</p>
+<p>&nbsp;</p>
+<p>If you just see the msg (whatever message) and not see the line with the *** in it, that means you have probably mistyped the message in the script.</p>
+<p>&nbsp;</p>
+<p><span style="font-style: italic;">SCRIPTS ARE CASE SENSITIVE!</span> Remember to put the message in the script exactly as it appears in the console.</p>
+<p>&nbsp;</p>
+<p>When testing your scripts, the thing to do first is verify that the script is intercepting the messages you want it to. Once you have verified that, then you will be inserting whatever commands needed to manipulate the command points to make them available or unavailable.</p>
+<p>&nbsp;</p>
+<p>Basically in a script you are specifying a message you want the script to look out for. When the script sees each message, it is going to perform whatever actions go with that message. These actions change the states of command points, resulting in getting the bots to go to whatever command points are available and not pick an unavailable point as a destination.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Common Errors when scripting</span></p>
+<p>&nbsp;</p>
+<p><span style="font-style: italic;">Q: My script isn't loading!</span></p>
+<p>A: If you get a message on the intro that says your script isn't loading it could be one of several problems.</p>
+<p>1) Make sure the script is located in the directory: \foxbot\tfc\scripts</p>
+<p>2) It won't load if you are missing brackets or have too many. There should be a close bracket for every open bracket.</p>
+<p>3) Remember there's no space after on_msg in the script.</p>
+<p>4) Don't forget the on_start section at the top of the script.</p>
+<p>5) Double check your spelling in the commands.</p>
+<p>6) Remember that scripts, just like waypoints, are loaded when the map starts, so if you are in-game while making the script, you will need to save the script file and restart the map in order to load it.</p>
+<p>&nbsp;</p>
+<p><span style="font-style: italic;">Q: The script isn't intercepting the message!</span></p>
+<p>A: Remember to put the messages in the script exactly as they appear in the console. This includes capitalization if it has it in the console. Also, some messages appear more than 1 line. You will need to script these as more than one line as well. You can see an example of this in the script for shutdown2 and several other maps that have been done. My advice is to play with it till it works, as shown by the ***.</p>
+<p>&nbsp;</p>
+<p><span style="font-style: italic;">Q: Why aren't the bots respecting the availability of a scripted waypoint? </span></p>
+<p>A: Waypoints with a script number 1 - 8 are only honoured when bots use them as goal waypoints.  For example, a bot won't go directly to a scripted waypoint that is not available, but it may may try to pass through it on the way to somewhere else. </p>
+
+</td></tr></table>
+
+</body>
+</html>

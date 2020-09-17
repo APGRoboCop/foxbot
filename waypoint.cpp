@@ -35,7 +35,7 @@
 #ifndef __linux__
 #include <sys/stat.h>
 #else
-#include <cstring>
+#include <string.h>
 #include <sys/stat.h>
 #endif
 
@@ -2948,12 +2948,12 @@ void WaypointThink(edict_t *pEntity) {
 
 // Run Floyd's algorithm on the waypoint list to generate the least cost
 // path matrix.
-static void WaypointFloyds(unsigned int *shortest_path, unsigned int *from_to) {
+static void WaypointFloyds(unsigned int *path, unsigned int *to) {
    unsigned int y, z;
 
    for (y = 0; y < route_num_waypoints; y++) {
       for (z = 0; z < route_num_waypoints; z++) {
-         from_to[y * route_num_waypoints + z] = z;
+         to[y * route_num_waypoints + z] = z;
       }
    }
 
@@ -2970,17 +2970,17 @@ static void WaypointFloyds(unsigned int *shortest_path, unsigned int *from_to) {
                const unsigned int yRz = y * route_num_waypoints + z;
                const unsigned int xRz = x * route_num_waypoints + z;
 
-               if (shortest_path[yRx] == WAYPOINT_UNREACHABLE || shortest_path[xRz] == WAYPOINT_UNREACHABLE)
+               if (path[yRx] == WAYPOINT_UNREACHABLE || path[xRz] == WAYPOINT_UNREACHABLE)
                   continue;
 
-               unsigned int distance = shortest_path[yRx] + shortest_path[xRz];
+               unsigned int distance = path[yRx] + path[xRz];
 
                if (distance > WAYPOINT_MAX_DISTANCE)
                   distance = WAYPOINT_MAX_DISTANCE;
 
-               if (distance < shortest_path[yRz] || shortest_path[yRz] == WAYPOINT_UNREACHABLE) {
-                  shortest_path[yRz] = distance;
-                  from_to[yRz] = from_to[yRx];
+               if (distance < path[yRz] || path[yRz] == WAYPOINT_UNREACHABLE) {
+                  path[yRz] = distance;
+                  to[yRz] = to[yRx];
                   changed = TRUE;
                }
             }

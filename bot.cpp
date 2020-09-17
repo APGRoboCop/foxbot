@@ -25,20 +25,23 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
-#include "bot.h"
+
 #include "extdll.h"
 #include "tf_defs.h"
 #include <meta_api.h>
 
 #include "list.h"
 
+#include "bot.h"
+#include "waypoint.h"
+
 #include "bot_func.h"
 #include "bot_job_think.h"
 #include "bot_navigate.h"
 #include "bot_weapons.h"
-#include "waypoint.h"
 
-#include "engine.h" //originally commented
+
+#include "engine.h"
 
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -336,7 +339,6 @@ void BotSpawnInit(bot_t *pBot) {
    pBot->f_dontEvadeTime = 0.0;
 
    pBot->f_enemy_check_time = gpGlobals->time;
-   pBot->f_item_check_time = gpGlobals->time;
    pBot->flag_impulse = -1;
    pBot->f_soundReactTime = gpGlobals->time + 3.0f;
 
@@ -954,6 +956,7 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
             }
          }
       }
+      memset (&pBot->job, 0, sizeof (job_struct) * JOB_BUFFER_MAX);
 
       botJustJoined[index] = FALSE; // the inititation ceremony is over!
    }
@@ -962,12 +965,6 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
 // This function is responsible for getting bots to spot nearby objects of
 // interest and collect or use them.
 void BotFindItem(bot_t *pBot) {
-   if (pBot->f_find_item_time >= pBot->f_think_time)
-      return;
-
-   // only look for items every 0.5 seconds
-   pBot->f_item_check_time = pBot->f_think_time + 0.5f;
-
    // check if the bot can see a flag
    BotFlagSpottedCheck(pBot);
 
@@ -3988,8 +3985,12 @@ static void BotSenseEnvironment(bot_t *pBot) {
       BotAttackerCheck(pBot);
 
    // check if bot should look for items now or not...
-   if (pBot->f_find_item_time < pBot->f_think_time)
-      BotFindItem(pBot); // see if there are any visible items
+   if (pBot->f_find_item_time < pBot->f_think_time) {
+      BotFindItem (pBot); // see if there are any visible items
+
+      // only look for items every 0.5 seconds
+      pBot->f_find_item_time = pBot->f_think_time + 0.5f;
+   }
 
    bool didnt_have_flag = FALSE;
    if (pBot->bot_has_flag == FALSE)

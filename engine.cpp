@@ -847,10 +847,6 @@ void pfnWriteEntity(int iValue) {
 }
 
 void pfnRegUserMsg_common(const char *pszName, int msg) {
-
-   // g_engfuncs.pfnServerPrint (pszName);
-   // g_engfuncs.pfnServerPrint ("\n");
-
    if (strcmp(pszName, "VGUIMenu") == 0)
       message_VGUI = msg;
    else if (strcmp(pszName, "WeaponList") == 0)
@@ -893,9 +889,6 @@ void pfnRegUserMsg_common(const char *pszName, int msg) {
 }
 
 int pfnRegUserMsg_post(const char *pszName, const int iSize) {
-   if (mr_meta)
-      RETURN_META_VALUE(MRES_HANDLED, 0);
-
    int msg = META_RESULT_ORIG_RET(int);
 
    pfnRegUserMsg_common(pszName, msg);
@@ -1169,16 +1162,16 @@ C_DLLEXPORT int GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *inte
    pengfuncsFromEngine->pfnCmd_Argc = Cmd_Argc;
    pengfuncsFromEngine->pfnClientCommand = pfnClientCommand;
    pengfuncsFromEngine->pfnClientPrintf = pfnClientPrintf;
-   pengfuncsFromEngine->pfnMessageBegin = pfnMessageBegin;
-   pengfuncsFromEngine->pfnMessageEnd = pfnMessageEnd;
-   pengfuncsFromEngine->pfnWriteByte = pfnWriteByte;
-   pengfuncsFromEngine->pfnWriteChar = pfnWriteChar;
-   pengfuncsFromEngine->pfnWriteShort = pfnWriteShort;
-   pengfuncsFromEngine->pfnWriteLong = pfnWriteLong;
-   pengfuncsFromEngine->pfnWriteAngle = pfnWriteAngle;
-   pengfuncsFromEngine->pfnWriteCoord = pfnWriteCoord;
-   pengfuncsFromEngine->pfnWriteString = pfnWriteString;
-   pengfuncsFromEngine->pfnWriteEntity = pfnWriteEntity;
+   pengfuncsFromEngine->pfnMessageBegin = MessageBegin;
+   pengfuncsFromEngine->pfnMessageEnd = MessageEnd;
+   pengfuncsFromEngine->pfnWriteByte = WriteByte;
+   pengfuncsFromEngine->pfnWriteChar = WriteChar;
+   pengfuncsFromEngine->pfnWriteShort = WriteShort;
+   pengfuncsFromEngine->pfnWriteLong = WriteLong;
+   pengfuncsFromEngine->pfnWriteAngle = WriteAngle;
+   pengfuncsFromEngine->pfnWriteCoord = WriteCoord;
+   pengfuncsFromEngine->pfnWriteString = WriteString;
+   pengfuncsFromEngine->pfnWriteEntity = WriteEntity;
    pengfuncsFromEngine->pfnServerPrint = pfnServerPrint;
    pengfuncsFromEngine->pfnSetOrigin = pfnSetOrigin;
    pengfuncsFromEngine->pfnRemoveEntity = pfnRemoveEntity;

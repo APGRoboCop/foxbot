@@ -28,10 +28,11 @@
 
 */
 
-#include "sdk_util.h"
-#include "osdep.h" // win32 v_snprintf, etc
-#include <cstring>
+
 #include <extdll.h>
+
+#include "osdep.h" // win32 v_snprintf, etc
+#include "sdk_util.h"
 
 char *UTIL_VarArgs(char *format, ...) {
    va_list argptr;

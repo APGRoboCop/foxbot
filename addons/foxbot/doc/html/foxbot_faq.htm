@@ -1,0 +1,242 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<script type="text/javascript" src="helpman_topicinit.js"></script>
+
+   <title>FoxBot FAQ</title>
+   <meta name="generator" content="Help &amp; Manual" />
+   <meta name="keywords" content="" />
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+   <meta http-equiv="Content-Style-Type" content="text/css" />
+   <link type="text/css" href="default.css" rel="stylesheet" />
+</head>
+<body style="margin: 0px 0px 0px 0px; background: #FFFFFF;">
+
+
+<table width="100%" border="0" cellspacing="0" cellpadding="5" bgcolor="#DCDCBA">
+  <tr valign="middle">
+    <td align="left">
+      <p class="p_Heading1" style="text-align: center;"><img src="logoheader.jpg" width="535" height="134" border="0" alt="LogoHeader"></p>
+<p class="p_Heading1" style="text-align: center;"><span class="f_Heading1" style="color: #ff6600;">FoxBot FAQ</span></p>
+
+    </td>
+  </tr>
+</table>
+
+<script>
+function CopyToClip()
+{
+clipboardData.setData('TEXT',S1.outerText)
+}
+</script>
+<style><!--
+BODY {
+      background: 4C5844;
+      color: 99A591;
+      scrollbar-track-color: 4C5844;
+      scrollbar-face-color: 4D5945;
+      scrollbar-highlight-color: 6C7666;
+      scrollbar-3dlight-color: 8C9487;
+      scrollbar-darkshadow-color: 31392C;
+      scrollbar-shadow-color: 3F4938;
+      scrollbar-arrow-color: 99A591;
+     }
+--></style>
+
+<!-- Placeholder for topic body. -->
+<table width="100%" border="0" cellspacing="0" cellpadding="5"><tr valign="top"><td align="left">
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Question:</span> What is a bot? </p>
+<p>Answer: A bot is a computer program that can play a specific computer game, and simulate the playing style of a Human.  </p>
+<p>Some bots are better at simulating Human behaviour than others.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Question:</span> What are waypoint files?  </p>
+<p><span style="font-weight: bold;">Answer:</span> Waypoint files contain a list of waypoints that have been placed around the map and the "paths" that connect them. </p>
+<p>These waypoints can be "tagged" as health, ammo, armor, sentry, sniper, flag, flag goal, and many other types of waypoints. The bots use this information to calculate shortest routes to whichever of these waypoint types that it wants to get to.  </p>
+<p>Basically, waypoint files provide the bots with information about how to navigate each map.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Question:</span> What is a script file? </p>
+<p><span style="font-weight: bold;">Answer:</span> The bots can read map script files in order to better understand how to play a specific map.</p>
+<p>A script file can be used, for example,  to tell bots on the Blue team that they should attack more, as happens on Dustbowl.</p>
+<p>Or, on Hunted a script file is used to tell the Snipers what waypoints they should snipe from based on the presidents movements</p>
+<p>If a map has more goals than just straight CTF, such as security systems that need to be disabled or buttons that need to be hit, then chances are you will need a script in order for the bots to play the map well. Even maps without complex goals can sometimes benefit from scripts. </p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Question:</span> What are area/zone files?  </p>
+<p><span style="font-weight: bold;">Answer:</span> Area(also known as zone) files are not required for the bots to work properly.</p>
+<p>However they can be used to define named areas of a map so that the bots can provide more information in their chat messages. </p>
+<p>For example a bot would be able to tell it's team where it dropped a flag, or that it is building a Sentry Gun in the Blue flag room on 2fort.  </p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Question:</span> What is the liblist.gam file? </p>
+<p><span style="font-weight: bold;">Answer:</span> Liblist.gam is an important file that tells Half-Life where the mod's DLL is, the name, the website, etc... </p>
+<p>Every mod has a liblist, tfc, cstrike, and valve, all of them!</p>
+<p>Without a correct liblist.gam the mod will not be recognised by Half-life. </p>
+<p>In order for FoxBot to run in tfc, it has to modify the mod's liblist.gam to point it to FoxBot.dll instead of the mods dll.</p>
+<p>But don't worry; all bots will load the mod's DLL automatically. </p>
+<p>&nbsp;</p>
+<p>To edit the liblist.gam, right click on the file -&gt; Open with -&gt; Notepad (or any other NON formatting text editor. Don't use MSWord) Now that you have the liblist open, look for the line that starts with "gamedll". </p>
+<p>That's the line FoxBot needs to be loaded on. The path to FoxBot is identified by the %folder path%\FoxBot.dll. </p>
+<p>So if you have FoxBot v69 the path would have to go one directory up. Do that by using "..\"</p>
+<p>So the correct line for FoxBot v69 would be game dll "..\FoxBot\FoxBot.dll".</p>
+<p>You may see that you have lots of .gam files in your mod folder. Well that's probably the bots install programs work. Lots of bots use batch files to install their liblist, and they usually rename your original to liblist_old.gam or liblist.old. Don't worry they are not hurting anything, and if you still have the bot installed leave them in there. </p>
+<p>If you get any errors after running a bot’s remove batch file or uninstaller, check your liblist! If your liblist is pointing at a DLL that's not there you will get a DLL API error. This is no biggy, just fix your gamedll to the mod's default. </p>
+<p>&nbsp;</p>
+<p>Notes: </p>
+<p>- FoxBot’s installer does this for you, but its good to know.</p>
+<p>- The liblist is NOT case sensitive (FoXbOt.DlL = foxbot.dll)</p>
+<p>- The default path for tfc's gamedll is "dlls\tfc.dll" cs’s is "dlls\cstrike.dll"</p>
+<p>- Use back slashes in Windows "\" and front slashes in Linux "/" for paths. </p>
+<p>- You can use comments by adding // in front of the line you want commented. </p>
+<p>- The liblist.gam is always located in the mod's root folder. (ex. Half-Life\tfc\liblist.gam) Of course if you're using Admin mod that's another story.</p>
+<p>&nbsp;</p>
+<p>  </p>
+<p><span style="font-weight: bold;">Question:</span> I downloaded and installed FoxBot, but the bots won't join! Whats wrong? </p>
+<p><span style="font-weight: bold;">Answer:</span> You can try the following.. </p>
+<p>&nbsp;</p>
+<p>1) Are you playing in a waypointed map? (try 2fort)</p>
+<p>2) Did you install foxbot in the right folder? (Look in your Half-life directory for a FoxBot folder) </p>
+<p>3) Is your liblist correct? Open it up and see if its pointing to foxbot.dll Here is what the liblist.gam file should look like. It is located in the halflife\tfc folder. </p>
+<p>If it doesnt look like this, FoxBot didn't install correctly. </p>
+<p>&nbsp;</p>
+<p>// Team Fortress Classes Game .dll Listing File </p>
+<p>// Load order is determined by file order. </p>
+<p>game "Team Fortress" </p>
+<p>url_info "www.teamfortressclassic.com" </p>
+<p>url_dl "" </p>
+<p>version "1.5" </p>
+<p>size "37000000" </p>
+<p>svonly "0" </p>
+<p>cldll "0" </p>
+<p>type "multiplayer_only" </p>
+<p>nomodels "1" // Don't show models in browser, since you don't pick them there anyway. </p>
+<p>mpentity "info_tfdetect" </p>
+<p>gamedll "..\FoxBot\FoxBot.dll" </p>
+<p>gamedll_linux "dlls/tfc_i386.so"</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Question:</span> How do I temporarily stop  FoxBot from loading in TFC?  </p>
+<p><span style="font-weight: bold;">Answer:</span> Why would you want to do that? hehe just kidding. Follow these instructions. Open the liblist.gam in the TFC folder in notepad. </p>
+<p>Next change the line:</p>
+<p>gamedll "..\FoxBot\FoxBot.dll"</p>
+<p>to</p>
+<p>gamedll "dlls\tfc.dll"</p>
+<p>&nbsp;</p>
+<p>This will configure it to load ONLY TFC, and not load FoxBot.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Question:</span> Bots don't join when I type addbot in the console! Whats wrong? </p>
+<p><span style="font-weight: bold;">Answer:</span> When you first started the listen server did you see a message pop up saying FoxBot version x? If not check the following. Open notepad, and then open the file in your halflife\tfc folder called liblist.gam </p>
+<p>It should have the following line in it near the bottom:</p>
+<p>gamedll "..\FoxBot\FoxBot.dll"</p>
+<p>If this line is no present in that file, then the bot is not installed correctly. </p>
+<p>NOTE: If you are running admin mod with foxbot then the contents of the liblist.gam file will be different.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Question:</span> How do I make scripts/waypoints/zones for a map? </p>
+<p><span style="font-weight: bold;">Answer:</span> Look under the tutorial section at http://www.foxbot.net </p>
+<p>Also, there are guides contained in these help files.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Question:</span> Can I edit waypoints on a Dedicated server after connecting as a client?</p>
+<p><span style="font-weight: bold;">Answer:</span> No, but you can edit waypoints if you are hosting a Listen server.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Question:</span> How do I change the names that the bots use on my server? </p>
+<p><span style="font-weight: bold;">Answer:</span> Look in the Half-life\FoxBot\tfc folder and edit the foxbot_names.txt to change or add names. Each new line will be used as a name.</p>
+<p>Note: From Foxbot version 0.74 onwards a bot can have spaces in it's name if the name is surrounded by speech marks. For example: "[FoX]1 Shot Wonder"</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Question:</span> How do I change the chat messages that the bots use in the game? </p>
+<p><span style="font-weight: bold;">Answer:</span> Look in the halflife\foxbot\tfc folder and edit the foxbot_chat.txt to change or add stuff. </p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Question:</span> How do I change the bot skill level?</p>
+<p><span style="font-weight: bold;">Answer:</span>Two options control the default level of botskill: botskill_upper and botskill_lower.<br>To change either of these use one of the following. For a listenserver: in the console type: botskill_upper x or botskill_lower x</p>
+<p>For a dedicated server: in the console type bot "botskill_upper x" or bot "botskill_lower x"</p>
+<p>In both example x is the skill level that you want to set them to.</p>
+<p>NOTE: When changing skill level, this only changes the skill level of bots that are added AFTER you change the skill level.</p>
+<p>In order to change the skill levels of ALL the bots on your server, you must kick them all and re-add them after you set the new skill level. Remember you can also set the skill level of a specific bot when adding them. Refer to the commands page in the addbot section.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Question:</span> How do I stop the bots chatting? </p>
+<p><span style="font-weight: bold;">Answer:</span> The bot setting bot_chat is initially set to a number such as 15.<br>You can silence the bots using one of the following.<br>For a listenserver: in the console type: bot_chat 0</p>
+<p>For a dedicated server: in the console type bot "bot_chat 0"</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Question:</span> How do I change how many bots load automatically at the start of a map? </p>
+<p><span style="font-weight: bold;">Answer:</span> Look in the halflife\foxbot\tfc\configs folder. In this folder there are files called &lt;mapname&gt;_bot.cfg These files are used so that you can set up exactly how many bots and specific classes for them for each map independently. You can delete addbot lines, add addbot lines, change the lines that are there, or delete all the addbot commands altogether so that no bots load automatically at the start of the map. The file names are always named exactly like the map, with _bot.cfg at the end. Examples: 2fort_bot.cfg well_bot.cfg rock2_bot.cfg</p>
+<p>Refer to the commands section for specifics on how to use the addbot command.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Question:</span> The game crashes when one of the bots build a Teleporter.  What can I do about it?</p>
+<p><span style="font-weight: bold;">Answer:</span> Teleporters are not fully supported with Steamless patch 1.1.1.2 and clients running this patch will crash when Teleporters are built.</p>
+<p>Possibly the only way around this is to tell the bots not to build Teleporters in the 'foxbot.cfg' file.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Question:</span> When I start TFC I get this error.. Couldn't get DLL API... </p>
+<p><span style="font-weight: bold;">Answer:</span> Check your liblist.gam file as shown in the 5th question above. If that file is correct try the following. 1) Go to the start&gt;settings&gt;control panel. </p>
+<p>2) Open up the system icon from the list. </p>
+<p>3) Click on performance, then virtual memory button near the bottom. </p>
+<p>4) Finally choose "Let windows manage my virtual memory" </p>
+<p>If neither of these work, post on the forum so that we can help you out more.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Question:</span> When I play with FoxBot I can only add 4/6 bots then it gives me an error! Whats wrong? </p>
+<p><span style="font-weight: bold;">Answer:</span> You could try right clicking on your TFC desktop shortcut, and adding -heapsize 32000</p>
+<p>to the end of the command line. </p>
+<p>This should assign a bit more memory to halflife, and hopefully stop the error.</p>
+<p>You can try different values such as 64000 also.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Question:</span> What do I do if I find a weird error or a bug with the bot? </p>
+<p><span style="font-weight: bold;">Answer:</span> Report it on our forums ASAP! Include as much information as you can about your configuration and the bug. What version of Halflife are you running? (lower right corner of the main menu)</p>
+<p>What is the speed of your processor?</p>
+<p>What type of processor? (Intel/AMD)</p>
+<p>How much RAM do you have?</p>
+<p>What Operating System are you running? (please be specific, version of Windows or Linux, service packs etc.)</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Question:</span> I want to play a 3rd party map but I don't have the waypoints for it! How can I get a waypoint file for it?</p>
+<p><span style="font-weight: bold;">Answer:</span> First, check the foxbot forums. Look in the beta waypoints or official waypoints section for the map. If you can't find waypoints for the map you want there, look for them at one of the following sites:</p>
+<p>http://www.waypointwarehouse.com/</p>
+<p>&lt;If you run a waypoint site contact me if you want your link here&gt;</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Question:</span> Can you add support for &lt;insert mod name here&gt; ? </p>
+<p><span style="font-weight: bold;">Answer:</span> The first and foremost goal is to turn FoxBot into an expert TFC bot. In the future the team may evaluate other mods and decide then on which mod to pursue next. We don't know what mod will be next so please don't ask. </p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Question:</span> How do I set up FoxBot with Admin Mod? </p>
+<p><span style="font-weight: bold;">Answer:</span> Thanks to Kramerika for this information. </p>
+<p>For specific instructions on setting up a Half-life dedicated server, go to http://planethalflife.com/commands/</p>
+<p>&nbsp;</p>
+<p>Install FoxBot into the Half-life folder. Edit the foxbot.cfg file in the halflife\foxbot\tfc folder to create bot-specific settings that will get loaded before the mapname_bot.cfg each time a map loads. Create/edit the mapname_bot.cfg file in your halflife\foxbot\tfc\configs for each map you have available on your server with bot-specific settings. These settings load after the foxbot.cfg so they will override the default settings found in the foxbot.cfg file. To have bots automatically join and leave the server as real players join and leave, set max_bots and min_bots. Make certain NOT to set max_bots to a number equal to or greater than the maxplayers you have set on your server. Always leave one spot vacant for real players to join into. If you want to specify characteristics for bots, use addbot statements in addition. </p>
+<p>&nbsp;</p>
+<p>Install Admin Mod into your tfc folder (for more information on installation, go to www.adminmod.org). Edit the liblist.gam file with Notepad to make sure it is pointing to the metamod.dll file in your dlls folder: "dlls\metamod.dll". Now edit the metamod.ini file and add "win32 ../Foxbot/Foxbot.dll" to the top of it above "win32 dlls/admin_MM.dll". If you want to reserve the names or a string from the name of your bots, add them to the users.ini file with any password and an access level of 16384. Admin Mod and all of its plugins should be completely compatible with FoxBot. If you find a problem in general or with a specific plug-in, please post in the "FoxBot Bugs" forum.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Question</span>: How do I set up NeoTF with Foxbot? </p>
+<p><span style="font-weight: bold;">Answer:</span> To install FoxBot into NeoTF you need to.... </p>
+<p>1) Go to the TFC folder </p>
+<p>2) Open the ntf_config.txt and replace tfc.dll with Foxbot.dll </p>
+<p>3) Copy your Half-life\FoxBot\FoxBot.dll to the folder Half-life\tfc\dlls </p>
+<p>4) To get around the crash bug with Neo and the HalfLife update open the listenserver.cfg and enter ntf_feature_flashgren 0 </p>
+<p>Neo's Website: http://www.neo-tf.com </p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Question:</span> How can I help the FoxBot team? </p>
+<p><span style="font-weight: bold;">Answer:</span>Fewer people are actively developing Foxbot now
+ If you speak and write a language other than English and are willing to provide translations of the help file and chat file, let us know on the forum.<br>Also, you can provide feedback and suggestions.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Question:</span> What are the fw1, fw2, fw3, fw4 files for in the waypoints folder? </p>
+<p><span style="font-weight: bold;">Answer:</span> These have been phased out in v 0.695. Make sure ALL fw1, fw2, fw3, fw4 files are deleted from your waypoints folder, as well as your tfc\maps folder. </p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Question:</span> The bots act really weird on a certain map! Whats wrong?</p>
+<p><span style="font-weight: bold;">Answer:</span>If you are running an older version of Foxbot you could try looking in the halflife\foxbot\tfc\waypoints folder. There may be files with the extension of fw1,fw2,fw3,fw4</p>
+<p>Delete all files with the extension fw1,fw2,fw3,fw4. DO NOT DELETE THE FWP FILES!</p>
+<p>Once those files are deleted try playing again. The weird behavior should be gone since the bot will then re-calculate the routes.</p>
+<p>ANY time you see weird bot behavior, try deleting the fw1,fw2,fw3,fw4 files before asking for help or reporting bugs in the forum.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Question:</span> How do i use the waypoint_author command? </p>
+<p><span style="font-weight: bold;">Answer:</span> The waypoint_author command allows you to sign your own waypoints. Here is how to use it.</p>
+<p>1) Turn on waypoint mode (waypoint on)</p>
+<p>2) Type waypoint_author Myname or waypoint_author "My name" if it contains spaces.</p>
+<p>3) Then you must save the waypoints (waypoint save)</p>
+<p>The result will be seen at the beginning of the round in a listen server and will look like this: </p>
+<p><img src="clip00018.jpg" width="261" height="57" border="0" alt="clip00018"></p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Question:</span> How do I use the botcam?  </p>
+<p><span style="font-weight: bold;">Answer:</span> The botcam allows you to see through the eyes of the bot showing what he sees and targets. </p>
+<p>It was created as a testing platform for Foxbot developers, so advanced behavior can be seen through the eyes of the bot.</p>
+<p>You can play with this feature if you want. Boxes will be drawn around targets, different colors mean different types of targets.</p>
+<p>Here's how you turn it on:</p>
+<p>1) Spectate the bot you wish to use botcam on. (if you dont do this you wont "hear" from the bots perspective.</p>
+<p>2) Type botcam "Botsname" in the console. This should take you to botcam mode for the bot you specified.</p>
+<p>3) To turn off botcam mode type nobotcam in the console. </p>
+<p>&nbsp;</p>
+
+</td></tr></table>
+
+</body>
+</html>

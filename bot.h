@@ -28,7 +28,7 @@
 #ifndef BOT_H
 #define BOT_H
 
-#include <string>
+#include <string.h>
 
 #include "osdep.h"
 
@@ -147,10 +147,10 @@ using namespace std;
 class chatClass {
  private:
    // section header names for each chat type, as used in the chat file
-   string sectionNames[TOTAL_CHAT_TYPES];
+   char sectionNames[64][TOTAL_CHAT_TYPES];
 
    // chat strings, organised by groups of chat types
-   string strings[TOTAL_CHAT_TYPES][MAX_CHAT_STRINGS];
+   char strings[256][TOTAL_CHAT_TYPES][MAX_CHAT_STRINGS];
 
    // counts the number of strings read from the chat file
    int stringCount[TOTAL_CHAT_TYPES];
@@ -327,7 +327,6 @@ typedef struct {
 
    unsigned bot_has_flag : 1;
    float f_dontEvadeTime;   // sets how long the bot should not deviate from it's route
-   float f_item_check_time; // used to stop the bots checking for items too frequently.
 
    int flag_impulse; // used to identify which flag the bot carried when killed
 

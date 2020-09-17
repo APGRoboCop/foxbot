@@ -29,12 +29,14 @@
 #include "util.h"
 
 #include "bot.h"
+#include "waypoint.h"
+
 #include "bot_client.h"
 #include "bot_func.h"
 #include "bot_job_think.h"
 #include "bot_navigate.h"
 #include "bot_weapons.h"
-#include "waypoint.h"
+
 
 #include "tf_defs.h"
 

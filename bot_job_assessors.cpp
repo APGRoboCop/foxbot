@@ -30,20 +30,22 @@
 // of their priority level.  For example, the job of picking up a discarded
 // back pack will be less important if it is now quite far away.
 
-#include "bot.h"
+
 #include "extdll.h"
 #include "tf_defs.h"
 #include <meta_api.h>
 
 #include "list.h"
 
+#include "bot.h"
+#include "waypoint.h"
 #include "bot_func.h"
 
 #include "bot_job_assessors.h"
 #include "bot_job_think.h"
 #include "bot_navigate.h"
 #include "bot_weapons.h"
-#include "waypoint.h"
+
 
 #ifdef WIN32
 #define itoa _itoa

@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//Norman Walsh//DTD DocBook HTML 1.0//EN">
+<html>
+<head>
+	<title>Installation and Troubleshooting</title>
+</head>
+<body BGCOLOR="#FFFFFF">
+<h1>Installation and Troubleshooting</h1>
+<p>This document was put together to help people who are having difficulties getting Foxbot to run.<br>
+Several known problems are listed here plus also some suggested solutions to these problems.</p>
+<p>&nbsp;</p>
+<b>Where do I install to?</b>
+<p>Team Fortress Classic can now be found in a variety of versions.<br>
+There are Dedicated and Listen servers for the Windows retail(boxed) copy of Half-Life.<br>
+There are Steam Windows Dedicated and Listen servers.  And there are also Dedicated Linux servers.</p>
+<p>Whatever the version there is always one main place to install or extract Foxbot to.<br>
+Which is the directory just before the tfc directory.</p>
+<p>For example if your Half-Life tfc directory looks like this:<br>
+C:\Sierra\Half_life\tfc<br>
+Then you should install or extract to:<br>
+C:\Sierra\Half_life\</p>
+<p>And your directories would look like this:<br>
+C:\Sierra\Half_life\tfc\addons\<br>
+C:\Sierra\Half_life\tfc\addons\metamod\<br>
+C:\Sierra\Half_life\tfc\addons\foxbot\<br>
+C:\Sierra\Half_life\tfc\addons\foxbot\tfc\</p>
+<p>&nbsp;</p>
+<b>I'm new to Foxbot, the bots don't join, and I don't know which problem to investigate first.</b>
+<p>The first link in the Foxbot chain is a file called liblist.gam which is in the main Team Fortress Classic directory.<br>
+This file tells the Half-Life engine what custom game to run.  Ordinarily it
+contains this line:<br>
+gamedll "dlls\tfc.dll"<br>
+This line tells Half-Life to run TFC, but we need it to run a program called Metamod first.  So liblist.gam should contain these lines instead:<br>
+//gamedll "dlls\tfc.dll"<br>
+gamedll "addons\metamod\dlls\metamod.dll"</p>
+<p>&nbsp;</p>
+<b>Metamod loads but Foxbot doesn't.</b>
+<p>If you're sure Metamod loads but Foxbot hasn't then you can issue the console command: meta list.<br>
+Metamod will list what plugins are running and which ones failed.  If the Foxbot plug-in is marked as 'badf' then it failed to load properly.</p>
+<p>Here are some possible causes:</p>
+<p>1.) The name of the Foxbot plug-in given to Metamod is wrong.  This can happen even if the capitalisation of the name is wrong.<br>
+For example, if you are trying to run /FOXBOT/FoXBot.dll then tfc/addons/metamod/plugins.ini should contain this line:<br>
+win32 ../FOXBOT/FoXBot.dll<br>
+The capitalisation and path given in tfc/addons/metamod/plugins.ini should be an exact match for the name and path of the Foxbot plug-in.</p>
+<p>2.) If you are running a Linux server then it's possible that you are lacking a library which Foxbot may need to run.  One way to find out is to switch to the directory where the Foxbot.so file is stored and enter this command:</p>
+<p>ldd foxbot_MM_i386.so</p>
+<p>This will show you a list of libraries that Foxbot needs for it to run on your machine.  You can then check if you have them installed.</p>
+<p>Alternatively you could try compiling Foxbot for your machine.  You will need a copy of the Foxbot source code and a C++ compiler such as g++ which is part of GCC(the GNU Compiler Collection).  The Foxbot source code contains instructions on how to compile a Linux Foxbot plug-in.</p>
+<p>&nbsp;</p>
+<b>Increasing your log output.</b>
+<p>By default Half-Life and Metamod try to avoid overloading the player with lots of log messages.<br>
+What you can do to help find the cause of many problems is try turning up the log output, and here's how you do it.</p>
+<p>To get Half-Life or TFC to create log files add this: "+log on" (without the speech marks) to the command line that starts the game up.<br>
+For Metamod create a file called "config.ini" in \tfc\addons\metamod\<br>
+Make sure this file contains the line:<br>
+debuglevel 6</p>
+<p>When you start the game up more log messages will be output to the console and to the games log files.<br>
+The logfiles are usually found in the \tfc\logs\ directory and have the extension: ".log"</p>
+<p>As an example, I renamed the Foxbot executable so that Metamod wouldn't be able to find it.  And then after I ran the game I checked the games most recent log files and found this message:</p>
+<p>L 05/02/2010 - 08:44:42: [META] (debug:4) Unable to get realpath for '/hda_seven/hlds_l/tfc/../tfc/addons/foxbot/foxbot_MM_i386.so': No such file or directory</p>
+<p>As you can see, this points out the root cause of the problem I created.<br>
+Don't forget to turn logging off once you've solved your issue!</p>
+<p>&nbsp;</p>
+<b>If in doubt, try a reboot.</b>
+<p>Some people are having difficulties getting newer versions of Foxbot to work on Windows.<br>Rebooting the machine after installing Foxbot has been known to resolve this issue.</p>
+<p>Thanks to Grubber for pointing this out.</p>
+<p>&nbsp;</p>
+<b>Teleporters may crash clients who are running the Steamless patch 1.1.1.2.</b>
+<p>Teleporters are not fully supported in the Steamless patch version 1.1.1.2 and clients running that version may crash if a player attempts to build a teleporter with a console command.</p>
+<p>This is not a Foxbot specific issue, but you should tell the bots not to build Teleporters if there will be clients connecting with that release version.</p>
+<p>In foxbot.cfg make sure 'bot_can_build_teleporter' is set to 'off'.</p>
+<p>&nbsp;</p>
+<b>How do I get Foxbot to work with Neo Team Fortress?</b>
+<p>You may want to read the file ntf_install.txt which is included with the Neo Team Fortress package.<br>It contains a short guide on getting Foxbot to work with Neo Team Fortress.</p>
+<p>&nbsp;</p>
+<b>Conflicts with other Metamod plug-ins.</b>
+<p>The Bots are artificial players created and run by a host server, and therefore have no network connection.</p>
+<p>If a server crashes with a "tried to write to unitialized sizebuf_t" error then this may have been caused by another Metamod plugin sending network messages to the bots.</p>
+<p>This can happen for example if you are running a plugin that does things to players, e.g. award/punish them or update them with information.</p>
+<p>A simple way of finding out if another plugin is responsible is to temporarily deactive ALL Metamod plugins except for Foxbot and see if the problem goes away.  Then you can add the other plugins, one by one, until you find the one that triggers the problem.</p>
+<p>&nbsp;</p>
+<b>Debugging a crash on a Linux server.</b>
+<p>Note: The following information is most useful if you are trying to contact a Foxbot developer about an unexplained crash.</p>
+<p>With the Linux version of the Half-Life server you can install a program called GDB(the Gnu project Debugger) and then run the Half-Life server with the "-debug" option.</p>
+<p>When a crash occurs, debugging output is dumped into a debug logfile, which can then provide more detailed information about the cause of the crash.</p>
+<p>&nbsp;</p>
+</body>
+</html>

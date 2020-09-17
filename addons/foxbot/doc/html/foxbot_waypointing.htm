@@ -1,0 +1,212 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+   <title>Waypointing Tutorial</title>
+   <meta name="generator" content="Help &amp; Manual" />
+   <meta name="keywords" content="" />
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+   <meta http-equiv="Content-Style-Type" content="text/css" />
+   <link type="text/css" href="default.css" rel="stylesheet" />
+</head>
+<body style="margin: 0px 0px 0px 0px; background: #FFFFFF;">
+
+
+<table width="100%" border="0" cellspacing="0" cellpadding="5" bgcolor="#DCDCBA">
+  <tr valign="middle">
+    <td align="left">
+      <p class="p_Heading1" style="text-align: center;"><img src="logoheader.jpg" width="535" height="134" border="0" alt="LogoHeader"></p>
+<p class="p_Heading1" style="text-align: center;"><span class="f_Heading1" style="color: #ff6600;">FoxBot Waypointing</span></p>
+
+    </td>
+  </tr>
+</table>
+
+<script>
+function CopyToClip()
+{
+clipboardData.setData('TEXT',S1.outerText)
+}
+</script>
+<style><!--
+BODY {
+      background: 4C5844;
+      color: 99A591;
+      scrollbar-track-color: 4C5844;
+      scrollbar-face-color: 4D5945;
+      scrollbar-highlight-color: 6C7666;
+      scrollbar-3dlight-color: 8C9487;
+      scrollbar-darkshadow-color: 31392C;
+      scrollbar-shadow-color: 3F4938;
+      scrollbar-arrow-color: 99A591;
+     }
+--></style>
+
+<!-- Placeholder for topic body. -->
+<table width="100%" border="0" cellspacing="0" cellpadding="5"><tr valign="top"><td align="left">
+<li><a href="#about">About Waypoints</a></li>
+<li><a href="#bindings">Key bindings</a></li>
+<li><a href="#basics">Basic Waypointing</a></li>
+<li><a href="#foundation">Add the waypoint foundation</a></li>
+<li><a HREF="Waypoint_types.html">Waypoint Tag Types</a></li>
+<li><a HREF="#test">Testing your waypoints</a></li>
+<li><a HREF="#problems">Problems to look out for</a></li>
+<li><a HREF="#debug">bot_debug mode</a></li>
+<li><a HREF="#optimize">Optimising your waypoints</a></li>
+<li><a HREF="#authoring">Signing your waypoint file</a></li>
+<li><a HREF="#important">Important Information</a></li>
+<p>&nbsp;</p>
+<h3><a name="about">About Waypoints</a></h3>
+<p>Waypoints provide the bots with very specific navigation information that they can easily understand.<br>
+Waypoints are basically a bunch of points on a map connected by paths.<br>
+Bots use the path information to calculate routes to various objectives in a map, whether that be the enemy flag, capture point, health, armor, ammo, sentry building spots, sniper points, etc...<br>
+Basically when a bot spawns, it goes to the nearest waypoint and from there runs from point to point through the route that takes it to whatever objective it needs to get to.</p>
+<p>&nbsp;</p>
+<h3><a name="bindings">Key bindings</a></h3>
+<p>It is important before you begin waypointing that you set up keys for the waypointing commands. The easiest way to do this is to create a cfg file with the waypointing bindings in it, and manually load them when you are waypointing. For my personal use, I created a file called waypoints.cfg in my tfc directory and put the following commands in it. Replace the <span style="color: #ff0000;">RED</span> text with whatever key you want to use if you want to change it. </p>
+<p>&nbsp;</p>
+<div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table cellspacing="0" cellpadding="0" border="1" style="border: solid 1px #000000; border-spacing:0px;">
+<tr style="text-align:left;vertical-align:top;">
+<td valign="top" style="border: none"><p>bind "<span style="color: #ff0000;">INS</span>" "waypoint add" </p>
+<p>bind "<span style="color: #ff0000;">DEL</span>" "waypoint delete" </p>
+<p>bind "<span style="color: #ff0000;">END</span>" "waypoint save" </p>
+<p>bind "<span style="color: #ff0000;">HOME</span>" "waypoint load" </p>
+<p>bind "<span style="color: #ff0000;">i</span>" "waypoint info" </p>
+<p>bind "<span style="color: #ff0000;">m</span>" "waypoint menu" </p>
+<p>bind "<span style="color: #ff0000;">PGUP</span>" "pathwaypoint_connect on" </p>
+<p>bind "<span style="color: #ff0000;">PGDN</span>" "pathwaypoint_connect off" </p>
+<p>bind "<span style="color: #ff0000;">,</span>" "pathwaypoint create1" </p>
+<p>bind "<span style="color: #ff0000;">.</span>" "pathwaypoint create2" </p>
+<p>bind "<span style="color: #ff0000;">[</span>" "pathwaypoint remove1" </p>
+<p>bind "<span style="color: #ff0000;">]</span>" "pathwaypoint remove2" </p>
+<p>&nbsp;</p>
+<p>pathwaypoint_connect off </p>
+<p>waypoint on </p>
+<p>pathwaypoint on </p>
+<p>&nbsp;</p>
+<p>bot_debug on </p>
+</td>
+</tr>
+</table>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>The last 4 lines are in there so that when I exec the waypoint.cfg from the console, it will turn on waypointing with "waypoint on" and turn on the ability to see the paths between waypoints with "pathwaypoint on" as well as turn on bot_debug, which I will explain more about later. You need at least waypoint and pathwaypoint to be turned on when you are waypointing. If you have all this is a waypoint.cfg like I do in the tfc directory, to load them in the game once you start a lan game with no bots.. bring down the console and type "exec waypoint.cfg" </p>
+<p>&nbsp;</p>
+<h3><a name="basics">Basic Waypointing</a></h3>
+<p>First, I'm going to assume that you know how to get access to the console in the game itself. If you don't know how to do this then check the help file that came with the bot download. Couple things to understand before you dive into waypointing. You need to understand the pathlines. Look at the following picture:</p>
+<p><img src="clip0003.jpg" width="300" height="331" border="0" alt="clip0003"> </p>
+<p>You will notice in this picture as well as while you are waypointing that there are 2 different colored lines between most waypoints. There is an explanation for this. </p>
+<p>First off you must understand that you have to stand on waypoints in order to see the paths connected to and from it. While standing on a waypoint or very close you will see various paths connecting to other waypoints around it. White paths represent paths that are connected FROM the waypoint you are standing on TO another waypoint. Yellow paths represent paths that are connected FROM another waypoint TO the waypoint you are on. If you see both that means that the path is 2 ways. If you only see one color path between 2 waypoints, that means it is a 1 way path. The color of the line gives you an indication of which way is 1 way. Here is an example:</p>
+<p><img src="clip0004.jpg" width="220" height="181" border="0" alt="clip0004"></p>
+<p>In this example you see one of each 1 way path, represented by the yellow line and the white line. White means 1 way from where you are to the other waypoint, yellow means 1 way from the other waypoint to where you are. So in this picture you can tell that the waypoints are set up so that the bot is able to get on the lift but cannot go to the far waypoint from the waypoint you are standing at, BUT if a bot somehow get blown back there, since the path is 1 way, the bot would be able to come from that waypoint out to where you are. 1 way paths are useful for setting up clean traffic routes for the bots. If you ever find bots get stuck on each other in a frequently used corridor, you could create 2 paths down that corridor on either side, and with the use of 1 way paths you could make the bots going one way down one side of the corridor, and if they are going the other way down the corridor they would use the opposite side of the hallway, eliminating jams. </p>
+<p>&nbsp;</p>
+<h3><a name="foundation">Add the waypoint foundation</a></h3>
+<p>&nbsp;</p>
+<p>The first thing you need to do as a waypointer is to lay the framework for the waypoints in a level. Do this by starting a multiplayer lan game by yourself. Make sure that you DON'T allow any bots to join the map while you are waypointing. If you do they will be stuck in the respawn areas and the game can possibly crash. Assuming the map is a standard 2 team CTF map, join the game as blue team first and run around the map and add as many waypoints as needed to cover all the areas of the map that the bot will need to navigate through. This is probably the easiest part of the waypointing process. Here are some things to keep in mind or look for. </p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>1. Only place waypoints and paths where needed. It is best to keep the waypoints as clean as possible. This will reduce the calculation times that the bot takes to figure out routes. </p>
+<p>2. Check all waypoints for paths you don't want. Especially when using pathwaypoint_connect on. </p>
+<p>3. Only place waypoints where a bot might need to change direction. In long straight areas there is no need to place alot of waypoints to form a straight path. Place 1 waypoint at each end of the long path/hallway and manually connect the waypoints with paths. </p>
+<p>4. When placing waypoints around corners, make sure that paths do not try to cut the corners too much, especially if the path line itself cuts through the corner. Bots can and most likely will get stuck if your paths cut the corners too much. </p>
+<p>5. If the map you are waypointing has a small respawn room with several entrances and you notice the bots getting stuck on each other, try creating 1 way paths in and out of the respawn so that the bots will enter in one door and exit the other to reduce getting stuck on each other. </p>
+<p>6. You cannot create paths in between waypoints that are more than 600 units apart. If you ever try to create a path between 2 waypoints that are far apart and you don’t see a path when there should be one, try putting another waypoint in between them and making a path through that one. </p>
+<p>&nbsp;</p>
+<p>Try to keep your waypoints clean and simple. Provide direct paths so that a bot coming from any direction will be able to go any other direction without taking a wide jackass route. He should be able to take a direct route as a person would. </p>
+<p>&nbsp;</p>
+<p>Remember, the fewer waypoints there is, the faster the calculations can be made. </p>
+<p>&nbsp;</p>
+<p>My favorite way to do the waypoints is by placing waypoints and connecting them manually. Fortunately, a couple new features in 0.691 make this much easier and faster. These new features are controlled by the following cvars. </p>
+<p>&nbsp;</p>
+<p>pathrun_oneway on/off </p>
+<p>pathrun_twoway on/off </p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>These 2 commands allow you to connect waypoints together just by walking over them. When you walk over waypoints with one of these options turned on, paths will be created between the last waypoint you were at, and the next waypoint you walk over. This proves much faster than using the pathwaypoint_create1 and pathwaypoint_create2 commands. The type of path created depends on which one of these options you have turned on. If you only have pathrun_oneway enabled, walking over the waypoints will create one way paths In the order that you walk over them. If you have pathrun_twoway enabled you will be creating two-way paths as you walk over them. This new feature tends to save a lot of time compared to the other method of manually connecting waypoints. I tend to use pathrun_twoway always when waypointing, and pathrun_oneway for areas where I might have to connect a lot of 1 way paths In a row. </p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>Place the waypoint tags. </p>
+<p>This step can be done while you are doing step 1 or separate.. it doesn't matter. This just involves going through the map to place all the necessary "tags" on all the waypoints that need them. For those that don't know, tags are various things that can be placed on a waypoint to give it special features that the bot would use to perform certain actions at that waypoint. </p>
+<p>For a list of waypoint tag types check out this page: <A HREF="Waypoint_types.html">Waypoint Tag Types</a></p>
+<p>&nbsp;</p>
+<h3>Quick Reference Guide</h3>
+<p>Ladders : </p>
+<p>1) Place a waypoint at the base of the ladder. </p>
+<p>2) Place another waypoint at the top of the ladder </p>
+<p>3) Manually connect the bottom waypoint to the top waypoint. </p>
+<p>&nbsp;</p>
+<p>Lifts: </p>
+<p>1) Place a waypoint at the center of the lift when it is at its lowest position. Make sure there is a path to the lower lift waypoint. </p>
+<p>2) Ride the lift to the top of its travel and place another waypoint at its top position. </p>
+<p>3) Next connect the top waypoint to another waypoint off the lift to form a path the bot will use to exit off the lift. </p>
+<p>4) Activate the lift flag on BOTH the bottom and the top waypoints, use team specifics if needed. </p>
+<p>&nbsp;</p>
+<h3><a name="test">Testing your waypoints</a></h3>
+<p>The most important part of waypointing is by far the testing. It is best to test certain aspects of the map separately from others. The main areas that need to be tested are the paths to and from the flag and goal locations, sentry points, and sniper points. </p>
+<p>&nbsp;</p>
+<p>First, test the flag and flag goal location paths. Do this by adding a couple scouts to blue team by typing "addbot 1 1" in the console. Go into spectator mode and watch the bots as they run through the level. They should fairly quickly get to the enemy flag when there is no opposition. Keep spectating them after they get the flag until they get back to the capture point. Be on the lookout for areas that the bot gets stuck briefly so that you can fix them later. If you notice the scouts wandering around their base and never going for the enemy flag, the problem is that there is a broken path somewhere so they cant get to the enemy flag. The same goes for the paths back to the flag goal location. If you notice the scout grab the enemy flag and immediately start acting wierd or wandering around then chances are there is a broken path somewhere along the way back to the flag location. </p>
+<p>&nbsp;</p>
+<p>Remember that not all paths are bi-directional, and that it may look like a path is connected when you check from one waypoint but if you check from the other there might not be a path. Sometimes these problems can be difficult to find. In the future the waypoints and waypoint paths will be color coded so you can better spot one-way paths and other special waypoint types. </p>
+<p>&nbsp;</p>
+<p>Ok, once you have tested the blue scouts ability to grab and capture the flag on their own, execute a kickall in the console and add a couple scouts on the red team. Once again watch them for problem areas and to make sure they can get to the flag and then back to the goal again. Once you have verified the paths for both teams like that, kick all the bots again. This time add about 3 or 4 snipers on each team. Cycle through the snipers for a bit to watch them go to their sniper points. They should go to their sniper points and point in the direction the waypoint is set to and stand with a charged rifle. Sometimes they don't stand too long before moving. </p>
+<p>&nbsp;</p>
+<p>After you have seen the snipers in action, kick all the bots, and then add 2 or 3 engineers per team. Cycle through them and make sure that the engineers are able to build their sentry at the designated spots, resupply and go back to upgrade them. </p>
+<p>&nbsp;</p>
+<p>After testing this way, make any changes you need to waypoints or paths to fix any errors you noticed during testing. Once you make your changes, save your waypoints, and restart the level. </p>
+<p>&nbsp;</p>
+<p>You will likely notice that the dark blue lines usually project a long ways through the maps, this is normal and shows you where the bot is ultimately trying to get to, while the green lines show you where he is going, waypoint by waypoint. </p>
+<p>&nbsp;</p>
+<h3><a name="problems">Problems to look out for</a></h3>
+<p>1) Bots getting hung on walls - Make sure that the waypoints don’t cut a corner too much so that the path hits the wall, this can cause bots to get stuck. </p>
+<p>2) Bots spinning around on a waypoint - turn bot_debug on Look to see where the blue (i think they are blue?) lines are going. that represents where the bot is trying to get to. If the lines go to a waypoint that is unreachable such as one above the bot, the bot will spin. If the lines are being projected way off through the level, the likely cause is that the bot cannot reach his goal (flag) or if the bot goes and grabs the flag and then spins around the waypoint there, he is unable to find a path back to the cap point. Check ALL your waypoints throughout the level or the path to the goals to make sure there are valid 2 way paths in between them. Remember! Just because the bot can get to the flag doesn’t mean he can always get back to the cap point. With the ability to have 1 way paths, it is possible for there to be breaks at some point along the paths that effect 1 or both ways. The other thing to look for is paths that are too long. If a path is too long it is thrown out as if the path wasn’t there. When standing on a waypoint, if the waypoint the path is connected to is barely in visual range or out of visual range, then the path is likely too long. Add a waypoint in between them to create a couple shorter paths. If you are positive that all the waypoints are connected with valid paths, it is likely that you have a path that is too long. This issue should be addressed soon. </p>
+<p>3) Bots spinning around a waypoint when I add them after I create waypoints - waypoints aren’t used until they are loaded during a map start. If you are editing or creating waypoints, when you are ready to test them, save them using the "waypoint save" command and then restart the map. The restart will then load the waypoints so that the bots can use them. DO NOT EDIT OR CREATE WAYPOINTS WITH BOTS IN THE GAME, BECAUSE IT CAN CRASH HALFLIFE. </p>
+<p>&nbsp;</p>
+<h3><a name="debug">bot_debug mode</a></h3>
+<p>bot_debug mode is very useful for troubleshooting waypoints or scripts. When bot_debug mode is turned on, you will start to see a lot of lines projected out from any bots that may be running around in the map. There are several different color lines that you may see while in this mode, and each color line means something different. </p>
+<p>-Green line shows what waypoint the bot is currently trying to get to. </p>
+<p>-Dark Blue line shows the final destination the bot is going for. </p>
+<p>-Light Blue shows items in the bots search radius they will go for. </p>
+<p>-Red lines point to the bots current target. </p>
+<p>&nbsp;</p>
+<h3><a name="optimize">Optimising your waypoints</a></h3>
+<p>An important part of your waypointing is optimizing your waypoints. This is basically running through your level and deleting unneeded waypoints and fixing paths that aren't quite right. Here are some things to look for when optimizing. </p>
+<p>&nbsp;</p>
+<p>1) Make sure paths don't cut through corners or try to connect to unreachable places. </p>
+<p>2) Make sure there are paths to and from the flags and flag goal locations that travel both ways. </p>
+<p>3) Make sure you have health, ammo, and armor waypoints set where needed. Also check if they should be team specific.<br>
+It's best to put health/armor/ammo waypoints as close to the health/armor/ammo as possible because if you don't put the waypoint near enough, then the bots may not reach the item they were going for and appear confused.</p>
+<p>4) Try to reduce the amount of paths and waypoints throughout the level. By this I mean try not to have redundant paths. Example waypoint x, y, z are all on the same path in that order. X should be connected to y and y should be connected to z to form the path. Try to eliminate duplicate paths such as x also connected to z. The fewer the paths the quicker the bots can perform path calculations and the better future versions of foxbot will work with your waypoints. </p>
+<p>5) Set up your waypoints so that bots run into ladders head on, meaning make the path swing wide a little so they come at the ladder from the front as much as possible. Bots can get stuck if they come at the side of a ladder sometimes. </p>
+<p>6) If bots are still having trouble with a ladder you can also give the ladder waypoint a 'walk' tag.  That way they'll slow down and approach the ladder more carefully. </p>
+<p>7) Make sure you add sniper points correctly. The direction of a sniper point is the direction you are facing when you put the sniper tag on the waypoint. It is often easiest when placing sniper points to place the waypoint, then face toward the middle of the area you want the bot to be watching, then place the sniper tag on the waypoint. </p>
+<p>8) Make sure sniper, sentry, ammo, health, and armor waypoints have team specific tags on them if only 1 team is able to use them. This is very important especially with sentry and sniper tags. You wont want a bot randomly choosing a sniper point on the other teams battlements, so make them team specific. </p>
+<p>9) If there are messages broadcasted to players in the map, consider how they could be useful to the bots and think about possibly creating a script for the map. Scripts allow a lot more flexibility to the bots by allowing you to alter their goals throughout the game by using common cues that are presented to real players, such as sounds that are played for certain events, or broadcasted messages. Scripts are what give the bots the ability to play maps such as warpath and cz2. More script functions will be added throughout development. </p>
+<p>&nbsp;</p>
+<h3><a name="authoring">Signing your waypoint file</a></h3>
+<p>A new feature in version 0.696 is the ability for an author to sign their waypoints, saving their name along with the waypoint file, so that it will show up on the screen when the settings shows up on the screen a few seconds after the map starts as shown below in the screenshot of the left half of the screen a few seconds into a map. </p>
+<p><img src="clip00017.jpg" width="637" height="768" border="0" alt="clip00017"></p>
+<p>&nbsp;</p>
+<p>To use this, </p>
+<p>Go to waypoint mode on your own waypointed map </p>
+<p>Type: waypoint_author Myname or if there spaces waypoint_author "My name" </p>
+<p>Then save your waypoints and thats it! </p>
+<p>&nbsp;</p>
+<p>Heres what it looks like: <img src="clip00018.jpg" width="261" height="57" border="0" alt="clip00018"></p>
+<p>**stolen from jordans FAQ post** </p>
+<p>&nbsp;</p>
+<p>You can also bring up this exact same settings listing at any time in the game by typing bot_info in the console. </p>
+<p>&nbsp;</p>
+<h3><a name="important">Important Information</a></h3>
+<p>&nbsp;</p>
+<p>REMEMBER: Waypoint data is loaded at the start of a level. This is why you MUST save your waypoints and RESTART the level before you will see the bots react properly to the changes you have made.</p>
+<p>&nbsp;</p>
+<p>If you make a crouch waypoint into an aim waypoint without crouching the aim waypoint will be at a higher level than it should be for a crouch waypoint.  This bug can be useful if you want to make a sniper crouch and aim upwards.</p>
+<p>&nbsp;</p>
+<p>It's best to delete and then re-create aimable waypoints rather than re-aim them otherwise aim artifacts are left behind.  This is a known bug and has not been fixed as of Foxbot version 0.75.</p>
+<p>&nbsp;</p>
+<p><span style="font-style: italic;">Waypoint Tutorial v 2.6 created by Dr.Evil</span></p>
+
+</td></tr></table>
+
+</body>
+</html>

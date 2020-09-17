@@ -25,13 +25,15 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
-#include "bot.h"
+
 #include "extdll.h"
 #include "tf_defs.h"
 #include <meta_api.h>
 
 #include "list.h"
 
+#include "bot.h"
+#include "waypoint.h"
 #include "bot_func.h"
 
 #include "bot_job_assessors.h"
@@ -39,7 +41,6 @@
 #include "bot_job_think.h"
 #include "bot_navigate.h"
 #include "bot_weapons.h"
-#include "waypoint.h"
 
 #ifdef WIN32
 #define itoa _itoa
@@ -1792,7 +1793,7 @@ int JobDisguise(bot_t *pBot) {
       };
       const int new_disguise = disguiseList[random_long(0, 6)];
 
-      char choice[2];
+      char choice[12];
       itoa(new_disguise, choice, 10);
       FakeClientCommand(pBot->pEdict, "disguise_enemy", choice, NULL);
       pBot->disguise_state = DISGUISE_UNDERWAY;

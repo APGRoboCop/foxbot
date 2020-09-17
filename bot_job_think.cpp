@@ -25,15 +25,15 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
-#include <cfloat>
 
-#include "bot.h"
 #include "extdll.h"
 #include "tf_defs.h"
 #include <meta_api.h>
 
 #include "list.h"
 
+#include "bot.h"
+#include "waypoint.h"
 #include "bot_func.h"
 
 #include "bot_job_assessors.h"
@@ -41,7 +41,7 @@
 #include "bot_job_think.h"
 #include "bot_navigate.h"
 #include "bot_weapons.h"
-#include "waypoint.h"
+
 
 // team data /////////////////////////
 extern int RoleStatus[];
@@ -215,7 +215,7 @@ static void DropJobFromBuffer(bot_t *pBot, const int buffer_index) {
 // should depend upon the type type of job that failed and the type of failure.
 void BlacklistJob(bot_t *pBot, const int jobType, const float timeOut) {
    int shortestIndex = -1;
-   float shortestTime = FLT_MAX;
+   float shortestTime = 9999999999999999.0f;
 
    for (int i = 0; i < JOB_BLACKLIST_MAX; i++) {
       if (pBot->jobBlacklist[i].f_timeOut < shortestTime) {

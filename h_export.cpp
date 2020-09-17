@@ -25,8 +25,9 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
-#include "enginecallback.h"
 #include "extdll.h"
+#include "enginecallback.h"
+
 
 #include "bot.h"
 #include "engine.h"
@@ -44,15 +45,13 @@ extern bool mr_meta;
 
 #ifndef __linux__
 HINSTANCE h_Library = NULL;
-HGLOBAL h_global_argv = NULL;
 #else
 void *h_Library = NULL;
-char h_global_argv[1024];
 #endif
 
 enginefuncs_t g_engfuncs;
 globalvars_t *gpGlobals;
-char *g_argv;
+char g_argv[256] = { 0, };
 
 // static FILE *fp;
 
@@ -67,13 +66,8 @@ extern int mod_id;
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, const DWORD fdwReason, LPVOID lpvReserved) {
    if (fdwReason == DLL_PROCESS_ATTACH) {
    } else if (fdwReason == DLL_PROCESS_DETACH) {
-      // if (h_Library)
-      //	FreeLibrary(h_Library);
-
-      if (h_global_argv) {
-         GlobalUnlock(h_global_argv);
-         GlobalFree(h_global_argv);
-      }
+       if (h_Library)
+      	FreeLibrary(h_Library);
    }
 
    return TRUE;
@@ -132,13 +126,6 @@ void WINAPI GiveFnptrsToDll(enginefuncs_t *pengfuncsFromEngine, globalvars_t *pG
 
       ALERT(at_error, "FoXBot - MOD dll not found (or unsupported MOD)!");
    }
-#ifndef __linux__
-   h_global_argv = GlobalAlloc(GMEM_SHARE, 1024);
-   g_argv = static_cast<char *>(GlobalLock(h_global_argv));
-#else
-   g_argv = (char *)h_global_argv;
-#endif
-
    other_GetEntityAPI = (GETENTITYAPI)GetProcAddress(h_Library, "GetEntityAPI");
 
    if (other_GetEntityAPI == NULL) {

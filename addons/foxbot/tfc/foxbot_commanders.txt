@@ -1,0 +1,27 @@
+//This file is optional and if you see any error messages when this file is read
+//it wont hurt anything.
+//
+//- Ordering bots -
+//You can edit this file and add Steam ID's for all players you wish to give
+//commander access to.
+//Only people with the Steam ID's listed in this file will be able to give the
+//bots commands.
+//
+//Commands are given through team chat during play.
+//Also, note that you can only command bots that are on your team.
+//
+//-Commands Available-
+//  (botname = the bots name on your team, # = Class number)
+//botname changeclass #
+//botname changeclassnow #
+//botname changerole roam
+//botname changerole attack
+//botname changerole defend
+//
+//Example: bind "s" "say_team %i changerole defend" (get bot in crosshair & push "s" key)
+//
+//NOTE: defend only works if the waypoint author has placed defend waypoints in their
+//waypoint file.  If you see a bot demoman or hwguy standing guard in certain places,
+//then there are defend waypoints in the map.
+//
+//Add Steam ID's below (1 Steam ID per line).

@@ -1,0 +1,167 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<script type="text/javascript" src="helpman_topicinit.js"></script>
+
+   <title>Waypoint Key Binder</title>
+   <meta name="generator" content="Help &amp; Manual" />
+   <meta name="keywords" content="" />
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+   <meta http-equiv="Content-Style-Type" content="text/css" />
+   <link type="text/css" href="default.css" rel="stylesheet" />
+</head>
+<body style="margin: 0px 0px 0px 0px; background: #FFFFFF;">
+
+
+<table width="100%" border="0" cellspacing="0" cellpadding="5" bgcolor="#DCDCBA">
+  <tr valign="middle">
+    <td align="left">
+      <p class="p_Heading1" style="text-align: center;"><img src="logoheader.jpg" width="535" height="134" border="0" alt="LogoHeader"></p>
+<p class="p_Heading1" style="text-align: center;"><span class="f_Heading1" style="color: #ff6600;">Waypoint Key Binder</span></p>
+
+    </td>
+  </tr>
+</table>
+
+<script>
+function CopyToClip()
+{
+clipboardData.setData('TEXT',S1.outerText)
+}
+</script>
+<style><!--
+BODY {
+      background: 4C5844;
+      color: 99A591;
+      scrollbar-track-color: 4C5844;
+      scrollbar-face-color: 4D5945;
+      scrollbar-highlight-color: 6C7666;
+      scrollbar-3dlight-color: 8C9487;
+      scrollbar-darkshadow-color: 31392C;
+      scrollbar-shadow-color: 3F4938;
+      scrollbar-arrow-color: 99A591;
+     }
+--></style>
+
+<!-- Placeholder for topic body. -->
+<table width="100%" border="0" cellspacing="0" cellpadding="5"><tr valign="top"><td align="left">
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Default:</span></p>
+<div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table cellspacing="0" cellpadding="0" border="1" style="border: solid 1px #000000; border-spacing:0px;">
+<tr style="text-align:left;vertical-align:top;">
+<td valign="top" style="border: none"><p>bind "<span style="color: #ff0000;">INS</span>" "waypoint add" </p>
+<p>bind "<span style="color: #ff0000;">DEL</span>" "waypoint delete" </p>
+<p>bind "<span style="color: #ff0000;">END</span>" "waypoint save" </p>
+<p>bind "<span style="color: #ff0000;">HOME</span>" "waypoint load" </p>
+<p>bind "<span style="color: #ff0000;">i</span>" "waypoint info" </p>
+<p>bind "<span style="color: #ff0000;">m</span>" "waypoint menu" </p>
+<p>bind "<span style="color: #ff0000;">PGUP</span>" "pathwaypoint_connect on" </p>
+<p>bind "<span style="color: #ff0000;">PGDN</span>" "pathwaypoint_connect off" </p>
+<p>bind "<span style="color: #ff0000;">,</span>" "pathwaypoint create1" </p>
+<p>bind "<span style="color: #ff0000;">.</span>" "pathwaypoint create2" </p>
+<p>bind "<span style="color: #ff0000;">[</span>" "pathwaypoint remove1" </p>
+<p>bind "<span style="color: #ff0000;">]</span>" "pathwaypoint remove2" </p>
+<p>&nbsp;</p>
+<p>pathwaypoint_connect off </p>
+<p>waypoint on </p>
+<p>pathwaypoint on </p>
+<p>&nbsp;</p>
+<p>bot_debug on </p>
+</td>
+</tr>
+</table>
+</div>
+<p><span style="font-weight: bold;">&nbsp;</span></p>
+<p><span style="font-weight: bold;">Extended by Grubber:</span></p>
+<div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table cellspacing="0" cellpadding="0" border="0" style="border: none; border-spacing:0px; border-collapse: collapse;">
+<tr style="text-align:left;vertical-align:top;">
+<td valign="top" style="border: solid 1px #000000;"><p><span style="color: #008000;">// Waypoint Key Binder For FoXBot .. -=Last Modified 8-02-2006=-</span></p>
+<p><span style="color: #008000;">// These are the keys that will be bound ..</span></p>
+<p>bind "<span style="color: #ff0000;">=</span>" "waypoint on"</p>
+<p>bind "<span style="color: #ff0000;">-</span>" "waypoint off"</p>
+<p>bind "<span style="color: #ff0000;">INS</span>" "waypoint add"</p>
+<p>bind "<span style="color: #ff0000;">DEL</span>" "waypoint delete"</p>
+<p>bind "<span style="color: #ff0000;">s</span>" "waypoint save"</p>
+<p>bind "<span style="color: #ff0000;">m</span>" "waypoint menu"</p>
+<p>bind "<span style="color: #ff0000;">i</span>" "waypoint info"</p>
+<p>bind "<span style="color: #ff0000;">l</span>" "waypoint load"</p>
+<p>bind "<span style="color: #ff0000;">[</span>" "autowaypoint on"</p>
+<p>bind "<span style="color: #ff0000;">]</span>" "autowaypoint off"</p>
+<p>bind "<span style="color: #ff0000;">PGUP</span>" "pathwaypoint on"</p>
+<p>bind "<span style="color: #ff0000;">PGDN</span>" "pathwaypoint off"</p>
+<p>bind "<span style="color: #ff0000;">/</span>" "pathwaypoint create1"</p>
+<p>bind "<span style="color: #ff0000;">\</span>" "pathwaypoint create2"</p>
+<p>bind "<span style="color: #ff0000;">HOME</span>" "pathwaypoint remove1"</p>
+<p>bind "<span style="color: #ff0000;">END</span>" "pathwaypoint remove2"</p>
+<p>bind "<span style="color: #ff0000;">F11</span>" "bot_debug on"</p>
+<p>bind "<span style="color: #ff0000;">F12</span>" "bot_debug off"</p>
+<p>bind "<span style="color: #ff0000;">F3</span>" "pathwaypoint_connect on"</p>
+<p>bind "<span style="color: #ff0000;">F4</span>" "pathwaypoint_connect off"</p>
+<p>bind "<span style="color: #ff0000;">F5</span>" "locate_waypoint on"</p>
+<p>bind "<span style="color: #ff0000;">F6</span>" "locate_waypoint off"</p>
+<p>bind "<span style="color: #ff0000;">F7</span>" "Pathrun_oneway"</p>
+<p>bind "<span style="color: #ff0000;">F8</span>" "Pathrun_twoway"</p>
+<p>bind "<span style="color: #ff0000;">F9</span>" "Waypoint_author YOURNAMEHERE"</p>
+<p>bind "<span style="color: #ff0000;">F10</span>" "exec config1.cfg"</p>
+<p>&nbsp;</p>
+<p><span style="color: #008000;">// This section prints the info out into the console ..</span></p>
+<p><span style="color: #008000;">// So that you can PGUP &amp; PGDN to see each keys function ..</span></p>
+<p>clear</p>
+<p>echo "=-....-=Waypoint Keyz Loaded For FoXBot=-....-="</p>
+<p>echo ""</p>
+<p>echo "= waypoint on --&gt; Turns On Waypoints."</p>
+<p>echo "- waypoint off --&gt; Turns Off Waypoints."</p>
+<p>echo "INS waypoint add --&gt; Adds a waypoint at the current player location."</p>
+<p>echo "DEL waypoint delete --&gt; Deletes the waypoint nearest to the player."</p>
+<p>echo "s waypoint save --&gt; Saves the current waypoint list to a file."</p>
+<p>echo "m waypoint menu --&gt; Displays a menu for setting tags on a waypoint."</p>
+<p>echo "i waypoint info --&gt; Shows information about the current waypoint."</p>
+<p>echo "l waypoint load --&gt; Loads the waypoint list from a waypoint file."</p>
+<p>echo "[ autowaypoint on --&gt; Turns on autowaypoint setting."</p>
+<p>echo "] autowaypoint off --&gt; Turns off autowaypoint setting."</p>
+<p>echo "PGUP pathwaypoint on --&gt; Turns on the pathwaypoint setting."</p>
+<p>echo "PGDN pathwaypoint off --&gt; Turns off the pathwaypoint setting."</p>
+<p>echo "/ pathwaypoint create1 --&gt; Sets the first waypoint in a manual path."</p>
+<p>echo "\ pathwaypoint create2 --&gt; Sets the second waypoint in a manual path."</p>
+<p>echo "HOME pathwaypoint remove1 --&gt; Sets the first waypoint in removing a path."</p>
+<p>echo "END pathwaypoint remove2 --&gt; Sets the second waypoint in removing a path."</p>
+<p>echo "F11 bot_debug on --&gt; Bot tells you current location of it's problem."</p>
+<p>echo "F12 bot_debug off --&gt; Turns Debug Off."</p>
+<p>echo "F3 pathwaypoint_connect on --&gt; Turns on automatic path connection to a waypoint."</p>
+<p>echo "F4 pathwaypoint_connect off --&gt; Turns off automatic path connection to a waypoint."</p>
+<p>echo "F5 locate_waypoint on --&gt; Turns waypoint location on."</p>
+<p>echo "F6 locate_waypoint off --&gt; Turns waypoint location off."</p>
+<p>echo "N/A locate_waypoint &lt;number&gt; --&gt; Best use spectator mode for this."</p>
+<p>echo "F7 Path run 1 way ==&gt; Connects waypoints in direction you run 1 way"</p>
+<p>echo "F8 Path run both ways ==&gt; Connets both ways when running"</p>
+<p>echo "F9 Waypoint Author ==&gt; Add's your name to waypoint file"</p>
+<p>echo "F10 Restore config ==&gt; Done waypointing, restore original config.cfg"</p>
+<p>&nbsp;</p>
+<p>--------------------------------------------------------------------------------</p>
+<p>&nbsp;</p>
+<p>Just create a file called fwp.cfg (or any name) must have .cfg extension though! And ingame push ~ key to open console &amp; type exec fwp.cfg..... That will bind the keys to your config.cfg...</p>
+<p>&nbsp;</p>
+<p>That is all the Current waypoint commands!</p>
+<p>Change keys to fit your preference. </p>
+<p>The bottom section only tells you ingame console what the keys that are bound do, if you should forget. The top part are the binds!</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">BACKUP YOUR CURRENT CONFIG.CFG FIRST</span></p>
+<p>If you plan on using my config above, then create a backup of your current config.cfg. What i did as you can see above, was to copy my config.cfg to another folder &amp; rename it to config1.cfg.. Then when i press F10, i have ALL my normal keys back.. </p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">NEVER WAYPOINT WITH BOTS INGAME</span></p>
+<p>If you ever add a bot to see how your waypoints are doing before you finish.... Then YOU MUST reload the map &amp; then continue waypointing so it starts fresh!! Otherwise your waypoints will probably be fubar! Open console, type changelevel 2fort OR whatever the maps name is that your working on.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">THE MAP WILL RELOAD</span></p>
+<p>Whenever you go to turn on waypoints, the map will reload first. Then you will be able to waypoint. I personally don't like that, but it was set to do that because of bugs with warpath &amp; i think another map?</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">NO YOU CANNOT WAYPOINT FROM ANOTHER MACHINE</span></p>
+<p>I remeber a person that asked if they could waypoint on their Dedicated server from their Client machine. No!!!</p>
+</td>
+</tr>
+</table>
+</div>
+
+</td></tr></table>
+
+</body>
+</html>

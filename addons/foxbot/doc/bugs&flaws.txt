@@ -1,0 +1,134 @@
+
+   INTRODUCTION
+
+This document is divided into three sections: bugs, design flaws,
+and map specific issues.
+Anyone who wants to work on Foxbot coding might find the information
+here useful as a reference.
+
+--------------------------------------------------
+
+   KNOWN BUGS
+
+-  If you lower the max_bots setting as the bots are joining the game then it's
+   sometimes possible to create a "limbo bot".  i.e. a bot that doesn't do
+   anything, and you can't kick it.  Changing maps will get rid of it though.
+
+-  When trying to throw grenades far the bots usually aim high.  This screws
+   up the bots weapon aim and they may keep shooting at the ceiling or sky
+   for a few moments.
+
+-  Some bots sometimes do not respond to changerole or changeclass commands.
+   Maybe it affects the first bot on the server?
+
+-  Bots are slowed down by caltrops and Spy tranquiliser darts but not by
+   being sniped in the leg.  (reported by Grubber, might be a Half-Life engine bug)
+
+-  Aimable waypoints leave aim artifacts if you attempt to toggle them off or re-aim them.
+
+-  The bots are able to switch from one separate waypoint network to another
+   if the waypoint networks come close enough to each other at some point.
+
+-  Snipers have insanely good aim at very long distances with the auto-rifle
+   (quite noticeable when they climb the ladders on well and switch to auto-rifle).
+
+-  When a bot is infected by an enemy medic and the enemy medic changes
+   to a different class the bot is still infected because it will still
+   spurt blood but it wont take any more infection damage.
+   This seems to be a TFC problem.
+
+-  One day a year(August 24th apparently) the bots celebrate Christmas or Team Fortresses
+   birthday even though bot_xmas is turned off and tfc_birthday is turned off also.
+   Is this a Foxbot or a TFC bug?
+
+-  There's a TFC bug that looks like a Foxbot bug.  Snipers can be stuck
+   charging their rifles when one team wins a round on Avanti or Flagrun.
+
+--------------------------------------------------
+
+   KNOWN DESIGN FLAWS
+
+-  The bots are designed to cope best with the default server gravity.
+   Higher or lower gravity may confuse them about certain things(e.g. rocket jumping).
+
+-  Bot vision is unaffected by light levels, or by fog of any kind.
+
+-  The bots take no notice of caltrop injuries and may walk around slowly for
+   a long time.
+
+-  The bots do not stay concussed for the right amount of time.
+   Scouts should be concussed for about 10 seconds and medics for
+   about 5 seconds.  Other classes may vary.
+
+-  The bots don't check to see if an ally is blocking their line of fire.
+
+-  The bots do not check if dispensers belong to an enemy player before
+   running into them.
+
+-  When a map ends and the score table shows you can hear that the bots are still playing.
+
+-  The bots jump down great heights when very low on health a little too often.
+
+-  The bots will go on a long swim even when they have a small amount of
+   health left and will drown.
+
+-  Waypoints with a point tag 1 - 8 are only respected when they are also
+   goal waypoints.
+   For example a bot won't go to a number tagged waypoint that has been
+   deactivated, but it may may try to pass through it on the way to
+   somewhere else.
+
+-  The bots are not capable of fully avoiding any pipetraps.
+
+-  The bots can ocassionally get held up by teammates who are standing
+   in a narrow passage.
+
+-  The bots completely ignore certain useful concussion/rocket jump points
+   in some places on some maps.
+   This is because they need a normal route to their goal to begin with.
+   e.g. It's very hard getting them to jump onto the roof of Building 1 in Hunted.
+
+-  If you make a crouch waypoint into an aim waypoint without crouching
+   the aim waypoint will be at a higher level than it should be for a crouch waypoint.
+   This glitch can be useful if you want to make a sniper crouch and aim upwards,
+   or stand and aim downwards, so it shall probably be left as it is.
+
+-  Bots can't tell where to get more grenades from.
+
+-  Bots have trouble throwing grenades at sentry guns that are higher than them
+   or which are perched on some kind of ledge.
+
+-  Bots can't tell that a body is really a feigning Spy even though the
+   dead body is spinning around on the floor.
+
+-  Bots don't care if a Spy feigns or un-feigns in front of them.
+
+-  The bots can't tell that a HWGuy or Scout moving at the wrong speed is a Spy.
+
+-  Bots may call for a medic when they are injured and in a respawn area.
+
+-  If foxbot.cfg has a number of addbot commands which specify team and class
+   then the bots spawned may not be what was specified if you change max_bots
+   several times and change your team.
+
+--------------------------------------------------
+
+   MAP SPECIFIC ISSUES
+
+-  Dustbowl
+   Defenders will pick the scout class occasionally(not a big problem, just daft).
+
+-  Flagrun.
+   1. When each bot spawns/respawns there is a brief framerate drop.
+      Could be because of all the waypoints near the respawn rooms.
+   2. The spawn room doors don't open for flag carriers, and the bots don't
+      know about this(although they should now be able to cope).
+
+-  Ravelin
+   1. Engineers don't know how to repair the generators.
+   2. So far there is no real way to stop bots trying a side route through
+      the enemy teams laser grid.
+   3. The doors to the flag rooms take ages to open so the bots often give up on them.
+
+-  Rock2
+   The bots don't know that they should seek protection before the gas triggers.

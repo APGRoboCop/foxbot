@@ -21,16 +21,16 @@
 // util.cpp
 //
 
-#include "engine.h"
+
 #include "extdll.h"
-#include <cctype>
-#include <ctime>
+#include <time.h>
 #include <util.h>
 
-#include <cmath>
+#include <math.h>
 
 #include "bot.h"
 #include "bot_func.h"
+#include "engine.h"
 
 // this is used to store the current Foxbot directory path
 static char foxbot_path[160] = "";

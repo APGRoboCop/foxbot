@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//Norman Walsh//DTD DocBook HTML 1.0//EN">
+<HTML>
+<HEAD>
+   <TITLE>Waypoint tag types</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="5" bgcolor="#DCDCBA">
+  <tr valign="middle">
+    <td align="left">
+      <p class="p_Heading1" style="text-align: center;"><img src="logoheader.jpg" width="535" height="134" border="0" alt="LogoHeader"></p>
+<p class="p_Heading1" style="text-align: center;"><span class="f_Heading1" style="color: #ff6600;">Waypoint tag types</span></p>
+
+    </td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+<b>Team Specific tags</b>
+<p><img src="clip0005.jpg" width="351" height="257" border="0" alt="clip0005"></p>
+<p>Team Specific tags tell the bots which waypoints are available for use by which team in TFC.<br>
+If a waypoint has no team specific color(i.e. it's white) then it can be used by all the bots, whatever their teams are.</p>
+<hr size=8>
+<b>Walk</b>
+<p>Walk waypoint tags have no icon, but the "waypoint info" command will reveal their presence.</p>
+<p>A waypoint with a walk tag tells the bots that they need to walk as they approach it.<br>
+You may want them to walk when approaching a certain type of door, for example.</p>
+<hr size=8>
+<b>Crouch</b>
+<p><img src="crouch.jpg" width="580" height="250" border="0" alt="crouch"></p>
+<p>A waypoint with a walk tag tells the bots that they need to crouch as they approach it.<br>
+You may want them to crouch when approaching a low ceiling, for example.</p>
+<p>To make a crouch waypoint you must crouch and then add a waypoint.</p>
+<hr size=8>
+<b>Jump</b>
+<p><img src="clip00012.jpg" width="200" height="305" border="0" alt="clip00012"></p>
+<p>Bots will jump when approaching this waypoint.<br>
+Jump waypoints are best placed suspended in the air over the area you wish the bot to jump over. It is best to do this in spectator mode and adjust until you get the kind of jump from the bots that you need.</p>
+<p>Here is a picture of a jump waypoint being used by a couple bots in the map dusk </p>
+<p><img src="clip00013.jpg" width="640" height="440" border="0" alt="clip00013"></p>
+<hr size=8>
+<b>Wait for Lift</b>
+<p><img src="clip0006.jpg" width="150" height="240" border="0" alt="clip0006"></p>
+<p>When placing lift waypoints you must place a lift waypoint on the lift at both the bottom and the top of its travel. Why? Because the bottom one tells the bot he is on a lift, and to be still until he gets close to the other lift waypoint which is on the top. When he gets to the top he will then proceed to the next waypoint. </p>
+<hr size=8>
+<b>Flag Location and Flag Goal Location</b>
+<p><img src="clip0008.jpg" width="250" height="244" border="0" alt="clip0008"></p>
+<p>A Flag waypoint tag(the one on the left) tells bots where to find flags.<br>
+A Flag Goal Location(the one on the right) tells bots where to go with the flags that they have picked up.</p>
+<hr size=8>
+<b>Health, Armor, and Ammo</b>
+<p><img src="clip0009.jpg" width="622" height="320" border="0" alt="clip0009"></p>
+<p>These waypoint tags can be used to tell bots where to go when they need health, armor, or ammo.<br>
+Also, you should make sure that all health, armor, and ammo packs have team specific waypoint tags on them if they are only available to a certain team.</p>
+<hr size=8>
+<b>Sniper Spot</b>
+<p><img src="clip0007.jpg" width="190" height="320" border="0" alt="clip0007"></p>
+<p>Notice the small line to one side of the sniper point. This line represents the direction a bot sniper will face when using this sniper spot. When you place a sniper tag on a waypoint make sure YOU are facing in the direction you want the bot sniper to face when using it. When you place the sniper tag on a waypoint, you will see the small line appear in the direction you were facing when you created it. </p>
+<hr size=8>
+<b>Defender</b>
+<p><img src="guard.jpg" width="160" height="230" border="0" alt="guard"></p>
+<p>Defender waypoints are directional, just like Sniper waypoints.<br>
+A Defender waypoint tag tells bots that are on defense about good locations to stand guard.</p>
+<hr size=8>
+<b>Demoman Pipetrap</b>
+<p><img src="pipetrap.jpg" width="170" height="244" border="0" alt="pipetrap"></p>
+<p>Demoman Pipetrap waypoints are directional, just like Sniper waypoints.<br>
+A Demoman Pipetrap waypoint tag tells Demoman bots that are on defense about good locations to set up a pipebomb trap.</p>
+<hr size=8>
+<b>Build Sentry Gun</b>
+<p><img src="clip00014.jpg" width="200" height="266" border="0" alt="clip00014"></p>
+<p>Engineer bots will build sentry guns at this location.<br>
+Just like sniper points, sentry points have directional tags also.<br>
+The directional tag indicates the direction that the Engineer should face when he builds the Sentry Gun.</p>
+<hr size=8>
+<b>Rotate Sentry Gun 180</b>
+<p>Engineer bots will rotate their sentry guns 180 degrees when built at this location.<br>
+This waypoint tag has no icon, but you can reveal it's presence with the "waypoint info" command.</p>
+<hr size=8>
+<b>Rocketjump/Concussion Jump</b>
+<p><img src="clip00016.png" width="122" height="300" border="0" alt="clip00016"></p>
+<p>This waypoint tag was introduced in Foxbot release 0.698.<br>
+It tells Soldiers that they can rocket jump to it.  And it tells Medics and Scouts that they can concussion jump towards it.<br>
+This waypoint type works differently than other waypoints, and therefore needs a longer explanation both on how they work, and how to add them to your map.</p>
+<p>Rocket jump waypoints represent the target landing point for a rocket or concussion jump. There is no take off point to waypoint. The most important aspect of the rocket jump waypoint(RJ for short) is understanding that the RJ waypoint should NOT be connected to areas where soldiers are intended to rocket jump FROM. Doing so will cause all classes to attempt to go to that waypoint. RJ waypoints should ONLY be connected to other waypoints around it, so that when the bot lands, there will be a valid path to take him onward to his goal. There are NO additional routes created when using RJ waypoints, so bots will not go out of their way to use RJ points. RJ points are used based on their visibility, and the bots goal. Take 2fort as an example. First notice how the RJ waypoints are connected ONLY to the other waypoints on the battlements, they should not be connected to the waypoints on the ground. When a bot soldier comes across the bridge, he should see the RJ waypoints. When a bot sees a RJ waypoint, it will evaluate whether taking that route would result in a decent size distance savings to whatever goal he was pursuing at the time. If the distance savings is good enough, and he has the health/armor/ammo, he should attempt to take the jump. This system is not perfect, so it is likely the bots might not be able to perform the jumps in certain maps. Of all the waypoint types, RJ waypoints are going to need a little more attention than the others, since they may need tweaking several times to get the bot to successfully make the jump a majority of the time. </p>
+<p>Medics and Scout bots can also use this waypoint type for Concussion Jumping. The main difference is that the bots "look ahead" in their path for jump points so they can attempt to prime a grenade early.</p>
+<hr size=8>
+<b>Teleporter</b>
+<p><img src="clip00022.jpg" width="253" height="210" border="0" alt="clip00022"></p>
+<p>Foxbot 0.699 added support for Teleporter entrance and exit waypoint tags.<br>
+These two waypoint tags can be used to tell bot Engineers about good locations to build Teleporter entrances and exits.</p>
+<hr size=8>
+<b>Detpack Clear</b>
+<p><img src="clip00015.jpg" width="200" height="301" border="0" alt="clip00015"></p>
+<p>A Demoman bot will set a 5 second detpack at this type of waypoint if<br>
+EITHER: Any of the paths connecting from it are blocked(e.g. by destroyable rubble or walls).<br>
+OR: The detpack clear waypoint is only connected to one other waypoint.</p>
+<p>Note: Players can only place a detpack if they are touching ground beneath them, even when they are under water.</p>
+<hr size=8>
+<b>Detpack Seal</b>
+<p><img src="detpack_seal.jpg" width="370" height="350" border="0" alt="detpack_seal"></p>
+<p>This waypoint tag was introduced in Foxbot 0.76.<br>
+A Demoman bot will set a 5 second detpack near this waypoint type if none of the paths leading from it are obstructed by scenery.<br>
+i.e. if a passage is clear they will try to seal it with their detpacks.</p>
+<p>Note: Players can only place a detpack if they are touching ground beneath them, even when they are under water.</p>
+<hr size=8>
+<b>Path Check</b>
+<p><img src="path_check.jpg" width="270" height="270" border="0" alt="path_check"></p>
+<p>This waypoint tag was introduced in Foxbot 0.76.<br>
+When a bot encounters a waypoint with the path check tag it will check to see if there is an obstruction blocking the path from the waypoint.<br>
+If the path is blocked the bot will try to find another route around it.</p>
+<hr size=8>
+<p>&nbsp;</p>
+</BODY>
+</HTML>

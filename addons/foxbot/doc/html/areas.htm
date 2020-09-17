@@ -1,0 +1,101 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<script type="text/javascript" src="helpman_topicinit.js"></script>
+
+   <title>Zones/Areas</title>
+   <meta name="generator" content="Help &amp; Manual" />
+   <meta name="keywords" content="" />
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+   <meta http-equiv="Content-Style-Type" content="text/css" />
+   <link type="text/css" href="default.css" rel="stylesheet" />
+</head>
+<body style="margin: 0px 0px 0px 0px; background: #FFFFFF;">
+
+
+<table width="100%" border="0" cellspacing="0" cellpadding="5" bgcolor="#DCDCBA">
+  <tr valign="middle">
+    <td align="left">
+      <p class="p_Heading1" style="text-align: center;"><img src="logoheader.jpg" width="535" height="134" border="0" alt="LogoHeader"></p>
+<p class="p_Heading1" style="text-align: center;"><span class="f_Heading1" style="color: #ff6600;">Zones/Areas</span></p>
+
+    </td>
+  </tr>
+</table>
+
+<script>
+function CopyToClip()
+{
+clipboardData.setData('TEXT',S1.outerText)
+}
+</script>
+<style><!--
+BODY {
+      background: 4C5844;
+      color: 99A591;
+      scrollbar-track-color: 4C5844;
+      scrollbar-face-color: 4D5945;
+      scrollbar-highlight-color: 6C7666;
+      scrollbar-3dlight-color: 8C9487;
+      scrollbar-darkshadow-color: 31392C;
+      scrollbar-shadow-color: 3F4938;
+      scrollbar-arrow-color: 99A591;
+     }
+--></style>
+
+<!-- Placeholder for topic body. -->
+<table width="100%" border="0" cellspacing="0" cellpadding="5"><tr valign="top"><td align="left">
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">About Areas/Zones</span></p>
+<p>Zones were introduced in version 0.68 of foxbot. Now, in version 0.69 the bots will finally utilize them for their intended purpose. First I will briefly describe what zones are and how they work. Zones (also called areas) are a separate file made in much of the same way waypoints are made. Basically waypoints are used to trace lines around all the different areas of a level to create 4 sided polygons inside the level. Each polygon or "area" is then given several names(up to 4). When a bot has the flag and is killed, a check is made to see what area he is in, and then he uses the name of the area to say to the team "Flag dropped in enemy flagroom" or whatever the name ofthe zone is. The reason there are up to 4 names is because TFC can support up to 4 teams, and realistically players from all 4 teams will not likely refer to a particular area with the same name as another team. Example, red respawn room would be zoned. Namel would be "enemy respawn room" and name2 would be "our respawn room" Namel is used by a blue team bot and Name2 is used by a red team bot. Now on to the How-to.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Key Bindings</span></p>
+<p>First create a file called area.cfg or zone.cfg and paste the following into it:</p>
+<div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table cellspacing="0" cellpadding="0" border="0" style="border: none; border-spacing:0px; border-collapse: collapse;">
+<tr style="text-align:left;vertical-align:top;">
+<td valign="top" style="border: solid 1px #000000;"><p>area on</p>
+<p>waypoint off </p>
+<p>pathwaypoint off</p>
+<p>bind "<span style="color: #ff0000;">INS</span>" "area add" </p>
+<p>bind "<span style="color: #ff0000;">DEL</span>" "area delete" </p>
+<p>bind "<span style="color: #ff0000;">END</span>" "area save" </p>
+<p>bind "<span style="color: #ff0000;">i</span>" "area info"</p>
+</td>
+</tr>
+</table>
+</div>
+<p>&nbsp;</p>
+<p>The first line turns area mode on.</p>
+<p>The second line turns waypoint mode off if it was on. (if waypoint and area mode are both on the game could crash)</p>
+<p>The 3rd line turns off another waypoint related feature.</p>
+<p>The rest of the lines are binds for the area editing mode.</p>
+<p>Now, lets look at what the commands in these binds do.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Commands</span></p>
+<p>"area add" - This begins creating an "area" by placing waypoints. When the 4th one is placed, you will notice the forming of a closed polygon.</p>
+<p>"area delete" - Use this to delete the waypoints that make up an area. Remember to delete all 4.</p>
+<p>"area save" - This will save all the areas to a file for the map you are in.</p>
+<p>"area info" - This shows you information about the area.</p>
+<p>"area namex" - (not shown in config) This is the command in the console that will be used to name the zone. Here is the syntax in an example of a zone placed in red teams flagroom.</p>
+<p>area name1 "in the enemy flag room"</p>
+<p>area name2 "in our flag room"</p>
+<p>name1 will be used by team1 (blue) name2 will be used by &nbsp;team2 (red)</p>
+<p>&nbsp;</p>
+<p>If the map only supports 2 teams you can leave "area name3" and "area name4" set to nothing. If there are more than 2 teams just give the zones names for the rest of the teams that the map supports.</p>
+<p>namel is for team 1 (blue)</p>
+<p>name2 is for team2 (red)</p>
+<p>name3 is for team3 (yellow)</p>
+<p>name4 is for team4 (green)</p>
+<p>&nbsp;</p>
+<p>You may use the command: </p>
+<p>area name "insert area here" </p>
+<p>If you dont specify a number after area name it will make all 4 names whatever you specify. As shown here:</p>
+<p>&nbsp;</p>
+<p>Here you see some of the zones from 2fort. You can't see here but there is 1 large zone in the water, with a point at each comer of the pool.</p>
+<p>&nbsp;</p>
+<p>As shown here, don't hesitate to shape the zones however you want. The goal is to cover as much of the map as possible with accurate zone names. Its important to establish a balance of the numper of zones and the accuracy of the descriptions. Try not to do too many zones for a map. Usually depending on the room u may use 1-3 or so zones to cover it depending on shape and stuff. Some areas you may want to divide a little more in order to be more accurate with descriptions.</p>
+
+</td></tr></table>
+
+</body>
+</html>

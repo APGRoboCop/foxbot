@@ -73,7 +73,7 @@ extern GETNEWDLLFUNCTIONS other_GetNewDLLFunctions;
 extern enginefuncs_t g_engfuncs;
 extern int debug_engine;
 extern globalvars_t *gpGlobals;
-extern char *g_argv;
+extern char g_argv[256];
 extern bool g_waypoint_on;
 extern bool g_waypoint_cache;
 extern bool g_auto_waypoint;
@@ -695,12 +695,12 @@ void GameDLLInit(void) {
 // Constructor for the chatClass class
 // sets up the names of the chat section headers
 chatClass::chatClass(void) {
-   this->sectionNames[CHAT_TYPE_GREETING] = "[GREETINGS]";
-   this->sectionNames[CHAT_TYPE_KILL_HI] = "[KILL WINNING]";
-   this->sectionNames[CHAT_TYPE_KILL_LOW] = "[KILL LOSING]";
-   this->sectionNames[CHAT_TYPE_KILLED_HI] = "[KILLED WINNING]";
-   this->sectionNames[CHAT_TYPE_KILLED_LOW] = "[KILLED LOSING]";
-   this->sectionNames[CHAT_TYPE_SUICIDE] = "[SUICIDE]";
+   strcpy (this->sectionNames[CHAT_TYPE_GREETING], "[GREETINGS]");
+   strcpy (this->sectionNames[CHAT_TYPE_KILL_HI], "[KILL WINNING]");
+   strcpy (this->sectionNames[CHAT_TYPE_KILL_LOW], "[KILL LOSING]");
+   strcpy (this->sectionNames[CHAT_TYPE_KILLED_HI], "[KILLED WINNING]");
+   strcpy (this->sectionNames[CHAT_TYPE_KILLED_LOW], "[KILLED LOSING]");
+   strcpy (this->sectionNames[CHAT_TYPE_SUICIDE], "[SUICIDE]");
 
    int j;
 
@@ -708,7 +708,7 @@ chatClass::chatClass(void) {
    for (int i = 0; i < TOTAL_CHAT_TYPES; i++) {
       this->stringCount[i] = 0;
       for (j = 0; j < MAX_CHAT_STRINGS; j++) {
-         this->strings[i][j].clear();
+         this->strings[i][j][0] = 0x0;
       }
 
       for (j = 0; j < 5; j++) {
@@ -771,7 +771,7 @@ void chatClass::readChatFile(void) {
       if (chat_section != -1 && this->stringCount[chat_section] < MAX_CHAT_STRINGS && length > 0) {
          // UTIL_BotLogPrintf("buffer %s %d\n", buffer, this->stringCount[chat_section]);
 
-         this->strings[chat_section][this->stringCount[chat_section]] = buffer;
+         strcpy (this->strings[chat_section][this->stringCount[chat_section]], buffer);
          ++this->stringCount[chat_section];
       }
    }
@@ -816,8 +816,8 @@ void chatClass::pickRandomChatString(char *msg, const size_t maxLength, const in
 
    // set up the message string
    // is "%s" in the text?
-   if (playerName != NULL && strstr(this->strings[chatSection][randomIndex].c_str(), "%s") != NULL) {
-      _snprintf(msg, maxLength, this->strings[chatSection][randomIndex].c_str(), playerName);
+   if (playerName != NULL && strstr(this->strings[chatSection][randomIndex], "%s") != NULL) {
+      _snprintf(msg, maxLength, this->strings[chatSection][randomIndex], playerName);
    } else
       printf("%s", msg);
 

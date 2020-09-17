@@ -3,46 +3,6 @@
 ==============================
 
 --------------------------------------------------------------------------------
-Version 0.793
-????-??-202?
-Updated by RoboCop
---------------------------------------------------------------------------------
-
-- Removed some more redundant codes
-
-- Added some Clang compiler fixes and performance fixes
-
-- Spies won't select enemy Scouts, Medics, HWs and Engineers disguises as their speeds and lame default weapons can easily blow their covers
-
-- Repaired some rogue pathwaypoints for 2fort, avanti, cz2, palermo, rock2, sandbowl_r2, shutdown2 and well
-
-- Allowing bots to avoid firing lame weapons like nailguns, laser railguns and dart tranq guns too often
-
-- Limited the bot frame rate movement to 60Hz
-
-- Increased bot job priority for collecting ammo and healing teammates
-
-- Added script for the bots to know how to disable flag room security
-
-- Reduced bot job priority for solders to avoid rocket jumping too often
-
-- Removed excess Conc/Rocket Jump waypoints in dustbowl in awkward areas and due to the lack of conc nades
-
-- Optimised 'foxbot_commander.txt' by removing excess 'strlen' loops
-
-Known bugs:-  
-
->> '[META] WARNING: Plugin didn't set meta_result: foxbot_mm.so:engClientCommand()' may occur occasionally
-
->> Soldier bots tend to struggle for rocket jumping in certain areas that can block its way
-
->> Sniper bots tend to TK when Friendly Fire is on, when interacting with their team's sentries and teleports
-
->> botdontmove, bot_chat, min_bots, max_bots, bot_bot_balance and bot_team_balance cvars may not be 100% operational
-
->> FoxBot appears to crash sometimes on Windows Listenservers
-
---------------------------------------------------------------------------------
 Version 0.792
 March-29-2020
 Updated by RoboCop
@@ -50,7 +10,7 @@ Updated by RoboCop
 
 - Further optimisation fixes
 
-- Linux build compiled with the newer GCC/G++ 8.3
+- Linux build compiled with the newer GCC/G++ 8
 
 - Replaced most of the C style casts with C++ casts
 
@@ -68,7 +28,7 @@ Updated by RoboCop
 
 - Corrected the hunted map config where Sniper assassins could not spawn
 
-- Fixed deprecation warning for 'SpyDetect'
+- Fixed depreciation warning for 'SpyDetect'
 
 - Fixed some potential code issues
 

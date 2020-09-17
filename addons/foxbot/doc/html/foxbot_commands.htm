@@ -1,0 +1,507 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<script type="text/javascript" src="helpman_topicinit.js"></script>
+
+   <title>FoxBot Commands</title>
+   <meta name="generator" content="Help &amp; Manual" />
+   <meta name="keywords" content="" />
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+   <meta http-equiv="Content-Style-Type" content="text/css" />
+   <link type="text/css" href="default.css" rel="stylesheet" />
+</head>
+<body style="margin: 0px 0px 0px 0px; background: #FFFFFF;">
+
+
+<table width="100%" border="0" cellspacing="0" cellpadding="5" bgcolor="#DCDCBA">
+  <tr valign="middle">
+    <td align="left">
+      <p class="p_Heading1" style="text-align: center;"><img src="logoheader.jpg" width="535" height="134" border="0" alt="LogoHeader"></p>
+<p class="p_Heading1" style="text-align: center;"><span class="f_Heading1" style="color: #ff6600;">FoxBot Commands</span></p>
+
+    </td>
+  </tr>
+</table>
+
+<script>
+function CopyToClip()
+{
+clipboardData.setData('TEXT',S1.outerText)
+}
+</script>
+<style><!--
+BODY {
+      background: 4C5844;
+      color: 99A591;
+      scrollbar-track-color: 4C5844;
+      scrollbar-face-color: 4D5945;
+      scrollbar-highlight-color: 6C7666;
+      scrollbar-3dlight-color: 8C9487;
+      scrollbar-darkshadow-color: 31392C;
+      scrollbar-shadow-color: 3F4938;
+      scrollbar-arrow-color: 99A591;
+     }
+--></style>
+
+<!-- Placeholder for topic body. -->
+<table width="100%" border="0" cellspacing="0" cellpadding="5"><tr valign="top"><td align="left">
+<p>&nbsp;</p>
+<p><span style="font-weight: bold;">Console Commands:</span></p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold; text-decoration: underline;">Adding Bots:</span></p>
+<p><span style="font-style: italic; font-weight: bold;">addbot</span> [Team: 1-4] [Class: 1-10] [Name] [Skill: 1-5]</p>
+<p>There are several different ways you can use the addbot command to add bots to your game.</p>
+<p><span style="font-weight: bold;">1)</span> <span style="font-style: italic; font-weight: bold;">addbot</span> - By typing just the command addbot, a single bot will be added to the game. The computer will select the bots team, class, and name.</p>
+<p><span style="font-weight: bold;">2)</span> <span style="font-style: italic; font-weight: bold;">addbot</span> x – The addbot command followed by a space and a number will add a bot to the team of your choice (1=Blue, 2=Red, &nbsp; 3=Yellow, 4=Green). The computer will select the bots class and name.</p>
+<p><span style="font-weight: bold;">3)</span> <span style="font-style: italic; font-weight: bold;">addbot</span> x x – The addbot command followed by 2 separate numbers will add a bot to the game on the team of your choice, as the class of your choice. The first number is the team number. The second number is the number of the class as seen in the class selection menu. The computer will select the bots name.</p>
+<p><span style="font-weight: bold;">4)</span> <span style="font-style: italic; font-weight: bold;">addbot</span> x x name – This command is identical to the one above, except that you assign the bot a name by adding one to the line after the second number (Example: <span style="font-style: italic;">addbot</span> 1 2 BigBot. This command will add a bot to the blue team(1) as a sniper(2) with the name BigBot.).</p>
+<p><span style="font-weight: bold;">5)</span> <span style="font-style: italic; font-weight: bold;">addbot</span> x x name skill – This command is the most specific. Same as the one above, except after the name you would put another number. This number would be the skill level of this particular bot (Example: <span style="font-style: italic;">addbot</span> 1 2 BigBot 1. This command will add a bot to the blue team(1) as a sniper(2) with the name BigBot and the skill level of 1. (1 is best 5 is worst)).</p>
+<p>&nbsp;</p>
+<p>NOTE: From Foxbot version 0.705 onwards, if you do not specify a class with the addbot command then the spawned bot will be able to change class whenever it wants to.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold; text-decoration: underline;">Kicking Bots:</span></p>
+<p><span style="font-style: italic; font-weight: bold;">kick</span> Name</p>
+<div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table border="0" cellpadding="0" cellspacing="0" style="line-height: normal;"><tr style="vertical-align:baseline" valign="baseline"><td width="13"><span style="font-size: 10pt; font-family: 'Symbol'; font-style: normal; color: #000000; text-decoration: none;">&#183;</span></td><td>You may kick the bots at any time by typing kick followed by the bots name.</td></tr></table></div><div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table border="0" cellpadding="0" cellspacing="0" style="line-height: normal;"><tr style="vertical-align:baseline" valign="baseline"><td width="13"><span style="font-size: 10pt; font-family: 'Symbol'; font-style: normal; color: #000000; text-decoration: none;">&#183;</span></td><td>Example: <span style="font-style: italic;">kick</span> BigBot - will kick the bot named BigBot from the game.</td></tr></table></div><p><span style="font-style: italic; font-weight: bold;">kickall</span></p>
+<div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table border="0" cellpadding="0" cellspacing="0" style="line-height: normal;"><tr style="vertical-align:baseline" valign="baseline"><td width="13"><span style="font-size: 10pt; font-family: 'Symbol'; font-style: normal; color: #000000; text-decoration: none;">&#183;</span></td><td>You may also remove all the bots from the game by typing the command <span style="font-style: italic;">kickall</span>.</td></tr></table></div>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold; text-decoration: underline;">Bot Skill Level:</span></p>
+<p><span style="font-style: italic; font-weight: bold;">botskill_upper</span> Number 1-5</p>
+<div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table border="0" cellpadding="0" cellspacing="0" style="line-height: normal;"><tr style="vertical-align:baseline" valign="baseline"><td width="13"><span style="font-size: 10pt; font-family: 'Symbol'; font-style: normal; color: #000000; text-decoration: none;">&#183;</span></td><td>This command will set the best possible skill level to be randomly assigned to bots that join the game automatically.<br>Skill levels are a value 1-5. Skill 1 is the best, Skill 5 is worst.</td></tr></table></div>
+
+<p><span style="font-style: italic; font-weight: bold;">botskill_lower</span> Number 1-5</p>
+<div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table border="0" cellpadding="0" cellspacing="0" style="line-height: normal;"><tr style="vertical-align:baseline" valign="baseline"><td width="13"><span style="font-size: 10pt; font-family: 'Symbol'; font-style: normal; color: #000000; text-decoration: none;">&#183;</span></td><td>This command will set the worst possible skill level to be randomly assigned to bots that join the game automatically.<br>Skill levels are a value 1-5. Skill 1 is the best, Skill 5 is worst.</td></tr></table></div>
+<p>&nbsp;</p>
+<p><span style="font-style: italic; font-weight: bold;">bot_skill_1_aim</span> Number 0-200</p>
+<div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table border="0" cellpadding="0" cellspacing="0" style="line-height: normal;"><tr style="vertical-align:baseline" valign="baseline"><td width="13"><span style="font-size: 10pt; font-family: 'Symbol'; font-style: normal; color: #000000; text-decoration: none;">&#183;</span></td><td>This command will affect the accuracy of all bots of skill 1 in the game or that join the game.  If you set it to 0 then bots of skill 1 will have the best accuracy possible, or you can increase it to increase their inaccuracy(i.e. worsen their aim).</td></tr></table></div>
+
+<p><span style="font-style: italic; font-weight: bold;">bot_aim_per_skill</span> Number 5-50</p>
+<div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table border="0" cellpadding="0" cellspacing="0" style="line-height: normal;"><tr style="vertical-align:baseline" valign="baseline"><td width="13"><span style="font-size: 10pt; font-family: 'Symbol'; font-style: normal; color: #000000; text-decoration: none;">&#183;</span></td><td>This command will affect the inaccuracy of all bots of skill levels 2-5 in the game or that join the game.  This sets the difference in inaccuracy between one bot skill level and the next.  For example, if you set it to 20 and bots of skill level 1 have an inaccuracy of 30 then a bot of skill 2 will have an inaccuracy of 50, and a bot of skill level 3 will have an inaccuracy of 70.</td></tr></table></div>
+
+<p>&nbsp;</p>
+
+<p><span style="font-weight: bold; text-decoration: underline;">Waypoint Editing (For more information look at the waypoint tutorial):</span></p>
+<p><span style="font-style: italic; font-weight: bold;">bot_debug</span> on/off</p>
+<div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table border="0" cellpadding="0" cellspacing="0" style="line-height: normal;"><tr style="vertical-align:baseline" valign="baseline"><td width="13"><span style="font-size: 10pt; font-family: 'Symbol'; font-style: normal; color: #000000; text-decoration: none;">&#183;</span></td><td>A bot will report at the console if he can't reach a goal (health/flag etc) from a waypoint, giving his goal and current waypoint as well.</td></tr></table></div><p><span style="font-style: italic; font-weight: bold;">locate_waypoint</span> on/off</p>
+<div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table border="0" cellpadding="0" cellspacing="0" style="line-height: normal;"><tr style="vertical-align:baseline" valign="baseline"><td width="13"><span style="font-size: 10pt; font-family: 'Symbol'; font-style: normal; color: #000000; text-decoration: none;">&#183;</span></td><td>Turns waypoint location on/off.</td></tr></table></div><p><span style="font-style: italic; font-weight: bold;">locate_waypoint</span> Number</p>
+<div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table border="0" cellpadding="0" cellspacing="0" style="line-height: normal;"><tr style="vertical-align:baseline" valign="baseline"><td width="13"><span style="font-size: 10pt; font-family: 'Symbol'; font-style: normal; color: #000000; text-decoration: none;">&#183;</span></td><td>Sets the destination of the waypoint locator beam(to help you find specific waypoints). This will also provide information about the waypoint it points to, such as it's physical distance, route distance and height from your location.</td></tr></table></div><p><span style="font-style: italic; font-weight: bold;">pathwaypoint_connect</span> on/off</p>
+<div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table border="0" cellpadding="0" cellspacing="0" style="line-height: normal;"><tr style="vertical-align:baseline" valign="baseline"><td width="13"><span style="font-size: 10pt; font-family: 'Symbol'; font-style: normal; color: #000000; text-decoration: none;">&#183;</span></td><td>Turns on/off automatic path connection to a waypoint useful for when you want to place a waypoint but you don’t want paths to be automatically generated to and from that point.</td></tr></table></div><p><span style="font-style: italic; font-weight: bold;">pathwaypoint create1</span></p>
+<div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table border="0" cellpadding="0" cellspacing="0" style="line-height: normal;"><tr style="vertical-align:baseline" valign="baseline"><td width="13"><span style="font-size: 10pt; font-family: 'Symbol'; font-style: normal; color: #000000; text-decoration: none;">&#183;</span></td><td>Stores first waypoint to make a new path connection.</td></tr></table></div><p><span style="font-style: italic; font-weight: bold;">pathwaypoint create2</span></p>
+<div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table border="0" cellpadding="0" cellspacing="0" style="line-height: normal;"><tr style="vertical-align:baseline" valign="baseline"><td width="13"><span style="font-size: 10pt; font-family: 'Symbol'; font-style: normal; color: #000000; text-decoration: none;">&#183;</span></td><td>Makes the new path connection from the waypoint stored from 'pathwaypoint create1' command.</td></tr></table></div><p><span style="font-style: italic; font-weight: bold;">pathwaypoint remove1</span></p>
+<div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table border="0" cellpadding="0" cellspacing="0" style="line-height: normal;"><tr style="vertical-align:baseline" valign="baseline"><td width="13"><span style="font-size: 10pt; font-family: 'Symbol'; font-style: normal; color: #000000; text-decoration: none;">&#183;</span></td><td>Stores first waypoint to remove path from this waypoint.</td></tr></table></div><p><span style="font-style: italic; font-weight: bold;">pathwaypoint remove2</span></p>
+<div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table border="0" cellpadding="0" cellspacing="0" style="line-height: normal;"><tr style="vertical-align:baseline" valign="baseline"><td width="13"><span style="font-size: 10pt; font-family: 'Symbol'; font-style: normal; color: #000000; text-decoration: none;">&#183;</span></td><td>Removes the path connection from the waypoint stored from 'pathwaypoint remove1' command.</td></tr></table></div><p><span style="font-style: italic; font-weight: bold;">waypoint</span> on/off</p>
+<div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table border="0" cellpadding="0" cellspacing="0" style="line-height: normal;"><tr style="vertical-align:baseline" valign="baseline"><td width="13"><span style="font-size: 10pt; font-family: 'Symbol'; font-style: normal; color: #000000; text-decoration: none;">&#183;</span></td><td>Show or hide waypoints, use if you want create waypoints for map.</td></tr></table></div><p><span style="font-style: italic; font-weight: bold;">waypoint add</span></p>
+<div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table border="0" cellpadding="0" cellspacing="0" style="line-height: normal;"><tr style="vertical-align:baseline" valign="baseline"><td width="13"><span style="font-size: 10pt; font-family: 'Symbol'; font-style: normal; color: #000000; text-decoration: none;">&#183;</span></td><td>Add waypoint to current position (player or spectator).</td></tr></table></div><p><span style="font-style: italic; font-weight: bold;">waypoint delete</span></p>
+<div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table border="0" cellpadding="0" cellspacing="0" style="line-height: normal;"><tr style="vertical-align:baseline" valign="baseline"><td width="13"><span style="font-size: 10pt; font-family: 'Symbol'; font-style: normal; color: #000000; text-decoration: none;">&#183;</span></td><td>Delete waypoint from current position (player or spectator).</td></tr></table></div><p><span style="font-style: italic; font-weight: bold;">waypoint save</span></p>
+<div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table border="0" cellpadding="0" cellspacing="0" style="line-height: normal;"><tr style="vertical-align:baseline" valign="baseline"><td width="13"><span style="font-size: 10pt; font-family: 'Symbol'; font-style: normal; color: #000000; text-decoration: none;">&#183;</span></td><td>Save the current maps waypoints to its waypoint file.  Each maps waypoint file is stored in: \foxbot\tfc\waypoints\mapname.fwp</td></tr></table></div><div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table border="0" cellpadding="0" cellspacing="0" style="line-height: normal;"><tr style="vertical-align:baseline" valign="baseline"><td width="13"><span style="font-size: 10pt; font-family: 'Symbol'; font-style: normal; color: #000000; text-decoration: none;">&#183;</span></td><td><span style="font-style: italic;">Warning:</span> This command will overwrite the existing waypoint file for the current map.</td></tr></table></div><p><span style="font-style: italic; font-weight: bold;">waypoint load</span></p>
+<div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table border="0" cellpadding="0" cellspacing="0" style="line-height: normal;"><tr style="vertical-align:baseline" valign="baseline"><td width="13"><span style="font-size: 10pt; font-family: 'Symbol'; font-style: normal; color: #000000; text-decoration: none;">&#183;</span></td><td>Load saved waypoints.</td></tr></table></div><p><span style="font-style: italic; font-weight: bold;">waypoint info</span></p>
+<div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table border="0" cellpadding="0" cellspacing="0" style="line-height: normal;"><tr style="vertical-align:baseline" valign="baseline"><td width="13"><span style="font-size: 10pt; font-family: 'Symbol'; font-style: normal; color: #000000; text-decoration: none;">&#183;</span></td><td>Get waypoint information for the waypoint nearest to you.  For example, what team should use it, etc.</td></tr></table></div><p><span style="font-style: italic; font-weight: bold;">waypoint menu</span></p>
+<div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table border="0" cellpadding="0" cellspacing="0" style="line-height: normal;"><tr style="vertical-align:baseline" valign="baseline"><td width="13"><span style="font-size: 10pt; font-family: 'Symbol'; font-style: normal; color: #000000; text-decoration: none;">&#183;</span></td><td>Show a waypoint menu for the waypoint nearest to you.</td></tr></table></div><p><span style="font-style: italic; font-weight: bold;">waypoint_author</span></p>
+<div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table border="0" cellpadding="0" cellspacing="0" style="line-height: normal;"><tr style="vertical-align:baseline" valign="baseline"><td width="13"><span style="font-size: 10pt; font-family: 'Symbol'; font-style: normal; color: #000000; text-decoration: none;">&#183;</span></td><td>Allows you to sign your own waypoint file. Here is how to use it.</td></tr></table></div><div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table border="0" cellpadding="0" cellspacing="0" style="line-height: normal;"><tr style="vertical-align:baseline" valign="baseline"><td width="13"><span style="font-size: 10pt; font-family: 'Symbol'; font-style: normal; color: #000000; text-decoration: none;">&#183;</span></td><td>1) Turn on waypoint mode (waypoint on)</td></tr></table></div><div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table border="0" cellpadding="0" cellspacing="0" style="line-height: normal;"><tr style="vertical-align:baseline" valign="baseline"><td width="13"><span style="font-size: 10pt; font-family: 'Symbol'; font-style: normal; color: #000000; text-decoration: none;">&#183;</span></td><td>2) Type waypoint_author Myname or waypoint_author "My name" if it contains spaces.</td></tr></table></div><div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table border="0" cellpadding="0" cellspacing="0" style="line-height: normal;"><tr style="vertical-align:baseline" valign="baseline"><td width="13"><span style="font-size: 10pt; font-family: 'Symbol'; font-style: normal; color: #000000; text-decoration: none;">&#183;</span></td><td>3) Then you must save the waypoints (waypoint save)</td></tr></table></div><div style="text-align: left; text-indent: 0px; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;"><table border="0" cellpadding="0" cellspacing="0" style="line-height: normal;"><tr style="vertical-align:baseline" valign="baseline"><td width="13"><span style="font-size: 10pt; font-family: 'Symbol'; font-style: normal; color: #000000; text-decoration: none;">&#183;</span></td><td>The result will be seen at the beginning of the round in a listen server.</td></tr></table></div><p>&nbsp;</p>
+<u><b>Other Console Commands:</b></u>
+
+<p><b>bot_chat </b>Number 0 - 1000</p>
+<p>This command lets you influence how often the bots trash talk. Set it higher if you want more chat, or 0 for none.</p>
+
+<p><b>min_bots </b>Number 0 - 32 [-1 Turns this off]</p>
+<p>Minimum bots in server.</p>
+
+<p><b>max_bots </b>Number 0 - 32 [-1 Turns this off]</p>
+<p>Maximum bots in server.</p>
+
+<p><b>bot_total_varies </b>0 - 3</p>
+<p>When this setting is set to 1, 2, or 3 the number of bots on the server will fluctuate from
+min_bots to max_bots randomly(to simulate playing on an Internet public server).<br>
+The higher you set it the more often the numbers of bots playing will change.</p>
+
+<p><b>bot_team_balance </b>Number 0 for off, 1 for on</p>
+<p>Turn this on to have the bots auto switch when teams become uneven.<br>
+If you turn this off the bots will be allowed to decide for themselves if and when they balance the teams out.</p>
+
+<p><b>bot_bot_balance </b>Number 0 for off, 1 for on</p>
+<p>Turn this on to balance the teams in a bot to human ratio (May be buggy).</p>
+
+<p><b>pause </b>Number 0-100</p>
+<p>Number of seconds before bots join.</p>
+
+<p><b>bot_create_interval </b>1 - 8</p>
+<p>Time(measured in seconds) between auto-creating one bot and the next.
+Note: On slower machines and/or old versions of TFC setting this to 1 or 2
+might(or might not) cause your server to crash(caused by a Half-Life bug).<br>
+Setting this to 3 will be safe if settings 1 or 2 cause any instability.</p>
+
+<p><b>bot_xmas </b>on/off</p>
+<p>Controls whether or not the bots celebrate Christmas.</p>
+
+<p><b>bot_allow_moods </b>0 = off, 1 = on</p>
+<p>If this is set to 1 any bots created will be given random personality traits and/or moods.<br>Set this to 0 if you want all the bots to have the same personality profile.</p>
+
+<p><b>bot_allow_humour </b>0 = off, 1 = on</p>
+<p>If this is set to 1 then the bots are allowed to go crazy occasionally and do daft stuff such as using melee weapons only, or go looking for walls to graffiti.</p>
+
+<p><b>defensive_chatter </b>Number 0 for off, 1 for on</p>
+<p>Controls bots announcing defense related messages.</p>
+
+<p><b>offensive_chatter </b>Number 0 for off, 1 for on</p>
+<p>Controls bots announcing offense related messages.</p>
+
+<p><b>bot_can_use_teleporter </b>on/off</p>
+<p>Controls whether or not you want bots using Teleporters.</p>
+
+<p><b>bot_can_build_teleporter </b>on/off</p>
+<p>Controls whether or not you want bot Engineers to build Teleporters.<br>
+Note: It's Best to execute this command before a map starts.</p>
+
+<p><b>bot_use_grenades </b>0 - 2</p>
+<p>Controls whether or not you want the bots to use grenades.<br>0 = No grenade usage at all.<br>1 = Concussion jumping is allowed.<br>2 = The bots can use all grenades freely.</p>
+
+<p><b>botdontshoot </b>Number 1-2</p>
+<p>This command is used to turn off the bots shooting. Useful for testing purposes.<br>When enabled, the bots will just run past each other without fighting.<br>
+1 = Bots hold fire, 2 = Bots shoot.</p>
+
+<b>bot_info </b>
+<p>Show information such as: foxbot variables, foxbot info, foxbot version.</p>
+
+<p><b>botcam </b>a_bots_name</p>
+<p>The botcam allows you to see through the eyes of the bot showing what it sees and targets.  It also reveals debug information about the bot.</p>
+
+<p><b>spectate_debug </b>0 - 3</p>
+<p>This command only works on listen servers, and was created mainly for development use.  When the (spectating)host player gets near to a bot some information will appear about the bot and the waypoints it is interested in.<br>
+0 = off,<br>
+1 = show the bots job buffer(what it's thinking about),<br>
+2 = show any blacklisted jobs(any jobs it is temporarily ignoring),<br>
+3 = show some of the bots navigation info.</p>
+
+<p>&nbsp;</p>
+<p><span style="font-weight: bold; text-decoration: underline;">Dedicated Servers:</span></p>
+<p>All the commands above can be used in a dedicated server.  With a dedicated server you must prefix each command with the word 'bot' and surround the command with quotation marks.</p>
+<p>For example: <b>bot "max_bots 10"</b></p>
+<p>&nbsp;</p>
+<p>NOTE: The waypoint editing commands were intended for use on a listen server, not a dedicated server.</p>
+<p>&nbsp;</p>
+<p><span style="font-weight: bold; text-decoration: underline;">Command Menu:</span></p>
+<p>"commandmenu.txt" in tfc folder, file expanded with FoxBot.</p>
+<p><textarea rows="13" name="S1" cols="80" readonly="true" wrap="off">
+// Command Menu definition
+//
+// Basic Format:
+//		"<Bound Key>" "<Button Text>" "<Command sent to server>"
+//
+// Or you can check for a specific class:
+//		<Class> "<BoundKey>" "<Button Text>" "<Command sent to server>"
+// Where <Class> is one of: SCOUT, SNIPER, SOLDIER, DEMOMAN, MEDIC, HWGUY, PYRO, SPY, ENGINEER
+//
+// Or you can check for a specific map:
+//		MAP <MapName> "<BoundKey>" "<Button Text>" "<Command sent to server>"
+// Where <MapName> is the name of the map, without the ".bsp".
+//
+// Or you can check for a specific team:
+//		TEAM1 "<BoundKey>" "<Button Text>" "<Command sent to server>"
+//		TEAM2 "<BoundKey>" "<Button Text>" "<Command sent to server>"
+// TEAM3, TEAM4 work as well
+//
+// Buttons can also open up submenus, as follows:
+// {
+// 	"Some More Options",
+//	{
+//		...
+//	}
+// }
+//
+// Class can be any of the following:
+//		SCOUT, SNIPER, SOLDER, DEMOMAN, MEDIC, HWGUY, PYRO, SPY, ENGINEER
+//	Buttons prepended with a class name will only be seen if the player
+//	is that class.
+//
+// Buttons preceded with "CUSTOM" are handled in special ways. They can only be moved
+// around or deleted.
+//
+//
+// Limitations:
+//		Maximum of 40 menus.
+//		Maximum of 100 buttons per menu.
+
+//--------------------------------------------------------
+// Everything below here is editable
+"1" "HELP"
+{
+	CUSTOM		"1" "SERVER INFO"		"!SERVERINFO"
+	CUSTOM		"2" "CLASS DESCRIPTION"	"!CLASSDESC"
+	CUSTOM		"3" "MAP DESCRIPTION"	"!MAPBRIEFING"
+}
+
+CUSTOM		"2" "CHANGE CLASS"	"!CHANGECLASS"
+CUSTOM  	"3" "CHANGE TEAM"	"!CHANGETEAM"
+
+// Here are the rest of the buttons and submenus
+// You can change these safely if you want.
+"4" "TEAM MESSAGE"
+{
+	// Map Specific
+
+	//!! dustbowl messages not complete
+	MAP dustbowl "1" "MAP DUSTBOWL"
+	{
+		TEAM1 "1" "'Need spies'"		"say_team Need spies for offense"
+		TEAM1 "2" "'Guard gren pack'"		"say_team Guard the gren pack"
+
+		TEAM2 "1" "'Need spy defense'"	"say_team Need more spy defense"
+		TEAM2 "2" "'Need more sentries'" "say_team Need more sentries"
+	}
+
+
+	MAP 2fort "1" "MAP 2FORT"
+	{
+		"1" "'Where is enemy flag?'"	"say_team Where is enemy flag?"
+		"2" "'Where is our flag?'"		"say_team Where is our flag?"
+		"3" "'Have Flag'"				"say_team I have the flag"
+		"4" "'Flag is on bridge'"		"say_team Flag is on the BRIDGE"
+		"5" "'Flag is in ramp room'"	"say_team Flag is in the RAMP ROOM"
+		"6" "'Flag is in basement'"		"say_team Flag is in the BASEMENT"
+		"7" "'Flag is in water'"		"say_team Flag is in the WATER"
+		"8" "'Flag is in spiral'"		"say_team Flag is in the SPIRAL"
+	}
+	MAP badlands "1" "MAP BADLANDS"
+	{
+		"1" "'Where is enemy flag?'"		"say_team Where is enemy flag?"
+		"2" "'Where is our flag?'"		"say_team Where is our flag?"
+		"3" "'Have Flag'"				"say_team I have the flag"
+		"4" "'Flag is in enemy base'"		"say_team Flag is in ENEMY BASE"
+		"5" "'Flag is on bridge'"		"say_team Flag is on the BRIDGE"
+		"6" "'Flag is in enemy canyon'"	"say_team Flag is in ENEMY CANYON"
+		"7" "'Flag is in center canyon'"	"say_team Flag is in CENTER CANYON"
+		"8" "'Flag is in our canyon'"		"say_team Flag is in OUR CANYON"
+	}
+	MAP well "1" "MAP WELL"
+	{
+		"1" "'Where is enemy flag?'"	"say_team Where is enemy flag?"
+		"2" "'Where is our flag?'"		"say_team Where is our flag?"
+		"3" "'Have Flag'"				"say_team I have the flag"
+		"4" "'Flag is in loft'"			"say_team Flag is in the LOFT"
+		"5" "'Flag is in lobby'"		"say_team Flag is in the LOBBY"
+		"6" "'Flag is in water'"		"say_team Flag is in the WATER"
+		"7" "'Flag is on bridge'"		"say_team Flag is on the BRIDGE"
+	}
+	MAP cz2 "1" "MAP CZ2"
+	{
+		"1" "'I'm taking flag to..."
+		{
+			"1" "command point 1'"			"say_team Taking Flag to Command Point 1!"
+			"2" "command point 2'"			"say_team Taking Flag to Command Point 2!"
+			"3" "command point 3'"			"say_team Taking Flag to Command Point 3!"
+			"4" "command point 4'"			"say_team Taking Flag to Command Point 4!"
+			"5" "command point 5'"			"say_team Taking Flag to Command Point 5!"
+		}
+		"2" "'Need defense at..."
+		{
+			"1" "command point 1'"			"say_team We need defense at Command Point 1!"
+			"2" "command point 2'"			"say_team We need defense at Command Point 2!"
+			"3" "command point 3'"			"say_team We need defense at Command Point 3!"
+			"4" "command point 4'"			"say_team We need defense at Command Point 4!"
+			"5" "command point 5'"			"say_team We need defense at Command Point 5!"
+		}
+	}
+	MAP rock2 "1" "MAP ROCK2"
+	{
+		"1" "'Where is key?'"				"say_team Where is the key?"
+		"2" "'Enemy key in yard'"			"say_team The Enemy Key is in the YARD!"
+		"3" "'Enemy key in gas chamber'"	"say_team The Enemy Key is in the GAS CHAMBER!"
+		"4" "'Enemy key in office'"			"say_team The Enemy Key is in the WARDEN'S OFFICE!"
+		"5" "'Enemy key in library'"		"say_team The Enemy Key is in the LIBRARY!"
+		"6" "'Our key in yard'"				"say_team Our Key is in the YARD!"
+		"7" "'Our key in gas chamber'"		"say_team Our Key is in the GAS CHAMBER!"
+		"8" "'Our key in office'"			"say_team Our Key is in the WARDEN'S OFFICE!"
+		"9" "'Our key in library'"			"say_team Our Key is in the LIBRARY!"
+	}
+	MAP warpath "1" "MAP WARPATH"
+	{
+		"1" "'I'm going to..."
+		{
+			"1" "'command point 1'"			"say_team I'm going to Command Point 1!"
+			"2" "'command point 2'"			"say_team I'm going to Command Point 2!"
+			"3" "'command point 3'"			"say_team I'm going to Command Point 3!"
+			"4" "'command point 4'"			"say_team I'm going to Command Point 4!"
+			"5" "'command point 5'"			"say_team I'm going to Command Point 5!"
+		}
+		"2" "'need defense at..."
+		{
+			"1" "'command point 1'"			"say_team We need defense at Command Point 1!"
+			"2" "'command point 2'"			"say_team We need defense at Command Point 2!"
+			"3" "'command point 3'"			"say_team We need defense at Command Point 3!"
+			"4" "'command point 4'"			"say_team We need defense at Command Point 4!"
+			"5" "'command point 5'"			"say_team We need defense at Command Point 5!"
+		}
+		"3" "'Need tunnel opened!'"	"say_team Need a demoman to detpack the enemy tunnel!"
+		"4" "'Need tunnel closed!"	"say_team Need a demoman to close our tunnel with a detpack!"
+	}
+	MAP epicenter "1" "MAP EPICENTER"
+	{
+		"1" "'Where is enemy flag?'"	"say_team Where is enemy flag?"
+		"2" "'Where is our flag?'"		"say_team Where is our flag?"
+		"3" "'Have Flag'"				"say_team I have the flag"
+		"4" "'Our flag is in...'"
+		{
+			"1" "'our building, 1st floor'"	"say_team Flag is in our building, 1st floor"
+			"2" "'our building, 2nd floor'"	"say_team Flag is in our building, 2nd floor"
+			"3" "'enemy building, 1st floor'"	"say_team Flag is in enemy building, 1st floor"
+			"4" "'enemy building, 2nd floor'"	"say_team Flag is in enemy building, 2nd floor"
+			"5" "'near APC'"				"say_team Flag is near APC"
+		}
+		"5" "'Enemy flag is in...'"
+		{
+			"1" "'enemy building, 1st floor'"	"say_team Enemy flag in enemy building, 1st floor"
+			"2" "'enemy building, 2nd floor'"	"say_team Enemy flag in enemy building, 2nd floor"
+			"3" "'our building, 1st floor'"	"say_team Enemy flag in our building, 1st floor"
+			"4" "'our building, 2nd floor'"	"say_team Enemy flag in our building, 2nd floor"
+			"5" "'near APC'"				"say_team Enemy flag is near APC"
+		}
+	}
+	MAP hunted "1" "MAP HUNTED"
+	{
+		TEAM1 "1" "'Clear ahead?'"				"say_team Is the area ahead CLEAR?"
+		TEAM1 "2" "'Under attack!'"				"say_team I'm under ATTACK!"
+		TEAM1 "3" "'I'm Hiding!'"				"say_team I'm hiding and waiting for Escort!"
+		TEAM1 "4" "'I'm in the Building!'"		"say_team I'm in the FIRST BUILDING!"
+		TEAM1 "5" "'I'm in the Alley!'"			"say_team I'm in the ALLEY!"
+		TEAM1 "6" "'I'm in the Ruins!'"			"say_team I'm in the RUINS!"
+		TEAM1 "7" "'I'm in the Warehouse!'"		"say_team I'm in the WAREHOUSE!"
+		TEAM1 "8" "'I'm at the Field!'"			"say_team I'm at the FIELD! OPEN THE DOORS!"
+		TEAM1 "9" "'I'm in the Sewers!'"		"say_team I'm in the SEWERS!"
+
+		TEAM2 "1" "'Area ahead CLEAR!'"			"say_team Area ahead is CLEAR!"
+		TEAM2 "2" "'Area ahead NOT CLEAR!'"		"say_team Area ahead is NOT CLEAR!"
+		TEAM2 "3" "'Where is the Hunted?'"		"say_team Where is the Hunted?"
+		TEAM2 "4" "'Hunted in Building!'"		"say_team Hunted is in the FIRST BUILDING!"
+		TEAM2 "5" "'Hunted in Alley!'"			"say_team Hunted is in the ALLEY!"
+		TEAM2 "6" "'Hunted in Ruins!'"			"say_team Hunted is in the RUINS!"
+		TEAM2 "7" "'Hunted in Warehouse!'"		"say_team Hunted is in the WAREHOUSE!"
+		TEAM2 "8" "'Hunted at the Field!'"		"say_team Hunted is at the FIELD!"
+		TEAM2 "9" "'Hunted in Sewers!'"			"say_team Hunted is in the SEWERS!"
+
+		TEAM3 "1" "'Where is the Hunted?'"		"say_team Where is the Hunted?"
+		TEAM3 "2" "'Hunted in Building!'"		"say_team Hunted is in the FIRST BUILDING!"
+		TEAM3 "3" "'Hunted in Alley!'"			"say_team Hunted is in the ALLEY!"
+		TEAM3 "4" "'Hunted in Ruins!'"			"say_team Hunted is in the RUINS!"
+		TEAM3 "5" "'Hunted in Warehouse!'"		"say_team Hunted is in the WAREHOUSE!"
+		TEAM3 "6" "'Hunted at the Field!'"		"say_team Hunted is at the FIELD!"
+		TEAM3 "7" "'Hunted in Sewers!'"			"say_team Hunted is in the SEWERS!"
+	}
+
+	"2" "OFFENSE"
+	 {
+		 "1" "'Meet at Enemy Entrance'" "say_team Meet at Enemy Entrance"
+		 "2" "'Engaging Enemy'"			"say_team Engaging Enemy"
+		 "3" "'Need Sentry Taken Down'" "say_team Need Enemy Sentry Taken Down"
+		 "4" "'Enemy Sentry Down'"		"say_team Enemy Sentry Down"
+		 "5" "'Need assistance'"		"say_team Need assistance on Offense"
+	 }
+
+     "3" "DEFENSE"
+	 {
+		 "1" "'Incoming Enemy'"			"say_team Incoming Enemy"
+		 "2" "'Incoming Spy'"			"say_team Incoming Spy"
+		 "3" "'Enemy in base'"			"say_team Enemy is breaking through!"
+		 "4" "'Need sentry built'"		"say_team Need sentry on defense"
+		 "5" "'Need assistance'"		"say_team Need assistance on Defense"
+		 "6" "'Repair my sentry'"		"say_team Repair my sentry"
+	 }
+
+     "4" "'Acknowledged'"			"say_team Acknowledged"
+     "5" "'Negative'"				"say_team Negative"
+     "6" "'Playing Offense'"		"say_team Playing Offense"
+     "7" "'Playing Defense'"		"say_team Playing Defense"
+     "8" "'On my way'"				"say_team On my way"
+}
+
+"5" "CALL FOR MEDIC" 	"saveme"
+"6" "DISCARD AMMO"		"discard"
+
+// DEMOMAN
+CUSTOM	"7" "SET DETPACK"		"!DETPACKSTART"
+CUSTOM	"7" "STOP DETPACK"		"!DETPACKSTOP"
+
+// SPY
+CUSTOM  "7" "SPY"	"!SPY"
+{
+	CUSTOM	"1" "DISGUISE"				"!DISGUISE"
+
+	CUSTOM  "1"	"ENEMY DISGUISE"		"!DISGUISEENEMY"
+	CUSTOM  "2"	"FRIENDLY DISGUISE"		"!DISGUISEFRIENDLY"
+
+	CUSTOM	"3" "FEIGN DEATH"			"!FEIGN"
+	CUSTOM	"4" "FEIGN SILENTLY"		"!FEIGNSILENT"
+	CUSTOM	"3" "STOP FEIGNING"			"!FEIGNSTOP"
+}
+
+// ENGINEER
+CUSTOM  "7" "BUILD"	"!BUILD"
+{
+	// SENTRY GUN
+	CUSTOM	"1" "BUILD SENTRY GUN"		"!BUILDSENTRY"
+	CUSTOM	"1" "ROTATE SENTRY 180"		"!ROTATESENTRY180"
+	CUSTOM	"2" "ROTATE SENTRY 45"		"!ROTATESENTRY"
+	CUSTOM  "3" "DISMANTLE SENTRY"		"!DISMANTLESENTRY"
+	CUSTOM  "4" "DETONATE SENTRY"		"!DETONATESENTRY"
+
+	// DISPENSER
+	CUSTOM	"5" "BUILD DISPENSER"		"!BUILDDISPENSER"
+	CUSTOM	"5" "DISMANTLE DISPENSER"	"!DISMANTLEDISPENSER"
+	CUSTOM	"6" "DETONATE DISPENSER"	"!DETONATEDISPENSER"
+
+	// TELEPORTER
+	"7" "TELEPORTER"
+	    {
+		CUSTOM	"1" "BUILD ENTRANCE"	"!BUILDENTRYTELEPORTER"
+		CUSTOM	"1" "DISMANTLE ENTRANCE" "!DISMANTLEENTRYTELEPORTER"
+		CUSTOM	"2" "DETONATE ENTRANCE"	"!DETONATEENTRYTELEPORTER"
+
+		// EXIT TELEPORTER
+		CUSTOM	"3" "BUILD EXIT"	"!BUILDEXITTELEPORTER"
+		CUSTOM	"3" "DISMANTLE EXIT" "!DISMANTLEEXITTELEPORTER"
+		CUSTOM	"4" "DETONATE EXIT"	"!DETONATEEXITTELEPORTER"
+	    }
+}
+
+CUSTOM  "7" "STOP BUILDING"		"!BUILDSTOP"
+
+// FoXBot - http://www.foxbot.net/
+"8" "FoxBot Commanders Menu"
+
+{
+"1" "Change Class after death"
+{
+                            "1" "Scout" "say_team %i changeclass 1"
+                            "2" "Sniper" "say_team %i changeclass 2"
+                            "3" "Soldier" "say_team %i changeclass 3"
+                            "4" "Demoman" "say_team %i changeclass 4"
+                            "5" "Medic" "say_team %i changeclass 5"
+                            "6" "HWGuy" "say_team %i changeclass 6"
+                            "7" "Pyro" "say_team %i changeclass 7"
+                            "8" "Spy" "say_team %i changeclass 8"
+                            "9" "Engineer" "say_team %i changeclass 9"
+}
+ "2" "Change Class Now"
+{
+                            "1" "Scout" "say_team %i changeclassnow 1"
+                            "2" "Sniper" "say_team %i changeclassnow 2"
+                            "3" "Soldier" "say_team %i changeclassnow 3"
+                            "4" "Demoman" "say_team %i changeclassnow 4"
+                            "5" "Medic" "say_team %i changeclassnow 5"
+                            "6" "HWGuy" "say_team %i changeclassnow 6"
+                            "7" "Pyro" "say_team %i changeclassnow 7"
+                            "8" "Spy" "say_team %i changeclassnow 8"
+                            "9" "Engineer" "say_team %i changeclassnow 9"
+}
+ "3" "Change Role "
+{
+                            "1" "roam" "say_team %i changerole roam"
+                            "2" "attack" "say_team %i changerole attack"
+                            "3" "defend" "say_team %i changerole defend"
+}
+}</textarea>
+<input type="button" value="Copy to clipboard" name="b1" onclick="CopyToClip()">
+</p>
+
+</td></tr></table>
+
+</body>
+</html>

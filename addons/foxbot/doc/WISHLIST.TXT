@@ -1,0 +1,166 @@
+
+WISHLIST/IDEAS
+--------------
+
+-  The bots should check to see if they are about to shoot a teammate who is
+   between them and their target.
+
+-  It would be better if bots threw grenades at enemies when team mates are not
+   near their target.
+
+-  The bots should stop approaching a Sentry Gun when they are outside it's
+   view range, and attack it from afar.
+
+-  Random bot personalities is cool.  But it would also be nice to be able
+   to specify specific bot characters.  e.g. an aggressive bot called
+   "[FoX]King Prawn" that prefers to play HWGuy.
+
+-  Demomen could do pipebomb jumps.
+
+-  Infected bots should call for a medic.
+
+-  The bots could destroy any enemy dispensers they come across.
+
+-  Speculative damage would be nice.  i.e. firing rockets at corners to scare
+   or hit any enemies around the corner.
+
+-  Bots could say stuff when they kill themselves.
+
+-  One neat idea would be a bot chat menu.  i.e. you bind a key to the menu
+   to bring it up and then press a number key to select a message to issue to the
+   bots.  For example "Flag dropped at..." would let the bots figure out the
+   exact map area the flag was dropped in.
+
+-  Bots could announce to their team where they spotted a flag their
+   team is trying to capture(if no one said where they dropped it recently).
+
+-  When the waypoint delete command is used the waypoint isn't truly deleted,
+   just switched off.  It would make waypoint files smaller if they could be
+   properly deleted.
+
+-  It might be fun if bots chatted in response when their names are mentioned.
+
+-  An interesting feature would be the ability to add a team identifier tag
+   into bot chat messages.
+   e.g. if a red team bot is told to say "%t team kicks ass!" then it will say:
+   "red team kicks ass!"
+
+-  Non-NeoTF Pyros could rocket jump too.  e.g. into the flag well on badlands.
+   There would actually be a few good uses for this feature.
+
+-  An idea suggested by laparel is that you could tell a bot to defend at a
+   specific defender waypoint when you use the addbot or changerole command.
+   e.g. "[FoX]KittenSniffer changerole defend 187" would tell that bot to
+   defend at waypoint 187.
+   laparel also suggested the ability to assign a unique name to individual
+   waypoints so that you can call them out by name in a command.
+
+-  It would be really cool if you could pit one bot type or version against
+   another.  e.g. Foxbot versus Oddbot.  (Botmixer 5000 does this doesn't it?)
+
+-  Ideally the bots should try to rocket/concussion jump to parts of maps
+   they wouldn't normally be able to reach.
+
+-  Soldiers could rocket jump up to get enemies that are on any higher ledge.
+
+-  It would be cool if the bots could rocket and concussion jump up the
+   air vent on hunted.
+
+-  Bot soldiers could use rocket jumping as an attack maneuver like human players
+   do.  e.g. prime a grenade, rocket jump overhead and rain explosive hell on
+   the target.
+
+-  Ideally bots should be able to shoot at shootable buttons.  e.g. the ones
+   outside the base doors on well.
+
+-  Snipers oughta check if an obstacle is blocking their rifle scope, and sidestep
+   left or right to clear their sights.
+
+-  It would seem more realistic if bots occasionally changed weapon without an obvious
+   reason during quieter moments.
+
+-  It would be neat if bots could spot rockets coming their way and try to avoid them.
+
+-  It would be cool if bot vision was affected by light levels.
+
+-  Make Spies sneak when they hear footsteps near.
+
+-  Bots ought to know how many flags/CPs are available to them on each map.
+
+-  Coordinated attacks might be an interesting idea.
+   e.g. one bot calls and waits for other teammates to join it before attacking
+   the enemy base.
+
+-  A daft idea.  Generate bot names by mixing words from a list.
+   e.g. [FoX]DarkMaster or [FoX]Snip3rKing or [FoX]DarkKing.
+
+-  The same person can vary in skill during a game depending on their mood.
+   Bots could emulate this too.
+
+-  Issue a message to people who try to do waypoint editing on a dedicated
+   server telling them that they need to run a listen server instead.
+
+-  This feature would possibly require a new waypoint type added, but bots
+   could throw flags out to teammates on certain maps, e.g. out the sniper
+   windows on well.
+
+-  Play a sound when setting any tag for a waypoint in waypoint edit mode.
+
+-  If a bot on offense drops a flag in a map that has no areas defined it could
+   announce an estimate of how far away the flag was dropped.
+
+-  Ideally you should be able to specify what language the bots should use
+   for all their messages.  Waypoint area files may be tricky though as they
+   are in binary format.
+
+IDEAS FOR NEW SETTINGS
+----------------------
+
+-  Being able to filter out usage of certain weapons or grenades in the config file.
+   (suggested by laparel)
+
+-  An evasiveness modifier.  This would allow players to modify how aggressive
+   or cautious the bots are towards enemies.
+
+-  Configurable levels of CPU consumption via a config file.
+
+-  Add debug_engine to the config file.  People can switch it on if Foxbot isn't
+   working and check the log file for crash info.
+
+-  An option for allowing bots to decide the ratio of attackers to defenders themselves.
+
+-  An interesting option would be one that allows you to block the bots on
+   certain teams from choosing certain classes.
+   e.g. you could stop red team from using scouts on dustbowl.
+
+IDEAS FOR NEW SCRIPT COMMANDS
+-----------------------------
+
+-  A command that tells bots where their base is currently located.
+   e.g. "red_home 43" would tell red teams bots their base is located around
+   waypoint 43.
+
+-  A command that tells bots how many flags exist for each team(this is
+   auto-detected, but a script command may be more accurate).
+
+-  A command that tells bots how much the flags will slow them down.
+   e.g. on cz2 they slow HWGuys down a lot.
+
+IDEAS FOR NEW WAYPOINT TAG TYPES
+--------------------------------
+
+-  Come here!  This waypoint type could be used to send bots to safe zones
+   when a map script says so.  e.g. when the gas triggers on rock2.
+
+-  Grenades.  Useful on dustbowl for example.
+
+-  Repair this.  Tells Engineers to repair the generators on ravelin.
+   Maybe other repairable entities too.
+
+-  Caution!  This waypoint type would tell bots that they should perform more
+   environment checks when moving towards it.
+   i.e. check for a drop in floor level nearby, and do not deviate from the waypoint.
+   This could be useful for routes on high ledges, such as on badlands.
+
+-  Button.  Only press a button near this waypoint if the waypoint is available.
+   You can just use a normal scripted waypoint for this though.
