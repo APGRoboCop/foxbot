@@ -27,7 +27,6 @@
 
 #include "extdll.h"
 #include "util.h"
-#include "cbase.h"
 
 #include "bot.h"
 #include "bot_func.h"
@@ -203,21 +202,6 @@ void BotFindCurrentWaypoint(bot_t* pBot)
 		//		10, 2, 250, 250, 250, 200, 10);
 	}
 }
-
-CBaseEntity* UTIL_FindEntityInSphere(CBaseEntity* pStartEntity, const Vector& vecCenter, const float flRadius)
-{
-	edict_t* pentEntity = NULL;
-
-	if (pStartEntity != NULL)
-		pentEntity = pStartEntity->edict();
-
-	pentEntity = FIND_ENTITY_IN_SPHERE(pentEntity, vecCenter, flRadius);
-
-	if (!FNullEnt(pentEntity))
-		return CBaseEntity::Instance(pentEntity);
-	return NULL;
-}
-
 // This function will tell the bot to face the map coordinates indicated by v_focus
 void BotSetFacing(bot_t* pBot, Vector v_focus)
 {
@@ -258,7 +242,7 @@ float BotChangePitch(edict_t* pEdict, float speed)
 	// turn from the current v_angle pitch to the idealpitch by selecting
 	// the quickest way to turn to face that direction
 	// find the difference in the current and ideal angle
-	const float diff = std::fabs(current - ideal);
+	const float diff = fabsf(current - ideal);
 
 	// check if the bot is already facing the idealpitch direction...
 	if (diff <= 0.01)
@@ -337,7 +321,7 @@ float BotChangeYaw(edict_t* pEdict, float speed)
 	// turn from the current v_angle yaw to the ideal_yaw by selecting
 	// the quickest way to turn to face that direction
 	// find the difference in the current and ideal angle
-	const float diff = std::fabs(current - ideal);
+	const float diff = fabsf(current - ideal);
 
 	// check if the bot is already facing the ideal_yaw direction...
 	if (diff <= 0.01)

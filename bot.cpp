@@ -26,10 +26,8 @@
 //
 
 #include "extdll.h"
-//#include "util.h"
 #include "bot.h"
 #include <meta_api.h>
-#include "cbase.h"
 #include "tf_defs.h"
 
 #include "list.h"
@@ -281,8 +279,8 @@ void BotSpawnInit(bot_t* pBot)
 	pBot->current_wp = -1;
 
 	//Fix by Cheeseh (RCBot)
-	float fUpdateTime = gpGlobals->time;
-	float fLastRunPlayerMoveTime = gpGlobals->time - 0.1f;
+	//float fUpdateTime = gpGlobals->time;
+	//float fLastRunPlayerMoveTime = gpGlobals->time - 0.1f;
 
 	//pBot->msecnum = 0;
 	//pBot->msecdel = 0.0;
@@ -598,7 +596,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 		//	max_skin_index = GEARBOX_MAX_SKINS;
 
 		if (arg1 == NULL || *arg1 == 0) {
-			bool* pSkinUsed;
+			bool* pSkinUsed = nullptr;
 
 			// pick a random skin
 			if (mod_id == VALVE_DLL) {
@@ -611,26 +609,28 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 					pSkinUsed = &gearbox_skin_used[0];
 			}*/
 
-			// check if this skin has already been used...
-			while (pSkinUsed[index] == TRUE) {
-				index++;
+			if (pSkinUsed) {
+				// check if this skin has already been used...
+				while (pSkinUsed[index] == TRUE) {
+					index++;
 
-				if (index == max_skin_index)
-					index = 0;
-			}
+					if (index == max_skin_index)
+						index = 0;
+				}
 
-			pSkinUsed[index] = TRUE;
+				pSkinUsed[index] = TRUE;
 
-			// check if all skins are now used...
-			for (i = 0; i < max_skin_index; i++) {
-				if (pSkinUsed[i] == FALSE)
-					break;
-			}
+				// check if all skins are now used...
+				for (i = 0; i < max_skin_index; i++) {
+					if (pSkinUsed[i] == FALSE)
+						break;
+				}
 
-			// if all skins are used, reset used to FALSE for next selection
-			if (i == max_skin_index) {
-				for (i = 0; i < max_skin_index; i++)
-					pSkinUsed[i] = FALSE;
+				// if all skins are used, reset used to FALSE for next selection
+				if (i == max_skin_index) {
+					for (i = 0; i < max_skin_index; i++)
+						pSkinUsed[i] = FALSE;
+				}
 			}
 
 			if (mod_id == VALVE_DLL)
@@ -788,7 +788,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 	else {
 		char ptr[256]; // allocate space for message from ClientConnect
 
-		int index = 0;
+		index = 0;
 		while ((bots[index].is_used) && index < (MAX_BOTS))
 			++index;
 
@@ -827,58 +827,27 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 		}
 		pBot->pEdict->v.frags = 0;
 
-		player(VARS(BotEnt)); // redundant?
-
-		char* infobuffer = GET_INFOBUFFER(BotEnt);
-		// infobuffer = g_engfuncs.pfnGetInfoKeyBuffer(BotEnt);
-		int clientIndex = ENTINDEX(BotEnt);
-		// clientIndex = g_engfuncs.pfnIndexOfEdict(BotEnt);
-		// else clientIndex = gpGamedllFuncs->dllapi_table->pfnIndexOfEdict(BotEnt);
-
-		//if((mod_id == VALVE_DLL))
-		//    SET_CLIENT_KEY_VALUE(clientIndex, infobuffer, "model", c_skin);
-		//else // other mods
-		//    SET_CLIENT_KEY_VALUE(clientIndex, infobuffer, "model", "gina");
-
-		/*if(mod_id == CSTRIKE_DLL)
-		{
-				SET_CLIENT_KEY_VALUE( clientIndex, infobuffer, "rate", "3500.000000");
-				SET_CLIENT_KEY_VALUE( clientIndex, infobuffer, "cl_updaterate", "20");
-				SET_CLIENT_KEY_VALUE( clientIndex, infobuffer, "cl_lw", "1");
-				SET_CLIENT_KEY_VALUE( clientIndex, infobuffer, "cl_lc", "1");
-				SET_CLIENT_KEY_VALUE( clientIndex, infobuffer, "tracker", "0");
-				SET_CLIENT_KEY_VALUE( clientIndex, infobuffer, "cl_dlmax", "128");
-				SET_CLIENT_KEY_VALUE( clientIndex, infobuffer, "lefthand", "1");
-				SET_CLIENT_KEY_VALUE( clientIndex, infobuffer, "friends", "0");
-				SET_CLIENT_KEY_VALUE( clientIndex, infobuffer, "dm", "0");
-				SET_CLIENT_KEY_VALUE( clientIndex, infobuffer, "ah", "1");
-		}*/
+		// create the player entity by calling MOD's player function
+		if (mr_meta)
+			CALL_GAME_ENTITY (PLID, "player", &BotEnt->v);
+		else
+			player (VARS (BotEnt));
 
 		//{fp=UTIL_OpenFoxbotLog(); fprintf(fp, "-bot connect %x\n",BotEnt); fclose(fp); }
-		if (mr_meta) {
-			MDLL_ClientConnect(BotEnt, c_name, "127.0.0.1", ptr);
-			spawn_check_crash = TRUE;
-			spawn_check_crash_count = 0;
-			spawn_check_crash_edict = BotEnt;
-			MDLL_ClientPutInServer(BotEnt);
-			spawn_check_crash = FALSE;
-			spawn_check_crash_edict = NULL;
-			/*i = 0;
-			   while((i < 32) && (clients[i] != NULL))
-			   i++;
+		MDLL_ClientConnect(BotEnt, c_name, "127.0.0.1", ptr);
+		spawn_check_crash = TRUE;
+		spawn_check_crash_count = 0;
+		spawn_check_crash_edict = BotEnt;
+		MDLL_ClientPutInServer(BotEnt);
+		spawn_check_crash = FALSE;
+		spawn_check_crash_edict = NULL;
+		/*i = 0;
+			while((i < 32) && (clients[i] != NULL))
+			i++;
 
-			   if(i < 32)
-			   clients[i] = BotEnt;*/
-		}
-		else {
-			ClientConnect(BotEnt, c_name, "127.0.0.1", ptr);
-			spawn_check_crash = TRUE;
-			spawn_check_crash_count = 0;
-			spawn_check_crash_edict = BotEnt;
-			ClientPutInServer(BotEnt); //<- this is the important one..
-			spawn_check_crash = FALSE;
-			spawn_check_crash_edict = NULL;
-		}
+			if(i < 32)
+			clients[i] = BotEnt;*/
+
 
 		//{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"e\n"); fclose(fp); }
 		BotEnt->v.flags |= FL_FAKECLIENT;
@@ -4393,10 +4362,10 @@ static void BotCombatThink(bot_t* pBot)
 			SubmitNewJob(pBot, JOB_SEEK_BACKUP, newJob);
 		}
 		else {
-			job_struct* newJob = InitialiseNewJob(pBot, JOB_AVOID_ENEMY);
-			if (newJob != NULL) {
-				newJob->player = pBot->enemy.ptr;
-				SubmitNewJob(pBot, JOB_AVOID_ENEMY, newJob);
+			job_struct* newJob2 = InitialiseNewJob(pBot, JOB_AVOID_ENEMY);
+			if (newJob2 != NULL) {
+				newJob2->player = pBot->enemy.ptr;
+				SubmitNewJob(pBot, JOB_AVOID_ENEMY, newJob2);
 			}
 		}
 	}

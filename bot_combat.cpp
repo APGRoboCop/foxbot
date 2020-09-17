@@ -29,7 +29,6 @@
 
 #include "extdll.h"
 #include "util.h"
-#include "cbase.h"
 
 #include "bot.h"
 #include "bot_func.h"
@@ -904,7 +903,7 @@ static edict_t* BotFindEnemy(bot_t* pBot)
 			bool enemy_has_flag = FALSE;
 
 			// is the enemy carrying the flag/card/ball ?
-			edict_t* pent = NULL;
+			pent = NULL;
 			while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "item_tfgoal")) != NULL && !FNullEnt(pent)) {
 				if (pent->v.owner == pNewEnemy) {
 					enemy_has_flag = TRUE;
@@ -1613,8 +1612,8 @@ bool BotFireWeapon(const Vector v_enemy, bot_t* pBot, const int weapon_choice)
 				float min_delay = pDelay[select_index].primary_min_delay[pBot->bot_skill];
 				float max_delay = pDelay[select_index].primary_max_delay[pBot->bot_skill];
 
-				// pBot->f_shoot_time = pBot->f_think_time + base_delay +
-				//   random_float(min_delay, max_delay);
+				 pBot->f_shoot_time = pBot->f_think_time + base_delay +
+				   random_float(min_delay, max_delay);
 				return TRUE;
 			}
 			else {
@@ -1638,10 +1637,11 @@ bool BotFireWeapon(const Vector v_enemy, bot_t* pBot, const int weapon_choice)
 
 				while (pSelect[select_index].iId && pSelect[select_index].iId != iId)
 					select_index++;
-
+/*
 				float base_delay = pDelay[select_index].secondary_base_delay;
 				float min_delay = pDelay[select_index].secondary_min_delay[pBot->bot_skill];
 				float max_delay = pDelay[select_index].secondary_max_delay[pBot->bot_skill];
+*/
 				return TRUE;
 			}
 			else {
@@ -1915,7 +1915,7 @@ int BotNadeHandler(bot_t* pBot, bool timed, const char newNadeType)
 		const float distanceThrown = NADEVELOCITY * timeToDet;
 
 		// Throw it if we got a good chance at landing good splash damage.
-		if (std::fabs(distanceThrown - pBot->enemy.f_seenDistance) < 20.0f ||
+		if (fabsf(distanceThrown - pBot->enemy.f_seenDistance) < 20.0f ||
 			distanceThrown - pBot->enemy.f_seenDistance < -200.0f) {
 			toss = TRUE;
 			pBot->tossNade = 1;

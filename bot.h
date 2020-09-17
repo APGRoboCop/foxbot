@@ -38,7 +38,7 @@
 
 typedef int(FAR* GETENTITYAPI)(DLL_FUNCTIONS*, int);
 typedef int(FAR* GETNEWDLLFUNCTIONS)(NEW_DLL_FUNCTIONS*, int*);
-typedef void(DLLEXPORT* GIVEFNPTRSTODLL)(enginefuncs_t*, globalvars_t*);
+typedef void(__stdcall * GIVEFNPTRSTODLL)(enginefuncs_t*, globalvars_t*);
 typedef void(FAR* LINK_ENTITY_FUNC)(entvars_t*);
 
 #else
@@ -56,11 +56,10 @@ typedef void (*LINK_ENTITY_FUNC)(entvars_t*);
 #endif
 
 // define constants used to identify the MOD we are playing...
-#define TFC_DLL 1
-#define VALVE_DLL 2
-//#define CSTRIKE_DLL 3 // Not required for TFC - [APG]RoboCop[CL]
-//#define GEARBOX_DLL 4
-//#define FRONTLINE_DLL 5
+enum {
+	TFC_DLL = 1,
+	VALVE_DLL = 2
+};
 
 // define some function prototypes...
 BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress, char szRejectReason[128]);
@@ -602,6 +601,7 @@ void UTIL_BotLogPrintf(char* fmt, ...);
 void UTIL_BuildFileName(char* filename, int max_fn_length, char* arg1, char* arg2);
 
 bool UTIL_ReadFileLine(char* string, unsigned int max_length, FILE* file_ptr);
+
 
 // my functions
 

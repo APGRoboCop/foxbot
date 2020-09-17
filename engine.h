@@ -28,6 +28,18 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
+void pfnMessageBegin (int msg_dest, int msg_type, const float *pOrigin, edict_t *ed);
+void pfnMessageEnd (void);
+void pfnWriteByte (int iValue);
+void pfnWriteChar (int iValue);
+void pfnWriteShort (int iValue);
+void pfnWriteLong (int iValue);
+void pfnWriteAngle (float flValue);
+void pfnWriteCoord (float flValue);
+void pfnWriteString (const char *sz);
+void pfnWriteEntity (int iValue);
+
+/*
 // engine prototypes (from engine\eiface.h)...
 int pfnPrecacheModel(char* s);
 int pfnPrecacheSound(char* s);
@@ -61,7 +73,7 @@ void pfnSetOrigin(edict_t* e, const float* rgflOrigin);
 void pfnEmitSound(edict_t* entity,
 	int channel,
 	const char* sample,
-	/*int*/ float volume,
+	/*int/ float volume,
 	float attenuation,
 	int fFlags,
 	int pitch);
@@ -102,16 +114,7 @@ void pfnParticleEffect(const float* org, const float* dir, float color, float co
 void pfnLightStyle(int style, char* val);
 int pfnDecalIndex(const char* name);
 int pfnPointContents(const float* rgflVector);
-void pfnMessageBegin(int msg_dest, int msg_type, const float* pOrigin, edict_t* ed);
-void pfnMessageEnd(void);
-void pfnWriteByte(int iValue);
-void pfnWriteChar(int iValue);
-void pfnWriteShort(int iValue);
-void pfnWriteLong(int iValue);
-void pfnWriteAngle(float flValue);
-void pfnWriteCoord(float flValue);
-void pfnWriteString(const char* sz);
-void pfnWriteEntity(int iValue);
+
 void pfnCVarRegister(cvar_t* pCvar);
 float pfnCVarGetFloat(const char* szVarName);
 const char* pfnCVarGetString(const char* szVarName);
@@ -181,7 +184,7 @@ int pfnGetPlayerUserId(edict_t* e);
 void pfnBuildSoundMsg(edict_t* entity,
 	int channel,
 	const char* sample,
-	/*int*/ float volume,
+	/*int/ float volume,
 	float attenuation,
 	int fFlags,
 	int pitch,
@@ -229,4 +232,6 @@ void pfnForceUnmodified(FORCE_TYPE type, float* mins, float* maxs, const char* f
 void pfnGetPlayerStats(const edict_t* pClient, int* ping, int* packet_loss);
 const char* pfnGetPlayerAuthID(edict_t* e);
 //extern unsigned int mm_GetPlayerWONId(edict_t* e); // Old and outdated? [APG]RoboCop[CL]
+
+*/
 #endif // ENGINE_H

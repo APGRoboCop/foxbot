@@ -42,7 +42,6 @@
 #include "extdll.h"
 #include <enginecallback.h>
 #include "util.h"
-//#include "cbase.h"
 
 #include "bot.h"
 #include "waypoint.h"
@@ -1185,7 +1184,7 @@ void WaypointAdd(edict_t* pEntity)
 
 	if (g_path_connect) {
 		// calculate all the paths to this new waypoint
-		for (int i = 0; i < num_waypoints; i++) {
+		for (i = 0; i < num_waypoints; i++) {
 			if (i == index)
 				continue; // skip the waypoint that was just added
 
@@ -3342,8 +3341,7 @@ bool WaypointAvailable(const int index, const int team)
 
 	// a bit field of all script number waypoint flags
 	// to speed the checking operation up
-	static WPT_INT8 validFlags = (S_FL_POINT1 | S_FL_POINT2 | S_FL_POINT3 | S_FL_POINT4 | S_FL_POINT5 | S_FL_POINT6 | S_FL_POINT7 | S_FL_POINT8) +
-		0;
+	static int validFlags = (S_FL_POINT1 | S_FL_POINT2 | S_FL_POINT3 | S_FL_POINT4 | S_FL_POINT5 | S_FL_POINT6 | S_FL_POINT7 | S_FL_POINT8);
 
 	// Report true if this waypoint is scripted and currently
 	// available to the indicated team
@@ -4209,7 +4207,7 @@ int AreaInsideClosest(edict_t* pEntity)
 			// we want the mid point between hz and lz.. that will be
 			// our distance..
 			// nearly forgot, the distance revolves around the player!
-			const float a = std::fabs((hz - lz) / 2 + lz - pEntity->v.origin.z);
+			const float a = fabsf((hz - lz) / 2 + lz - pEntity->v.origin.z);
 			if (a < distance) {
 				distance = a;
 				index = i;

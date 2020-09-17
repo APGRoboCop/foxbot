@@ -30,7 +30,6 @@
 
 #include <extdll.h>
 #include "sdk_util.h"
-#include "cbase.h"
 #include <cstring>
 #include "osdep.h" // win32 v_snprintf, etc
 

@@ -31,17 +31,4 @@
 void CreateCamera(edict_t* pPlayer, edict_t* pEntity);
 void KillCamera(edict_t* pPlayer);
 
-/*class CBotCam : public CBaseEntity
-{
-   public:
-
-	  CBasePlayer *m_pPlayer;
-	  CBasePlayer *m_pBot;
-
-	  static CBotCam *Create( CBasePlayer *pPlayer, CBasePlayer *pBot );
-	  void Spawn( void );
-		  void EXPORT IThink( void );
-	  void Disconnect( void );
-};*/
-
 #endif

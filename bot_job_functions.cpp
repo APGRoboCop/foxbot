@@ -28,7 +28,6 @@
 #include "extdll.h"
 #include "bot.h"
 #include <meta_api.h>
-#include "cbase.h"
 #include "tf_defs.h"
 
 #include "list.h"

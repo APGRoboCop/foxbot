@@ -58,5 +58,6 @@ FoXBot.sdf
 *.rsp
 *.i
 *.cfg
-Debug/*
-Release/*
+msvc/Debug/*
+msvc/Release/*
+msvc/.vs
