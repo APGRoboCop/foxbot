@@ -37,7 +37,6 @@ INCLUDES = -I"./metamod" \
 
 CFLAGS = ${BASEFLAGS} ${OPTFLAGS} ${ARCHFLAG} ${INCLUDES}
 CPPFLAGS += -fno-rtti -fno-exceptions -fno-threadsafe-statics ${CFLAGS} 
-LINKFLAGS += -Wl,--no-undefined
 
 SRC = 	bot.cpp \
    bot_client.cpp \
