@@ -9,11 +9,20 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: update packages
+      
+    - name: update
       run: sudo dpkg --add-architecture i386 && sudo apt-get -y update
-    - name: install packages
+      
+    - name: install
       run: sudo apt-get -y install build-essential g++-multilib gcc-mingw-w64
-    - name: make
+      
+    - name: make-linux
       run: make
-    - name: make win32
+      
+    - name: make-win32
       run: make OSTYPE=win32
+      
+    - uses: actions/upload-artifact@v1
+      with:
+        name: foxbot
+        path: addons/foxbot/bin/
