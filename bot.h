@@ -73,6 +73,15 @@ const char *Cmd_Args(void);
 const char *Cmd_Argv(int argc);
 int Cmd_Argc(void);
 
+// anologue of memset
+template <typename U> void bzero (U *ptr, size_t len) noexcept {
+   auto zeroing = reinterpret_cast <unsigned char *> (ptr);
+
+   for (size_t i = 0; i < len; ++i) {
+      zeroing[i] = 0;
+   }
+}
+
 #define BOT_PITCH_SPEED 20
 #define BOT_YAW_SPEED 20
 
@@ -141,16 +150,22 @@ int Cmd_Argc(void);
 #define CHAT_TYPE_KILLED_LOW 4
 #define CHAT_TYPE_SUICIDE 5
 
-using namespace std;
+#ifndef max
+#define max(a,b)            (((a) > (b)) ? (a) : (b))
+#endif
+
+#ifndef min
+#define min(a,b)            (((a) < (b)) ? (a) : (b))
+#endif
 
 // a class for handling the bot chat messages
 class chatClass {
  private:
    // section header names for each chat type, as used in the chat file
-   char sectionNames[64][TOTAL_CHAT_TYPES];
+   char sectionNames[TOTAL_CHAT_TYPES][64];
 
    // chat strings, organised by groups of chat types
-   char strings[256][TOTAL_CHAT_TYPES][MAX_CHAT_STRINGS];
+   char strings[TOTAL_CHAT_TYPES][MAX_CHAT_STRINGS][512];
 
    // counts the number of strings read from the chat file
    int stringCount[TOTAL_CHAT_TYPES];
@@ -632,5 +647,6 @@ bool SpyAmbushAreaCheck(bot_t *pBot, Vector &r_wallVector);
 void ResetBotHomeInfo(void);
 
 void BotLookAbout(bot_t *pBot);
+
 
 #endif // BOT_H

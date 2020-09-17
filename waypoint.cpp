@@ -46,10 +46,6 @@
 #include "bot.h"
 #include "waypoint.h"
 
-#ifdef WIN32
-#define stricmp _stricmp
-#endif
-
 // me
 #include "engine.h"
 
@@ -1506,7 +1502,7 @@ bool WaypointLoad(edict_t *pEntity) {
       }
       // make sure the waypoint file was meant for the current map
       header.mapname[31] = 0;
-      if (stricmp(header.mapname, STRING(gpGlobals->mapname)) != 0) {
+      if (strcasecmp(header.mapname, STRING(gpGlobals->mapname)) != 0) {
          if (pEntity) {
             sprintf(msg, "%s FoXBot waypoints are not for this map!\n", filename);
             ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
@@ -2047,7 +2043,7 @@ void WaypointPrintInfo(edict_t *pEntity) {
    }
 
    // spit out some basic info first
-   _snprintf(msg, 95, "Waypoint %d of %d total.\n%d deleted waypoint indexes can be re-used.\n", index, num_waypoints, deleted_waypoint_total);
+   snprintf(msg, 95, "Waypoint %d of %d total.\n%d deleted waypoint indexes can be re-used.\n", index, num_waypoints, deleted_waypoint_total);
    ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 
    const WPT_INT32 flags = waypoints[index].flags;
@@ -2771,7 +2767,7 @@ void WaypointThink(edict_t *pEntity) {
          int routeDistance = WaypointDistanceFromTo(nearWP, g_find_wp, -1);
 
          char msg[128];
-         _snprintf(msg, 128, "Waypoint height difference: %f\ndistance: %f\nroute distance %d", waypoints[g_find_wp].origin.z - pPlayer->v.origin.z, (waypoints[g_find_wp].origin - pPlayer->v.origin).Length(), routeDistance);
+         snprintf(msg, 128, "Waypoint height difference: %f\ndistance: %f\nroute distance %d", waypoints[g_find_wp].origin.z - pPlayer->v.origin.z, (waypoints[g_find_wp].origin - pPlayer->v.origin).Length(), routeDistance);
          msg[127] = '\0';
 
          MESSAGE_BEGIN(MSG_ONE, SVC_TEMPENTITY, NULL, pPlayer);
@@ -3523,8 +3519,8 @@ void WaypointAutoBuild(edict_t *pEntity) {
                   // displayed...
                   wp_display_time[index] = gpGlobals->time;
 
-                  Vector start = tr.vecEndPos - Vector(0, 0, 34);
-                  Vector end = start + Vector(0, 0, 68);
+                  //Vector start = tr.vecEndPos - Vector(0, 0, 34);
+                  //Vector end = start + Vector(0, 0, 68);
 
                   //********************************************************
                   // look for lift, ammo, flag, health, armor, etc.
@@ -3871,7 +3867,7 @@ bool AreaDefLoad(edict_t *pEntity) {
 
          header.mapname[31] = 0;
 
-         if (stricmp(header.mapname, STRING(gpGlobals->mapname)) == 0) {
+         if (strcasecmp(header.mapname, STRING(gpGlobals->mapname)) == 0) {
             // works for areas aswell :)
             // WaypointInit();  // remove any existing waypoints
             // grr, removes loaded waypoints! doh
@@ -3930,15 +3926,15 @@ void AreaDefPrintInfo(edict_t *pEntity) {
 
    const int i = AreaInsideClosest(pEntity);
    if (i != -1) {
-      _snprintf(msg, 1020, "Area %d of %d total\n", i, num_areas);
+      snprintf(msg, 1020, "Area %d of %d total\n", i, num_areas);
       ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
-      _snprintf(msg, 1020, "Name1 = %s\n", areas[i].namea);
+      snprintf(msg, 1020, "Name1 = %s\n", areas[i].namea);
       ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
-      _snprintf(msg, 1020, "Name2 = %s\n", areas[i].nameb);
+      snprintf(msg, 1020, "Name2 = %s\n", areas[i].nameb);
       ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
-      _snprintf(msg, 1020, "Name3 = %s\n", areas[i].namec);
+      snprintf(msg, 1020, "Name3 = %s\n", areas[i].namec);
       ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
-      _snprintf(msg, 1020, "Name4 = %s\n", areas[i].named);
+      snprintf(msg, 1020, "Name4 = %s\n", areas[i].named);
       ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
    }
 
@@ -4022,19 +4018,19 @@ bool AreaInside(edict_t *pEntity, const int i) {
 
       // now the in-bounds check..
       if (x >= lx && x <= hx && y >= ly && y <= hy) {
-         if (areas[i].a.y < y && areas[i].b.y >= y || areas[i].b.y < y && areas[i].a.y >= y) {
+         if ((areas[i].a.y < y && areas[i].b.y >= y) || (areas[i].b.y < y && areas[i].a.y >= y)) {
             if (areas[i].a.x + (y - areas[i].a.y) / (areas[i].b.y - areas[i].a.y) * (areas[i].b.x - areas[i].a.x) < x)
                inside = !inside;
          }
-         if (areas[i].b.y < y && areas[i].c.y >= y || areas[i].c.y < y && areas[i].b.y >= y) {
+         if ((areas[i].b.y < y && areas[i].c.y >= y) || (areas[i].c.y < y && areas[i].b.y >= y)) {
             if (areas[i].b.x + (y - areas[i].b.y) / (areas[i].c.y - areas[i].b.y) * (areas[i].c.x - areas[i].b.x) < x)
                inside = !inside;
          }
-         if (areas[i].c.y < y && areas[i].d.y >= y || areas[i].d.y < y && areas[i].c.y >= y) {
+         if ((areas[i].c.y < y && areas[i].d.y >= y) || (areas[i].d.y < y && areas[i].c.y >= y)) {
             if (areas[i].c.x + (y - areas[i].c.y) / (areas[i].d.y - areas[i].c.y) * (areas[i].d.x - areas[i].c.x) < x)
                inside = !inside;
          }
-         if (areas[i].d.y < y && areas[i].a.y >= y || areas[i].a.y < y && areas[i].d.y >= y) {
+         if ((areas[i].d.y < y && areas[i].a.y >= y) || (areas[i].a.y < y && areas[i].d.y >= y)) {
             if (areas[i].d.x + (y - areas[i].d.y) / (areas[i].a.y - areas[i].d.y) * (areas[i].a.x - areas[i].d.x) < x)
                inside = !inside;
          }
@@ -4161,8 +4157,8 @@ void AreaAutoBuild1() {
                   else
                      ru = TRUE;
                }
-            } else if (waypoints[i].origin.y == waypoints[k].origin.y && (waypoints[ll].origin.z - 16 <= waypoints[k].origin.z && waypoints[ll].origin.z + 16 >= waypoints[k].origin.z) ||
-                       waypoints[lr].origin.z - 16 <= waypoints[k].origin.z && waypoints[lr].origin.z + 16 >= waypoints[k].origin.z && (ru || rd) && (ld || lu) && i != k) {
+            } else if ((waypoints[i].origin.y == waypoints[k].origin.y && (waypoints[ll].origin.z - 16 <= waypoints[k].origin.z && waypoints[ll].origin.z + 16 >= waypoints[k].origin.z)) ||
+                       (waypoints[lr].origin.z - 16 <= waypoints[k].origin.z && waypoints[lr].origin.z + 16 >= waypoints[k].origin.z && (ru || rd) && (ld || lu) && i != k)) {
                if (waypoints[i].origin.x - 32 * (lc + 1) == waypoints[k].origin.x) {
                   if (waypoints[i].origin.z <= waypoints[k].origin.z && ld) {
                      ll = k;
@@ -4236,8 +4232,8 @@ void AreaAutoBuild1() {
                                  else
                                     ru = TRUE;
                               }
-                           } else if (waypoints[j].origin.y == waypoints[k].origin.y && (waypoints[ll].origin.z - 16 <= waypoints[k].origin.z && waypoints[ll].origin.z + 16 >= waypoints[k].origin.z) ||
-                                      waypoints[lr].origin.z - 16 <= waypoints[k].origin.z && waypoints[lr].origin.z + 16 >= waypoints[k].origin.z && (ru || rd) && (ld || lu) && j != k) {
+                           } else if ((waypoints[j].origin.y == waypoints[k].origin.y && (waypoints[ll].origin.z - 16 <= waypoints[k].origin.z && waypoints[ll].origin.z + 16 >= waypoints[k].origin.z)) ||
+                                      (waypoints[lr].origin.z - 16 <= waypoints[k].origin.z && waypoints[lr].origin.z + 16 >= waypoints[k].origin.z && (ru || rd) && (ld || lu) && j != k)) {
                               if (waypoints[j].origin.x - 32 * (l + 1) == waypoints[k].origin.x) {
                                  if (waypoints[j].origin.z <= waypoints[k].origin.z && ld) {
                                     ll = k;
@@ -4311,8 +4307,8 @@ void AreaAutoBuild1() {
                                  else
                                     ru = TRUE;
                               }
-                           } else if (waypoints[j].origin.y == waypoints[k].origin.y && (waypoints[ll].origin.z - 16 <= waypoints[k].origin.z && waypoints[ll].origin.z + 16 >= waypoints[k].origin.z) ||
-                                      waypoints[lr].origin.z - 16 <= waypoints[k].origin.z && waypoints[lr].origin.z + 16 >= waypoints[k].origin.z && (ru || rd) && (ld || lu) && j != k) {
+                           } else if ((waypoints[j].origin.y == waypoints[k].origin.y && (waypoints[ll].origin.z - 16 <= waypoints[k].origin.z && waypoints[ll].origin.z + 16 >= waypoints[k].origin.z)) ||
+                                      (waypoints[lr].origin.z - 16 <= waypoints[k].origin.z && waypoints[lr].origin.z + 16 >= waypoints[k].origin.z && (ru || rd) && (ld || lu) && j != k)) {
                               if (waypoints[j].origin.x - 32 * (l + 1) == waypoints[k].origin.x) {
                                  if (waypoints[j].origin.z <= waypoints[k].origin.z && ld) {
                                     ll = k;
@@ -4408,8 +4404,8 @@ void AreaAutoBuild1() {
                      else
                         ru = TRUE;
                   }
-               } else if (waypoints[h].origin.x == waypoints[k].origin.x && (waypoints[ll].origin.z - 16 <= waypoints[k].origin.z && waypoints[ll].origin.z + 16 >= waypoints[k].origin.z) ||
-                          waypoints[lr].origin.z - 16 <= waypoints[k].origin.z && waypoints[lr].origin.z + 16 >= waypoints[k].origin.z && (ru || rd) && (ld || lu) && i != k) {
+               } else if ((waypoints[h].origin.x == waypoints[k].origin.x && (waypoints[ll].origin.z - 16 <= waypoints[k].origin.z && waypoints[ll].origin.z + 16 >= waypoints[k].origin.z)) ||
+                          (waypoints[lr].origin.z - 16 <= waypoints[k].origin.z && waypoints[lr].origin.z + 16 >= waypoints[k].origin.z && (ru || rd) && (ld || lu) && i != k)) {
                   if (waypoints[h].origin.y - 32 * (lc + 1) == waypoints[k].origin.y) {
                      if (waypoints[h].origin.z <= waypoints[k].origin.z && ld) {
                         ll = k;
@@ -4490,8 +4486,8 @@ void AreaAutoBuild1() {
                                        else
                                           ru = TRUE;
                                     }
-                                 } else if (waypoints[h].origin.x == waypoints[k].origin.x && (waypoints[ll].origin.z - 16 <= waypoints[k].origin.z && waypoints[ll].origin.z + 16 >= waypoints[k].origin.z) ||
-                                            waypoints[lr].origin.z - 16 <= waypoints[k].origin.z && waypoints[lr].origin.z + 16 >= waypoints[k].origin.z && (ru || rd) && (ld || lu) && i != k) {
+                                 } else if ((waypoints[h].origin.x == waypoints[k].origin.x && (waypoints[ll].origin.z - 16 <= waypoints[k].origin.z && waypoints[ll].origin.z + 16 >= waypoints[k].origin.z)) ||
+                                            (waypoints[lr].origin.z - 16 <= waypoints[k].origin.z && waypoints[lr].origin.z + 16 >= waypoints[k].origin.z && (ru || rd) && (ld || lu) && i != k)) {
                                     if (waypoints[h].origin.y - 32 * (l + 1) == waypoints[k].origin.y) {
                                        if (waypoints[h].origin.z <= waypoints[k].origin.z && ld) {
                                           ll = k;
@@ -4574,7 +4570,7 @@ void AreaAutoMerge() {
             }
 
             // corner areas will have 1 bool (out of a-c) false only
-            if (!a && b && c && d || a && !b && c && d || a && b && !c && d || a && b && c && !d) {
+            if ((!a && b && c && d) || (a && !b && c && d) || (a && b && !c && d) || (a && b && c && !d)) {
                // Vector aa,bb;
                // now find all the areas we can merge this one with
                bool merged = TRUE;
@@ -4773,7 +4769,7 @@ void AreaAutoMerge() {
             }
 
             // corner areas will have 1 bool (out of a-c) false only
-            if (!a && b && c && d || a && !b && c && d || a && b && !c && d || a && b && c && !d || !a && !b && c && d || a && b && !c && !d || a && !b && !c && d || !a && b && c && !d) {
+            if ((!a && b && c && d) || (a && !b && c && d) || (a && b && !c && d) || (a && b && c && !d) || (!a && !b && c && d) || (a && b && !c && !d) || (a && !b && !c && d) || (!a && b && c && !d)) {
                // Vector aa,bb;
                // now find all the areas we can merge this one with
                bool merged = TRUE;

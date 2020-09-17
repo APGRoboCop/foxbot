@@ -35,10 +35,6 @@
 
 #include "meta_api.h" //meta mod"
 
-#ifdef WIN32
-#define stricmp _stricmp
-#endif
-
 extern bool mr_meta;
 
 // extern enginefuncs_t g_engfuncs; //No longer required? [APG]RoboCop[CL]
@@ -177,7 +173,7 @@ void pfnRemoveEntity(edict_t *e) {
          }
       }
    }
-   // _snprintf(sz_error_check,250,"pfnRemoveEntity: %x %d\n",e,e->v.spawnflags);
+   // snprintf(sz_error_check,250,"pfnRemoveEntity: %x %d\n",e,e->v.spawnflags);
 
    if (mr_meta)
       RETURN_META(MRES_HANDLED);
@@ -315,7 +311,7 @@ void pfnClientCommand(edict_t *pEdict, char *szFmt, ...) {
       fprintf(fp, "-pfnClientCommand=%s %p\n", szFmt, static_cast<void *>(pEdict));
       fclose(fp);
    }
-   _snprintf(sz_error_check, 250, "-pfnClientCommand=%s %p\n", szFmt, static_cast<void *>(pEdict));
+   snprintf(sz_error_check, 250, "-pfnClientCommand=%s %p\n", szFmt, static_cast<void *>(pEdict));
    /*if(pEdict!=NULL)
       {
       if((pEdict->v.flags & FL_FAKECLIENT)==FL_FAKECLIENT)
@@ -344,7 +340,7 @@ void pfnClientCommand(edict_t *pEdict, char *szFmt, ...) {
                (GETPLAYERWONID(pEdict)==-1 && IS_DEDICATED_SERVER())))
                {
                b=false;
-               //_snprintf(sz_error_check,250,"%s %d",sz_error_check,i);
+               //snprintf(sz_error_check,250,"%s %d",sz_error_check,i);
                }*/
          }
       }
@@ -360,12 +356,12 @@ void pfnClientCommand(edict_t *pEdict, char *szFmt, ...) {
          //	unsigned int u=GETPLAYERWONID(pEdict);
          //	if((u==0 || ENTINDEX(pEdict)==-1))
          //		b=false;
-         // _snprintf(sz_error_check,250,"%s %d",sz_error_check,GETPLAYERWONID(pEdict));
+         // snprintf(sz_error_check,250,"%s %d",sz_error_check,GETPLAYERWONID(pEdict));
       }
       if (b) {
-         //	_snprintf(sz_error_check,250,"%s b = %d %d\n",sz_error_check,GETPLAYERWONID(pEdict),ENTINDEX(pEdict));
+         //	snprintf(sz_error_check,250,"%s b = %d %d\n",sz_error_check,GETPLAYERWONID(pEdict),ENTINDEX(pEdict));
          //{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"b\n"); fclose(fp); }
-         // _snprintf(sz_error_check,250,"%s -executing",sz_error_check);
+         // snprintf(sz_error_check,250,"%s -executing",sz_error_check);
          (*g_engfuncs.pfnClientCommand)(pEdict, tempFmt);
          va_end(argp);
          return;
@@ -387,7 +383,7 @@ void pfnClCom(edict_t *pEdict, char *szFmt, ...) {
       fprintf(fp, "-pfnClientCom=%s %p\n", szFmt, static_cast<void *>(pEdict));
       fclose(fp);
    }
-   _snprintf(sz_error_check, 250, "-pfnClientCom=%s %p\n", szFmt, static_cast<void *>(pEdict));
+   snprintf(sz_error_check, 250, "-pfnClientCom=%s %p\n", szFmt, static_cast<void *>(pEdict));
    if (pEdict != NULL) {
       bool b = FALSE;
 
@@ -425,7 +421,7 @@ void pfnClCom(edict_t *pEdict, char *szFmt, ...) {
             RETURN_META(MRES_SUPERCEDE);
          return;
       } else
-         //	_snprintf(sz_error_check,250,"%s b = %d %d\n",sz_error_check,GETPLAYERWONID(pEdict),ENTINDEX(pEdict));
+         //	snprintf(sz_error_check,250,"%s b = %d %d\n",sz_error_check,GETPLAYERWONID(pEdict),ENTINDEX(pEdict));
          return;
    } else {
       if (mr_meta)
@@ -453,7 +449,7 @@ void pfnMessageBegin(const int msg_dest, const int msg_type, const float *pOrigi
          fclose(fp);
       }
 
-      /*_snprintf(sz_error_check,250,
+      /*snprintf(sz_error_check,250,
                       "pfnMessageBegin: edict=%x dest=%d type=%d id=%d %d\n",
                       ed,msg_dest,msg_type,GETPLAYERWONID(ed),ENTINDEX(ed));*/
 
@@ -914,7 +910,7 @@ void pfnClientPrintf(edict_t *pEdict, const PRINT_TYPE ptype, const char *szMsg)
       fclose(fp);
    }
 
-   _snprintf(sz_error_check, 250, "CPf: %p %s\n", static_cast<void *>(pEdict), szMsg);
+   snprintf(sz_error_check, 250, "CPf: %p %s\n", static_cast<void *>(pEdict), szMsg);
 
    // only send message if its not a bot...
    if (pEdict != NULL) {
@@ -924,7 +920,7 @@ void pfnClientPrintf(edict_t *pEdict, const PRINT_TYPE ptype, const char *szMsg)
             // if(!((pEdict->v.flags & FL_FAKECLIENT)==FL_FAKECLIENT))
             // bots[i].is_used &&
             /*if(clients[i]!=NULL)
-               _snprintf(sz_error_check,250,"%s %x %d\n",sz_error_check,clients[i],i);*/
+               snprintf(sz_error_check,250,"%s %x %d\n",sz_error_check,clients[i],i);*/
             if (clients[i] == pEdict)
                b = TRUE;
             /*if(bots[i].pEdict==pEdict && (GETPLAYERWONID(pEdict)==0 || ENTINDEX(pEdict)==-1 ||
@@ -957,7 +953,7 @@ void pfnClientPrintf(edict_t *pEdict, const PRINT_TYPE ptype, const char *szMsg)
       }
       if (b) {
          //{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"b\n"); fclose(fp); }
-         //	_snprintf(sz_error_check,250,"%s b = %d %d\n",sz_error_check,GETPLAYERWONID(pEdict),ENTINDEX(pEdict));
+         //	snprintf(sz_error_check,250,"%s b = %d %d\n",sz_error_check,GETPLAYERWONID(pEdict),ENTINDEX(pEdict));
          (*g_engfuncs.pfnClientPrintf)(pEdict, ptype, szMsg);
          // else RETURN_META(MRES_HANDLED);
          //(*g_engfuncs.pfnClientPrintf)(pEdict, ptype, szMsg);
@@ -989,7 +985,7 @@ void pfnClPrintf(edict_t *pEdict, PRINT_TYPE ptype, const char *szMsg) {
       fprintf(fp, "pfnClPrintf: %p %s\n", static_cast<void *>(pEdict), szMsg);
       fclose(fp);
    }
-   _snprintf(sz_error_check, 250, "pfnClPrintf: %p %s\n", static_cast<void *>(pEdict), szMsg);
+   snprintf(sz_error_check, 250, "pfnClPrintf: %p %s\n", static_cast<void *>(pEdict), szMsg);
 
    // only send message if its not a bot...
    if (pEdict != NULL) {
@@ -1038,7 +1034,7 @@ void pfnServerPrint(const char *szMsg) {
       fclose(fp);
    }
 
-   // _snprintf(sz_error_check,250,"pfnServerPrint: %s\n",szMsg);
+   // snprintf(sz_error_check,250,"pfnServerPrint: %s\n",szMsg);
 
    // if were gonna deal with commands for bots (e.i.'follow user')
    // then this is a good place to start
@@ -1099,11 +1095,11 @@ void pfnServerPrint(const char *szMsg) {
 
          // check that the message was meant for this bot
          // bots[i].name = name obviously
-         if (bots[i].is_used && name_message_check(szMsg, bots[i].name) || bots[i].is_used && stricmp(cmd, "bots") == 0) {
+         if ((bots[i].is_used && name_message_check(szMsg, bots[i].name)) || (bots[i].is_used && strcasecmp(cmd, "bots") == 0)) {
             // DONT ALLOW CHANGECLASS TO ALL BOTS
-            if (stricmp(cmd, "bots") == 0 && strstr(szMsg, "changeclass"))
+            if (strcasecmp(cmd, "bots") == 0 && strstr(szMsg, "changeclass"))
                continue;
-            if (stricmp(cmd, "bots") == 0 && strstr(szMsg, "changeclassnow"))
+            if (strcasecmp(cmd, "bots") == 0 && strstr(szMsg, "changeclassnow"))
                continue;
 
             strncpy(bots[i].message, szMsg, 253);

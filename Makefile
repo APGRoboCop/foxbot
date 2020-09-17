@@ -8,16 +8,12 @@
 
 ifeq ($(OSTYPE),win32)
 	CPP = i686-w64-mingw32-gcc -m32
-	AR = i686-w64-mingw32-ar rc
-	RANLIB = i686-w64-mingw32-ranlib
-	LINKFLAGS = -mdll -lm -Xlinker --add-stdcall-alias -s
+	LINKFLAGS = -mdll -lm -Xlinker -add-stdcall-alias -static-libgcc -shared -s_@@_ -Wl,--no-undefined
 	DLLEND = .dll
 else
 	CPP = gcc -m32
-	AR = ar rc
-	RANLIB = ranlib
 	ARCHFLAG = -fPIC
-	LINKFLAGS = -fPIC -shared -ldl -lm -s
+	LINKFLAGS = -fPIC -shared -ldl -lm -s 
 	DLLEND = .so
 endif
 
@@ -30,8 +26,7 @@ ifeq ($(DBG_FLGS),1)
 else
 	OPTFLAGS = -O2 -fomit-frame-pointer -g
 	OPTFLAGS += -funsafe-math-optimizations
-	LTOFLAGS = -flto -fvisibility=hidden
-	LINKFLAGS += ${OPTFLAGS} ${LTOFLAGS}
+	LINKFLAGS += ${OPTFLAGS}
 endif
 
 INCLUDES = -I"./metamod" \
@@ -41,7 +36,8 @@ INCLUDES = -I"./metamod" \
 	-I"./hlsdk/pm_shared"
 
 CFLAGS = ${BASEFLAGS} ${OPTFLAGS} ${ARCHFLAG} ${INCLUDES}
-CPPFLAGS = -fno-rtti -fno-exceptions ${CFLAGS} 
+CPPFLAGS += -fno-rtti -fno-exceptions -fno-threadsafe-statics ${CFLAGS} 
+LINKFLAGS += -Wl,--no-undefined
 
 SRC = 	bot.cpp \
    bot_client.cpp \
@@ -76,9 +72,6 @@ distclean:
 
 %.o: %.cpp
 	${CPP} ${CPPFLAGS} ${LTOFLAGS} -c $< -o $@
-
-%.o: %.c
-	${CPP} ${CFLAGS} ${LTOFLAGS} -c $< -o $@
 
 depend: Rules.depend
 

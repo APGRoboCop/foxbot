@@ -377,7 +377,7 @@ void BotNavigateWaypointless(bot_t *pBot) {
    // if not obstructed by a player is the bot obstructed by anything else?
    if (BotContactThink(pBot) == NULL) {
       // buoyed by water, or on a ladder?
-      if (pBot->pEdict->v.waterlevel > WL_FEET_IN_WATER && !(pBot->pEdict->v.flags & FL_ONGROUND) || pBot->pEdict->v.movetype == MOVETYPE_FLY) {
+      if ((pBot->pEdict->v.waterlevel > WL_FEET_IN_WATER && !(pBot->pEdict->v.flags & FL_ONGROUND)) || pBot->pEdict->v.movetype == MOVETYPE_FLY) {
          // hopefully the bot wont get stuck
       } else // not on a ladder or in some water
       {
@@ -513,7 +513,7 @@ bool BotNavigateWaypoints(bot_t *pBot, bool navByStrafe) {
          navByStrafe = FALSE;
 
       // buoyed by water, or on a ladder?
-      if (pBot->pEdict->v.waterlevel > WL_FEET_IN_WATER && !(pBot->pEdict->v.flags & FL_ONGROUND) || pBot->pEdict->v.movetype == MOVETYPE_FLY) {
+      if ((pBot->pEdict->v.waterlevel > WL_FEET_IN_WATER && !(pBot->pEdict->v.flags & FL_ONGROUND)) || pBot->pEdict->v.movetype == MOVETYPE_FLY) {
          if (pBot->f_navProblemStartTime + 2.0 < pBot->f_think_time) {
             job_struct *newJob = InitialiseNewJob(pBot, JOB_GET_UNSTUCK);
             if (newJob != NULL)
@@ -773,8 +773,8 @@ bool BotHeadTowardWaypoint(bot_t *pBot, bool &r_navByStrafe) {
             pBot->f_side_speed = 0.0; // not on left or right, don't strafe sideways
 
          // now to handle vertical movement when swimming(or bobbing on the surface of water)
-         if (pBot->pEdict->v.waterlevel == WL_WAIST_IN_WATER // on the surface
-                 && !(pBot->pEdict->v.flags & FL_ONGROUND) ||
+         if ((pBot->pEdict->v.waterlevel == WL_WAIST_IN_WATER // on the surface
+                 && !(pBot->pEdict->v.flags & FL_ONGROUND)) ||
              pBot->pEdict->v.waterlevel == WL_HEAD_IN_WATER) {
             // swim up if below the waypoint
             if (pBot->pEdict->v.origin.z < waypoints[pBot->current_wp].origin.z - 5.0) {

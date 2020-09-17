@@ -31,7 +31,7 @@
 
 #include <extdll.h>
 
-#include "osdep.h" // win32 v_snprintf, etc
+#include "osdep.h" // win32 vsnprintf, etc
 #include "sdk_util.h"
 
 char *UTIL_VarArgs(char *format, ...) {

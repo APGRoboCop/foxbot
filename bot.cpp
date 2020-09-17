@@ -59,10 +59,6 @@ extern HINSTANCE h_Library;
 extern void *h_Library;
 #endif
 
-#ifdef WIN32
-#define stricmp _stricmp
-#endif
-
 // my global var for checking if we're using metamod or not?
 // i.e. should we be a plugin..
 bool mr_meta = FALSE;
@@ -81,6 +77,8 @@ struct TeamLayout {
    List<edict_t *> humanDefenders[4];
    int total[4];
 };
+
+
 
 // team data /////////////////////////
 extern int RoleStatus[];
@@ -195,6 +193,8 @@ static void BotEnemyCarrierAlert(bot_t *pBot);
 static void BotSenseEnvironment(bot_t *pBot);
 static void BotFight(bot_t *pBot);
 static void BotSpectatorDebug(bot_t *pBot);
+
+
 
 inline edict_t *CREATE_FAKE_CLIENT(const char *netname) {
    if (debug_engine) {
@@ -669,21 +669,21 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
          GET_GAME_DIR(dir_name);
 
 #ifndef __linux__
-         _snprintf(filename, 127, "%s\\models\\player\\%s", dir_name, c_skin);
+         snprintf(filename, 127, "%s\\models\\player\\%s", dir_name, c_skin);
 #else
-         _snprintf(filename, 127, "%s/models/player/%s", dir_name, c_skin);
+         snprintf(filename, 127, "%s/models/player/%s", dir_name, c_skin);
 #endif
 
          if (stat(filename, &stat_str) != 0) {
 #ifndef __linux__
-            _snprintf(filename, 127, "valve\\models\\player\\%s", c_skin);
+            snprintf(filename, 127, "valve\\models\\player\\%s", c_skin);
 #else
-            _snprintf(filename, 127, "valve/models/player/%s", c_skin);
+            snprintf(filename, 127, "valve/models/player/%s", c_skin);
 #endif
             if (stat(filename, &stat_str) != 0) {
                char err_msg[80];
 
-               _snprintf(err_msg, 79, "model \"%s\" is unknown.\n", c_skin);
+               snprintf(err_msg, 79, "model \"%s\" is unknown.\n", c_skin);
                if (pPlayer)
                   ClientPrint(pPlayer, HUD_PRINTNOTIFY, err_msg);
                if (IS_DEDICATED_SERVER())
@@ -795,7 +795,7 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
       // and before we can add this shit for checking purposes
       bot_t *pBot = &bots[index];
       if (botJustJoined[index])
-         memset(pBot, 0, sizeof(bot_t)); // wipe out the bots data
+         bzero (pBot, sizeof(bot_t)); // wipe out the bots data
       pBot->pEdict = BotEnt;
 
       // clear the player info from the previous player who used this edict
@@ -1573,7 +1573,7 @@ edict_t *BotContactThink(bot_t *pBot) {
             continue;
 
          // don't avoid if going for player with one of these weapons
-         if (pBot->currentJob > -1 && pPlayer == pBot->job[pBot->currentJob].player || pBot->enemy.ptr == pPlayer) {
+         if ((pBot->currentJob > -1 && pPlayer == pBot->job[pBot->currentJob].player) || pBot->enemy.ptr == pPlayer) {
             if (pBot->current_weapon.iId == TF_WEAPON_KNIFE || pBot->current_weapon.iId == TF_WEAPON_MEDIKIT || pBot->current_weapon.iId == TF_WEAPON_SPANNER || pBot->current_weapon.iId == TF_WEAPON_AXE)
                continue;
          }
@@ -1683,7 +1683,7 @@ void script(const char *sz) {
 
    if (g_bot_debug) {
       char msg[255];
-      _snprintf(msg, 250, "msg (%s)\n", sz);
+      snprintf(msg, 250, "msg (%s)\n", sz);
       ALERT(at_console, msg);
 
       fp = UTIL_OpenFoxbotLog();
@@ -1699,14 +1699,14 @@ void script(const char *sz) {
          // ALERT( at_console, "-\n");
          // some messages have line returns, so check
          char msg2[255];
-         _snprintf(msg2, 250, "%s\n", msg_msg[current_msg]);
+         snprintf(msg2, 250, "%s\n", msg_msg[current_msg]);
          if (strcmp(sz, msg_msg[current_msg]) == 0 || strcmp(sz, msg2) == 0) {
             /*{ fp=UTIL_OpenFoxbotLog();
                             fprintf(fp,"a %d\n",current_msg); fclose(fp); }*/
             if (msg_com[current_msg].ifs[0] == '\0') {
                if (g_bot_debug) {
                   char msg[255];
-                  _snprintf(msg, 250, "no if : %s +++ %s %d\n", msg_msg[current_msg], sz, current_msg);
+                  snprintf(msg, 250, "no if : %s +++ %s %d\n", msg_msg[current_msg], sz, current_msg);
                   ALERT(at_console, msg);
                   /*{ fp=UTIL_OpenFoxbotLog();
                                   fprintf(fp,msg,sz); fclose(fp); }*/
@@ -1870,7 +1870,7 @@ void script(const char *sz) {
                                   fprintf(fp, "-pass\n"); fclose(fp);}*/
                   if (g_bot_debug) {
                      char msg[255];
-                     _snprintf(msg, 250, "if : %s +++ %s %d \nComparing point %s\n", msg_msg[current_msg], sz, current_msg, curr->ifs + 4);
+                     snprintf(msg, 250, "if : %s +++ %s %d \nComparing point %s\n", msg_msg[current_msg], sz, current_msg, curr->ifs + 4);
                      ALERT(at_console, msg);
                      /*{ fp=UTIL_OpenFoxbotLog();
                                      fprintf(fp,msg,sz); fclose(fp);}*/
@@ -1878,7 +1878,7 @@ void script(const char *sz) {
                   if (execif) {
                      if (g_bot_debug) {
                         char msg[64];
-                        _snprintf(msg, 63, "Executing if\n");
+                        snprintf(msg, 63, "Executing if\n");
                         ALERT(at_console, msg);
                         /*{ fp=UTIL_OpenFoxbotLog();
                                         fprintf(fp,msg,sz); fclose(fp); }*/
@@ -2578,7 +2578,7 @@ static void BotGrenadeAvoidance(bot_t *pBot) {
             avoid_action = avoid_retreat;
             threatEnt = pent;
          }
-      } else if (strncmp("tf_gl_grenade", classname, 29) == 0 && pBot->pEdict->v.playerclass != TFC_CLASS_DEMOMAN || (strncmp("tf_weapon_nailgrenade", classname, 29) == 0 || strncmp("tf_weapon_napalmgrenade", classname, 29) == 0)) {
+      } else if ((strncmp("tf_gl_grenade", classname, 29) == 0 && pBot->pEdict->v.playerclass != TFC_CLASS_DEMOMAN) || (strncmp("tf_weapon_nailgrenade", classname, 29) == 0 || strncmp("tf_weapon_napalmgrenade", classname, 29) == 0)) {
          entity_origin = pent->v.origin;
          if (FInViewCone(entity_origin, pBot->pEdict) && FVisible(entity_origin, pBot->pEdict)) {
             if (pBot->trait.aggression < 33 || static_cast<int>(pBot->pEdict->v.health) > 70)
@@ -2719,7 +2719,7 @@ static void BotRoleCheck(bot_t *pBot) {
          if (bots[i].is_used && bots[i].pEdict->v.playerclass && bots[i].current_team == team && bots[i].mission != needed_mission && !bots[i].lockMission && !bots[i].bot_has_flag) {
             // these classes are good candidates for switching between attack and defense
             // Engineers are also suitable here because EMP and armor repair is cool
-            if (bots[i].pEdict->v.playerclass == TFC_CLASS_DEMOMAN && !ignoreDemomen ||
+            if ((bots[i].pEdict->v.playerclass == TFC_CLASS_DEMOMAN && !ignoreDemomen) ||
                 (bots[i].pEdict->v.playerclass == TFC_CLASS_SOLDIER || bots[i].pEdict->v.playerclass == TFC_CLASS_PYRO || bots[i].pEdict->v.playerclass == TFC_CLASS_HWGUY || bots[i].pEdict->v.playerclass == TFC_CLASS_ENGINEER)) {
                bots[i].mission = needed_mission;
                /*	char msg[80];//DebugMessageOfDoom!
@@ -2766,10 +2766,10 @@ static void BotComms(bot_t *pBot) {
          cmd[k] = '\0';
 
          // strcpy(buffb, cmd);
-         if (stricmp("changeclass", cmd) == 0 || stricmp("changeclassnow", cmd) == 0) {
+         if (strcasecmp ("changeclass", cmd) == 0 || strcasecmp ("changeclassnow", cmd) == 0) {
             // Check if this message is from another player on our team.
             char fromName[255] = {0};
-            if (_strnicmp("(TEAM)", pBot->message + 1, 6) == 0)
+            if (strncasecmp ("(TEAM)", pBot->message + 1, 6) == 0)
                strcpy(fromName, pBot->message + 8);
             else
                strcpy(fromName, pBot->message);
@@ -2790,15 +2790,15 @@ static void BotComms(bot_t *pBot) {
                const int iClass = atoi(&theClass);
                if (BotChangeClass(pBot, iClass, fromName)) {
                   UTIL_HostSay(pBot->pEdict, 1, "Roger");
-                  if (stricmp("changeclassnow", cmd) == 0)
+                  if (strcasecmp("changeclassnow", cmd) == 0)
                      FakeClientCommand(pBot->pEdict, "kill", NULL, NULL);
                }
             }
          }
-         if (stricmp("changerole", cmd) == 0 || stricmp("changerolenow", cmd) == 0) {
+         if (strcasecmp("changerole", cmd) == 0 || strcasecmp("changerolenow", cmd) == 0) {
             // Check if this message is from another player on our team.
             char fromName[255] = {0};
-            if (_strnicmp("(TEAM)", pBot->message + 1, 6) == 0)
+            if (strncasecmp ("(TEAM)", pBot->message + 1, 6) == 0)
                strcpy(fromName, pBot->message + 8);
             else
                strcpy(fromName, pBot->message);
@@ -2814,30 +2814,30 @@ static void BotComms(bot_t *pBot) {
             }
             BotChangeRole(pBot, pBot->message, fromName);
          }
-         /*	if(stricmp("follow", cmd) == 0)
+         /*	if(strcasecmp("follow", cmd) == 0)
                          {
                                          UTIL_HostSay(pEdict, 0, "Follow mode");
                          //	pBot->follow = TRUE;
                                          pBot->tracked_player = NULL;
                          //	pBot->track_ttime = pBot->f_think_time;
                          }*/
-         if (stricmp("die", cmd) == 0) {
+         if (strcasecmp("die", cmd) == 0) {
             EMIT_SOUND_DYN2(pBot->pEdict, CHAN_VOICE, "barney/c1a4_ba_octo4.wav", 0, 0, SND_STOP, PITCH_NORM);
             EMIT_SOUND_DYN2(pBot->pEdict, CHAN_VOICE, "barney/c1a4_ba_octo4.wav", 1.0, ATTN_NORM, 0, PITCH_NORM);
          }
-         /*if(stricmp("roam", cmd) == 0)
+         /*if(strcasecmp("roam", cmd) == 0)
          {
                          UTIL_HostSay(pEdict, 0, "Roam mode");
                          pBot->follow = FALSE;
                          pBot->tracked_player = NULL;
                          pBot->enemy.ptr = NULL;
          }*/
-         if (stricmp("xmas", cmd) == 0 && bot_xmas) {
+         if (strcasecmp("xmas", cmd) == 0 && bot_xmas) {
             // TraceResult tr;
             short model;
 
-            UTIL_MakeVectors(pEdict->v.v_angle);
-            Vector vecDir = gpGlobals->v_forward;
+            //UTIL_MakeVectors(pEdict->v.v_angle);
+            //Vector vecDir = gpGlobals->v_forward;
 
             /*UTIL_TraceLine( pEdict->v.origin,
                             pEdict->v.origin+vecDir*256,
@@ -3073,7 +3073,7 @@ static bool botVerifyAccess(edict_t *pPlayer) {
    strcpy(authId, GETPLAYERAUTHID(pPlayer));
 
    char szBuffer[64];
-   _snprintf(szBuffer, 63, "%s Does not have access.", authId);
+   snprintf(szBuffer, 63, "%s Does not have access.", authId);
    szBuffer[63] = '\0'; // just to be sure
    ALERT(at_console, szBuffer);
    // example steam ID: STEAM_0:1245
@@ -3081,7 +3081,7 @@ static bool botVerifyAccess(edict_t *pPlayer) {
    bool found = FALSE;
    LIter<char *> iter(&commanders);
    for (iter.begin(); !iter.end(); ++iter) {
-      if (stricmp(authId, *iter.current()) == 0)
+      if (strcasecmp(authId, *iter.current()) == 0)
          found = TRUE;
    }
 
@@ -3386,7 +3386,7 @@ static bool BotDemomanNeededCheck(bot_t *pBot) {
       return FALSE;
 
    // Check if any more demoman are allowed on this map.
-   const int class_not_allowed = team_class_limits[pBot->current_team] & (1 << TFC_CLASS_DEMOMAN) - 1;
+   const bool class_not_allowed = !(team_class_limits[pBot->current_team] & (1 << TFC_CLASS_DEMOMAN));
 
    if (class_not_allowed)
       return FALSE;
@@ -3417,7 +3417,7 @@ static bool BotDemomanNeededCheck(bot_t *pBot) {
 bool SpyAmbushAreaCheck(bot_t *pBot, Vector &r_wallVector) {
    // perform some basic checks first
    // e.g. don't feign near a lift
-   if (pBot->current_wp > -1 && waypoints[pBot->current_wp].flags & W_FL_LIFT || (pBot->pEdict->v.waterlevel != WL_NOT_IN_WATER || pBot->nadePrimed == TRUE || pBot->bot_has_flag || PlayerIsInfected(pBot->pEdict))) {
+   if ((pBot->current_wp > -1 && waypoints[pBot->current_wp].flags & W_FL_LIFT) || (pBot->pEdict->v.waterlevel != WL_NOT_IN_WATER || pBot->nadePrimed == TRUE || pBot->bot_has_flag || PlayerIsInfected(pBot->pEdict))) {
       return FALSE;
    }
 
@@ -3552,16 +3552,16 @@ static void BotReportMyFlagDrop(bot_t *pBot) {
       if (newJob != NULL) {
          switch (pBot->current_team) {
          case 0:
-            _snprintf(newJob->message, MAX_CHAT_LENGTH, "Flag dropped %s", areas[bot_area].namea);
+            snprintf(newJob->message, MAX_CHAT_LENGTH, "Flag dropped %s", areas[bot_area].namea);
             break;
          case 1:
-            _snprintf(newJob->message, MAX_CHAT_LENGTH, "Flag dropped %s", areas[bot_area].nameb);
+            snprintf(newJob->message, MAX_CHAT_LENGTH, "Flag dropped %s", areas[bot_area].nameb);
             break;
          case 2:
-            _snprintf(newJob->message, MAX_CHAT_LENGTH, "Flag dropped %s", areas[bot_area].namec);
+            snprintf(newJob->message, MAX_CHAT_LENGTH, "Flag dropped %s", areas[bot_area].namec);
             break;
          case 3:
-            _snprintf(newJob->message, MAX_CHAT_LENGTH, "Flag dropped %s", areas[bot_area].named);
+            snprintf(newJob->message, MAX_CHAT_LENGTH, "Flag dropped %s", areas[bot_area].named);
             break;
          default:
             break;
@@ -3602,22 +3602,22 @@ static void BotEnemyCarrierAlert(bot_t *pBot) {
    if (found_area != -1) {
       switch (pBot->current_team) {
       case 0:
-         _snprintf(newJob->message, MAX_CHAT_LENGTH, "Enemy carrier %s", areas[found_area].namea);
+         snprintf(newJob->message, MAX_CHAT_LENGTH, "Enemy carrier %s", areas[found_area].namea);
          break;
       case 1:
-         _snprintf(newJob->message, MAX_CHAT_LENGTH, "Enemy carrier %s", areas[found_area].nameb);
+         snprintf(newJob->message, MAX_CHAT_LENGTH, "Enemy carrier %s", areas[found_area].nameb);
          break;
       case 2:
-         _snprintf(newJob->message, MAX_CHAT_LENGTH, "Enemy carrier %s", areas[found_area].namec);
+         snprintf(newJob->message, MAX_CHAT_LENGTH, "Enemy carrier %s", areas[found_area].namec);
          break;
       case 3:
-         _snprintf(newJob->message, MAX_CHAT_LENGTH, "Enemy carrier %s", areas[found_area].named);
+         snprintf(newJob->message, MAX_CHAT_LENGTH, "Enemy carrier %s", areas[found_area].named);
          break;
       default:
          break;
       }
 
-      newJob->message[MAX_CHAT_LENGTH - 1] = '\0'; // not all versions of _snprintf terminate the string
+      newJob->message[MAX_CHAT_LENGTH - 1] = '\0'; // not all versions of snprintf terminate the string
       SubmitNewJob(pBot, JOB_REPORT, newJob);
       pBot->f_roleSayDelay = pBot->f_think_time + 30.0f;
 
@@ -3713,7 +3713,7 @@ void BotThink(bot_t *pBot) {
    //{ FILE *fp=UTIL_OpenFoxbotLog(); fprintf(fp,"%d\n",pBot->pEdict->v.flags); fclose(fp); }
 
    // if the bot is dead, randomly press fire to respawn...
-   if (pBot->pEdict->v.deadflag != DEAD_NO && pBot->pEdict->v.deadflag != 5 || pBot->pEdict->v.health < 1 // not a spy feigning death
+   if ((pBot->pEdict->v.deadflag != DEAD_NO && pBot->pEdict->v.deadflag != 5) || pBot->pEdict->v.health < 1 // not a spy feigning death
        || pBot->pEdict->v.playerclass == 0) {
       if (pBot->bot_start2 > 0 && pBot->bot_start3 == 0)
          pBot->bot_start3 = pBot->f_think_time;
@@ -4414,9 +4414,9 @@ static void BotSpectatorDebug(bot_t *pBot) {
 
       // show the bots name, skill, and role
       if (pBot->mission == ROLE_DEFENDER)
-         _snprintf(msg, 72, "%s, skill %d, Defending\n", pBot->name, pBot->bot_skill);
+         snprintf(msg, 72, "%s, skill %d, Defending\n", pBot->name, pBot->bot_skill);
       else
-         _snprintf(msg, 72, "%s, skill %d, Attacking\n", pBot->name, pBot->bot_skill);
+         snprintf(msg, 72, "%s, skill %d, Attacking\n", pBot->name, pBot->bot_skill);
 
       msg[71] = '\0';
 
@@ -4425,7 +4425,7 @@ static void BotSpectatorDebug(bot_t *pBot) {
          /*	if(pBot->currentJob > -1)
                          {
                                          char msgBuffer[128] = "";
-                                         _snprintf(msgBuffer, 128, "CURRENT JOB - phase %d runtime %f\n",
+                                         snprintf(msgBuffer, 128, "CURRENT JOB - phase %d runtime %f\n",
                                                          pBot->job[pBot->currentJob].phase, pBot->f_think_time -
             pBot->job[pBot->currentJob].f_bufferedTime);
                                          strncat(msg, msgBuffer, 255 - strlen(msg));
@@ -4440,7 +4440,7 @@ static void BotSpectatorDebug(bot_t *pBot) {
                // indicate the current job and how long it's been running
                if (pBot->currentJob == i) {
                   char msgBuffer[128] = "";
-                  _snprintf(msgBuffer, 128, " [phase %d, buffered %f]\n", pBot->job[pBot->currentJob].phase, pBot->f_think_time - pBot->job[pBot->currentJob].f_bufferedTime);
+                  snprintf(msgBuffer, 128, " [phase %d, buffered %f]\n", pBot->job[pBot->currentJob].phase, pBot->f_think_time - pBot->job[pBot->currentJob].f_bufferedTime);
                   strncat(msg, msgBuffer, 255 - strlen(msg));
                } else
                   strncat(msg, "\n", 255 - strlen(msg)); // add a newline on the end
@@ -4466,16 +4466,16 @@ static void BotSpectatorDebug(bot_t *pBot) {
       } else if (spectate_debug == 3) // show the bots personality traits
       {
          char msgBuffer[128] = "";
-         _snprintf(msgBuffer, 128, "aggression %d\nhealth threshold%d\ncamper %d", pBot->trait.aggression, pBot->trait.health, pBot->trait.camper);
+         snprintf(msgBuffer, 128, "aggression %d\nhealth threshold%d\ncamper %d", pBot->trait.aggression, pBot->trait.health, pBot->trait.camper);
          strncat(msg, msgBuffer, 255 - strlen(msg));
       } else // some other spectate_debug mode - show navigation info
       {
          char msgBuffer[128] = "";
-         _snprintf(msgBuffer, 128, "waypoint deadline %f\nnavDistance %f\nf_navProblemStartTime %f\n", pBot->f_current_wp_deadline - pBot->f_think_time, (waypoints[pBot->current_wp].origin - pBot->pEdict->v.origin).Length(),
+         snprintf(msgBuffer, 128, "waypoint deadline %f\nnavDistance %f\nf_navProblemStartTime %f\n", pBot->f_current_wp_deadline - pBot->f_think_time, (waypoints[pBot->current_wp].origin - pBot->pEdict->v.origin).Length(),
                    pBot->f_think_time - pBot->f_navProblemStartTime);
          strncat(msg, msgBuffer, 255 - strlen(msg));
 
-         _snprintf(msgBuffer, 128, "velocity length 2D %f\n velocity Z %f\n", pBot->pEdict->v.velocity.Length2D(), pBot->pEdict->v.velocity.z);
+         snprintf(msgBuffer, 128, "velocity length 2D %f\n velocity Z %f\n", pBot->pEdict->v.velocity.Length2D(), pBot->pEdict->v.velocity.z);
          strncat(msg, msgBuffer, 255 - strlen(msg));
       }
 

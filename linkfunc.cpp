@@ -32,9 +32,7 @@
 
 #include "bot.h"
 
-#ifdef __BORLANDC__
-extern HINSTANCE _h_Library;
-#elif _WIN32
+#ifdef _WIN32
 extern HINSTANCE h_Library;
 #else
 extern void *h_Library;

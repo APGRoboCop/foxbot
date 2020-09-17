@@ -236,9 +236,9 @@ void UTIL_HostSay(edict_t *pEntity, const int teamonly, char *message) {
 
    // turn on color set 2  (color on,  no sound)
    if (teamonly)
-      _snprintf(text, 127, "%c(TEAM) %s: %s\n", 2, STRING(pEntity->v.netname), message);
+      snprintf(text, 127, "%c(TEAM) %s: %s\n", 2, STRING(pEntity->v.netname), message);
    else
-      _snprintf(text, 127, "%c%s: %s\n", 2, STRING(pEntity->v.netname), message);
+      snprintf(text, 127, "%c%s: %s\n", 2, STRING(pEntity->v.netname), message);
 
    text[127] = '\0';
 

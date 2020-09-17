@@ -47,10 +47,6 @@
 #include "bot_weapons.h"
 
 
-#ifdef WIN32
-#define itoa _itoa
-#endif
-
 extern bot_t bots[32];
 extern bot_weapon_t weapon_defs[MAX_WEAPONS];
 
@@ -520,7 +516,7 @@ int assess_JobFeignAmbush(const bot_t *pBot, const job_struct &r_job) {
       return PRIORITY_NONE;
 
    // check if the bot is in an unsuitable location
-   if (pBot->current_wp > -1 && waypoints[pBot->current_wp].flags & W_FL_LIFT || pBot->pEdict->v.waterlevel != WL_NOT_IN_WATER)
+   if ((pBot->current_wp > -1 && waypoints[pBot->current_wp].flags & W_FL_LIFT) || pBot->pEdict->v.waterlevel != WL_NOT_IN_WATER)
       return PRIORITY_NONE;
 
    return jl[JOB_FEIGN_AMBUSH].basePriority;
@@ -545,7 +541,7 @@ int assess_JobSnipe(const bot_t *pBot, const job_struct &r_job) {
 int assess_JobGuardWaypoint(const bot_t *pBot, const job_struct &r_job) {
    // recommend the job be removed if it is invalid
    if (pBot->mission != ROLE_DEFENDER ||
-       pBot->pEdict->v.playerclass != TFC_CLASS_SOLDIER && pBot->pEdict->v.playerclass != TFC_CLASS_HWGUY && pBot->pEdict->v.playerclass != TFC_CLASS_PYRO && pBot->pEdict->v.playerclass != TFC_CLASS_DEMOMAN)
+       (pBot->pEdict->v.playerclass != TFC_CLASS_SOLDIER && pBot->pEdict->v.playerclass != TFC_CLASS_HWGUY && pBot->pEdict->v.playerclass != TFC_CLASS_PYRO && pBot->pEdict->v.playerclass != TFC_CLASS_DEMOMAN))
       return PRIORITY_NONE;
 
    // check the waypoints validity
@@ -636,7 +632,7 @@ int assess_JobHarrassDefense(const bot_t *pBot, const job_struct &r_job) {
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobRocketJump(const bot_t *pBot, const job_struct &r_job) {
    // recommend the job be removed if it is invalid
-   if (r_job.phase == 0 && r_job.f_bufferedTime + 0.5 < pBot->f_think_time                                     // got enough rockets?
+   if ((r_job.phase == 0 && r_job.f_bufferedTime + 0.5 < pBot->f_think_time)                                    // got enough rockets?
        || (r_job.f_bufferedTime < pBot->f_killed_time || pBot->m_rgAmmo[weapon_defs[TF_WEAPON_RPG].iAmmo1] < 4 // got enough rockets?
            ) ||
        pBot->pEdict->v.waterlevel > WL_FEET_IN_WATER || r_job.waypoint < 0) {
@@ -652,7 +648,7 @@ int assess_JobRocketJump(const bot_t *pBot, const job_struct &r_job) {
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobConcussionJump(const bot_t *pBot, const job_struct &r_job) {
    // recommend the job be removed if it is invalid
-   if (r_job.phase == 0 && r_job.f_bufferedTime + 0.5 < pBot->f_think_time // took too long
+   if ((r_job.phase == 0 && r_job.f_bufferedTime + 0.5 < pBot->f_think_time) // took too long
        || (r_job.f_bufferedTime < pBot->f_killed_time || r_job.f_bufferedTime + 10.0 < pBot->f_think_time
            // took too long
            )) {
@@ -671,7 +667,7 @@ int assess_JobConcussionJump(const bot_t *pBot, const job_struct &r_job) {
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobDetpackWaypoint(const bot_t *pBot, const job_struct &r_job) {
    // recommend the job be removed if it is invalid
-   if (r_job.phase == 0 && pBot->detpack != 2 || pBot->pEdict->v.playerclass != TFC_CLASS_DEMOMAN)
+   if ((r_job.phase == 0 && pBot->detpack != 2) || pBot->pEdict->v.playerclass != TFC_CLASS_DEMOMAN)
       return PRIORITY_NONE;
 
    // check the waypoints validity
@@ -817,8 +813,8 @@ int assess_JobAttackTeleport(const bot_t *pBot, const job_struct &r_job) {
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobSeekBackup(const bot_t *pBot, const job_struct &r_job) {
    // recommend the job be removed if it is invalid
-   if (r_job.phase == 0 // abort if the job has been asleep in the buffer for too long
-           && r_job.f_bufferedTime + 4.0 < pBot->f_think_time ||
+   if ((r_job.phase == 0 // abort if the job has been asleep in the buffer for too long
+           && r_job.f_bufferedTime + 4.0 < pBot->f_think_time) ||
        r_job.f_bufferedTime < pBot->f_killed_time)
       return PRIORITY_NONE;
 
@@ -834,8 +830,8 @@ int assess_JobSeekBackup(const bot_t *pBot, const job_struct &r_job) {
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobAvoidEnemy(const bot_t *pBot, const job_struct &r_job) {
    // recommend the job be removed if it is invalid
-   if (r_job.phase == 0 // abort if the job has been asleep in the buffer for too long
-           && r_job.f_bufferedTime + 4.0 < pBot->f_think_time ||
+   if ((r_job.phase == 0 // abort if the job has been asleep in the buffer for too long
+           && r_job.f_bufferedTime + 4.0 < pBot->f_think_time) ||
        r_job.f_bufferedTime < pBot->f_killed_time)
       return PRIORITY_NONE;
 
@@ -852,8 +848,8 @@ int assess_JobAvoidEnemy(const bot_t *pBot, const job_struct &r_job) {
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobAvoidAreaDamage(const bot_t *pBot, const job_struct &r_job) {
    // recommend the job be removed if it is invalid
-   if (r_job.phase == 0 // abort if the job has been asleep in the buffer for too long
-           && r_job.f_bufferedTime + 2.0 < pBot->f_think_time ||
+   if ((r_job.phase == 0 // abort if the job has been asleep in the buffer for too long
+           && r_job.f_bufferedTime + 2.0 < pBot->f_think_time) ||
        r_job.f_bufferedTime < pBot->f_killed_time)
       return PRIORITY_NONE;
 
@@ -878,7 +874,7 @@ int assess_JobInfectedAttack(const bot_t *pBot, const job_struct &r_job) {
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobBinGrenade(const bot_t *pBot, const job_struct &r_job) {
    // recommend the job be removed if it is invalid
-   if (r_job.phase == 0 && pBot->nadePrimed == FALSE || pBot->enemy.ptr != NULL || r_job.f_bufferedTime < pBot->f_killed_time || r_job.f_bufferedTime + 5.0 < pBot->f_think_time) {
+   if ((r_job.phase == 0 && pBot->nadePrimed == FALSE) || pBot->enemy.ptr != NULL || r_job.f_bufferedTime < pBot->f_killed_time || r_job.f_bufferedTime + 5.0 < pBot->f_think_time) {
       return PRIORITY_NONE;
    }
 

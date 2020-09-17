@@ -29,20 +29,13 @@
 #include <enginecallback.h>
 #include <entity_state.h>
 
-//#include <osdep.h>
+#include <osdep.h>
 
-//#ifndef __linux__ //Fix by Globoss - [APG]RoboCop[CL]
-//#include <tchar.h>
-//#endif
 
 #include "bot.h"
 #include "bot_func.h"
 #include "bot_weapons.h"
 #include "waypoint.h"
-
-#ifdef WIN32
-#define stricmp _stricmp
-#endif
 
 // meta mod includes
 #include <dllapi.h>
@@ -570,7 +563,7 @@ static void BotBalanceTeams_Casual(void) {
          //		bots[i].pEdict->v.team, bots[i].bot_team);
 
          char msg[16];
-         _snprintf(msg, 16, "%d", smallest_team);
+         snprintf(msg, 16, "%d", smallest_team);
          msg[15] = '\0';
          //	FakeClientCommand(bots[i].pEdict, "jointeam", msg, NULL);
          bots[i].bot_team = smallest_team; // choose your team
@@ -593,7 +586,7 @@ static bool BotBalanceTeams(const int a, const int b) {
          // is this slot used?
          if (bots[i].is_used && bots[i].pEdict->v.team == a) {
             char msg[32];
-            _snprintf(msg, 32, "%d", b);
+            snprintf(msg, 32, "%d", b);
             //	FakeClientCommand(bots[i].pEdict, "jointeam", msg, NULL);
             bots[i].bot_team = b;       // choose your team
             bots[i].not_started = TRUE; // join the team, pick a class
@@ -632,7 +625,7 @@ static bool BBotBalanceTeams(const int a, const int b) {
          // is this slot used?
          if (bots[i].is_used && bots[i].pEdict->v.team == a) {
             char msg[32];
-            _snprintf(msg, 32, "%d", b);
+            snprintf(msg, 32, "%d", b);
             //	FakeClientCommand(bots[i].pEdict, "jointeam", msg, NULL);
             bots[i].bot_team = b;       // choose your team
             bots[i].not_started = TRUE; // join the team, pick a class
@@ -652,7 +645,7 @@ static bool HBalanceTeams(const int a, const int b) {
    if (playersPerTeam[a - 1] - 1 > playersPerTeam[b - 1] && (max_team_players[b - 1] > playersPerTeam[b - 1] || max_team_players[b - 1] == 0) && is_team[b - 1]) {
       for (int i = 1; i <= 32; i++) {
          bool not_bot = TRUE;
-         for (int j = 1; j <= 32; j++) {
+         for (int j = 31; j >= 0; j--) {
             if (bots[j].is_used && bots[j].pEdict == INDEXENT(i))
                not_bot = FALSE;
          }
@@ -678,7 +671,7 @@ void GameDLLInit(void) {
       clients[i] = NULL;
 
    // initialize the bots array of structures...
-   memset(bots, 0, sizeof bots);
+   bzero(bots, sizeof bots);
 
    // read the bot names from the bot name file
    BotNameInit();
@@ -689,7 +682,7 @@ void GameDLLInit(void) {
    if (!mr_meta)
       (*other_gFunctionTable.pfnGameInit)();
    else
-      SET_META_RESULT(MRES_HANDLED);
+      SET_META_RESULT(MRES_IGNORED);
 }
 
 // Constructor for the chatClass class
@@ -817,7 +810,7 @@ void chatClass::pickRandomChatString(char *msg, const size_t maxLength, const in
    // set up the message string
    // is "%s" in the text?
    if (playerName != NULL && strstr(this->strings[chatSection][randomIndex], "%s") != NULL) {
-      _snprintf(msg, maxLength, this->strings[chatSection][randomIndex], playerName);
+      snprintf(msg, maxLength, this->strings[chatSection][randomIndex], playerName);
    } else
       printf("%s", msg);
 
@@ -968,13 +961,13 @@ void DispatchThink(edict_t *pent) {
          // Try putting together a string for more information in botcam
          char msg[255];
          if (pBot->mission == ROLE_ATTACKER) {
-            _snprintf(msg, 254, "BotCam: Role:Attacker\n ammoStatus:%d deathsTillClassChange:%d trait.health:%d", pBot->ammoStatus, pBot->deathsTillClassChange, pBot->trait.health);
+            snprintf(msg, 254, "BotCam: Role:Attacker\n ammoStatus:%d deathsTillClassChange:%d trait.health:%d", pBot->ammoStatus, pBot->deathsTillClassChange, pBot->trait.health);
             WRITE_STRING(msg);
          } else if (pBot->mission == ROLE_DEFENDER) {
-            _snprintf(msg, 254, "BotCam: Role:Defender\n ammoStatus:%d deathsTillClassChange:%d trait.health:%d", pBot->ammoStatus, pBot->deathsTillClassChange, pBot->trait.health);
+            snprintf(msg, 254, "BotCam: Role:Defender\n ammoStatus:%d deathsTillClassChange:%d trait.health:%d", pBot->ammoStatus, pBot->deathsTillClassChange, pBot->trait.health);
             WRITE_STRING(msg);
          } else {
-            _snprintf(msg, 254, "BotCam: Role:None\n ammoStatus:%d deathsTillClassChange:%d trait.health:%d", pBot->ammoStatus, pBot->deathsTillClassChange, pBot->trait.health);
+            snprintf(msg, 254, "BotCam: Role:None\n ammoStatus:%d deathsTillClassChange:%d trait.health:%d", pBot->ammoStatus, pBot->deathsTillClassChange, pBot->trait.health);
             WRITE_STRING(msg);
          }
          MESSAGE_END();
@@ -1091,7 +1084,7 @@ void DispatchThink(edict_t *pent) {
             float veloff = vel.x + vel.y + vel.z;
             veloff = veloff * (vidsize / distance) * 10;
 
-            _snprintf(msg, 510, "Vis %.1f\nAmb %d %d\nSz %.1f\nveloff %.1f", p_vis, amb, d, sz, veloff);
+            snprintf(msg, 510, "Vis %.1f\nAmb %d %d\nSz %.1f\nveloff %.1f", p_vis, amb, d, sz, veloff);
 
             MESSAGE_BEGIN(MSG_ONE, SVC_TEMPENTITY, NULL, pent->v.owner);
             WRITE_BYTE(TE_TEXTMESSAGE);
@@ -1271,7 +1264,7 @@ BOOL ClientConnect(edict_t *pEntity, const char *pszName, const char *pszAddress
          // VER_MINOR, VER_BUILD);
          // sprintf(msg, "[FOXBOT] This server is running FoxBot (v%d.%d), Get it at foxbot.net!\n", VER_MAJOR,
          // VER_MINOR);
-         _snprintf(msg, 254, "[FOXBOT] This server is running FoxBot (v%d.%d), get it at www.apg-clan.org\n", VER_MAJOR, VER_MINOR);
+         snprintf(msg, 254, "[FOXBOT] This server is running FoxBot (v%d.%d), get it at www.apg-clan.org\n", VER_MAJOR, VER_MINOR);
          CLIENT_PRINTF(pEntity, print_console, msg);
       }
 
@@ -1315,7 +1308,7 @@ BOOL ClientConnect_Post(edict_t *pEntity, const char *pszName, const char *pszAd
       // VER_BUILD);
       // sprintf(msg, "[FOXBOT] This server is running FoxBot (v%d.%d), Get it at foxbot.net!\n", VER_MAJOR,
       // VER_MINOR);
-      _snprintf(msg, 254, "[FOXBOT] This server is running FoxBot (v%d.%d), get it at www.apg-clan.org\n", VER_MAJOR, VER_MINOR);
+      snprintf(msg, 254, "[FOXBOT] This server is running FoxBot (v%d.%d), get it at www.apg-clan.org\n", VER_MAJOR, VER_MINOR);
       CLIENT_PRINTF(pEntity, print_console, msg);
    }
    RETURN_META_VALUE(MRES_HANDLED, TRUE);
@@ -1628,7 +1621,7 @@ void ClientCommand(edict_t *pEntity) {
                index = 0;
 
                while (index < 32) {
-                  if (bots[index].is_used && stricmp(bots[index].name, botname) == 0)
+                  if (bots[index].is_used && strcasecmp(bots[index].name, botname) == 0)
                      break;
                   else
                      index++;
@@ -1803,7 +1796,7 @@ void ClientCommand(edict_t *pEntity) {
             if (yellow_av[i])
                yellow_state = 1;
 
-            _snprintf(msg, 250, "POINT:%d, AVAILABILITY: Blue %d Red %d Yellow %d Green %d\n", i + 1, blue_state, red_state, yellow_state, green_state);
+            snprintf(msg, 250, "POINT:%d, AVAILABILITY: Blue %d Red %d Yellow %d Green %d\n", i + 1, blue_state, red_state, yellow_state, green_state);
             msg[251] = '\0';
             ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
          }
@@ -2424,8 +2417,10 @@ void StartFrame(void) {
    // Reset pipeCheck frame counter.
    if (pipeCheckFrame < 0)
       pipeCheckFrame = 20;
-
+   printf ("FRAME1!");
    if (gpGlobals->deathmatch) {
+
+      printf ("FRAME!");
       edict_t *pPlayer;
       static float check_server_cmd;
       check_server_cmd = gpGlobals->time;
@@ -2545,7 +2540,7 @@ void StartFrame(void) {
 
          for (i = 0; i < 32; i++) {
             if (bots[i].is_used) {
-               memset(&cd, 0, sizeof cd);
+               bzero (&cd,  sizeof cd);
 
                MDLL_UpdateClientData(bots[i].pEdict, 1, &cd);
 
@@ -2565,7 +2560,7 @@ void StartFrame(void) {
                       {  // starto!
                                       char msg[128];
 
-                                      _snprintf(msg, 128, "check_time %f, time %f\nmin_bots %d, max_bots %d",
+                                      snprintf(msg, 128, "check_time %f, time %f\nmin_bots %d, max_bots %d",
                                                       bot_check_time, gpGlobals->time, min_bots, max_bots);
 
                                       msg[127] = '\0';
@@ -3067,7 +3062,7 @@ void StartFrame(void) {
          // do bot max_bot kick here...
          // if there are currently more than the minimum number of bots running
          // then kick one of the bots off the server...
-         if ((count > interested_bots && bot_total_varies || count > max_bots) && max_bots != -1) {
+         if (((count > interested_bots && bot_total_varies) || count > max_bots) && max_bots != -1) {
             // count the number of bots present
             int bot_count = 0;
             for (i = 0; i <= 31; i++) {
@@ -4995,7 +4990,7 @@ void StartFrame(void) {
 
 gamedll_funcs_t gGameDLLFunc;
 
-C_DLLEXPORT int GetEntityAPI(DLL_FUNCTIONS *pFunctionTable, const int interfaceVersion) {
+C_DLLEXPORT int GetEntityAPI(DLL_FUNCTIONS *pFunctionTable, int interfaceVersion) {
    // check if engine's pointer is valid and version is correct...
 
    memset(pFunctionTable, 0, sizeof(DLL_FUNCTIONS));
@@ -5012,15 +5007,15 @@ C_DLLEXPORT int GetEntityAPI(DLL_FUNCTIONS *pFunctionTable, const int interfaceV
       memcpy(pFunctionTable, &other_gFunctionTable, sizeof(DLL_FUNCTIONS));
    }
 
+   pFunctionTable->pfnStartFrame = StartFrame;
    pFunctionTable->pfnGameInit = GameDLLInit;
    pFunctionTable->pfnSpawn = DispatchSpawn;
    pFunctionTable->pfnThink = DispatchThink;
-   pFunctionTable->pfnClientConnect = ClientConnect;
    pFunctionTable->pfnKeyValue = DispatchKeyValue;
    pFunctionTable->pfnClientConnect = ClientConnect;
    pFunctionTable->pfnClientDisconnect = ClientDisconnect;
-   pFunctionTable->pfnStartFrame = StartFrame;
    pFunctionTable->pfnClientCommand = ClientCommand;
+
 
    return TRUE;
 }
@@ -5058,13 +5053,13 @@ void FakeClientCommand(edict_t *pBot, char *arg1, char *arg2, char *arg3) {
    }
 
    if (arg2 == NULL || *arg2 == 0) {
-      length = _snprintf(&g_argv[0], 250, "%s", arg1);
+      length = snprintf(&g_argv[0], 250, "%s", arg1);
       fake_arg_count = 1;
    } else if (arg3 == NULL || *arg3 == 0) {
-      length = _snprintf(&g_argv[0], 250, "%s %s", arg1, arg2);
+      length = snprintf(&g_argv[0], 250, "%s %s", arg1, arg2);
       fake_arg_count = 2;
    } else {
-      length = _snprintf(&g_argv[0], 250, "%s %s %s", arg1, arg2, arg3);
+      length = snprintf(&g_argv[0], 250, "%s %s %s", arg1, arg2, arg3);
       fake_arg_count = 3;
    }
    isFakeClientCommand = 1;
@@ -5849,7 +5844,7 @@ static void DisplayBotInfo() {
    if (IS_DEDICATED_SERVER()) {
       // tell the console all the bot vars
 
-      _snprintf(msg2, 511, "--FoxBot Loaded--\n--Visit 'www.apg-clan.org' for updates and info--\n");
+      snprintf(msg2, 511, "--FoxBot Loaded--\n--Visit 'www.apg-clan.org' for updates and info--\n");
       msg2[511] = '\0'; // just in case
       printf("%s", msg2);
 
@@ -6085,7 +6080,7 @@ static void changeBotSetting(const char *settingName, int *setting, const char *
       } else {
          // report that a bad setting was requested
 
-         _snprintf(msg, 128, "%s%s should be set from %d to %d\n", configMessage, settingName, minValue, maxValue);
+         snprintf(msg, 128, "%s%s should be set from %d to %d\n", configMessage, settingName, minValue, maxValue);
          msg[127] = '\0';
 
          if (settingSource == SETTING_SOURCE_CLIENT_COMMAND)
@@ -6103,10 +6098,10 @@ static void changeBotSetting(const char *settingName, int *setting, const char *
 
    // report if the setting was actually changed or not
    if (settingWasChanged) {
-      _snprintf(msg, 128, "%s%s has been set to %d\n", configMessage, settingName, *setting);
+      snprintf(msg, 128, "%s%s has been set to %d\n", configMessage, settingName, *setting);
       msg[127] = '\0';
    } else {
-      _snprintf(msg, 128, "%s%s is currently set to %d\n", configMessage, settingName, *setting);
+      snprintf(msg, 128, "%s%s is currently set to %d\n", configMessage, settingName, *setting);
       msg[127] = '\0';
    }
 
@@ -6138,7 +6133,7 @@ static void kickBots(int totalToKick, const int team) {
           && !FNullEnt(bots[index].pEdict) && (team < 0 || bots[index].bot_team == team)) {
          char cmd[80];
 
-         _snprintf(cmd, 80, "kick \"%s\"\n", bots[index].name);
+         snprintf(cmd, 80, "kick \"%s\"\n", bots[index].name);
          cmd[79] = '\0';
          SERVER_COMMAND(cmd); // kick the bot using (kick "name")
          ClearKickedBotsData(index, TRUE);
@@ -6173,7 +6168,7 @@ static void kickRandomBot(void) {
    if (index > -1 && index < MAX_BOTS && bots[index].is_used && !FNullEnt(bots[index].pEdict)) {
       char cmd[80];
 
-      _snprintf(cmd, 80, "kick \"%s\"\n", bots[index].name);
+      snprintf(cmd, 80, "kick \"%s\"\n", bots[index].name);
       cmd[79] = '\0';
       SERVER_COMMAND(cmd); // kick the bot using (kick "name")
       ClearKickedBotsData(index, TRUE);

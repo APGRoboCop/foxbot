@@ -29,7 +29,7 @@
 #define WAYPOINT_H
 
 #ifdef __linux__
-#include <climits>
+#include <limits.h>
 #endif
 
 // standard variable sizes, useful for the waypoint code because the waypoint files

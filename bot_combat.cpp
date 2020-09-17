@@ -319,13 +319,13 @@ void BotEnemyCheck(bot_t *pBot) {
             if (area != -1) {
                char msg[MAX_CHAT_LENGTH];
                if (pBot->current_team == 0)
-                  _snprintf(msg, MAX_CHAT_LENGTH, "Sentry Down %s", areas[area].namea);
+                  snprintf(msg, MAX_CHAT_LENGTH, "Sentry Down %s", areas[area].namea);
                else if (pBot->current_team == 1)
-                  _snprintf(msg, MAX_CHAT_LENGTH, "Sentry Down %s", areas[area].nameb);
+                  snprintf(msg, MAX_CHAT_LENGTH, "Sentry Down %s", areas[area].nameb);
                else if (pBot->current_team == 2)
-                  _snprintf(msg, MAX_CHAT_LENGTH, "Sentry Down %s", areas[area].namec);
+                  snprintf(msg, MAX_CHAT_LENGTH, "Sentry Down %s", areas[area].namec);
                else if (pBot->current_team == 3)
-                  _snprintf(msg, MAX_CHAT_LENGTH, "Sentry Down %s", areas[area].named);
+                  snprintf(msg, MAX_CHAT_LENGTH, "Sentry Down %s", areas[area].named);
                msg[MAX_CHAT_LENGTH - 1] = '\0';
 
                bool destruction_reported = FALSE;
@@ -552,7 +552,7 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
 
    if (mod_id == TFC_DLL) {
       // get medics and engineers to heal/repair teammates
-      if (pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER && pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > 90 || pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC) {
+      if ((pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER && pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > 90) || pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC) {
          nearestDistance = 1000.0;
          edict_t *pPlayer;
          int player_team;
@@ -942,7 +942,7 @@ static bool BotSpyDetectCheck(bot_t *pBot, edict_t *pNewEnemy) {
       return TRUE;
    }
    // the bot has decided to target it's suspected Spy
-   else if (pNewEnemy == pBot->suspectedSpy && pBot->f_suspectSpyTime < pBot->f_think_time || pBot->current_team != UTIL_GetTeamColor(pNewEnemy) && pNewEnemy->v.deadflag != 5) {
+   else if ((pNewEnemy == pBot->suspectedSpy && pBot->f_suspectSpyTime < pBot->f_think_time) || (pBot->current_team != UTIL_GetTeamColor(pNewEnemy) && pNewEnemy->v.deadflag != 5)) {
       // keep the memory of this experience fresh
       pBot->f_suspectSpyTime = pBot->f_think_time - 0.5f;
 
@@ -983,16 +983,16 @@ static void BotSGSpotted(bot_t *pBot, edict_t *sg) {
    if (area != -1) {
       switch (pBot->current_team) {
       case 0:
-         _snprintf(newJob->message, MAX_CHAT_LENGTH, "Sentry Spotted %s", areas[area].namea);
+         snprintf(newJob->message, MAX_CHAT_LENGTH, "Sentry Spotted %s", areas[area].namea);
          break;
       case 1:
-         _snprintf(newJob->message, MAX_CHAT_LENGTH, "Sentry Spotted %s", areas[area].nameb);
+         snprintf(newJob->message, MAX_CHAT_LENGTH, "Sentry Spotted %s", areas[area].nameb);
          break;
       case 2:
-         _snprintf(newJob->message, MAX_CHAT_LENGTH, "Sentry Spotted %s", areas[area].namec);
+         snprintf(newJob->message, MAX_CHAT_LENGTH, "Sentry Spotted %s", areas[area].namec);
          break;
       case 3:
-         _snprintf(newJob->message, MAX_CHAT_LENGTH, "Sentry Spotted %s", areas[area].named);
+         snprintf(newJob->message, MAX_CHAT_LENGTH, "Sentry Spotted %s", areas[area].named);
          break;
       default:;
       }
@@ -1372,7 +1372,7 @@ static Vector BotBodyTarget(edict_t *pBotEnemy, bot_t *pBot) {
    dist2d += static_cast<float>(random_long(-pBot->bot_skill, pBot->bot_skill) * 10);
 
    // lead for rocket and grenade launcher type weapons
-   if (!pBot->tossNade && (pBot->current_weapon.iId == TF_WEAPON_RPG || pBot->current_weapon.iId == TF_WEAPON_IC || pBot->current_weapon.iId == TF_WEAPON_GL) || pBot->current_weapon.iId == TF_WEAPON_PL) {
+   if (!pBot->tossNade && ((pBot->current_weapon.iId == TF_WEAPON_RPG || pBot->current_weapon.iId == TF_WEAPON_IC || pBot->current_weapon.iId == TF_WEAPON_GL) || pBot->current_weapon.iId == TF_WEAPON_PL)) {
       BotLeadTarget(pBotEnemy, pBot, 725, d_x, d_y, d_z);
 
       // arc grenade/pipe launcher

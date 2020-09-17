@@ -766,7 +766,7 @@ void BotClient_Valve_ScreenFade(void *p, const int bot_index) {
    static int state = 0; // current state machine state
    static int duration;
    static int hold_time;
-   static int fade_flags;
+   //static int fade_flags;
 
    if (state == 0) {
       state++;
@@ -776,7 +776,7 @@ void BotClient_Valve_ScreenFade(void *p, const int bot_index) {
       hold_time = *static_cast<int *>(p);
    } else if (state == 2) {
       state++;
-      fade_flags = *static_cast<int *>(p);
+      //fade_flags = *static_cast<int *>(p);
    } else if (state == 6) {
       state = 0;
 
@@ -942,6 +942,7 @@ void BotClient_TFC_DetPack(void *p, const int bot_index) {
 }
 
 void BotClient_Menu(void *p, int bot_index) {
+#if 0
    static int val, s;
    if (g_state == 0) {
       // g_state++;
@@ -965,6 +966,7 @@ void BotClient_Menu(void *p, int bot_index) {
                                                     FakeClientCommand(bots[bot_index].pEdict,"menuselect",msg,NULL);
                                     }
                    }*/
+#endif
    g_state++;
 }
 

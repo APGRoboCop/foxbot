@@ -32,12 +32,7 @@
 #include "bot.h"
 #include "engine.h"
 
-#ifdef WIN32
-#define strcmpi _strcmpi
-#endif
-
 // meta mod stuff
-#include <h_export.h> // me
 #include <meta_api.h>
 
 extern bool mr_meta;
@@ -79,7 +74,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, const DWORD fdwReason, LPVOID lpvReserve
 #pragma comment(linker, "/SECTION:.data,RW")
 #endif
 
-void WINAPI GiveFnptrsToDll(enginefuncs_t *pengfuncsFromEngine, globalvars_t *pGlobals) {
+C_DLLEXPORT void WINAPI GiveFnptrsToDll(enginefuncs_t *pengfuncsFromEngine, globalvars_t *pGlobals) {
    memcpy(&g_engfuncs, pengfuncsFromEngine, sizeof(enginefuncs_t));
    gpGlobals = pGlobals;
 
@@ -88,11 +83,6 @@ void WINAPI GiveFnptrsToDll(enginefuncs_t *pengfuncsFromEngine, globalvars_t *pG
    }
    char game_dir[256];
    char mod_name[32];
-
-   // get the engine functions from the engine...
-
-   memcpy(&g_engfuncs, pengfuncsFromEngine, sizeof(enginefuncs_t));
-   gpGlobals = pGlobals;
 
    // find the directory name of the currently running MOD...
    (*g_engfuncs.pfnGetGameDir)(game_dir);
@@ -112,10 +102,10 @@ void WINAPI GiveFnptrsToDll(enginefuncs_t *pengfuncsFromEngine, globalvars_t *pG
    }
    strcpy(mod_name, &game_dir[pos]);
 
-   if (strcmpi(mod_name, "tfc") == 0) {
+   if (strcasecmp(mod_name, "tfc") == 0) {
       mod_id = TFC_DLL;
 #ifndef __linux__
-      h_Library = LoadLibrary("tfc\\dlls\\tfc.dll");
+      h_Library = LoadLibraryA("tfc\\dlls\\tfc.dll");
 #else
       h_Library = dlopen("tfc/dlls/tfc.so", RTLD_NOW);
 #endif
@@ -125,6 +115,7 @@ void WINAPI GiveFnptrsToDll(enginefuncs_t *pengfuncsFromEngine, globalvars_t *pG
       // Directory error or Unsupported MOD!
 
       ALERT(at_error, "FoXBot - MOD dll not found (or unsupported MOD)!");
+      
    }
    other_GetEntityAPI = (GETENTITYAPI)GetProcAddress(h_Library, "GetEntityAPI");
 
@@ -136,13 +127,6 @@ void WINAPI GiveFnptrsToDll(enginefuncs_t *pengfuncsFromEngine, globalvars_t *pG
 
    other_GetNewDLLFunctions = (GETNEWDLLFUNCTIONS)GetProcAddress(h_Library, "GetNewDLLFunctions");
 
-   //	if (other_GetNewDLLFunctions == NULL)
-   //	{
-   //		// Can't find GetNewDLLFunctions!
-   //
-   //		ALERT( at_error, "FoXBot - Can't get MOD's GetNewDLLFunctions!" );
-   //	}
-
    other_GiveFnptrsToDll = (GIVEFNPTRSTODLL)GetProcAddress(h_Library, "GiveFnptrsToDll");
 
    if (other_GiveFnptrsToDll == NULL) {
@@ -152,7 +136,38 @@ void WINAPI GiveFnptrsToDll(enginefuncs_t *pengfuncsFromEngine, globalvars_t *pG
    }
 
    GetEngineFunctions(pengfuncsFromEngine, NULL);
-
+   
    // give the engine functions to the other DLL...
-   (*other_GiveFnptrsToDll)(pengfuncsFromEngine, pGlobals);
+   other_GiveFnptrsToDll(pengfuncsFromEngine, pGlobals);
 }
+
+#if defined (__GNUC__)
+
+void *operator new(size_t size) {
+   if (size == 0)
+      return(calloc (1, 1));
+   return(calloc (1, size));
+}
+
+void *operator new[](size_t size) {
+   if (size == 0)
+      return(calloc (1, 1));
+   return(calloc (1, size));
+}
+
+void operator delete(void *ptr) {
+   if (ptr)
+      free (ptr);
+}
+
+void operator delete(void *ptr, size_t) {
+   if (ptr)
+      free (ptr);
+}
+
+void operator delete[](void *ptr) {
+   if (ptr)
+      free (ptr);
+}
+
+#endif
