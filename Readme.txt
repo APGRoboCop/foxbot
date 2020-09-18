@@ -12,6 +12,17 @@ Most of the guide is Operating System independant but there is also
 a section specifically about compiling the Linux version of Foxbot.
 
 --------------------------------------------------------------------------------
+Version 0.799
+September-18-2020
+Updated by ds@stx.su
+--------------------------------------------------------------------------------
+- Reorganized and cleaned up source code and repository.
+- Fixed high bots CPU usage.
+- Fixed buffer overruns.
+- Fixed load with non-metamod crashing the game.
+
+
+--------------------------------------------------------------------------------
 Version 0.792
 March-29-2020
 Updated by RoboCop

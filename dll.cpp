@@ -56,7 +56,7 @@
 #define MENU_6 6
 #define MENU_7 7
 
-cvar_t foxbot = {"foxbot", "0.793-APG", FCVAR_SERVER | FCVAR_UNLOGGED, 0, NULL};
+cvar_t foxbot = {"foxbot", "0.799", FCVAR_SERVER | FCVAR_UNLOGGED, 0, NULL};
 cvar_t enable_foxbot = {"enable_foxbot", "1", FCVAR_SERVER | FCVAR_UNLOGGED, 0, NULL};
 
 cvar_t sv_bot = {"bot", "", 0, 0, NULL};

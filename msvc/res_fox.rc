@@ -32,12 +32,12 @@ BEGIN
 VALUE "Comments", "AI opponent for Half-Life TFC"
 VALUE "CompanyName", "Tom Simpson <redfox@foxbot.net>"
 VALUE "FileDescription", "FoxBot Half-Life MOD DLL"
-VALUE "FileVersion", "0.792.0.0"
+VALUE "FileVersion", "0.799.0.0"
 VALUE "InternalName", "FoxBot"
 VALUE "LegalCopyright", "Copyright © 2020, Tom Simpson and APG Foundation"
 VALUE "OriginalFilename", "foxbot_mm.dll"
 VALUE "ProductName", "FoxBot"
-VALUE "ProductVersion", "0.792.0.0"
+VALUE "ProductVersion", "0.799.0.0"
 END
 END
 BLOCK "VarFileInfo"
