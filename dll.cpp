@@ -2417,10 +2417,8 @@ void StartFrame(void) {
    // Reset pipeCheck frame counter.
    if (pipeCheckFrame < 0)
       pipeCheckFrame = 20;
-   printf ("FRAME1!");
    if (gpGlobals->deathmatch) {
 
-      printf ("FRAME!");
       edict_t *pPlayer;
       static float check_server_cmd;
       check_server_cmd = gpGlobals->time;
