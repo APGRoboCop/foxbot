@@ -27,20 +27,7 @@
 #include "custom.h"
 #include "cvardef.h"
 #include "Sequence.h"
-//
-// Defines entity interface between engine and DLLs.
-// This header file included by engine files and DLL files.
-//
-// Before including this header, DLLs must:
-//		include progdefs.h
-// This is conveniently done for them in extdll.h
-//
 
-#ifdef _WIN32
-#define DLLEXPORT __stdcall
-#else
-#define DLLEXPORT /* */
-#endif
 
 typedef enum
 	{
