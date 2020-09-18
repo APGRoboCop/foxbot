@@ -92,7 +92,7 @@
 	// WINAPI should be provided in the windows compiler headers.
 	// It's usually defined to something like "__stdcall".
 #elif defined(linux) || defined (__APPLE__)
-	#define DLLEXPORT	/* */
+	#define DLLEXPORT	__attribute__((visibility("default")))
 	#define WINAPI		/* */
 #endif /* linux */
 
