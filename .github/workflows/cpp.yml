@@ -3,49 +3,26 @@ name: C/C++ CI
 on: [push, pull_request]
 
 jobs:
-  Linux:
+  build:
+
     runs-on: ubuntu-latest
 
     steps:
-    - name: Run add x86 Architecture
+    - uses: actions/checkout@v2
+      
+    - name: update
       run: sudo dpkg --add-architecture i386 && sudo apt-get -y update
       
-    - name: Run install x86 Toolchain
-      run: sudo apt-get -y install build-essential g++-multilib
+    - name: install
+      run: sudo apt-get -y install build-essential g++-multilib gcc-mingw-w64
       
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v1
-    - uses: BSFishy/meson-build@v1.0.1
-      with:
-        action: build
+    - name: make-linux
+      run: make clean && make
       
-    - uses: actions/upload-artifact@v1
-      with:
-        name: foxbot.so
-        path: build/foxbot.so
-        
-  Windows:
-    runs-on: windows-latest
-
-    steps:
-    - uses: ilammy/msvc-dev-cmd@v1
-      with:
-        arch: x86
-        
-    - name: Remove bad ninja
-      shell: cmd
-      run: |
-          del "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja\ninja.EXE"
-          
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v1
-    - uses: BSFishy/meson-build@v1.0.1
-      with:
-        action: build
-        directory: build
-        setup-options: -Db_vscrt=mt
+    - name: make-win32
+      run: make clean && make OSTYPE=win32
       
     - uses: actions/upload-artifact@v1
       with:
-        name: foxbot.dll
-        path: build/foxbot.dll
+        name: foxbot
+        path: addons/foxbot/bin/

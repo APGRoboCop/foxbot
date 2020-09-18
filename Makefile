@@ -8,7 +8,7 @@
 
 ifeq ($(OSTYPE),win32)
 	CPP = i686-w64-mingw32-gcc -m32
-	LINKFLAGS = -mdll -lm -Xlinker -add-stdcall-alias -static-libgcc -shared -s_@@_ -Wl,--no-undefined
+	LINKFLAGS = -mdll -lm -Xlinker -add-stdcall-alias -s
 	DLLEND = .dll
 else
 	CPP = gcc -m32
@@ -37,7 +37,6 @@ INCLUDES = -I"./metamod" \
 
 CFLAGS = ${BASEFLAGS} ${OPTFLAGS} ${ARCHFLAG} ${INCLUDES}
 CPPFLAGS += -fno-rtti -fno-exceptions -fno-threadsafe-statics ${CFLAGS} 
-LINKFLAGS += -Wl,--no-undefined
 
 SRC = 	bot.cpp \
    bot_client.cpp \
