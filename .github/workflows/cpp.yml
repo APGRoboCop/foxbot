@@ -1,0 +1,28 @@
+name: C/C++ CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      
+    - name: update
+      run: sudo dpkg --add-architecture i386 && sudo apt-get -y update
+      
+    - name: install
+      run: sudo apt-get -y install build-essential g++-multilib gcc-mingw-w64
+      
+    - name: make-linux
+      run: make clean && make
+      
+    - name: make-win32
+      run: make clean && make OSTYPE=win32
+      
+    - uses: actions/upload-artifact@v1
+      with:
+        name: foxbot
+        path: addons/foxbot/bin/

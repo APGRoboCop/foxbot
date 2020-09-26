@@ -2,6 +2,27 @@
    Foxbot Source code Readme
 ===================================
 
+Foxbot has been developed by:
+
+Tom, Aka RedFox
+Jordan, Aka FURY
+Jeremy, Aka DrEvil
+Paul, Aka GoaT_RopeR
+Grubber
+Yuraj
+Victor
+JASMINE
+Richard, Aka Zybby
+
+Special thanks to:
+RoboCop
+Koala
+Safety1st
+Arkshine
+Globoss
+pizzahut
+jeefo
+
    Introduction
    ------------
 
@@ -12,44 +33,44 @@ Most of the guide is Operating System independant but there is also
 a section specifically about compiling the Linux version of Foxbot.
 
 --------------------------------------------------------------------------------
-Version 0.792
-March-29-2020
+Version 0.793
+September-26-2020
 Updated by RoboCop
 --------------------------------------------------------------------------------
 
-- Further optimisation fixes
+- Fixed high bots CPU usage and buffer overruns
 
-- Linux build compiled with the newer GCC/G++ 8.3
+- Fixed load with non-metamod crashing the game
 
-- Replaced most of the C style casts with C++ casts
+- Removed some more redundant codes
 
-- Increased engineer priority task to maintain sentries
+- Added some Clang compiler fixes and performance fixes
 
-- Increased medic priority task to buff and heal team mates
+- Spies won't select enemy Scouts, Medics, HWs and Engineers disguises as their speeds and lame default weapons can easily blow their covers
 
-- Increased collect ammo priority to allow both engineers and snipers for defensive tasks
+- Repaired some rogue pathwaypoints for 2fort, avanti, cz2, palermo, rock2, sandbowl_r2, shutdown2 and well
 
-- Reduced sniper accuracy for each of the 5 bot skill settings
+- Allowing bots to avoid firing lame weapons like nailguns, laser railguns and dart tranq guns too often
 
-- Enhanced the dustbowl waypoints even further to remove lame sentry deployment areas
+- Limited the bot frame rate movement to 60Hz
 
-- Altered the dustbowl map config to allow Red Engineers to spawn first
+- Increased bot job priority for collecting ammo and healing teammates
 
-- Corrected the hunted map config where Sniper assassins could not spawn
+- Added script for the bots to know how to disable flag room security
 
-- Fixed deprecation warning for 'SpyDetect'
+- Reduced bot job priority for solders to avoid rocket jumping too often
 
-- Fixed some potential code issues
+- Removed excess Conc/Rocket Jump waypoints in dustbowl in awkward areas and due to the lack of conc nades
 
-Known bugs:-  
+- Optimised 'foxbot_commander.txt' by removing excess 'strlen' loops
 
->> '[META] WARNING: Plugin didn't set meta_result: foxbot_mm.so:engClientCommand()' still appears to occur
+Known bugs:-
 
->> Soldier bots tend to struggle for rocket jumping in certain areas
+>> Soldier bots tend to struggle for rocket jumping in certain areas that can block its way
 
->> botdontmove, bot_chat, bot_bot_balance and bot_team_balance cvars may not be 100% operational
+>> Sniper bots tend to TK when Friendly Fire is on, when interacting with their team's sentries and teleports
 
->> FoxBot appears to crash sometimes on Windows Listenservers
+>> botdontmove, bot_chat, min_bots, max_bots, bot_bot_balance and bot_team_balance cvars may not be 100% operational
 
 --------------------------------------------------------------------------------
 

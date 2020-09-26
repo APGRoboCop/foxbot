@@ -45,11 +45,11 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
-.vs/*
+msvc/.vs/*
 *.so
 *.o
 *.ipch
-foxbot_mm.so
+foxbot.so
 *.log
 *.pdb
 FoXBot.v12.suo
@@ -58,5 +58,6 @@ FoXBot.sdf
 *.rsp
 *.i
 *.cfg
-Debug/*
-Release/*
+msvc/Debug/*
+msvc/Release/*
+addons/*
