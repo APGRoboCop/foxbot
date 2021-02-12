@@ -43,7 +43,6 @@
 
 #include "engine.h"
 
-#include <math.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 
@@ -55,8 +54,10 @@
 extern List<char *> commanders;
 
 #ifndef __linux__
+#include <cmath>
 extern HINSTANCE h_Library;
 #else
+#include <math.h>
 extern void *h_Library;
 #endif
 

@@ -29,7 +29,12 @@
 #include <enginecallback.h>
 #include <entity_state.h>
 
+#ifndef __linux__
+#include <cmath>
+#else
 #include <math.h>
+#endif
+
 #include <osdep.h>
 
 #include "bot.h"
@@ -2408,11 +2413,9 @@ void ClientCommand(edict_t *pEntity) {
 }
 
 void StartFrame(void) {
-   // v7 last frame timing
    last_frame_time = last_frame_time_prev;
    last_frame_time_prev = gpGlobals->time;
 
-   // Reset pipeCheck frame counter.
    if (pipeCheckFrame < 0)
       pipeCheckFrame = 20;
    if (gpGlobals->deathmatch) {
@@ -2440,7 +2443,6 @@ void StartFrame(void) {
          need_to_open_cfg = TRUE;
 
          // check if mapname_bot.cfg file exists...
-
          if (gpGlobals->time + 0.1 < previous_time) {
             strcpy(mapname, STRING(gpGlobals->mapname));
             strcat(mapname, "_bot.cfg");
@@ -2455,8 +2457,6 @@ void StartFrame(void) {
             }
 
             if (bot_cfg_fp != nullptr) {
-               // sprintf(msg, "Executing %s\n", filename);
-               // ALERT( at_console, msg );
 
                for (index = 0; index < 32; index++) {
                   bots[index].is_used = FALSE;
@@ -2502,7 +2502,6 @@ void StartFrame(void) {
 
          bot_check_time = gpGlobals->time + 30.0;
       }
-
       // end of config map check stuff.
 
       if (!IS_DEDICATED_SERVER()) {
@@ -2519,11 +2518,8 @@ void StartFrame(void) {
             char welcome_msg[128] = "--FoxBot--\n\nwww.apg-clan.org\n";
             char version[32];
 
-            // sprintf(version," Beta v%d.%d Build#%d\n", VER_MAJOR, VER_MINOR, VER_BUILD);
             sprintf(version, " v%d.%d \n", VER_MAJOR, VER_MINOR);
             strcat(welcome_msg, version);
-            // let's send a welcome message to this client...
-            // UTIL_SayText(welcome_msg, clients[welcome_index]);
 
             KewlHUDNotify(clients[welcome_index], welcome_msg);
             welcome_sent = TRUE; // clear this so we only do it once
@@ -2531,7 +2527,6 @@ void StartFrame(void) {
       }
 
       if (client_update_time <= gpGlobals->time) {
-         // if(debug_engine) { fp = UTIL_OpenFoxbotLog(); fprintf(fp, "clientupdate\n"); fclose(fp); }
          client_update_time = gpGlobals->time + 1.0;
 
          for (i = 0; i < 32; i++) {
@@ -2551,62 +2546,12 @@ void StartFrame(void) {
 
       UpdateFlagCarrierList(); // need to do this once per frame
 
-      /*	// useful debugging info
-                      if(spectate_debug == 0)
-                      {  // starto!
-                                      char msg[128];
-
-                                      snprintf(msg, 128, "check_time %f, time %f\nmin_bots %d, max_bots %d",
-                                                      bot_check_time, gpGlobals->time, min_bots, max_bots);
-
-                                      msg[127] = '\0';
-
-                                      // output the message
-                                      MESSAGE_BEGIN(MSG_ONE, SVC_TEMPENTITY, NULL, INDEXENT(1));
-                                                      WRITE_BYTE( TE_TEXTMESSAGE);
-                                                      WRITE_BYTE( 2 & 0xFF );
-
-                                                      WRITE_SHORT( 0 ); // coordinates X
-                                                      WRITE_SHORT( -8192 ); // coordinates Y
-
-                                                      WRITE_BYTE(1); //effect
-
-                                                      WRITE_BYTE(255);
-                                                      WRITE_BYTE(255);
-                                                      WRITE_BYTE(255);
-                                                      WRITE_BYTE(255);
-
-                                                      WRITE_BYTE(255);
-                                                      WRITE_BYTE(255);
-                                                      WRITE_BYTE(255);
-                                                      WRITE_BYTE(255);
-                                                      WRITE_SHORT( FixedUnsigned16( 0, 1 << 8 ) );  // fade-in time
-                                                      WRITE_SHORT( FixedUnsigned16( 0, 1 << 8 ) );  // fade-out time
-                                                      WRITE_SHORT( FixedUnsigned16( 1, 1 << 8 ) );  // hold time
-
-                                                      WRITE_STRING(msg);
-                                      MESSAGE_END();
-                      } // endo!*/
-
       for (bot_index = 0; bot_index < gpGlobals->maxClients; bot_index++) {
          // if this bot is active, and the bot is not respawning
          if (bots[bot_index].is_used && bots[bot_index].respawn_state == RESPAWN_IDLE) {
-            //	UTIL_BotLogPrintf("running bot %d time:%f\n", bot_index, gpGlobals->time);
             BotThink(&bots[bot_index]);
 
             count++;
-
-            /*if((mod_id == FRONTLINE_DLL) && (flf_bug_check == 0)) {
-                    edict_t* pent = NULL;
-                    // int fix_flag = 0;
-
-                    flf_bug_check = 1;
-
-                    while((pent = FIND_ENTITY_BY_CLASSNAME(pent, "capture_point")) != NULL && (!FNullEnt(pent))) {
-                            if(pent->v.skin != 0) // not blue skin?
-                                    flf_bug_fix = 1;  // need to use bug fix code
-                    }
-            }*/
          }
       }
 
@@ -2620,18 +2565,6 @@ void StartFrame(void) {
             if ((g_area_def || g_waypoint_on) && FBitSet(pPlayer->v.flags, FL_CLIENT) && !FBitSet(pPlayer->v.flags, FL_FAKECLIENT)) {
                WaypointThink(pPlayer);
             }
-
-            /*if((mod_id == FRONTLINE_DLL) && (flf_bug_check == 0)) {
-                    edict_t* pent = NULL;
-                    // int fix_flag = 0;
-
-                    flf_bug_check = 1;
-
-                    while((pent = FIND_ENTITY_BY_CLASSNAME(pent, "capture_point")) != NULL && (!FNullEnt(pent))) {
-                            if(pent->v.skin != 0) // not blue skin?
-                                    flf_bug_fix = 1;  // need to use bug fix code
-                    }
-            }*/
          }
       }
 
@@ -2688,7 +2621,6 @@ void StartFrame(void) {
             display_start_time = gpGlobals->time + 10;
 
             // check if mapname_bot.cfg file exists...
-
             strcpy(mapname, STRING(gpGlobals->mapname));
             strcat(mapname, "_bot.cfg");
 
@@ -2710,9 +2642,7 @@ void StartFrame(void) {
             }
 
             if (IS_DEDICATED_SERVER())
-               bot_cfg_pause_time = gpGlobals->time + 2.0; // was 5
-                                                           // else
-            //	bot_cfg_pause_time = gpGlobals->time + 2.0; // was 20
+               bot_cfg_pause_time = gpGlobals->time + 2.0;
          }
 
          if (need_to_open_cfg2) // have we opened foxbot.cfg file yet?
@@ -2723,11 +2653,8 @@ void StartFrame(void) {
 
             need_to_open_cfg2 = FALSE; // only do this once!!!
             cfg_file = 2;
-            // display_bot_vars=TRUE;
-            // display_start_time=gpGlobals->time+10;
 
             // check if mapname_bot.cfg file exists...
-
             strcpy(mapname, STRING(gpGlobals->mapname));
             strcat(mapname, "_bot.cfg");
 
@@ -2767,7 +2694,6 @@ void StartFrame(void) {
                }
             }
          }
-
          // end need config
 
          if (!IS_DEDICATED_SERVER() && !spawn_time_reset) {
@@ -2783,8 +2709,7 @@ void StartFrame(void) {
                }
             }
          }
-         if ( //(bot_cfg_fp) &&
-             bot_cfg_pause_time >= 1.0 && bot_cfg_pause_time <= gpGlobals->time) {
+         if ( bot_cfg_pause_time >= 1.0 && bot_cfg_pause_time <= gpGlobals->time) {
             // process bot.cfg file options...
             ProcessBotCfgFile();
             display_start_time = 0;
@@ -2974,9 +2899,6 @@ void StartFrame(void) {
          CVAR_SET_STRING("bot", "");
       }
 
-      // { FILE *ufp=UTIL_OpenFoxbotLog(); fprintf(ufp,"time %f | check %f\n", gpGlobals->time, bot_check_time);
-      // fclose(ufp); }
-
       // check if time to see if a bot needs to be created...
       if (bot_check_time < gpGlobals->time) {
          bot_check_time = gpGlobals->time + bot_create_interval;
@@ -3049,8 +2971,6 @@ void StartFrame(void) {
          // if there are currently less than the maximum number of players
          // then add another bot using the default skill level...
          if ((count < interested_bots || bot_total_varies == 0) && count < max_bots && max_bots != -1) {
-            //	UTIL_BotLogPrintf("Bot created, time:%f, bot_check_time:%f, bot_create_interval:%f\n",
-            //		gpGlobals->time, bot_check_time, bot_create_interval);
 
             BotCreate(nullptr, nullptr, nullptr, nullptr, nullptr);
          }
@@ -3087,8 +3007,6 @@ void StartFrame(void) {
 
    if (strcmp(STRING(gpGlobals->mapname), prevmapname) != 0) {
       edict_t *pent = nullptr;
-      // while((pent = FIND_ENTITY_BY_STRING( pent, "classname","trigger_multiple" )) != NULL
-      // && (!FNullEnt(pent)))
       while ((pent = FIND_ENTITY_IN_SPHERE(pent, Vector(0, 0, 0), 8000)) != nullptr && !FNullEnt(pent)) {
          if (pent->v.absmin.x == -1 && pent->v.absmin.y == -1 && pent->v.absmin.z == -1) {
             if (pent->v.absmax.x == 1 && pent->v.absmax.y == 1 && pent->v.absmax.z == 1) {
@@ -3146,11 +3064,9 @@ void StartFrame(void) {
                      MDLL_Spawn(pent);
                   else
                      DispatchSpawn(pent);
-                  // UTIL_SavePent(pent);
                }
             }
          }
-         // UTIL_SavePent(pent);
          if (strcmp(STRING(pent->v.classname), "func_door") == 0 && pent->v.nextthink != -1)
             pent->v.nextthink = -1;
       }
@@ -3173,21 +3089,6 @@ void StartFrame(void) {
       }
       ResetBotHomeInfo();
 
-      // clear up all the model icons here!
-      // don't remove them as the engine does this its self on a map change
-      // just clear the pointers..doh!
-      /*for(i=0; i<128; i++)
-         {
-         if(!mdlb[i])
-         if(mdlp[i]!=NULL)
-         {
-         //REMOVE_ENTITY(mdlp[i]);
-         mdlp[i]=NULL;
-         mdlb[i]=true;
-         }
-         }*/
-      // ok, do other level data clearing here!
-
       struct msg_com_struct *prev = nullptr;
       struct msg_com_struct *curr = nullptr;
       for (int i = 0; i < MSG_MAX; i++) {
@@ -3201,7 +3102,6 @@ void StartFrame(void) {
          // and deletes it.. then repeats it all again.. if root.next etc
          while (msg_com[i].next != nullptr) {
             curr = &msg_com[i];
-            // UTIL_BotLogPrintf("StartFrame-del %d\n", curr->next);
 
             while (curr->next != nullptr && (int)curr->next != -1) {
                prev = curr;
@@ -3214,9 +3114,7 @@ void StartFrame(void) {
             }
          }
          msg_com[i].next = nullptr; // make sure it dont crash..gr
-                                 // UTIL_BotLogPrintf("StartFrame-del %d\n",msg_com[i].next);
       }
-      // UTIL_BotLogPrintf("StartFrame-made it past clear data\n");
 
       // check if mapname_bot.cfg file exists...
 
@@ -3252,8 +3150,7 @@ void StartFrame(void) {
          int msgsection = 0; // used to check if were in a message section section or not
          int ifsec = 0;      // used to check if were in an if statement
          char *buf = buffer;
-         // ALERT( at_console, buf);
-         // ALERT( at_console, "\n");
+
          bool random_shit_error = FALSE;
          for (int i = 0; i < 14096 && buffer[i] != '\0' && !random_shit_error; i++) {
             // first off... we need to ignore comment lines!
@@ -3422,7 +3319,7 @@ void StartFrame(void) {
                   } // move to end
                }
 
-               // point<n> availabe_only (exclusive)
+               // point<n> available_only (exclusive)
                else if (strncmp(buf, "blue_available_only_point", 25) == 0) {
                   // this can only be in a section
                   if (start == 0 && msgsection == 0)
@@ -3481,7 +3378,7 @@ void StartFrame(void) {
                   } // move to end
                }
 
-               // point<n> availabe (set to true)
+               // point<n> available (set to true)
                else if (strncmp(buf, "blue_available_point", 20) == 0) {
                   // this can only be in a section
                   if (start == 0 && msgsection == 0)
@@ -3540,7 +3437,7 @@ void StartFrame(void) {
                   } // move to end
                }
 
-               // point<n> not_availabe (set to false)
+               // point<n> not_available (set to false)
                else if (strncmp(buf, "blue_notavailable_point", 23) == 0) {
                   // this can only be in a section
                   if (start == 0 && msgsection == 0)
@@ -3600,7 +3497,7 @@ void StartFrame(void) {
                   } // move to end
                }
 
-               // is point<n> availabe?
+               // is point<n> available?
                else if (strncmp(buf, "if_blue_point", 13) == 0) {
                   // this can only be in a section
                   if (msgsection == 0)
@@ -3675,7 +3572,7 @@ void StartFrame(void) {
                   } // move to end
                }
 
-               // is point<n> NOT availabe?
+               // is point<n> NOT available?
                else if (strncmp(buf, "ifn_blue_point", 14) == 0) {
                   // this can only be in a section
                   if (msgsection == 0)
@@ -3931,7 +3828,6 @@ void StartFrame(void) {
          if (syntax_error == false) {
             script_parsed = TRUE;
             // pass everything to data array
-            //	bool pass_debug = TRUE;
             ALERT(at_console, "Passing data to behaviour arrays\n\n");
             braces = 0;          // check for an even number of braces i.e. {..}
             commentline = FALSE; // used to ignore comment lines
@@ -4131,7 +4027,7 @@ void StartFrame(void) {
                      } // move to end
                   }
 
-                  // point<n> availabe_only (exclusive)
+                  // point<n> available_only (exclusive)
                   else if (strncmp(buf, "blue_available_only_point", 25) == 0) {
                      // this can only be in a section
                      if (start == 0 && msgsection == 0)
@@ -4270,7 +4166,7 @@ void StartFrame(void) {
                      }
                   }
 
-                  // point<n> availabe (set to true)
+                  // point<n> available (set to true)
                   else if (strncmp(buf, "blue_available_point", 20) == 0) {
                      // this can only be in a section
                      if (start == 0 && msgsection == 0)
@@ -4373,7 +4269,7 @@ void StartFrame(void) {
                      }
                   }
 
-                  // point<n> not_availabe (set to false)
+                  // point<n> not_available (set to false)
                   else if (strncmp(buf, "blue_notavailable_point", 23) == 0) {
                      // this can only be in a section
                      if (start == 0 && msgsection == 0)
@@ -4754,9 +4650,7 @@ void StartFrame(void) {
                      strcpy(curr->ifs, msg);
                   }
 
-                  //
                   // multipoint ifs
-                  //
                   else if (strncmp(buf, "if_blue_mpoint", 14) == 0) {
                      // this can only be in a section
                      if (msgsection == 0)
@@ -4973,9 +4867,6 @@ void StartFrame(void) {
          fclose(bfp);
          bfp = nullptr;
       }
-
-      //{ fp = UTIL_OpenFoxbotLog(); fprintf(fp, "StartFrame-my shiznit (end)\n"); fclose(fp); }
-      // strcpy(prevmapname,STRING(gpGlobals->mapname));
    }
 
    if (!mr_meta)
