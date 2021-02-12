@@ -61,3 +61,5 @@ FoXBot.sdf
 msvc/Debug/*
 msvc/Release/*
 addons/*
+build/*
+Rules.depend

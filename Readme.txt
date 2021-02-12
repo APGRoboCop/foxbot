@@ -33,6 +33,19 @@ Most of the guide is Operating System independant but there is also
 a section specifically about compiling the Linux version of Foxbot.
 
 --------------------------------------------------------------------------------
+Version 0.800
+????-??-202?
+Updated by RoboCop
+--------------------------------------------------------------------------------
+
+- Added new waypoints:-
+	+ botspree
+	+ gen_complex
+	+ insideout
+	+ lbdustbowl
+	+ mulch_dm2b1
+
+--------------------------------------------------------------------------------
 Version 0.793
 September-26-2020
 Updated by RoboCop

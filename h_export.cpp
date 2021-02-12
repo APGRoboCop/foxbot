@@ -39,7 +39,7 @@ extern bool mr_meta;
 // extern engine_t Engine;
 
 #ifndef __linux__
-HINSTANCE h_Library = NULL;
+HINSTANCE h_Library = nullptr;
 #else
 void *h_Library = NULL;
 #endif
@@ -50,9 +50,9 @@ char g_argv[256] = { 0, };
 
 // static FILE *fp;
 
-GETENTITYAPI other_GetEntityAPI = NULL;
-GETNEWDLLFUNCTIONS other_GetNewDLLFunctions = NULL;
-GIVEFNPTRSTODLL other_GiveFnptrsToDll = NULL;
+GETENTITYAPI other_GetEntityAPI = nullptr;
+GETNEWDLLFUNCTIONS other_GetNewDLLFunctions = nullptr;
+GIVEFNPTRSTODLL other_GiveFnptrsToDll = nullptr;
 
 extern int mod_id;
 
@@ -88,7 +88,7 @@ C_DLLEXPORT void WINAPI GiveFnptrsToDll(enginefuncs_t *pengfuncsFromEngine, glob
    (*g_engfuncs.pfnGetGameDir)(game_dir);
 
    int pos = 0;
-   if (strchr(game_dir, '/') != NULL) {
+   if (strchr(game_dir, '/') != nullptr) {
       pos = strlen(game_dir) - 1;
       // scan backwards till first directory separator...
 
@@ -111,7 +111,7 @@ C_DLLEXPORT void WINAPI GiveFnptrsToDll(enginefuncs_t *pengfuncsFromEngine, glob
 #endif
    }
 
-   if (h_Library == NULL) {
+   if (h_Library == nullptr) {
       // Directory error or Unsupported MOD!
 
       ALERT(at_error, "FoXBot - MOD dll not found (or unsupported MOD)!");
@@ -119,7 +119,7 @@ C_DLLEXPORT void WINAPI GiveFnptrsToDll(enginefuncs_t *pengfuncsFromEngine, glob
    }
    other_GetEntityAPI = (GETENTITYAPI)GetProcAddress(h_Library, "GetEntityAPI");
 
-   if (other_GetEntityAPI == NULL) {
+   if (other_GetEntityAPI == nullptr) {
       // Can't find GetEntityAPI!
 
       ALERT(at_error, "FoXBot - Can't get MOD's GetEntityAPI!");
@@ -129,13 +129,13 @@ C_DLLEXPORT void WINAPI GiveFnptrsToDll(enginefuncs_t *pengfuncsFromEngine, glob
 
    other_GiveFnptrsToDll = (GIVEFNPTRSTODLL)GetProcAddress(h_Library, "GiveFnptrsToDll");
 
-   if (other_GiveFnptrsToDll == NULL) {
+   if (other_GiveFnptrsToDll == nullptr) {
       // Can't find GiveFnptrsToDll!
 
       ALERT(at_error, "FoXBot - Can't get MOD's GiveFnptrsToDll!");
    }
 
-   GetEngineFunctions(pengfuncsFromEngine, NULL);
+   GetEngineFunctions(pengfuncsFromEngine, nullptr);
    
    // give the engine functions to the other DLL...
    other_GiveFnptrsToDll(pengfuncsFromEngine, pGlobals);

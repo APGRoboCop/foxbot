@@ -43,6 +43,7 @@
 
 #include "engine.h"
 
+#include <math.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 
@@ -170,7 +171,7 @@ static char bot_names[MAX_BOT_NAMES][BOT_NAME_LEN + 1];
 // defend response distance per class
 const static float defendMaxRespondDist[] = {300.0f, 1500.0f, 500.0f, 1500.0f, 800.0f, 1500.0f, 1500.0f, 1500.0f, 1500.0f, 1500.0f};
 
-const static double double_pi = 3.141592653589793238;
+//const static double double_pi = 3.141592653589793238;
 
 // FUNCTION PROTOTYPES /////////////////
 static int BotAssignDefaultSkill();
@@ -199,7 +200,7 @@ static void BotSpectatorDebug(bot_t *pBot);
 inline edict_t *CREATE_FAKE_CLIENT(const char *netname) {
    if (debug_engine) {
       fp = UTIL_OpenFoxbotLog();
-      if (fp != NULL) {
+      if (fp != nullptr) {
          fprintf(fp, "createfakeclient: %s\n", netname);
          fclose(fp);
       }
@@ -210,7 +211,7 @@ inline edict_t *CREATE_FAKE_CLIENT(const char *netname) {
 inline char *GET_INFOBUFFER(edict_t *e) {
    if (debug_engine) {
       fp = UTIL_OpenFoxbotLog();
-      if (fp != NULL) {
+      if (fp != nullptr) {
          fprintf(fp, "getinfobuffer: %p\n", static_cast<void *>(e));
          fclose(fp);
       }
@@ -236,7 +237,7 @@ inline char *GET_INFO_KEY_VALUE( char *infobuffer, char *key )
 inline void SET_CLIENT_KEY_VALUE(const int clientIndex, char *infobuffer, char *key, char *value) {
    if (debug_engine) {
       fp = UTIL_OpenFoxbotLog();
-      if (fp != NULL) {
+      if (fp != nullptr) {
          fprintf(fp, "pfnSetClientKeyValue: %s %s\n", key, value);
          fclose(fp);
       }
@@ -246,11 +247,11 @@ inline void SET_CLIENT_KEY_VALUE(const int clientIndex, char *infobuffer, char *
 
 // this is the LINK_ENTITY_TO_CLASS function that creates a player (bot)
 void player(entvars_t *pev) {
-   static LINK_ENTITY_FUNC otherClassName = NULL;
-   if (otherClassName == NULL) {
+   static LINK_ENTITY_FUNC otherClassName = nullptr;
+   if (otherClassName == nullptr) {
       otherClassName = (LINK_ENTITY_FUNC)GetProcAddress(h_Library, "player");
    }
-   if (otherClassName != NULL) {
+   if (otherClassName != nullptr) {
       (*otherClassName)(pev);
    }
 }
@@ -297,7 +298,7 @@ void BotSpawnInit(bot_t *pBot) {
    pBot->strafe_mod = STRAFE_MOD_NORMAL;
 
    // enemy stuff
-   pBot->enemy.ptr = NULL;
+   pBot->enemy.ptr = nullptr;
    pBot->enemy.seenWithFlag = 0;
    pBot->enemy.f_firstSeen = gpGlobals->time - 1000.0;
    pBot->enemy.f_lastSeen = pBot->enemy.f_firstSeen;
@@ -396,11 +397,11 @@ void BotNameInit() {
    char bot_name_filename[256];
    char name_buffer[80];
 
-   UTIL_BuildFileName(bot_name_filename, 255, "foxbot_names.txt", NULL);
+   UTIL_BuildFileName(bot_name_filename, 255, "foxbot_names.txt", nullptr);
    FILE *bot_name_fp = fopen(bot_name_filename, "r");
 
-   if (bot_name_fp != NULL) {
-      while (number_names < MAX_BOT_NAMES && fgets(name_buffer, 80, bot_name_fp) != NULL) {
+   if (bot_name_fp != nullptr) {
+      while (number_names < MAX_BOT_NAMES && fgets(name_buffer, 80, bot_name_fp) != nullptr) {
          int length = strlen(name_buffer);
 
          // remove '\n'
@@ -486,7 +487,7 @@ void BotPickName(char *name_buffer) {
 
             // Log this event as it normally shouldn't happen
             fp = UTIL_OpenFoxbotLog();
-            if (fp != NULL) {
+            if (fp != nullptr) {
                fprintf(fp, "Ran out of unique bot names to assign.\n");
                fclose(fp);
             }
@@ -581,7 +582,7 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
       // else  // must be GEARBOX_DLL
       //	max_skin_index = GEARBOX_MAX_SKINS;
 
-      if (arg1 == NULL || *arg1 == 0) {
+      if (arg1 == nullptr || *arg1 == 0) {
          bool *pSkinUsed = nullptr;
 
          // pick a random skin
@@ -649,7 +650,7 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
       }
 
       if (found == TRUE) {
-         if (arg2 != NULL && *arg2 != 0) {
+         if (arg2 != nullptr && *arg2 != 0) {
             strncpy(c_name, arg2, BOT_SKIN_LEN - 1);
             c_name[BOT_SKIN_LEN] = 0; // make sure c_name is null terminated
          } else {
@@ -701,7 +702,7 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
             }
          }
 
-         if (arg2 != NULL && *arg2 != 0) {
+         if (arg2 != nullptr && *arg2 != 0) {
             strncpy(c_name, arg2, BOT_NAME_LEN - 1);
             c_name[BOT_NAME_LEN] = 0; // make sure c_name is null terminated
          } else {
@@ -717,13 +718,13 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
 
       skill = 0;
 
-      if (arg3 != NULL && *arg3 != 0)
+      if (arg3 != nullptr && *arg3 != 0)
          skill = atoi(arg3);
 
       if (skill < 1 || skill > 5)
          skill = BotAssignDefaultSkill();
    } else {
-      if (arg3 != NULL && *arg3 != 0) {
+      if (arg3 != nullptr && *arg3 != 0) {
          strncpy(c_name, arg3, BOT_NAME_LEN - 1);
          c_name[BOT_NAME_LEN] = '\0'; // make sure c_name is null terminated
       } else {
@@ -735,7 +736,7 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
 
       skill = 0;
 
-      if (arg4 != NULL && *arg4 != 0)
+      if (arg4 != nullptr && *arg4 != 0)
          skill = atoi(arg4);
 
       if (skill < 1 || skill > 5)
@@ -789,7 +790,7 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
          i++;
 
       if (i < 32)
-         clients[i] = NULL;
+         clients[i] = nullptr;
       // why put these here?
       // well admin mod plugin may sneak in as their connecting
       // and before we can add this shit for checking purposes
@@ -800,9 +801,9 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
 
       // clear the player info from the previous player who used this edict
       // (a fix by Pierre-Marie, found in the HPB forum)
-      if (BotEnt->pvPrivateData != NULL) {
+      if (BotEnt->pvPrivateData != nullptr) {
          FREE_PRIVATE(pBot->pEdict);
-         pBot->pEdict->pvPrivateData = NULL;
+         pBot->pEdict->pvPrivateData = nullptr;
       }
       pBot->pEdict->v.frags = 0;
 
@@ -819,7 +820,7 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
       spawn_check_crash_edict = BotEnt;
       MDLL_ClientPutInServer(BotEnt);
       spawn_check_crash = FALSE;
-      spawn_check_crash_edict = NULL;
+      spawn_check_crash_edict = nullptr;
       /*i = 0;
               while((i < 32) && (clients[i] != NULL))
               i++;
@@ -840,20 +841,20 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
       BotResetJobBuffer(pBot);
 
       pBot->has_sentry = FALSE;
-      pBot->sentry_edict = NULL;
+      pBot->sentry_edict = nullptr;
       pBot->sentryWaypoint = -1;
       pBot->SGRotated = FALSE;
       pBot->sentry_ammo = 0;
       pBot->has_dispenser = FALSE;
-      pBot->dispenser_edict = NULL;
+      pBot->dispenser_edict = nullptr;
       pBot->f_dispenserDetTime = 0.0;
-      pBot->killer_edict = NULL;
-      pBot->killed_edict = NULL;
-      pBot->lastEnemySentryGun = NULL;
+      pBot->killer_edict = nullptr;
+      pBot->killed_edict = nullptr;
+      pBot->lastEnemySentryGun = nullptr;
       pBot->mission = ROLE_ATTACKER;
       pBot->lockMission = FALSE;
-      pBot->tpEntrance = NULL;
-      pBot->tpExit = NULL;
+      pBot->tpEntrance = nullptr;
+      pBot->tpExit = nullptr;
       pBot->tpEntranceWP = -1;
       pBot->tpExitWP = -1;
       pBot->f_safeWeaponTime = gpGlobals->time;
@@ -867,13 +868,13 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
 
       // stop the bot from autonomously changing class if
       // a class was specified
-      if (arg2 != NULL && mod_id == TFC_DLL)
+      if (arg2 != nullptr && mod_id == TFC_DLL)
          pBot->lockClass = TRUE;
       else
          pBot->lockClass = FALSE;
 
       pBot->f_suspectSpyTime = 0.0;
-      pBot->suspectedSpy = NULL;
+      pBot->suspectedSpy = nullptr;
 
       pBot->lastFrameHealth = 70;
       pBot->f_injured_time = 0.0f;
@@ -948,10 +949,10 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
       pBot->bot_skill = skill - 1; // 0 based for array indexes
 
       if (mod_id == TFC_DLL) {
-         if (arg1 != NULL && arg1[0] != 0) {
+         if (arg1 != nullptr && arg1[0] != 0) {
             pBot->bot_team = atoi(arg1);
 
-            if (arg2 != NULL && arg2[0] != 0) {
+            if (arg2 != nullptr && arg2[0] != 0) {
                pBot->bot_class = atoi(arg2);
             }
          }
@@ -968,7 +969,7 @@ void BotFindItem(bot_t *pBot) {
    // check if the bot can see a flag
    BotFlagSpottedCheck(pBot);
 
-   edict_t *pPickupEntity = NULL;
+   edict_t *pPickupEntity = nullptr;
    Vector pickup_origin;
    Vector entity_origin;
    bool can_pickup;
@@ -995,8 +996,8 @@ void BotFindItem(bot_t *pBot) {
 
    min_distance = radius + 0.1f;
 
-   edict_t *pent = NULL;
-   while ((pent = FIND_ENTITY_IN_SPHERE(pent, searchCenter, radius)) != NULL && !FNullEnt(pent)) {
+   edict_t *pent = nullptr;
+   while ((pent = FIND_ENTITY_IN_SPHERE(pent, searchCenter, radius)) != nullptr && !FNullEnt(pent)) {
       can_pickup = FALSE; // assume can't use it until known otherwise
 
       strcpy(item_name, STRING(pent->v.classname));
@@ -1024,7 +1025,7 @@ void BotFindItem(bot_t *pBot) {
          // check if the entity is a button...
          if (strcmp("func_button", item_name) == 0 || strcmp("func_rot_button", item_name) == 0) {
             newJob = InitialiseNewJob(pBot, JOB_PUSH_BUTTON);
-            if (newJob != NULL && pent->v.target != 0 && VectorsNearerThan(pBot->pEdict->v.origin, entity_origin, 250.0)) {
+            if (newJob != nullptr && pent->v.target != 0 && VectorsNearerThan(pBot->pEdict->v.origin, entity_origin, 250.0)) {
                // ignore this button if the nearest waypoint to it is unavailable
                const int nearestWP = WaypointFindNearest_V(entity_origin, 80.0, -1);
                if (nearestWP != -1 && !WaypointAvailable(nearestWP, pBot->current_team))
@@ -1101,7 +1102,7 @@ void BotFindItem(bot_t *pBot) {
                      continue;
 
                   newJob = InitialiseNewJob(pBot, JOB_ATTACK_BREAKABLE);
-                  if (newJob != NULL) {
+                  if (newJob != nullptr) {
                      newJob->object = pent;
                      if (SubmitNewJob(pBot, JOB_ATTACK_BREAKABLE, newJob) == TRUE)
                         return;
@@ -1130,12 +1131,12 @@ void BotFindItem(bot_t *pBot) {
          if (BotCanSeeOrigin(pBot, vecEnd)) {
             // check if entity is a back pack dropped by a player
             if (strcmp("tf_ammobox", item_name) == 0) {
-               if (pBot->ammoStatus != AMMO_UNNEEDED && pent->v.owner == NULL)
+               if (pBot->ammoStatus != AMMO_UNNEEDED && pent->v.owner == nullptr)
                   can_pickup = TRUE;
             }
             // check if entity is a back pack
             else if (strcmp("item_tfgoal", item_name) == 0) {
-               if (pBot->ammoStatus == AMMO_UNNEEDED || pent->v.owner != NULL || pent->v.model == 0)
+               if (pBot->ammoStatus == AMMO_UNNEEDED || pent->v.owner != nullptr || pent->v.model == 0)
                   continue;
 
                // check if the item is not visible
@@ -1169,7 +1170,7 @@ void BotFindItem(bot_t *pBot) {
 
             // check if entity is a back pack
             else if (strcmp("info_tfgoal", item_name) == 0) {
-               if (pBot->ammoStatus == AMMO_UNNEEDED || pent->v.owner != NULL || pent->v.model == 0)
+               if (pBot->ammoStatus == AMMO_UNNEEDED || pent->v.owner != nullptr || pent->v.model == 0)
                   continue;
 
                // check if the item is not visible (i.e. has not respawned)
@@ -1243,7 +1244,7 @@ void BotFindItem(bot_t *pBot) {
                if (strcmp(modelName, "models/sentry3.mdl") != 0 || pent->v.health < 91) {
                   // set up a job to help this sentry gun out
                   newJob = InitialiseNewJob(pBot, JOB_MAINTAIN_OBJECT);
-                  if (newJob != NULL) {
+                  if (newJob != nullptr) {
                      newJob->object = pent;
                      SubmitNewJob(pBot, JOB_MAINTAIN_OBJECT, newJob);
                   }
@@ -1252,19 +1253,19 @@ void BotFindItem(bot_t *pBot) {
             // teleporter entrances
             else if (strcmp("building_teleporter", item_name) == 0) {
                // ignore Teleporters whilst in combat
-               if (pBot->enemy.ptr != NULL)
+               if (pBot->enemy.ptr != nullptr)
                   continue;
 
                // is this the bots own teleporter entrance?
                // ignore it if the bot hasn't made an exit yet
-               if (pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER && pent == pBot->tpEntrance && pBot->tpExit == NULL)
+               if (pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER && pent == pBot->tpEntrance && pBot->tpExit == nullptr)
                   continue;
 
                // if it's an enemy teleporter maybe set up a job to attack it
                const int TeleportTeam = BotTeamColorCheck(pent);
                if (pBot->current_team != TeleportTeam && !(team_allies[pBot->current_team] & 1 << TeleportTeam)) {
                   newJob = InitialiseNewJob(pBot, JOB_ATTACK_TELEPORT);
-                  if (newJob != NULL) {
+                  if (newJob != nullptr) {
                      newJob->object = pent;
                      if (SubmitNewJob(pBot, JOB_ATTACK_TELEPORT, newJob) == TRUE)
                         return;
@@ -1272,14 +1273,14 @@ void BotFindItem(bot_t *pBot) {
                }
 
                // is this an allied Teleporter the bot hasn't used before?
-               else if (pBot->enemy.ptr == NULL && bot_can_use_teleporter == TRUE && pent->v.iuser1 == W_FL_TFC_TELEPORTER_ENTRANCE) {
+               else if (pBot->enemy.ptr == nullptr && bot_can_use_teleporter == TRUE && pent->v.iuser1 == W_FL_TFC_TELEPORTER_ENTRANCE) {
                   // if the bot doesn't know where this entrance goes, give it a test run
                   const int telePairIndex = BotRecallTeleportEntranceIndex(pBot, pent);
                   if (telePairIndex == -1                            // unknown entrance
                       || pBot->telePair[telePairIndex].exitWP == -1) // unknown exit
                   {
                      newJob = InitialiseNewJob(pBot, JOB_USE_TELEPORT);
-                     if (newJob != NULL) {
+                     if (newJob != nullptr) {
                         newJob->object = pent;
                         newJob->waypoint = WaypointFindNearest_E(pent, 500.0, pBot->current_team);
                         newJob->waypointTwo = -1; // remember that destination is unknown
@@ -1426,9 +1427,9 @@ void BotFindItem(bot_t *pBot) {
    } // end while loop
 
    // if the bot has found something to pick up set up a job to pick it up
-   if (pPickupEntity != NULL) {
+   if (pPickupEntity != nullptr) {
       newJob = InitialiseNewJob(pBot, JOB_PICKUP_ITEM);
-      if (newJob != NULL) {
+      if (newJob != nullptr) {
          newJob->object = pPickupEntity;
          newJob->origin = pPickupEntity->v.origin; // remember it's exact location too
          newJob->waypoint = WaypointFindNearest_E(pPickupEntity, 500.0, pBot->current_team);
@@ -1450,10 +1451,10 @@ static void BotFlagSpottedCheck(bot_t *pBot) {
 
    // only check for flags the bot can see
    // that are sitting around unclaimed
-   edict_t *pent = NULL;
-   while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "item_tfgoal")) != NULL && !FNullEnt(pent)) {
+   edict_t *pent = nullptr;
+   while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "item_tfgoal")) != nullptr && !FNullEnt(pent)) {
       // if the bot can see the flag
-      if (pent->v.owner == NULL && !(pent->v.effects & EF_NODRAW) && VectorsNearerThan(pBot->pEdict->v.origin, pent->v.origin, 1500.0) && FInViewCone(pent->v.origin, pBot->pEdict) && BotCanSeeOrigin(pBot, pent->v.origin)) {
+      if (pent->v.owner == nullptr && !(pent->v.effects & EF_NODRAW) && VectorsNearerThan(pBot->pEdict->v.origin, pent->v.origin, 1500.0) && FInViewCone(pent->v.origin, pBot->pEdict) && BotCanSeeOrigin(pBot, pent->v.origin)) {
          // ignore this flag if it's on an unavailable waypoint
          int nearestWP = WaypointFindNearest_V(pent->v.origin, 80.0, -1);
          if (nearestWP != -1 && !WaypointAvailable(nearestWP, pBot->current_team))
@@ -1466,7 +1467,7 @@ static void BotFlagSpottedCheck(bot_t *pBot) {
          if (nearestWP != -1) {
             // set up a job to retrieve the flag
             job_struct *newJob = InitialiseNewJob(pBot, JOB_PICKUP_FLAG);
-            if (newJob != NULL) {
+            if (newJob != nullptr) {
                newJob->waypoint = nearestWP;
                newJob->object = pent;
                newJob->origin = pent->v.origin;
@@ -1553,11 +1554,11 @@ static void BotAmmoCheck(bot_t *pBot) {
 // to any player the bot is trying to get around, NULL otherwise.
 edict_t *BotContactThink(bot_t *pBot) {
    if (pBot->f_snipe_time > pBot->f_think_time)
-      return NULL;
+      return nullptr;
 
    float nearestdistance = 100.0f;
    Vector vang; // vang is angle to avoid person
-   edict_t *playerToAvoid = NULL;
+   edict_t *playerToAvoid = nullptr;
 
    // disguised spies prefer to keep more of a distance
    if (pBot->disguise_state == DISGUISE_COMPLETE && pBot->pEdict->v.playerclass == TFC_CLASS_SPY)
@@ -1568,7 +1569,7 @@ edict_t *BotContactThink(bot_t *pBot) {
       edict_t *pPlayer = INDEXENT(i);
 
       // skip invalid players and skip self (i.e. this bot)
-      if (pPlayer != NULL && !pPlayer->free && pPlayer != pBot->pEdict && IsAlive(pPlayer)) {
+      if (pPlayer != nullptr && !pPlayer->free && pPlayer != pBot->pEdict && IsAlive(pPlayer)) {
          if (b_observer_mode && !((pPlayer->v.flags & FL_FAKECLIENT) == FL_FAKECLIENT))
             continue;
 
@@ -1605,7 +1606,7 @@ edict_t *BotContactThink(bot_t *pBot) {
    }
 
    // avoid the nearest player if they are too close
-   if (playerToAvoid != NULL) {
+   if (playerToAvoid != nullptr) {
       // if the other player is ducking jump over them
       if (playerToAvoid->v.button & IN_DUCK && nearestdistance < 70.1f) {
          pBot->pEdict->v.button |= IN_JUMP;
@@ -1675,7 +1676,7 @@ edict_t *BotContactThink(bot_t *pBot) {
       return playerToAvoid;
    }
 
-   return NULL;
+   return nullptr;
 }
 
 void script(const char *sz) {
@@ -1687,14 +1688,14 @@ void script(const char *sz) {
       ALERT(at_console, msg);
 
       fp = UTIL_OpenFoxbotLog();
-      if (fp != NULL) {
+      if (fp != nullptr) {
          fprintf(fp, "msg (%s)\n", sz);
          fclose(fp);
       }
    }
 
    for (int current_msg = 0; current_msg < MSG_MAX; current_msg++) {
-      if (sz != NULL && msg_msg[current_msg] != NULL && sz[0] != 0 && msg_msg[current_msg][0] != 0) {
+      if (sz != nullptr && msg_msg[current_msg] != nullptr && sz[0] != 0 && msg_msg[current_msg][0] != 0) {
          // ALERT( at_console, msg_msg[current_msg]);
          // ALERT( at_console, "-\n");
          // some messages have line returns, so check
@@ -1743,7 +1744,7 @@ void script(const char *sz) {
                             fprintf(fp,"b %d\n",current_msg); fclose(fp); }*/
 
             msg_com_struct *curr = &msg_com[current_msg];
-            while (curr != NULL && (int)curr != -1) {
+            while (curr != nullptr && (int)curr != -1) {
                /*{ fp=UTIL_OpenFoxbotLog();
                                fprintf(fp,"Started while %s %d\n",sz,current_msg);
                                fclose(fp); }*/
@@ -2076,7 +2077,7 @@ static void BotAttackerCheck(bot_t *pBot) {
    //	pBot->pEdict->v.origin + Vector(0, 0, 50),
    //	10, 2, 250, 250, 250, 200, 10);
 
-   edict_t *mysteryPlayer = NULL; // unseen enemies
+   edict_t *mysteryPlayer = nullptr; // unseen enemies
    bool readyDefender = FALSE;
    if (pBot->mission == ROLE_DEFENDER && pBot->visAllyCount < 4 // too many allies nearby = white noise
        && pBot->bot_skill < 4 && PlayerHealthPercent(pBot->pEdict) >= pBot->trait.health && pBot->enemy.f_lastSeen + 5.0 < pBot->f_think_time)
@@ -2129,7 +2130,7 @@ static void BotAttackerCheck(bot_t *pBot) {
             if (!FInViewCone(vecEnd, pBot->pEdict)) {
                // set up a job for spotting the unseen assailant
                job_struct *newJob = InitialiseNewJob(pBot, JOB_SPOT_STIMULUS);
-               if (newJob != NULL) {
+               if (newJob != nullptr) {
                   newJob->origin = pPlayer->v.origin + pPlayer->v.view_ofs;
                   newJob->waypoint = pBot->goto_wp;
                   SubmitNewJob(pBot, JOB_SPOT_STIMULUS, newJob);
@@ -2141,7 +2142,7 @@ static void BotAttackerCheck(bot_t *pBot) {
                return;
             }
          } else if (readyDefender // remember any unseen enemies we can investigate
-                    && mysteryPlayer == NULL) {
+                    && mysteryPlayer == nullptr) {
             mysteryPlayer = pPlayer;
          }
       }
@@ -2149,9 +2150,9 @@ static void BotAttackerCheck(bot_t *pBot) {
 
    // no visible enemies were found, were any non-visible enemies found
    // near enough to go investigate
-   if (mysteryPlayer != NULL) {
+   if (mysteryPlayer != nullptr) {
       job_struct *newJob = InitialiseNewJob(pBot, JOB_INVESTIGATE_AREA);
-      if (newJob != NULL) {
+      if (newJob != nullptr) {
          newJob->waypoint = WaypointFindNearest_V(mysteryPlayer->v.origin, 500.0, pBot->current_team);
 
          if (newJob->waypoint != -1) {
@@ -2179,7 +2180,7 @@ static void BotAttackerCheck(bot_t *pBot) {
 // According to Botman some sound stuff is handled by the client(such as
 // footsteps).  But this function still works on Listen and Dedicated servers.
 void BotSoundSense(edict_t *pEdict, const char *pszSample, const float fVolume) {
-   if (pEdict == NULL)
+   if (pEdict == nullptr)
       return;
 
    const int sourceTeam = UTIL_GetTeam(pEdict);
@@ -2231,7 +2232,7 @@ void BotSoundSense(edict_t *pEdict, const char *pszSample, const float fVolume) 
                      if (!FInViewCone(pEdict->v.origin, bots[i].pEdict)) {
                         // set up a job to investigate the sound
                         newJob = InitialiseNewJob(&bots[i], JOB_INVESTIGATE_AREA);
-                        if (newJob != NULL) {
+                        if (newJob != nullptr) {
                            newJob->waypoint = closestWPToThreat;
                            SubmitNewJob(&bots[i], JOB_INVESTIGATE_AREA, newJob);
                         }
@@ -2255,7 +2256,7 @@ void BotSoundSense(edict_t *pEdict, const char *pszSample, const float fVolume) 
       // find the nearest Medic and Engineer to the sound source
       for (int index = 0; index < 32; index++) {
          // look for the nearest free Medic
-         if (bots[index].is_used && bots[index].pEdict->v.playerclass == TFC_CLASS_MEDIC && bots[index].enemy.ptr == NULL) {
+         if (bots[index].is_used && bots[index].pEdict->v.playerclass == TFC_CLASS_MEDIC && bots[index].enemy.ptr == nullptr) {
             botDistance = (bots[index].pEdict->v.origin - pEdict->v.origin).Length();
             if (botDistance < hearingDistance && botDistance < nearestMedDist) {
                nearestMedic = index;
@@ -2265,7 +2266,7 @@ void BotSoundSense(edict_t *pEdict, const char *pszSample, const float fVolume) 
          }
 
          // look for the nearest free Engineer
-         if (bots[index].is_used && bots[index].pEdict->v.playerclass == TFC_CLASS_ENGINEER && bots[index].enemy.ptr == NULL && bots[index].m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > 20) {
+         if (bots[index].is_used && bots[index].pEdict->v.playerclass == TFC_CLASS_ENGINEER && bots[index].enemy.ptr == nullptr && bots[index].m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > 20) {
             botDistance = (bots[index].pEdict->v.origin - pEdict->v.origin).Length();
             if (botDistance < hearingDistance && botDistance < nearestEngDist) {
                nearestEngy = index;
@@ -2281,7 +2282,7 @@ void BotSoundSense(edict_t *pEdict, const char *pszSample, const float fVolume) 
             if (bots[nearestMedic].current_team == UTIL_GetTeam(pEdict)) {
                // set up a job to handle the healing/repairing
                newJob = InitialiseNewJob(&bots[nearestMedic], JOB_BUFF_ALLY);
-               if (newJob != NULL) {
+               if (newJob != nullptr) {
                   newJob->player = pEdict;
                   newJob->origin = pEdict->v.origin; // remember where the player was
                   SubmitNewJob(&bots[nearestMedic], JOB_BUFF_ALLY, newJob);
@@ -2290,7 +2291,7 @@ void BotSoundSense(edict_t *pEdict, const char *pszSample, const float fVolume) 
          } else // go find the person who called for a Medic
          {
             newJob = InitialiseNewJob(&bots[nearestMedic], JOB_INVESTIGATE_AREA);
-            if (newJob != NULL) {
+            if (newJob != nullptr) {
                const int closestWPToSound = WaypointFindNearest_V(pEdict->v.origin, 500.0, bots[nearestMedic].current_team);
 
                if (closestWPToSound != -1) {
@@ -2313,7 +2314,7 @@ void BotSoundSense(edict_t *pEdict, const char *pszSample, const float fVolume) 
             if (bots[nearestEngy].current_team == UTIL_GetTeam(pEdict) && !PlayerIsInfected(pEdict) && PlayerArmorPercent(pEdict) < 100) {
                // set up a job to handle the healing/repairing
                newJob = InitialiseNewJob(&bots[nearestEngy], JOB_BUFF_ALLY);
-               if (newJob != NULL) {
+               if (newJob != nullptr) {
                   newJob->player = pEdict;
                   newJob->origin = pEdict->v.origin; // remember where the player was
                   SubmitNewJob(&bots[nearestEngy], JOB_BUFF_ALLY, newJob);
@@ -2322,7 +2323,7 @@ void BotSoundSense(edict_t *pEdict, const char *pszSample, const float fVolume) 
          } else // go find the person who called for a Medic
          {
             newJob = InitialiseNewJob(&bots[nearestEngy], JOB_INVESTIGATE_AREA);
-            if (newJob != NULL) {
+            if (newJob != nullptr) {
                const int closestWPToSound = WaypointFindNearest_V(pEdict->v.origin, 500.0, bots[nearestEngy].current_team);
 
                if (closestWPToSound != -1) {
@@ -2347,7 +2348,7 @@ void BotSoundSense(edict_t *pEdict, const char *pszSample, const float fVolume) 
           && bots[i].f_soundReactTime < bots[i].f_think_time && bots[i].pEdict->v.deadflag != 5) // skip feigning spies(for now)
       {
          newJob = InitialiseNewJob(&bots[i], JOB_SPOT_STIMULUS);
-         if (newJob == NULL)
+         if (newJob == nullptr)
             continue;
 
          // sometimes ignore sounds made by allies
@@ -2385,7 +2386,7 @@ void BotSoundSense(edict_t *pEdict, const char *pszSample, const float fVolume) 
 // of a particular pair of Teleporters it knows about.
 void BotForgetTeleportPair(bot_t *pBot, const int index) {
    if (index > -1 && index < MAX_BOT_TELEPORTER_MEMORY) {
-      pBot->telePair[index].entrance = NULL;
+      pBot->telePair[index].entrance = nullptr;
       pBot->telePair[index].entranceWP = -1;
       pBot->telePair[index].exitWP = -1;
    }
@@ -2396,7 +2397,7 @@ void BotForgetTeleportPair(bot_t *pBot, const int index) {
 // Or -1 if the bot hasn't encountered the Teleporter entrance before.
 int BotRecallTeleportEntranceIndex(const bot_t *pBot, edict_t *const teleportEntrance) {
    // just checking!
-   if (teleportEntrance == NULL)
+   if (teleportEntrance == nullptr)
       return -1;
 
    for (int i = 0; i < MAX_BOT_TELEPORTER_MEMORY; i++) {
@@ -2424,14 +2425,14 @@ int BotGetFreeTeleportIndex(const bot_t *pBot) {
 // passed, or NULL if none. This should be useful for stopping engineers
 // building guns at the same defense points.
 edict_t *BotEntityAtPoint(const char *entityName, const Vector &location, const float range) {
-   edict_t *pent = NULL;
-   while ((pent = FIND_ENTITY_IN_SPHERE(pent, location, range)) != NULL && !FNullEnt(pent)) {
+   edict_t *pent = nullptr;
+   while ((pent = FIND_ENTITY_IN_SPHERE(pent, location, range)) != nullptr && !FNullEnt(pent)) {
       // strcpy(item_name, STRING(pent->v.classname));
       if (strcmp(entityName, STRING(pent->v.classname)) == 0)
          return pent;
    }
 
-   return NULL;
+   return nullptr;
 }
 
 // This function returns the edict of any teammate who is within a specified radius
@@ -2441,7 +2442,7 @@ edict_t *BotAllyAtVector(const bot_t *pBot, const Vector &r_vecOrigin, const flo
    for (int i = 1; i <= gpGlobals->maxClients; i++) {
       edict_t *pPlayer = INDEXENT(i);
 
-      if (pPlayer != NULL && !pPlayer->free && pPlayer != pBot->pEdict // ignore this bot
+      if (pPlayer != nullptr && !pPlayer->free && pPlayer != pBot->pEdict // ignore this bot
           && UTIL_GetTeam(pPlayer) == pBot->current_team && VectorsNearerThan(pPlayer->v.origin, r_vecOrigin, range)) {
          if (stationaryOnly) {
             if (pPlayer->v.velocity.Length() < 1.0)
@@ -2451,7 +2452,7 @@ edict_t *BotAllyAtVector(const bot_t *pBot, const Vector &r_vecOrigin, const flo
       }
    }
 
-   return NULL;
+   return nullptr;
 }
 
 // This function returns the number of a bots teammates who are
@@ -2488,7 +2489,7 @@ short BotTeammatesNearWaypoint(const bot_t *pBot, const int waypoint) {
 bot_t *BotDefenderAtWaypoint(const bot_t *pBot, const int waypoint, const float range) {
    // sanity check
    if (waypoint < 0)
-      return FALSE;
+      return nullptr;
 
    for (int i = 0; i < MAX_BOTS; i++) {
       // Is this a bot defender teammate, with an interest in the
@@ -2502,7 +2503,7 @@ bot_t *BotDefenderAtWaypoint(const bot_t *pBot, const int waypoint, const float 
       }
    }
 
-   return NULL;
+   return nullptr;
 }
 
 // This is a modified version of a similar function from the HPB bot source code.
@@ -2539,9 +2540,9 @@ static void BotGrenadeAvoidance(bot_t *pBot) {
    // start looking for known visible grenades in front of the bot
    char classname[30];
    Vector entity_origin;
-   edict_t *pent = NULL;
-   edict_t *threatEnt = NULL;
-   while (avoid_action == avoid_no_action && (pent = FIND_ENTITY_IN_SPHERE(pent, search_source, 250)) != NULL && !FNullEnt(pent)) {
+   edict_t *pent = nullptr;
+   edict_t *threatEnt = nullptr;
+   while (avoid_action == avoid_no_action && (pent = FIND_ENTITY_IN_SPHERE(pent, search_source, 250)) != nullptr && !FNullEnt(pent)) {
       if (pent->v.classname == 0)
          continue;
 
@@ -2609,9 +2610,9 @@ static void BotGrenadeAvoidance(bot_t *pBot) {
       }
    }
 
-   if (avoid_action == avoid_retreat && threatEnt != NULL) {
+   if (avoid_action == avoid_retreat && threatEnt != nullptr) {
       job_struct *newJob = InitialiseNewJob(pBot, JOB_AVOID_AREA_DAMAGE);
-      if (newJob != NULL) {
+      if (newJob != nullptr) {
          newJob->object = threatEnt;           // remember the object
          newJob->origin = threatEnt->v.origin; // remember the object's origin too
          SubmitNewJob(pBot, JOB_AVOID_AREA_DAMAGE, newJob);
@@ -2791,7 +2792,7 @@ static void BotComms(bot_t *pBot) {
                if (BotChangeClass(pBot, iClass, fromName)) {
                   UTIL_HostSay(pBot->pEdict, 1, "Roger");
                   if (strcasecmp("changeclassnow", cmd) == 0)
-                     FakeClientCommand(pBot->pEdict, "kill", NULL, NULL);
+                     FakeClientCommand(pBot->pEdict, "kill", nullptr, nullptr);
                }
             }
          }
@@ -2871,14 +2872,14 @@ static void BotComms(bot_t *pBot) {
    // chat related stuff below, ignore if already chatting
    // or if the bot has no current waypoint
    job_struct *newJob = InitialiseNewJob(pBot, JOB_CHAT);
-   if (newJob == NULL || pBot->current_wp < 0)
+   if (newJob == nullptr || pBot->current_wp < 0)
       return;
 
    // greetings from the bots
    if (pBot->greeting == FALSE && pBot->create_time + 3.0 > pBot->f_think_time) {
       pBot->greeting = TRUE;
       if (random_long(1, 1000) < static_cast<long>(bot_chat)) {
-         chat.pickRandomChatString(newJob->message, MAX_CHAT_LENGTH, CHAT_TYPE_GREETING, NULL);
+         chat.pickRandomChatString(newJob->message, MAX_CHAT_LENGTH, CHAT_TYPE_GREETING, nullptr);
 
          newJob->message[MAX_CHAT_LENGTH - 1] = '\0';
          SubmitNewJob(pBot, JOB_CHAT, newJob);
@@ -2892,7 +2893,7 @@ static void BotComms(bot_t *pBot) {
 
    // my chat, bot has died
    // good idea to check for null...urg!
-   if (pBot->killer_edict != NULL && random_long(1, 1000) < static_cast<long>(bot_chat)) {
+   if (pBot->killer_edict != nullptr && random_long(1, 1000) < static_cast<long>(bot_chat)) {
       if (pBot->killer_edict->v.frags > pEdict->v.frags) {
          chat.pickRandomChatString(newJob->message, MAX_CHAT_LENGTH, CHAT_TYPE_KILLED_LOW, STRING(pBot->killer_edict->v.netname));
       } else {
@@ -2902,16 +2903,16 @@ static void BotComms(bot_t *pBot) {
       newJob->message[MAX_CHAT_LENGTH - 1] = '\0';
       SubmitNewJob(pBot, JOB_CHAT, newJob);
 
-      if (bot_xmas && random_long(1, 100) <= 30 && pBot->killer_edict != NULL) {
+      if (bot_xmas && random_long(1, 100) <= 30 && pBot->killer_edict != nullptr) {
          strcpy(pBot->message, "xmas");
          pBot->newmsg = TRUE;
       }
-      pBot->killer_edict = NULL;
+      pBot->killer_edict = nullptr;
    } else
-      pBot->killer_edict = NULL;
+      pBot->killer_edict = nullptr;
 
    // haha I killed you messages
-   if (pBot->killed_edict != NULL && random_long(1, 1000) < static_cast<long>(bot_chat)) {
+   if (pBot->killed_edict != nullptr && random_long(1, 1000) < static_cast<long>(bot_chat)) {
       if (pBot->killed_edict->v.frags > pEdict->v.frags) {
          chat.pickRandomChatString(newJob->message, MAX_CHAT_LENGTH, CHAT_TYPE_KILL_LOW, STRING(pBot->killed_edict->v.netname));
       } else {
@@ -2921,13 +2922,13 @@ static void BotComms(bot_t *pBot) {
       newJob->message[MAX_CHAT_LENGTH - 1] = '\0';
       SubmitNewJob(pBot, JOB_CHAT, newJob);
 
-      if (bot_xmas && random_long(1, 100) <= 30 && pBot->killed_edict != NULL) {
+      if (bot_xmas && random_long(1, 100) <= 30 && pBot->killed_edict != nullptr) {
          strcpy(pBot->message, "xmas");
          pBot->newmsg = TRUE;
       }
-      pBot->killed_edict = NULL;
+      pBot->killed_edict = nullptr;
    } else
-      pBot->killed_edict = NULL;
+      pBot->killed_edict = nullptr;
 }
 
 // BotChangeClass - Given a bot and a class #, this function should
@@ -3010,7 +3011,7 @@ static bool BotChangeClass(bot_t *pBot, const int iClass, const char *from) {
             return FALSE;
          }
 
-         FakeClientCommand(pBot->pEdict, c_class, NULL, NULL);
+         FakeClientCommand(pBot->pEdict, c_class, nullptr, nullptr);
          pBot->lockClass = TRUE;
       }
    }
@@ -3255,7 +3256,7 @@ static void BotPickNewClass(bot_t *pBot) {
       break;
    }
    pBot->bot_class = new_class;
-   FakeClientCommand(pBot->pEdict, c_class, NULL, NULL);
+   FakeClientCommand(pBot->pEdict, c_class, nullptr, nullptr);
 
    // decide it's role
    if (defender_required)
@@ -3365,7 +3366,7 @@ static bool BotChooseCounterClass(bot_t *pBot) {
       return FALSE;
    }
    pBot->bot_class = new_class;
-   FakeClientCommand(pBot->pEdict, c_class, NULL, NULL);
+   FakeClientCommand(pBot->pEdict, c_class, nullptr, nullptr);
 
    pBot->mission = ROLE_ATTACKER; // reset the mission to it's default
 
@@ -3398,7 +3399,7 @@ static bool BotDemomanNeededCheck(bot_t *pBot) {
 
    if (WaypointFindDetpackGoal(pBot->current_wp, pBot->current_team) != -1) {
       pBot->bot_class = TFC_CLASS_DEMOMAN;
-      FakeClientCommand(pBot->pEdict, "demoman", NULL, NULL);
+      FakeClientCommand(pBot->pEdict, "demoman", nullptr, nullptr);
 
       // delay changing class again for a while
       pBot->deathsTillClassChange = 6;
@@ -3496,8 +3497,8 @@ static void BotReportMyFlagDrop(bot_t *pBot) {
    bool flag_was_dropped = FALSE;
 
    // check if the flag still exists where the bot died
-   edict_t *pent = NULL;
-   while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "item_tfgoal")) != NULL && !FNullEnt(pent)) {
+   edict_t *pent = nullptr;
+   while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "item_tfgoal")) != nullptr && !FNullEnt(pent)) {
       if (pBot->flag_impulse == pent->v.impulse) {
          const float ll = (pent->v.origin - pBot->pEdict->v.origin).Length();
          if (ll > 0 && ll < 64.0f) {
@@ -3508,8 +3509,8 @@ static void BotReportMyFlagDrop(bot_t *pBot) {
    }
 
    if (!flag_was_dropped) {
-      pent = NULL;
-      while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "info_tfgoal")) != NULL && !FNullEnt(pent)) {
+      pent = nullptr;
+      while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "info_tfgoal")) != nullptr && !FNullEnt(pent)) {
          if (pBot->flag_impulse == pent->v.impulse) {
             const float ll = (pent->v.origin - pBot->pEdict->v.origin).Length();
             if (ll > 0 && ll < 64.0f) {
@@ -3527,7 +3528,7 @@ static void BotReportMyFlagDrop(bot_t *pBot) {
 
    // set up a job to retrieve the flag
    job_struct *newJob = InitialiseNewJob(pBot, JOB_PICKUP_FLAG);
-   if (newJob != NULL) {
+   if (newJob != nullptr) {
       newJob->waypoint = WaypointFindNearest_E(pent, 600.0, pBot->current_team);
       newJob->object = pent;
       newJob->origin = pent->v.origin;
@@ -3539,7 +3540,7 @@ static void BotReportMyFlagDrop(bot_t *pBot) {
    if (offensive_chatter && bot_area != -1) {
       // give the other bots on the bot's team the same JOB_PICKUP_FLAG
       // job if they're interested
-      if (newJob != NULL) {
+      if (newJob != nullptr) {
          for (int i = 0; i < 32; i++) {
             if (bots[i].is_used && &bots[i] != pBot // not this bot
                 && bots[i].bot_has_flag == FALSE && bots[i].mission == ROLE_ATTACKER && bots[i].current_team == pBot->current_team) {
@@ -3549,7 +3550,7 @@ static void BotReportMyFlagDrop(bot_t *pBot) {
       }
 
       newJob = InitialiseNewJob(pBot, JOB_REPORT);
-      if (newJob != NULL) {
+      if (newJob != nullptr) {
          switch (pBot->current_team) {
          case 0:
             snprintf(newJob->message, MAX_CHAT_LENGTH, "Flag dropped %s", areas[bot_area].namea);
@@ -3585,7 +3586,7 @@ static void BotEnemyCarrierAlert(bot_t *pBot) {
       return;
 
    job_struct *newJob = InitialiseNewJob(pBot, JOB_REPORT);
-   if (newJob == NULL)
+   if (newJob == nullptr)
       return;
 
    // Arrange the operator in the proper order [APG]RoboCop[CL]
@@ -3644,7 +3645,7 @@ static void BotEnemyCarrierAlert(bot_t *pBot) {
 // Called from StartFrame().
 void BotThink(bot_t *pBot) {
    // this sanity check might not be necessary, but wont hurt anything
-   if (pBot == NULL)
+   if (pBot == nullptr)
       return;
 
    //{ fp=UTIL_OpenFoxbotLog(); fprintf(fp, "1\n"); fclose(fp); }
@@ -3693,7 +3694,7 @@ void BotThink(bot_t *pBot) {
       BotResetJobBuffer(pBot);
       pBot->f_duck_time = pBot->f_think_time;
       pBot->strafe_mod = STRAFE_MOD_NORMAL;
-      pBot->sentry_edict = NULL;
+      pBot->sentry_edict = nullptr;
       pBot->SGRotated = FALSE;
       BotStartGame(pBot);
       g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, 0.0, 0, 0, pBot->pEdict->v.button, (byte)0, (byte)msecval);
@@ -3843,11 +3844,11 @@ void BotThink(bot_t *pBot) {
    // if the feign timer is active play dead
    if (pBot->f_feigningTime >= pBot->f_think_time) {
       if (pBot->pEdict->v.deadflag != 5)
-         FakeClientCommand(pBot->pEdict, "sfeign", NULL, NULL);
+         FakeClientCommand(pBot->pEdict, "sfeign", nullptr, nullptr);
    } else // stop playing dead
    {
       if (pBot->pEdict->v.deadflag == 5)
-         FakeClientCommand(pBot->pEdict, "feign", NULL, NULL);
+         FakeClientCommand(pBot->pEdict, "feign", nullptr, nullptr);
    }
 
    // don't move while pausing
@@ -3921,7 +3922,7 @@ void BotThink(bot_t *pBot) {
       speed = 7;
    else if (diff > -110 && diff < 110)
       speed = 10;
-   if (pBot->enemy.ptr == NULL)
+   if (pBot->enemy.ptr == nullptr)
       speed = static_cast<int>(speed * 2.5);
    speed *= 5 - pBot->bot_skill + pBot->bot_skill / 5;
    if (speed != 0)
@@ -3968,7 +3969,7 @@ static void BotSenseEnvironment(bot_t *pBot) {
    if (b_botdontshoot == 0)
       BotEnemyCheck(pBot);
    else
-      pBot->enemy.ptr = NULL; // clear enemy pointer(b_botdontshoot is true)
+      pBot->enemy.ptr = nullptr; // clear enemy pointer(b_botdontshoot is true)
 
    BotAmmoCheck(pBot);
 
@@ -3981,7 +3982,7 @@ static void BotSenseEnvironment(bot_t *pBot) {
       //	pBot->pEdict->v.button, (byte)0, pBot->msecval);
    }
 
-   if (pBot->enemy.ptr == NULL)
+   if (pBot->enemy.ptr == nullptr)
       BotAttackerCheck(pBot);
 
    // check if bot should look for items now or not...
@@ -4023,7 +4024,7 @@ static void BotFight(bot_t *pBot) {
    // DrEvils Nade update, or toss a nade if threatlevel high enuff.
    if (pBot->lastEnemySentryGun && pBot->enemy.ptr == pBot->lastEnemySentryGun && !FNullEnt(pBot->lastEnemySentryGun))
       BotNadeHandler(pBot, false, GRENADE_STATIONARY);
-   else if (pBot->enemy.ptr != NULL && pBot->enemy.f_firstSeen + 1.0 < pBot->f_think_time && BotAssessThreatLevel(pBot) > 50)
+   else if (pBot->enemy.ptr != nullptr && pBot->enemy.f_firstSeen + 1.0 < pBot->f_think_time && BotAssessThreatLevel(pBot) > 50)
       BotNadeHandler(pBot, true, GRENADE_RANDOM);
    else
       BotNadeHandler(pBot, true, 0);
@@ -4031,14 +4032,14 @@ static void BotFight(bot_t *pBot) {
    // detonate the bots dispenser if enemies are using it
    if (pBot->f_dispenserDetTime > 0.5 // i.e. a valid time
        && pBot->f_dispenserDetTime < pBot->f_think_time && !FNullEnt(pBot->dispenser_edict)) {
-      FakeClientCommand(pBot->pEdict, "detdispenser", NULL, NULL);
+      FakeClientCommand(pBot->pEdict, "detdispenser", nullptr, nullptr);
       pBot->f_dispenserDetTime = 0.0;
       pBot->has_dispenser = FALSE;
-      pBot->dispenser_edict = NULL;
+      pBot->dispenser_edict = nullptr;
    }
 
    // if the bot has an enemy
-   if (pBot->enemy.ptr != NULL) {
+   if (pBot->enemy.ptr != nullptr) {
       BotShootAtEnemy(pBot);
 
       BotCombatThink(pBot);
@@ -4158,7 +4159,7 @@ static void BotCombatThink(bot_t *pBot) {
 
       if (tooBusySniping == FALSE) {
          job_struct *newJob = InitialiseNewJob(pBot, JOB_PURSUE_ENEMY);
-         if (newJob != NULL) {
+         if (newJob != nullptr) {
             newJob->player = pBot->enemy.ptr;
             newJob->origin = pBot->enemy.ptr->v.origin; // remember where
             SubmitNewJob(pBot, JOB_PURSUE_ENEMY, newJob);
@@ -4169,7 +4170,7 @@ static void BotCombatThink(bot_t *pBot) {
    // make the hunted seek backup when alone(the snipers love a lone fawn in the woods!)
    if (pBot->pEdict->v.playerclass == TFC_CLASS_CIVILIAN && pBot->bot_has_flag && pBot->visAllyCount <= 1 && pBot->f_lastAllySeenTime + 15.0 > pBot->f_think_time && pBot->f_lastAllySeenTime > pBot->f_killed_time) {
       job_struct *newJob = InitialiseNewJob(pBot, JOB_SEEK_BACKUP);
-      if (newJob != NULL)
+      if (newJob != nullptr)
          SubmitNewJob(pBot, JOB_SEEK_BACKUP, newJob);
    }
 
@@ -4178,11 +4179,11 @@ static void BotCombatThink(bot_t *pBot) {
    {
       // seek an ally if the bot is alone and saw an ally recently
       job_struct *newJob = InitialiseNewJob(pBot, JOB_SEEK_BACKUP);
-      if (newJob != NULL && pBot->visAllyCount < 2 && pBot->f_lastAllySeenTime + 15.0 > pBot->f_think_time) {
+      if (newJob != nullptr && pBot->visAllyCount < 2 && pBot->f_lastAllySeenTime + 15.0 > pBot->f_think_time) {
          SubmitNewJob(pBot, JOB_SEEK_BACKUP, newJob);
       } else {
          job_struct *newJob2 = InitialiseNewJob(pBot, JOB_AVOID_ENEMY);
-         if (newJob2 != NULL) {
+         if (newJob2 != nullptr) {
             newJob2->player = pBot->enemy.ptr;
             SubmitNewJob(pBot, JOB_AVOID_ENEMY, newJob2);
          }
@@ -4406,7 +4407,7 @@ static void BotSpectatorDebug(bot_t *pBot) {
    edict_t *pPlayer = INDEXENT(1);
 
    // only give debug messages if a spectating human player is very close
-   if (pPlayer != NULL && !pPlayer->free &&
+   if (pPlayer != nullptr && !pPlayer->free &&
        !(pPlayer->v.flags & FL_FAKECLIENT)
        //	&& pPlayer->v.movetype == MOVETYPE_NOCLIP  // didn't work
        && !IsAlive(pPlayer) && VectorsNearerThan(pBot->pEdict->v.origin, pPlayer->v.origin, 80.0)) {
@@ -4482,7 +4483,7 @@ static void BotSpectatorDebug(bot_t *pBot) {
       msg[254] = '\0';
 
       // output the message
-      MESSAGE_BEGIN(MSG_ONE, SVC_TEMPENTITY, NULL, pPlayer);
+      MESSAGE_BEGIN(MSG_ONE, SVC_TEMPENTITY, nullptr, pPlayer);
       WRITE_BYTE(TE_TEXTMESSAGE);
       WRITE_BYTE(2 & 0xFF);
 

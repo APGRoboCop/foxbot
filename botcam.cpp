@@ -33,7 +33,7 @@
 #include <meta_api.h>
 
 void CreateCamera(edict_t *pPlayer, edict_t *pEntity) {
-   if (pPlayer != NULL && pEntity != NULL) {
+   if (pPlayer != nullptr && pEntity != nullptr) {
       edict_t *pCamera = CREATE_NAMED_ENTITY(MAKE_STRING("info_target"));
       MDLL_Spawn(pCamera);
       pCamera->v.origin = pEntity->v.origin + pEntity->v.view_ofs;
@@ -56,9 +56,9 @@ void CreateCamera(edict_t *pPlayer, edict_t *pEntity) {
 }
 
 void KillCamera(edict_t *pPlayer) {
-   if (pPlayer != NULL) {
-      edict_t *pCCamera = NULL;
-      while ((pCCamera = FIND_ENTITY_BY_CLASSNAME(pCCamera, "entity_botcam")) != NULL && !FNullEnt(pCCamera)) {
+   if (pPlayer != nullptr) {
+      edict_t *pCCamera = nullptr;
+      while ((pCCamera = FIND_ENTITY_BY_CLASSNAME(pCCamera, "entity_botcam")) != nullptr && !FNullEnt(pCCamera)) {
          if (pCCamera->v.owner == pPlayer)
             pCCamera->v.flags |= FL_KILLME;
       }

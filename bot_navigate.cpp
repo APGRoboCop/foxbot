@@ -60,7 +60,7 @@ extern int RJPoints[MAXRJWAYPOINTS][2];
 
 int CheckTeleporterExitTime = 0;
 
-extern int flf_bug_fix;
+//extern int flf_bug_fix;
 extern bool g_bot_debug;
 
 extern float last_frame_time;
@@ -375,7 +375,7 @@ void BotNavigateWaypointless(bot_t *pBot) {
    BotFallenOffCheck(pBot);
 
    // if not obstructed by a player is the bot obstructed by anything else?
-   if (BotContactThink(pBot) == NULL) {
+   if (BotContactThink(pBot) == nullptr) {
       // buoyed by water, or on a ladder?
       if ((pBot->pEdict->v.waterlevel > WL_FEET_IN_WATER && !(pBot->pEdict->v.flags & FL_ONGROUND)) || pBot->pEdict->v.movetype == MOVETYPE_FLY) {
          // hopefully the bot wont get stuck
@@ -466,7 +466,7 @@ bool BotNavigateWaypoints(bot_t *pBot, bool navByStrafe) {
    }
 
    // try to navigate by strafing if the bot has an enemy
-   if (pBot->enemy.ptr != NULL)
+   if (pBot->enemy.ptr != nullptr)
       navByStrafe = TRUE;
 
    bool botIsSniping = FALSE;
@@ -509,14 +509,14 @@ bool BotNavigateWaypoints(bot_t *pBot, bool navByStrafe) {
    if (!botIsSniping && pBot->f_navProblemStartTime > 0.1 && pBot->f_navProblemStartTime + 0.5 < pBot->f_think_time) {
       // face the waypoint when navigation is getting hindered
       // and it's been going on for too long
-      if (pBot->enemy.ptr == NULL || pBot->f_navProblemStartTime + 4.0 < pBot->f_think_time)
+      if (pBot->enemy.ptr == nullptr || pBot->f_navProblemStartTime + 4.0 < pBot->f_think_time)
          navByStrafe = FALSE;
 
       // buoyed by water, or on a ladder?
       if ((pBot->pEdict->v.waterlevel > WL_FEET_IN_WATER && !(pBot->pEdict->v.flags & FL_ONGROUND)) || pBot->pEdict->v.movetype == MOVETYPE_FLY) {
          if (pBot->f_navProblemStartTime + 2.0 < pBot->f_think_time) {
             job_struct *newJob = InitialiseNewJob(pBot, JOB_GET_UNSTUCK);
-            if (newJob != NULL)
+            if (newJob != nullptr)
                SubmitNewJob(pBot, JOB_GET_UNSTUCK, newJob);
          }
       } else // not on a ladder or in some water
@@ -548,7 +548,7 @@ bool BotNavigateWaypoints(bot_t *pBot, bool navByStrafe) {
                   // try to get unstuck, but not too soon
                   if (pBot->f_navProblemStartTime + 2.0 < pBot->f_think_time) {
                      job_struct *newJob = InitialiseNewJob(pBot, JOB_GET_UNSTUCK);
-                     if (newJob != NULL)
+                     if (newJob != nullptr)
                         SubmitNewJob(pBot, JOB_GET_UNSTUCK, newJob);
                   } else // a little too soon for calling JOB_GET_UNSTUCK
                   {
@@ -593,7 +593,7 @@ bool BotNavigateWaypoints(bot_t *pBot, bool navByStrafe) {
                      }
 
                      // slow down for a couple of seconds(see if that helps)
-                     if (pBot->enemy.ptr == NULL && pBot->f_navProblemStartTime + 4.0 > pBot->f_think_time)
+                     if (pBot->enemy.ptr == nullptr && pBot->f_navProblemStartTime + 4.0 > pBot->f_think_time)
                         pBot->f_move_speed = pBot->f_max_speed / 2.0;
 
                      // some maps(e.g. hunted) have undetectable obstacles
@@ -706,7 +706,7 @@ bool BotHeadTowardWaypoint(bot_t *pBot, bool &r_navByStrafe) {
       // turn r_navByStrafe off if the bot is using a ladder unless
       // it has seen an enemy recently and isn't getting seriously stuck
       if (r_navByStrafe == TRUE && (waypoints[pBot->current_wp].flags & W_FL_LADDER || pBot->pEdict->v.movetype == MOVETYPE_FLY)) {
-         if (pBot->enemy.ptr == NULL)
+         if (pBot->enemy.ptr == nullptr)
             r_navByStrafe = FALSE;
          else if (pBot->f_navProblemStartTime > 0.1 && pBot->f_navProblemStartTime + 4.0 < pBot->f_think_time)
             r_navByStrafe = FALSE;
@@ -946,7 +946,7 @@ static void BotHandleLadderTraffic(bot_t *pBot) {
    UTIL_TraceLine(pBot->pEdict->v.origin, pBot->pEdict->v.origin - Vector(0, 0, 120.0), dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
    // see if we detected a player below
-   if (tr.flFraction < 1.0 && tr.pHit != NULL) {
+   if (tr.flFraction < 1.0 && tr.pHit != nullptr) {
       // search the world for players...
       for (int i = 1; i <= gpGlobals->maxClients; i++) {
          edict_t *pPlayer = INDEXENT(i);
@@ -1003,7 +1003,7 @@ void BotUseLift(bot_t *pBot) {
          TraceResult tr;
          UTIL_TraceLine(waypoints[pBot->current_wp].origin, waypoints[pBot->current_wp].origin + Vector(0.0, 0.0, 36.0), dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
-         if (tr.pHit != NULL) {
+         if (tr.pHit != nullptr) {
             char className[10];
             strncpy(className, STRING(tr.pHit->v.classname), 10);
             className[9] = '\0';
@@ -1017,7 +1017,7 @@ void BotUseLift(bot_t *pBot) {
                   // do a traceline straight down, to see if the lift is there
                   UTIL_TraceLine(waypoints[pBot->current_wp].origin, waypoints[pBot->current_wp].origin - Vector(0.0, 0.0, 50.0), ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
-                  if (tr.pHit != NULL) {
+                  if (tr.pHit != nullptr) {
                      strncpy(className, STRING(tr.pHit->v.classname), 10);
                      className[9] = '\0';
                      if (strncmp(STRING(tr.pHit->v.classname), "func_door", 9) == 0 || strncmp(STRING(tr.pHit->v.classname), "func_plat", 9) == 0) {
@@ -1052,7 +1052,7 @@ void BotUseLift(bot_t *pBot) {
          TraceResult tr;
          UTIL_TraceLine(pBot->pEdict->v.origin, pBot->pEdict->v.origin - Vector(0.0, 0.0, 50.0), ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
-         if (tr.pHit != NULL) {
+         if (tr.pHit != nullptr) {
             char className[10];
             strncpy(className, STRING(tr.pHit->v.classname), 10);
             className[9] = '\0';
@@ -1328,7 +1328,7 @@ static bool BotFallenOffCheck(bot_t *const pBot) {
          // does this waypoint have a direct path to the bots current waypoint?
          PATH *p = paths[index];
          bool waypointIsConnected = FALSE;
-         while (p != NULL && !waypointIsConnected) {
+         while (p != nullptr && !waypointIsConnected) {
             for (int i = 0; i < MAX_PATH_INDEX; i++) {
                if (p->index[i] == pBot->current_wp) {
                   waypointIsConnected = TRUE;
@@ -1522,7 +1522,7 @@ void BotFindSideRoute(bot_t *pBot) {
    PATH *p = paths[pBot->current_wp];
    int i;
    int paths_total = 0; // number of paths from the bots current waypoint
-   while (p != NULL && paths_total < 3) {
+   while (p != nullptr && paths_total < 3) {
       for (i = 0; i < MAX_PATH_INDEX && paths_total < 3; i++) {
          // count the path node if it's available to the bots team
          if (p->index[i] != -1 && !(waypoints[p->index[i]].flags & ignoreFlags) && (!(waypoints[p->index[i]].flags & W_FL_TEAM_SPECIFIC) || (waypoints[p->index[i]].flags & W_FL_TEAM) == pBot->current_team))
@@ -1644,7 +1644,7 @@ bool BotPathCheck(const int sourceWP, const int destWP) {
    TraceResult tr;
 
    // trace a line from waypoint to waypoint
-   UTIL_TraceLine(waypoints[sourceWP].origin, waypoints[destWP].origin, ignore_monsters, NULL, &tr);
+   UTIL_TraceLine(waypoints[sourceWP].origin, waypoints[destWP].origin, ignore_monsters, nullptr, &tr);
 
    // if line of sight is not blocked
    if (tr.flFraction >= 1.0)
@@ -1901,7 +1901,7 @@ int BotFindRetreatPoint(bot_t *const pBot, const int min_dist, const Vector &r_t
             bestIndex = index;
 
             // check for non-visibility
-            UTIL_TraceLine(waypoints[index].origin, r_threatOrigin, ignore_monsters, NULL, &tr);
+            UTIL_TraceLine(waypoints[index].origin, r_threatOrigin, ignore_monsters, nullptr, &tr);
 
             // is this waypoint hidden by scenery?
             // if so immediately accept this waypoint as the best candidate
@@ -2203,7 +2203,7 @@ bool BotFindTeleportShortCut(bot_t *pBot) {
       // is this a pair of teleporters the bot has used before?
       // we assume the exit still exists, if it doesn't the bot can learn
       // about that when it tries to teleport
-      if (pBot->telePair[i].entranceWP > -1 && pBot->telePair[i].entranceWP < num_waypoints && pBot->telePair[i].exitWP > -1 && pBot->telePair[i].exitWP < num_waypoints && pBot->telePair[i].entrance != NULL) {
+      if (pBot->telePair[i].entranceWP > -1 && pBot->telePair[i].entranceWP < num_waypoints && pBot->telePair[i].exitWP > -1 && pBot->telePair[i].exitWP < num_waypoints && pBot->telePair[i].entrance != nullptr) {
          // distance via this known teleporter pair
          const int totalDistance = WaypointDistanceFromTo(pBot->current_wp, pBot->telePair[i].entranceWP, pBot->current_team) + WaypointDistanceFromTo(pBot->telePair[i].exitWP, pBot->goto_wp, pBot->current_team);
 
@@ -2218,7 +2218,7 @@ bool BotFindTeleportShortCut(bot_t *pBot) {
    // found a teleporter to use that saves travel time?
    if (shortestIndex != -1) {
       job_struct *newJob = InitialiseNewJob(pBot, JOB_USE_TELEPORT);
-      if (newJob != NULL) {
+      if (newJob != nullptr) {
          newJob->object = pBot->telePair[shortestIndex].entrance;
          newJob->waypoint = pBot->telePair[shortestIndex].entranceWP;
          SubmitNewJob(pBot, JOB_USE_TELEPORT, newJob);
@@ -2349,7 +2349,7 @@ static void BotCheckForRocketJump(bot_t *pBot) {
 
       // set up a job to handle the jump
       job_struct *newJob = InitialiseNewJob(pBot, JOB_ROCKET_JUMP);
-      if (newJob != NULL) {
+      if (newJob != nullptr) {
          newJob->waypoint = closestRJ;
          SubmitNewJob(pBot, JOB_ROCKET_JUMP, newJob);
       }
@@ -2487,7 +2487,7 @@ static void BotCheckForConcJump(bot_t *pBot) {
    else       // success - it's time to set up a concussion jump job
    {
       job_struct *newJob = InitialiseNewJob(pBot, JOB_CONCUSSION_JUMP);
-      if (newJob != NULL) {
+      if (newJob != nullptr) {
          newJob->waypoint = endWP;
          newJob->waypointTwo = closestJumpWP;
 

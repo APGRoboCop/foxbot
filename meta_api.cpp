@@ -24,10 +24,10 @@ extern bool mr_meta;
 static META_FUNCTIONS gMetaFunctionTable = {
     GetEntityAPI,            // pfnGetEntityAPI				HL SDK;	called before game DLL
     GetEntityAPI_Post,       // pfnGetEntityAPI_Post			META; called after game	DLL
-    NULL,                    // pfnGetEntityAPI2				HL SDK2; called	before game	DLL
-    NULL,                    // pfnGetEntityAPI2_Post		META; called after game	DLL
-    NULL,                    // pfnGetNewDLLFunctions		HL SDK2; called	before game	DLL
-    NULL,                    // pfnGetNewDLLFunctions_Post	META; called after game	DLL
+    nullptr,                 // pfnGetEntityAPI2				HL SDK2; called	before game	DLL
+    nullptr,                 // pfnGetEntityAPI2_Post		META; called after game	DLL
+    nullptr,                 // pfnGetNewDLLFunctions		HL SDK2; called	before game	DLL
+    nullptr,                        // pfnGetNewDLLFunctions_Post	META; called after game	DLL
     GetEngineFunctions,      // pfnGetEngineFunctions		META; called before	HL engine
     GetEngineFunctions_Post, // pfnGetEngineFunctions_Post	META; called after HL engine
 };
@@ -36,7 +36,7 @@ static META_FUNCTIONS gMetaFunctionTable = {
 plugin_info_t Plugin_info = {
     META_INTERFACE_VERSION,                        // ifvers
     "FoxBot",                                      // name
-    "0.793",                                   // version
+    "0.800-beta",                                   // version
     __DATE__,                                  // date
     "Tom Simpson & RoboCop <robocop@lycos.co.uk>", // author
     "https://apg-clan.org/",                       // url

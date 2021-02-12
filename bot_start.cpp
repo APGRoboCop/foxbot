@@ -68,13 +68,13 @@ void BotStartGame(bot_t *pBot) {
             char *cvar_specs = const_cast<char *>(CVAR_GET_STRING("allow_spectators"));
             if (strcmp(cvar_specs, "0") == 0) {
                CVAR_SET_STRING("allow_spectators", "1");
-               FakeClientCommand(pBot->pEdict, "spectate", NULL, NULL);
+               FakeClientCommand(pBot->pEdict, "spectate", nullptr, nullptr);
                CVAR_SET_STRING("allow_spectators", "0");
             } else
-               FakeClientCommand(pBot->pEdict, "spectate", NULL, NULL);
+               FakeClientCommand(pBot->pEdict, "spectate", nullptr, nullptr);
 
             spawn_check_crash = FALSE;
-            spawn_check_crash_edict = NULL;
+            spawn_check_crash_edict = nullptr;
          }
 
          pBot->create_time = gpGlobals->time;
@@ -135,7 +135,7 @@ void BotStartGame(bot_t *pBot) {
 
          //	UTIL_BotLogPrintf("%p joining team %d\n", pBot, pBot->bot_team);
 
-         FakeClientCommand(pEdict, "jointeam", c_team, NULL);
+         FakeClientCommand(pEdict, "jointeam", c_team, nullptr);
 
          return;
       }
@@ -194,7 +194,7 @@ void BotStartGame(bot_t *pBot) {
          else if (pBot->bot_class == 9)
             strcpy(c_class, "engineer");
 
-         FakeClientCommand(pEdict, c_class, NULL, NULL);
+         FakeClientCommand(pEdict, c_class, nullptr, nullptr);
 
          // bot has now joined the game (doesn't need to be started)
          pBot->not_started = FALSE;

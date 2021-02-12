@@ -17,7 +17,7 @@ project (
     'foxbot',
     'cpp',
     
-    version: '0.793',
+    version: '0.800',
     license: 'GPL',
     
     default_options: [

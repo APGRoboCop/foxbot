@@ -70,10 +70,10 @@ int debug_engine = 0;
 
 bool spawn_check_crash = FALSE;
 int spawn_check_crash_count = 0;
-edict_t *spawn_check_crash_edict = NULL;
+edict_t *spawn_check_crash_edict = nullptr;
 
-void (*botMsgFunction)(void *, int) = NULL;
-void (*botMsgEndFunction)(void *, int) = NULL;
+void (*botMsgFunction)(void *, int) = nullptr;
+void (*botMsgEndFunction)(void *, int) = nullptr;
 int botMsgIndex;
 
 // g_state from bot_clients
@@ -118,7 +118,7 @@ edict_t *pfnFindEntityInSphere(edict_t *pEdictStartSearchAfter, const float *org
       fp = UTIL_OpenFoxbotLog();
       fprintf(fp, "pfnFindEntityInSphere:%p (%f %f %f) %f %d\n", static_cast<void *>(pEdictStartSearchAfter), (*(Vector *)org).x, (*(Vector *)org).y, (*(Vector *)org).z, rad, spawn_check_crash_count);
 
-      if (pEdictStartSearchAfter != NULL)
+      if (pEdictStartSearchAfter != nullptr)
          if (pEdictStartSearchAfter->v.classname != 0)
             fprintf(fp, "classname %s\n", STRING(pEdictStartSearchAfter->v.classname));
       fclose(fp);
@@ -145,29 +145,29 @@ void pfnRemoveEntity(edict_t *e) {
    for (int i = 0; i < 32; i++) {
       if (bots[i].is_used) {
          if (bots[i].lastEnemySentryGun == e)
-            bots[i].lastEnemySentryGun = NULL;
+            bots[i].lastEnemySentryGun = nullptr;
          if (bots[i].enemy.ptr == e)
-            bots[i].enemy.ptr = NULL;
+            bots[i].enemy.ptr = nullptr;
 
          if (bots[i].pEdict->v.playerclass == TFC_CLASS_ENGINEER) {
             if (bots[i].sentry_edict == e) {
                bots[i].has_sentry = FALSE;
-               bots[i].sentry_edict = NULL;
+               bots[i].sentry_edict = nullptr;
                bots[i].SGRotated = FALSE;
             }
 
             if (bots[i].dispenser_edict == e) {
                bots[i].has_dispenser = FALSE;
-               bots[i].dispenser_edict = NULL;
+               bots[i].dispenser_edict = nullptr;
             }
 
             if (bots[i].tpEntrance == e) {
-               bots[i].tpEntrance = NULL;
+               bots[i].tpEntrance = nullptr;
                bots[i].tpEntranceWP = -1;
             }
 
             if (bots[i].tpExit == e) {
-               bots[i].tpExit = NULL;
+               bots[i].tpExit = nullptr;
                bots[i].tpExitWP = -1;
             }
          }
@@ -190,7 +190,7 @@ void pfnSetOrigin(edict_t *e, const float *rgflOrigin) {
             // see if a teleporter pad moved the bot
             const edict_t *teleExit = BotEntityAtPoint("building_teleporter", bots[bot_index].pEdict->v.origin, 90.0);
 
-            if (teleExit == NULL) {
+            if (teleExit == nullptr) {
                //	UTIL_BotLogPrintf("%s Non-teleport translocation, time %f\n",
                //		bots[bot_index].name, gpGlobals->time);
 
@@ -212,7 +212,7 @@ void pfnSetOrigin(edict_t *e, const float *rgflOrigin) {
       // we want the pointer to the sentry itself
 
       for (int bot_index = 0; bot_index < 32; bot_index++) {
-         if (bots[bot_index].sentry_edict != NULL && bots[bot_index].has_sentry) {
+         if (bots[bot_index].sentry_edict != nullptr && bots[bot_index].has_sentry) {
             edict_t *pent = e;
             int l = static_cast<int>(bots[bot_index].sentry_edict->v.origin.z - (*(Vector *)rgflOrigin).z);
             if (l < 0)
@@ -327,7 +327,7 @@ void pfnClientCommand(edict_t *pEdict, char *szFmt, ...) {
    va_start(argp, szFmt);
    vsprintf(tempFmt, szFmt, argp);
 
-   if (pEdict != NULL) {
+   if (pEdict != nullptr) {
       // if(!((pEdict->v.flags & FL_FAKECLIENT)==FL_FAKECLIENT))
       bool b = FALSE;
       if (!((pEdict->v.flags & FL_FAKECLIENT) == FL_FAKECLIENT)) {
@@ -351,7 +351,7 @@ void pfnClientCommand(edict_t *pEdict, char *szFmt, ...) {
          char *infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEdict);
          strncpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"), 120);
          //{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"cl %d name %s\n",i,cl_name); fclose(fp); }
-         if (cl_name[0] == '\0' || infobuffer == NULL)
+         if (cl_name[0] == '\0' || infobuffer == nullptr)
             b = FALSE;
          //	unsigned int u=GETPLAYERWONID(pEdict);
          //	if((u==0 || ENTINDEX(pEdict)==-1))
@@ -384,7 +384,7 @@ void pfnClCom(edict_t *pEdict, char *szFmt, ...) {
       fclose(fp);
    }
    snprintf(sz_error_check, 250, "-pfnClientCom=%s %p\n", szFmt, static_cast<void *>(pEdict));
-   if (pEdict != NULL) {
+   if (pEdict != nullptr) {
       bool b = FALSE;
 
       if (!((pEdict->v.flags & FL_FAKECLIENT) == FL_FAKECLIENT)) {
@@ -405,7 +405,7 @@ void pfnClCom(edict_t *pEdict, char *szFmt, ...) {
          char *infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEdict);
          strncpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"), 120);
          //{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"cl %d name %s\n",i,cl_name); fclose(fp); }
-         if (cl_name[0] == '\0' || infobuffer == NULL)
+         if (cl_name[0] == '\0' || infobuffer == nullptr)
             b = FALSE;
          // unsigned int u=GETPLAYERWONID(pEdict);
          // if((u==0 || ENTINDEX(pEdict)==-1))
@@ -459,8 +459,8 @@ void pfnMessageBegin(const int msg_dest, const int msg_type, const float *pOrigi
          // is this message for a bot?
          if (index != -1) {
             g_state = 0;              // reset global message state..where we at!
-            botMsgFunction = NULL;    // no msg function until known otherwise
-            botMsgEndFunction = NULL; // no msg end function until known otherwise
+            botMsgFunction = nullptr; // no msg function until known otherwise
+            botMsgEndFunction = nullptr;     // no msg end function until known otherwise
             botMsgIndex = index;      // index of bot receiving message
 
             if (mod_id == TFC_DLL) {
@@ -504,8 +504,8 @@ void pfnMessageBegin(const int msg_dest, const int msg_type, const float *pOrigi
          } else {
             // (index == -1)
             g_state = 0;              // reset global message state..where we at!
-            botMsgFunction = NULL;    // no msg function until known otherwise
-            botMsgEndFunction = NULL; // no msg end function until known otherwise
+            botMsgFunction = nullptr; // no msg function until known otherwise
+            botMsgEndFunction = nullptr;     // no msg end function until known otherwise
             botMsgIndex = index;      // index of bot receiving message
             if (mod_id == TFC_DLL) {
                if (msg_type == message_TextMsg || msg_type == message_StatusText)
@@ -513,7 +513,7 @@ void pfnMessageBegin(const int msg_dest, const int msg_type, const float *pOrigi
             }
          }
       } else if (msg_dest == MSG_ALL) {
-         botMsgFunction = NULL; // no msg function until known otherwise
+         botMsgFunction = nullptr; // no msg function until known otherwise
          botMsgIndex = -1;      // index of bot receiving message (none)
 
          if (mod_id == TFC_DLL) {
@@ -556,11 +556,11 @@ void pfnMessageEnd(void) {
       }
 
       if (botMsgEndFunction)
-         (*botMsgEndFunction)(NULL, botMsgIndex); // NULL indicated msg end
+         (*botMsgEndFunction)(nullptr, botMsgIndex); // NULL indicated msg end
 
       // clear out the bot message function pointers...
-      botMsgFunction = NULL;
-      botMsgEndFunction = NULL;
+      botMsgFunction = nullptr;
+      botMsgEndFunction = nullptr;
    }
 
    if (mr_meta && MM_func) {
@@ -885,18 +885,18 @@ void pfnRegUserMsg_common(const char *pszName, int msg) {
 }
 
 int pfnRegUserMsg_post(const char *pszName, const int iSize) {
-   int msg = META_RESULT_ORIG_RET(int);
+   const int msg = META_RESULT_ORIG_RET(int);
 
    pfnRegUserMsg_common(pszName, msg);
 
-   return msg;
+   RETURN_META_VALUE (MRES_IGNORED, 0); //Fix by Jeefo
 }
 
 int pfnRegUserMsg_pre(const char *pszName, const int iSize) {
    if (mr_meta)
       RETURN_META_VALUE(MRES_HANDLED, 0);
 
-   int msg = (*g_engfuncs.pfnRegUserMsg)(pszName, iSize);
+   const int msg = (*g_engfuncs.pfnRegUserMsg)(pszName, iSize);
 
    pfnRegUserMsg_common(pszName, msg);
 
@@ -913,7 +913,7 @@ void pfnClientPrintf(edict_t *pEdict, const PRINT_TYPE ptype, const char *szMsg)
    snprintf(sz_error_check, 250, "CPf: %p %s\n", static_cast<void *>(pEdict), szMsg);
 
    // only send message if its not a bot...
-   if (pEdict != NULL) {
+   if (pEdict != nullptr) {
       bool b = FALSE;
       if (!(pEdict->v.flags & FL_FAKECLIENT)) {
          for (int i = 0; i < 32; i++) {
@@ -941,7 +941,7 @@ void pfnClientPrintf(edict_t *pEdict, const PRINT_TYPE ptype, const char *szMsg)
          strncat(cl_name, "-\n", 127 - strlen(cl_name));
 
          //{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"cl %d name %s\n",i,cl_name); fclose(fp); }
-         if (infobuffer == NULL)
+         if (infobuffer == nullptr)
             b = FALSE;
          //	unsigned int u=GETPLAYERWONID(pEdict);
          //	if((u==0 || ENTINDEX(pEdict)==-1))
@@ -988,7 +988,7 @@ void pfnClPrintf(edict_t *pEdict, PRINT_TYPE ptype, const char *szMsg) {
    snprintf(sz_error_check, 250, "pfnClPrintf: %p %s\n", static_cast<void *>(pEdict), szMsg);
 
    // only send message if its not a bot...
-   if (pEdict != NULL) {
+   if (pEdict != nullptr) {
       bool b = FALSE;
       if (!((pEdict->v.flags & FL_FAKECLIENT) == FL_FAKECLIENT)) {
          for (int i = 0; i < 32; i++) {
@@ -1010,7 +1010,7 @@ void pfnClPrintf(edict_t *pEdict, PRINT_TYPE ptype, const char *szMsg) {
          strncpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"), 120);
          /*{ fp=UTIL_OpenFoxbotLog();
                          fprintf(fp,"cl %d name %s\n",i,cl_name); fclose(fp);}*/
-         if (cl_name[0] == '\0' || infobuffer == NULL)
+         if (cl_name[0] == '\0' || infobuffer == nullptr)
             b = FALSE;
          //	unsigned int u=GETPLAYERWONID(pEdict);
          //	if((u==0 || ENTINDEX(pEdict)==-1))

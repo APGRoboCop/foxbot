@@ -18,7 +18,7 @@ else
 endif
 
 TARGET = foxbot
-BASEFLAGS = -Wall -Wno-write-strings
+BASEFLAGS = -Wall -Wno-write-strings -Wno-attributes
 ARCHFLAG += -march=i686 -mtune=generic -msse -msse2 -mmmx
 
 ifeq ($(DBG_FLGS),1)

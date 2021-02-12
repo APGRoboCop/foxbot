@@ -75,7 +75,7 @@ int Cmd_Argc(void);
 
 // anologue of memset
 template <typename U> void bzero (U *ptr, size_t len) noexcept {
-   auto zeroing = reinterpret_cast <unsigned char *> (ptr);
+   const auto zeroing = reinterpret_cast <unsigned char *> (ptr);
 
    for (size_t i = 0; i < len; ++i) {
       zeroing[i] = 0;
