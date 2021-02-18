@@ -1405,7 +1405,7 @@ static Vector BotBodyTarget(edict_t *pBotEnemy, bot_t *pBot) {
 // specifing a weapon_choice allows you to choose the weapon the bot
 // will use (assuming enough ammo exists for that weapon)
 // BotFireWeapon will return TRUE if weapon was fired, FALSE otherwise
-bool BotFireWeapon(const Vector v_enemy, bot_t *pBot, const int weapon_choice) {
+bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) {
    bot_weapon_select_t *pSelect = nullptr;
    bot_fire_delay_t *pDelay = nullptr;
    int iId;

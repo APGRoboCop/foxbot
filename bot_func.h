@@ -36,7 +36,7 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
 
 void BotStartGame(bot_t *pBot);
 
-int BotInFieldOfView(bot_t *pBot, Vector dest);
+int BotInFieldOfView(bot_t *pBot, const Vector &dest);
 
 bool BotCanSeeOrigin(bot_t *pBot, Vector &r_dest);
 
@@ -54,7 +54,7 @@ void BotUpdateSkillInaccuracy();
 
 void BotEnemyCheck(bot_t *pBot);
 
-bool BotFireWeapon(Vector v_enemy, bot_t *pBot, int weapon_choice);
+bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, int weapon_choice);
 
 void BotShootAtEnemy(bot_t *pBot);
 

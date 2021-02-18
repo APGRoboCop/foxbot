@@ -156,11 +156,11 @@ int WaypointFindPath(PATH **pPath, int *path_index, int waypoint_index, int team
 
 int WaypointFindNearest_E(edict_t *pEntity, float range, int team);
 
-int WaypointFindNearest_V(Vector v_src, float range, int team);
+int WaypointFindNearest_V(const Vector &v_src, float range, int team);
 
-int WaypointFindNearest_S(Vector v_src, edict_t *pEntity, float range, int team, WPT_INT32 ignore_flags);
+int WaypointFindNearest_S(const Vector &v_src, edict_t *pEntity, float range, int team, WPT_INT32 ignore_flags);
 
-int WaypointFindInRange(Vector v_src, float min_range, float max_range, int team, bool chooseRandom);
+int WaypointFindInRange(const Vector &v_src, float min_range, float max_range, int team, bool chooseRandom);
 
 int WaypointFindNearestGoal(int srcWP, int team, int range, WPT_INT32 flags);
 
@@ -168,7 +168,7 @@ int WaypointFindRandomGoal(int source_WP, int team, WPT_INT32 flags);
 
 int WaypointFindRandomGoal_D(int source_WP, int team, int range, WPT_INT32 flags);
 
-int WaypointFindRandomGoal_R(Vector v_src, bool checkVisibility, float range, int team, WPT_INT32 flags);
+int WaypointFindRandomGoal_R(const Vector &v_src, bool checkVisibility, float range, int team, WPT_INT32 flags);
 
 int WaypointFindDetpackGoal(int srcWP, int team);
 
@@ -206,7 +206,7 @@ int WaypointRouteFromTo(int src, int dest, int team);
 
 int WaypointDistanceFromTo(int src, int dest, int team);
 
-void WaypointDrawBeam(edict_t *pEntity, Vector start, Vector end, int width, int noise, int red, int green, int blue, int brightness, int speed);
+void WaypointDrawBeam(edict_t *pEntity, const Vector &start, const Vector &end, int width, int noise, int red, int green, int blue, int brightness, int speed);
 
 bool WaypointAvailable(int index, int team);
 

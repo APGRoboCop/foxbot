@@ -462,7 +462,7 @@ int WaypointFindNearest_E(edict_t *pEntity, const float range, const int team) {
 
 // pick an origin, and find the nearest waypoint to it
 // This wont check for visibility.
-int WaypointFindNearest_V(Vector v_src, const float range, const int team) {
+int WaypointFindNearest_V(const Vector &v_src, const float range, const int team) {
    if (num_waypoints < 1)
       return -1;
 
@@ -496,7 +496,7 @@ int WaypointFindNearest_V(Vector v_src, const float range, const int team) {
 // that waypoint.
 // If pEntity is not NULL then the waypoint found must be visible to that entity.
 // Also, you can specify waypoint flags that you wish to exclude from the search.
-int WaypointFindNearest_S(const Vector v_src, edict_t *pEntity, const float range, const int team, const WPT_INT32 ignore_flags) {
+int WaypointFindNearest_S(const Vector &v_src, edict_t *pEntity, const float range, const int team, const WPT_INT32 ignore_flags) {
    int min_index = -1;
    double min_distance_squared = range * range + 0.1f;
    TraceResult tr;
@@ -545,7 +545,7 @@ int WaypointFindNearest_S(const Vector v_src, edict_t *pEntity, const float rang
 // waypoint it found instead.
 // If chooseRandom is TRUE then the search starts from a random waypoint.
 // Returns -1 if no waypoint was found that is in visible range.
-int WaypointFindInRange(Vector v_src, const float min_range, const float max_range, const int team, const bool chooseRandom) {
+int WaypointFindInRange(const Vector &v_src, const float min_range, const float max_range, const int team, const bool chooseRandom) {
    TraceResult tr;
    int nextBestWP = -1; // just in case one wasn't found in ideal range
 
@@ -804,7 +804,7 @@ int WaypointFindRandomGoal_D(const int source_WP, const int team, const int rang
 
 // find a random goal within a range of a position (v_src) matching the
 // "flags" bits and return the index of that waypoint...
-int WaypointFindRandomGoal_R(const Vector v_src, const bool checkVisibility, const float range, const int team, const WPT_INT32 flags) {
+int WaypointFindRandomGoal_R(const Vector &v_src, const bool checkVisibility, const float range, const int team, const WPT_INT32 flags) {
    if (num_waypoints < 1)
       return -1;
 
@@ -1006,7 +1006,7 @@ int WaypointFindNearestAiming(const Vector &r_v_origin) {
    return min_index;
 }
 
-void WaypointDrawBeam(edict_t *pEntity, const Vector start, const Vector end, int width, int noise, int red, int green, int blue, int brightness, int speed) {
+void WaypointDrawBeam(edict_t *pEntity, const Vector &start, const Vector &end, int width, int noise, int red, int green, int blue, int brightness, int speed) {
    MESSAGE_BEGIN(MSG_ONE, SVC_TEMPENTITY, nullptr, pEntity);
    WRITE_BYTE(TE_BEAMPOINTS);
    WRITE_COORD(start.x);

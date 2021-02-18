@@ -204,7 +204,7 @@ void BotSetFacing(bot_t *pBot, Vector v_focus) {
 
 // This function will tell the bot to face the map coordinates
 // indicated by v_focus
-void BotMatchFacing(bot_t *pBot, Vector v_source, Vector v_focus) {
+void BotMatchFacing(bot_t *pBot, const Vector &v_source, Vector v_focus) {
    v_focus = v_focus - (pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs);
    const Vector bot_angles = UTIL_VecToAngles(v_focus);
    pBot->pEdict->v.ideal_yaw = bot_angles.y;

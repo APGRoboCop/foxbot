@@ -495,7 +495,7 @@ bool BotCanSeeOrigin(bot_t *pBot, Vector &r_dest) {
 // to the destination.  Zero degrees means the destination is straight
 // ahead, 45 degrees to the left or 45 degrees to the right
 // is the limit of the normal view angle.
-int BotInFieldOfView(bot_t *pBot, const Vector dest) {
+int BotInFieldOfView(bot_t *pBot, const Vector &dest) {
    // find angles from source to destination...
    Vector entity_angles = UTIL_VecToAngles(dest);
 
