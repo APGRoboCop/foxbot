@@ -28,21 +28,19 @@
 #ifndef BOT_H
 #define BOT_H
 
-#include <string.h>
-
 #include "osdep.h"
 
 // stuff for Win32 vs. Linux builds
 
 #ifndef __linux__
-
+#include <string.h>
 typedef int(FAR *GETENTITYAPI)(DLL_FUNCTIONS *, int);
 typedef int(FAR *GETNEWDLLFUNCTIONS)(NEW_DLL_FUNCTIONS *, int *);
 typedef void(__stdcall *GIVEFNPTRSTODLL)(enginefuncs_t *, globalvars_t *);
 typedef void(FAR *LINK_ENTITY_FUNC)(entvars_t *);
 
 #else
-
+#include <cstring>
 #include <dlfcn.h>
 #define GetProcAddress dlsym
 
@@ -69,9 +67,9 @@ void FakeClientCommand(edict_t *pBot, char *arg1, char *arg2, char *arg3);
 
 void BotFile_Write(char *string);
 
-const char *Cmd_Args(void);
+const char *Cmd_Args();
 const char *Cmd_Argv(int argc);
-int Cmd_Argc(void);
+int Cmd_Argc();
 
 // anologue of memset
 template <typename U> void bzero (U *ptr, size_t len) noexcept {
@@ -174,9 +172,9 @@ class chatClass {
    int recentStrings[TOTAL_CHAT_TYPES][5];
 
  public:
-   chatClass(void); // constructor, sets up the names of the chat section headers
+   chatClass(); // constructor, sets up the names of the chat section headers
 
-   void readChatFile(void); // this processes the bot chat file
+   void readChatFile(); // this processes the bot chat file
 
    // this will fill msg with a randomly selected string from the
    // specified chat section
@@ -604,7 +602,7 @@ bool UTIL_FootstepsHeard(edict_t *pEdict, edict_t *pPlayer);
 
 void UTIL_ShowMenu(edict_t *pEdict, int slots, int displaytime, bool needmore, char *pText);
 
-FILE *UTIL_OpenFoxbotLog(void);
+FILE *UTIL_OpenFoxbotLog();
 
 void UTIL_BotLogPrintf(char *fmt, ...);
 
@@ -644,7 +642,7 @@ bot_t *BotDefenderAtWaypoint(const bot_t *pBot, int waypoint, float range);
 
 bool SpyAmbushAreaCheck(bot_t *pBot, Vector &r_wallVector);
 
-void ResetBotHomeInfo(void);
+void ResetBotHomeInfo();
 
 void BotLookAbout(bot_t *pBot);
 

@@ -29,7 +29,7 @@
 #define ENGINE_H
 
 void pfnMessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *ed);
-void pfnMessageEnd(void);
+void pfnMessageEnd();
 void pfnWriteByte(int iValue);
 void pfnWriteChar(int iValue);
 void pfnWriteShort(int iValue);

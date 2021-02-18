@@ -28,7 +28,7 @@ project (
         'werror=false',
         'backend=ninja',
         'strip=true',
-        'optimization=3',
+        'optimization=2',
         'default_library=static',
         'cpp_eh=none'
     ],
@@ -102,7 +102,7 @@ if isLinux or isDarwin
         flagsCompiler += [
             '-g3',
             '-ggdb',
-            '-O3',
+            '-O2',
             '-DCR_DEBUG'
         ]
     else

@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // FoXBot - AI Bot for Halflife's Team Fortress Classic
 //
@@ -540,13 +542,13 @@ void pfnMessageBegin(const int msg_dest, const int msg_type, const float *pOrigi
       (*g_engfuncs.pfnMessageBegin)(msg_dest, msg_type, pOrigin, ed);
 }
 
-void MessageEnd(void) {
+void MessageEnd() {
    MM_func = TRUE;
    pfnMessageEnd();
    MM_func = FALSE;
 }
 
-void pfnMessageEnd(void) {
+void pfnMessageEnd() {
    if (gpGlobals->deathmatch) {
       // if(debug_engine || dont_send_packet) { fp=UTIL_OpenFoxbotLog(); fprintf(fp,"pfnMessageEnd:\n"); fclose(fp); }
       if (debug_engine) {

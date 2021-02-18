@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /***
  *
  *  Copyright (c) 1999, Valve LLC. All rights reserved.
@@ -56,7 +58,7 @@ int gmsgShowMenu = 0;
 static unsigned long lseed = static_cast<long>(time(nullptr));
 
 // FUNCTION PROTOTYPES
-static void UTIL_FindFoxbotPath(void);
+static void UTIL_FindFoxbotPath();
 
 #ifdef __BORLANDC__
 // The Borland 5.0 compiler doesn't ignore maths errors(unlike a few other compilers).
@@ -593,7 +595,7 @@ void UTIL_ShowMenu(edict_t *pEdict, const int slots, const int displaytime, cons
 // directory on it's first call.
 // Then it will open the log file for appending thereafter.
 // NOTE: Writing to a NULL file pointer can crash the server.
-FILE *UTIL_OpenFoxbotLog(void) {
+FILE *UTIL_OpenFoxbotLog() {
    static bool log_creation_attempted = FALSE;
 
    UTIL_FindFoxbotPath();
@@ -690,7 +692,7 @@ void UTIL_BuildFileName(char *filename, const int max_fn_length, char *arg1, cha
 // This function tries to find the Foxbot directory path by testing for
 // the existence of foxbot.cfg in expected relative locations.
 // e.g. /tfc/addons/  or the main Half-Life directory.
-static void UTIL_FindFoxbotPath(void) {
+static void UTIL_FindFoxbotPath() {
    // only do this test once
    static bool dir_path_checked = FALSE;
    if (dir_path_checked)

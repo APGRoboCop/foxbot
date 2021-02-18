@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // FoXBot - AI Bot for Halflife's Team Fortress Classic
 //
@@ -106,7 +108,7 @@ void BotUpdateHomeInfo(bot_t *pBot) {
 
 // This function should be called each time the map changes.
 // It resets the bots knowledge of where they are spawning.
-void ResetBotHomeInfo(void) {
+void ResetBotHomeInfo() {
    // sanity check
    if (mod_id != TFC_DLL)
       return;

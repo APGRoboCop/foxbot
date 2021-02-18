@@ -56,12 +56,12 @@ public:
 	}
 	
 	inline void operator delete(void *ptr) {
-		if(ptr)
+//		if(ptr)
 			free(ptr); 
 	}
 	
 	inline void operator delete[](void *ptr) {
-		if(ptr)
+//		if(ptr)
 			free(ptr); 
 	}
 };

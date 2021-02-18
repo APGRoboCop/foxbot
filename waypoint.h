@@ -150,7 +150,7 @@ typedef struct {
 } AREA_HDR;
 
 // waypoint function prototypes...
-void WaypointInit(void);
+void WaypointInit();
 
 int WaypointFindPath(PATH **pPath, int *path_index, int waypoint_index, int team);
 
@@ -192,7 +192,7 @@ bool WaypointTypeExists(WPT_INT32 flags, int team);
 
 bool WaypointLoad(edict_t *pEntity);
 
-void WaypointSave(void);
+void WaypointSave();
 
 bool WaypointReachable(Vector v_srv, Vector v_dest, edict_t *pEntity);
 
@@ -222,7 +222,7 @@ int AreaDefPointFindNearest(edict_t *pEntity, float range, int flags);
 
 void AreaDefDelete(edict_t *pEntity);
 
-void AreaDefSave(void);
+void AreaDefSave();
 
 bool AreaDefLoad(edict_t *pEntity);
 
@@ -232,9 +232,9 @@ bool AreaInside(edict_t *pEntity, int i);
 
 int AreaInsideClosest(edict_t *pEntity);
 
-void AreaAutoBuild1(void);
+void AreaAutoBuild1();
 
-void AreaAutoMerge(void);
+void AreaAutoMerge();
 
-void ProcessCommanderList(void);
+void ProcessCommanderList();
 #endif // WAYPOINT_H

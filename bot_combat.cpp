@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // FoXBot - AI Bot for Halflife's Team Fortress Classic
 //
@@ -163,7 +165,7 @@ static bot_fire_delay_t tfc_fire_delay[] = {{TF_WEAPON_KNIFE, 0.3, {0.0, 0.2, 0.
                                             /* terminator */
                                             {0, 0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}, 0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}}};
 
-void BotCheckTeamplay(void) {
+void BotCheckTeamplay() {
    // is this TFC?
    if (mod_id == TFC_DLL)
       is_team_play = 1.0;
@@ -213,7 +215,7 @@ int FriendlyClassTotal(edict_t *pEdict, const int specifiedClass, const bool ign
 // This function should be called whenever bot_skill_1_aim or bot_aim_per_skill
 // are changed, because it updates the bot inaccuracy levels based on those two
 // config settings.
-void BotUpdateSkillInaccuracy(void) {
+void BotUpdateSkillInaccuracy() {
    const float f_aim_per_skill = static_cast<float>(bot_aim_per_skill);
 
    bot_max_inaccuracy[0] = static_cast<float>(bot_skill_1_aim);
@@ -2283,7 +2285,7 @@ void BotCheckForMultiguns(bot_t *pBot, float nearestdistance, edict_t *pNewEnemy
 
 // This function should be called once each frame so that it can maintain
 // an up to date list of which players are currently carrying a flag.
-void UpdateFlagCarrierList(void) {
+void UpdateFlagCarrierList() {
    // reset the list before updating it
    for (int i = 0; i < 32; i++) {
       playerHasFlag[i] = FALSE;

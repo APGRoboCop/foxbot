@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // FoXBot - AI Bot for Halflife's Team Fortress Classic
 //
@@ -245,18 +247,18 @@ extern char sz_error_check[255];
 
 // FUNCTION PROTOTYPES /////////////////
 static void DisplayBotInfo();
-void BotNameInit(void);
+void BotNameInit();
 void UpdateClientData(const struct edict_s *ent, int sendweapons, struct clientdata_s *cd);
-static void varyBotTotal(void);
-static void TeamBalanceCheck(void);
-static void BotBalanceTeams_Casual(void);
+static void varyBotTotal();
+static void TeamBalanceCheck();
+static void BotBalanceTeams_Casual();
 static bool BotBalanceTeams(int a, int b);
 static bool BBotBalanceTeams(int a, int b);
 static bool HBalanceTeams(int a, int b);
-static void ProcessBotCfgFile(void);
+static void ProcessBotCfgFile();
 static void changeBotSetting(const char *settingName, int *setting, const char *arg1, int minValue, int maxValue, int settingSource);
 static void kickBots(int totalToKick, int team);
-static void kickRandomBot(void);
+static void kickRandomBot();
 static void ClearKickedBotsData(int botIndex, bool eraseBotsName);
 // void UTIL_CSavePent(CBaseEntity *pent);
 
@@ -328,7 +330,7 @@ void KewlHUDNotify(edict_t *pEntity, const char *msg_name) {
 
 // If bot_total_varies is active then this function will periodically alter
 // the number of bots that want to play on the server.
-static void varyBotTotal(void) {
+static void varyBotTotal() {
    if (bot_total_varies == 0)
       return; // just in case
 
@@ -393,7 +395,7 @@ static void varyBotTotal(void) {
 
 // This function is the core function for checking if the teams need balancing
 // and making sure the bots switch teams if they are supposed to.
-static void TeamBalanceCheck(void) {
+static void TeamBalanceCheck() {
    if (mod_id != TFC_DLL) // Fix for bot_team_balance? [APG]RoboCop[CL]
       return;
 
@@ -496,7 +498,7 @@ static void TeamBalanceCheck(void) {
 // This function should only be called if bot_team_balance is switched off.
 // It allows bots to decide for themselves if they "feel" like switching teams
 // to balance the teams.
-static void BotBalanceTeams_Casual(void) {
+static void BotBalanceTeams_Casual() {
    if (mod_id != TFC_DLL) // Fix for bot_team_balance? [APG]RoboCop[CL]
       return;
 
@@ -667,7 +669,7 @@ static bool HBalanceTeams(const int a, const int b) {
 }
 
 // This function is called once upon startup
-void GameDLLInit(void) {
+void GameDLLInit() {
    CVAR_REGISTER(&foxbot);
    CVAR_REGISTER(&sv_bot);
    CVAR_REGISTER(&enable_foxbot);
@@ -692,7 +694,7 @@ void GameDLLInit(void) {
 
 // Constructor for the chatClass class
 // sets up the names of the chat section headers
-chatClass::chatClass(void) {
+chatClass::chatClass() {
    strcpy (this->sectionNames[CHAT_TYPE_GREETING], "[GREETINGS]");
    strcpy (this->sectionNames[CHAT_TYPE_KILL_HI], "[KILL WINNING]");
    strcpy (this->sectionNames[CHAT_TYPE_KILL_LOW], "[KILL LOSING]");
@@ -716,7 +718,7 @@ chatClass::chatClass(void) {
 }
 
 // This function is responsible for reading in the chat from the bot chat file.
-void chatClass::readChatFile(void) {
+void chatClass::readChatFile() {
    char filename[256];
 
    UTIL_BuildFileName(filename, 255, "foxbot_chat.txt", nullptr);
@@ -2412,7 +2414,7 @@ void ClientCommand(edict_t *pEntity) {
    }
 }
 
-void StartFrame(void) {
+void StartFrame() {
    last_frame_time = last_frame_time_prev;
    last_frame_time_prev = gpGlobals->time;
 
@@ -4967,7 +4969,7 @@ void FakeClientCommand(edict_t *pBot, char *arg1, char *arg2, char *arg3) {
    isFakeClientCommand = 0;
 }
 
-const char *Cmd_Args(void) {
+const char *Cmd_Args() {
    if (!mr_meta) {
       if (isFakeClientCommand) {
          if (debug_engine) {
@@ -5083,7 +5085,7 @@ const char *Cmd_Argv(const int argc) {
    }
 }
 
-int Cmd_Argc(void) {
+int Cmd_Argc() {
    if (!mr_meta) {
       if (debug_engine)
          UTIL_BotLogPrintf("fake cmd_argc %d\n", fake_arg_count);
@@ -5203,7 +5205,7 @@ C_DLLEXPORT int GetEntityAPI_Post(DLL_FUNCTIONS *pFunctionTable, const int inter
    return TRUE;
 }
 
-static void ProcessBotCfgFile(void) {
+static void ProcessBotCfgFile() {
    char cmd_line[512];
    static char server_cmd[514];
    char *arg2, *arg3, *arg4;
@@ -6031,7 +6033,7 @@ static void kickBots(int totalToKick, const int team) {
 }
 
 // This function will kick a random bot.
-static void kickRandomBot(void) {
+static void kickRandomBot() {
    int bot_list[MAX_BOTS];
    int bot_total = 0;
    int index;

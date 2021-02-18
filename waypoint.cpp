@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // FoXBot - AI Bot for Halflife's Team Fortress Classic
 //
@@ -124,11 +126,11 @@ static FILE *fp;
 
 // FUNCTION PROTOTYPES
 static void WaypointFloyds(unsigned int *shortest_path, unsigned int *from_to);
-static void WaypointRouteInit(void);
+static void WaypointRouteInit();
 static bool WaypointLoadVersion4(FILE *bfp, int number_of_waypoints);
 static bool WaypointDeleteAimArtifact(edict_t *pEntity);
 
-void WaypointDebug(void) {
+void WaypointDebug() {
    fp = UTIL_OpenFoxbotLog();
    if (fp != nullptr) {
       fprintf(fp, "WaypointDebug: LINKED LIST ERROR!!!\n");
@@ -142,7 +144,7 @@ void WaypointDebug(void) {
 }
 
 // free the linked list of waypoint path nodes...
-void WaypointFree(void) {
+void WaypointFree() {
    for (int i = 0; i < MAX_WAYPOINTS; i++) {
 #ifdef _DEBUG
       int count = 0;
@@ -170,7 +172,7 @@ void WaypointFree(void) {
 }
 
 // initialize the waypoint structures...
-void WaypointInit(void) {
+void WaypointInit() {
    int i;
 
    // have any waypoint path nodes been allocated yet?
@@ -1778,7 +1780,7 @@ static bool WaypointLoadVersion4(FILE *bfp, const int number_of_waypoints) {
 }
 
 // this function is run when you type 'waypoint save' in the console
-void WaypointSave(void) {
+void WaypointSave() {
    char filename[256];
    char mapname[64];
    WAYPOINT_HDR header;
@@ -2987,7 +2989,7 @@ static void WaypointFloyds(unsigned int *path, unsigned int *to) {
 
 // Set up the matrices for the waypoints and their paths, so that they are
 // ready for use by the bots.
-static void WaypointRouteInit(void) {
+static void WaypointRouteInit() {
    if (num_waypoints < 1) // sanity check
       return;
 
@@ -3802,7 +3804,7 @@ void AreaDefDelete(edict_t *pEntity) {
    }
 }
 
-void AreaDefSave(void) {
+void AreaDefSave() {
    char filename[256];
    char mapname[64];
    AREA_HDR header;
@@ -5291,7 +5293,7 @@ void AreaAutoMerge() {
 // The id's in this file will be used to determine players that have
 // access to command
 // the bots, as in assign roles, classes positions...
-void ProcessCommanderList(void) {
+void ProcessCommanderList() {
    char msg[255];
    char buffer[80];
    char filename[255];

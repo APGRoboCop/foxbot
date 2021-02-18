@@ -50,7 +50,7 @@ void BotFindItem(bot_t *pBot);
 
 void BotThink(bot_t *pBot);
 
-void BotUpdateSkillInaccuracy(void);
+void BotUpdateSkillInaccuracy();
 
 void BotEnemyCheck(bot_t *pBot);
 
@@ -77,7 +77,7 @@ void BotSoundSense(edict_t *pEdict, const char *pszSample, float fVolume);
 
 int FriendlyClassTotal(edict_t *pEdict, int specifiedClass, bool ignoreSelf);
 
-void UpdateFlagCarrierList(void);
+void UpdateFlagCarrierList();
 
 bool PlayerHasFlag(edict_t *Player);
 

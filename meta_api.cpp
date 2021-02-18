@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vi: set ts=4	sw=4 :
 // vim:	set	tw=75 :
 
@@ -52,7 +54,7 @@ meta_globals_t *gpMetaGlobals;   // metamod globals
 gamedll_funcs_t *gpGamedllFuncs; // gameDLL function	tables
 mutil_funcs_t *gpMetaUtilFuncs;  // metamod utility functions
 
-void Meta_Init(void) { mr_meta = TRUE; }
+void Meta_Init() { mr_meta = TRUE; }
 
 // Metamod requesting info about this plugin:
 //	ifvers			(given)	interface_version metamod is using
