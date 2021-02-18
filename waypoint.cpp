@@ -1,5 +1,3 @@
-// This is an open source non-commercial project. Dear PVS-Studio, please check it.
-// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // FoXBot - AI Bot for Halflife's Team Fortress Classic
 //
@@ -94,16 +92,16 @@ PATH *paths[MAX_WAYPOINTS];
 // time that this waypoint was displayed (while editing)
 float wp_display_time[MAX_WAYPOINTS];
 
-static bool g_waypoint_paths = FALSE; // have any paths been allocated?
-bool g_waypoint_cache = FALSE;
-bool g_waypoint_on = FALSE;
-bool g_auto_waypoint = FALSE;
-bool g_path_waypoint = FALSE;
-bool g_find_waypoint = FALSE;
+static bool g_waypoint_paths = false; // have any paths been allocated?
+bool g_waypoint_cache = false;
+bool g_waypoint_on = false;
+bool g_auto_waypoint = false;
+bool g_path_waypoint = false;
+bool g_find_waypoint = false;
 long g_find_wp = 0;
-bool g_path_connect = TRUE;
-bool g_path_oneway = FALSE;
-bool g_path_twoway = FALSE;
+bool g_path_connect = true;
+bool g_path_oneway = false;
+bool g_path_twoway = false;
 static Vector last_waypoint;
 static float f_path_time = 0.0;
 
@@ -228,11 +226,11 @@ void WaypointInit() {
 }
 
 // add a path from one waypoint (add_index) to another (path_index)...
-// Returns FALSE on memory allocation failure.
+// Returns false on memory allocation failure.
 int WaypointAddPath(const short int add_index, const short int path_index) {
    // don't do it if its greater than max distance
    if ((waypoints[add_index].origin - waypoints[path_index].origin).Length() > REACHABLE_RANGE)
-      return TRUE;
+      return true;
 
    PATH *p = paths[add_index];
    PATH *prev = nullptr;
@@ -249,12 +247,12 @@ int WaypointAddPath(const short int add_index, const short int path_index) {
       while (i < MAX_PATH_INDEX) {
          // don't add the path if its already there?!
          if (p->index[i] == path_index)
-            return TRUE;
+            return true;
 
          if (p->index[i] == -1) {
             p->index[i] = path_index;
 
-            return TRUE;
+            return true;
          }
 
          i++;
@@ -279,7 +277,7 @@ int WaypointAddPath(const short int add_index, const short int path_index) {
    if (p == nullptr) {
       ALERT(at_error, "FoXBot - Error, memory allocation failed for waypoint path!");
       UTIL_BotLogPrintf("Memory allocation failed for waypoint path!\n");
-      return FALSE;
+      return false;
    }
 
    p->index[0] = path_index;
@@ -294,7 +292,7 @@ int WaypointAddPath(const short int add_index, const short int path_index) {
    if (paths[add_index] == nullptr)
       paths[add_index] = p; // save head point if necessary
 
-   return TRUE;
+   return true;
 }
 
 // delete all paths to this waypoint index...
@@ -543,7 +541,7 @@ int WaypointFindNearest_S(const Vector &v_src, edict_t *pEntity, const float ran
 // ideal kind of distance you want for the waypoint returned.
 // If no waypoint of suitable distance was found it may return a nearer
 // waypoint it found instead.
-// If chooseRandom is TRUE then the search starts from a random waypoint.
+// If chooseRandom is true then the search starts from a random waypoint.
 // Returns -1 if no waypoint was found that is in visible range.
 int WaypointFindInRange(const Vector &v_src, const float min_range, const float max_range, const int team, const bool chooseRandom) {
    TraceResult tr;
@@ -916,7 +914,7 @@ int WaypointFindDetpackGoal(const int srcWP, const int team) {
    return -1;
 }
 
-// This function returns TRUE if a specified W_FL_TFC_DETPACK_CLEAR waypoint
+// This function returns true if a specified W_FL_TFC_DETPACK_CLEAR waypoint
 // needs detpacking to blast it open.
 bool DetpackClearIsBlocked(const int index) {
    TraceResult tr;
@@ -932,24 +930,24 @@ bool DetpackClearIsBlocked(const int index) {
             UTIL_TraceLine(waypoints[index].origin, waypoints[p->index[i]].origin, ignore_monsters, nullptr, &tr);
 
             if (tr.flFraction < 1.0)
-               return TRUE; // a path is blocked by something
+               return true; // a path is blocked by something
          }
       }
 
       p = p->next; // go to next node in linked list
    }
 
-   // return TRUE only if no blockages were found
+   // return true only if no blockages were found
    // and there was less than two paths from the waypoint
    // this test is done to maintain backwards compatibility with old maps
    // from before Foxbot 0.76 that only used one type of detpack waypoint tag
    if (path_total < 2)
-      return TRUE;
+      return true;
 
-   return FALSE; // waypoint is unsuitable for detpacking
+   return false; // waypoint is unsuitable for detpacking
 }
 
-// This function returns TRUE if a specified W_FL_TFC_DETPACK_SEAL waypoint
+// This function returns true if a specified W_FL_TFC_DETPACK_SEAL waypoint
 // needs detpacking to blast it closed.
 bool DetpackSealIsClear(const int index) {
    TraceResult tr;
@@ -963,7 +961,7 @@ bool DetpackSealIsClear(const int index) {
             UTIL_TraceLine(waypoints[index].origin, waypoints[p->index[i]].origin, ignore_monsters, nullptr, &tr);
 
             if (tr.flFraction < 1.0)
-               return FALSE; // a path is blocked by something
+               return false; // a path is blocked by something
          }
       }
 
@@ -971,7 +969,7 @@ bool DetpackSealIsClear(const int index) {
    }
 
    // all paths are clear - waypoint is suitable for detpacking
-   return TRUE;
+   return true;
 }
 
 // find the nearest "special" aiming waypoint (for sniper aiming)...
@@ -1284,7 +1282,7 @@ void WaypointDelete(edict_t *pEntity) {
 // It returns false if it did not delete an aim artifact.
 static bool WaypointDeleteAimArtifact(edict_t *pEntity) {
    if (num_waypoints < 1)
-      return FALSE;
+      return false;
 
    int min_index = -1;
    float min_distance = 400.0f;
@@ -1308,10 +1306,10 @@ static bool WaypointDeleteAimArtifact(edict_t *pEntity) {
 
    // abort if the nearest waypoint is not an aim waypoint
    if (min_index == -1)
-      return FALSE;
+      return false;
 
    TraceResult tr;
-   bool waypoint_is_artifact = TRUE;
+   bool waypoint_is_artifact = true;
 
    // found an aim waypoint, now to find out if it is an artifact
    for (int j = 0; j < num_waypoints; j++) {
@@ -1328,7 +1326,7 @@ static bool WaypointDeleteAimArtifact(edict_t *pEntity) {
          // if there is line of sight from this waypoint to the
          // aim waypoint
          if (tr.flFraction >= 1.0) {
-            waypoint_is_artifact = FALSE;
+            waypoint_is_artifact = false;
 
             // draw a beam to the nearest waypoint found to show
             // why this aim waypoint will not be deleted
@@ -1346,10 +1344,10 @@ static bool WaypointDeleteAimArtifact(edict_t *pEntity) {
       waypoints[min_index].origin = Vector(0, 0, 0);
 
       wp_display_time[min_index] = 0.0;
-      return TRUE;
+      return true;
    }
 
-   return FALSE;
+   return false;
 }
 
 // allow player to manually create a path from one waypoint to another
@@ -1440,19 +1438,19 @@ bool WaypointTypeExists(const WPT_INT32 flags, const int team) {
        || team == 0) // team 0 - blue team
    {
       if (wp_type_exists[0] & flags)
-         return TRUE;
+         return true;
    } else if (team == 1) {
       if (wp_type_exists[1] & flags)
-         return TRUE;
+         return true;
    } else if (team == 2) {
       if (wp_type_exists[2] & flags)
-         return TRUE;
+         return true;
    } else if (team == 3) {
       if (wp_type_exists[3] & flags)
-         return TRUE;
+         return true;
    }
 
-   return FALSE;
+   return false;
 }
 
 bool WaypointLoad(edict_t *pEntity) {
@@ -1500,7 +1498,7 @@ bool WaypointLoad(edict_t *pEntity) {
             printf("%s is not a valid FoXBot waypoint file!\n", filename);
 
          fclose(bfp);
-         return FALSE;
+         return false;
       }
       // make sure the waypoint file was meant for the current map
       header.mapname[31] = 0;
@@ -1514,17 +1512,17 @@ bool WaypointLoad(edict_t *pEntity) {
             printf("%s FoXBot waypoints are not for this map!\n", filename);
 
          fclose(bfp);
-         return FALSE;
+         return false;
       }
 
       // load and convert version 4 waypoint files
       if (header.waypoint_file_version == 4) {
-         if (WaypointLoadVersion4(bfp, header.number_of_waypoints) == TRUE) {
+         if (WaypointLoadVersion4(bfp, header.number_of_waypoints) == true) {
             fclose(bfp);
-            return TRUE;
+            return true;
          } else {
             fclose(bfp);
-            return FALSE;
+            return false;
          }
       }
       // make sure the waypoint version is compatible
@@ -1536,7 +1534,7 @@ bool WaypointLoad(edict_t *pEntity) {
             printf("Incompatible FoXBot waypoint file version!\nWaypoints not loaded!\n");
 
          fclose(bfp);
-         return FALSE;
+         return false;
       }
 
       WaypointInit(); // remove any existing waypoints
@@ -1578,7 +1576,7 @@ bool WaypointLoad(edict_t *pEntity) {
          }
       }
 
-      g_waypoint_paths = TRUE; // keep track so path can be freed
+      g_waypoint_paths = true; // keep track so path can be freed
 
       // read waypoint authors name..if there is one (could be an old wpt file)
       fread(&waypoint_author, sizeof(char), 255, bfp);
@@ -1587,7 +1585,7 @@ bool WaypointLoad(edict_t *pEntity) {
       fclose(bfp);
 
       WaypointRouteInit();
-      return TRUE;
+      return true;
    } else {
       if (pEntity) {
          sprintf(msg, "Waypoint file %s does not exist!\nLooking for HPB bot file instead\n", filename);
@@ -1619,7 +1617,7 @@ bool WaypointLoad(edict_t *pEntity) {
                ClientPrint(pEntity, HUD_PRINTNOTIFY, "Incompatible HPB bot waypoint file version!\nWaypoints not loaded!\n");
 
             fclose(bfp);
-            return FALSE;
+            return false;
          }
 
          header.mapname[31] = 0;
@@ -1644,7 +1642,7 @@ bool WaypointLoad(edict_t *pEntity) {
                }
             }
 
-            g_waypoint_paths = TRUE; // keep track so path can be freed
+            g_waypoint_paths = true; // keep track so path can be freed
          } else {
             if (pEntity) {
                sprintf(msg, "%s HPB bot waypoints are not for this map!\n", filename);
@@ -1652,7 +1650,7 @@ bool WaypointLoad(edict_t *pEntity) {
             }
 
             fclose(bfp);
-            return FALSE;
+            return false;
          }
       } else {
          if (pEntity) {
@@ -1661,7 +1659,7 @@ bool WaypointLoad(edict_t *pEntity) {
          }
 
          fclose(bfp);
-         return FALSE;
+         return false;
       }
 
       fclose(bfp);
@@ -1677,10 +1675,10 @@ bool WaypointLoad(edict_t *pEntity) {
       if (IS_DEDICATED_SERVER())
          printf("waypoint file %s not found!\n", filename);
 
-      return FALSE;
+      return false;
    }
 
-   return TRUE;
+   return true;
 }
 
 // This function will load the waypoints from a version 4 Foxbot waypoint file.
@@ -1769,14 +1767,14 @@ static bool WaypointLoadVersion4(FILE *bfp, const int number_of_waypoints) {
       }
    }
 
-   g_waypoint_paths = TRUE; // keep track so path can be freed
+   g_waypoint_paths = true; // keep track so path can be freed
 
    // read waypoint authors name...if there is one (could be an old wpt file)
    fread(&waypoint_author, sizeof(char), 255, bfp);
    waypoint_author[254] = '\0';
 
    WaypointRouteInit();
-   return TRUE;
+   return true;
 }
 
 // this function is run when you type 'waypoint save' in the console
@@ -1881,7 +1879,7 @@ bool WaypointReachable(Vector v_src, Vector v_dest, edict_t *pEntity) {
       if (tr.flFraction >= 1.0) {
          // check for special case of both waypoints being underwater...
          if (POINT_CONTENTS(v_src) == CONTENTS_WATER && POINT_CONTENTS(v_dest) == CONTENTS_WATER)
-            return TRUE;
+            return true;
 
          // check for special case of waypoint being suspended in mid-air...
 
@@ -1897,7 +1895,7 @@ bool WaypointReachable(Vector v_src, Vector v_dest, edict_t *pEntity) {
             // check if we didn't hit anything,
             // if not then it's in mid-air
             if (tr.flFraction >= 1.0) {
-               return FALSE; // can't reach this one
+               return false; // can't reach this one
             }
          }
 
@@ -1931,7 +1929,7 @@ bool WaypointReachable(Vector v_src, Vector v_dest, edict_t *pEntity) {
             // height higher that the jump height?
             if (last_height - curr_height > 45.0) {
                // can't get there from here...
-               return FALSE;
+               return false;
             }
 
             last_height = curr_height;
@@ -1939,36 +1937,36 @@ bool WaypointReachable(Vector v_src, Vector v_dest, edict_t *pEntity) {
             distance = (v_dest - v_check).Length(); // distance from goal
          }
 
-         return TRUE;
+         return true;
       }
    }
 
-   return FALSE;
+   return false;
 }
 
-// This function returns TRUE if the source waypoint has a path connected
+// This function returns true if the source waypoint has a path connected
 // directly to the destination waypoint.
 bool WaypointDirectPathCheck(const int srcWP, const int destWP) {
    // sanity check
    if (srcWP == -1)
-      return FALSE;
+      return false;
 
    // sanity check
    if (srcWP == destWP)
-      return TRUE;
+      return true;
 
    PATH *p = paths[srcWP];
 
    while (p != nullptr) {
       for (int i = 0; i < MAX_PATH_INDEX; i++) {
          if (p->index[i] == destWP)
-            return TRUE;
+            return true;
       }
 
       p = p->next; // go to next node in linked list
    }
 
-   return FALSE;
+   return false;
 }
 
 // find the nearest reachable waypoint
@@ -2823,7 +2821,7 @@ void WaypointThink(edict_t *pEntity) {
                   // draw a red waypoint
                   WaypointDrawBeam(pEntity, start, end, 30, 0, 255, 0, 0, 250, 5);
 
-                  timr = TRUE;
+                  timr = true;
                }
             }
          }
@@ -2844,7 +2842,7 @@ void WaypointThink(edict_t *pEntity) {
                   // draw a red waypoint
                   WaypointDrawBeam(pEntity, start, end, 30, 0, 255, 0, 0, 250, 5);
 
-                  timr = TRUE;
+                  timr = true;
                }
             }
          }
@@ -2865,7 +2863,7 @@ void WaypointThink(edict_t *pEntity) {
                   // draw a red waypoint
                   WaypointDrawBeam(pEntity, start, end, 30, 0, 255, 0, 0, 250, 5);
 
-                  timr = TRUE;
+                  timr = true;
                }
             }
          }
@@ -2886,7 +2884,7 @@ void WaypointThink(edict_t *pEntity) {
                   // draw a red waypoint
                   WaypointDrawBeam(pEntity, start, end, 30, 0, 255, 0, 0, 250, 5);
 
-                  timr = TRUE;
+                  timr = true;
                }
             }
          }
@@ -2955,10 +2953,10 @@ static void WaypointFloyds(unsigned int *path, unsigned int *to) {
       }
    }
 
-   bool changed = TRUE;
+   bool changed = true;
 
    while (changed) {
-      changed = FALSE;
+      changed = false;
       for (unsigned int x = 0; x < route_num_waypoints; x++) {
          for (y = 0; y < route_num_waypoints; y++) {
             const unsigned int yRx = y * route_num_waypoints + x;
@@ -2979,7 +2977,7 @@ static void WaypointFloyds(unsigned int *path, unsigned int *to) {
                if (distance < path[yRz] || path[yRz] == WAYPOINT_UNREACHABLE) {
                   path[yRz] = distance;
                   to[yRz] = to[yRx];
-                  changed = TRUE;
+                  changed = true;
                }
             }
          }
@@ -3001,22 +2999,22 @@ static void WaypointRouteInit() {
    // save number of current waypoints in case waypoints get added later
    route_num_waypoints = num_waypoints;
 
-   build_matrix[0] = TRUE; // always build matrix 0 (non-team and team 1)
-   build_matrix[1] = FALSE;
-   build_matrix[2] = FALSE;
-   build_matrix[3] = FALSE;
+   build_matrix[0] = true; // always build matrix 0 (non-team and team 1)
+   build_matrix[1] = false;
+   build_matrix[2] = false;
+   build_matrix[3] = false;
 
    // find out how many route matrixes to create...
    for (index = 0; index < route_num_waypoints; index++) {
       if (waypoints[index].flags & W_FL_TEAM_SPECIFIC) {
          if ((waypoints[index].flags & W_FL_TEAM) == 0x01) // team 2?
-            build_matrix[1] = TRUE;
+            build_matrix[1] = true;
 
          if ((waypoints[index].flags & W_FL_TEAM) == 0x02) // team 3?
-            build_matrix[2] = TRUE;
+            build_matrix[2] = true;
 
          if ((waypoints[index].flags & W_FL_TEAM) == 0x03) // team 4?
-            build_matrix[3] = TRUE;
+            build_matrix[3] = true;
       }
    }
 
@@ -3218,11 +3216,11 @@ int WaypointDistanceFromTo(const int src, const int dest, int team) {
 bool WaypointAvailable(const int index, const int team) {
    // check it's a valid waypoint first
    if (index < 0 || index >= num_waypoints)
-      return FALSE;
+      return false;
 
    // if a team was specified make sure it matches this waypoint
    if (team != -1 && waypoints[index].flags & W_FL_TEAM_SPECIFIC && (waypoints[index].flags & W_FL_TEAM) != team)
-      return FALSE;
+      return false;
 
    // a bit field of all script number waypoint flags
    // to speed the checking operation up
@@ -3231,172 +3229,172 @@ bool WaypointAvailable(const int index, const int team) {
    // Report true if this waypoint is scripted and currently
    // available to the indicated team
    if (team != -1 && waypoints[index].script_flags & validFlags) {
-      bool waypoint_is_scripted = FALSE;
+      bool waypoint_is_scripted = false;
       if (waypoints[index].script_flags & S_FL_POINT1) {
-         waypoint_is_scripted = TRUE;
+         waypoint_is_scripted = true;
          switch (team) {
          case 0:
             if (blue_av[0] == true)
-               return TRUE;
+               return true;
             break;
          case 1:
             if (red_av[0] == true)
-               return TRUE;
+               return true;
             break;
          case 2:
             if (yellow_av[0] == true)
-               return TRUE;
+               return true;
             break;
          case 3:
             if (green_av[0] == true)
-               return TRUE;
+               return true;
             break;
          }
       }
       if (waypoints[index].script_flags & S_FL_POINT2) {
-         waypoint_is_scripted = TRUE;
+         waypoint_is_scripted = true;
          switch (team) {
          case 0:
             if (blue_av[1] == true)
-               return TRUE;
+               return true;
             break;
          case 1:
             if (red_av[1] == true)
-               return TRUE;
+               return true;
             break;
          case 2:
             if (yellow_av[1] == true)
-               return TRUE;
+               return true;
             break;
          case 3:
             if (green_av[1] == true)
-               return TRUE;
+               return true;
             break;
          }
       }
       if (waypoints[index].script_flags & S_FL_POINT3) {
-         waypoint_is_scripted = TRUE;
+         waypoint_is_scripted = true;
          switch (team) {
          case 0:
             if (blue_av[2] == true)
-               return TRUE;
+               return true;
             break;
          case 1:
             if (red_av[2] == true)
-               return TRUE;
+               return true;
             break;
          case 2:
             if (yellow_av[2] == true)
-               return TRUE;
+               return true;
             break;
          case 3:
             if (green_av[2] == true)
-               return TRUE;
+               return true;
             break;
          }
       }
       if (waypoints[index].script_flags & S_FL_POINT4) {
-         waypoint_is_scripted = TRUE;
+         waypoint_is_scripted = true;
          switch (team) {
          case 0:
             if (blue_av[3] == true)
-               return TRUE;
+               return true;
             break;
          case 1:
             if (red_av[3] == true)
-               return TRUE;
+               return true;
             break;
          case 2:
             if (yellow_av[3] == true)
-               return TRUE;
+               return true;
             break;
          case 3:
             if (green_av[3] == true)
-               return TRUE;
+               return true;
             break;
          }
       }
       if (waypoints[index].script_flags & S_FL_POINT5) {
-         waypoint_is_scripted = TRUE;
+         waypoint_is_scripted = true;
          switch (team) {
          case 0:
             if (blue_av[4] == true)
-               return TRUE;
+               return true;
             break;
          case 1:
             if (red_av[4] == true)
-               return TRUE;
+               return true;
             break;
          case 2:
             if (yellow_av[4] == true)
-               return TRUE;
+               return true;
             break;
          case 3:
             if (green_av[4] == true)
-               return TRUE;
+               return true;
             break;
          }
       }
       if (waypoints[index].script_flags & S_FL_POINT6) {
-         waypoint_is_scripted = TRUE;
+         waypoint_is_scripted = true;
          switch (team) {
          case 0:
             if (blue_av[5] == true)
-               return TRUE;
+               return true;
             break;
          case 1:
             if (red_av[5] == true)
-               return TRUE;
+               return true;
             break;
          case 2:
             if (yellow_av[5] == true)
-               return TRUE;
+               return true;
             break;
          case 3:
             if (green_av[5] == true)
-               return TRUE;
+               return true;
             break;
          }
       }
       if (waypoints[index].script_flags & S_FL_POINT7) {
-         waypoint_is_scripted = TRUE;
+         waypoint_is_scripted = true;
          switch (team) {
          case 0:
             if (blue_av[6] == true)
-               return TRUE;
+               return true;
             break;
          case 1:
             if (red_av[6] == true)
-               return TRUE;
+               return true;
             break;
          case 2:
             if (yellow_av[6] == true)
-               return TRUE;
+               return true;
             break;
          case 3:
             if (green_av[6] == true)
-               return TRUE;
+               return true;
             break;
          }
       }
       if (waypoints[index].script_flags & S_FL_POINT8) {
-         waypoint_is_scripted = TRUE;
+         waypoint_is_scripted = true;
          switch (team) {
          case 0:
             if (blue_av[7] == true)
-               return TRUE;
+               return true;
             break;
          case 1:
             if (red_av[7] == true)
-               return TRUE;
+               return true;
             break;
          case 2:
             if (yellow_av[7] == true)
-               return TRUE;
+               return true;
             break;
          case 3:
             if (green_av[7] == true)
-               return TRUE;
+               return true;
             break;
          }
       }
@@ -3404,12 +3402,12 @@ bool WaypointAvailable(const int index, const int team) {
       // this waypoint must be scripted but currently unavailable
       // so return false (waypoint is unavailable)
       if (waypoint_is_scripted)
-         return FALSE;
+         return false;
    }
 
    // if the code ran this far the waypoint is suitable for
    // use by this bot
-   return TRUE;
+   return true;
 }
 
 void WaypointRunOneWay(edict_t *pEntity) {
@@ -3843,7 +3841,7 @@ bool AreaDefLoad(edict_t *pEntity) {
    AREA_HDR header;
    char msg[80];
 
-   // return FALSE; //test to see if having areas loaded is
+   // return false; //test to see if having areas loaded is
    // fucking up the server (mem crashes)
 
    strcpy(mapname, STRING(gpGlobals->mapname));
@@ -3864,7 +3862,7 @@ bool AreaDefLoad(edict_t *pEntity) {
                ClientPrint(pEntity, HUD_PRINTNOTIFY, "Incompatible FoXBot area file version!\nAreas not loaded!\n");
 
             fclose(bfp);
-            return FALSE;
+            return false;
          }
 
          header.mapname[31] = 0;
@@ -3904,7 +3902,7 @@ bool AreaDefLoad(edict_t *pEntity) {
             }
 
             fclose(bfp);
-            return FALSE;
+            return false;
          }
       } else {
          if (pEntity) {
@@ -3913,13 +3911,13 @@ bool AreaDefLoad(edict_t *pEntity) {
          }
 
          fclose(bfp);
-         return FALSE;
+         return false;
       }
 
       fclose(bfp);
    }
 
-   return TRUE;
+   return true;
 }
 
 void AreaDefPrintInfo(edict_t *pEntity) {
@@ -3978,7 +3976,7 @@ void AreaDefPrintInfo(edict_t *pEntity) {
 }
 
 bool AreaInside(edict_t *pEntity, const int i) {
-   bool inside = FALSE;
+   bool inside = false;
    if ((areas[i].flags & A_FL_1) == A_FL_1 && (areas[i].flags & A_FL_2) == A_FL_2 && (areas[i].flags & A_FL_3) == A_FL_3 && (areas[i].flags & A_FL_4) == A_FL_4) {
       const float x = pEntity->v.origin.x;
       const float y = pEntity->v.origin.y;
@@ -4115,7 +4113,7 @@ void AreaAutoBuild1() {
          // initial area done
          // now expand it
          // look for its neighbours
-         bool expanded = TRUE;
+         bool expanded = true;
 
          lc = 0;
          rc = 0;
@@ -4123,10 +4121,10 @@ void AreaAutoBuild1() {
          //	r = 0;
          //	l = 0;
          k = 0;
-         ru = FALSE;
-         lu = FALSE;
-         rd = FALSE;
-         ld = FALSE;
+         ru = false;
+         lu = false;
+         rd = false;
+         ld = false;
          ll = 0;
          lr = 0;
          while (k <= num_waypoints) {
@@ -4145,9 +4143,9 @@ void AreaAutoBuild1() {
                   k = -1;
                   lc++;
                   if (waypoints[i].origin.z <= waypoints[k].origin.z)
-                     ld = TRUE;
+                     ld = true;
                   else
-                     lu = TRUE;
+                     lu = true;
                }
             } else if (waypoints[i].origin.y == waypoints[k].origin.y && waypoints[i].origin.z - 16 <= waypoints[k].origin.z && waypoints[i].origin.z + 16 >= waypoints[k].origin.z && !ru && !rd && i != k) {
                if (waypoints[i].origin.x + 32 * (rc + 1) == waypoints[k].origin.x) {
@@ -4155,9 +4153,9 @@ void AreaAutoBuild1() {
                   k = -1;
                   rc++;
                   if (waypoints[i].origin.z <= waypoints[k].origin.z)
-                     rd = TRUE;
+                     rd = true;
                   else
-                     ru = TRUE;
+                     ru = true;
                }
             } else if ((waypoints[i].origin.y == waypoints[k].origin.y && (waypoints[ll].origin.z - 16 <= waypoints[k].origin.z && waypoints[ll].origin.z + 16 >= waypoints[k].origin.z)) ||
                        (waypoints[lr].origin.z - 16 <= waypoints[k].origin.z && waypoints[lr].origin.z + 16 >= waypoints[k].origin.z && (ru || rd) && (ld || lu) && i != k)) {
@@ -4187,7 +4185,7 @@ void AreaAutoBuild1() {
             k++;
          }
          while (expanded) {
-            expanded = FALSE;
+            expanded = false;
             for (j = 0; j <= num_waypoints; j++) {
                if (!(waypoints[j].flags & W_FL_DELETED)) {
                   // expand via y
@@ -4198,10 +4196,10 @@ void AreaAutoBuild1() {
                         r = 0;
                         l = 0;
                         k = 0;
-                        ru = FALSE;
-                        lu = FALSE;
-                        rd = FALSE;
-                        ld = FALSE;
+                        ru = false;
+                        lu = false;
+                        rd = false;
+                        ld = false;
                         ll = 0;
                         lr = 0;
                         while (k <= num_waypoints) {
@@ -4220,9 +4218,9 @@ void AreaAutoBuild1() {
                                  k = -1;
                                  l++;
                                  if (waypoints[j].origin.z <= waypoints[k].origin.z)
-                                    ld = TRUE;
+                                    ld = true;
                                  else
-                                    lu = TRUE;
+                                    lu = true;
                               }
                            } else if (waypoints[j].origin.y == waypoints[k].origin.y && waypoints[j].origin.z - 16 <= waypoints[k].origin.z && waypoints[j].origin.z + 16 >= waypoints[k].origin.z && !ru && !rd && j != k) {
                               if (waypoints[j].origin.x + 32 * (r + 1) == waypoints[k].origin.x) {
@@ -4230,9 +4228,9 @@ void AreaAutoBuild1() {
                                  k = -1;
                                  r++;
                                  if (waypoints[j].origin.z <= waypoints[k].origin.z)
-                                    rd = TRUE;
+                                    rd = true;
                                  else
-                                    ru = TRUE;
+                                    ru = true;
                               }
                            } else if ((waypoints[j].origin.y == waypoints[k].origin.y && (waypoints[ll].origin.z - 16 <= waypoints[k].origin.z && waypoints[ll].origin.z + 16 >= waypoints[k].origin.z)) ||
                                       (waypoints[lr].origin.z - 16 <= waypoints[k].origin.z && waypoints[lr].origin.z + 16 >= waypoints[k].origin.z && (ru || rd) && (ld || lu) && j != k)) {
@@ -4265,7 +4263,7 @@ void AreaAutoBuild1() {
                            areas[index].b.y = waypoints[j].origin.y + 16;
                            areas[index].c.y = waypoints[j].origin.y + 16;
                            waypoints[j].flags = W_FL_DELETED;
-                           expanded = TRUE;
+                           expanded = true;
                         }
                      }
                      // expand the other way..
@@ -4273,10 +4271,10 @@ void AreaAutoBuild1() {
                         r = 0;
                         l = 0;
                         k = 0;
-                        ru = FALSE;
-                        lu = FALSE;
-                        rd = FALSE;
-                        ld = FALSE;
+                        ru = false;
+                        lu = false;
+                        rd = false;
+                        ld = false;
                         ll = 0;
                         lr = 0;
                         while (k <= num_waypoints) {
@@ -4295,9 +4293,9 @@ void AreaAutoBuild1() {
                                  k = -1;
                                  l++;
                                  if (waypoints[j].origin.z <= waypoints[k].origin.z)
-                                    ld = TRUE;
+                                    ld = true;
                                  else
-                                    lu = TRUE;
+                                    lu = true;
                               }
                            } else if (waypoints[j].origin.y == waypoints[k].origin.y && waypoints[j].origin.z - 16 <= waypoints[k].origin.z && waypoints[j].origin.z + 16 >= waypoints[k].origin.z && !ru && !rd && j != k) {
                               if (waypoints[j].origin.x + 32 * (r + 1) == waypoints[k].origin.x) {
@@ -4305,9 +4303,9 @@ void AreaAutoBuild1() {
                                  k = -1;
                                  r++;
                                  if (waypoints[j].origin.z <= waypoints[k].origin.z)
-                                    rd = TRUE;
+                                    rd = true;
                                  else
-                                    ru = TRUE;
+                                    ru = true;
                               }
                            } else if ((waypoints[j].origin.y == waypoints[k].origin.y && (waypoints[ll].origin.z - 16 <= waypoints[k].origin.z && waypoints[ll].origin.z + 16 >= waypoints[k].origin.z)) ||
                                       (waypoints[lr].origin.z - 16 <= waypoints[k].origin.z && waypoints[lr].origin.z + 16 >= waypoints[k].origin.z && (ru || rd) && (ld || lu) && j != k)) {
@@ -4340,7 +4338,7 @@ void AreaAutoBuild1() {
                            areas[index].a.y = waypoints[j].origin.y - 16;
                            areas[index].d.y = waypoints[j].origin.y - 16;
                            waypoints[j].flags = W_FL_DELETED;
-                           expanded = TRUE;
+                           expanded = true;
                         }
                      }
                   }
@@ -4361,10 +4359,10 @@ void AreaAutoBuild1() {
             //	l = 0;
             k = 0;
             h = 0;
-            ru = FALSE;
-            lu = FALSE;
-            rd = FALSE;
-            ld = FALSE;
+            ru = false;
+            lu = false;
+            rd = false;
+            ld = false;
             ll = 0;
             lr = 0;
             while (k <= num_waypoints) {
@@ -4392,9 +4390,9 @@ void AreaAutoBuild1() {
                      k = -1;
                      lc++;
                      if (waypoints[h].origin.z <= waypoints[k].origin.z)
-                        ld = TRUE;
+                        ld = true;
                      else
-                        lu = TRUE;
+                        lu = true;
                   }
                } else if (waypoints[h].origin.x == waypoints[k].origin.x && waypoints[h].origin.z - 16 <= waypoints[k].origin.z && waypoints[h].origin.z + 16 >= waypoints[k].origin.z && !ru && !rd && i != k) {
                   if (waypoints[h].origin.y + 32 * (rc + 1) == waypoints[k].origin.y) {
@@ -4402,9 +4400,9 @@ void AreaAutoBuild1() {
                      k = -1;
                      rc++;
                      if (waypoints[h].origin.z <= waypoints[k].origin.z)
-                        rd = TRUE;
+                        rd = true;
                      else
-                        ru = TRUE;
+                        ru = true;
                   }
                } else if ((waypoints[h].origin.x == waypoints[k].origin.x && (waypoints[ll].origin.z - 16 <= waypoints[k].origin.z && waypoints[ll].origin.z + 16 >= waypoints[k].origin.z)) ||
                           (waypoints[lr].origin.z - 16 <= waypoints[k].origin.z && waypoints[lr].origin.z + 16 >= waypoints[k].origin.z && (ru || rd) && (ld || lu) && i != k)) {
@@ -4438,9 +4436,9 @@ void AreaAutoBuild1() {
 
             // as we expanded each area in the y direction earlier
             // we must now merge them in the x direction
-            bool expanded = TRUE;
+            bool expanded = true;
             while (expanded) {
-               expanded = FALSE;
+               expanded = false;
                for (j = 0; j <= num_areas; j++) {
                   if (!(areas[j].flags & W_FL_DELETED)) {
                      if ((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 && (areas[j].flags & A_FL_3) == A_FL_3 && (areas[j].flags & A_FL_4) == A_FL_4) {
@@ -4474,9 +4472,9 @@ void AreaAutoBuild1() {
                                        k = -1;
                                        l++;
                                        if (waypoints[h].origin.z <= waypoints[k].origin.z)
-                                          ld = TRUE;
+                                          ld = true;
                                        else
-                                          lu = TRUE;
+                                          lu = true;
                                     }
                                  } else if (waypoints[h].origin.x == waypoints[k].origin.x && waypoints[h].origin.z - 16 <= waypoints[k].origin.z && waypoints[h].origin.z + 16 >= waypoints[k].origin.z && !ru && !rd && i != k) {
                                     if (waypoints[h].origin.y + 32 * (r + 1) == waypoints[k].origin.y) {
@@ -4484,9 +4482,9 @@ void AreaAutoBuild1() {
                                        k = -1;
                                        r++;
                                        if (waypoints[h].origin.z <= waypoints[k].origin.z)
-                                          rd = TRUE;
+                                          rd = true;
                                        else
-                                          ru = TRUE;
+                                          ru = true;
                                     }
                                  } else if ((waypoints[h].origin.x == waypoints[k].origin.x && (waypoints[ll].origin.z - 16 <= waypoints[k].origin.z && waypoints[ll].origin.z + 16 >= waypoints[k].origin.z)) ||
                                             (waypoints[lr].origin.z - 16 <= waypoints[k].origin.z && waypoints[lr].origin.z + 16 >= waypoints[k].origin.z && (ru || rd) && (ld || lu) && i != k)) {
@@ -4519,7 +4517,7 @@ void AreaAutoBuild1() {
                                  areas[i].a = areas[j].a;
                                  areas[i].b = areas[j].b;
                                  areas[j].flags = W_FL_DELETED;
-                                 expanded = TRUE;
+                                 expanded = true;
                               }
                            }
                         }
@@ -4552,21 +4550,21 @@ void AreaAutoMerge() {
    for (i = 0; i <= num_areas; i++) {
       if (!(areas[i].flags & W_FL_DELETED)) {
          if ((areas[i].flags & A_FL_1) == A_FL_1 && (areas[i].flags & A_FL_2) == A_FL_2 && (areas[i].flags & A_FL_3) == A_FL_3 && (areas[i].flags & A_FL_4) == A_FL_4) {
-            a = FALSE;
-            b = FALSE;
-            c = FALSE;
-            d = FALSE;
+            a = false;
+            b = false;
+            c = false;
+            d = false;
             for (j = 0; j <= num_areas; j++) {
                if (!(areas[j].flags & W_FL_DELETED) && i != j) {
                   if ((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 && (areas[j].flags & A_FL_3) == A_FL_3 && (areas[j].flags & A_FL_4) == A_FL_4) {
                      if (areas[j].a == areas[i].a || areas[j].b == areas[i].a || areas[j].c == areas[i].a || areas[j].d == areas[i].a)
-                        a = TRUE;
+                        a = true;
                      if (areas[j].a == areas[i].b || areas[j].b == areas[i].b || areas[j].c == areas[i].b || areas[j].d == areas[i].b)
-                        b = TRUE;
+                        b = true;
                      if (areas[j].a == areas[i].c || areas[j].b == areas[i].c || areas[j].c == areas[i].c || areas[j].d == areas[i].c)
-                        c = TRUE;
+                        c = true;
                      if (areas[j].a == areas[i].d || areas[j].b == areas[i].d || areas[j].c == areas[i].d || areas[j].d == areas[i].d)
-                        d = TRUE;
+                        d = true;
                   }
                }
             }
@@ -4575,10 +4573,10 @@ void AreaAutoMerge() {
             if ((!a && b && c && d) || (a && !b && c && d) || (a && b && !c && d) || (a && b && c && !d)) {
                // Vector aa,bb;
                // now find all the areas we can merge this one with
-               bool merged = TRUE;
+               bool merged = true;
                while (merged) {
                   stk_cnt = 0;
-                  merged = FALSE;
+                  merged = false;
                   if (areas[i].d.x - areas[i].a.x > areas[i].b.y - areas[i].a.y) {
                      // x>y so expand in the y direction
                      for (j = 0; j <= num_areas; j++) {
@@ -4589,7 +4587,7 @@ void AreaAutoMerge() {
                                     areas[i].b = areas[j].b;
                                     areas[i].c = areas[j].c;
                                     areas[j].flags = W_FL_DELETED;
-                                    merged = TRUE;
+                                    merged = true;
                                     j = num_areas;
                                  }
                                  // else to multiple merge
@@ -4614,7 +4612,7 @@ void AreaAutoMerge() {
                                           for (k = 0; k < stk_cnt; k++) {
                                              areas[stk[k]].flags = W_FL_DELETED;
                                           }
-                                          merged = TRUE;
+                                          merged = true;
                                           j = num_areas;
                                        }
                                     }
@@ -4625,7 +4623,7 @@ void AreaAutoMerge() {
                                     areas[i].a = areas[j].a;
                                     areas[i].d = areas[j].d;
                                     areas[j].flags = W_FL_DELETED;
-                                    merged = TRUE;
+                                    merged = true;
                                     j = num_areas;
                                  }
                                  // else to multiple merge
@@ -4650,7 +4648,7 @@ void AreaAutoMerge() {
                                           for (k = 0; k < stk_cnt; k++) {
                                              areas[stk[k]].flags = W_FL_DELETED;
                                           }
-                                          merged = TRUE;
+                                          merged = true;
                                           j = num_areas;
                                        }
                                     }
@@ -4669,7 +4667,7 @@ void AreaAutoMerge() {
                                     areas[i].d = areas[j].d;
                                     areas[i].c = areas[j].c;
                                     areas[j].flags = W_FL_DELETED;
-                                    merged = TRUE;
+                                    merged = true;
                                     j = num_areas;
                                  }
                                  // else to multiple merge
@@ -4694,7 +4692,7 @@ void AreaAutoMerge() {
                                           for (k = 0; k < stk_cnt; k++) {
                                              areas[stk[k]].flags = W_FL_DELETED;
                                           }
-                                          merged = TRUE;
+                                          merged = true;
                                           j = num_areas;
                                        }
                                     }
@@ -4705,7 +4703,7 @@ void AreaAutoMerge() {
                                     areas[i].a = areas[j].a;
                                     areas[i].b = areas[j].b;
                                     areas[j].flags = W_FL_DELETED;
-                                    merged = TRUE;
+                                    merged = true;
                                     j = num_areas;
                                  }
                                  // else to multiple merge
@@ -4730,7 +4728,7 @@ void AreaAutoMerge() {
                                           for (k = 0; k < stk_cnt; k++) {
                                              areas[stk[k]].flags = W_FL_DELETED;
                                           }
-                                          merged = TRUE;
+                                          merged = true;
                                           j = num_areas;
                                        }
                                     }
@@ -4751,21 +4749,21 @@ void AreaAutoMerge() {
    for (i = 0; i <= num_areas; i++) {
       if (!(areas[i].flags & W_FL_DELETED)) {
          if ((areas[i].flags & A_FL_1) == A_FL_1 && (areas[i].flags & A_FL_2) == A_FL_2 && (areas[i].flags & A_FL_3) == A_FL_3 && (areas[i].flags & A_FL_4) == A_FL_4) {
-            a = FALSE;
-            b = FALSE;
-            c = FALSE;
-            d = FALSE;
+            a = false;
+            b = false;
+            c = false;
+            d = false;
             for (j = 0; j <= num_areas; j++) {
                if (!(areas[j].flags & W_FL_DELETED) && i != j) {
                   if ((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 && (areas[j].flags & A_FL_3) == A_FL_3 && (areas[j].flags & A_FL_4) == A_FL_4) {
                      if (areas[j].a == areas[i].a || areas[j].b == areas[i].a || areas[j].c == areas[i].a || areas[j].d == areas[i].a)
-                        a = TRUE;
+                        a = true;
                      if (areas[j].a == areas[i].b || areas[j].b == areas[i].b || areas[j].c == areas[i].b || areas[j].d == areas[i].b)
-                        b = TRUE;
+                        b = true;
                      if (areas[j].a == areas[i].c || areas[j].b == areas[i].c || areas[j].c == areas[i].c || areas[j].d == areas[i].c)
-                        c = TRUE;
+                        c = true;
                      if (areas[j].a == areas[i].d || areas[j].b == areas[i].d || areas[j].c == areas[i].d || areas[j].d == areas[i].d)
-                        d = TRUE;
+                        d = true;
                   }
                }
             }
@@ -4774,10 +4772,10 @@ void AreaAutoMerge() {
             if ((!a && b && c && d) || (a && !b && c && d) || (a && b && !c && d) || (a && b && c && !d) || (!a && !b && c && d) || (a && b && !c && !d) || (a && !b && !c && d) || (!a && b && c && !d)) {
                // Vector aa,bb;
                // now find all the areas we can merge this one with
-               bool merged = TRUE;
+               bool merged = true;
                while (merged) {
                   stk_cnt = 0;
-                  merged = FALSE;
+                  merged = false;
                   if (areas[i].d.x - areas[i].a.x > areas[i].b.y - areas[i].a.y) {
                      // x>y so expand in the y direction
                      for (j = 0; j <= num_areas; j++) {
@@ -4788,7 +4786,7 @@ void AreaAutoMerge() {
                                     areas[i].b = areas[j].b;
                                     areas[i].c = areas[j].c;
                                     areas[j].flags = W_FL_DELETED;
-                                    merged = TRUE;
+                                    merged = true;
                                     j = num_areas;
                                  }
                                  // else to multiple merge
@@ -4813,7 +4811,7 @@ void AreaAutoMerge() {
                                           for (k = 0; k < stk_cnt; k++) {
                                              areas[stk[k]].flags = W_FL_DELETED;
                                           }
-                                          merged = TRUE;
+                                          merged = true;
                                           j = num_areas;
                                        }
                                     }
@@ -4824,7 +4822,7 @@ void AreaAutoMerge() {
                                     areas[i].a = areas[j].a;
                                     areas[i].d = areas[j].d;
                                     areas[j].flags = W_FL_DELETED;
-                                    merged = TRUE;
+                                    merged = true;
                                     j = num_areas;
                                  }
                                  // else to multiple merge
@@ -4849,7 +4847,7 @@ void AreaAutoMerge() {
                                           for (k = 0; k < stk_cnt; k++) {
                                              areas[stk[k]].flags = W_FL_DELETED;
                                           }
-                                          merged = TRUE;
+                                          merged = true;
                                           j = num_areas;
                                        }
                                     }
@@ -4868,7 +4866,7 @@ void AreaAutoMerge() {
                                     areas[i].d = areas[j].d;
                                     areas[i].c = areas[j].c;
                                     areas[j].flags = W_FL_DELETED;
-                                    merged = TRUE;
+                                    merged = true;
                                     j = num_areas;
                                  }
                                  // else to multiple merge
@@ -4893,7 +4891,7 @@ void AreaAutoMerge() {
                                           for (k = 0; k < stk_cnt; k++) {
                                              areas[stk[k]].flags = W_FL_DELETED;
                                           }
-                                          merged = TRUE;
+                                          merged = true;
                                           j = num_areas;
                                        }
                                     }
@@ -4904,7 +4902,7 @@ void AreaAutoMerge() {
                                     areas[i].a = areas[j].a;
                                     areas[i].b = areas[j].b;
                                     areas[j].flags = W_FL_DELETED;
-                                    merged = TRUE;
+                                    merged = true;
                                     j = num_areas;
                                  }
                                  // else to multiple merge
@@ -4929,7 +4927,7 @@ void AreaAutoMerge() {
                                           for (k = 0; k < stk_cnt; k++) {
                                              areas[stk[k]].flags = W_FL_DELETED;
                                           }
-                                          merged = TRUE;
+                                          merged = true;
                                           j = num_areas;
                                        }
                                     }
@@ -4949,18 +4947,18 @@ void AreaAutoMerge() {
    for (i = 0; i <= num_areas; i++) {
       if (!(areas[i].flags & W_FL_DELETED)) {
          if ((areas[i].flags & A_FL_1) == A_FL_1 && (areas[i].flags & A_FL_2) == A_FL_2 && (areas[i].flags & A_FL_3) == A_FL_3 && (areas[i].flags & A_FL_4) == A_FL_4) {
-            a = FALSE;
-            b = FALSE;
-            c = FALSE;
-            d = FALSE;
+            a = false;
+            b = false;
+            c = false;
+            d = false;
             {
                // Vector aa,bb;
                // now find all the areas we can merge this one with
                bool merged;
-               merged = TRUE;
+               merged = true;
                while (merged) {
                   stk_cnt = 0;
-                  merged = FALSE;
+                  merged = false;
                   // x>y so expand in the y direction
                   for (j = 0; j <= num_areas; j++) {
                      if (!(areas[j].flags & W_FL_DELETED) && i != j) {
@@ -4970,7 +4968,7 @@ void AreaAutoMerge() {
                                  areas[i].b = areas[j].b;
                                  areas[i].c = areas[j].c;
                                  areas[j].flags = W_FL_DELETED;
-                                 merged = TRUE;
+                                 merged = true;
                                  j = num_areas;
                               }
                               // else to multiple merge
@@ -4995,7 +4993,7 @@ void AreaAutoMerge() {
                                        for (k = 0; k < stk_cnt; k++) {
                                           areas[stk[k]].flags = W_FL_DELETED;
                                        }
-                                       merged = TRUE;
+                                       merged = true;
                                        j = num_areas;
                                     }
                                  }
@@ -5006,7 +5004,7 @@ void AreaAutoMerge() {
                                  areas[i].a = areas[j].a;
                                  areas[i].d = areas[j].d;
                                  areas[j].flags = W_FL_DELETED;
-                                 merged = TRUE;
+                                 merged = true;
                                  j = num_areas;
                               }
                               // else to multiple merge
@@ -5031,7 +5029,7 @@ void AreaAutoMerge() {
                                        for (k = 0; k < stk_cnt; k++) {
                                           areas[stk[k]].flags = W_FL_DELETED;
                                        }
-                                       merged = TRUE;
+                                       merged = true;
                                        j = num_areas;
                                     }
                                  }
@@ -5049,7 +5047,7 @@ void AreaAutoMerge() {
                                  areas[i].d = areas[j].d;
                                  areas[i].c = areas[j].c;
                                  areas[j].flags = W_FL_DELETED;
-                                 merged = TRUE;
+                                 merged = true;
                                  j = num_areas;
                               }
                               // else to multiple merge
@@ -5074,7 +5072,7 @@ void AreaAutoMerge() {
                                        for (k = 0; k < stk_cnt; k++) {
                                           areas[stk[k]].flags = W_FL_DELETED;
                                        }
-                                       merged = TRUE;
+                                       merged = true;
                                        j = num_areas;
                                     }
                                  }
@@ -5085,7 +5083,7 @@ void AreaAutoMerge() {
                                  areas[i].a = areas[j].a;
                                  areas[i].b = areas[j].b;
                                  areas[j].flags = W_FL_DELETED;
-                                 merged = TRUE;
+                                 merged = true;
                                  j = num_areas;
                               }
                               // else to multiple merge
@@ -5110,7 +5108,7 @@ void AreaAutoMerge() {
                                        for (k = 0; k < stk_cnt; k++) {
                                           areas[stk[k]].flags = W_FL_DELETED;
                                        }
-                                       merged = TRUE;
+                                       merged = true;
                                        j = num_areas;
                                     }
                                  }
@@ -5332,7 +5330,7 @@ void ProcessCommanderList() {
          if (buffer[0] == '/' && buffer[1] == '/')
             continue;
       }
-      const bool valid = TRUE;
+      const bool valid = true;
 
       // Search for invalid characters in the read string.
       // strlen is being called too many times in the for loop - [APG]RoboCop[CL]
@@ -5341,7 +5339,7 @@ void ProcessCommanderList() {
                       const char ch = invalidChars[j];
 
                       if (strchr(buffer, ch)) {
-                              valid = FALSE;
+                              valid = false;
                               if (IS_DEDICATED_SERVER())
                                       printf("[Config] foxbot_commanders.txt : Invalid Character %c\n", ch);
                               else {

@@ -1,5 +1,3 @@
-// This is an open source non-commercial project. Dear PVS-Studio, please check it.
-// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // FoXBot - AI Bot for Halflife's Team Fortress Classic
 //
@@ -228,7 +226,7 @@ int JobRoam(bot_t *pBot) {
    // make sure the bot has a waypoint destination
    if (job_ptr->waypoint == -1) {
       // pick a random plain waypoint
-      job_ptr->waypoint = WaypointFindRandomGoal_R(pBot->pEdict->v.origin, FALSE, 8000.0, -1, 0);
+      job_ptr->waypoint = WaypointFindRandomGoal_R(pBot->pEdict->v.origin, false, 8000.0, -1, 0);
       if (job_ptr->waypoint == -1) {
          // this really shouldn't happen(unless the map has no waypoints)
          return JOB_TERMINATED;
@@ -248,7 +246,7 @@ int JobRoam(bot_t *pBot) {
       }
    } else {
       pBot->goto_wp = job_ptr->waypoint;
-      if (!BotNavigateWaypoints(pBot, FALSE)) {
+      if (!BotNavigateWaypoints(pBot, false)) {
          // failure is not an option here, so force the selection of a new goal waypoint
          job_ptr->waypoint = -1;
       }
@@ -344,7 +342,7 @@ int JobPickUpItem(bot_t *pBot) {
    // phase zero - go to the waypoint nearest the item
    if (job_ptr->phase == 0) {
       pBot->goto_wp = job_ptr->waypoint;
-      if (!BotNavigateWaypoints(pBot, FALSE)) {
+      if (!BotNavigateWaypoints(pBot, false)) {
          BlacklistJob(pBot, JOB_PICKUP_ITEM, random_float(5.0, 15.0));
          return JOB_TERMINATED;
       }
@@ -400,7 +398,7 @@ int JobPickUpFlag(bot_t *pBot) {
    // phase zero - go to the waypoint nearest the flag
    if (job_ptr->phase == 0) {
       pBot->goto_wp = job_ptr->waypoint;
-      if (!BotNavigateWaypoints(pBot, FALSE)) {
+      if (!BotNavigateWaypoints(pBot, false)) {
          BlacklistJob(pBot, JOB_PICKUP_FLAG, random_float(5.0, 10.0));
          return JOB_TERMINATED;
       }
@@ -594,7 +592,7 @@ int JobUseTeleport(bot_t *pBot) {
          job_ptr->phase_timer = pBot->f_think_time + 6.0;
       } else {
          pBot->goto_wp = job_ptr->waypoint;
-         if (!BotNavigateWaypoints(pBot, FALSE)) {
+         if (!BotNavigateWaypoints(pBot, false)) {
             BlacklistJob(pBot, JOB_USE_TELEPORT, random_float(5.0, 20.0));
             return JOB_TERMINATED;
          }
@@ -608,7 +606,7 @@ int JobUseTeleport(bot_t *pBot) {
 
       // is there some reason to abort?
       // e.g. took too long, teleport is occupied, or bot is fighting
-      if (pBot->enemy.ptr != nullptr || job_ptr->phase_timer < pBot->f_think_time || BotAllyAtVector(pBot, TeleportCenter, 70.0, FALSE) != nullptr) {
+      if (pBot->enemy.ptr != nullptr || job_ptr->phase_timer < pBot->f_think_time || BotAllyAtVector(pBot, TeleportCenter, 70.0, false) != nullptr) {
          BlacklistJob(pBot, JOB_USE_TELEPORT, 6.0);
          return JOB_TERMINATED;
       }
@@ -746,7 +744,7 @@ int JobMaintainObject(bot_t *pBot) {
          job_ptr->phase = 2;
       else {
          pBot->goto_wp = job_ptr->waypoint;
-         if (!BotNavigateWaypoints(pBot, FALSE)) {
+         if (!BotNavigateWaypoints(pBot, false)) {
             BlacklistJob(pBot, JOB_MAINTAIN_OBJECT, random_float(5.0, 15.0));
             return JOB_TERMINATED;
          }
@@ -761,22 +759,22 @@ int JobMaintainObject(bot_t *pBot) {
       className[23] = '\0';
 
       if (strcmp("building_sentrygun", className) == 0) {
-         bool maintenanceNeeded = FALSE;
+         bool maintenanceNeeded = false;
 
          if (job_ptr->object->v.health < 100)
-            maintenanceNeeded = TRUE;
+            maintenanceNeeded = true;
          else if (job_ptr->object == pBot->sentry_edict && pBot->sentry_ammo < 100)
-            maintenanceNeeded = TRUE;
+            maintenanceNeeded = true;
          else { // sentry needs upgrading?
             char modelName[24];
             strncpy(modelName, STRING(job_ptr->object->v.model), 24);
             modelName[23] = '\0';
 
             if (strcmp(modelName, "models/sentry3.mdl") != 0)
-               maintenanceNeeded = TRUE;
+               maintenanceNeeded = true;
          }
 
-         if (maintenanceNeeded == FALSE)
+         if (maintenanceNeeded == false)
             return JOB_TERMINATED; // maintenance is uneeded
       } else if (strcmp("building_dispenser", className) == 0) {
          if (job_ptr->object->v.health > 99)
@@ -876,7 +874,7 @@ int JobBuildSentry(bot_t *pBot) {
       }
 
       pBot->goto_wp = job_ptr->waypoint;
-      if (!BotNavigateWaypoints(pBot, FALSE)) {
+      if (!BotNavigateWaypoints(pBot, false)) {
          BlacklistJob(pBot, JOB_BUILD_SENTRY, random_float(10.0, 20.0));
          return JOB_TERMINATED;
       }
@@ -921,7 +919,7 @@ int JobBuildSentry(bot_t *pBot) {
    if (job_ptr->phase == 2) {
       if (job_ptr->phase_timer < pBot->f_think_time) {
          // find and remember the sentry gun the bot just built
-         bool success = FALSE;
+         bool success = false;
          edict_t *pent = nullptr;
          while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "building_sentrygun")) != nullptr && !FNullEnt(pent)) {
             //	UTIL_BotLogPrintf("%s: sentry gun distance %f\n",
@@ -931,8 +929,8 @@ int JobBuildSentry(bot_t *pBot) {
             // when it started building
             if (VectorsNearerThan(job_ptr->origin, pent->v.origin, 50.0)) {
                //	UTIL_HostSay(pBot->pEdict, 0, "sentry gun built"); //DebugMessageOfDoom!
-               success = TRUE;
-               pBot->has_sentry = TRUE;
+               success = true;
+               pBot->has_sentry = true;
                pBot->sentry_edict = pent;
                pBot->sentryWaypoint = job_ptr->waypoint;
 
@@ -940,7 +938,7 @@ int JobBuildSentry(bot_t *pBot) {
                if (waypoints[job_ptr->waypoint].flags & W_FL_TFC_SENTRY_180) {
                   //	UTIL_HostSay(pBot->pEdict, 0, "rotating SG"); //DebugMessageOfDoom!
                   FakeClientCommand(pBot->pEdict, "rotatesentry180", nullptr, nullptr);
-                  pBot->SGRotated = TRUE;
+                  pBot->SGRotated = true;
                }
 
                job_ptr->phase = 3;
@@ -949,7 +947,7 @@ int JobBuildSentry(bot_t *pBot) {
          }
 
          // abort if the bot has been waiting for the sentry gun and it isn't there
-         if (success == FALSE) { // don't repeat the job for a while
+         if (success == false) { // don't repeat the job for a while
             BlacklistJob(pBot, JOB_BUILD_SENTRY, random_float(20.0, 40.0));
             return JOB_TERMINATED;
          }
@@ -1017,7 +1015,7 @@ int JobBuildDispenser(bot_t *pBot) {
       }
 
       pBot->goto_wp = job_ptr->waypoint;
-      if (!BotNavigateWaypoints(pBot, FALSE)) {
+      if (!BotNavigateWaypoints(pBot, false)) {
          BlacklistJob(pBot, JOB_BUILD_DISPENSER, random_float(5.0, 20.0));
          return JOB_TERMINATED;
       }
@@ -1063,7 +1061,7 @@ int JobBuildDispenser(bot_t *pBot) {
       if (job_ptr->phase_timer < pBot->f_think_time) {
          // find and remember the dispenser the bot just built
          edict_t *pent = nullptr;
-         bool success = FALSE;
+         bool success = false;
          while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "building_dispenser")) != nullptr && !FNullEnt(pent)) {
             //	UTIL_BotLogPrintf("%s: dispenser distance %f\n",
             //		pBot->name, (job_ptr->origin - pent->v.origin).Length());
@@ -1072,8 +1070,8 @@ int JobBuildDispenser(bot_t *pBot) {
             // when it started building
             if (VectorsNearerThan(job_ptr->origin, pent->v.origin, 50.0)) {
                //	UTIL_HostSay(pBot->pEdict, 0, "dispenser built"); //DebugMessageOfDoom!
-               success = TRUE;
-               pBot->has_dispenser = TRUE;
+               success = true;
+               pBot->has_dispenser = true;
                pBot->dispenser_edict = pent;
                pBot->f_dispenserDetTime = 0.0; // don't blow it up yet!
                return JOB_TERMINATED;          // job done!
@@ -1098,9 +1096,9 @@ int JobBuildTeleport(bot_t *pBot) {
    job_struct *job_ptr = &pBot->job[pBot->currentJob];
 
    // find out if the bot is to build a teleport entrance or an exit
-   bool buildExit = TRUE;
+   bool buildExit = true;
    if (waypoints[job_ptr->waypoint].flags & W_FL_TFC_TELEPORTER_ENTRANCE)
-      buildExit = FALSE;
+      buildExit = false;
 
    // phase 0, getting into position
    if (job_ptr->phase == 0) {
@@ -1149,7 +1147,7 @@ int JobBuildTeleport(bot_t *pBot) {
       }
 
       pBot->goto_wp = job_ptr->waypoint;
-      if (!BotNavigateWaypoints(pBot, FALSE)) {
+      if (!BotNavigateWaypoints(pBot, false)) {
          BlacklistJob(pBot, JOB_BUILD_TELEPORT, random_float(10.0, 30.0));
          return JOB_TERMINATED;
       }
@@ -1202,7 +1200,7 @@ int JobBuildTeleport(bot_t *pBot) {
       if (job_ptr->phase_timer < pBot->f_think_time) {
          // find and remember the teleport the bot just built
          edict_t *pent = nullptr;
-         bool success = FALSE;
+         bool success = false;
          while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "building_teleporter")) != nullptr && !FNullEnt(pent)) {
             //	UTIL_BotLogPrintf("%s: Teleport distance %f\n",
             //		pBot->name, (job_ptr->origin - pent->v.origin).Length());
@@ -1211,7 +1209,7 @@ int JobBuildTeleport(bot_t *pBot) {
             // when it started building
             if (VectorsNearerThan(job_ptr->origin, pent->v.origin, 50.0)) {
                //	UTIL_HostSay(pBot->pEdict, 0, "teleporter built"); //DebugMessageOfDoom!
-               success = TRUE;
+               success = true;
                if (buildExit) {
                   pBot->tpExit = pent;
                   pBot->tpExitWP = job_ptr->waypoint;
@@ -1329,7 +1327,7 @@ int JobBuffAlly(bot_t *pBot) {
          pBot->sideRouteTolerance = 200; // very short route changes
 
          pBot->goto_wp = job_ptr->waypoint;
-         if (!BotNavigateWaypoints(pBot, FALSE)) {
+         if (!BotNavigateWaypoints(pBot, false)) {
             BlacklistJob(pBot, JOB_BUFF_ALLY, random_float(5.0, 15.0));
             return JOB_TERMINATED;
          }
@@ -1405,7 +1403,7 @@ int JobEscortAlly(bot_t *pBot) {
 
    // phase zero - we assume the ally is visible and must find a waypoint near them
    if (job_ptr->phase == SET_WAYPOINT_VISIBLE_ALLY) {
-      job_ptr->waypoint = WaypointFindInRange(job_ptr->origin, 50.0, maxEscortRange, pBot->current_team, TRUE);
+      job_ptr->waypoint = WaypointFindInRange(job_ptr->origin, 50.0, maxEscortRange, pBot->current_team, true);
 
       job_ptr->phase = FOLLOW_VISIBLE_ALLY;
       return JOB_UNDERWAY;
@@ -1437,7 +1435,7 @@ int JobEscortAlly(bot_t *pBot) {
          }
       } else {
          pBot->goto_wp = job_ptr->waypoint;
-         if (!BotNavigateWaypoints(pBot, FALSE)) {
+         if (!BotNavigateWaypoints(pBot, false)) {
             BlacklistJob(pBot, JOB_ESCORT_ALLY, random_float(5.0, 15.0));
             return JOB_TERMINATED;
          }
@@ -1467,7 +1465,7 @@ int JobEscortAlly(bot_t *pBot) {
          return JOB_TERMINATED;
       else {
          pBot->goto_wp = job_ptr->waypoint;
-         if (!BotNavigateWaypoints(pBot, FALSE)) {
+         if (!BotNavigateWaypoints(pBot, false)) {
             BlacklistJob(pBot, JOB_ESCORT_ALLY, random_float(5.0, 15.0));
             return JOB_TERMINATED;
          }
@@ -1545,13 +1543,13 @@ int JobGetHealth(bot_t *pBot) {
       } else // not there yet
       {
          pBot->goto_wp = job_ptr->waypoint;
-         if (!BotNavigateWaypoints(pBot, FALSE) && !BotSetAlternativeGoalWaypoint(pBot, job_ptr->waypoint, W_FL_HEALTH)) {
+         if (!BotNavigateWaypoints(pBot, false) && !BotSetAlternativeGoalWaypoint(pBot, job_ptr->waypoint, W_FL_HEALTH)) {
             BlacklistJob(pBot, JOB_GET_HEALTH, random_float(5.0, 20.0));
             return JOB_TERMINATED;
          }
          // is the waypoint already occupied by someone more needy? try elsewhere
          else if (pBot->f_periodicAlert1 < pBot->f_think_time && WaypointDistanceFromTo(pBot->current_wp, job_ptr->waypoint, pBot->current_team) < 800) {
-            const edict_t *allyPtr = BotAllyAtVector(pBot, waypoints[job_ptr->waypoint].origin, 80.0, TRUE);
+            const edict_t *allyPtr = BotAllyAtVector(pBot, waypoints[job_ptr->waypoint].origin, 80.0, true);
             if (!FNullEnt(allyPtr) && PlayerHealthPercent(pBot->pEdict) > PlayerHealthPercent(allyPtr)) {
                job_ptr->waypoint = WaypointFindRandomGoal_D(job_ptr->waypoint, pBot->current_team, 4000, W_FL_AMMO);
 
@@ -1582,7 +1580,7 @@ int JobGetHealth(bot_t *pBot) {
 
       // if disturbed by an ally who has less health than you give up the spot
       if (pBot->visAllyCount > 1) {
-         const edict_t *allyPtr = BotAllyAtVector(pBot, waypoints[job_ptr->waypoint].origin, 200.0, FALSE);
+         const edict_t *allyPtr = BotAllyAtVector(pBot, waypoints[job_ptr->waypoint].origin, 200.0, false);
          if (!FNullEnt(allyPtr) && PlayerHealthPercent(pBot->pEdict) > PlayerHealthPercent(allyPtr)) {
             job_ptr->waypoint = WaypointFindRandomGoal_D(pBot->current_wp, pBot->current_team, 3000, W_FL_HEALTH);
 
@@ -1627,13 +1625,13 @@ int JobGetArmor(bot_t *pBot) {
       } else // not there yet
       {
          pBot->goto_wp = job_ptr->waypoint;
-         if (!BotNavigateWaypoints(pBot, FALSE) && !BotSetAlternativeGoalWaypoint(pBot, job_ptr->waypoint, W_FL_ARMOR)) {
+         if (!BotNavigateWaypoints(pBot, false) && !BotSetAlternativeGoalWaypoint(pBot, job_ptr->waypoint, W_FL_ARMOR)) {
             BlacklistJob(pBot, JOB_GET_ARMOR, random_float(5.0, 20.0));
             return JOB_TERMINATED;
          }
          // is the waypoint already occupied by someone more needy? try elsewhere
          else if (pBot->f_periodicAlert1 < pBot->f_think_time && WaypointDistanceFromTo(pBot->current_wp, job_ptr->waypoint, pBot->current_team) < 800) {
-            const edict_t *allyPtr = BotAllyAtVector(pBot, waypoints[job_ptr->waypoint].origin, 80.0, TRUE);
+            const edict_t *allyPtr = BotAllyAtVector(pBot, waypoints[job_ptr->waypoint].origin, 80.0, true);
             if (!FNullEnt(allyPtr) && PlayerArmorPercent(pBot->pEdict) > PlayerArmorPercent(allyPtr)) {
                job_ptr->waypoint = WaypointFindRandomGoal_D(job_ptr->waypoint, pBot->current_team, 4000, W_FL_AMMO);
 
@@ -1664,7 +1662,7 @@ int JobGetArmor(bot_t *pBot) {
 
       // if disturbed by an ally who has less armor than you give up the spot
       if (pBot->visAllyCount > 1) {
-         const edict_t *allyPtr = BotAllyAtVector(pBot, waypoints[job_ptr->waypoint].origin, 200.0, FALSE);
+         const edict_t *allyPtr = BotAllyAtVector(pBot, waypoints[job_ptr->waypoint].origin, 200.0, false);
          if (!FNullEnt(allyPtr) && PlayerArmorPercent(pBot->pEdict) > PlayerArmorPercent(allyPtr)) {
             job_ptr->waypoint = WaypointFindRandomGoal_D(pBot->current_wp, pBot->current_team, 3000, W_FL_ARMOR);
 
@@ -1709,13 +1707,13 @@ int JobGetAmmo(bot_t *pBot) {
       } else // not there yet
       {
          pBot->goto_wp = job_ptr->waypoint;
-         if (!BotNavigateWaypoints(pBot, FALSE) && !BotSetAlternativeGoalWaypoint(pBot, job_ptr->waypoint, W_FL_AMMO)) {
+         if (!BotNavigateWaypoints(pBot, false) && !BotSetAlternativeGoalWaypoint(pBot, job_ptr->waypoint, W_FL_AMMO)) {
             BlacklistJob(pBot, JOB_GET_AMMO, random_float(5.0, 20.0));
             return JOB_TERMINATED;
          }
          // is the waypoint already occupied? try elsewhere
          else if (pBot->f_periodicAlert1 < pBot->f_think_time && WaypointDistanceFromTo(pBot->current_wp, job_ptr->waypoint, pBot->current_team) < 800) {
-            const edict_t *allyPtr = BotAllyAtVector(pBot, waypoints[job_ptr->waypoint].origin, 80.0, TRUE);
+            const edict_t *allyPtr = BotAllyAtVector(pBot, waypoints[job_ptr->waypoint].origin, 80.0, true);
             if (!FNullEnt(allyPtr)) {
                job_ptr->waypoint = WaypointFindRandomGoal_D(job_ptr->waypoint, pBot->current_team, 4000, W_FL_AMMO);
 
@@ -1801,7 +1799,7 @@ int JobDisguise(bot_t *pBot) {
 
    // phase zero - pick a waypoint to go to
    if (job_ptr->phase == 0) {
-      job_ptr->waypoint = WaypointFindRandomGoal_R(pBot->pEdict->v.origin, FALSE, 1400.0, -1, 0);
+      job_ptr->waypoint = WaypointFindRandomGoal_R(pBot->pEdict->v.origin, false, 1400.0, -1, 0);
 
       job_ptr->phase = 1;
       job_ptr->phase_timer = pBot->f_think_time + 6.0;
@@ -1823,7 +1821,7 @@ int JobDisguise(bot_t *pBot) {
          pBot->sideRouteTolerance = 400; // very short route changes
 
          pBot->goto_wp = job_ptr->waypoint;
-         if (!BotNavigateWaypoints(pBot, FALSE)) {
+         if (!BotNavigateWaypoints(pBot, false)) {
             BlacklistJob(pBot, JOB_DISGUISE, 3.0);
             return JOB_TERMINATED;
          }
@@ -1928,7 +1926,7 @@ int JobSnipe(bot_t *pBot) {
             job_ptr->phase_timer = pBot->f_think_time + baseChargeTime[pBot->bot_skill] + random_float(0.5, 2.0);
       } else {
          pBot->goto_wp = job_ptr->waypoint;
-         if (!BotNavigateWaypoints(pBot, FALSE)) {
+         if (!BotNavigateWaypoints(pBot, false)) {
             BlacklistJob(pBot, JOB_SNIPE, random_float(5.0, 20.0));
             return JOB_TERMINATED;
          }
@@ -1938,7 +1936,7 @@ int JobSnipe(bot_t *pBot) {
    // phase 1 - stop moving and start charging the rifle
    if (job_ptr->phase == 1) {
       // give up if an ally is waiting here already
-      if (BotAllyAtVector(pBot, waypoints[job_ptr->waypoint].origin, 60.0, TRUE) != nullptr) {
+      if (BotAllyAtVector(pBot, waypoints[job_ptr->waypoint].origin, 60.0, true) != nullptr) {
          BlacklistJob(pBot, JOB_SNIPE, random_float(20.0, 40.0));
          return JOB_TERMINATED;
       }
@@ -2001,7 +1999,7 @@ int JobSnipe(bot_t *pBot) {
          }
 
          pBot->goto_wp = job_ptr->waypoint;
-         if (!BotNavigateWaypoints(pBot, TRUE)) // navigate by strafing
+         if (!BotNavigateWaypoints(pBot, true)) // navigate by strafing
          {
             BlacklistJob(pBot, JOB_SNIPE, random_float(5.0, 20.0));
             return JOB_TERMINATED;
@@ -2110,7 +2108,7 @@ int JobGuardWaypoint(bot_t *pBot) {
       }
    } else if (pBot->enemy.ptr == nullptr) {
       pBot->goto_wp = job_ptr->waypoint;
-      if (!BotNavigateWaypoints(pBot, FALSE)) {
+      if (!BotNavigateWaypoints(pBot, false)) {
          BlacklistJob(pBot, JOB_GUARD_WAYPOINT, random_float(5.0, 20.0));
          return JOB_TERMINATED;
       }
@@ -2127,7 +2125,7 @@ int JobDefendFlag(bot_t *pBot) {
 
    // phase 0 - pick somewhere to guard the flag from
    if (job_ptr->phase == 0) {
-      job_ptr->waypoint = WaypointFindInRange(job_ptr->object->v.origin, 100.0, 1000.0, pBot->current_team, TRUE);
+      job_ptr->waypoint = WaypointFindInRange(job_ptr->object->v.origin, 100.0, 1000.0, pBot->current_team, true);
 
       job_ptr->phase = 1; // it's time to guard the flag
       job_ptr->phase_timer = pBot->f_think_time + random_float(30.0, 120.0);
@@ -2147,7 +2145,7 @@ int JobDefendFlag(bot_t *pBot) {
          BotLookAbout(pBot);
       } else {
          pBot->goto_wp = job_ptr->waypoint;
-         if (!BotNavigateWaypoints(pBot, FALSE)) {
+         if (!BotNavigateWaypoints(pBot, false)) {
             BlacklistJob(pBot, JOB_DEFEND_FLAG, random_float(5.0, 20.0));
             return JOB_TERMINATED;
          }
@@ -2171,14 +2169,14 @@ int JobGetFlag(bot_t *pBot) {
             return JOB_UNDERWAY;
          }
          // don't repeat the job for a while, if this flag waypoint is occupied
-         else if (BotAllyAtVector(pBot, waypoints[job_ptr->waypoint].origin, 100.0, TRUE) != nullptr) {
+         else if (BotAllyAtVector(pBot, waypoints[job_ptr->waypoint].origin, 100.0, true) != nullptr) {
             BlacklistJob(pBot, JOB_GET_FLAG, random_float(15.0, 35.0));
             return JOB_TERMINATED;
          }
       }
 
       pBot->goto_wp = job_ptr->waypoint;
-      if (!BotNavigateWaypoints(pBot, FALSE)) {
+      if (!BotNavigateWaypoints(pBot, false)) {
          BlacklistJob(pBot, JOB_GET_FLAG, random_float(5.0, 20.0));
          return JOB_TERMINATED;
       }
@@ -2237,7 +2235,7 @@ int JobCaptureFlag(bot_t *pBot) {
          return JOB_TERMINATED; // job done
       } else {
          pBot->goto_wp = job_ptr->waypoint;
-         if (!BotNavigateWaypoints(pBot, FALSE) && !BotSetAlternativeGoalWaypoint(pBot, job_ptr->waypoint, W_FL_TFC_FLAG_GOAL)) {
+         if (!BotNavigateWaypoints(pBot, false) && !BotSetAlternativeGoalWaypoint(pBot, job_ptr->waypoint, W_FL_TFC_FLAG_GOAL)) {
             BlacklistJob(pBot, JOB_CAPTURE_FLAG, random_float(5.0, 15.0));
             return JOB_TERMINATED;
          }
@@ -2266,7 +2264,7 @@ int JobHarrassDefense(bot_t *pBot) {
             job_struct *newJob = InitialiseNewJob(pBot, JOB_GET_FLAG);
             if (newJob != nullptr) {
                newJob->waypoint = flagWP;
-               if (SubmitNewJob(pBot, JOB_GET_FLAG, newJob) == TRUE)
+               if (SubmitNewJob(pBot, JOB_GET_FLAG, newJob) == true)
                   return JOB_TERMINATED; // end this job so the bot can go for the flag instead
             }
          }
@@ -2299,7 +2297,7 @@ int JobHarrassDefense(bot_t *pBot) {
       }
    } else {
       pBot->goto_wp = job_ptr->waypoint;
-      if (!BotNavigateWaypoints(pBot, FALSE)) {
+      if (!BotNavigateWaypoints(pBot, false)) {
          BlacklistJob(pBot, JOB_HARRASS_DEFENSE, random_float(5.0, 20.0));
          return JOB_TERMINATED;
       }
@@ -2432,7 +2430,7 @@ int JobConcussionJump(bot_t *pBot) {
          BotSetFacing(pBot, waypoints[job_ptr->waypointTwo].origin);
       else {
          pBot->goto_wp = job_ptr->waypoint;
-         if (!BotNavigateWaypoints(pBot, FALSE)) {
+         if (!BotNavigateWaypoints(pBot, false)) {
             BlacklistJob(pBot, JOB_CONCUSSION_JUMP, random_float(10.0, 20.0));
             return JOB_TERMINATED;
          }
@@ -2516,7 +2514,7 @@ int JobDetpackWaypoint(bot_t *pBot) {
          return JOB_UNDERWAY;
       } else {
          pBot->goto_wp = job_ptr->waypoint;
-         if (!BotNavigateWaypoints(pBot, FALSE)) {
+         if (!BotNavigateWaypoints(pBot, false)) {
             BlacklistJob(pBot, JOB_DETPACK_WAYPOINT, random_float(5.0, 20.0));
             return JOB_TERMINATED;
          }
@@ -2555,7 +2553,7 @@ int JobDetpackWaypoint(bot_t *pBot) {
       pBot->sideRouteTolerance = 200; // very short route changes
 
       pBot->goto_wp = job_ptr->waypoint;
-      if (!BotNavigateWaypoints(pBot, FALSE)) {
+      if (!BotNavigateWaypoints(pBot, false)) {
          BlacklistJob(pBot, JOB_DETPACK_WAYPOINT, 10.0);
          return JOB_TERMINATED;
       }
@@ -2589,7 +2587,7 @@ int JobPipetrap(bot_t *pBot) {
             return JOB_TERMINATED;
       } else {
          pBot->goto_wp = job_ptr->waypoint;
-         if (!BotNavigateWaypoints(pBot, FALSE)) {
+         if (!BotNavigateWaypoints(pBot, false)) {
             BlacklistJob(pBot, JOB_PIPETRAP, random_float(10.0, 30.0));
             return JOB_TERMINATED;
          }
@@ -2691,7 +2689,7 @@ int JobInvestigateArea(bot_t *pBot) {
       }
    } else {
       pBot->goto_wp = job_ptr->waypoint;
-      if (!BotNavigateWaypoints(pBot, FALSE)) {
+      if (!BotNavigateWaypoints(pBot, false)) {
          BlacklistJob(pBot, JOB_INVESTIGATE_AREA, random_float(10.0, 20.0));
          return JOB_TERMINATED;
       }
@@ -2740,7 +2738,7 @@ int JobPursueEnemy(bot_t *pBot) {
          return JOB_TERMINATED;
       else {
          pBot->goto_wp = job_ptr->waypoint;
-         if (!BotNavigateWaypoints(pBot, FALSE)) {
+         if (!BotNavigateWaypoints(pBot, false)) {
             BlacklistJob(pBot, JOB_PURSUE_ENEMY, random_float(5.0, 20.0));
             return JOB_TERMINATED;
          }
@@ -2782,7 +2780,7 @@ int JobPursueEnemy(bot_t *pBot) {
          return JOB_TERMINATED;
       else {
          pBot->goto_wp = job_ptr->waypoint;
-         if (!BotNavigateWaypoints(pBot, FALSE)) {
+         if (!BotNavigateWaypoints(pBot, false)) {
             BlacklistJob(pBot, JOB_PURSUE_ENEMY, random_float(5.0, 20.0));
             return JOB_TERMINATED;
          }
@@ -2806,7 +2804,7 @@ int JobPatrolHome(bot_t *pBot) {
       const int defencePoint = WaypointFindRandomGoal(pBot->current_wp, pBot->current_team, wantedFlags);
 
       if (defencePoint != -1)
-         job_ptr->waypoint = WaypointFindRandomGoal_R(waypoints[defencePoint].origin, TRUE, 500.0, -1, 0);
+         job_ptr->waypoint = WaypointFindRandomGoal_R(waypoints[defencePoint].origin, true, 500.0, -1, 0);
 
       // abort and blacklist the job for a while if no waypoint was found
       if (job_ptr->waypoint == -1) {
@@ -2832,7 +2830,7 @@ int JobPatrolHome(bot_t *pBot) {
       }
    } else {
       pBot->goto_wp = job_ptr->waypoint;
-      if (!BotNavigateWaypoints(pBot, FALSE)) {
+      if (!BotNavigateWaypoints(pBot, false)) {
          BlacklistJob(pBot, JOB_PATROL_HOME, random_float(5.0, 10.0));
          return JOB_TERMINATED;
       }
@@ -2849,20 +2847,20 @@ int JobSpotStimulus(bot_t *pBot) {
    // phase zero - set up how long the bot will look at the stimulus
    if (job_ptr->phase == 0) {
       // also decide whether the bot will stop and look, or keep moving
-      bool moveNlook = FALSE;
+      bool moveNlook = false;
       if (pBot->current_wp != job_ptr->waypoint && job_ptr->waypoint > -1 && job_ptr->waypoint < num_waypoints) {
          if (pBot->bot_skill > 2) // low skill bots
          {
             if (random_long(0, 1000) < 400)
-               moveNlook = TRUE;
+               moveNlook = true;
          } else // skills 0 - 2
          {
             if (pBot->trait.aggression > 50 || pBot->pEdict->v.waterlevel == WL_HEAD_IN_WATER || pBot->f_injured_time + 2.0 > pBot->f_think_time || random_long(0, 1000) > 300)
-               moveNlook = TRUE;
+               moveNlook = true;
          }
       }
 
-      if (moveNlook == TRUE) {
+      if (moveNlook == true) {
          job_ptr->phase = 2;
          job_ptr->phase_timer = pBot->f_think_time + 0.5 + pBot->bot_skill * 0.5 + random_float(0.5, 1.5);
       } else {
@@ -2901,7 +2899,7 @@ int JobSpotStimulus(bot_t *pBot) {
       BotSetFacing(pBot, job_ptr->origin);
 
       if (pBot->current_wp != job_ptr->waypoint && job_ptr->waypoint > -1 && job_ptr->waypoint < num_waypoints) {
-         if (!BotNavigateWaypoints(pBot, TRUE)) {
+         if (!BotNavigateWaypoints(pBot, true)) {
             BlacklistJob(pBot, JOB_SPOT_STIMULUS, 5.0);
             return JOB_TERMINATED;
          }
@@ -2998,7 +2996,7 @@ int JobAttackTeleport(bot_t *pBot) {
          job_ptr->phase_timer = pBot->f_think_time + random_float(7.0, 12.0);
       } else {
          pBot->goto_wp = job_ptr->waypoint;
-         if (!BotNavigateWaypoints(pBot, FALSE)) {
+         if (!BotNavigateWaypoints(pBot, false)) {
             BlacklistJob(pBot, JOB_ATTACK_TELEPORT, random_float(10.0, 20.0));
             return JOB_TERMINATED;
          }
@@ -3093,7 +3091,7 @@ int JobSeekBackup(bot_t *pBot) {
             return JOB_TERMINATED; // job done(assume bot has found an ally)
 
          pBot->goto_wp = job_ptr->waypoint;
-         if (!BotNavigateWaypoints(pBot, FALSE)) {
+         if (!BotNavigateWaypoints(pBot, false)) {
             BlacklistJob(pBot, JOB_SEEK_BACKUP, random_float(5.0, 10.0));
             return JOB_TERMINATED;
          }
@@ -3160,7 +3158,7 @@ int JobAvoidEnemy(bot_t *pBot) {
          return JOB_UNDERWAY;
       } else {
          pBot->goto_wp = job_ptr->waypoint;
-         if (!BotNavigateWaypoints(pBot, FALSE)) {
+         if (!BotNavigateWaypoints(pBot, false)) {
             BlacklistJob(pBot, JOB_AVOID_ENEMY, 5.0);
             return JOB_TERMINATED;
          }
@@ -3228,7 +3226,7 @@ int JobAvoidAreaDamage(bot_t *pBot) {
          return JOB_UNDERWAY;
       } else {
          pBot->goto_wp = job_ptr->waypoint;
-         if (!BotNavigateWaypoints(pBot, FALSE)) {
+         if (!BotNavigateWaypoints(pBot, false)) {
             BlacklistJob(pBot, JOB_AVOID_AREA_DAMAGE, 5.0);
             return JOB_TERMINATED;
          }
@@ -3287,7 +3285,7 @@ int JobInfectedAttack(bot_t *pBot) {
             pBot->f_move_speed = pBot->f_max_speed;
       } else {
          pBot->goto_wp = job_ptr->waypoint;
-         if (!BotNavigateWaypoints(pBot, FALSE)) {
+         if (!BotNavigateWaypoints(pBot, false)) {
             BlacklistJob(pBot, JOB_INFECTED_ATTACK, random_float(5.0, 15.0));
             return JOB_TERMINATED;
          }
@@ -3314,7 +3312,7 @@ int JobBinGrenade(bot_t *pBot) {
 
       // if that fails, find an open space to throw at
       if (targetWP == -1)
-         targetWP = WaypointFindInRange(pBot->pEdict->v.origin, 400.0f, 1200.0f, pBot->current_team, FALSE);
+         targetWP = WaypointFindInRange(pBot->pEdict->v.origin, 400.0f, 1200.0f, pBot->current_team, false);
 
       if (targetWP != -1)
          job_ptr->origin = waypoints[targetWP].origin;
@@ -3334,7 +3332,7 @@ int JobBinGrenade(bot_t *pBot) {
 
       if (BotInFieldOfView(pBot, v_aim) == 0) {
          // thrown the grenade yet?
-         if (pBot->nadePrimed == FALSE) {
+         if (pBot->nadePrimed == false) {
             job_ptr->phase = 2;
             job_ptr->phase_timer = pBot->f_think_time + 1.0;
          }
@@ -3375,7 +3373,7 @@ int JobDrownRecover(bot_t *pBot) {
          job_ptr->phase_timer = pBot->f_think_time + 5.0;
       } else {
          pBot->goto_wp = job_ptr->waypoint;
-         if (!BotNavigateWaypoints(pBot, FALSE)) {
+         if (!BotNavigateWaypoints(pBot, false)) {
             BlacklistJob(pBot, JOB_DROWN_RECOVER, random_float(5.0, 10.0));
             return JOB_TERMINATED;
          }
@@ -3446,7 +3444,7 @@ int JobMeleeWarrior(bot_t *pBot) {
          job_ptr->phase_timer = pBot->f_think_time + random_float(2.0, 6.0);
       } else {
          pBot->goto_wp = job_ptr->waypoint;
-         if (!BotNavigateWaypoints(pBot, FALSE)) {
+         if (!BotNavigateWaypoints(pBot, false)) {
             BlacklistJob(pBot, JOB_MELEE_WARRIOR, random_float(10.0, 20.0));
             return JOB_TERMINATED;
          }
@@ -3487,7 +3485,7 @@ int JobGraffitiArtist(bot_t *pBot) {
    // phase zero - pick a waypoint to go to
    if (job_ptr->phase == 0) {
       //	UTIL_HostSay(pBot->pEdict, 0, "JOB_GRAFFITI_ARTIST - Starting"); //DebugMessageOfDoom!
-      job_ptr->waypoint = WaypointFindRandomGoal_R(pBot->pEdict->v.origin, FALSE, 1000.0, -1, 0);
+      job_ptr->waypoint = WaypointFindRandomGoal_R(pBot->pEdict->v.origin, false, 1000.0, -1, 0);
 
       job_ptr->phase = 1;
       job_ptr->phase_timer = pBot->f_think_time + random_float(45.0, 60.0);
@@ -3509,7 +3507,7 @@ int JobGraffitiArtist(bot_t *pBot) {
          pBot->sideRouteTolerance = 400; // very short route changes
 
          pBot->goto_wp = job_ptr->waypoint;
-         if (!BotNavigateWaypoints(pBot, FALSE)) {
+         if (!BotNavigateWaypoints(pBot, false)) {
             BlacklistJob(pBot, JOB_GRAFFITI_ARTIST, random_float(10.0, 20.0));
             return JOB_TERMINATED;
          }
@@ -3551,7 +3549,7 @@ int JobGraffitiArtist(bot_t *pBot) {
       BotNavigateWaypointless(pBot);
 
       if (VectorsNearerThan(pBot->pEdict->v.origin, job_ptr->origin, 60.0)) {
-         BotSprayLogo(pBot->pEdict, FALSE);
+         BotSprayLogo(pBot->pEdict, false);
          return JOB_TERMINATED; // success
       }
    }

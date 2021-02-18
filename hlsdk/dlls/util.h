@@ -15,6 +15,11 @@
 //
 // Misc utility code
 //
+
+#ifdef _WIN32
+#include <windef.h>
+#endif
+
 #include <string.h>
 #ifndef ACTIVITY_H
 #include "activity.h"

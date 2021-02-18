@@ -1,5 +1,3 @@
-// This is an open source non-commercial project. Dear PVS-Studio, please check it.
-// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 /***
  *
  *  Copyright (c) 1999, Valve LLC. All rights reserved.
@@ -64,11 +62,11 @@ static void UTIL_FindFoxbotPath();
 // The Borland 5.0 compiler doesn't ignore maths errors(unlike a few other compilers).
 // So here's a maths error handler to cope with problems such as: sqrt(-9).
 int _RTLENTRY _EXPFUNC _matherr(struct _exception *except_ptr) {
-   static bool errorReported = FALSE;
+   static bool errorReported = false;
 
    // make one log report about the maths error reported
    if (!errorReported) {
-      errorReported = TRUE;
+      errorReported = true;
 
       if (except_ptr->name != NULL) // just being neurotic
          UTIL_BotLogPrintf("Maths error reported: %s %f %f\n", except_ptr->name, except_ptr->arg1, except_ptr->arg2);
@@ -123,15 +121,15 @@ bool VectorsNearerThan(const Vector &r_vOne, const Vector &r_vTwo, double value)
    // perform an early 2 dimensional check, because most maps
    // are wider/longer than they are tall
    if (temp > value)
-      return FALSE;
+      return false;
    else
       temp += distance.z * distance.z;
 
    // final check(3 dimensional)
    if (temp < value)
-      return TRUE;
+      return true;
 
-   return FALSE;
+   return false;
 }
 
 #if 0 // this function is unused so far
@@ -158,10 +156,10 @@ Vector UTIL_VecToAngles(const Vector &vec) {
 
 // Overloaded to add IGNORE_GLASS
 void UTIL_TraceLine(const Vector &vecStart, const Vector &vecEnd, const IGNORE_MONSTERS igmon, const IGNORE_GLASS ignoreGlass, edict_t *pentIgnore, TraceResult *ptr) {
-   TRACE_LINE(vecStart, vecEnd, (igmon == ignore_monsters ? TRUE : FALSE) | (ignoreGlass ? 0x100 : 0), pentIgnore, ptr);
+   TRACE_LINE(vecStart, vecEnd, (igmon == ignore_monsters ? 1 : 0) | (ignoreGlass ? 0x100 : 0), pentIgnore, ptr);
 }
 
-void UTIL_TraceLine(const Vector &vecStart, const Vector &vecEnd, const IGNORE_MONSTERS igmon, edict_t *pentIgnore, TraceResult *ptr) { TRACE_LINE(vecStart, vecEnd, igmon == ignore_monsters ? TRUE : FALSE, pentIgnore, ptr); }
+void UTIL_TraceLine(const Vector &vecStart, const Vector &vecEnd, const IGNORE_MONSTERS igmon, edict_t *pentIgnore, TraceResult *ptr) { TRACE_LINE(vecStart, vecEnd, igmon == ignore_monsters ? true : false, pentIgnore, ptr); }
 
 void UTIL_MakeVectors(const Vector &vecAngles) { MAKE_VECTORS(vecAngles); }
 
@@ -460,9 +458,9 @@ bool FInViewCone(const Vector &r_pOrigin, const edict_t *pEdict) {
    const float flDot = DotProduct(vec2LOS, gpGlobals->v_forward.Make2D());
 
    if (flDot > 0.50) // 60 degree field of view
-      return TRUE;
+      return true;
    else
-      return FALSE;
+      return false;
 }
 
 // This function is a variant of FInViewCone().  It returns a measure of
@@ -486,9 +484,9 @@ bool BotCanSeeOrigin(bot_t *pBot, Vector &r_dest) {
 
    // check if line of sight to the object is not blocked
    if (tr.flFraction >= 1.0)
-      return TRUE;
+      return true;
 
-   return FALSE;
+   return false;
 }
 
 // BotInFieldOfView - This function returns the absolute value of angle
@@ -529,7 +527,7 @@ bool FVisible(const Vector &r_vecOrigin, edict_t *pEdict) {
 
    // don't look through surface of water
    if (bInWater != bLookerInWater)
-      return FALSE;
+      return false;
 
    TraceResult tr;
 
@@ -537,9 +535,9 @@ bool FVisible(const Vector &r_vecOrigin, edict_t *pEdict) {
    UTIL_TraceLine(vecLookerOrigin, r_vecOrigin, ignore_monsters, dont_ignore_glass, pEdict, &tr);
 
    if (tr.flFraction < 1.0)
-      return FALSE; // Line of sight is not established
+      return false; // Line of sight is not established
    else
-      return TRUE; // line of sight is valid.
+      return true; // line of sight is valid.
 }
 
 Vector GetGunPosition(const edict_t *pEdict) { return pEdict->v.origin + pEdict->v.view_ofs; }
@@ -555,26 +553,26 @@ Vector VecBModelOrigin(edict_t *pEdict) { return pEdict->v.absmin + pEdict->v.si
 // This function checks if footstep sounds are on and if the indicated player
 // is moving fast enough to make footstep sounds.
 bool UTIL_FootstepsHeard(edict_t *pEdict, edict_t *pPlayer) {
-   static bool check_footstep_sounds = TRUE;
-   static bool footstep_sounds_on = FALSE;
+   static bool check_footstep_sounds = true;
+   static bool footstep_sounds_on = false;
 
-   if (check_footstep_sounds == TRUE) {
-      check_footstep_sounds = FALSE;
+   if (check_footstep_sounds == true) {
+      check_footstep_sounds = false;
 
       if (CVAR_GET_FLOAT("mp_footsteps") > 0.0)
-         footstep_sounds_on = TRUE;
+         footstep_sounds_on = true;
    }
 
    // update sounds made by this player, alert bots if they are nearby...
-   if (footstep_sounds_on == TRUE) {
+   if (footstep_sounds_on == true) {
       // check if this player is near enough and moving fast enough on
       // the ground to make sounds
       if (pPlayer->v.flags & FL_ONGROUND && VectorsNearerThan(pPlayer->v.origin, pEdict->v.origin, 600.0) && pPlayer->v.velocity.Length2D() > 220.0) {
-         return TRUE;
+         return true;
       }
    }
 
-   return FALSE;
+   return false;
 }
 
 void UTIL_ShowMenu(edict_t *pEdict, const int slots, const int displaytime, const bool needmore, char *pText) {
@@ -596,7 +594,7 @@ void UTIL_ShowMenu(edict_t *pEdict, const int slots, const int displaytime, cons
 // Then it will open the log file for appending thereafter.
 // NOTE: Writing to a NULL file pointer can crash the server.
 FILE *UTIL_OpenFoxbotLog() {
-   static bool log_creation_attempted = FALSE;
+   static bool log_creation_attempted = false;
 
    UTIL_FindFoxbotPath();
 
@@ -630,7 +628,7 @@ FILE *UTIL_OpenFoxbotLog() {
             ALERT(at_console, "\nWARNING: Couldn't create log file: foxbot.log\n");
       }
 
-      log_creation_attempted = TRUE;
+      log_creation_attempted = true;
    }
 
    return file_ptr;
@@ -694,11 +692,11 @@ void UTIL_BuildFileName(char *filename, const int max_fn_length, char *arg1, cha
 // e.g. /tfc/addons/  or the main Half-Life directory.
 static void UTIL_FindFoxbotPath() {
    // only do this test once
-   static bool dir_path_checked = FALSE;
+   static bool dir_path_checked = false;
    if (dir_path_checked)
       return;
    else
-      dir_path_checked = TRUE;
+      dir_path_checked = true;
 
       // find out where the foxbot directory is, by trying to open and
       // close the foxbot.cfg file just once
@@ -758,15 +756,15 @@ static void UTIL_FindFoxbotPath() {
 // It also makes sure that the string is null terminated on success.
 // It returns false if fgets() returned NULL.
 bool UTIL_ReadFileLine(char *string, const unsigned int max_length, FILE *file_ptr) {
-   bool line_end_found = FALSE;
+   bool line_end_found = false;
 
    if (fgets(string, max_length, file_ptr) == nullptr)
-      return FALSE;
+      return false;
 
    // check if the string read contains a line terminator of some sort
    for (unsigned int a = 0; a < max_length; a++) {
       if (string[a] == '\n' || string[a] == '\r')
-         line_end_found = TRUE;
+         line_end_found = true;
    }
 
    // if the end of the current line in the file was not found,
@@ -780,5 +778,5 @@ bool UTIL_ReadFileLine(char *string, const unsigned int max_length, FILE *file_p
    } else /* make sure the string is null terminated */
       string[max_length - 1] = '\0';
 
-   return TRUE;
+   return true;
 }

@@ -1,5 +1,3 @@
-// This is an open source non-commercial project. Dear PVS-Studio, please check it.
-// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // FoXBot - AI Bot for Halflife's Team Fortress Classic
 //
@@ -63,7 +61,7 @@ extern void *h_Library;
 
 // my global var for checking if we're using metamod or not?
 // i.e. should we be a plugin..
-bool mr_meta = FALSE;
+bool mr_meta = false;
 
 extern int mod_id;
 extern WAYPOINT waypoints[MAX_WAYPOINTS];
@@ -156,7 +154,7 @@ bot_t bots[MAX_BOTS]; // max of 32 bots in a game
 
 // this can allow us to track which bots are joining the game for the first time
 // and which are joining because they were kicked off due to a map change
-bool botJustJoined[MAX_BOTS] = {TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE};
+bool botJustJoined[MAX_BOTS] = {true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true};
 
 extern chatClass chat; // bot chat stuff
 
@@ -324,13 +322,13 @@ void BotSpawnInit(bot_t *pBot) {
    pBot->f_pause_time = 0.0;
    pBot->f_duck_time = 0.0;
 
-   pBot->bot_has_flag = FALSE;
+   pBot->bot_has_flag = false;
 
    pBot->scoreAtSpawn = static_cast<int>(pBot->pEdict->v.frags);
 
-   pBot->b_use_health_station = FALSE;
+   pBot->b_use_health_station = false;
    pBot->f_use_health_time = 0.0;
-   pBot->b_use_HEV_station = FALSE;
+   pBot->b_use_HEV_station = false;
    pBot->f_use_HEV_time = 0.0;
 
    pBot->f_use_button_time = 0.0;
@@ -370,7 +368,7 @@ void BotSpawnInit(bot_t *pBot) {
 
    pBot->last_spawn_time = gpGlobals->time;
    pBot->nadeType = 0;
-   pBot->nadePrimed = FALSE;
+   pBot->nadePrimed = false;
    pBot->primeTime = pBot->lastDistance = 0.0f;
    pBot->lastDistanceCheck = pBot->FreezeDelay = 0.0f;
    pBot->f_shortcutCheckTime = gpGlobals->time + 2.0f;
@@ -445,7 +443,7 @@ void BotPickName(char *name_buffer) {
 
    // see if a name exists from a kicked bot (if so, reuse it)
    for (index = 0; index < MAX_BOTS; index++) {
-      if (bots[index].is_used == FALSE && bots[index].name[0]) {
+      if (bots[index].is_used == false && bots[index].name[0]) {
          strcpy(name_buffer, bots[index].name);
 
          // erase the name of the bot whose name we've taken
@@ -460,17 +458,17 @@ void BotPickName(char *name_buffer) {
    // it's time to pick a new name at random
    int name_index = random_long(1, number_names) - 1; // zero based
 
-   bool used = TRUE;
+   bool used = true;
    int attempts = 0;
    while (used) {
-      used = FALSE;
+      used = false;
 
       // is there a player with this name?
       for (index = 1; index <= gpGlobals->maxClients; index++) {
          edict_t *pPlayer = INDEXENT(index);
 
          if (pPlayer && !FNullEnt(pPlayer) && !pPlayer->free && strcmp(bot_names[name_index], STRING(pPlayer->v.netname)) == 0) {
-            used = TRUE;
+            used = true;
             break;
          }
       }
@@ -484,7 +482,7 @@ void BotPickName(char *name_buffer) {
          }
 
          if (attempts >= 2) {
-            used = FALSE; // break out of loop even if already used
+            used = false; // break out of loop even if already used
 
             // Log this event as it normally shouldn't happen
             fp = UTIL_OpenFoxbotLog();
@@ -501,11 +499,11 @@ void BotPickName(char *name_buffer) {
 
 void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char *arg3, const char *arg4) {
    // indicate which models are currently used for random model allocation
-   static bool valve_skin_used[VALVE_MAX_SKINS] = {FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE};
+   static bool valve_skin_used[VALVE_MAX_SKINS] = {false, false, false, false, false, false, false, false, false, false};
 
    /*static bool gearbox_skin_used[GEARBOX_MAX_SKINS] = {
-                   FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
-                   FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE
+                   false, false, false, false, false, false, false, false, false, false,
+                   false, false, false, false, false, false, false, false, false, false
    };*/
 
    // store the names of the models...
@@ -533,7 +531,7 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
    int skill;
    int index = 0;
    int i;
-   bool found = FALSE;
+   bool found = false;
 
    // min/max checking...
    if (max_bots > MAX_BOTS)
@@ -599,25 +597,25 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
 
          if (pSkinUsed) {
             // check if this skin has already been used...
-            while (pSkinUsed[index] == TRUE) {
+            while (pSkinUsed[index] == true) {
                index++;
 
                if (index == max_skin_index)
                   index = 0;
             }
 
-            pSkinUsed[index] = TRUE;
+            pSkinUsed[index] = true;
 
             // check if all skins are now used...
             for (i = 0; i < max_skin_index; i++) {
-               if (pSkinUsed[i] == FALSE)
+               if (pSkinUsed[i] == false)
                   break;
             }
 
-            // if all skins are used, reset used to FALSE for next selection
+            // if all skins are used, reset used to false for next selection
             if (i == max_skin_index) {
                for (i = 0; i < max_skin_index; i++)
-                  pSkinUsed[i] = FALSE;
+                  pSkinUsed[i] = false;
             }
          }
 
@@ -638,19 +636,19 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
       while (!found && index < max_skin_index) {
          if (mod_id == VALVE_DLL) {
             if (strcmp(c_skin, valve_bot_skins[index]) == 0)
-               found = TRUE;
+               found = true;
             else
                index++;
          }
          /*else // must be GEARBOX_DLL
          {
                          if(strcmp(c_skin, gearbox_bot_skins[index]) == 0)
-                                         found = TRUE;
+                                         found = true;
                          else index++;
          }*/
       }
 
-      if (found == TRUE) {
+      if (found == true) {
          if (arg2 != nullptr && *arg2 != 0) {
             strncpy(c_name, arg2, BOT_SKIN_LEN - 1);
             c_name[BOT_SKIN_LEN] = 0; // make sure c_name is null terminated
@@ -816,11 +814,11 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
 
       //{fp=UTIL_OpenFoxbotLog(); fprintf(fp, "-bot connect %x\n",BotEnt); fclose(fp); }
       MDLL_ClientConnect(BotEnt, c_name, "127.0.0.1", ptr);
-      spawn_check_crash = TRUE;
+      spawn_check_crash = true;
       spawn_check_crash_count = 0;
       spawn_check_crash_edict = BotEnt;
       MDLL_ClientPutInServer(BotEnt);
-      spawn_check_crash = FALSE;
+      spawn_check_crash = false;
       spawn_check_crash_edict = nullptr;
       /*i = 0;
               while((i < 32) && (clients[i] != NULL))
@@ -832,7 +830,7 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
       //{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"e\n"); fclose(fp); }
       BotEnt->v.flags |= FL_FAKECLIENT;
 
-      pBot->is_used = TRUE;
+      pBot->is_used = true;
       pBot->respawn_state = RESPAWN_IDLE;
       pBot->create_time = gpGlobals->time + 1.0;
       //{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"a%f %f\n",pBot->create_time,gpGlobals->time); fclose(fp); }
@@ -841,19 +839,19 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
       strcpy(pBot->skin, c_skin);
       BotResetJobBuffer(pBot);
 
-      pBot->has_sentry = FALSE;
+      pBot->has_sentry = false;
       pBot->sentry_edict = nullptr;
       pBot->sentryWaypoint = -1;
-      pBot->SGRotated = FALSE;
+      pBot->SGRotated = false;
       pBot->sentry_ammo = 0;
-      pBot->has_dispenser = FALSE;
+      pBot->has_dispenser = false;
       pBot->dispenser_edict = nullptr;
       pBot->f_dispenserDetTime = 0.0;
       pBot->killer_edict = nullptr;
       pBot->killed_edict = nullptr;
       pBot->lastEnemySentryGun = nullptr;
       pBot->mission = ROLE_ATTACKER;
-      pBot->lockMission = FALSE;
+      pBot->lockMission = false;
       pBot->tpEntrance = nullptr;
       pBot->tpExit = nullptr;
       pBot->tpEntranceWP = -1;
@@ -870,9 +868,9 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
       // stop the bot from autonomously changing class if
       // a class was specified
       if (arg2 != nullptr && mod_id == TFC_DLL)
-         pBot->lockClass = TRUE;
+         pBot->lockClass = true;
       else
-         pBot->lockClass = FALSE;
+         pBot->lockClass = false;
 
       pBot->f_suspectSpyTime = 0.0;
       pBot->suspectedSpy = nullptr;
@@ -890,9 +888,9 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
          pBot->trait.humour = random_long(0, 100);
 
          if (random_long(1, 30) > 10)
-            pBot->trait.camper = TRUE;
+            pBot->trait.camper = true;
          else
-            pBot->trait.camper = FALSE;
+            pBot->trait.camper = false;
       } else // make each bot have the same personality traits
       {
          pBot->trait.aggression = 50;
@@ -900,14 +898,14 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
          pBot->trait.faveClass = 3;
          pBot->trait.health = 50;
          pBot->trait.humour = 50;
-         pBot->trait.camper = TRUE;
+         pBot->trait.camper = true;
       }
 
       pBot->f_humour_time = pBot->f_think_time + random_float(60.0, 180.0);
 
       pBot->sideRouteTolerance = 400; // not willing to branch far initially
 
-      pBot->not_started = TRUE; // hasn't joined game yet
+      pBot->not_started = true; // hasn't joined game yet
       pBot->bot_start2 = 1;
       pBot->bot_start3 = 0;
 
@@ -916,8 +914,8 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
       pBot->current_team = 0; // sane value, will be set properly once bot has spawned
 
       if (botJustJoined[index]) {
-         pBot->greeting = FALSE; // new bots can always say "hello!"
-         pBot->newmsg = FALSE;
+         pBot->greeting = false; // new bots can always say "hello!"
+         pBot->newmsg = false;
          pBot->message[0] = '\0';
          pBot->msgstart[0] = '\0';
       }
@@ -935,7 +933,7 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
       //{fp=UTIL_OpenFoxbotLog(); fprintf(fp, "-bot d \n",BotEnt); fclose(fp); }
       BotSpawnInit(pBot);
 
-      pBot->need_to_initialize = FALSE; // don't need to initialize yet
+      pBot->need_to_initialize = false; // don't need to initialize yet
 
       BotEnt->v.idealpitch = BotEnt->v.v_angle.x;
       BotEnt->v.ideal_yaw = BotEnt->v.v_angle.y;
@@ -960,7 +958,7 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
       }
       memset (&pBot->job, 0, sizeof (job_struct) * JOB_BUFFER_MAX);
 
-      botJustJoined[index] = FALSE; // the inititation ceremony is over!
+      botJustJoined[index] = false; // the inititation ceremony is over!
    }
 }
 
@@ -999,7 +997,7 @@ void BotFindItem(bot_t *pBot) {
 
    edict_t *pent = nullptr;
    while ((pent = FIND_ENTITY_IN_SPHERE(pent, searchCenter, radius)) != nullptr && !FNullEnt(pent)) {
-      can_pickup = FALSE; // assume can't use it until known otherwise
+      can_pickup = false; // assume can't use it until known otherwise
 
       strcpy(item_name, STRING(pent->v.classname));
 
@@ -1055,15 +1053,15 @@ void BotFindItem(bot_t *pBot) {
                      if (!pBot->b_use_health_station) {
                         // check if close enough and facing it directly...
                         if (distance < PLAYER_SEARCH_RADIUS && angle_to_entity <= 10) {
-                           pBot->b_use_health_station = TRUE;
+                           pBot->b_use_health_station = true;
                            pBot->f_use_health_time = pBot->f_think_time;
                         }
 
-                        can_pickup = TRUE;
+                        can_pickup = true;
                      }
                   } else {
                      // don't need or can't use this item...
-                     pBot->b_use_health_station = FALSE;
+                     pBot->b_use_health_station = false;
                   }
                }
 
@@ -1076,15 +1074,15 @@ void BotFindItem(bot_t *pBot) {
                      if (!pBot->b_use_HEV_station) {
                         // check if close enough and facing it directly...
                         if (distance < PLAYER_SEARCH_RADIUS && angle_to_entity <= 10) {
-                           pBot->b_use_HEV_station = TRUE;
+                           pBot->b_use_HEV_station = true;
                            pBot->f_use_HEV_time = pBot->f_think_time;
                         }
 
-                        can_pickup = TRUE;
+                        can_pickup = true;
                      }
                   } else {
                      // don't need or can't use this item...
-                     pBot->b_use_HEV_station = FALSE;
+                     pBot->b_use_HEV_station = false;
                   }
                }
 
@@ -1105,7 +1103,7 @@ void BotFindItem(bot_t *pBot) {
                   newJob = InitialiseNewJob(pBot, JOB_ATTACK_BREAKABLE);
                   if (newJob != nullptr) {
                      newJob->object = pent;
-                     if (SubmitNewJob(pBot, JOB_ATTACK_BREAKABLE, newJob) == TRUE)
+                     if (SubmitNewJob(pBot, JOB_ATTACK_BREAKABLE, newJob) == true)
                         return;
                   }
 
@@ -1133,7 +1131,7 @@ void BotFindItem(bot_t *pBot) {
             // check if entity is a back pack dropped by a player
             if (strcmp("tf_ammobox", item_name) == 0) {
                if (pBot->ammoStatus != AMMO_UNNEEDED && pent->v.owner == nullptr)
-                  can_pickup = TRUE;
+                  can_pickup = true;
             }
             // check if entity is a back pack
             else if (strcmp("item_tfgoal", item_name) == 0) {
@@ -1166,7 +1164,7 @@ void BotFindItem(bot_t *pBot) {
                if (nearestWP != -1 && !WaypointAvailable(nearestWP, pBot->current_team))
                   continue;
 
-               can_pickup = TRUE;
+               can_pickup = true;
             }
 
             // check if entity is a back pack
@@ -1200,7 +1198,7 @@ void BotFindItem(bot_t *pBot) {
                if (nearestWP != -1 && !WaypointAvailable(nearestWP, pBot->current_team))
                   continue;
 
-               can_pickup = TRUE;
+               can_pickup = true;
             }
 
             // check if entity is a dispenser  // Fixed for Foxbot 0.79? [APG]RoboCop[CL]
@@ -1209,7 +1207,7 @@ void BotFindItem(bot_t *pBot) {
                if (pent->v.effects & EF_NODRAW)
                   continue;
 
-               if (pBot->ammoStatus == AMMO_UNNEEDED && pBot->bot_has_flag == FALSE) {
+               if (pBot->ammoStatus == AMMO_UNNEEDED && pBot->bot_has_flag == false) {
                   // make engineers attend to their own dispensers
                   if (pEdict->v.playerclass == TFC_CLASS_ENGINEER) {
                      if (pBot->dispenser_edict != pent)
@@ -1231,7 +1229,7 @@ void BotFindItem(bot_t *pBot) {
                if (nearestWP != -1 && !WaypointAvailable(nearestWP, pBot->current_team))
                   continue;
 
-               //	can_pickup = TRUE;
+               //	can_pickup = true;
             } // [APG]RoboCop[CL]
             else if (strcmp("building_sentrygun", item_name) == 0) {
                if (pEdict->v.playerclass != TFC_CLASS_ENGINEER || pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] < 140 || pBot->current_team != UTIL_GetTeam(pent))
@@ -1268,13 +1266,13 @@ void BotFindItem(bot_t *pBot) {
                   newJob = InitialiseNewJob(pBot, JOB_ATTACK_TELEPORT);
                   if (newJob != nullptr) {
                      newJob->object = pent;
-                     if (SubmitNewJob(pBot, JOB_ATTACK_TELEPORT, newJob) == TRUE)
+                     if (SubmitNewJob(pBot, JOB_ATTACK_TELEPORT, newJob) == true)
                         return;
                   }
                }
 
                // is this an allied Teleporter the bot hasn't used before?
-               else if (pBot->enemy.ptr == nullptr && bot_can_use_teleporter == TRUE && pent->v.iuser1 == W_FL_TFC_TELEPORTER_ENTRANCE) {
+               else if (pBot->enemy.ptr == nullptr && bot_can_use_teleporter == true && pent->v.iuser1 == W_FL_TFC_TELEPORTER_ENTRANCE) {
                   // if the bot doesn't know where this entrance goes, give it a test run
                   const int telePairIndex = BotRecallTeleportEntranceIndex(pBot, pent);
                   if (telePairIndex == -1                            // unknown entrance
@@ -1285,7 +1283,7 @@ void BotFindItem(bot_t *pBot) {
                         newJob->object = pent;
                         newJob->waypoint = WaypointFindNearest_E(pent, 500.0, pBot->current_team);
                         newJob->waypointTwo = -1; // remember that destination is unknown
-                        if (SubmitNewJob(pBot, JOB_USE_TELEPORT, newJob) == TRUE)
+                        if (SubmitNewJob(pBot, JOB_USE_TELEPORT, newJob) == true)
                            return;
                      }
                   }
@@ -1298,7 +1296,7 @@ void BotFindItem(bot_t *pBot) {
                   continue;
 
                if (PlayerArmorPercent(pEdict) < 100)
-                  can_pickup = TRUE;
+                  can_pickup = true;
             }
             // check if entity is a healthkit...
             else if (strcmp("item_healthkit", item_name) == 0) {
@@ -1315,7 +1313,7 @@ void BotFindItem(bot_t *pBot) {
                if (nearestWP != -1 && !WaypointAvailable(nearestWP, pBot->current_team))
                   continue;
 
-               can_pickup = TRUE;
+               can_pickup = true;
             }
             // check if entity is ammo...
             else if (strncmp("ammo_", item_name, 5) == 0) {
@@ -1331,7 +1329,7 @@ void BotFindItem(bot_t *pBot) {
                if (nearestWP != -1 && !WaypointAvailable(nearestWP, pBot->current_team))
                   continue;
 
-               can_pickup = TRUE;
+               can_pickup = true;
             }
             // check if entity is a weapon...
             else if (strncmp("weapon_", item_name, 7) == 0) {
@@ -1339,7 +1337,7 @@ void BotFindItem(bot_t *pBot) {
                if (pent->v.effects & EF_NODRAW)
                   continue;
 
-               can_pickup = TRUE;
+               can_pickup = true;
             }
             // check if entity is a battery...
             else if (strcmp("item_battery", item_name) == 0) {
@@ -1356,7 +1354,7 @@ void BotFindItem(bot_t *pBot) {
                if (nearestWP != -1 && !WaypointAvailable(nearestWP, pBot->current_team))
                   continue;
 
-               can_pickup = TRUE;
+               can_pickup = true;
             }
             // check if entity is a packed up weapons box...
             else if (strcmp("weaponbox", item_name) == 0) {
@@ -1374,7 +1372,7 @@ void BotFindItem(bot_t *pBot) {
                if (nearestWP != -1 && !WaypointAvailable(nearestWP, pBot->current_team))
                   continue;
 
-               can_pickup = TRUE;
+               can_pickup = true;
             }
 
             // check if entity is the spot from RPG laser
@@ -1403,12 +1401,12 @@ void BotFindItem(bot_t *pBot) {
                   continue;
 
                if (pent->v.team == UTIL_GetTeam(pEdict) + 1)
-                  can_pickup = TRUE;
+                  can_pickup = true;
                else {
                   char *cvar_ntf_capture_mg = const_cast<char *>(CVAR_GET_STRING("ntf_capture_mg"));
 
                   if (strcmp(cvar_ntf_capture_mg, "1") == 0)
-                     can_pickup = TRUE;
+                     can_pickup = true;
                }
             }
          } // end if object is visible
@@ -1716,27 +1714,27 @@ void script(const char *sz) {
                for (i = 0; i < 8; i++) {
                   j = msg_com[current_msg].blue_av[i];
                   if (j == 1)
-                     blue_av[i] = TRUE;
+                     blue_av[i] = true;
                   else if (j == 0)
-                     blue_av[i] = FALSE;
+                     blue_av[i] = false;
 
                   j = msg_com[current_msg].red_av[i];
                   if (j == 1)
-                     red_av[i] = TRUE;
+                     red_av[i] = true;
                   else if (j == 0)
-                     red_av[i] = FALSE;
+                     red_av[i] = false;
 
                   j = msg_com[current_msg].yellow_av[i];
                   if (j == 1)
-                     yellow_av[i] = TRUE;
+                     yellow_av[i] = true;
                   else if (j == 0)
-                     yellow_av[i] = FALSE;
+                     yellow_av[i] = false;
 
                   j = msg_com[current_msg].green_av[i];
                   if (j == 1)
-                     green_av[i] = TRUE;
+                     green_av[i] = true;
                   else if (j == 0)
-                     green_av[i] = FALSE;
+                     green_av[i] = false;
                }
             }
             // now deal with ifs... on message may start with
@@ -1750,7 +1748,7 @@ void script(const char *sz) {
                                fprintf(fp,"Started while %s %d\n",sz,current_msg);
                                fclose(fp); }*/
                if (curr->ifs[0] != '\0') {
-                  bool execif = FALSE;
+                  bool execif = false;
 
                   /*{ fp=UTIL_OpenFoxbotLog();
                                   fprintf(fp, "%s\n",curr->ifs);
@@ -1760,112 +1758,112 @@ void script(const char *sz) {
                   if (strncmp(curr->ifs, "b_p_", 4) == 0)
                      if (atoi(&curr->ifs[4]) > 0 && atoi(&curr->ifs[4]) < 9)
                         if (blue_av[atoi(&curr->ifs[4]) - 1])
-                           execif = TRUE;
+                           execif = true;
                   if (strncmp(curr->ifs, "r_p_", 4) == 0)
                      if (atoi(&curr->ifs[4]) > 0 && atoi(&curr->ifs[4]) < 9)
                         if (red_av[atoi(&curr->ifs[4]) - 1])
-                           execif = TRUE;
+                           execif = true;
                   if (strncmp(curr->ifs, "g_p_", 4) == 0)
                      if (atoi(&curr->ifs[4]) > 0 && atoi(&curr->ifs[4]) < 9)
                         if (green_av[atoi(&curr->ifs[4]) - 1])
-                           execif = TRUE;
+                           execif = true;
                   if (strncmp(curr->ifs, "y_p_", 4) == 0)
                      if (atoi(&curr->ifs[4]) > 0 && atoi(&curr->ifs[4]) < 9)
                         if (yellow_av[atoi(&curr->ifs[4]) - 1])
-                           execif = TRUE;
+                           execif = true;
                   // points not available
                   if (strncmp(curr->ifs, "b_pn_", 5) == 0)
                      if (atoi(&curr->ifs[5]) > 0 && atoi(&curr->ifs[5]) < 9)
                         if (!blue_av[atoi(&curr->ifs[5]) - 1])
-                           execif = TRUE;
+                           execif = true;
                   if (strncmp(curr->ifs, "r_pn_", 5) == 0)
                      if (atoi(&curr->ifs[5]) > 0 && atoi(&curr->ifs[5]) < 9)
                         if (!red_av[atoi(&curr->ifs[5]) - 1])
-                           execif = TRUE;
+                           execif = true;
                   if (strncmp(curr->ifs, "g_pn_", 5) == 0)
                      if (atoi(&curr->ifs[5]) > 0 && atoi(&curr->ifs[5]) < 9)
                         if (!green_av[atoi(&curr->ifs[5]) - 1])
-                           execif = TRUE;
+                           execif = true;
                   if (strncmp(curr->ifs, "y_pn_", 5) == 0)
                      if (atoi(&curr->ifs[5]) > 0 && atoi(&curr->ifs[5]) < 9)
                         if (!yellow_av[atoi(&curr->ifs[5]) - 1])
-                           execif = TRUE;
+                           execif = true;
                   // multipoint ifs
                   if (strncmp(curr->ifs, "b_mp_", 5) == 0) {
-                     bool con = TRUE;
+                     bool con = true;
                      for (int k = 0; k < 8; k++) {
                         if ((curr->ifs[k + 5] == '0' || curr->ifs[k + 5] == '1') && con) {
                            // set to false
                            // only set to true if we can continue and exec if
-                           con = FALSE;
+                           con = false;
                            if (curr->ifs[k + 5] == '1') {
                               if (blue_av[k])
-                                 con = TRUE;
+                                 con = true;
                            } else {
                               if (!blue_av[k])
-                                 con = TRUE;
+                                 con = true;
                            }
                         }
                      }
                      if (con)
-                        execif = TRUE;
+                        execif = true;
                   }
                   if (strncmp(curr->ifs, "r_mp_", 5) == 0) {
-                     bool con = TRUE;
+                     bool con = true;
                      for (int k = 0; k < 8; k++) {
                         if ((curr->ifs[k + 5] == '0' || curr->ifs[k + 5] == '1') && con) {
                            // set to false
                            // only set to true if we can continue and exec if
-                           con = FALSE;
+                           con = false;
                            if (curr->ifs[k + 5] == '1') {
                               if (red_av[k])
-                                 con = TRUE;
+                                 con = true;
                            } else {
                               if (!red_av[k])
-                                 con = TRUE;
+                                 con = true;
                            }
                         }
                      }
                      if (con)
-                        execif = TRUE;
+                        execif = true;
                   }
                   if (strncmp(curr->ifs, "g_mp_", 5) == 0) {
-                     bool con = TRUE;
+                     bool con = true;
                      for (int k = 0; k < 8; k++) {
                         if ((curr->ifs[k + 5] == '0' || curr->ifs[k + 5] == '1') && con) {
                            // set to false
                            // only set to true if we can continue and exec if
-                           con = FALSE;
+                           con = false;
                            if (curr->ifs[k + 5] == '1') {
                               if (green_av[k])
-                                 con = TRUE;
+                                 con = true;
                            } else {
                               if (!green_av[k])
-                                 con = TRUE;
+                                 con = true;
                            }
                         }
                      }
                      if (con)
-                        execif = TRUE;
+                        execif = true;
                   }
                   if (strncmp(curr->ifs, "y_mp_", 5) == 0) {
-                     bool con = TRUE;
+                     bool con = true;
                      for (int k = 0; k < 8; k++) {
                         if ((curr->ifs[k + 5] == '0' || curr->ifs[k + 5] == '1') && con) {
                            // set to false
                            // only set to true if we can continue and exec if
-                           con = FALSE;
+                           con = false;
                            if (curr->ifs[k + 5] == '1') {
                               if (yellow_av[k])
-                                 con = TRUE;
+                                 con = true;
                            } else {
                               if (!yellow_av[k])
-                                 con = TRUE;
+                                 con = true;
                            }
                         }
                      }
                      if (con)
-                        execif = TRUE;
+                        execif = true;
                   }
 
                   /*{ fp=UTIL_OpenFoxbotLog();
@@ -1888,27 +1886,27 @@ void script(const char *sz) {
                      for (i = 0; i < 8; i++) {
                         j = curr->blue_av[i];
                         if (j == 1)
-                           blue_av[i] = TRUE;
+                           blue_av[i] = true;
                         else if (j == 0)
-                           blue_av[i] = FALSE;
+                           blue_av[i] = false;
 
                         j = curr->red_av[i];
                         if (j == 1)
-                           red_av[i] = TRUE;
+                           red_av[i] = true;
                         else if (j == 0)
-                           red_av[i] = FALSE;
+                           red_av[i] = false;
 
                         j = curr->yellow_av[i];
                         if (j == 1)
-                           yellow_av[i] = TRUE;
+                           yellow_av[i] = true;
                         else if (j == 0)
-                           yellow_av[i] = FALSE;
+                           yellow_av[i] = false;
 
                         j = curr->green_av[i];
                         if (j == 1)
-                           green_av[i] = TRUE;
+                           green_av[i] = true;
                         else if (j == 0)
-                           green_av[i] = FALSE;
+                           green_av[i] = false;
                      }
                   }
                }
@@ -2079,10 +2077,10 @@ static void BotAttackerCheck(bot_t *pBot) {
    //	10, 2, 250, 250, 250, 200, 10);
 
    edict_t *mysteryPlayer = nullptr; // unseen enemies
-   bool readyDefender = FALSE;
+   bool readyDefender = false;
    if (pBot->mission == ROLE_DEFENDER && pBot->visAllyCount < 4 // too many allies nearby = white noise
        && pBot->bot_skill < 4 && PlayerHealthPercent(pBot->pEdict) >= pBot->trait.health && pBot->enemy.f_lastSeen + 5.0 < pBot->f_think_time)
-      readyDefender = TRUE;
+      readyDefender = true;
 
    // start checking from a randomly selected player, this is
    // done to avoid using CPU time picking the nearest heard enemy
@@ -2119,7 +2117,7 @@ static void BotAttackerCheck(bot_t *pBot) {
          if (!(pPlayer->v.button & IN_ATTACK)) {
             // they don't have the attack button pressed,
             // can we hear their footsteps instead?
-            if (UTIL_FootstepsHeard(pBot->pEdict, pPlayer) == FALSE)
+            if (UTIL_FootstepsHeard(pBot->pEdict, pPlayer) == false)
                continue;
          }
 
@@ -2462,7 +2460,7 @@ edict_t *BotAllyAtVector(const bot_t *pBot, const Vector &r_vecOrigin, const flo
 short BotTeammatesNearWaypoint(const bot_t *pBot, const int waypoint) {
    // sanity check
    if (waypoint < 0)
-      return FALSE;
+      return false;
 
    // number of bots found nearer to the waypoint than this bot
    short total_present = 0;
@@ -2705,9 +2703,9 @@ static void BotRoleCheck(bot_t *pBot) {
 
       // find out if Demomen should be left as attackers if the map
       // has active detpack waypoints
-      bool ignoreDemomen = FALSE;
-      if (needed_mission == ROLE_DEFENDER && WaypointTypeExists(W_FL_TFC_DETPACK_CLEAR | W_FL_TFC_DETPACK_SEAL, team) == TRUE)
-         ignoreDemomen = TRUE;
+      bool ignoreDemomen = false;
+      if (needed_mission == ROLE_DEFENDER && WaypointTypeExists(W_FL_TFC_DETPACK_CLEAR | W_FL_TFC_DETPACK_SEAL, team) == true)
+         ignoreDemomen = true;
 
       // start the search from a randomly selected bot
       i = random_long(0, MAX_BOTS - 1);
@@ -2744,7 +2742,7 @@ static void BotComms(bot_t *pBot) {
 
    // RedFox bot coms
    if (pBot->newmsg && pBot->f_periodicAlert1 < pBot->f_think_time) {
-      pBot->newmsg = FALSE;
+      pBot->newmsg = false;
 
       char buffa[255];
       // char buffb[255];
@@ -2819,7 +2817,7 @@ static void BotComms(bot_t *pBot) {
          /*	if(strcasecmp("follow", cmd) == 0)
                          {
                                          UTIL_HostSay(pEdict, 0, "Follow mode");
-                         //	pBot->follow = TRUE;
+                         //	pBot->follow = true;
                                          pBot->tracked_player = NULL;
                          //	pBot->track_ttime = pBot->f_think_time;
                          }*/
@@ -2830,7 +2828,7 @@ static void BotComms(bot_t *pBot) {
          /*if(strcasecmp("roam", cmd) == 0)
          {
                          UTIL_HostSay(pEdict, 0, "Roam mode");
-                         pBot->follow = FALSE;
+                         pBot->follow = false;
                          pBot->tracked_player = NULL;
                          pBot->enemy.ptr = NULL;
          }*/
@@ -2877,8 +2875,8 @@ static void BotComms(bot_t *pBot) {
       return;
 
    // greetings from the bots
-   if (pBot->greeting == FALSE && pBot->create_time + 3.0 > pBot->f_think_time) {
-      pBot->greeting = TRUE;
+   if (pBot->greeting == false && pBot->create_time + 3.0 > pBot->f_think_time) {
+      pBot->greeting = true;
       if (random_long(1, 1000) < static_cast<long>(bot_chat)) {
          chat.pickRandomChatString(newJob->message, MAX_CHAT_LENGTH, CHAT_TYPE_GREETING, nullptr);
 
@@ -2887,7 +2885,7 @@ static void BotComms(bot_t *pBot) {
       }
       if (bot_xmas) {
          strcpy(pBot->message, "xmas");
-         pBot->newmsg = TRUE;
+         pBot->newmsg = true;
       }
       return;
    }
@@ -2906,7 +2904,7 @@ static void BotComms(bot_t *pBot) {
 
       if (bot_xmas && random_long(1, 100) <= 30 && pBot->killer_edict != nullptr) {
          strcpy(pBot->message, "xmas");
-         pBot->newmsg = TRUE;
+         pBot->newmsg = true;
       }
       pBot->killer_edict = nullptr;
    } else
@@ -2925,7 +2923,7 @@ static void BotComms(bot_t *pBot) {
 
       if (bot_xmas && random_long(1, 100) <= 30 && pBot->killed_edict != nullptr) {
          strcpy(pBot->message, "xmas");
-         pBot->newmsg = TRUE;
+         pBot->newmsg = true;
       }
       pBot->killed_edict = nullptr;
    } else
@@ -2939,7 +2937,7 @@ static void BotComms(bot_t *pBot) {
 static bool BotChangeClass(bot_t *pBot, const int iClass, const char *from) {
    // Check for invalid input
    if (iClass > 10 || iClass < 1)
-      return FALSE;
+      return false;
 
    int class_not_allowed;
 
@@ -2950,7 +2948,7 @@ static bool BotChangeClass(bot_t *pBot, const int iClass, const char *from) {
       class_not_allowed = team_class_limits[pBot->current_team] & 1 << iClass;
 
    if (class_not_allowed)
-      return FALSE;
+      return false;
 
    // Make sure its from a teammate
    for (int i = 1; i <= gpGlobals->maxClients; i++) {
@@ -2962,12 +2960,12 @@ static bool BotChangeClass(bot_t *pBot, const int iClass, const char *from) {
       if (strcmp(STRING(pPlayer->v.netname), from) == 0) {
          // Make sure he is on our team to accept the message.
          if (pBot->current_team != UTIL_GetTeam(pPlayer))
-            return FALSE;
+            return false;
 
          // Check the pPlayer for access to this command.
          if (!botVerifyAccess(pPlayer)) {
             UTIL_HostSay(pBot->pEdict, 1, "You don't have bot commander access.");
-            return FALSE;
+            return false;
          }
 
          /*char msg[80];
@@ -3009,14 +3007,14 @@ static bool BotChangeClass(bot_t *pBot, const int iClass, const char *from) {
             strcpy(c_class, "engineer");
             break;
          default:
-            return FALSE;
+            return false;
          }
 
          FakeClientCommand(pBot->pEdict, c_class, nullptr, nullptr);
-         pBot->lockClass = TRUE;
+         pBot->lockClass = true;
       }
    }
-   return TRUE;
+   return true;
 }
 
 // BotChangeRole - Given a bot and a role, this function should make
@@ -3026,7 +3024,7 @@ static bool BotChangeClass(bot_t *pBot, const int iClass, const char *from) {
 static bool BotChangeRole(bot_t *pBot, const char *cmdLine, const char *from) {
    // Crash check.
    if (!pBot || !cmdLine || !from)
-      return FALSE;
+      return false;
 
    // Check if the class supplied is already at the limit.
 
@@ -3040,32 +3038,32 @@ static bool BotChangeRole(bot_t *pBot, const char *cmdLine, const char *from) {
       if (strcmp(STRING(pPlayer->v.netname), from) == 0) {
          // Make sure he is on our team to accept the message.
          if (pBot->current_team != UTIL_GetTeam(pPlayer))
-            return FALSE;
+            return false;
 
          // Check the pPlayer for access to this command.
          if (!botVerifyAccess(pPlayer)) {
             UTIL_HostSay(pBot->pEdict, 1, "You don't have access.");
-            return FALSE;
+            return false;
          }
 
          // Get the role to change to first from the cmdLine line
          // int changeTo = 0;
          if (strstr(cmdLine, "attack")) {
             pBot->mission = ROLE_ATTACKER;
-            pBot->lockMission = TRUE;
+            pBot->lockMission = true;
             UTIL_HostSay(pBot->pEdict, 1, "Roger, attacking.");
          } else if (strstr(cmdLine, "defend")) {
             pBot->mission = ROLE_DEFENDER;
-            pBot->lockMission = TRUE;
+            pBot->lockMission = true;
             UTIL_HostSay(pBot->pEdict, 1, "Roger, defending.");
          } else if (strstr(cmdLine, "roam")) {
-            pBot->lockMission = FALSE;
+            pBot->lockMission = false;
             UTIL_HostSay(pBot->pEdict, 1, "Roger, I'm on my own.");
          } else
             UTIL_HostSay(pBot->pEdict, 1, "Invalid Role.");
       }
    }
-   return TRUE;
+   return true;
 }
 
 // This function checks if the specified user has access through
@@ -3080,17 +3078,17 @@ static bool botVerifyAccess(edict_t *pPlayer) {
    ALERT(at_console, szBuffer);
    // example steam ID: STEAM_0:1245
 
-   bool found = FALSE;
+   bool found = false;
    LIter<char *> iter(&commanders);
    for (iter.begin(); !iter.end(); ++iter) {
       if (strcasecmp(authId, *iter.current()) == 0)
-         found = TRUE;
+         found = true;
    }
 
    if (found)
-      return TRUE;
+      return true;
    else
-      return FALSE;
+      return false;
 }
 
 // BotPickNewClass().
@@ -3140,10 +3138,10 @@ static void BotPickNewClass(bot_t *pBot) {
 
    // see if the bot should pick a class suitable to a given situation
    if (random_long(1, 1000) > 300) {
-      if (BotDemomanNeededCheck(pBot) == TRUE)
+      if (BotDemomanNeededCheck(pBot) == true)
          return;
 
-      if (BotChooseCounterClass(pBot) == TRUE)
+      if (BotChooseCounterClass(pBot) == true)
          return;
    }
 
@@ -3277,14 +3275,14 @@ static void BotPickNewClass(bot_t *pBot) {
 // may counteract certain classes that their enemies are using.
 static bool BotChooseCounterClass(bot_t *pBot) {
    if (FNullEnt(pBot->killer_edict))
-      return FALSE;
+      return false;
 
    short new_class = -1;
 
    // choose the Spy class if the bot was killed by a Sentry Gun and the team
    // has few spies already
    if (pBot->killer_edict == pBot->lastEnemySentryGun && !FNullEnt(pBot->lastEnemySentryGun)) {
-      if (FriendlyClassTotal(pBot->pEdict, TFC_CLASS_SPY, FALSE) < 1)
+      if (FriendlyClassTotal(pBot->pEdict, TFC_CLASS_SPY, false) < 1)
          new_class = 8;
    } else // enemy is not a sentry gun
    {
@@ -3294,24 +3292,24 @@ static bool BotChooseCounterClass(bot_t *pBot) {
          // Snipers are often a serious threat so pick Sniper or HWGuy
          // to fight back against them
          if (pBot->killer_edict->v.playerclass == TFC_CLASS_SNIPER) {
-            if (FriendlyClassTotal(pBot->pEdict, TFC_CLASS_SNIPER, FALSE) < 2) {
+            if (FriendlyClassTotal(pBot->pEdict, TFC_CLASS_SNIPER, false) < 2) {
                new_class = 2;
                //	UTIL_HostSay(pBot->pEdict, 0, "Counter classing a Sniper"); //DebugMessageOfDoom
-            } else if (FriendlyClassTotal(pBot->pEdict, TFC_CLASS_HWGUY, FALSE) < 1) {
+            } else if (FriendlyClassTotal(pBot->pEdict, TFC_CLASS_HWGUY, false) < 1) {
                new_class = 6;
                //	UTIL_HostSay(pBot->pEdict, 0, "Counter classing a Sniper"); //DebugMessageOfDoom
             }
          }
          // a good counter-class for enemy Engineers is the sneaky Spy
          else if (pBot->killer_edict->v.playerclass == TFC_CLASS_ENGINEER) {
-            if (FriendlyClassTotal(pBot->pEdict, TFC_CLASS_SPY, FALSE) < 1) {
+            if (FriendlyClassTotal(pBot->pEdict, TFC_CLASS_SPY, false) < 1) {
                new_class = 8;
                //	UTIL_HostSay(pBot->pEdict, 0, "Counter classing an Engineer"); //DebugMessageOfDoom
             }
          }
          // not enjoying bio-chemical warfare?  Pick the guy with an antidote
          else if (pBot->killer_edict->v.playerclass == TFC_CLASS_MEDIC) {
-            if (FriendlyClassTotal(pBot->pEdict, TFC_CLASS_MEDIC, FALSE) < 1) {
+            if (FriendlyClassTotal(pBot->pEdict, TFC_CLASS_MEDIC, false) < 1) {
                new_class = 5;
                //	UTIL_HostSay(pBot->pEdict, 0, "Counter classing a Medic"); //DebugMessageOfDoom
             }
@@ -3321,7 +3319,7 @@ static bool BotChooseCounterClass(bot_t *pBot) {
 
    // not chosen a counter-class?
    if (new_class == -1)
-      return FALSE;
+      return false;
 
    // Check if the chosen class is already at the limit.
    int class_not_allowed;
@@ -3331,7 +3329,7 @@ static bool BotChooseCounterClass(bot_t *pBot) {
       class_not_allowed = team_class_limits[pBot->current_team] & 1 << new_class;
 
    if (class_not_allowed || new_class == pBot->bot_class)
-      return FALSE;
+      return false;
 
    // name the class the bot wishes to use and change to it
    char c_class[16];
@@ -3364,7 +3362,7 @@ static bool BotChooseCounterClass(bot_t *pBot) {
       strcpy(c_class, "engineer");
       break;
    default:
-      return FALSE;
+      return false;
    }
    pBot->bot_class = new_class;
    FakeClientCommand(pBot->pEdict, c_class, nullptr, nullptr);
@@ -3376,22 +3374,22 @@ static bool BotChooseCounterClass(bot_t *pBot) {
       pBot->deathsTillClassChange = 8;
    else
       pBot->deathsTillClassChange = 4;
-   return TRUE;
+   return true;
 }
 
 // This function allows a bot that has just been fragged to decide whether
 // or not it should switch to Demoman in order to blow up any detpack waypoints.
-// It returns TRUE if the bot switched class to Demoman.
+// It returns true if the bot switched class to Demoman.
 static bool BotDemomanNeededCheck(bot_t *pBot) {
    // give up if there is a demoman on the bots team already
-   if (pBot->pEdict->v.playerclass == TFC_CLASS_DEMOMAN || FriendlyClassTotal(pBot->pEdict, TFC_CLASS_DEMOMAN, FALSE) > 0)
-      return FALSE;
+   if (pBot->pEdict->v.playerclass == TFC_CLASS_DEMOMAN || FriendlyClassTotal(pBot->pEdict, TFC_CLASS_DEMOMAN, false) > 0)
+      return false;
 
    // Check if any more demoman are allowed on this map.
    const bool class_not_allowed = !(team_class_limits[pBot->current_team] & (1 << TFC_CLASS_DEMOMAN));
 
    if (class_not_allowed)
-      return FALSE;
+      return false;
 
    //	char msg[80];
    //	sprintf(msg, "Checking if Demo needed, our score:%d, theirs:%d>",
@@ -3405,25 +3403,25 @@ static bool BotDemomanNeededCheck(bot_t *pBot) {
       // delay changing class again for a while
       pBot->deathsTillClassChange = 6;
 
-      return TRUE;
+      return true;
    }
 
-   return FALSE;
+   return false;
 }
 
 // This function was created so that Spys can check if they are in an
 // area suitable for feigning and ambushing enemy players.
 //	This function checks if the bot is in a narrow area and is near
-// enough to an enemy and returns TRUE if so.
+// enough to an enemy and returns true if so.
 // On success r_wallVector will remember the position of a nearby wall.
 bool SpyAmbushAreaCheck(bot_t *pBot, Vector &r_wallVector) {
    // perform some basic checks first
    // e.g. don't feign near a lift
-   if ((pBot->current_wp > -1 && waypoints[pBot->current_wp].flags & W_FL_LIFT) || (pBot->pEdict->v.waterlevel != WL_NOT_IN_WATER || pBot->nadePrimed == TRUE || pBot->bot_has_flag || PlayerIsInfected(pBot->pEdict))) {
-      return FALSE;
+   if ((pBot->current_wp > -1 && waypoints[pBot->current_wp].flags & W_FL_LIFT) || (pBot->pEdict->v.waterlevel != WL_NOT_IN_WATER || pBot->nadePrimed == true || pBot->bot_has_flag || PlayerIsInfected(pBot->pEdict))) {
+      return false;
    }
 
-   bool enemies_too_far = TRUE;
+   bool enemies_too_far = true;
    for (int i = 1; i <= gpGlobals->maxClients; i++) {
       edict_t *pPlayer = INDEXENT(i);
 
@@ -3439,7 +3437,7 @@ bool SpyAmbushAreaCheck(bot_t *pBot, Vector &r_wallVector) {
             continue;
 
          if (VectorsNearerThan(pPlayer->v.origin, pBot->pEdict->v.origin, 1200.0f)) {
-            enemies_too_far = FALSE;
+            enemies_too_far = false;
             break;
          }
       }
@@ -3447,13 +3445,13 @@ bool SpyAmbushAreaCheck(bot_t *pBot, Vector &r_wallVector) {
 
    // abort if no enemies are near enough
    if (enemies_too_far)
-      return FALSE;
+      return false;
 
    // this is used so the bot can remember any one of the two walls a traceline hit
    // i.e. the wall on the left or the one on the right of the bot
-   bool rememberLeftWall = TRUE;
+   bool rememberLeftWall = true;
    if (random_long(1, 1000) < 501)
-      rememberLeftWall = FALSE;
+      rememberLeftWall = false;
 
    // Now start checking that the bot is in some kind of narrow area.
    const Vector v_src = pBot->pEdict->v.origin;
@@ -3467,7 +3465,7 @@ bool SpyAmbushAreaCheck(bot_t *pBot, Vector &r_wallVector) {
 
    // report a failure if the trace didn't hit anything
    if (tr.flFraction >= 1.0)
-      return FALSE;
+      return false;
 
    if (!rememberLeftWall)
       r_wallVector = tr.vecEndPos;
@@ -3478,14 +3476,14 @@ bool SpyAmbushAreaCheck(bot_t *pBot, Vector &r_wallVector) {
 
    // report a failure if the trace didn't hit anything
    if (tr.flFraction >= 1.0)
-      return FALSE;
+      return false;
 
    if (rememberLeftWall)
       r_wallVector = tr.vecEndPos;
 
    // both traces hit something, so report success because the bot may
    // be in a narrow passage
-   return TRUE;
+   return true;
 }
 
 // This function is responsible for making bots that dropped the flag report
@@ -3495,7 +3493,7 @@ static void BotReportMyFlagDrop(bot_t *pBot) {
    if (!pBot->bot_has_flag)
       return;
 
-   bool flag_was_dropped = FALSE;
+   bool flag_was_dropped = false;
 
    // check if the flag still exists where the bot died
    edict_t *pent = nullptr;
@@ -3503,7 +3501,7 @@ static void BotReportMyFlagDrop(bot_t *pBot) {
       if (pBot->flag_impulse == pent->v.impulse) {
          const float ll = (pent->v.origin - pBot->pEdict->v.origin).Length();
          if (ll > 0 && ll < 64.0f) {
-            flag_was_dropped = TRUE;
+            flag_was_dropped = true;
             break;
          }
       }
@@ -3515,7 +3513,7 @@ static void BotReportMyFlagDrop(bot_t *pBot) {
          if (pBot->flag_impulse == pent->v.impulse) {
             const float ll = (pent->v.origin - pBot->pEdict->v.origin).Length();
             if (ll > 0 && ll < 64.0f) {
-               flag_was_dropped = TRUE;
+               flag_was_dropped = true;
                break;
             }
          }
@@ -3523,7 +3521,7 @@ static void BotReportMyFlagDrop(bot_t *pBot) {
    }
 
    if (flag_was_dropped)
-      pBot->bot_has_flag = FALSE;
+      pBot->bot_has_flag = false;
    else
       return;
 
@@ -3544,7 +3542,7 @@ static void BotReportMyFlagDrop(bot_t *pBot) {
       if (newJob != nullptr) {
          for (int i = 0; i < 32; i++) {
             if (bots[i].is_used && &bots[i] != pBot // not this bot
-                && bots[i].bot_has_flag == FALSE && bots[i].mission == ROLE_ATTACKER && bots[i].current_team == pBot->current_team) {
+                && bots[i].bot_has_flag == false && bots[i].mission == ROLE_ATTACKER && bots[i].current_team == pBot->current_team) {
                SubmitNewJob(&bots[i], JOB_PICKUP_FLAG, newJob);
             }
          }
@@ -3631,7 +3629,7 @@ static void BotEnemyCarrierAlert(bot_t *pBot) {
                                       {
                                                       if(bots[i].is_used
                                                                       && bots[i].mission == ROLE_DEFENDER
-                                                                      && bots[i].bot_has_flag == FALSE
+                                                                      && bots[i].bot_has_flag == false
                                                                       && bots[i].current_team == pBot->current_team
                                                                       && (bots[i].enemy.f_lastSeen + 20.0f) < pBot->f_think_time)
                                                       {
@@ -3691,12 +3689,12 @@ void BotThink(bot_t *pBot) {
    pBot->f_vertical_speed = 0.0; // not swimming up or down initially
 
    // if the bot hasn't selected stuff to start the game yet, go do that...
-   if (pBot->not_started == TRUE) {
+   if (pBot->not_started == true) {
       BotResetJobBuffer(pBot);
       pBot->f_duck_time = pBot->f_think_time;
       pBot->strafe_mod = STRAFE_MOD_NORMAL;
       pBot->sentry_edict = nullptr;
-      pBot->SGRotated = FALSE;
+      pBot->SGRotated = false;
       BotStartGame(pBot);
       g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, 0.0, 0, 0, pBot->pEdict->v.button, (byte)0, (byte)msecval);
       return;
@@ -3706,7 +3704,7 @@ void BotThink(bot_t *pBot) {
    pBot->current_team = UTIL_GetTeam(pBot->pEdict);
    if (pBot->current_team < 0) // shouldn't happen, but, just in case
    {
-      pBot->not_started = TRUE; // try joining again
+      pBot->not_started = true; // try joining again
       return;
    }
 
@@ -3729,7 +3727,7 @@ void BotThink(bot_t *pBot) {
             pBot->bot_team = 5;
             pBot->bot_class = -1;
          }
-         pBot->not_started = TRUE;
+         pBot->not_started = true;
          pBot->bot_start2++;
          pBot->bot_start3 = 0;
          if (mod_id == TFC_DLL)
@@ -3759,7 +3757,7 @@ void BotThink(bot_t *pBot) {
 
          BotPickNewClass(pBot);
          BotSpawnInit(pBot);
-         pBot->need_to_initialize = FALSE;
+         pBot->need_to_initialize = false;
       }
 
       pBot->f_duck_time = pBot->f_think_time;
@@ -3794,8 +3792,8 @@ void BotThink(bot_t *pBot) {
    pBot->bot_start3 = 0;
 
    // set this for the next time the bot dies so it will initialize stuff
-   if (pBot->need_to_initialize == FALSE) {
-      pBot->need_to_initialize = TRUE;
+   if (pBot->need_to_initialize == false) {
+      pBot->need_to_initialize = true;
       pBot->f_bot_spawn_time = pBot->f_think_time;
    }
 
@@ -3804,11 +3802,11 @@ void BotThink(bot_t *pBot) {
    if (pBot->f_blinded_time > pBot->f_think_time + 60)
       pBot->f_blinded_time = pBot->f_think_time - 1;
 
-   bool is_idle = FALSE;
+   bool is_idle = false;
 
    // don't do anything while blinded
    if (pBot->f_blinded_time > pBot->f_think_time)
-      is_idle = TRUE;
+      is_idle = true;
    if (is_idle) {
       if (pBot->idle_angle_time <= pBot->f_think_time) {
          pBot->idle_angle_time = pBot->f_think_time + RANDOM_FLOAT(0.5, 2.0);
@@ -3994,28 +3992,28 @@ static void BotSenseEnvironment(bot_t *pBot) {
       pBot->f_find_item_time = pBot->f_think_time + 0.5f;
    }
 
-   bool didnt_have_flag = FALSE;
-   if (pBot->bot_has_flag == FALSE)
-      didnt_have_flag = TRUE;
+   bool didnt_have_flag = false;
+   if (pBot->bot_has_flag == false)
+      didnt_have_flag = true;
 
    // update the bots knowledge of whether or not it is carrying a flag
    if (PlayerHasFlag(pBot->pEdict)) {
-      pBot->bot_has_flag = TRUE;
+      pBot->bot_has_flag = true;
 
       if (didnt_have_flag) {
          //	UTIL_BotLogPrintf("%s(%p)now has flag %d\n",
          //		pBot->name, pBot->pEdict, pBot->flag_impulse);
 
          if (bot_xmas) {
-            pBot->newmsg = TRUE;
+            pBot->newmsg = true;
             strcpy(pBot->message, "xmas");
          }
 
          if (random_long(1, 1000) <= 200)
-            BotSprayLogo(pBot->pEdict, TRUE);
+            BotSprayLogo(pBot->pEdict, true);
       }
    } else
-      pBot->bot_has_flag = FALSE;
+      pBot->bot_has_flag = false;
 }
 
 // This function handles basic combat actions, such as pointing the active
@@ -4035,7 +4033,7 @@ static void BotFight(bot_t *pBot) {
        && pBot->f_dispenserDetTime < pBot->f_think_time && !FNullEnt(pBot->dispenser_edict)) {
       FakeClientCommand(pBot->pEdict, "detdispenser", nullptr, nullptr);
       pBot->f_dispenserDetTime = 0.0;
-      pBot->has_dispenser = FALSE;
+      pBot->has_dispenser = false;
       pBot->dispenser_edict = nullptr;
    }
 
@@ -4154,11 +4152,11 @@ static void BotCombatThink(bot_t *pBot) {
 
    // pursue the enemy?
    if ((ThreatLevel <= 25 || pBot->enemy.seenWithFlag) && !pBot->bot_has_flag && pBot->f_periodicAlert1 < pBot->f_think_time) {
-      bool tooBusySniping = FALSE; // to stop snipers running after everybody!
+      bool tooBusySniping = false; // to stop snipers running after everybody!
       if (pBot->pEdict->v.playerclass == TFC_CLASS_SNIPER && (pBot->trait.aggression < 50 || waypoints[pBot->current_wp].flags & W_FL_SNIPER))
-         tooBusySniping = TRUE;
+         tooBusySniping = true;
 
-      if (tooBusySniping == FALSE) {
+      if (tooBusySniping == false) {
          job_struct *newJob = InitialiseNewJob(pBot, JOB_PURSUE_ENEMY);
          if (newJob != nullptr) {
             newJob->player = pBot->enemy.ptr;

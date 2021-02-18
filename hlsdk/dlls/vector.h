@@ -29,7 +29,7 @@ public:
 	Vector2D operator*(float fl)				const	{ return Vector2D(x*fl, y*fl);	}
 	Vector2D operator/(float fl)				const	{ return Vector2D(x/fl, y/fl);	}
 	
-	float Length(void)						const	{ return sqrt(x*x + y*y );		}
+	float Length(void)						const	{ return sqrt(x*x + y*y);		}
 
 	Vector2D Normalize ( void ) const
 	{
@@ -70,7 +70,7 @@ public:
 	// Operators
 	Vector operator-(void) const				{ return Vector(-x,-y,-z);				}
 	int operator==(const Vector& v) const	{ return x==v.x && y==v.y && z==v.z;	}
-	int operator!=(const Vector& v) const	{ return !(*this==v);					}
+	int operator!=(const Vector& v) const	{ return ~(*this==v);					}
 	Vector operator+(const Vector& v) const	{ return Vector(x+v.x, y+v.y, z+v.z);	}
 	Vector operator-(const Vector& v) const	{ return Vector(x-v.x, y-v.y, z-v.z);	}
 	Vector operator*(float fl) const			{ return Vector(x*fl, y*fl, z*fl);		}

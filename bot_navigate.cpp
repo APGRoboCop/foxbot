@@ -1,5 +1,3 @@
-// This is an open source non-commercial project. Dear PVS-Studio, please check it.
-// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // FoXBot - AI Bot for Halflife's Team Fortress Classic
 //
@@ -438,17 +436,17 @@ void BotNavigateWaypointless(bot_t *pBot) {
 
 // You should call this function when pBot->goto_wp is valid and you want
 // the bot to get to it.
-// Set navByStrafe to TRUE if you wish the bot to navigate by using axial
+// Set navByStrafe to true if you wish the bot to navigate by using axial
 // movement speeds only(i.e. without having to look at the next waypoint).
 bool BotNavigateWaypoints(bot_t *pBot, bool navByStrafe) {
    if (num_waypoints < 1)
-      return FALSE;
+      return false;
 
    // has the bot been getting stuck a little too often?
    if (pBot->routeFailureTally > 1) {
       BotEscapeWaypointTrap(pBot, pBot->goto_wp);
       pBot->routeFailureTally = 0;
-      return FALSE;
+      return false;
    }
 
    pBot->f_move_speed = pBot->f_max_speed;
@@ -459,7 +457,7 @@ bool BotNavigateWaypoints(bot_t *pBot, bool navByStrafe) {
    {
       pBot->f_shortcutCheckTime = pBot->f_think_time + 1.0;
 
-      if (BotFindTeleportShortCut(pBot) == FALSE && pBot->bot_skill < 4) {
+      if (BotFindTeleportShortCut(pBot) == false && pBot->bot_skill < 4) {
          if (pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC || pBot->pEdict->v.playerclass == TFC_CLASS_SCOUT)
             BotCheckForConcJump(pBot);
          else if (pBot->pEdict->v.playerclass == TFC_CLASS_SOLDIER)
@@ -469,11 +467,11 @@ bool BotNavigateWaypoints(bot_t *pBot, bool navByStrafe) {
 
    // try to navigate by strafing if the bot has an enemy
    if (pBot->enemy.ptr != nullptr)
-      navByStrafe = TRUE;
+      navByStrafe = true;
 
-   bool botIsSniping = FALSE;
+   bool botIsSniping = false;
    if (pBot->pEdict->v.playerclass == TFC_CLASS_SNIPER && pBot->current_weapon.iId == TF_WEAPON_SNIPERRIFLE && (pBot->f_snipe_time >= pBot->f_think_time || pBot->pEdict->v.button & IN_ATTACK)) {
-      botIsSniping = TRUE;
+      botIsSniping = true;
    }
 
    // this bit of code checks if the bot is getting stuck whilst navigating
@@ -512,7 +510,7 @@ bool BotNavigateWaypoints(bot_t *pBot, bool navByStrafe) {
       // face the waypoint when navigation is getting hindered
       // and it's been going on for too long
       if (pBot->enemy.ptr == nullptr || pBot->f_navProblemStartTime + 4.0 < pBot->f_think_time)
-         navByStrafe = FALSE;
+         navByStrafe = false;
 
       // buoyed by water, or on a ladder?
       if ((pBot->pEdict->v.waterlevel > WL_FEET_IN_WATER && !(pBot->pEdict->v.flags & FL_ONGROUND)) || pBot->pEdict->v.movetype == MOVETYPE_FLY) {
@@ -591,7 +589,7 @@ bool BotNavigateWaypoints(bot_t *pBot, bool navByStrafe) {
                         //	UTIL_HostSay(pBot->pEdict, 0, "fixed running vertically!");
                         ////DebugMessageOfDoom!
                         BotFindCurrentWaypoint(pBot);
-                        return FALSE; // to help avoid a repetitive failure
+                        return false; // to help avoid a repetitive failure
                      }
 
                      // slow down for a couple of seconds(see if that helps)
@@ -615,14 +613,14 @@ bool BotNavigateWaypoints(bot_t *pBot, bool navByStrafe) {
 
    // keep navigating the waypoints, unless a serious problem occurred
    if (!BotHeadTowardWaypoint(pBot, navByStrafe))
-      return FALSE;
+      return false;
 
    // allow the bot to react according to the characteristics of it's current waypoint
    if (pBot->current_wp != -1) {
       // remember how far the bot is from it's current waypoint
       const float current_wp_distance = (waypoints[pBot->current_wp].origin - pBot->pEdict->v.origin).Length();
 
-      if (navByStrafe == FALSE) {
+      if (navByStrafe == false) {
          // slow the bot down as it approaches the final waypoint on it's route
          if (pBot->current_wp == pBot->goto_wp) {
             if (current_wp_distance < 70.0)
@@ -632,7 +630,7 @@ bool BotNavigateWaypoints(bot_t *pBot, bool navByStrafe) {
          }
 
          // slow down if the next waypoint is a walk waypoint...
-         if (waypoints[pBot->current_wp].flags & W_FL_WALK && navByStrafe == FALSE)
+         if (waypoints[pBot->current_wp].flags & W_FL_WALK && navByStrafe == false)
             pBot->f_move_speed = pBot->f_max_speed / 3;
       }
 
@@ -677,18 +675,18 @@ bool BotNavigateWaypoints(bot_t *pBot, bool navByStrafe) {
          else
             nextWP = WaypointRouteFromTo(pBot->current_wp, pBot->branch_waypoint, pBot->current_team);
 
-         if (nextWP > -1 && BotPathCheck(pBot->current_wp, nextWP) == FALSE)
+         if (nextWP > -1 && BotPathCheck(pBot->current_wp, nextWP) == false)
             BotChangeRoute(pBot);
       }
    }
 
-   return TRUE; // all is well so far
+   return true; // all is well so far
 }
 
 // This function would probably be a good place to check to see how close
 // to the current waypoint the bot is, and if the bot is close enough to
 // the desired waypoint then call BotFindWaypoint to find the next one.
-// Set navByStrafe to TRUE if you wish the bot to navigate by using axial
+// Set navByStrafe to true if you wish the bot to navigate by using axial
 // movement speeds only(i.e. without having to look at the next waypoint).
 bool BotHeadTowardWaypoint(bot_t *pBot, bool &r_navByStrafe) {
    // check if the bot is taking too long to reach it's current waypoint
@@ -698,7 +696,7 @@ bool BotHeadTowardWaypoint(bot_t *pBot, bool &r_navByStrafe) {
       pBot->f_current_wp_deadline = pBot->f_think_time + BOT_WP_DEADLINE;
 
       ++pBot->routeFailureTally; // chalk up another route failure
-      return FALSE;              // give up
+      return false;              // give up
    }
 
    BotFallenOffCheck(pBot);
@@ -707,16 +705,16 @@ bool BotHeadTowardWaypoint(bot_t *pBot, bool &r_navByStrafe) {
    if (pBot->current_wp != -1 && pBot->goto_wp != -1) {
       // turn r_navByStrafe off if the bot is using a ladder unless
       // it has seen an enemy recently and isn't getting seriously stuck
-      if (r_navByStrafe == TRUE && (waypoints[pBot->current_wp].flags & W_FL_LADDER || pBot->pEdict->v.movetype == MOVETYPE_FLY)) {
+      if (r_navByStrafe == true && (waypoints[pBot->current_wp].flags & W_FL_LADDER || pBot->pEdict->v.movetype == MOVETYPE_FLY)) {
          if (pBot->enemy.ptr == nullptr)
-            r_navByStrafe = FALSE;
+            r_navByStrafe = false;
          else if (pBot->f_navProblemStartTime > 0.1 && pBot->f_navProblemStartTime + 4.0 < pBot->f_think_time)
-            r_navByStrafe = FALSE;
+            r_navByStrafe = false;
       }
 
       // if the bot is not navigating by strafing or is approaching
       // a jump waypoint then face towards the current waypoint
-      if (r_navByStrafe == FALSE || waypoints[pBot->current_wp].flags & W_FL_JUMP) {
+      if (r_navByStrafe == false || waypoints[pBot->current_wp].flags & W_FL_JUMP) {
          const Vector v_direction = waypoints[pBot->current_wp].origin - pBot->pEdict->v.origin;
          const Vector bot_angles = UTIL_VecToAngles(v_direction);
 
@@ -800,9 +798,9 @@ bool BotHeadTowardWaypoint(bot_t *pBot, bool &r_navByStrafe) {
    }
 
    if (BotUpdateRoute(pBot))
-      return TRUE;
+      return true;
    else
-      return FALSE;
+      return false;
 }
 
 // BotUpdateRoute()
@@ -823,9 +821,9 @@ static bool BotUpdateRoute(bot_t *pBot) {
          pBot->current_wp = new_current_wp;
          pBot->f_current_wp_deadline = pBot->f_think_time + BOT_WP_DEADLINE;
 
-         return TRUE;
+         return true;
       } else
-         return FALSE; // couldn't find a current waypoint for the bot
+         return false; // couldn't find a current waypoint for the bot
    } else              // the bot already has a current waypoint
    {
       new_current_wp = pBot->current_wp;
@@ -855,28 +853,28 @@ static bool BotUpdateRoute(bot_t *pBot) {
       // figure out how near to the bot's current waypoint the bot has to be
       // before it will move on the next waypoint
       float needed_distance = 50.0; // standard distance for most waypoint types
-      bool heightCheck = TRUE;      // used only when climbing ladders
+      bool heightCheck = true;      // used only when climbing ladders
       if (pBot->pEdict->v.movetype == MOVETYPE_FLY) {
          // if the bot is on a ladder make sure it is just above the waypoint
          needed_distance = 20.0; // got to be near when on a ladder
          if (pBot->pEdict->v.origin.z < waypoints[new_current_wp].origin.z || pBot->pEdict->v.origin.z > waypoints[new_current_wp].origin.z + 10.0)
-            heightCheck = FALSE;
+            heightCheck = false;
       } else if (waypoints[new_current_wp].flags & W_FL_JUMP) {
          // gotta be similar height or higher than jump waypoint
          if (pBot->pEdict->v.origin.z < waypoints[new_current_wp].origin.z - 15.0 || pBot->pEdict->v.flags & FL_ONGROUND)
-            heightCheck = FALSE;
+            heightCheck = false;
          needed_distance = 80.0;
       } else if (waypoints[new_current_wp].flags & W_FL_LIFT)
          needed_distance = 25.0; // some lifts are small(e.g. rock2's lifts)
       else if (waypoints[new_current_wp].flags & W_FL_WALK)
          needed_distance = 20.0;
 
-      bool waypointTouched = FALSE;
+      bool waypointTouched = false;
 
       // if the bot's near enough to it's current waypoint, and it hasn't
       // reached it's destination then pick the next waypoint on the route
-      if (new_current_wp != pBot->goto_wp && dist < needed_distance && heightCheck == TRUE) {
-         waypointTouched = TRUE;
+      if (new_current_wp != pBot->goto_wp && dist < needed_distance && heightCheck == true) {
+         waypointTouched = true;
       }
       // this check can solve waypoint circling problems
       else if (dist < 100.0 && pBot->f_navProblemStartTime > 0.1 && pBot->f_navProblemStartTime + 0.5 < pBot->f_think_time) {
@@ -891,7 +889,7 @@ static bool BotUpdateRoute(bot_t *pBot) {
                //		pBot->pEdict->v.origin + Vector(0, 0, 100.0),
                //		10, 2, 250, 250, 250, 200, 10);
 
-               waypointTouched = TRUE;
+               waypointTouched = true;
             }
          }
       }
@@ -931,7 +929,7 @@ static bool BotUpdateRoute(bot_t *pBot) {
          BotFindSideRoute(pBot);
       }
 
-      return TRUE;
+      return true;
    }
 }
 
@@ -998,7 +996,7 @@ void BotUseLift(bot_t *pBot) {
    {
       // is the lift waypoint roughly the same altitude as the bot?
       if (waypoints[pBot->current_wp].origin.z < pBot->pEdict->v.origin.z + 36.0 && waypoints[pBot->current_wp].origin.z > pBot->pEdict->v.origin.z - 36.0) {
-         bool liftReady = FALSE;
+         bool liftReady = false;
 
          // traceline a short distance up from the waypoint to make sure
          // the lift isn't there
@@ -1029,7 +1027,7 @@ void BotUseLift(bot_t *pBot) {
                         //	WaypointDrawBeam(INDEXENT(1), tr.pHit->v.absmin,
                         //		tr.pHit->v.absmin + tr.pHit->v.size, 10, 2, 50, 250, 50, 200, 10);
 
-                        liftReady = TRUE;
+                        liftReady = true;
                      }
                   }
                }
@@ -1075,7 +1073,7 @@ static int BotShouldJumpOver(bot_t *pBot) {
    // and their origin is 37 units above the bottom of their boots
    // when crouching bots are 36 units tall and their origin is 19 units high
 
-   bool obstacleFound = FALSE;
+   bool obstacleFound = false;
 
    // make vectors based upon the bots view yaw angle only
    UTIL_MakeVectors(Vector(0.0, pBot->pEdict->v.v_angle.y, 0.0));
@@ -1092,9 +1090,9 @@ static int BotShouldJumpOver(bot_t *pBot) {
 
    // whether or not to trace down from the bots origin or up from the bots ankles
    // random so as to maximise chance of detecting obstacles
-   bool searchDownwards = TRUE;
+   bool searchDownwards = true;
    if (random_long(1, 1000) > 500)
-      searchDownwards = FALSE; // search upwards instead
+      searchDownwards = false; // search upwards instead
 
    // here we can check from the left leg of the bot, first to see if there's
    // an obstacle there, then to see if it can be jumped over
@@ -1139,7 +1137,7 @@ static int BotShouldJumpOver(bot_t *pBot) {
          else if ((v_source - tr.vecEndPos).Length2D() > shinObstacleDistance + 1.0)
             return 2;
          else
-            obstacleFound = TRUE;
+            obstacleFound = true;
       }
    }
 
@@ -1187,7 +1185,7 @@ static int BotShouldJumpOver(bot_t *pBot) {
          else if ((v_source - tr.vecEndPos).Length2D() > shinObstacleDistance + 1.0)
             return 2;
          else
-            obstacleFound = TRUE;
+            obstacleFound = true;
       }
    }
 
@@ -1204,7 +1202,7 @@ static int BotShouldDuckUnder(bot_t *pBot) {
    if (pBot->pEdict->v.button & IN_DUCK)
       return 2;
 
-   bool obstacleFound = FALSE;
+   bool obstacleFound = false;
 
    // make vectors based upon the bots view yaw angle only
    UTIL_MakeVectors(Vector(0.0, pBot->pEdict->v.v_angle.y, 0.0));
@@ -1248,7 +1246,7 @@ static int BotShouldDuckUnder(bot_t *pBot) {
          else if ((v_source - tr.vecEndPos).Length() > headObstacleDistance + 1.0)
             return 2;
          else
-            obstacleFound = TRUE;
+            obstacleFound = true;
       }
    }
 
@@ -1288,7 +1286,7 @@ static int BotShouldDuckUnder(bot_t *pBot) {
          else if ((v_source - tr.vecEndPos).Length() > headObstacleDistance + 1.0)
             return 2;
          else
-            obstacleFound = TRUE;
+            obstacleFound = true;
       }
    }
 
@@ -1299,11 +1297,11 @@ static int BotShouldDuckUnder(bot_t *pBot) {
 }
 
 // This function attempts to detect whether or not the bot has fallen off
-// some kind of ledge.  It returns TRUE if the bot appears to have
+// some kind of ledge.  It returns true if the bot appears to have
 // fallen off, and will also attempt to correct the bots current waypoint.
 static bool BotFallenOffCheck(bot_t *const pBot) {
    if (pBot->current_wp == -1)
-      return FALSE;
+      return false;
 
    // fix going to wrong waypoint if falling, could help with rocket jumping :D
    // 87.0 = bot's standing origin(37) plus maximum jump height(48 - 50)
@@ -1329,11 +1327,11 @@ static bool BotFallenOffCheck(bot_t *const pBot) {
 
          // does this waypoint have a direct path to the bots current waypoint?
          PATH *p = paths[index];
-         bool waypointIsConnected = FALSE;
+         bool waypointIsConnected = false;
          while (p != nullptr && !waypointIsConnected) {
             for (int i = 0; i < MAX_PATH_INDEX; i++) {
                if (p->index[i] == pBot->current_wp) {
-                  waypointIsConnected = TRUE;
+                  waypointIsConnected = true;
                   break;
                }
             }
@@ -1350,11 +1348,11 @@ static bool BotFallenOffCheck(bot_t *const pBot) {
             const float distanceToCurr = (pBot->pEdict->v.origin - waypoints[pBot->current_wp].origin).Length();
 
             if (VectorsNearerThan(pBot->pEdict->v.origin, waypoints[index].origin, distanceToCurr) && BotCanSeeOrigin(pBot, waypoints[index].origin))
-               return FALSE;
+               return false;
          }
       }
    } else
-      return FALSE;
+      return false;
 
    const int nextWP = WaypointRouteFromTo(pBot->current_wp, pBot->goto_wp, pBot->current_team);
 
@@ -1367,7 +1365,7 @@ static bool BotFallenOffCheck(bot_t *const pBot) {
    }
 
    //	UTIL_HostSay(pBot->pEdict, 0, "I fell off"); //DebugMessageOfDoom
-   return TRUE;
+   return true;
 }
 
 // This function traces a line several units out to the bots left.
@@ -1389,10 +1387,10 @@ bool BotCheckWallOnLeft(bot_t *pBot) {
       //	WaypointDrawBeam(INDEXENT(1), pBot->pEdict->v.origin,
       //		v_left, 10, 2, 250, 50, 50, 200, 10);
 
-      return TRUE;
+      return true;
    }
 
-   return FALSE;
+   return false;
 }
 
 // This function traces a line several units out to the bots right.
@@ -1414,18 +1412,18 @@ bool BotCheckWallOnRight(bot_t *pBot) {
       //	WaypointDrawBeam(INDEXENT(1), pBot->pEdict->v.origin,
       //		v_right, 10, 2, 250, 50, 50, 200, 10);
 
-      return TRUE;
+      return true;
    }
 
-   return FALSE;
+   return false;
 }
 
 // This function returns the index of a waypoint suitable for building a
 // dispenser at, or -1 on failure.
 int BotGetDispenserBuildWaypoint(bot_t *pBot) {
    // if the bot has a sentry build the dispenser near it
-   if (pBot->has_sentry == TRUE && !FNullEnt(pBot->sentry_edict)) {
-      return WaypointFindRandomGoal_R(pBot->sentry_edict->v.origin, FALSE, 800.0, -1, 0);
+   if (pBot->has_sentry == true && !FNullEnt(pBot->sentry_edict)) {
+      return WaypointFindRandomGoal_R(pBot->sentry_edict->v.origin, false, 800.0, -1, 0);
    } else // build near a random sentry waypoint
    {
       if (pBot->current_wp < 0)
@@ -1436,7 +1434,7 @@ int BotGetDispenserBuildWaypoint(bot_t *pBot) {
       if (sentryWP == -1)
          return -1;
 
-      return WaypointFindRandomGoal_R(waypoints[sentryWP].origin, FALSE, 800.0, -1, 0);
+      return WaypointFindRandomGoal_R(waypoints[sentryWP].origin, false, 800.0, -1, 0);
    }
 }
 
@@ -1613,7 +1611,7 @@ void BotFindSideRoute(bot_t *pBot) {
 
          if (waypoints[nextWP].flags & W_FL_PATHCHECK || waypoints[nextWP].flags & W_FL_TFC_DETPACK_CLEAR || waypoints[nextWP].flags & W_FL_TFC_DETPACK_SEAL) {
             const int endWP = WaypointRouteFromTo(nextWP, i, pBot->current_team);
-            if (BotPathCheck(nextWP, endWP) == FALSE) {
+            if (BotPathCheck(nextWP, endWP) == false) {
                //	char msg[96];
                //	sprintf(msg, "path %d - %d blocked", nextWP, endWP);
                //	UTIL_HostSay(pBot->pEdict, 0, msg); //DebugMessageOfDoom!
@@ -1641,7 +1639,7 @@ void BotFindSideRoute(bot_t *pBot) {
 }
 
 // Give this function two waypoints and it'll see if there is an obstruction
-// between them.  It returns TRUE if the path is clear.
+// between them.  It returns true if the path is clear.
 bool BotPathCheck(const int sourceWP, const int destWP) {
    TraceResult tr;
 
@@ -1650,9 +1648,9 @@ bool BotPathCheck(const int sourceWP, const int destWP) {
 
    // if line of sight is not blocked
    if (tr.flFraction >= 1.0)
-      return TRUE;
+      return true;
 
-   return FALSE;
+   return false;
 }
 
 // This function is like BotFindSideRoute() but was designed to help bots
@@ -1660,10 +1658,10 @@ bool BotPathCheck(const int sourceWP, const int destWP) {
 // Basically, this function looks for a waypoint that:
 // 1.) is on a different route from the bots current route
 // 2.) will not route back though the bots current waypoint to the goal
-// It returns TRUE if it sent the bot along a new route.
+// It returns true if it sent the bot along a new route.
 bool BotChangeRoute(bot_t *pBot) {
    if (pBot->current_wp == -1 || pBot->goto_wp == -1)
-      return FALSE;
+      return false;
 
    // remember if the bot is going to a goal waypoint or a route branching waypoint
    int goalWP = pBot->goto_wp;
@@ -1673,12 +1671,12 @@ bool BotChangeRoute(bot_t *pBot) {
    // remember the next waypoint on the bots route to it's current goal
    const int nextPredictedWP = WaypointRouteFromTo(pBot->current_wp, goalWP, pBot->current_team);
    if (nextPredictedWP == -1)
-      return FALSE;
+      return false;
 
    // the bots current distance from it's goal
    const int currentGoalDistance = WaypointDistanceFromTo(pBot->current_wp, goalWP, pBot->current_team);
    if (currentGoalDistance < 200)
-      return FALSE;
+      return false;
 
    // used for remembering the best waypoint found
    int newBranchWP = -1;
@@ -1739,10 +1737,10 @@ bool BotChangeRoute(bot_t *pBot) {
 
       pBot->branch_waypoint = newBranchWP;
 
-      return TRUE;
+      return true;
    }
 
-   return FALSE;
+   return false;
 }
 
 // This function can be used to make the bot pick a different goal waypoint
@@ -1751,14 +1749,14 @@ bool BotChangeRoute(bot_t *pBot) {
 // be used to send the bot to a different flag waypoint instead.
 bool BotSetAlternativeGoalWaypoint(bot_t *const pBot, int &r_goalWP, const WPT_INT32 flags) {
    if (r_goalWP < 0)
-      return FALSE; // sanity check
+      return false; // sanity check
 
    // make sure the bot has a sane current waypoint(e.g. not behind a wall)
    BotFindCurrentWaypoint(pBot);
 
    const int nextWP = WaypointRouteFromTo(pBot->current_wp, r_goalWP, pBot->current_team);
    if (nextWP == -1)
-      return FALSE; // sanity check
+      return false; // sanity check
 
    enum { MAX_INDICES = 5 };
    int indices[MAX_INDICES];
@@ -1806,20 +1804,20 @@ bool BotSetAlternativeGoalWaypoint(bot_t *const pBot, int &r_goalWP, const WPT_I
    if (count > 0) {
       //	UTIL_HostSay(pBot->pEdict, 0, "alternative goal waypoint found"); //DebugMessageOfDoom!
       r_goalWP = indices[random_long(0, count - 1)];
-      return TRUE;
+      return true;
    }
 
-   return FALSE;
+   return false;
 }
 
 // Some waypoint files are not properly tested and contain waypoint traps.
 // e.g. a map area has a waypoint route leading in, but no route leading out.
 // Or the nearest current waypoint is completely unreachable.
 // This function is designed to find a way out for a trapped bot by giving
-// it a new current waypoint that should help.  Returns FALSE upon failure.
+// it a new current waypoint that should help.  Returns false upon failure.
 static bool BotEscapeWaypointTrap(bot_t *const pBot, const int goalWP) {
    if (goalWP < 0)
-      return FALSE; // sanity check
+      return false; // sanity check
 
    //	UTIL_HostSay(pBot->pEdict, 0, "Escaping a waypoint trap"); //DebugMessageOfDoom!
 
@@ -1843,12 +1841,12 @@ static bool BotEscapeWaypointTrap(bot_t *const pBot, const int goalWP) {
          if (routeDistance > -1 && (currentRoutDist == -1 || routeDistance < currentRoutDist) && VectorsNearerThan(pBot->pEdict->v.origin, waypoints[index].origin, 800.0) && BotCanSeeOrigin(pBot, waypoints[index].origin)) {
             // found a suitable waypoint
             pBot->current_wp = index;
-            return TRUE;
+            return true;
          }
       }
    }
 
-   return FALSE; // not a good result, the bot may stay stuck in a loop
+   return false; // not a good result, the bot may stay stuck in a loop
 }
 
 // This function looks for a waypoint that will lead a bot away from the
@@ -2011,12 +2009,12 @@ int BotFindFlagWaypoint(bot_t *pBot) {
 int BotTargetDefenderWaypoint(bot_t *pBot) {
    // perform basic sanity checks
    if (pBot->current_wp < 0 || pBot->current_wp >= num_waypoints)
-      return FALSE;
+      return false;
 
    // pick an enemy team to harrass
    const int target_team = PickRandomEnemyTeam(pBot->current_team);
    if (target_team == -1)
-      return FALSE;
+      return false;
 
    // pick a random waypoint to start searching from
    int index = static_cast<int>(random_long(0, num_waypoints - 1));
@@ -2050,7 +2048,7 @@ int BotTargetDefenderWaypoint(bot_t *pBot) {
          continue;
 
       // look for a waypoint near the target and return true
-      const int goalWP = WaypointFindRandomGoal_R(waypoints[index].origin, TRUE, 500.0, -1, 0);
+      const int goalWP = WaypointFindRandomGoal_R(waypoints[index].origin, true, 500.0, -1, 0);
 
       if (goalWP != -1) {
          //	char msg[80]; //DebugMessageOfDoom!
@@ -2186,17 +2184,17 @@ int BotDrowningWaypointSearch(bot_t *pBot) {
 
 // This function attempts to send the specified bot to a teleport entrance
 // that will provide a quicker route to its ultimate goal.
-// It returns TRUE on success, FALSE on failure.
+// It returns true on success, false on failure.
 bool BotFindTeleportShortCut(bot_t *pBot) {
-   if (bot_can_use_teleporter == FALSE || pBot->bot_has_flag || BufferContainsJobType(pBot, JOB_USE_TELEPORT))
-      return FALSE;
+   if (bot_can_use_teleporter == false || pBot->bot_has_flag || BufferContainsJobType(pBot, JOB_USE_TELEPORT))
+      return false;
 
    // the teleporter found has got to cut the route distance to less than this amount
    int shortestRoute = WaypointDistanceFromTo(pBot->current_wp, pBot->goto_wp, pBot->current_team) - 1200;
 
    // is the route too short anyway to bother with teleports?
    if (shortestRoute < 300)
-      return FALSE;
+      return false;
 
    int shortestIndex = -1;
 
@@ -2227,10 +2225,10 @@ bool BotFindTeleportShortCut(bot_t *pBot) {
          //	UTIL_BotLogPrintf("%s, got tele shortcut via %d\n", pBot->name, newJob->waypoint);
       }
 
-      return TRUE;
+      return true;
    }
 
-   return FALSE;
+   return false;
 }
 
 // BotCheckForRocketJump - Here, we look through the list of RJ/CJ waypoints

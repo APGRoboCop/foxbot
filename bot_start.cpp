@@ -1,5 +1,3 @@
-// This is an open source non-commercial project. Dear PVS-Studio, please check it.
-// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // FoXBot - AI Bot for Halflife's Team Fortress Classic
 //
@@ -52,7 +50,7 @@ extern edict_t *spawn_check_crash_edict;
 static int BotPickFavoredTeam_TFC(int faveClass);
 
 void BotStartGame(bot_t *pBot) {
-   pBot->not_started = TRUE;
+   pBot->not_started = true;
 
    char c_team[32];
    char c_class[32];
@@ -64,7 +62,7 @@ void BotStartGame(bot_t *pBot) {
 
       if (pBot->create_time > gpGlobals->time && pBot->create_time - 0.5 < gpGlobals->time) {
          if (!spawn_check_crash) {
-            spawn_check_crash = TRUE;
+            spawn_check_crash = true;
             spawn_check_crash_count = 0;
             spawn_check_crash_edict = pEdict;
             char *cvar_specs = const_cast<char *>(CVAR_GET_STRING("allow_spectators"));
@@ -75,7 +73,7 @@ void BotStartGame(bot_t *pBot) {
             } else
                FakeClientCommand(pBot->pEdict, "spectate", nullptr, nullptr);
 
-            spawn_check_crash = FALSE;
+            spawn_check_crash = false;
             spawn_check_crash_edict = nullptr;
          }
 
@@ -93,7 +91,7 @@ void BotStartGame(bot_t *pBot) {
 
       // if we dont start after 2, sort other stuff
       if (pBot->create_time + 2.0 <= gpGlobals->time)
-         pBot->not_started = FALSE;
+         pBot->not_started = false;
 
       // handle Team Fortress Classic stuff here...
 
@@ -112,7 +110,7 @@ void BotStartGame(bot_t *pBot) {
             // if the bot is not a fair player(a scoundrel) then
             // let the bot choose the team it prefers, otherwise
             // auto-assign the bots team(auto-assign keeps the teams balanced)
-            if (bot_team_balance == FALSE && RANDOM_LONG(1, 1000) > pBot->trait.fairplay) {
+            if (bot_team_balance == false && RANDOM_LONG(1, 1000) > pBot->trait.fairplay) {
                // add one to what BotPickFavoredTeam_TFC() returns, because
                // it returns team values from 0 to 3
                pBot->bot_team = BotPickFavoredTeam_TFC(pBot->trait.faveClass) + 1;
@@ -199,7 +197,7 @@ void BotStartGame(bot_t *pBot) {
          FakeClientCommand(pEdict, c_class, nullptr, nullptr);
 
          // bot has now joined the game (doesn't need to be started)
-         pBot->not_started = FALSE;
+         pBot->not_started = false;
          //	UTIL_BotLogPrintf("%p chosen class %d\n", pBot, pBot->bot_class);
          return;
       }
@@ -253,7 +251,7 @@ void BotStartGame(bot_t *pBot) {
                    FakeClientCommand(pEdict, "menuselect", c_class, NULL);
 
                    // bot has now joined the game (doesn't need to be started)
-                   pBot->not_started = FALSE;
+                   pBot->not_started = false;
 
                    return;
            }
@@ -283,7 +281,7 @@ void BotStartGame(bot_t *pBot) {
                    FakeClientCommand(pEdict, "menuselect", c_class, NULL);
 
                    // bot has now joined the game (doesn't need to be started)
-                   pBot->not_started = FALSE;
+                   pBot->not_started = false;
 
                    return;
            }
@@ -340,7 +338,7 @@ void BotStartGame(bot_t *pBot) {
                    FakeClientCommand(pEdict, "selectchar", c_class, NULL);
 
                    // bot has now joined the game (doesn't need to be started)
-                   pBot->not_started = FALSE;
+                   pBot->not_started = false;
 
                    return;
    } else if(mod_id == FRONTLINE_DLL) {
@@ -348,7 +346,7 @@ void BotStartGame(bot_t *pBot) {
    } else {
            // otherwise, don't need to do anything to start game...
            // UTIL_HostSay(INDEXENT(1),0,"wtf!");
-           pBot->not_started = FALSE;
+           pBot->not_started = false;
    }}*/
 }
 
@@ -369,7 +367,7 @@ static int BotPickFavoredTeam_TFC(const int faveClass) {
       //		i, is_team[i], max_team_players[i], playersPerTeam[i]);
 
       // skip inactive/non-valid teams
-      if (is_team[i] == FALSE)
+      if (is_team[i] == false)
          continue;
 
       // skip teams that are full already

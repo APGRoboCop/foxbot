@@ -1,5 +1,3 @@
-// This is an open source non-commercial project. Dear PVS-Studio, please check it.
-// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // FoXBot - AI Bot for Halflife's Team Fortress Classic
 //
@@ -29,7 +27,6 @@
 
 #include "extdll.h"
 #include "enginecallback.h"
-
 
 #include "bot.h"
 #include "engine.h"
@@ -67,7 +64,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, const DWORD fdwReason, LPVOID lpvReserve
       	FreeLibrary(h_Library);
    }
 
-   return TRUE;
+   return true;
 }
 #endif
 

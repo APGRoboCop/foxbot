@@ -1,5 +1,3 @@
-// This is an open source non-commercial project. Dear PVS-Studio, please check it.
-// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // FoXBot - AI Bot for Halflife's Team Fortress Classic
 //
@@ -97,19 +95,19 @@ extern bot_t bots[32];
 extern bool botJustJoined[MAX_BOTS]; // tracks if bot is new to the game
 
 // bot settings //////////////////
-bool defensive_chatter = TRUE;
-bool offensive_chatter = TRUE;
-bool b_observer_mode = FALSE;
-bool b_botdontshoot = FALSE;
-bool b_botdontmove = FALSE;
+bool defensive_chatter = true;
+bool offensive_chatter = true;
+bool b_observer_mode = false;
+bool b_botdontshoot = false;
+bool b_botdontmove = false;
 int bot_chat = 500;
 int bot_allow_moods = 1;  // whether bots can have different personality traits or not
 int bot_allow_humour = 1; // whether bots can choose to do daft things or not
-bool bot_can_use_teleporter = TRUE;
-bool bot_can_build_teleporter = TRUE;
+bool bot_can_use_teleporter = true;
+bool bot_can_build_teleporter = true;
 int bot_use_grenades = 2;
-bool bot_team_balance = FALSE;
-static bool bot_bot_balance = FALSE;
+bool bot_team_balance = false;
+static bool bot_bot_balance = false;
 int min_bots = -1;
 int max_bots = -1;
 static int bot_total_varies = 0;
@@ -118,8 +116,8 @@ int botskill_upper = 1;
 int botskill_lower = 3;
 int bot_skill_1_aim = 20;   // accuracy for skill 1 bots
 int bot_aim_per_skill = 10; // accuracy modifier for bots from skill 1 downwards
-bool bot_xmas = FALSE;      // silly stuff
-bool g_bot_debug = FALSE;
+bool bot_xmas = false;      // silly stuff
+bool g_bot_debug = false;
 int spectate_debug = 0; // spectators can trigger debug messages from bots
 
 // waypoint author
@@ -163,16 +161,16 @@ static float bot_check_time = 30.0f;
 static edict_t *first_player = nullptr;
 int num_bots = 0;
 int prev_num_bots = 0;
-bool g_GameRules = FALSE;
+bool g_GameRules = false;
 edict_t *clients[32];
 static float welcome_time = 0.0;
 static int welcome_index = -1;
-static bool welcome_sent = FALSE;
+static bool welcome_sent = false;
 static int g_menu_waypoint;
 static int g_menu_state = 0;
 
 float is_team_play = 0.0;
-bool checked_teamplay = FALSE;
+bool checked_teamplay = false;
 // char team_names[MAX_TEAMS][MAX_TEAMNAME_LENGTH];
 int num_teams = 0;
 edict_t *pent_info_tfdetect = nullptr;
@@ -188,23 +186,23 @@ int num_flags = 0;
 
 static FILE *bot_cfg_fp = nullptr;
 // changed..cus we set it else where
-static bool need_to_open_cfg = FALSE;
-static bool need_to_open_cfg2 = FALSE;
+static bool need_to_open_cfg = false;
+static bool need_to_open_cfg2 = false;
 static int cfg_file = 1;
 
 // my display stuff...
-static bool display_bot_vars = TRUE;
+static bool display_bot_vars = true;
 static float display_start_time;
-static bool script_loaded = FALSE;
-static bool script_parsed = FALSE;
+static bool script_loaded = false;
+static bool script_parsed = false;
 
 static short scanpos;
 static bool player_vis[8];
 
 static float bot_cfg_pause_time = 0.0;
 static float respawn_time = 0.0;
-static bool spawn_time_reset = FALSE;
-bool botcamEnabled = FALSE;
+static bool spawn_time_reset = false;
+bool botcamEnabled = false;
 
 //int flf_bug_fix;
 //int flf_bug_check;
@@ -516,10 +514,10 @@ static void BotBalanceTeams_Casual() {
 
    // find out which teams have player limits, and are full
    int i;
-   bool team_is_full[4] = {FALSE, FALSE, FALSE, FALSE};
+   bool team_is_full[4] = {false, false, false, false};
    for (i = 0; i < 4; i++) {
       if (max_team_players[i] > 0 && playersPerTeam[i] >= max_team_players[i])
-         team_is_full[i] = TRUE;
+         team_is_full[i] = true;
    }
 
    /*	UTIL_BotLogPrintf("team_is_full[] - 0:%d, 1:%d, 2:%d, 3:%d\n",
@@ -531,7 +529,7 @@ static void BotBalanceTeams_Casual() {
    int size_difference = -1;
    for (i = 0; i < 3; i++) {
       // stop comparing if the next team isn't used on this map
-      if (is_team[i + 1] == FALSE)
+      if (is_team[i + 1] == false)
          break;
 
       // is this team bigger than the next one?
@@ -574,10 +572,10 @@ static void BotBalanceTeams_Casual() {
          msg[15] = '\0';
          //	FakeClientCommand(bots[i].pEdict, "jointeam", msg, NULL);
          bots[i].bot_team = smallest_team; // choose your team
-         bots[i].not_started = TRUE;       // join the team, pick a class
+         bots[i].not_started = true;       // join the team, pick a class
          bots[i].start_action = MSG_TFC_IDLE;
          bots[i].create_time = gpGlobals->time + 2.0;
-         ClearKickedBotsData(i, FALSE);
+         ClearKickedBotsData(i, false);
 
          //	UTIL_BotLogPrintf("joined team:%d, vteam:%d, team:%d\n",
          //		smallest_team, bots[i].pEdict->v.team, bots[i].bot_team);
@@ -596,15 +594,15 @@ static bool BotBalanceTeams(const int a, const int b) {
             snprintf(msg, 32, "%d", b);
             //	FakeClientCommand(bots[i].pEdict, "jointeam", msg, NULL);
             bots[i].bot_team = b;       // choose your team
-            bots[i].not_started = TRUE; // join the team, pick a class
+            bots[i].not_started = true; // join the team, pick a class
             bots[i].start_action = MSG_TFC_IDLE;
             bots[i].create_time = gpGlobals->time + 2.0;
-            ClearKickedBotsData(i, FALSE);
-            return TRUE;
+            ClearKickedBotsData(i, false);
+            return true;
          }
       }
    }
-   return FALSE;
+   return false;
 }
 
 // used with the bot_bot_balance setting
@@ -635,15 +633,15 @@ static bool BBotBalanceTeams(const int a, const int b) {
             snprintf(msg, 32, "%d", b);
             //	FakeClientCommand(bots[i].pEdict, "jointeam", msg, NULL);
             bots[i].bot_team = b;       // choose your team
-            bots[i].not_started = TRUE; // join the team, pick a class
+            bots[i].not_started = true; // join the team, pick a class
             bots[i].start_action = MSG_TFC_IDLE;
             bots[i].create_time = gpGlobals->time + 2.0;
-            ClearKickedBotsData(i, FALSE);
-            return TRUE;
+            ClearKickedBotsData(i, false);
+            return true;
          }
       }
    }
-   return FALSE;
+   return false;
 }
 
 // This function will balance the human players amongst the teams by forcing
@@ -651,21 +649,21 @@ static bool BBotBalanceTeams(const int a, const int b) {
 static bool HBalanceTeams(const int a, const int b) {
    if (playersPerTeam[a - 1] - 1 > playersPerTeam[b - 1] && (max_team_players[b - 1] > playersPerTeam[b - 1] || max_team_players[b - 1] == 0) && is_team[b - 1]) {
       for (int i = 1; i <= 32; i++) {
-         bool not_bot = TRUE;
+         bool not_bot = true;
          for (int j = 31; j >= 0; j--) {
             if (bots[j].is_used && bots[j].pEdict == INDEXENT(i))
-               not_bot = FALSE;
+               not_bot = false;
          }
 
          if (not_bot && INDEXENT(i) != nullptr) {
             if (INDEXENT(i)->v.team == a && INDEXENT(i)->v.netname != 0) {
                CLIENT_COMMAND(INDEXENT(i), UTIL_VarArgs("jointeam %d\n", b));
-               return TRUE;
+               return true;
             }
          }
       }
    }
-   return FALSE;
+   return false;
 }
 
 // This function is called once upon startup
@@ -753,11 +751,11 @@ void chatClass::readChatFile() {
 
       // watch out for the chat section headers
       if (buffer[0] == '[') {
-         bool newSectionFound = FALSE;
+         bool newSectionFound = false;
          for (int i = 0; i < TOTAL_CHAT_TYPES; i++) {
             if (buffer == this->sectionNames[i]) {
                chat_section = i;
-               newSectionFound = TRUE;
+               newSectionFound = true;
             }
          }
          if (newSectionFound)
@@ -794,10 +792,10 @@ void chatClass::pickRandomChatString(char *msg, const size_t maxLength, const in
    // try to pick a string that hasn't been used recently
    while (recentCount < 5) {
       randomIndex = random_long(0, this->stringCount[chatSection] - 1);
-      bool used = FALSE;
+      bool used = false;
       for (i = 0; i < 5; i++) {
          if (this->recentStrings[chatSection][i] == randomIndex)
-            used = TRUE;
+            used = true;
       }
 
       if (used)
@@ -860,13 +858,13 @@ int DispatchSpawn(edict_t *pent) {
          }
 
          max_teams = 0;
-         is_team[0] = FALSE;
-         is_team[1] = FALSE;
-         is_team[2] = FALSE;
-         is_team[3] = FALSE;
+         is_team[0] = false;
+         is_team[1] = false;
+         is_team[2] = false;
+         is_team[3] = false;
          num_flags = 0;
 
-         g_waypoint_cache = FALSE;
+         g_waypoint_cache = false;
          if (g_waypoint_on || g_area_def) {
             // precache stuff here
             PRECACHE_MODEL("sprites/dot.spr");
@@ -891,7 +889,7 @@ int DispatchSpawn(edict_t *pent) {
             PRECACHE_SOUND("common/wpn_moveselect.wav"); // path add/delete cancel
             PRECACHE_SOUND("common/wpn_denyselect.wav"); // path add/delete error
 
-            g_waypoint_cache = TRUE;
+            g_waypoint_cache = true;
          }
 
          PRECACHE_MODEL("models/presentlg.mdl");
@@ -904,15 +902,15 @@ int DispatchSpawn(edict_t *pent) {
 
          m_spriteTexture = PRECACHE_MODEL("sprites/lgtning.spr");
 
-         g_GameRules = TRUE;
+         g_GameRules = true;
 
          is_team_play = 0.0;
          //	memset(team_names, 0, sizeof(team_names));
          num_teams = 0;
-         checked_teamplay = FALSE;
+         checked_teamplay = false;
 
          respawn_time = 0.0;
-         spawn_time_reset = FALSE;
+         spawn_time_reset = false;
 
          prev_num_bots = num_bots;
          num_bots = 0;
@@ -1007,9 +1005,9 @@ void DispatchThink(edict_t *pent) {
             UTIL_TraceLine(pent->v.euser1->v.origin + pent->v.euser1->v.view_ofs, pBot->enemy.ptr->v.origin + Vector(xx, yy, zz), dont_ignore_monsters, dont_ignore_glass, pent->v.euser1, &tr);
 
             if (tr.pHit == pBot->enemy.ptr || tr.flFraction == 1.0)
-               player_vis[scanpos] = TRUE;
+               player_vis[scanpos] = true;
             else
-               player_vis[scanpos] = FALSE;
+               player_vis[scanpos] = false;
             scanpos++;
             if (scanpos > 7) // 7
                scanpos = 0;
@@ -1213,7 +1211,7 @@ void DispatchKeyValue(edict_t *pentKeyvalue, KeyValueData *pkvd) {
             flags[flag_index].team_no = atoi(pkvd->szValue);
 
          if (strcmp(pkvd->szKeyName, "mdl") == 0 && (strcmp(pkvd->szValue, "models/flag.mdl") == 0 || strcmp(pkvd->szValue, "models/keycard.mdl") == 0 || strcmp(pkvd->szValue, "models/ball.mdl") == 0)) {
-            flags[flag_index].mdl_match = TRUE;
+            flags[flag_index].mdl_match = true;
             num_flags++;
          }
       } else if (pent_item_tfgoal == nullptr) {
@@ -1221,7 +1219,7 @@ void DispatchKeyValue(edict_t *pentKeyvalue, KeyValueData *pkvd) {
             if (num_flags < MAX_FLAGS) {
                pent_item_tfgoal = pentKeyvalue;
 
-               flags[num_flags].mdl_match = FALSE;
+               flags[num_flags].mdl_match = false;
                flags[num_flags].team_no = 0; // any team unless specified
                flags[num_flags].edict = pentKeyvalue;
 
@@ -1237,7 +1235,7 @@ void DispatchKeyValue(edict_t *pentKeyvalue, KeyValueData *pkvd) {
          if (strcmp(pkvd->szKeyName, "team_no") == 0) {
             const int value = atoi(pkvd->szValue);
 
-            is_team[value - 1] = TRUE;
+            is_team[value - 1] = true;
             if (value > max_teams)
                max_teams = value;
          }
@@ -1293,7 +1291,7 @@ BOOL ClientConnect(edict_t *pEntity, const char *pszName, const char *pszAddress
    if (!mr_meta)
       return (*other_gFunctionTable.pfnClientConnect)(pEntity, pszName, pszAddress, szRejectReason);
    else
-      RETURN_META_VALUE(MRES_HANDLED, TRUE);
+      RETURN_META_VALUE(MRES_HANDLED, true);
 }
 
 BOOL ClientConnect_Post(edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[128]) {
@@ -1316,7 +1314,7 @@ BOOL ClientConnect_Post(edict_t *pEntity, const char *pszName, const char *pszAd
       snprintf(msg, 254, "[FOXBOT] This server is running FoxBot (v%d.%d), get it at www.apg-clan.org\n", VER_MAJOR, VER_MINOR);
       CLIENT_PRINTF(pEntity, print_console, msg);
    }
-   RETURN_META_VALUE(MRES_HANDLED, TRUE);
+   RETURN_META_VALUE(MRES_HANDLED, true);
 }
 
 void ClientDisconnect(edict_t *pEntity) {
@@ -1341,8 +1339,8 @@ void ClientDisconnect(edict_t *pEntity) {
       if (index != -1) {
          // someone has kicked this bot off of the server...
 
-         ClearKickedBotsData(index, FALSE);
-         bots[index].is_used = FALSE;               // this bot index is now free to re-use
+         ClearKickedBotsData(index, false);
+         bots[index].is_used = false;               // this bot index is now free to re-use
          bots[index].f_kick_time = gpGlobals->time; // save the kicked time
       } else {
          i = 0;
@@ -1467,9 +1465,9 @@ void ClientCommand(edict_t *pEntity) {
             if (*arg1 != 0) {
                int temp = atoi(arg1);
                if (temp)
-                  bot_team_balance = TRUE;
+                  bot_team_balance = true;
                else
-                  bot_team_balance = FALSE;
+                  bot_team_balance = false;
             }
          }
          if (bot_team_balance)
@@ -1484,9 +1482,9 @@ void ClientCommand(edict_t *pEntity) {
             if (*arg1 != 0) {
                int temp = atoi(arg1);
                if (temp)
-                  bot_bot_balance = TRUE;
+                  bot_bot_balance = true;
                else
-                  bot_bot_balance = FALSE;
+                  bot_bot_balance = false;
             }
          }
 
@@ -1510,9 +1508,9 @@ void ClientCommand(edict_t *pEntity) {
          if (arg1 != nullptr && *arg1 != 0) {
             int temp = atoi(arg1);
             if (temp)
-               b_observer_mode = TRUE;
+               b_observer_mode = true;
             else
-               b_observer_mode = FALSE;
+               b_observer_mode = false;
          }
 
          if (b_observer_mode)
@@ -1560,9 +1558,9 @@ void ClientCommand(edict_t *pEntity) {
             if (*arg1 != 0) {
                int temp = atoi(arg1);
                if (temp)
-                  b_botdontshoot = TRUE;
+                  b_botdontshoot = true;
                else
-                  b_botdontshoot = FALSE;
+                  b_botdontshoot = false;
             }
          }
 
@@ -1579,9 +1577,9 @@ void ClientCommand(edict_t *pEntity) {
             if (*arg1 != 0) {
                int temp = atoi(arg1);
                if (temp)
-                  b_botdontmove = TRUE;
+                  b_botdontmove = true;
                else
-                  b_botdontmove = FALSE;
+                  b_botdontmove = false;
             }
          }
 
@@ -1639,7 +1637,7 @@ void ClientCommand(edict_t *pEntity) {
          } else {
             index = 0;
 
-            while (bots[index].is_used == FALSE && index < 32)
+            while (bots[index].is_used == false && index < 32)
                index++;
 
             if (index < 32) {
@@ -1658,7 +1656,7 @@ void ClientCommand(edict_t *pEntity) {
             else {
                KillCamera(pEntity);
                CreateCamera(pEntity, pBot);
-               botcamEnabled = TRUE;
+               botcamEnabled = true;
             }
          }
          if (mr_meta)
@@ -1666,7 +1664,7 @@ void ClientCommand(edict_t *pEntity) {
          return;
       } else if (FStrEq(pcmd, "nobotcam")) {
          KillCamera(pEntity);
-         botcamEnabled = FALSE;
+         botcamEnabled = false;
          if (mr_meta)
             RETURN_META(MRES_SUPERCEDE);
          return;
@@ -1703,22 +1701,22 @@ void ClientCommand(edict_t *pEntity) {
          return;
       } else if (FStrEq(pcmd, "waypoint")) {
          if (FStrEq(arg1, "on")) {
-            g_waypoint_on = TRUE;
+            g_waypoint_on = true;
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "waypoints are ON\n");
          } else if (FStrEq(arg1, "off")) {
-            g_waypoint_on = FALSE;
-            g_path_oneway = FALSE;
-            g_path_twoway = FALSE;
+            g_waypoint_on = false;
+            g_path_oneway = false;
+            g_path_twoway = false;
 
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "waypoints are OFF\n");
          } else if (FStrEq(arg1, "add")) {
             if (!g_waypoint_on)
-               g_waypoint_on = TRUE; // turn waypoints on if off
+               g_waypoint_on = true; // turn waypoints on if off
 
             WaypointAdd(pEntity);
          } else if (FStrEq(arg1, "delete") && g_waypoint_on) {
             if (!g_waypoint_on)
-               g_waypoint_on = TRUE; // turn waypoints on if off
+               g_waypoint_on = true; // turn waypoints on if off
 
             WaypointDelete(pEntity);
          } else if (FStrEq(arg1, "save") && g_waypoint_on) {
@@ -1734,14 +1732,14 @@ void ClientCommand(edict_t *pEntity) {
                g_menu_waypoint = index;
                g_menu_state = MENU_1;
 
-               UTIL_ShowMenu(pEntity, 0x7F, -1, FALSE, show_menu_1);
-               //	UTIL_ShowMenu(pEntity, 0x3F, -1, FALSE, show_menu_1);
+               UTIL_ShowMenu(pEntity, 0x7F, -1, false, show_menu_1);
+               //	UTIL_ShowMenu(pEntity, 0x3F, -1, false, show_menu_1);
             }
          } else if (FStrEq(arg1, "info")) {
             WaypointPrintInfo(pEntity);
          } else if (FStrEq(arg1, "autobuild")) {
             if (!g_waypoint_on)
-               g_waypoint_on = TRUE; // turn waypoints on if off
+               g_waypoint_on = true; // turn waypoints on if off
 
             WaypointAutoBuild(pEntity);
          } else {
@@ -1756,10 +1754,10 @@ void ClientCommand(edict_t *pEntity) {
          return;
       } else if (FStrEq(pcmd, "autowaypoint")) {
          if (FStrEq(arg1, "on")) {
-            g_auto_waypoint = TRUE;
-            g_waypoint_on = TRUE; // turn this on just in case
+            g_auto_waypoint = true;
+            g_waypoint_on = true; // turn this on just in case
          } else if (FStrEq(arg1, "off")) {
-            g_auto_waypoint = FALSE;
+            g_auto_waypoint = false;
          }
 
          if (g_auto_waypoint)
@@ -1775,11 +1773,11 @@ void ClientCommand(edict_t *pEntity) {
       } else if (FStrEq(pcmd, "bot_debug")) {
          if (FStrEq(arg1, "on")) {
             CVAR_SET_STRING("developer", "1");
-            g_bot_debug = TRUE;
+            g_bot_debug = true;
 
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "bot debugging is ON\n");
          } else if (FStrEq(arg1, "off")) {
-            g_bot_debug = FALSE;
+            g_bot_debug = false;
 
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "bot debugging is OFF\n");
             CVAR_SET_STRING("developer", "0");
@@ -1835,10 +1833,10 @@ void ClientCommand(edict_t *pEntity) {
          return;
       } else if (FStrEq(pcmd, "bot_xmas")) {
          if (FStrEq(arg1, "on")) {
-            bot_xmas = TRUE;
+            bot_xmas = true;
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "bot xmas is ON\n");
          } else if (FStrEq(arg1, "off")) {
-            bot_xmas = FALSE;
+            bot_xmas = false;
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "bot xmas is OFF\n");
          }
          if (mr_meta)
@@ -1865,10 +1863,10 @@ void ClientCommand(edict_t *pEntity) {
       } else if (FStrEq(pcmd, "bot_can_use_teleporter")) // bot_can_use_teleporter - by yuraj
       {
          if (FStrEq(arg1, "on")) {
-            bot_can_use_teleporter = TRUE;
+            bot_can_use_teleporter = true;
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "bot_can_use_teleporter is ON\n");
          } else if (FStrEq(arg1, "off")) {
-            bot_can_use_teleporter = FALSE;
+            bot_can_use_teleporter = false;
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "bot_can_use_teleporter is OFF\n");
          }
          if (mr_meta)
@@ -1877,10 +1875,10 @@ void ClientCommand(edict_t *pEntity) {
       } else if (FStrEq(pcmd, "bot_can_build_teleporter")) // bot_can_build_teleporter - by yuraj
       {
          if (FStrEq(arg1, "on")) {
-            bot_can_build_teleporter = TRUE;
+            bot_can_build_teleporter = true;
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "bot_can_build_teleporter is ON\n");
          } else if (FStrEq(arg1, "off")) {
-            bot_can_build_teleporter = FALSE;
+            bot_can_build_teleporter = false;
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "bot_can_build_teleporter is OFF\n");
          }
          if (mr_meta)
@@ -1888,16 +1886,16 @@ void ClientCommand(edict_t *pEntity) {
          return;
       } else if (FStrEq(pcmd, "locate_waypoint")) {
          if (FStrEq(arg1, "on")) {
-            g_find_waypoint = TRUE;
-            g_path_waypoint = TRUE;
-            g_waypoint_on = TRUE; // turn this on just in case
+            g_find_waypoint = true;
+            g_path_waypoint = true;
+            g_waypoint_on = true; // turn this on just in case
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "locate waypoint is ON\n");
          } else if (FStrEq(arg1, "off")) {
-            g_find_waypoint = FALSE;
+            g_find_waypoint = false;
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "locate waypoint is OFF\n");
          } else {
-            g_find_waypoint = TRUE;
-            g_waypoint_on = TRUE; // turn this on just in case
+            g_find_waypoint = true;
+            g_waypoint_on = true; // turn this on just in case
 
             int l_waypoint = atoi(arg1);
             if (l_waypoint <= num_waypoints) {
@@ -1912,13 +1910,13 @@ void ClientCommand(edict_t *pEntity) {
          return;
       } else if (FStrEq(pcmd, "pathwaypoint_connect")) {
          if (FStrEq(arg1, "on")) {
-            g_path_waypoint = TRUE;
-            g_waypoint_on = TRUE; // turn this on just in case
-            g_path_connect = TRUE;
+            g_path_waypoint = true;
+            g_waypoint_on = true; // turn this on just in case
+            g_path_connect = true;
 
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "pathwaypoint auto connect is ON\n");
          } else if (FStrEq(arg1, "off")) {
-            g_path_connect = FALSE;
+            g_path_connect = false;
 
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "pathwaypoint auto connect is OFF\n");
          }
@@ -1929,15 +1927,15 @@ void ClientCommand(edict_t *pEntity) {
          if (FStrEq(arg1, "on")) {
             wpt1 = -1;
             wpt2 = -1;
-            g_path_waypoint = TRUE;
-            g_waypoint_on = TRUE; // turn this on just in case
-            g_path_connect = FALSE;
-            g_path_oneway = TRUE;
-            g_path_twoway = FALSE;
+            g_path_waypoint = true;
+            g_waypoint_on = true; // turn this on just in case
+            g_path_connect = false;
+            g_path_oneway = true;
+            g_path_twoway = false;
 
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "pathrun oneway ON\n");
          } else if (FStrEq(arg1, "off")) {
-            g_path_oneway = FALSE;
+            g_path_oneway = false;
 
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "pathrun oneway OFF\n");
          }
@@ -1948,15 +1946,15 @@ void ClientCommand(edict_t *pEntity) {
          if (FStrEq(arg1, "on")) {
             wpt1 = -1;
             wpt2 = -1;
-            g_path_waypoint = TRUE;
-            g_waypoint_on = TRUE; // turn this on just in case
-            g_path_connect = FALSE;
-            g_path_oneway = FALSE;
-            g_path_twoway = TRUE;
+            g_path_waypoint = true;
+            g_waypoint_on = true; // turn this on just in case
+            g_path_connect = false;
+            g_path_oneway = false;
+            g_path_twoway = true;
 
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "pathrun twoway ON\n");
          } else if (FStrEq(arg1, "off")) {
-            g_path_twoway = FALSE;
+            g_path_twoway = false;
 
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "pathrun twoway OFF\n");
          }
@@ -1965,12 +1963,12 @@ void ClientCommand(edict_t *pEntity) {
          return;
       } else if (FStrEq(pcmd, "pathwaypoint")) {
          if (FStrEq(arg1, "on")) {
-            g_path_waypoint = TRUE;
-            g_waypoint_on = TRUE; // turn this on just in case
+            g_path_waypoint = true;
+            g_waypoint_on = true; // turn this on just in case
 
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "pathwaypoint is ON\n");
          } else if (FStrEq(arg1, "off")) {
-            g_path_waypoint = FALSE;
+            g_path_waypoint = false;
 
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "pathwaypoint is OFF\n");
          } else if (FStrEq(arg1, "create1") && g_path_waypoint) {
@@ -1988,18 +1986,18 @@ void ClientCommand(edict_t *pEntity) {
          return;
       } else if (FStrEq(pcmd, "area")) {
          if (FStrEq(arg1, "on")) {
-            g_area_def = TRUE;
+            g_area_def = true;
 
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "area is ON\n");
          } else if (FStrEq(arg1, "off")) {
-            g_area_def = FALSE;
+            g_area_def = false;
 
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "area is OFF\n");
          } else if (FStrEq(arg1, "add")) {
-            g_area_def = TRUE;
+            g_area_def = true;
             AreaDefCreate(pEntity);
          } else if (FStrEq(arg1, "delete") && g_area_def) {
-            g_area_def = TRUE;
+            g_area_def = true;
             AreaDefDelete(pEntity);
          } else if (FStrEq(arg1, "save") && g_area_def) {
             AreaDefSave();
@@ -2044,13 +2042,13 @@ void ClientCommand(edict_t *pEntity) {
             }
             AreaDefPrintInfo(pEntity);
          } else if (FStrEq(arg1, "autobuild1")) {
-            g_area_def = TRUE;
+            g_area_def = true;
 
             AreaAutoBuild1();
 
             // ClientPrint(pEntity, HUD_PRINTNOTIFY, "area is ON\n");
          } else if (FStrEq(arg1, "merge")) {
-            g_area_def = TRUE;
+            g_area_def = true;
 
             AreaAutoMerge();
 
@@ -2065,14 +2063,14 @@ void ClientCommand(edict_t *pEntity) {
             if (FStrEq(arg1, "1")) // team specific...
             {
                g_menu_state = MENU_2; // display team specific menu...
-               UTIL_ShowMenu(pEntity, 0x1F, -1, FALSE, show_menu_2);
+               UTIL_ShowMenu(pEntity, 0x1F, -1, false, show_menu_2);
                if (mr_meta)
                   RETURN_META(MRES_SUPERCEDE);
                return;
             } else if (FStrEq(arg1, "2")) // display locations menu
             {
                g_menu_state = MENU_3;
-               UTIL_ShowMenu(pEntity, 0x07, -1, FALSE, show_menu_3);
+               UTIL_ShowMenu(pEntity, 0x07, -1, false, show_menu_3);
 
                if (mr_meta)
                   RETURN_META(MRES_SUPERCEDE);
@@ -2080,7 +2078,7 @@ void ClientCommand(edict_t *pEntity) {
             } else if (FStrEq(arg1, "3")) // display items menu
             {
                g_menu_state = MENU_4;
-               UTIL_ShowMenu(pEntity, 0x0F, -1, FALSE, show_menu_4);
+               UTIL_ShowMenu(pEntity, 0x0F, -1, false, show_menu_4);
 
                if (mr_meta)
                   RETURN_META(MRES_SUPERCEDE);
@@ -2088,7 +2086,7 @@ void ClientCommand(edict_t *pEntity) {
             } else if (FStrEq(arg1, "4")) // display actions menu 1
             {
                g_menu_state = MENU_5;
-               UTIL_ShowMenu(pEntity, 0xFF, -1, FALSE, show_menu_5);
+               UTIL_ShowMenu(pEntity, 0xFF, -1, false, show_menu_5);
 
                if (mr_meta)
                   RETURN_META(MRES_SUPERCEDE);
@@ -2096,7 +2094,7 @@ void ClientCommand(edict_t *pEntity) {
             } else if (FStrEq(arg1, "5")) // display actions menu 2
             {
                g_menu_state = MENU_6;
-               UTIL_ShowMenu(pEntity, 0xFF, -1, FALSE, show_menu_6);
+               UTIL_ShowMenu(pEntity, 0xFF, -1, false, show_menu_6);
 
                if (mr_meta)
                   RETURN_META(MRES_SUPERCEDE);
@@ -2104,7 +2102,7 @@ void ClientCommand(edict_t *pEntity) {
             } else if (FStrEq(arg1, "6")) // control points
             {
                g_menu_state = MENU_7;
-               UTIL_ShowMenu(pEntity, 0x1FF, -1, FALSE, show_menu_7);
+               UTIL_ShowMenu(pEntity, 0x1FF, -1, false, show_menu_7);
                if (mr_meta)
                   RETURN_META(MRES_SUPERCEDE);
                return;
@@ -2348,31 +2346,31 @@ void ClientCommand(edict_t *pEntity) {
       // DREVIL CVARS
       else if (FStrEq(pcmd, "defensive_chatter")) {
          if (FStrEq(arg1, "on")) {
-            defensive_chatter = TRUE;
+            defensive_chatter = true;
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "Defensive Chatter is ON\n");
          } else if (FStrEq(arg1, "off")) {
-            defensive_chatter = FALSE;
+            defensive_chatter = false;
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "Defensive Chatter is OFF\n");
          } else if (FStrEq(arg1, "1")) {
-            defensive_chatter = TRUE;
+            defensive_chatter = true;
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "Defensive Chatter is ON\n");
          } else if (FStrEq(arg1, "0")) {
-            defensive_chatter = FALSE;
+            defensive_chatter = false;
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "Defensive Chatter is OFF\n");
          }
          return;
       } else if (FStrEq(pcmd, "offensive_chatter")) {
          if (FStrEq(arg1, "on")) {
-            offensive_chatter = TRUE;
+            offensive_chatter = true;
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "Offensive Chatter is ON\n");
          } else if (FStrEq(arg1, "off")) {
-            offensive_chatter = FALSE;
+            offensive_chatter = false;
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "Offensive Chatter is OFF\n");
          } else if (FStrEq(arg1, "1")) {
-            offensive_chatter = TRUE;
+            offensive_chatter = true;
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "Offensive Chatter is ON\n");
          } else if (FStrEq(arg1, "0")) {
-            offensive_chatter = FALSE;
+            offensive_chatter = false;
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "Offensive Chatter is OFF\n");
          }
          return;
@@ -2381,25 +2379,25 @@ void ClientCommand(edict_t *pEntity) {
                                       {
                                                       if(FStrEq(arg1, "on"))
                                                       {
-                                                                      frag_commander = TRUE;
+                                                                      frag_commander = true;
                                                                       ClientPrint(pEntity, HUD_PRINTNOTIFY,
                                                                                       "Score-based commander is ON\n");
                                                       }
                                                       else if(FStrEq(arg1, "off"))
                                                       {
-                                                                      frag_commander = FALSE;
+                                                                      frag_commander = false;
                                                                       ClientPrint(pEntity, HUD_PRINTNOTIFY,
                                                                                       "Score-based commander is OFF\n");
                                                       }
                                                       else if(FStrEq(arg1, "1"))
                                                       {
-                                                                      frag_commander = TRUE;
+                                                                      frag_commander = true;
                                                                       ClientPrint(pEntity, HUD_PRINTNOTIFY,
                                                                                       "Score-based commander is ON\n");
                                                       }
                                                       else if(FStrEq(arg1, "0"))
                                                       {
-                                                                      frag_commander = FALSE;
+                                                                      frag_commander = false;
                                                                       ClientPrint(pEntity, HUD_PRINTNOTIFY,
                                                                                       "Score-based commander is OFF\n");
                                                       }
@@ -2431,24 +2429,19 @@ void StartFrame() {
       clientdata_s cd;
       char msg[256];
       int count;
-
       // if a new map has started then (MUST BE FIRST IN StartFrame)...
       // if((gpGlobals->time + 0.1) < previous_time)
       if (strcmp(STRING(gpGlobals->mapname), prevmapname) != 0) {
          char filename[256];
          char mapname[64];
-
          first_player = nullptr;
-         display_bot_vars = TRUE;
+         display_bot_vars = true;
          display_start_time = gpGlobals->time + 10;
-
-         need_to_open_cfg = TRUE;
-
+         need_to_open_cfg = true;
          // check if mapname_bot.cfg file exists...
          if (gpGlobals->time + 0.1 < previous_time) {
             strcpy(mapname, STRING(gpGlobals->mapname));
             strcat(mapname, "_bot.cfg");
-
             bot_cfg_fp = nullptr;
             UTIL_BuildFileName(filename, 255, "configs", mapname);
             bot_cfg_fp = fopen(filename, "r");
@@ -2457,11 +2450,10 @@ void StartFrame() {
                UTIL_BuildFileName(filename, 255, "default.cfg", nullptr);
                bot_cfg_fp = fopen(filename, "r");
             }
-
             if (bot_cfg_fp != nullptr) {
 
                for (index = 0; index < 32; index++) {
-                  bots[index].is_used = FALSE;
+                  bots[index].is_used = false;
                   bots[index].respawn_state = 0;
                   bots[index].f_kick_time = 0.0;
                }
@@ -2472,17 +2464,15 @@ void StartFrame() {
                // mark the bots as needing to be respawned...
                for (index = 0; index < 32; index++) {
                   if (count >= prev_num_bots) {
-                     bots[index].is_used = FALSE;
+                     bots[index].is_used = false;
                      bots[index].respawn_state = 0;
                      bots[index].f_kick_time = 0.0;
                   }
-
                   if (bots[index].is_used) // is this slot used?
                   {
                      bots[index].respawn_state = RESPAWN_NEED_TO_RESPAWN;
                      count++;
                   }
-
                   // check for any bots that were very recently kicked...
                   if (bots[index].f_kick_time + 5.0 > previous_time) {
                      bots[index].respawn_state = RESPAWN_NEED_TO_RESPAWN;
@@ -2490,7 +2480,6 @@ void StartFrame() {
                   } else
                      bots[index].f_kick_time = 0.0; // reset to prevent false spawns later
                }
-
                // set the respawn time
                if (IS_DEDICATED_SERVER())
                   respawn_time = gpGlobals->time + 10.0;
@@ -2498,16 +2487,13 @@ void StartFrame() {
                   respawn_time = gpGlobals->time + 20.0;
             }
          }
-
          // start updating client data again
          client_update_time = gpGlobals->time + 10.0;
-
          bot_check_time = gpGlobals->time + 30.0;
       }
       // end of config map check stuff.
-
       if (!IS_DEDICATED_SERVER()) {
-         if (welcome_index != -1 && welcome_sent == FALSE && welcome_time < 1.0) {
+         if (welcome_index != -1 && welcome_sent == false && welcome_time < 1.0) {
             // are they out of observer mode yet?
             if (clients[welcome_index] != nullptr) {
                // welcome in 5 seconds
@@ -2515,48 +2501,38 @@ void StartFrame() {
                   welcome_time = gpGlobals->time + 5.0;
             }
          }
-
-         if (welcome_time > 0.0 && welcome_time < gpGlobals->time && welcome_sent == FALSE) {
+         if (welcome_time > 0.0 && welcome_time < gpGlobals->time && welcome_sent == false) {
             char welcome_msg[128] = "--FoxBot--\n\nwww.apg-clan.org\n";
             char version[32];
-
             sprintf(version, " v%d.%d \n", VER_MAJOR, VER_MINOR);
             strcat(welcome_msg, version);
-
             KewlHUDNotify(clients[welcome_index], welcome_msg);
-            welcome_sent = TRUE; // clear this so we only do it once
+            welcome_sent = true; // clear this so we only do it once
          }
       }
-
       if (client_update_time <= gpGlobals->time) {
          client_update_time = gpGlobals->time + 1.0;
 
          for (i = 0; i < 32; i++) {
             if (bots[i].is_used) {
                bzero (&cd,  sizeof cd);
-
                MDLL_UpdateClientData(bots[i].pEdict, 1, &cd);
-
                // see if a weapon was dropped...
                if (bots[i].bot_weapons != cd.weapons)
                   bots[i].bot_weapons = cd.weapons;
             }
          }
       }
-
       count = 0;
-
       UpdateFlagCarrierList(); // need to do this once per frame
 
       for (bot_index = 0; bot_index < gpGlobals->maxClients; bot_index++) {
          // if this bot is active, and the bot is not respawning
          if (bots[bot_index].is_used && bots[bot_index].respawn_state == RESPAWN_IDLE) {
             BotThink(&bots[bot_index]);
-
             count++;
          }
       }
-
       if (count > num_bots)
          num_bots = count;
 
@@ -2569,31 +2545,25 @@ void StartFrame() {
             }
          }
       }
-
       // are we currently respawning bots and is it time to spawn one yet?
       if (respawn_time > 1.0 && respawn_time <= gpGlobals->time) {
          index = 0;
-
          // find bot needing to be respawned...
          while (index < 32 && bots[index].respawn_state != RESPAWN_NEED_TO_RESPAWN)
             index++;
 
          if (index < 32) {
             bots[index].respawn_state = RESPAWN_IS_RESPAWNING;
-            bots[index].is_used = FALSE; // free up this slot
-
+            bots[index].is_used = false; // free up this slot
             // respawn 1 bot then wait a while(otherwise engine crashes)
             if (mod_id != TFC_DLL) {
                char c_skill[2];
-
                sprintf(c_skill, "%d", bots[index].bot_skill);
-
                BotCreate(nullptr, bots[index].skin, bots[index].name, c_skill, nullptr);
             } else {
                char c_skill[2];
                char c_team[2];
                char c_class[3];
-
                sprintf(c_skill, "%d", bots[index].bot_skill);
                sprintf(c_team, "%d", bots[index].bot_team);
                sprintf(c_class, "%d", bots[index].bot_class);
@@ -2605,7 +2575,6 @@ void StartFrame() {
             }
 
             respawn_time = gpGlobals->time + 2.0; // set next respawn time
-
             bot_check_time = gpGlobals->time + 5.0;
          } else
             respawn_time = 0.0;
@@ -2616,16 +2585,13 @@ void StartFrame() {
          {
             char filename[256];
             char mapname[64];
-
-            need_to_open_cfg = FALSE; // only do this once!!!
+            need_to_open_cfg = false; // only do this once!!!
             cfg_file = 1;
-            display_bot_vars = TRUE;
+            display_bot_vars = true;
             display_start_time = gpGlobals->time + 10;
-
             // check if mapname_bot.cfg file exists...
             strcpy(mapname, STRING(gpGlobals->mapname));
             strcat(mapname, "_bot.cfg");
-
             bot_cfg_fp = nullptr;
             UTIL_BuildFileName(filename, 255, "foxbot.cfg", nullptr);
             bot_cfg_fp = fopen(filename, "r");
@@ -2642,24 +2608,19 @@ void StartFrame() {
                else
                   ALERT(at_console, msg);
             }
-
             if (IS_DEDICATED_SERVER())
                bot_cfg_pause_time = gpGlobals->time + 2.0;
          }
-
          if (need_to_open_cfg2) // have we opened foxbot.cfg file yet?
          {
             bot_cfg_pause_time = gpGlobals->time + 1.0;
             char filename[256];
             char mapname[64];
-
-            need_to_open_cfg2 = FALSE; // only do this once!!!
+            need_to_open_cfg2 = false; // only do this once!!!
             cfg_file = 2;
-
             // check if mapname_bot.cfg file exists...
             strcpy(mapname, STRING(gpGlobals->mapname));
             strcat(mapname, "_bot.cfg");
-
             bot_cfg_fp = nullptr;
             UTIL_BuildFileName(filename, 255, "configs", mapname);
             bot_cfg_fp = fopen(filename, "r");
@@ -2697,11 +2658,10 @@ void StartFrame() {
             }
          }
          // end need config
-
          if (!IS_DEDICATED_SERVER() && !spawn_time_reset) {
             if (first_player != nullptr) {
                if (IsAlive(first_player)) {
-                  spawn_time_reset = TRUE;
+                  spawn_time_reset = true;
 
                   if (respawn_time >= 1.0)
                      respawn_time = min(respawn_time, gpGlobals->time + 1.0f);
@@ -2717,26 +2677,21 @@ void StartFrame() {
             display_start_time = 0;
          } else if (bot_cfg_fp == nullptr && display_bot_vars && display_start_time <= gpGlobals->time) {
             DisplayBotInfo();
-            display_bot_vars = FALSE;
+            display_bot_vars = false;
          }
       }
-
       // if time to check for server commands then do so...
       if (check_server_cmd <= gpGlobals->time && IS_DEDICATED_SERVER()) {
          check_server_cmd = gpGlobals->time + 1.0;
-
          char *cvar_bot = const_cast<char *>(CVAR_GET_STRING("bot"));
 
          if (cvar_bot && cvar_bot[0]) {
             char cmd_line[80];
             char *cmd, *arg1, *arg2, *arg3, *arg4;
-
             strcpy(cmd_line, cvar_bot);
-
             index = 0;
             cmd = cmd_line;
             arg1 = arg2 = arg3 = arg4 = nullptr;
-
             // skip to blank or end of string...
             while (cmd_line[index] != ' ' && cmd_line[index] != 0)
                index++;
@@ -2744,7 +2699,6 @@ void StartFrame() {
             if (cmd_line[index] == ' ') {
                cmd_line[index++] = 0;
                arg1 = &cmd_line[index];
-
                // skip to blank or end of string...
                while (cmd_line[index] != ' ' && cmd_line[index] != 0)
                   index++;
@@ -2752,7 +2706,6 @@ void StartFrame() {
                if (cmd_line[index] == ' ') {
                   cmd_line[index++] = 0;
                   arg2 = &cmd_line[index];
-
                   // skip to blank or end of string...
                   while (cmd_line[index] != ' ' && cmd_line[index] != 0)
                      index++;
@@ -2760,7 +2713,6 @@ void StartFrame() {
                   if (cmd_line[index] == ' ') {
                      cmd_line[index++] = 0;
                      arg3 = &cmd_line[index];
-
                      // skip to blank or end of string...
                      while (cmd_line[index] != ' ' && cmd_line[index] != 0)
                         index++;
@@ -2772,7 +2724,6 @@ void StartFrame() {
                   }
                }
             }
-
             if (strcmp(cmd, "addbot") == 0) {
                BotCreate(nullptr, arg1, arg2, arg3, arg4);
                bot_check_time = gpGlobals->time + 5.0;
@@ -2789,12 +2740,11 @@ void StartFrame() {
                   if (*arg1 != 0) {
                      int temp = atoi(arg1);
                      if (temp)
-                        bot_team_balance = TRUE;
+                        bot_team_balance = true;
                      else
-                        bot_team_balance = FALSE;
+                        bot_team_balance = false;
                   }
                }
-
                if (bot_team_balance)
                   printf("bot_team_balance (1) On\n");
                else
@@ -2804,12 +2754,11 @@ void StartFrame() {
                   if (*arg1 != 0) {
                      int temp = atoi(arg1);
                      if (temp)
-                        bot_bot_balance = TRUE;
+                        bot_bot_balance = true;
                      else
-                        bot_bot_balance = FALSE;
+                        bot_bot_balance = false;
                   }
                }
-
                if (bot_bot_balance)
                   printf("bot_bot_balance (1) On\n");
                else
@@ -2852,35 +2801,30 @@ void StartFrame() {
                BotUpdateSkillInaccuracy();
                return;
             }
-
             else if (strcmp(cmd, "bot_can_build_teleporter") == 0 && arg1 != nullptr) {
                if (strcmp(arg1, "on") == 0) {
-                  bot_can_build_teleporter = TRUE;
+                  bot_can_build_teleporter = true;
                   printf("bot_can_build_teleporter is ON\n");
                } else if (strcmp(arg1, "off") == 0) {
-                  bot_can_build_teleporter = FALSE;
+                  bot_can_build_teleporter = false;
                   printf("bot_can_build_teleporter is OFF\n");
                }
             }
-
             else if (strcmp(cmd, "bot_can_use_teleporter") == 0 && arg1 != nullptr) {
                if (strcmp(arg1, "on") == 0) {
-                  bot_can_use_teleporter = TRUE;
+                  bot_can_use_teleporter = true;
                   printf("bot_can_use_teleporter is ON\n");
                } else if (strcmp(arg1, "off") == 0) {
-                  bot_can_use_teleporter = FALSE;
+                  bot_can_use_teleporter = false;
                   printf("bot_can_use_teleporter is OFF\n");
                }
             }
-
             else if (strcmp(cmd, "bot_xmas") == 0 && arg1 != nullptr) {
                if (strcmp(arg1, "on") == 0) {
-                  bot_xmas = TRUE;
-
+                  bot_xmas = true;
                   printf("bot xmas is ON\n");
                } else if (strcmp(arg1, "off") == 0) {
-                  bot_xmas = FALSE;
-
+                  bot_xmas = false;
                   printf("bot xmas is OFF\n");
                }
             } else if (strcmp(cmd, "bot_allow_moods") == 0) {
@@ -2894,13 +2838,11 @@ void StartFrame() {
                while ((pent = FIND_ENTITY_IN_SPHERE(pent, Vector(0, 0, 0), 8192)) != nullptr && !FNullEnt(pent)) {
                   UTIL_SavePent(pent);
                }
-            }
-            // dedicated server input
+            }// dedicated server input
          }
          // moved this line down one
          CVAR_SET_STRING("bot", "");
       }
-
       // check if time to see if a bot needs to be created...
       if (bot_check_time < gpGlobals->time) {
          bot_check_time = gpGlobals->time + bot_create_interval;
@@ -2945,38 +2887,32 @@ void StartFrame() {
                }
             }
          }
-
          // sort out is_team, just in case the map ents are fucked
-         bool active_team_found = FALSE;
+         bool active_team_found = false;
          for (i = 0; i < 4; i++) // look for an active team
          {
             if (is_team[i])
-               active_team_found = TRUE;
+               active_team_found = true;
          }
          if (!active_team_found) // assume there are at least two teams
          {
-            is_team[0] = TRUE;
-            is_team[1] = TRUE;
-            is_team[2] = FALSE;
-            is_team[3] = FALSE;
+            is_team[0] = true;
+            is_team[1] = true;
+            is_team[2] = false;
+            is_team[3] = false;
          }
-         if (is_team[2] == FALSE && is_team[3] == TRUE)
-            is_team[3] = FALSE;
-
+         if (is_team[2] == false && is_team[3] == true)
+            is_team[3] = false;
          // check if the teams need balancing
          TeamBalanceCheck();
-
          // random simulation of clients joining/leaving
          if (bot_total_varies)
             varyBotTotal();
-
          // if there are currently less than the maximum number of players
          // then add another bot using the default skill level...
          if ((count < interested_bots || bot_total_varies == 0) && count < max_bots && max_bots != -1) {
-
             BotCreate(nullptr, nullptr, nullptr, nullptr, nullptr);
          }
-
          // do bot max_bot kick here...
          // if there are currently more than the minimum number of bots running
          // then kick one of the bots off the server...
@@ -2987,7 +2923,6 @@ void StartFrame() {
                if (bots[i].is_used)
                   ++bot_count;
             }
-
             if (bot_count > min_bots) {
                if (bot_total_varies)
                   kickRandomBot();
@@ -3000,13 +2935,10 @@ void StartFrame() {
          if (bot_check_time > gpGlobals->time + 100.0)
             bot_check_time = gpGlobals->time + 10.0;
       }
-
       previous_time = gpGlobals->time;
    }
-
    // this is where the behaviour config is interpreted..
    // i.e. new lev, load behaviour, and parse it
-
    if (strcmp(STRING(gpGlobals->mapname), prevmapname) != 0) {
       edict_t *pent = nullptr;
       while ((pent = FIND_ENTITY_IN_SPHERE(pent, Vector(0, 0, 0), 8000)) != nullptr && !FNullEnt(pent)) {
@@ -3017,7 +2949,6 @@ void StartFrame() {
                   fprintf(fp, "Fixing entity current map %s last map %s\n", STRING(gpGlobals->mapname), prevmapname);
                   fclose(fp);
                }
-
                // UTIL_SavePent(pent);
                if (strcmp(STRING(pent->v.classname), "info_tfgoal") != 0) {
                   pent->v.absmin = pent->v.absmin + pent->v.mins;
@@ -3072,32 +3003,29 @@ void StartFrame() {
          if (strcmp(STRING(pent->v.classname), "func_door") == 0 && pent->v.nextthink != -1)
             pent->v.nextthink = -1;
       }
-      script_loaded = FALSE;
-      script_parsed = FALSE;
+      script_loaded = false;
+      script_parsed = false;
       strcpy(prevmapname, STRING(gpGlobals->mapname));
       char filename[256];
       char mapname[64];
-
       // reset known team data on map change
       for (int i = 0; i < 4; i++) {
-         attack[i] = FALSE;
-         defend[i] = FALSE;
+         attack[i] = false;
+         defend[i] = false;
       }
       for (int i = 0; i < 8; i++) {
-         blue_av[i] = FALSE;
-         red_av[i] = FALSE;
-         green_av[i] = FALSE;
-         yellow_av[i] = FALSE;
+         blue_av[i] = false;
+         red_av[i] = false;
+         green_av[i] = false;
+         yellow_av[i] = false;
       }
       ResetBotHomeInfo();
-
       struct msg_com_struct *prev = nullptr;
       struct msg_com_struct *curr = nullptr;
       for (int i = 0; i < MSG_MAX; i++) {
          // assuming i only goes to 64 on next line..see msg_msg[64][msg_max]
          // was [0][i] before...may be a problem
          msg_msg[0][i] = '\0'; // clear the messages, for level changes
-
          msg_com[i].ifs[0] = '\0';
          // the idea behind this delete function is if the root.next isnt null,
          // then it finds the last item in list (the one with item.next =null)
@@ -3109,7 +3037,6 @@ void StartFrame() {
                prev = curr;
                curr = curr->next;
             }
-
             if (prev != nullptr) {
                delete prev->next;
                prev->next = nullptr; // make sure it doesnt go over
@@ -3117,9 +3044,7 @@ void StartFrame() {
          }
          msg_com[i].next = nullptr; // make sure it dont crash..gr
       }
-
       // check if mapname_bot.cfg file exists...
-
       strcpy(mapname, STRING(gpGlobals->mapname));
       strcat(mapname, "_fb.cfg");
 
@@ -3127,7 +3052,7 @@ void StartFrame() {
       FILE *bfp = fopen(filename, "r");
 
       if (bfp != nullptr && mod_id == TFC_DLL) {
-         script_loaded = TRUE;
+         script_loaded = true;
          char msg[255];
          sprintf(msg, "\nExecuting FoXBot TFC script file:%s\n\n", filename);
          ALERT(at_console, msg);
@@ -3142,27 +3067,25 @@ void StartFrame() {
             ch = fgetc(bfp);
          }
          buffer[index] = '\0';
-
          // weve read it into buffer, now we need to check the syntax..
          // ooo lexical analysis, hehe
          int braces = 0;           // check for an even number of braces i.e. {..}
-         bool commentline = FALSE; // used to ignore comment lines
+         bool commentline = false; // used to ignore comment lines
          int start = 0;            // used to check if were in a start section or not
          int havestart = 0;
          int msgsection = 0; // used to check if were in a message section section or not
          int ifsec = 0;      // used to check if were in an if statement
          char *buf = buffer;
-
-         bool random_shit_error = FALSE;
+         bool random_shit_error = false;
          for (int i = 0; i < 14096 && buffer[i] != '\0' && !random_shit_error; i++) {
             // first off... we need to ignore comment lines!
             if (strncmp(buf, "//", 2) == 0) {
-               commentline = TRUE;
+               commentline = true;
                i++;
                buf = buf + 1;
             }
             if (buffer[i] == '\n')
-               commentline = FALSE;
+               commentline = false;
             if (commentline == false) {
                // need to check for section definition (on_...)
                if (strncmp(buf, "on_start", 8) == 0) {
@@ -3211,7 +3134,7 @@ void StartFrame() {
                else if (strncmp(buf, "blue_attack", 11) == 0) {
                   // this can only be in a section
                   if (start == 0 && msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   for (int j = 0; j < 11; j++) {
                      i++;
                      buf = buf + 1;
@@ -3220,7 +3143,7 @@ void StartFrame() {
                } else if (strncmp(buf, "red_attack", 10) == 0) {
                   // this can only be in a section
                   if (start == 0 && msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   for (int j = 0; j < 10; j++) {
                      i++;
                      buf = buf + 1;
@@ -3229,7 +3152,7 @@ void StartFrame() {
                } else if (strncmp(buf, "yellow_attack", 13) == 0) {
                   // this can only be in a section
                   if (start == 0 && msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   for (int j = 0; j < 13; j++) {
                      i++;
                      buf = buf + 1;
@@ -3238,19 +3161,18 @@ void StartFrame() {
                } else if (strncmp(buf, "green_attack", 12) == 0) {
                   // this can only be in a section
                   if (start == 0 && msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   for (int j = 0; j < 12; j++) {
                      i++;
                      buf = buf + 1;
                      RoleStatus[3] = 90;
                   } // move to end
                }
-
                // defend
                else if (strncmp(buf, "blue_defend", 11) == 0) {
                   // this can only be in a section
                   if (start == 0 && msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   for (int j = 0; j < 11; j++) {
                      i++;
                      buf = buf + 1;
@@ -3259,7 +3181,7 @@ void StartFrame() {
                } else if (strncmp(buf, "red_defend", 10) == 0) {
                   // this can only be in a section
                   if (start == 0 && msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   for (int j = 0; j < 10; j++) {
                      i++;
                      buf = buf + 1;
@@ -3268,7 +3190,7 @@ void StartFrame() {
                } else if (strncmp(buf, "yellow_defend", 13) == 0) {
                   // this can only be in a section
                   if (start == 0 && msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   for (int j = 0; j < 13; j++) {
                      i++;
                      buf = buf + 1;
@@ -3277,7 +3199,7 @@ void StartFrame() {
                } else if (strncmp(buf, "green_defend", 12) == 0) {
                   // this can only be in a section
                   if (start == 0 && msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   for (int j = 0; j < 12; j++) {
                      i++;
                      buf = buf + 1;
@@ -3286,7 +3208,7 @@ void StartFrame() {
                } else if (strncmp(buf, "blue_normal", 11) == 0) {
                   // this can only be in a section
                   if (start == 0 && msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   for (int j = 0; j < 11; j++) {
                      i++;
                      buf = buf + 1;
@@ -3295,7 +3217,7 @@ void StartFrame() {
                } else if (strncmp(buf, "red_normal", 10) == 0) {
                   // this can only be in a section
                   if (start == 0 && msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   for (int j = 0; j < 10; j++) {
                      i++;
                      buf = buf + 1;
@@ -3304,7 +3226,7 @@ void StartFrame() {
                } else if (strncmp(buf, "yellow_normal", 13) == 0) {
                   // this can only be in a section
                   if (start == 0 && msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   for (int j = 0; j < 13; j++) {
                      i++;
                      buf = buf + 1;
@@ -3313,25 +3235,24 @@ void StartFrame() {
                } else if (strncmp(buf, "green_normal", 12) == 0) {
                   // this can only be in a section
                   if (start == 0 && msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   for (int j = 0; j < 12; j++) {
                      i++;
                      buf = buf + 1;
                      RoleStatus[3] = 50;
                   } // move to end
                }
-
                // point<n> available_only (exclusive)
                else if (strncmp(buf, "blue_available_only_point", 25) == 0) {
                   // this can only be in a section
                   if (start == 0 && msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   for (int j = 0; j < 25; j++) {
                      i++;
                      buf = buf + 1;
                   } // move to end
                   if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   else {
                      i++;
                      buf = buf + 1;
@@ -3339,13 +3260,13 @@ void StartFrame() {
                } else if (strncmp(buf, "red_available_only_point", 24) == 0) {
                   // this can only be in a section
                   if (start == 0 && msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   for (int j = 0; j < 24; j++) {
                      i++;
                      buf = buf + 1;
                   } // move to end
                   if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   else {
                      i++;
                      buf = buf + 1;
@@ -3353,13 +3274,13 @@ void StartFrame() {
                } else if (strncmp(buf, "green_available_only_point", 26) == 0) {
                   // this can only be in a section
                   if (start == 0 && msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   for (int j = 0; j < 26; j++) {
                      i++;
                      buf = buf + 1;
                   } // move to end
                   if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   else {
                      i++;
                      buf = buf + 1;
@@ -3367,30 +3288,29 @@ void StartFrame() {
                } else if (strncmp(buf, "yellow_available_only_point", 27) == 0) {
                   // this can only be in a section
                   if (start == 0 && msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   for (int j = 0; j < 27; j++) {
                      i++;
                      buf = buf + 1;
                   } // move to end
                   if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   else {
                      i++;
                      buf = buf + 1;
                   } // move to end
                }
-
                // point<n> available (set to true)
                else if (strncmp(buf, "blue_available_point", 20) == 0) {
                   // this can only be in a section
                   if (start == 0 && msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   for (int j = 0; j < 20; j++) {
                      i++;
                      buf = buf + 1;
                   } // move to end
                   if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   else {
                      i++;
                      buf = buf + 1;
@@ -3398,13 +3318,13 @@ void StartFrame() {
                } else if (strncmp(buf, "red_available_point", 19) == 0) {
                   // this can only be in a section
                   if (start == 0 && msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   for (int j = 0; j < 19; j++) {
                      i++;
                      buf = buf + 1;
                   } // move to end
                   if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   else {
                      i++;
                      buf = buf + 1;
@@ -3412,13 +3332,13 @@ void StartFrame() {
                } else if (strncmp(buf, "green_available_point", 21) == 0) {
                   // this can only be in a section
                   if (start == 0 && msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   for (int j = 0; j < 21; j++) {
                      i++;
                      buf = buf + 1;
                   } // move to end
                   if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   else {
                      i++;
                      buf = buf + 1;
@@ -3426,30 +3346,29 @@ void StartFrame() {
                } else if (strncmp(buf, "yellow_available_point", 22) == 0) {
                   // this can only be in a section
                   if (start == 0 && msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   for (int j = 0; j < 22; j++) {
                      i++;
                      buf = buf + 1;
                   } // move to end
                   if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   else {
                      i++;
                      buf = buf + 1;
                   } // move to end
                }
-
                // point<n> not_available (set to false)
                else if (strncmp(buf, "blue_notavailable_point", 23) == 0) {
                   // this can only be in a section
                   if (start == 0 && msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   for (int j = 0; j < 23; j++) {
                      i++;
                      buf = buf + 1;
                   } // move to end
                   if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   else {
                      i++;
                      buf = buf + 1;
@@ -3457,13 +3376,13 @@ void StartFrame() {
                } else if (strncmp(buf, "red_notavailable_point", 22) == 0) {
                   // this can only be in a section
                   if (start == 0 && msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   for (int j = 0; j < 22; j++) {
                      i++;
                      buf = buf + 1;
                   } // move to end
                   if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   else {
                      i++;
                      buf = buf + 1;
@@ -3471,13 +3390,13 @@ void StartFrame() {
                } else if (strncmp(buf, "green_notavailable_point", 24) == 0) {
                   // this can only be in a section
                   if (start == 0 && msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   for (int j = 0; j < 24; j++) {
                      i++;
                      buf = buf + 1;
                   } // move to end
                   if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   else {
                      i++;
                      buf = buf + 1;
@@ -3485,25 +3404,24 @@ void StartFrame() {
                } else if (strncmp(buf, "yellow_notavailable_point", 25) == 0) {
                   // this can only be in a section
                   if (start == 0 && msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
 
                   for (int j = 0; j < 25; j++) {
                      i++;
                      buf = buf + 1;
                   } // move to end
                   if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   else {
                      i++;
                      buf = buf + 1;
                   } // move to end
                }
-
                // is point<n> available?
                else if (strncmp(buf, "if_blue_point", 13) == 0) {
                   // this can only be in a section
                   if (msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   if (ifsec > 0)
                      ifsec = 99; // check for nested if defs
                   else
@@ -3513,7 +3431,7 @@ void StartFrame() {
                      buf = buf + 1;
                   } // move to end
                   if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   else {
                      i++;
                      buf = buf + 1;
@@ -3521,7 +3439,7 @@ void StartFrame() {
                } else if (strncmp(buf, "if_red_point", 12) == 0) {
                   // this can only be in a section
                   if (msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   if (ifsec > 0)
                      ifsec = 99; // check for nested if defs
                   else
@@ -3531,7 +3449,7 @@ void StartFrame() {
                      buf = buf + 1;
                   } // move to end
                   if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   else {
                      i++;
                      buf = buf + 1;
@@ -3539,7 +3457,7 @@ void StartFrame() {
                } else if (strncmp(buf, "if_green_point", 14) == 0) {
                   // this can only be in a section
                   if (msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   if (ifsec > 0)
                      ifsec = 99; // check for nested if defs
                   else
@@ -3549,7 +3467,7 @@ void StartFrame() {
                      buf = buf + 1;
                   } // move to end
                   if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   else {
                      i++;
                      buf = buf + 1;
@@ -3557,7 +3475,7 @@ void StartFrame() {
                } else if (strncmp(buf, "if_yellow_point", 15) == 0) {
                   // this can only be in a section
                   if (msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   if (ifsec > 0)
                      ifsec = 99; // check for nested if defs
                   else
@@ -3567,18 +3485,17 @@ void StartFrame() {
                      buf = buf + 1;
                   } // move to end
                   if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   else {
                      i++;
                      buf = buf + 1;
                   } // move to end
                }
-
                // is point<n> NOT available?
                else if (strncmp(buf, "ifn_blue_point", 14) == 0) {
                   // this can only be in a section
                   if (msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   if (ifsec > 0)
                      ifsec = 99; // check for nested if defs
                   else
@@ -3588,7 +3505,7 @@ void StartFrame() {
                      buf = buf + 1;
                   } // move to end
                   if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   else {
                      i++;
                      buf = buf + 1;
@@ -3596,7 +3513,7 @@ void StartFrame() {
                } else if (strncmp(buf, "ifn_red_point", 13) == 0) {
                   // this can only be in a section
                   if (msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   if (ifsec > 0)
                      ifsec = 99; // check for nested if defs
                   else
@@ -3606,7 +3523,7 @@ void StartFrame() {
                      buf = buf + 1;
                   } // move to end
                   if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   else {
                      i++;
                      buf = buf + 1;
@@ -3614,7 +3531,7 @@ void StartFrame() {
                } else if (strncmp(buf, "ifn_green_point", 15) == 0) {
                   // this can only be in a section
                   if (msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   if (ifsec > 0)
                      ifsec = 99; // check for nested if defs
                   else
@@ -3624,7 +3541,7 @@ void StartFrame() {
                      buf = buf + 1;
                   } // move to end
                   if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   else {
                      i++;
                      buf = buf + 1;
@@ -3632,7 +3549,7 @@ void StartFrame() {
                } else if (strncmp(buf, "ifn_yellow_point", 16) == 0) {
                   // this can only be in a section
                   if (msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   if (ifsec > 0)
                      ifsec = 99; // check for nested if defs
                   else
@@ -3642,20 +3559,17 @@ void StartFrame() {
                      buf = buf + 1;
                   } // move to end
                   if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   else {
                      i++;
                      buf = buf + 1;
                   } // move to end
                }
-
-               //
                // multipoint ifs
-               //
                else if (strncmp(buf, "if_blue_mpoint", 14) == 0) {
                   // this can only be in a section
                   if (msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   if (ifsec > 0)
                      ifsec = 99; // check for nested if defs
                   else
@@ -3668,7 +3582,7 @@ void StartFrame() {
                   // check for 8 if vals
                   for (j = 0; j < 8; j++) {
                      if (buffer[i] != '1' && buffer[i] != '0')
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      else {
                         i++;
                         buf = buf + 1;
@@ -3677,7 +3591,7 @@ void StartFrame() {
                } else if (strncmp(buf, "if_red_mpoint", 13) == 0) {
                   // this can only be in a section
                   if (msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   if (ifsec > 0)
                      ifsec = 99; // check for nested if defs
                   else
@@ -3690,7 +3604,7 @@ void StartFrame() {
                   // check for 8 if vals
                   for (j = 0; j < 8; j++) {
                      if (buffer[i] != '1' && buffer[i] != '0')
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      else {
                         i++;
                         buf = buf + 1;
@@ -3699,7 +3613,7 @@ void StartFrame() {
                } else if (strncmp(buf, "if_green_mpoint", 15) == 0) {
                   // this can only be in a section
                   if (msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   if (ifsec > 0)
                      ifsec = 99; // check for nested if defs
                   else
@@ -3712,7 +3626,7 @@ void StartFrame() {
                   // check for 8 if vals
                   for (j = 0; j < 8; j++) {
                      if (buffer[i] != '1' && buffer[i] != '0')
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      else {
                         i++;
                         buf = buf + 1;
@@ -3721,7 +3635,7 @@ void StartFrame() {
                } else if (strncmp(buf, "if_yellow_mpoint", 16) == 0) {
                   // this can only be in a section
                   if (msgsection == 0)
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                   if (ifsec > 0)
                      ifsec = 99; // check for nested if defs
                   else
@@ -3734,7 +3648,7 @@ void StartFrame() {
                   // check for 8 if vals
                   for (j = 0; j < 8; j++) {
                      if (buffer[i] != '1' && buffer[i] != '0')
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      else {
                         i++;
                         buf = buf + 1;
@@ -3742,18 +3656,13 @@ void StartFrame() {
                   }
                }
                // end of multipoint ifs
-
-               // ignore endlines
-               // and comments
                else if (buffer[i] != '/' && buffer[i] != '{' && buffer[i] != '}' && buffer[i] != ' ' && buffer[i] != '\n' && commentline == false && random_shit_error == false) {
-                  random_shit_error = TRUE;
+                  random_shit_error = true;
                   ALERT(at_console, "\\/\\/\\/\\/\\/\\/\n");
                   ALERT(at_console, buf);
                   ALERT(at_console, "\n");
                }
-
-               // do your magic lexical analysis here..
-               // first braces
+               // do your magic lexical analysis here. first braces
                switch (buffer[i]) {
                case '{':
                   braces++;
@@ -3761,7 +3670,7 @@ void StartFrame() {
                      start = 2;
                   else if (start > 0)
                      start = 99;
-                  // need to check that more braces aernt put in than nesesarry
+                  // need to check that more braces aren't put in than nesesarry
                   // i.e. start=2 then generate error,
                   // cus only have variable setting in start section
                   if (ifsec == 1)
@@ -3789,31 +3698,31 @@ void StartFrame() {
                buf = buf + 1; // like i++ but for stringcmp stuff
          }
          bool syntax_error;
-         syntax_error = FALSE;
+         syntax_error = false;
          // syntax errors
          if (braces != 0) {
             ALERT(at_console, "Syntax error, wrong number of braces\n");
-            syntax_error = TRUE;
+            syntax_error = true;
          }
          if (start != 0) {
             ALERT(at_console, "Syntax error, on_start error\n");
-            syntax_error = TRUE;
+            syntax_error = true;
          }
          if (msgsection != 0) {
             ALERT(at_console, "Syntax error, on_msg error\n");
-            syntax_error = TRUE;
+            syntax_error = true;
          }
          if (ifsec != 0) {
             ALERT(at_console, "Syntax error, if error\n");
-            syntax_error = TRUE;
+            syntax_error = true;
          }
          if (havestart > 1) {
             ALERT(at_console, "Syntax error, more than 1 on_start\n");
-            syntax_error = TRUE;
+            syntax_error = true;
          }
          if (random_shit_error) {
             ALERT(at_console, "Syntax error, unrecognised command\n");
-            syntax_error = TRUE;
+            syntax_error = true;
 
             fp = UTIL_OpenFoxbotLog();
             if (fp != nullptr) {
@@ -3821,24 +3730,23 @@ void StartFrame() {
                fclose(fp);
             }
          }
-
          // warnings
          if (havestart == 0)
             ALERT(at_console, "Warning, no on_start section\n");
          // after all the lexical stuff, if we dont have any errors
          // pass the text into the command data types for use
          if (syntax_error == false) {
-            script_parsed = TRUE;
+            script_parsed = true;
             // pass everything to data array
             ALERT(at_console, "Passing data to behaviour arrays\n\n");
             braces = 0;          // check for an even number of braces i.e. {..}
-            commentline = FALSE; // used to ignore comment lines
+            commentline = false; // used to ignore comment lines
             start = 0;           // used to check if were in a start section or not
             havestart = 0;
             msgsection = 0; // used to check if were in a message section section or not
             ifsec = 0;      // used to check if were in an if statement
             buf = buffer;
-            random_shit_error = FALSE;
+            random_shit_error = false;
             int pnt = 0;
             char msgtext[64];
             int cnt;
@@ -3847,12 +3755,12 @@ void StartFrame() {
             for (int i = 0; i < 14096 && buffer[i] != '\0'; i++) {
                // first off.. need to ignore comment lines!
                if (strncmp(buf, "//", 2) == 0) {
-                  commentline = TRUE;
+                  commentline = true;
                   i++;
                   buf = buf + 1;
                }
                if (buffer[i] == '\n')
-                  commentline = FALSE;
+                  commentline = false;
                if (commentline == false) {
                   // need to check for section definition (on_...)
                   if (strncmp(buf, "on_start", 8) == 0) {
@@ -3919,86 +3827,83 @@ void StartFrame() {
                   else if (strncmp(buf, "blue_attack", 11) == 0) {
                      // this can only be in a section
                      if (start == 0 && msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      for (int j = 0; j < 11; j++) {
                         i++;
                         buf = buf + 1;
                      } // move to end
-                     attack[0] = TRUE;
+                     attack[0] = true;
                   } else if (strncmp(buf, "red_attack", 10) == 0) {
                      // this can only be in a section
                      if (start == 0 && msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      for (int j = 0; j < 10; j++) {
                         i++;
                         buf = buf + 1;
                      } // move to end
-                     attack[1] = TRUE;
+                     attack[1] = true;
                   } else if (strncmp(buf, "green_attack", 12) == 0) {
                      // this can only be in a section
                      if (start == 0 && msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      for (int j = 0; j < 12; j++) {
                         i++;
                         buf = buf + 1;
                      } // move to end
-                     attack[2] = TRUE;
+                     attack[2] = true;
                   } else if (strncmp(buf, "yellow_attack", 13) == 0) {
                      // this can only be in a section
                      if (start == 0 && msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      for (int j = 0; j < 13; j++) {
                         i++;
                         buf = buf + 1;
                      } // move to end
-                     attack[3] = TRUE;
+                     attack[3] = true;
                   }
-
                   // defend
                   else if (strncmp(buf, "blue_defend", 11) == 0) {
                      // this can only be in a section
                      if (start == 0 && msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      for (int j = 0; j < 11; j++) {
                         i++;
                         buf = buf + 1;
                      } // move to end
-                     defend[0] = TRUE;
+                     defend[0] = true;
                   } else if (strncmp(buf, "red_defend", 10) == 0) {
                      // this can only be in a section
                      if (start == 0 && msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      for (int j = 0; j < 10; j++) {
                         i++;
                         buf = buf + 1;
                      } // move to end
-                     defend[1] = TRUE;
+                     defend[1] = true;
                   } else if (strncmp(buf, "green_defend", 12) == 0) {
                      // this can only be in a section
                      if (start == 0 && msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      for (int j = 0; j < 12; j++) {
                         i++;
                         buf = buf + 1;
                      } // move to end
-                     defend[2] = TRUE;
+                     defend[2] = true;
                   } else if (strncmp(buf, "yellow_defend", 13) == 0) {
                      // this can only be in a section
                      if (start == 0 && msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      for (int j = 0; j < 13; j++) {
                         i++;
                         buf = buf + 1;
                      } // move to end
-                     defend[3] = TRUE;
+                     defend[3] = true;
                   }
-                  // normal (defend+attack)??
-                  // not used yet..
-
+                  // normal (defend+attack)??  // not used yet..
                   else if (strncmp(buf, "blue_normal", 11) == 0) {
                      // this can only be in a section
                      if (start == 0 && msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      for (int j = 0; j < 11; j++) {
                         i++;
                         buf = buf + 1;
@@ -4006,7 +3911,7 @@ void StartFrame() {
                   } else if (strncmp(buf, "red_normal", 10) == 0) {
                      // this can only be in a section
                      if (start == 0 && msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      for (int j = 0; j < 10; j++) {
                         i++;
                         buf = buf + 1;
@@ -4014,7 +3919,7 @@ void StartFrame() {
                   } else if (strncmp(buf, "green_normal", 12) == 0) {
                      // this can only be in a section
                      if (start == 0 && msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      for (int j = 0; j < 12; j++) {
                         i++;
                         buf = buf + 1;
@@ -4022,24 +3927,23 @@ void StartFrame() {
                   } else if (strncmp(buf, "yellow_normal", 13) == 0) {
                      // this can only be in a section
                      if (start == 0 && msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      for (int j = 0; j < 13; j++) {
                         i++;
                         buf = buf + 1;
                      } // move to end
                   }
-
                   // point<n> available_only (exclusive)
                   else if (strncmp(buf, "blue_available_only_point", 25) == 0) {
                      // this can only be in a section
                      if (start == 0 && msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      for (int j = 0; j < 25; j++) {
                         i++;
                         buf = buf + 1;
                      } // move to end
                      if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      else {
                         pnt = atoi(&buffer[i]); // get the var
                         pnt--;
@@ -4048,9 +3952,9 @@ void StartFrame() {
                      } // move to end
                      if (start == 2) {
                         for (int j = 0; j < 8; j++) {
-                           blue_av[j] = FALSE;
+                           blue_av[j] = false;
                         }
-                        blue_av[pnt] = TRUE;
+                        blue_av[pnt] = true;
                      }
                      if (msgsection == 2 && ifsec == 0) {
                         for (int j = 0; j < 8; j++) {
@@ -4067,13 +3971,13 @@ void StartFrame() {
                   } else if (strncmp(buf, "red_available_only_point", 24) == 0) {
                      // this can only be in a section
                      if (start == 0 && msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      for (int j = 0; j < 24; j++) {
                         i++;
                         buf = buf + 1;
                      } // move to end
                      if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      else {
                         pnt = atoi(&buffer[i]); // get the var
                         pnt--;
@@ -4082,9 +3986,9 @@ void StartFrame() {
                      } // move to end
                      if (start == 2) {
                         for (int j = 0; j < 8; j++) {
-                           red_av[j] = FALSE;
+                           red_av[j] = false;
                         }
-                        red_av[pnt] = TRUE;
+                        red_av[pnt] = true;
                      }
                      if (msgsection == 2 && ifsec == 0) {
                         for (int j = 0; j < 8; j++) {
@@ -4101,13 +4005,13 @@ void StartFrame() {
                   } else if (strncmp(buf, "green_available_only_point", 26) == 0) {
                      // this can only be in a section
                      if (start == 0 && msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      for (int j = 0; j < 26; j++) {
                         i++;
                         buf = buf + 1;
                      } // move to end
                      if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      else {
                         pnt = atoi(&buffer[i]); // get the var
                         pnt--;
@@ -4116,9 +4020,9 @@ void StartFrame() {
                      } // move to end
                      if (start == 2) {
                         for (int j = 0; j < 8; j++) {
-                           green_av[j] = FALSE;
+                           green_av[j] = false;
                         }
-                        green_av[pnt] = TRUE;
+                        green_av[pnt] = true;
                      }
                      if (msgsection == 2 && ifsec == 0) {
                         for (int j = 0; j < 8; j++) {
@@ -4135,13 +4039,13 @@ void StartFrame() {
                   } else if (strncmp(buf, "yellow_available_only_point", 27) == 0) {
                      // this can only be in a section
                      if (start == 0 && msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      for (int j = 0; j < 27; j++) {
                         i++;
                         buf = buf + 1;
                      } // move to end
                      if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      else {
                         pnt = atoi(&buffer[i]); // get the var
                         pnt--;
@@ -4150,9 +4054,9 @@ void StartFrame() {
                      } // move to end
                      if (start == 2) {
                         for (int j = 0; j < 8; j++) {
-                           yellow_av[j] = FALSE;
+                           yellow_av[j] = false;
                         }
-                        yellow_av[pnt] = TRUE;
+                        yellow_av[pnt] = true;
                      }
                      if (msgsection == 2 && ifsec == 0) {
                         for (int j = 0; j < 8; j++) {
@@ -4167,18 +4071,17 @@ void StartFrame() {
                         curr->yellow_av[pnt] = 1; // true
                      }
                   }
-
                   // point<n> available (set to true)
                   else if (strncmp(buf, "blue_available_point", 20) == 0) {
                      // this can only be in a section
                      if (start == 0 && msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      for (int j = 0; j < 20; j++) {
                         i++;
                         buf = buf + 1;
                      } // move to end
                      if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      else {
                         pnt = atoi(&buffer[i]); // get the var
                         pnt--;
@@ -4186,7 +4089,7 @@ void StartFrame() {
                         buf = buf + 1;
                      } // move to end
                      if (start == 2) {
-                        blue_av[pnt] = TRUE;
+                        blue_av[pnt] = true;
                      }
                      if (msgsection == 2 && ifsec == 0) {
                         msg_com[current_msg].blue_av[pnt] = 1; // true
@@ -4197,13 +4100,13 @@ void StartFrame() {
                   } else if (strncmp(buf, "red_available_point", 19) == 0) {
                      // this can only be in a section
                      if (start == 0 && msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      for (int j = 0; j < 19; j++) {
                         i++;
                         buf = buf + 1;
                      } // move to end
                      if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      else {
                         pnt = atoi(&buffer[i]); // get the var
                         pnt--;
@@ -4211,7 +4114,7 @@ void StartFrame() {
                         buf = buf + 1;
                      } // move to end
                      if (start == 2) {
-                        red_av[pnt] = TRUE;
+                        red_av[pnt] = true;
                      }
                      if (msgsection == 2 && ifsec == 0) {
                         msg_com[current_msg].red_av[pnt] = 1; // true
@@ -4222,13 +4125,13 @@ void StartFrame() {
                   } else if (strncmp(buf, "green_available_point", 21) == 0) {
                      // this can only be in a section
                      if (start == 0 && msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      for (int j = 0; j < 21; j++) {
                         i++;
                         buf = buf + 1;
                      } // move to end
                      if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      else {
                         pnt = atoi(&buffer[i]); // get the var
                         pnt--;
@@ -4236,7 +4139,7 @@ void StartFrame() {
                         buf = buf + 1;
                      } // move to end
                      if (start == 2) {
-                        green_av[pnt] = TRUE;
+                        green_av[pnt] = true;
                      }
                      if (msgsection == 2 && ifsec == 0) {
                         msg_com[current_msg].green_av[pnt] = 1; // true
@@ -4247,13 +4150,13 @@ void StartFrame() {
                   } else if (strncmp(buf, "yellow_available_point", 22) == 0) {
                      // this can only be in a section
                      if (start == 0 && msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      for (int j = 0; j < 22; j++) {
                         i++;
                         buf = buf + 1;
                      } // move to end
                      if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      else {
                         pnt = atoi(&buffer[i]); // get the var
                         pnt--;
@@ -4261,7 +4164,7 @@ void StartFrame() {
                         buf = buf + 1;
                      } // move to end
                      if (start == 2) {
-                        yellow_av[pnt] = TRUE;
+                        yellow_av[pnt] = true;
                      }
                      if (msgsection == 2 && ifsec == 0) {
                         msg_com[current_msg].yellow_av[pnt] = 1; // true
@@ -4270,18 +4173,17 @@ void StartFrame() {
                         curr->yellow_av[pnt] = 1; // true
                      }
                   }
-
                   // point<n> not_available (set to false)
                   else if (strncmp(buf, "blue_notavailable_point", 23) == 0) {
                      // this can only be in a section
                      if (start == 0 && msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      for (int j = 0; j < 23; j++) {
                         i++;
                         buf = buf + 1;
                      } // move to end
                      if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      else {
                         pnt = atoi(&buffer[i]); // get the var
                         pnt--;
@@ -4289,7 +4191,7 @@ void StartFrame() {
                         buf = buf + 1;
                      } // move to end
                      if (start == 2) {
-                        blue_av[pnt] = FALSE;
+                        blue_av[pnt] = false;
                      }
                      if (msgsection == 2 && ifsec == 0) {
                         msg_com[current_msg].blue_av[pnt] = 0; // false
@@ -4300,13 +4202,13 @@ void StartFrame() {
                   } else if (strncmp(buf, "red_notavailable_point", 22) == 0) {
                      // this can only be in a section
                      if (start == 0 && msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      for (int j = 0; j < 22; j++) {
                         i++;
                         buf = buf + 1;
                      } // move to end
                      if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      else {
                         pnt = atoi(&buffer[i]); // get the var
                         pnt--;
@@ -4314,7 +4216,7 @@ void StartFrame() {
                         buf = buf + 1;
                      } // move to end
                      if (start == 2) {
-                        red_av[pnt] = FALSE;
+                        red_av[pnt] = false;
                      }
                      if (msgsection == 2 && ifsec == 0) {
                         msg_com[current_msg].red_av[pnt] = 0; // false
@@ -4325,13 +4227,13 @@ void StartFrame() {
                   } else if (strncmp(buf, "green_notavailable_point", 24) == 0) {
                      // this can only be in a section
                      if (start == 0 && msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      for (int j = 0; j < 24; j++) {
                         i++;
                         buf = buf + 1;
                      } // move to end
                      if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      else {
                         pnt = atoi(&buffer[i]); // get the var
                         pnt--;
@@ -4339,7 +4241,7 @@ void StartFrame() {
                         buf = buf + 1;
                      } // move to end
                      if (start == 2) {
-                        green_av[pnt] = FALSE;
+                        green_av[pnt] = false;
                      }
                      if (msgsection == 2 && ifsec == 0) {
                         msg_com[current_msg].green_av[pnt] = 0; // false
@@ -4350,13 +4252,13 @@ void StartFrame() {
                   } else if (strncmp(buf, "yellow_notavailable_point", 25) == 0) {
                      // this can only be in a section
                      if (start == 0 && msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      for (int j = 0; j < 25; j++) {
                         i++;
                         buf = buf + 1;
                      } // move to end
                      if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      else {
                         pnt = atoi(&buffer[i]); // get the var
                         pnt--;
@@ -4364,7 +4266,7 @@ void StartFrame() {
                         buf = buf + 1;
                      } // move to end
                      if (start == 2) {
-                        yellow_av[pnt] = FALSE;
+                        yellow_av[pnt] = false;
                      }
                      if (msgsection == 2 && ifsec == 0) {
                         msg_com[current_msg].yellow_av[pnt] = 0; // false
@@ -4373,12 +4275,11 @@ void StartFrame() {
                         curr->yellow_av[pnt] = 0; // false
                      }
                   }
-
                   // is point<n> availabe?
                   else if (strncmp(buf, "if_blue_point", 13) == 0) {
                      // this can only be in a section
                      if (msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      if (ifsec > 0)
                         ifsec = 99; // check for nested if defs
                      else
@@ -4388,7 +4289,7 @@ void StartFrame() {
                         buf = buf + 1;
                      } // move to end
                      if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      else {
                         pnt = atoi(&buffer[i]); // get the var
                         i++;
@@ -4396,7 +4297,6 @@ void StartFrame() {
                      } // move to end
                      while (curr->next != nullptr && (int)curr->next != -1)
                         curr = curr->next; // get to null
-
                      curr->next = new msg_com_struct;
                      curr = curr->next;
                      // clear next pointer..
@@ -4412,7 +4312,7 @@ void StartFrame() {
                   } else if (strncmp(buf, "if_red_point", 12) == 0) {
                      // this can only be in a section
                      if (msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      if (ifsec > 0)
                         ifsec = 99; // check for nested if defs
                      else
@@ -4422,7 +4322,7 @@ void StartFrame() {
                         buf = buf + 1;
                      } // move to end
                      if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      else {
                         pnt = atoi(&buffer[i]); // get the var
                         i++;
@@ -4446,7 +4346,7 @@ void StartFrame() {
                   } else if (strncmp(buf, "if_green_point", 14) == 0) {
                      // this can only be in a section
                      if (msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      if (ifsec > 0)
                         ifsec = 99; // check for nested if defs
                      else
@@ -4456,7 +4356,7 @@ void StartFrame() {
                         buf = buf + 1;
                      } // move to end
                      if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      else {
                         pnt = atoi(&buffer[i]); // get the var
                         i++;
@@ -4480,7 +4380,7 @@ void StartFrame() {
                   } else if (strncmp(buf, "if_yellow_point", 15) == 0) {
                      // this can only be in a section
                      if (msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      if (ifsec > 0)
                         ifsec = 99; // check for nested if defs
                      else
@@ -4490,7 +4390,7 @@ void StartFrame() {
                         buf = buf + 1;
                      } // move to end
                      if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      else {
                         pnt = atoi(&buffer[i]); // get the var
                         i++;
@@ -4498,7 +4398,6 @@ void StartFrame() {
                      } // move to end
                      while (curr->next != nullptr && (int)curr->next != -1)
                         curr = curr->next; // get to null
-
                      curr->next = new msg_com_struct;
                      curr = curr->next;
                      // clear next pointer..
@@ -4512,12 +4411,11 @@ void StartFrame() {
                      sprintf(msg, "y_p_%d", pnt);
                      strcpy(curr->ifs, msg);
                   }
-
                   // is point<n> NOT availabe?
                   else if (strncmp(buf, "ifn_blue_point", 14) == 0) {
                      // this can only be in a section
                      if (msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      if (ifsec > 0)
                         ifsec = 99; // check for nested if defs
                      else
@@ -4527,7 +4425,7 @@ void StartFrame() {
                         buf = buf + 1;
                      } // move to end
                      if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      else {
                         pnt = atoi(&buffer[i]); // get the var
                         i++;
@@ -4535,7 +4433,6 @@ void StartFrame() {
                      } // move to end
                      while (curr->next != nullptr && (int)curr->next != -1)
                         curr = curr->next; // get to null
-
                      curr->next = new msg_com_struct;
                      curr = curr->next;
                      // clear next pointer..
@@ -4551,7 +4448,7 @@ void StartFrame() {
                   } else if (strncmp(buf, "ifn_red_point", 13) == 0) {
                      // this can only be in a section
                      if (msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      if (ifsec > 0)
                         ifsec = 99; // check for nested if defs
                      else
@@ -4561,7 +4458,7 @@ void StartFrame() {
                         buf = buf + 1;
                      } // move to end
                      if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      else {
                         pnt = atoi(&buffer[i]); // get the var
                         i++;
@@ -4569,7 +4466,6 @@ void StartFrame() {
                      } // move to end
                      while (curr->next != nullptr && (int)curr->next != -1)
                         curr = curr->next; // get to null
-
                      curr->next = new msg_com_struct;
                      curr = curr->next;
                      // clear next pointer..
@@ -4585,7 +4481,7 @@ void StartFrame() {
                   } else if (strncmp(buf, "ifn_green_point", 15) == 0) {
                      // this can only be in a section
                      if (msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      if (ifsec > 0)
                         ifsec = 99; // check for nested if defs
                      else
@@ -4595,7 +4491,7 @@ void StartFrame() {
                         buf = buf + 1;
                      } // move to end
                      if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      else {
                         pnt = atoi(&buffer[i]); // get the var
                         i++;
@@ -4603,7 +4499,6 @@ void StartFrame() {
                      } // move to end
                      while (curr->next != nullptr && (int)curr->next != -1)
                         curr = curr->next; // get to null
-
                      curr->next = new msg_com_struct;
                      curr = curr->next;
                      // clear next pointer..
@@ -4619,7 +4514,7 @@ void StartFrame() {
                   } else if (strncmp(buf, "ifn_yellow_point", 16) == 0) {
                      // this can only be in a section
                      if (msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      if (ifsec > 0)
                         ifsec = 99; // check for nested if defs
                      else
@@ -4629,7 +4524,7 @@ void StartFrame() {
                         buf = buf + 1;
                      } // move to end
                      if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      else {
                         pnt = atoi(&buffer[i]); // get the var
                         i++;
@@ -4637,7 +4532,6 @@ void StartFrame() {
                      } // move to end
                      while (curr->next != nullptr && (int)curr->next != -1)
                         curr = curr->next; // get to null
-
                      curr->next = new msg_com_struct;
                      curr = curr->next;
                      // clear next pointer..
@@ -4651,12 +4545,11 @@ void StartFrame() {
                      sprintf(msg, "y_pn_%d", pnt);
                      strcpy(curr->ifs, msg);
                   }
-
                   // multipoint ifs
                   else if (strncmp(buf, "if_blue_mpoint", 14) == 0) {
                      // this can only be in a section
                      if (msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      if (ifsec > 0)
                         ifsec = 99; // check for nested if defs
                      else
@@ -4665,12 +4558,11 @@ void StartFrame() {
                      for (j = 0; j < 14; j++) {
                         i++;
                         buf = buf + 1;
-                     } // move to end
-                     // check for 8 if vals
+                     } // move to end  // check for 8 if vals
                      char pnts[9];
                      for (j = 0; j < 8; j++) {
                         if (buffer[i] != '1' && buffer[i] != '0')
-                           random_shit_error = TRUE;
+                           random_shit_error = true;
                         else {
                            pnts[j] = buffer[i];
                            i++;
@@ -4679,7 +4571,6 @@ void StartFrame() {
                      }
                      while (curr->next != nullptr && (int)curr->next != -1)
                         curr = curr->next; // get to null
-
                      curr->next = new msg_com_struct;
                      curr = curr->next;
                      // clear next pointer..
@@ -4696,7 +4587,7 @@ void StartFrame() {
                   } else if (strncmp(buf, "if_red_mpoint", 13) == 0) {
                      // this can only be in a section
                      if (msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      if (ifsec > 0)
                         ifsec = 99; // check for nested if defs
                      else
@@ -4705,12 +4596,11 @@ void StartFrame() {
                      for (j = 0; j < 13; j++) {
                         i++;
                         buf = buf + 1;
-                     } // move to end
-                     // check for 8 if vals
+                     } // move to end  // check for 8 if vals
                      char pnts[9];
                      for (j = 0; j < 8; j++) {
                         if (buffer[i] != '1' && buffer[i] != '0')
-                           random_shit_error = TRUE;
+                           random_shit_error = true;
                         else {
                            pnts[j] = buffer[i];
                            i++;
@@ -4719,7 +4609,6 @@ void StartFrame() {
                      }
                      while (curr->next != nullptr && (int)curr->next != -1)
                         curr = curr->next; // get to null
-
                      curr->next = new msg_com_struct;
                      curr = curr->next;
                      // clear next pointer..
@@ -4736,7 +4625,7 @@ void StartFrame() {
                   } else if (strncmp(buf, "if_green_mpoint", 15) == 0) {
                      // this can only be in a section
                      if (msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      if (ifsec > 0)
                         ifsec = 99; // check for nested if defs
                      else
@@ -4745,12 +4634,11 @@ void StartFrame() {
                      for (j = 0; j < 15; j++) {
                         i++;
                         buf = buf + 1;
-                     } // move to end
-                     // check for 8 if vals
+                     } // move to end // check for 8 if vals
                      char pnts[9];
                      for (j = 0; j < 8; j++) {
                         if (buffer[i] != '1' && buffer[i] != '0')
-                           random_shit_error = TRUE;
+                           random_shit_error = true;
                         else {
                            pnts[j] = buffer[i];
                            i++;
@@ -4759,7 +4647,6 @@ void StartFrame() {
                      }
                      while (curr->next != nullptr && (int)curr->next != -1)
                         curr = curr->next; // get to null
-
                      curr->next = new msg_com_struct;
                      curr = curr->next;
                      // clear next pointer..
@@ -4776,7 +4663,7 @@ void StartFrame() {
                   } else if (strncmp(buf, "if_yellow_mpoint", 16) == 0) {
                      // this can only be in a section
                      if (msgsection == 0)
-                        random_shit_error = TRUE;
+                        random_shit_error = true;
                      if (ifsec > 0)
                         ifsec = 99; // check for nested if defs
                      else
@@ -4785,12 +4672,11 @@ void StartFrame() {
                      for (j = 0; j < 16; j++) {
                         i++;
                         buf = buf + 1;
-                     } // move to end
-                     // check for 8 if vals
+                     } // move to end  // check for 8 if vals
                      char pnts[9];
                      for (j = 0; j < 8; j++) {
                         if (buffer[i] != '1' && buffer[i] != '0')
-                           random_shit_error = TRUE;
+                           random_shit_error = true;
                         else {
                            pnts[j] = buffer[i];
                            i++;
@@ -4799,7 +4685,6 @@ void StartFrame() {
                      }
                      while (curr->next != nullptr && (int)curr->next != -1)
                         curr = curr->next; // get to null
-
                      curr->next = new msg_com_struct;
                      curr = curr->next;
                      // clear next pointer..
@@ -4815,18 +4700,13 @@ void StartFrame() {
                      strcpy(curr->ifs, msg);
                   }
                   // end of multipoint ifs
-
-                  // ignore endlines
-                  // and comments
                   else if (buffer[i] != '/' && buffer[i] != '{' && buffer[i] != '}' && buffer[i] != ' ' && buffer[i] != '\n' && commentline == false && random_shit_error == false) {
-                     random_shit_error = TRUE;
+                     random_shit_error = true;
                      ALERT(at_console, "\\/\\/\\/\\/\\/\\/\n");
                      ALERT(at_console, buf);
                      ALERT(at_console, "\n");
                   }
-
-                  // do your magic lexical analysis here..
-                  // first braces
+                  // do your magic lexical analysis here.  // first braces
                   switch (buffer[i]) {
                   case '{':
                      braces++;
@@ -4864,19 +4744,16 @@ void StartFrame() {
             ALERT(at_console, "\nScript will not be used until there are no syntax errors\n\n");
          }
       }
-
       if (bfp != nullptr) {
          fclose(bfp);
          bfp = nullptr;
       }
    }
-
    if (!mr_meta)
       (*other_gFunctionTable.pfnStartFrame)();
    else
       SET_META_RESULT(MRES_HANDLED);
 }
-
 gamedll_funcs_t gGameDLLFunc;
 
 C_DLLEXPORT int GetEntityAPI(DLL_FUNCTIONS *pFunctionTable, int interfaceVersion) {
@@ -4887,7 +4764,7 @@ C_DLLEXPORT int GetEntityAPI(DLL_FUNCTIONS *pFunctionTable, int interfaceVersion
    if (!mr_meta) {
       // pass other DLLs engine callbacks to function table...
       if (!(*other_GetEntityAPI)(&other_gFunctionTable, INTERFACE_VERSION)) {
-         return FALSE; // error initializing function table!!!
+         return false; // error initializing function table!!!
       }
 
       gGameDLLFunc.dllapi_table = &other_gFunctionTable;
@@ -4906,22 +4783,22 @@ C_DLLEXPORT int GetEntityAPI(DLL_FUNCTIONS *pFunctionTable, int interfaceVersion
    pFunctionTable->pfnClientCommand = ClientCommand;
 
 
-   return TRUE;
+   return true;
 }
 
 C_DLLEXPORT int GetNewDLLFunctions(NEW_DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion) {
    if (other_GetNewDLLFunctions == nullptr)
-      return FALSE;
+      return false;
 
    if (!mr_meta) {
       // pass other DLLs engine callbacks to function table...
       if (!(*other_GetNewDLLFunctions)(pFunctionTable, interfaceVersion)) {
-         return FALSE; // error initializing function table!!!
+         return false; // error initializing function table!!!
       }
       gGameDLLFunc.newapi_table = pFunctionTable;
    }
 
-   return TRUE;
+   return true;
 }
 
 void FakeClientCommand(edict_t *pBot, char *arg1, char *arg2, char *arg3) {
@@ -5150,7 +5027,7 @@ void DispatchKeyValue_Post(edict_t *pentKeyvalue, KeyValueData *pkvd) {
             flags[flag_index].team_no = atoi(pkvd->szValue);
 
          if (strcmp(pkvd->szKeyName, "mdl") == 0 && (strcmp(pkvd->szValue, "models/flag.mdl") == 0 || strcmp(pkvd->szValue, "models/keycard.mdl") == 0 || strcmp(pkvd->szValue, "models/ball.mdl") == 0)) {
-            flags[flag_index].mdl_match = TRUE;
+            flags[flag_index].mdl_match = true;
             num_flags++;
          }
       } else if (pent_item_tfgoal == nullptr) {
@@ -5158,7 +5035,7 @@ void DispatchKeyValue_Post(edict_t *pentKeyvalue, KeyValueData *pkvd) {
             if (num_flags < MAX_FLAGS) {
                pent_item_tfgoal = pentKeyvalue;
 
-               flags[num_flags].mdl_match = FALSE;
+               flags[num_flags].mdl_match = false;
                flags[num_flags].team_no = 0; // any team unless specified
                flags[num_flags].edict = pentKeyvalue;
 
@@ -5197,12 +5074,12 @@ void DispatchKeyValue_Post(edict_t *pentKeyvalue, KeyValueData *pkvd) {
 
 C_DLLEXPORT int GetEntityAPI_Post(DLL_FUNCTIONS *pFunctionTable, const int interfaceVersion) {
    if (!pFunctionTable) {
-      return FALSE;
+      return false;
    } else if (interfaceVersion != INTERFACE_VERSION) {
-      return FALSE;
+      return false;
    }
    pFunctionTable->pfnClientConnect = ClientConnect_Post;
-   return TRUE;
+   return true;
 }
 
 static void ProcessBotCfgFile() {
@@ -5216,7 +5093,7 @@ static void ProcessBotCfgFile() {
 
    if (bot_cfg_fp == nullptr) {
       if (cfg_file == 1)
-         need_to_open_cfg2 = TRUE;
+         need_to_open_cfg2 = true;
       if (cfg_file == 2) {
          cfg_file = 0;
          bot_cfg_pause_time = 0.0; // stop it checking the file again :)
@@ -5268,7 +5145,7 @@ static void ProcessBotCfgFile() {
 
       // sort new cfg shiznit out
       if (cfg_file == 1)
-         need_to_open_cfg2 = TRUE;
+         need_to_open_cfg2 = true;
       if (cfg_file == 2) {
          cfg_file = 3; // 0 is for if it was null when we passed in
          bot_cfg_pause_time = 0.0;
@@ -5372,9 +5249,9 @@ static void ProcessBotCfgFile() {
       const int temp = atoi(arg1);
 
       if (temp)
-         b_observer_mode = TRUE;
+         b_observer_mode = true;
       else
-         b_observer_mode = FALSE;
+         b_observer_mode = false;
 
       return;
    }
@@ -5413,9 +5290,9 @@ static void ProcessBotCfgFile() {
       if (arg1 != nullptr) {
          const int temp = atoi(arg1);
          if (temp)
-            bot_team_balance = TRUE;
+            bot_team_balance = true;
          else
-            bot_team_balance = FALSE;
+            bot_team_balance = false;
       }
 
       if (IS_DEDICATED_SERVER()) {
@@ -5435,9 +5312,9 @@ static void ProcessBotCfgFile() {
       if (arg1 != nullptr) {
          const int temp = atoi(arg1);
          if (temp)
-            bot_bot_balance = TRUE;
+            bot_bot_balance = true;
          else
-            bot_bot_balance = FALSE;
+            bot_bot_balance = false;
       }
 
       if (IS_DEDICATED_SERVER()) {
@@ -5456,9 +5333,9 @@ static void ProcessBotCfgFile() {
 
    if (strcmp(cmd, "bot_xmas") == 0) {
       const int temp = atoi(arg1);
-      bot_xmas = TRUE;
+      bot_xmas = true;
       if (temp == 0) {
-         bot_xmas = FALSE;
+         bot_xmas = false;
          if (IS_DEDICATED_SERVER())
             printf("[Config] bot xmas (0) off\n");
          else {
@@ -5478,7 +5355,7 @@ static void ProcessBotCfgFile() {
 
    if (strcmp(cmd, "bot_can_build_teleporter") == 0) {
       if (strcmp(arg1, "on") == 0) {
-         bot_can_build_teleporter = TRUE;
+         bot_can_build_teleporter = true;
          if (IS_DEDICATED_SERVER())
             printf("[Config] bot_can_build_teleporter on\n");
          else {
@@ -5486,7 +5363,7 @@ static void ProcessBotCfgFile() {
             ALERT(at_console, msg);
          }
       } else if (strcmp(arg1, "off") == 0) {
-         bot_can_build_teleporter = FALSE;
+         bot_can_build_teleporter = false;
          if (IS_DEDICATED_SERVER())
             printf("[Config] bot_can_build_teleporter off\n");
          else {
@@ -5499,7 +5376,7 @@ static void ProcessBotCfgFile() {
 
    if (strcmp(cmd, "bot_can_use_teleporter") == 0) {
       if (strcmp(arg1, "on") == 0) {
-         bot_can_use_teleporter = TRUE;
+         bot_can_use_teleporter = true;
          if (IS_DEDICATED_SERVER())
             printf("[Config] bot_can_use_teleporter on\n");
          else {
@@ -5507,7 +5384,7 @@ static void ProcessBotCfgFile() {
             ALERT(at_console, msg);
          }
       } else if (strcmp(arg1, "off") == 0) {
-         bot_can_use_teleporter = FALSE;
+         bot_can_use_teleporter = false;
          if (IS_DEDICATED_SERVER())
             printf("[Config] bot_can_use_teleporter off\n");
          else {
@@ -5547,9 +5424,9 @@ static void ProcessBotCfgFile() {
    if (strcmp(cmd, "defensive_chatter") == 0) {
       const int temp = atoi(arg1);
       if (temp == 0)
-         defensive_chatter = FALSE;
+         defensive_chatter = false;
       else
-         defensive_chatter = TRUE;
+         defensive_chatter = true;
 
       if (IS_DEDICATED_SERVER()) {
          printf("[Config] defensive chatter is %s\n", arg1);
@@ -5562,9 +5439,9 @@ static void ProcessBotCfgFile() {
    if (strcmp(cmd, "offensive_chatter") == 0) {
       const int temp = atoi(arg1);
       if (temp == 0)
-         offensive_chatter = FALSE;
+         offensive_chatter = false;
       else
-         offensive_chatter = TRUE;
+         offensive_chatter = true;
 
       if (IS_DEDICATED_SERVER()) {
          printf("[Config] offensive chatter is %s\n", arg1);
@@ -5578,9 +5455,9 @@ static void ProcessBotCfgFile() {
                    {
                                    int temp = atoi( arg1 );
                                    if(temp == 0)
-                                                   frag_commander = FALSE;
+                                                   frag_commander = false;
                                    else
-                                                   frag_commander = TRUE;
+                                                   frag_commander = true;
 
                                    if(IS_DEDICATED_SERVER())
                                    {
@@ -5951,7 +5828,7 @@ static void DisplayBotInfo() {
 // command line or console.
 // e.g. the max_bots setting.
 static void changeBotSetting(const char *settingName, int *setting, const char *arg1, const int minValue, const int maxValue, const int settingSource) {
-   bool settingWasChanged = FALSE;
+   bool settingWasChanged = false;
 
    char msg[128] = "";
 
@@ -5965,7 +5842,7 @@ static void changeBotSetting(const char *settingName, int *setting, const char *
       const int temp = atoi(arg1);
       if (temp >= minValue && temp <= maxValue) {
          *setting = temp;
-         settingWasChanged = TRUE;
+         settingWasChanged = true;
       } else {
          // report that a bad setting was requested
 
@@ -6025,8 +5902,8 @@ static void kickBots(int totalToKick, const int team) {
          snprintf(cmd, 80, "kick \"%s\"\n", bots[index].name);
          cmd[79] = '\0';
          SERVER_COMMAND(cmd); // kick the bot using (kick "name")
-         ClearKickedBotsData(index, TRUE);
-         bots[index].is_used = FALSE;
+         ClearKickedBotsData(index, true);
+         bots[index].is_used = false;
          --totalToKick;
       }
    }
@@ -6060,14 +5937,14 @@ static void kickRandomBot() {
       snprintf(cmd, 80, "kick \"%s\"\n", bots[index].name);
       cmd[79] = '\0';
       SERVER_COMMAND(cmd); // kick the bot using (kick "name")
-      ClearKickedBotsData(index, TRUE);
-      bots[index].is_used = FALSE;
+      ClearKickedBotsData(index, true);
+      bots[index].is_used = false;
    }
 }
 
 // This function can be called when a bot has been kicked and will attempt
 // to clear all the bots data that might be unsafe if used.  e.g. pointers.
-// Set eraseBotsName to TRUE if you want the bots name to be forgotten too.
+// Set eraseBotsName to true if you want the bots name to be forgotten too.
 static void ClearKickedBotsData(const int botIndex, const bool eraseBotsName) {
    bots[botIndex].current_wp = -1; // just for the hell of it
 
@@ -6077,9 +5954,9 @@ static void ClearKickedBotsData(const int botIndex, const bool eraseBotsName) {
    bots[botIndex].suspectedSpy = nullptr;
    bots[botIndex].killer_edict = nullptr;
    bots[botIndex].killed_edict = nullptr;
-   bots[botIndex].has_sentry = FALSE;
+   bots[botIndex].has_sentry = false;
    bots[botIndex].sentry_edict = nullptr;
-   bots[botIndex].has_dispenser = FALSE;
+   bots[botIndex].has_dispenser = false;
    bots[botIndex].dispenser_edict = nullptr;
    bots[botIndex].tpEntrance = nullptr;
    bots[botIndex].tpExit = nullptr;
@@ -6089,7 +5966,7 @@ static void ClearKickedBotsData(const int botIndex, const bool eraseBotsName) {
    bots[botIndex].tpExitWP = -1;
 
    // clear the messaging data
-   bots[botIndex].newmsg = FALSE;
+   bots[botIndex].newmsg = false;
    bots[botIndex].message[0] = '\0';
    bots[botIndex].msgstart[0] = '\0';
 
@@ -6100,7 +5977,7 @@ static void ClearKickedBotsData(const int botIndex, const bool eraseBotsName) {
 
    // we don't like ya, so sod off!
    if (eraseBotsName) {
-      botJustJoined[botIndex] = TRUE;
+      botJustJoined[botIndex] = true;
       bots[botIndex].name[0] = '\0';
       bots[botIndex].bot_team = -1; // no team chosen
    }

@@ -1,5 +1,3 @@
-// This is an open source non-commercial project. Dear PVS-Studio, please check it.
-// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vi: set ts=4	sw=4 :
 // vim:	set	tw=75 :
 
@@ -54,7 +52,7 @@ meta_globals_t *gpMetaGlobals;   // metamod globals
 gamedll_funcs_t *gpGamedllFuncs; // gameDLL function	tables
 mutil_funcs_t *gpMetaUtilFuncs;  // metamod utility functions
 
-void Meta_Init() { mr_meta = TRUE; }
+void Meta_Init() { mr_meta = true; }
 
 // Metamod requesting info about this plugin:
 //	ifvers			(given)	interface_version metamod is using
@@ -74,7 +72,7 @@ C_DLLEXPORT int Meta_Query(char *ifvers, plugin_info_t **pPlugInfo, mutil_funcs_
       LOG_MESSAGE(PLID, "%s: meta-interface version mismatch (metamod: %s, %s: %s)", Plugin_info.name, ifvers, Plugin_info.name, Plugin_info.ifvers);
    }
 
-   return TRUE;
+   return true;
 }
 
 // Metamod attaching plugin	to the server.
@@ -87,16 +85,16 @@ C_DLLEXPORT int Meta_Attach(const PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTa
       // to satisfy gcc -Wunused
       if (!pMGlobals) {
          LOG_ERROR(PLID, "Meta_Attach called	with null pMGlobals");
-         return FALSE;
+         return false;
       }
    gpMetaGlobals = pMGlobals;
    if (!pFunctionTable) {
       LOG_ERROR(PLID, "Meta_Attach called	with null pFunctionTable");
-      return FALSE;
+      return false;
    }
    memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));
    gpGamedllFuncs = pGamedllFuncs;
-   return TRUE;
+   return true;
 }
 
 // Metamod detaching plugin	from the server.
@@ -105,6 +103,6 @@ C_DLLEXPORT int Meta_Attach(const PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTa
 C_DLLEXPORT int Meta_Detach(const PLUG_LOADTIME now, const PL_UNLOAD_REASON reason) {
    if (now && reason)
       // to satisfy gcc -Wunused
-      return TRUE;
+      return true;
    return 0;
 }

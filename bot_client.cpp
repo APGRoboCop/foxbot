@@ -1,5 +1,3 @@
-// This is an open source non-commercial project. Dear PVS-Studio, please check it.
-// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // FoXBot - AI Bot for Halflife's Team Fortress Classic
 //
@@ -546,8 +544,8 @@ void BotClient_Valve_Damage(void *p, const int bot_index) {
             bots[bot_index].f_injured_time = gpGlobals->time;
 
             // stop using health or HEV stations...
-            bots[bot_index].b_use_health_station = FALSE;
-            bots[bot_index].b_use_HEV_station = FALSE;
+            bots[bot_index].b_use_health_station = false;
+            bots[bot_index].b_use_HEV_station = false;
          }
       }
    }

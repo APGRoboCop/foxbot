@@ -1,5 +1,3 @@
-// This is an open source non-commercial project. Dear PVS-Studio, please check it.
-// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // FoXBot - AI Bot for Halflife's Team Fortress Classic
 //
@@ -70,7 +68,7 @@ static bool name_message_check(const char *msg_string, const char *name_string);
 
 int debug_engine = 0;
 
-bool spawn_check_crash = FALSE;
+bool spawn_check_crash = false;
 int spawn_check_crash_count = 0;
 edict_t *spawn_check_crash_edict = nullptr;
 
@@ -108,10 +106,10 @@ int message_StatusValue = 0;
 int message_Detpack = 0;
 int message_SecAmmoVal = 0;
 
-bool MM_func = FALSE;
+bool MM_func = false;
 static FILE *fp;
 
-bool dont_send_packet = FALSE;
+bool dont_send_packet = false;
 
 char sz_error_check[255];
 
@@ -153,13 +151,13 @@ void pfnRemoveEntity(edict_t *e) {
 
          if (bots[i].pEdict->v.playerclass == TFC_CLASS_ENGINEER) {
             if (bots[i].sentry_edict == e) {
-               bots[i].has_sentry = FALSE;
+               bots[i].has_sentry = false;
                bots[i].sentry_edict = nullptr;
-               bots[i].SGRotated = FALSE;
+               bots[i].SGRotated = false;
             }
 
             if (bots[i].dispenser_edict == e) {
-               bots[i].has_dispenser = FALSE;
+               bots[i].has_dispenser = false;
                bots[i].dispenser_edict = nullptr;
             }
 
@@ -331,13 +329,13 @@ void pfnClientCommand(edict_t *pEdict, char *szFmt, ...) {
 
    if (pEdict != nullptr) {
       // if(!((pEdict->v.flags & FL_FAKECLIENT)==FL_FAKECLIENT))
-      bool b = FALSE;
+      bool b = false;
       if (!((pEdict->v.flags & FL_FAKECLIENT) == FL_FAKECLIENT)) {
          for (int i = 0; i < 32; i++) {
             // if(!((pEdict->v.flags & FL_FAKECLIENT)==FL_FAKECLIENT))
             // bots[i].is_used &&
             if (clients[i] == pEdict)
-               b = TRUE;
+               b = true;
             /*if(bots[i].pEdict==pEdict && (GETPLAYERWONID(pEdict)==0 || ENTINDEX(pEdict)==-1 ||
                (GETPLAYERWONID(pEdict)==-1 && IS_DEDICATED_SERVER())))
                {
@@ -354,7 +352,7 @@ void pfnClientCommand(edict_t *pEdict, char *szFmt, ...) {
          strncpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"), 120);
          //{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"cl %d name %s\n",i,cl_name); fclose(fp); }
          if (cl_name[0] == '\0' || infobuffer == nullptr)
-            b = FALSE;
+            b = false;
          //	unsigned int u=GETPLAYERWONID(pEdict);
          //	if((u==0 || ENTINDEX(pEdict)==-1))
          //		b=false;
@@ -387,14 +385,14 @@ void pfnClCom(edict_t *pEdict, char *szFmt, ...) {
    }
    snprintf(sz_error_check, 250, "-pfnClientCom=%s %p\n", szFmt, static_cast<void *>(pEdict));
    if (pEdict != nullptr) {
-      bool b = FALSE;
+      bool b = false;
 
       if (!((pEdict->v.flags & FL_FAKECLIENT) == FL_FAKECLIENT)) {
          for (int i = 0; i < 32; i++) {
             // if(!((pEdict->v.flags & FL_FAKECLIENT)==FL_FAKECLIENT))
             // bots[i].is_used &&
             if (clients[i] == pEdict)
-               b = TRUE;
+               b = true;
             /*if(bots[i].pEdict==pEdict && (GETPLAYERWONID(pEdict)==0 || ENTINDEX(pEdict)==-1 ||
                (GETPLAYERWONID(pEdict)==-1 && IS_DEDICATED_SERVER())))
                b=false;*/
@@ -408,7 +406,7 @@ void pfnClCom(edict_t *pEdict, char *szFmt, ...) {
          strncpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"), 120);
          //{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"cl %d name %s\n",i,cl_name); fclose(fp); }
          if (cl_name[0] == '\0' || infobuffer == nullptr)
-            b = FALSE;
+            b = false;
          // unsigned int u=GETPLAYERWONID(pEdict);
          // if((u==0 || ENTINDEX(pEdict)==-1))
          //	b=false;
@@ -435,9 +433,9 @@ void pfnClCom(edict_t *pEdict, char *szFmt, ...) {
 }
 
 void MessageBegin(const int msg_dest, const int msg_type, const float *pOrigin, edict_t *ed) {
-   MM_func = TRUE;
+   MM_func = true;
    pfnMessageBegin(msg_dest, msg_type, pOrigin, ed);
-   MM_func = FALSE;
+   MM_func = false;
 }
 
 void pfnMessageBegin(const int msg_dest, const int msg_type, const float *pOrigin, edict_t *ed) {
@@ -543,9 +541,9 @@ void pfnMessageBegin(const int msg_dest, const int msg_type, const float *pOrigi
 }
 
 void MessageEnd() {
-   MM_func = TRUE;
+   MM_func = true;
    pfnMessageEnd();
-   MM_func = FALSE;
+   MM_func = false;
 }
 
 void pfnMessageEnd() {
@@ -567,22 +565,22 @@ void pfnMessageEnd() {
 
    if (mr_meta && MM_func) {
       if (dont_send_packet) {
-         dont_send_packet = FALSE;
+         dont_send_packet = false;
          RETURN_META(MRES_SUPERCEDE);
       } else
          RETURN_META(MRES_HANDLED);
    }
    if (dont_send_packet) {
-      dont_send_packet = FALSE;
+      dont_send_packet = false;
       return;
    } else
       (*g_engfuncs.pfnMessageEnd)();
 }
 
 void WriteByte(const int iValue) {
-   MM_func = TRUE;
+   MM_func = true;
    pfnWriteByte(iValue);
-   MM_func = FALSE;
+   MM_func = false;
 }
 
 void pfnWriteByte(int iValue) {
@@ -613,9 +611,9 @@ void pfnWriteByte(int iValue) {
 }
 
 void WriteChar(const int iValue) {
-   MM_func = TRUE;
+   MM_func = true;
    pfnWriteChar(iValue);
-   MM_func = FALSE;
+   MM_func = false;
 }
 
 void pfnWriteChar(int iValue) {
@@ -646,9 +644,9 @@ void pfnWriteChar(int iValue) {
 }
 
 void WriteShort(const int iValue) {
-   MM_func = TRUE;
+   MM_func = true;
    pfnWriteShort(iValue);
-   MM_func = FALSE;
+   MM_func = false;
 }
 
 void pfnWriteShort(int iValue) {
@@ -679,9 +677,9 @@ void pfnWriteShort(int iValue) {
 }
 
 void WriteLong(const int iValue) {
-   MM_func = TRUE;
+   MM_func = true;
    pfnWriteLong(iValue);
-   MM_func = FALSE;
+   MM_func = false;
 }
 
 void pfnWriteLong(int iValue) {
@@ -712,9 +710,9 @@ void pfnWriteLong(int iValue) {
 }
 
 void WriteAngle(const float flValue) {
-   MM_func = TRUE;
+   MM_func = true;
    pfnWriteAngle(flValue);
-   MM_func = FALSE;
+   MM_func = false;
 }
 
 void pfnWriteAngle(float flValue) {
@@ -745,9 +743,9 @@ void pfnWriteAngle(float flValue) {
 }
 
 void WriteCoord(const float flValue) {
-   MM_func = TRUE;
+   MM_func = true;
    pfnWriteCoord(flValue);
-   MM_func = FALSE;
+   MM_func = false;
 }
 
 void pfnWriteCoord(float flValue) {
@@ -778,9 +776,9 @@ void pfnWriteCoord(float flValue) {
 }
 
 void WriteString(const char *sz) {
-   MM_func = TRUE;
+   MM_func = true;
    pfnWriteString(sz);
-   MM_func = FALSE;
+   MM_func = false;
 }
 
 void pfnWriteString(const char *sz) {
@@ -812,9 +810,9 @@ void pfnWriteString(const char *sz) {
 }
 
 void WriteEntity(const int iValue) {
-   MM_func = TRUE;
+   MM_func = true;
    pfnWriteEntity(iValue);
-   MM_func = FALSE;
+   MM_func = false;
 }
 
 void pfnWriteEntity(int iValue) {
@@ -916,7 +914,7 @@ void pfnClientPrintf(edict_t *pEdict, const PRINT_TYPE ptype, const char *szMsg)
 
    // only send message if its not a bot...
    if (pEdict != nullptr) {
-      bool b = FALSE;
+      bool b = false;
       if (!(pEdict->v.flags & FL_FAKECLIENT)) {
          for (int i = 0; i < 32; i++) {
             // if(!((pEdict->v.flags & FL_FAKECLIENT)==FL_FAKECLIENT))
@@ -924,7 +922,7 @@ void pfnClientPrintf(edict_t *pEdict, const PRINT_TYPE ptype, const char *szMsg)
             /*if(clients[i]!=NULL)
                snprintf(sz_error_check,250,"%s %x %d\n",sz_error_check,clients[i],i);*/
             if (clients[i] == pEdict)
-               b = TRUE;
+               b = true;
             /*if(bots[i].pEdict==pEdict && (GETPLAYERWONID(pEdict)==0 || ENTINDEX(pEdict)==-1 ||
                (GETPLAYERWONID(pEdict)==-1 && IS_DEDICATED_SERVER())))
                {
@@ -944,7 +942,7 @@ void pfnClientPrintf(edict_t *pEdict, const PRINT_TYPE ptype, const char *szMsg)
 
          //{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"cl %d name %s\n",i,cl_name); fclose(fp); }
          if (infobuffer == nullptr)
-            b = FALSE;
+            b = false;
          //	unsigned int u=GETPLAYERWONID(pEdict);
          //	if((u==0 || ENTINDEX(pEdict)==-1))
          //	{
@@ -991,7 +989,7 @@ void pfnClPrintf(edict_t *pEdict, PRINT_TYPE ptype, const char *szMsg) {
 
    // only send message if its not a bot...
    if (pEdict != nullptr) {
-      bool b = FALSE;
+      bool b = false;
       if (!((pEdict->v.flags & FL_FAKECLIENT) == FL_FAKECLIENT)) {
          for (int i = 0; i < 32; i++) {
             // if(!((pEdict->v.flags & FL_FAKECLIENT)==FL_FAKECLIENT))
@@ -1001,7 +999,7 @@ void pfnClPrintf(edict_t *pEdict, PRINT_TYPE ptype, const char *szMsg) {
                             || (GETPLAYERWONID(pEdict)==-1 && IS_DEDICATED_SERVER())))
                b=false;*/
             if (clients[i] == pEdict)
-               b = TRUE;
+               b = true;
          }
       }
       if (b) {
@@ -1013,7 +1011,7 @@ void pfnClPrintf(edict_t *pEdict, PRINT_TYPE ptype, const char *szMsg) {
          /*{ fp=UTIL_OpenFoxbotLog();
                          fprintf(fp,"cl %d name %s\n",i,cl_name); fclose(fp);}*/
          if (cl_name[0] == '\0' || infobuffer == nullptr)
-            b = FALSE;
+            b = false;
          //	unsigned int u=GETPLAYERWONID(pEdict);
          //	if((u==0 || ENTINDEX(pEdict)==-1))
          //		b=false;
@@ -1041,7 +1039,7 @@ void pfnServerPrint(const char *szMsg) {
    // if were gonna deal with commands for bots (e.i.'follow user')
    // then this is a good place to start
 
-   // bool loop = TRUE;
+   // bool loop = true;
    char sz[1024]; // needs to be defined at max message length..is 1024 ok?
    char msgstart[255];
    char buffa[255];
@@ -1106,7 +1104,7 @@ void pfnServerPrint(const char *szMsg) {
 
             strncpy(bots[i].message, szMsg, 253);
             strncpy(bots[i].msgstart, msgstart, 253);
-            bots[i].newmsg = TRUE; // tell the bot it has mail
+            bots[i].newmsg = true; // tell the bot it has mail
          }
       }
 
@@ -1124,7 +1122,7 @@ static bool name_message_check(const char *msg_string, const char *name_string) 
    const size_t name_end = strlen(name_string) - (size_t)1;
 
    if (msg_length < name_end)
-      return FALSE;
+      return false;
 
    /*	{
                                    fp = UTIL_OpenFoxbotLog();
@@ -1141,14 +1139,14 @@ static bool name_message_check(const char *msg_string, const char *name_string) 
       if (msg_string[i] == name_string[j]) {
          // found the last matching character of the bots name?
          if (j >= name_end)
-            return TRUE;
+            return true;
 
          ++j; // go on to the next character of the bots name
       } else
          j = 0; // reset to the start of the bots name
    }
 
-   return FALSE;
+   return false;
 }
 
 C_DLLEXPORT int GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *interfaceVersion) {
@@ -1180,11 +1178,11 @@ C_DLLEXPORT int GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *inte
    pengfuncsFromEngine->pfnClientCommand = pfnClCom;
    pengfuncsFromEngine->pfnClientPrintf = pfnClPrintf;
 
-   return TRUE;
+   return true;
 }
 
 int GetEngineFunctions_Post(enginefuncs_t *pengfuncsFromEngine, int *interfaceVersion) {
 
    pengfuncsFromEngine->pfnRegUserMsg = pfnRegUserMsg_post;
-   return TRUE;
+   return true;
 }

@@ -1,5 +1,3 @@
-// This is an open source non-commercial project. Dear PVS-Studio, please check it.
-// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // FoXBot - AI Bot for Halflife's Team Fortress Classic
 //
@@ -153,7 +151,7 @@ int assess_JobPickUpItem(const bot_t *pBot, const job_struct &r_job) {
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobPickUpFlag(const bot_t *pBot, const job_struct &r_job) {
    // recommend the job be removed if it is invalid
-   if (pBot->bot_has_flag == TRUE || FNullEnt(r_job.object) || r_job.object->v.owner != nullptr // i.e. someone is carrying it
+   if (pBot->bot_has_flag == true || FNullEnt(r_job.object) || r_job.object->v.owner != nullptr // i.e. someone is carrying it
        || r_job.f_bufferedTime + 300.0 < pBot->f_think_time)
       return PRIORITY_NONE;
 
@@ -281,7 +279,7 @@ int assess_JobBuildSentry(const bot_t *pBot, const job_struct &r_job) {
 
    // check the conditions at job start
    if (r_job.phase == 0) {
-      if (pBot->has_sentry == TRUE || pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] < 140)
+      if (pBot->has_sentry == true || pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] < 140)
          return PRIORITY_NONE;
    }
 
@@ -302,7 +300,7 @@ int assess_JobBuildSentry(const bot_t *pBot, const job_struct &r_job) {
 int assess_JobBuildDispenser(const bot_t *pBot, const job_struct &r_job) {
    // check the conditions at job start
    if (r_job.phase == 0) {
-      if (pBot->has_dispenser == TRUE || pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] < 140)
+      if (pBot->has_dispenser == true || pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] < 140)
          return PRIORITY_NONE;
    }
 
@@ -332,7 +330,7 @@ int assess_JobBuildTeleport(const bot_t *pBot, const job_struct &r_job) {
    }
 
    // recommend the job be removed if it is invalid
-   if (bot_can_build_teleporter == FALSE || pBot->pEdict->v.playerclass != TFC_CLASS_ENGINEER || r_job.f_bufferedTime <= pBot->f_killed_time)
+   if (bot_can_build_teleporter == false || pBot->pEdict->v.playerclass != TFC_CLASS_ENGINEER || r_job.f_bufferedTime <= pBot->f_killed_time)
       return PRIORITY_NONE;
 
    // check the waypoints validity
@@ -510,7 +508,7 @@ int assess_JobDisguise(const bot_t *pBot, const job_struct &r_job) {
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobFeignAmbush(const bot_t *pBot, const job_struct &r_job) {
    // recommend the job be removed if it is invalid
-   if (pBot->bot_has_flag || r_job.f_bufferedTime < pBot->f_killed_time || pBot->f_injured_time + 1.0 > pBot->f_think_time || pBot->nadePrimed == TRUE || PlayerIsInfected(pBot->pEdict))
+   if (pBot->bot_has_flag || r_job.f_bufferedTime < pBot->f_killed_time || pBot->f_injured_time + 1.0 > pBot->f_think_time || pBot->nadePrimed == true || PlayerIsInfected(pBot->pEdict))
       return PRIORITY_NONE;
 
    // the job can't be left to sleep, it's best done where it was triggered
@@ -606,7 +604,7 @@ int assess_JobGetFlag(const bot_t *pBot, const job_struct &r_job) {
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobCaptureFlag(const bot_t *pBot, const job_struct &r_job) {
    // recommend the job be removed if it is invalid
-   if (pBot->bot_has_flag == FALSE)
+   if (pBot->bot_has_flag == false)
       return PRIORITY_NONE;
 
    // check the waypoints validity
@@ -866,7 +864,7 @@ int assess_JobAvoidAreaDamage(const bot_t *pBot, const job_struct &r_job) {
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobInfectedAttack(const bot_t *pBot, const job_struct &r_job) {
    // recommend the job be removed if it is invalid
-   if (r_job.f_bufferedTime < pBot->f_killed_time || pBot->bot_has_flag || PlayerIsInfected(pBot->pEdict) == FALSE)
+   if (r_job.f_bufferedTime < pBot->f_killed_time || pBot->bot_has_flag || PlayerIsInfected(pBot->pEdict) == false)
       return PRIORITY_NONE;
 
    return jl[JOB_INFECTED_ATTACK].basePriority;
@@ -876,7 +874,7 @@ int assess_JobInfectedAttack(const bot_t *pBot, const job_struct &r_job) {
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobBinGrenade(const bot_t *pBot, const job_struct &r_job) {
    // recommend the job be removed if it is invalid
-   if ((r_job.phase == 0 && pBot->nadePrimed == FALSE) || pBot->enemy.ptr != nullptr || r_job.f_bufferedTime < pBot->f_killed_time || r_job.f_bufferedTime + 5.0 < pBot->f_think_time) {
+   if ((r_job.phase == 0 && pBot->nadePrimed == false) || pBot->enemy.ptr != nullptr || r_job.f_bufferedTime < pBot->f_killed_time || r_job.f_bufferedTime + 5.0 < pBot->f_think_time) {
       return PRIORITY_NONE;
    }
 

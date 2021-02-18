@@ -1,5 +1,3 @@
-// This is an open source non-commercial project. Dear PVS-Studio, please check it.
-// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // FoXBot - AI Bot for Halflife's Team Fortress Classic
 //
@@ -61,7 +59,7 @@ extern int bot_skill_1_aim;   // accuracy for skill 1 bots
 extern int bot_aim_per_skill; // accuracy modifier for bots from skill 1 downwards
 
 // accuracy levels for each bot skill level
-static float bot_max_inaccuracy[5] = {22.0, 33.0, 44.0, 55.0, 66.0};
+static float bot_max_inaccuracy[5] = {20.0, 30.0, 40.0, 50.0, 60.0};
 static float bot_snipe_max_inaccuracy[5] = {15.0, 25.0, 35.0, 45.0, 55.0};
 
 extern bool is_team[4];
@@ -123,26 +121,26 @@ char *ntfTargetChecks[] = {
 
 // weapons are stored in priority order, most desired weapon should be at
 // the start of the array and least desired should be at the end
-static bot_weapon_select_t tfc_weapon_select[] = {{TF_WEAPON_KNIFE, "tf_weapon_knife", 5, 0.0, 90.0, 0.0, 0.0, 100, TRUE, 100, 0, 0, FALSE, FALSE, FALSE, FALSE, 0.0, 0.0},
-                                                  {TF_WEAPON_SPANNER, "tf_weapon_spanner", 5, 0.0, 80.0, 0.0, 0.0, 100, TRUE, 100, 0, 0, FALSE, FALSE, FALSE, FALSE, 0.0, 0.0},
-                                                  {TF_WEAPON_MEDIKIT, "tf_weapon_medikit", 5, 0.0, 80.0, 0.0, 0.0, 100, TRUE, 100, 0, 0, FALSE, FALSE, FALSE, FALSE, 0.0, 0.0},
-                                                  {TF_WEAPON_SNIPERRIFLE, "tf_weapon_sniperrifle", 5, 300.0, 4000.0, 0.0, 0.0, 100, TRUE, 100, 1, 0, FALSE, FALSE, TRUE, FALSE, 2.0, 0.0},
-                                                  {TF_WEAPON_FLAMETHROWER, "tf_weapon_flamethrower", 5, 0.0, 400.0, 0.0, 0.0, 100, FALSE, 100, 1, 0, TRUE, FALSE, FALSE, FALSE, 0.0, 0.0},
-                                                  {TF_WEAPON_AC, "tf_weapon_ac", 5, 0.0, 2500.0, 0.0, 0.0, 100, TRUE, 100, 1, 0, TRUE, FALSE, FALSE, FALSE, 0.0, 0.0},
-                                                  {TF_WEAPON_RPG, "tf_weapon_rpg", 5, 150.0, 3000.0, 0.0, 0.0, 100, TRUE, 100, 1, 0, FALSE, FALSE, FALSE, FALSE, 0.0, 0.0},
-                                                  {TF_WEAPON_IC, "tf_weapon_ic", 5, 300.0, 2000.0, 0.0, 0.0, 100, TRUE, 100, 1, 0, FALSE, FALSE, FALSE, FALSE, 0.0, 0.0},
-                                                  {TF_WEAPON_SUPERSHOTGUN, "tf_weapon_supershotgun", 5, 0.0, 2000.0, 0.0, 0.0, 100, TRUE, 100, 2, 0, FALSE, FALSE, FALSE, FALSE, 0.0, 0.0},
-                                                  {TF_WEAPON_SUPERNAILGUN, "tf_weapon_superng", 5, 40.0, 200.0, 0.0, 0.0, 50, TRUE, 50, 1, 0, TRUE, FALSE, FALSE, FALSE, 0.0, 0.0},
-                                                  {TF_WEAPON_TRANQ, "tf_weapon_tranq", 5, 0.0, 100.0, 0.0, 0.0, 20, TRUE, 20, 1, 0, FALSE, FALSE, FALSE, FALSE, 0.0, 0.0},
-                                                  {TF_WEAPON_AUTORIFLE, "tf_weapon_autorifle", 5, 0.0, 1000.0, 0.0, 0.0, 100, TRUE, 100, 1, 0, FALSE, FALSE, FALSE, FALSE, 0.0, 0.0},
-                                                  {TF_WEAPON_AXE, "tf_weapon_axe", 5, 0.0, 80.0, 0.0, 0.0, 100, TRUE, 100, 0, 0, FALSE, FALSE, FALSE, FALSE, 0.0, 0.0},
-                                                  {TF_WEAPON_PL, "tf_weapon_pl", 5, 300.0, 600.0, 0.0, 0.0, 100, TRUE, 100, 1, 0, FALSE, FALSE, FALSE, FALSE, 0.0, 0.0},
-                                                  {TF_WEAPON_GL, "tf_weapon_gl", 5, 150.0, 600.0, 0.0, 0.0, 100, TRUE, 100, 1, 0, FALSE, FALSE, FALSE, FALSE, 0.0, 0.0},
-                                                  {TF_WEAPON_SHOTGUN, "tf_weapon_shotgun", 5, 0.0, 4000.0, 0.0, 0.0, 75, TRUE, 100, 1, 0, FALSE, FALSE, FALSE, FALSE, 0.0, 0.0},
-                                                  {TF_WEAPON_NAILGUN, "tf_weapon_ng", 5, 40.0, 300.0, 0.0, 0.0, 20, TRUE, 20, 1, 0, FALSE, FALSE, FALSE, FALSE, 0.0, 0.0},
-                                                  {TF_WEAPON_RAILGUN, "tf_weapon_railgun", 5, 80.0, 200.0, 0.0, 0.0, 20, TRUE, 20, 1, 0, FALSE, FALSE, FALSE, FALSE, 0.0, 0.0},
+static bot_weapon_select_t tfc_weapon_select[] = {{TF_WEAPON_KNIFE, "tf_weapon_knife", 5, 0.0, 80.0, 0.0, 0.0, 100, true, 100, 0, 0, false, false, false, false, 0.0, 0.0},
+                                                  {TF_WEAPON_SPANNER, "tf_weapon_spanner", 5, 0.0, 60.0, 0.0, 0.0, 100, true, 100, 0, 0, false, false, false, false, 0.0, 0.0},
+                                                  {TF_WEAPON_MEDIKIT, "tf_weapon_medikit", 5, 0.0, 60.0, 0.0, 0.0, 100, true, 100, 0, 0, false, false, false, false, 0.0, 0.0},
+                                                  {TF_WEAPON_SNIPERRIFLE, "tf_weapon_sniperrifle", 5, 300.0, 4000.0, 0.0, 0.0, 100, true, 100, 1, 0, false, false, true, false, 2.0, 0.0},
+                                                  {TF_WEAPON_FLAMETHROWER, "tf_weapon_flamethrower", 5, 0.0, 400.0, 0.0, 0.0, 100, false, 100, 1, 0, true, false, false, false, 0.0, 0.0},
+                                                  {TF_WEAPON_AC, "tf_weapon_ac", 5, 0.0, 2000.0, 0.0, 0.0, 100, true, 100, 1, 0, true, false, false, false, 0.0, 0.0},
+                                                  {TF_WEAPON_RPG, "tf_weapon_rpg", 5, 150.0, 3000.0, 0.0, 0.0, 100, true, 100, 1, 0, false, false, false, false, 0.0, 0.0},
+                                                  {TF_WEAPON_IC, "tf_weapon_ic", 5, 150.0, 2000.0, 0.0, 0.0, 100, true, 100, 1, 0, false, false, false, false, 0.0, 0.0},
+                                                  {TF_WEAPON_SUPERSHOTGUN, "tf_weapon_supershotgun", 5, 0.0, 2000.0, 0.0, 0.0, 100, true, 100, 2, 0, false, false, false, false, 0.0, 0.0},
+                                                  {TF_WEAPON_SUPERNAILGUN, "tf_weapon_superng", 5, 40.0, 2000.0, 0.0, 0.0, 20, true, 100, 1, 0, true, false, false, false, 0.0, 0.0},
+                                                  {TF_WEAPON_TRANQ, "tf_weapon_tranq", 5, 0.0, 100.0, 0.0, 0.0, 20, true, 20, 1, 0, false, false, false, false, 0.0, 0.0},
+                                                  {TF_WEAPON_AUTORIFLE, "tf_weapon_autorifle", 5, 0.0, 1000.0, 0.0, 0.0, 100, true, 100, 1, 0, false, false, false, false, 0.0, 0.0},
+                                                  {TF_WEAPON_AXE, "tf_weapon_axe", 5, 0.0, 60.0, 0.0, 0.0, 100, true, 100, 0, 0, false, false, false, false, 0.0, 0.0},
+                                                  {TF_WEAPON_PL, "tf_weapon_pl", 5, 150.0, 600.0, 0.0, 0.0, 100, true, 100, 1, 0, false, false, false, false, 0.0, 0.0},
+                                                  {TF_WEAPON_GL, "tf_weapon_gl", 5, 150.0, 600.0, 0.0, 0.0, 100, true, 100, 1, 0, false, false, false, false, 0.0, 0.0},
+                                                  {TF_WEAPON_SHOTGUN, "tf_weapon_shotgun", 5, 0.0, 2000.0, 0.0, 0.0, 50, true, 100, 1, 0, false, false, false, false, 0.0, 0.0},
+                                                  {TF_WEAPON_NAILGUN, "tf_weapon_ng", 5, 40.0, 2000.0, 0.0, 0.0, 20, true, 20, 1, 0, false, false, false, false, 0.0, 0.0},
+                                                  {TF_WEAPON_RAILGUN, "tf_weapon_railgun", 5, 80.0, 2000.0, 0.0, 0.0, 20, true, 20, 1, 0, false, false, false, false, 0.0, 0.0},
                                                   /* terminator */
-                                                  {0, "", 0, 0.0, 0.0, 0.0, 0.0, 0, TRUE, 0, 1, 1, FALSE, FALSE, FALSE, FALSE, 0.0, 0.0}};
+                                                  {0, "", 0, 0.0, 0.0, 0.0, 0.0, 0, true, 0, 1, 1, false, false, false, false, 0.0, 0.0}};
 
 static bot_fire_delay_t tfc_fire_delay[] = {{TF_WEAPON_KNIFE, 0.3, {0.0, 0.2, 0.3, 0.4, 0.6}, {0.1, 0.3, 0.5, 0.7, 1.0}, 0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}},
                                             {TF_WEAPON_SPANNER, 0.3, {0.0, 0.2, 0.3, 0.4, 0.6}, {0.1, 0.3, 0.5, 0.7, 1.0}, 0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}},
@@ -172,7 +170,7 @@ void BotCheckTeamplay() {
    else
       is_team_play = CVAR_GET_FLOAT("mp_teamplay"); // teamplay enabled?
 
-   checked_teamplay = TRUE;
+   checked_teamplay = true;
 }
 
 // This function can be used to report the number of players using the specified class
@@ -184,7 +182,7 @@ int FriendlyClassTotal(edict_t *pEdict, const int specifiedClass, const bool ign
 
    // report failure if there is no team play
    if (is_team_play <= 0 || mod_id != TFC_DLL)
-      return FALSE;
+      return false;
 
    const int my_team = UTIL_GetTeam(pEdict);
    int classTotal = 0;
@@ -330,7 +328,7 @@ void BotEnemyCheck(bot_t *pBot) {
                   snprintf(msg, MAX_CHAT_LENGTH, "Sentry Down %s", areas[area].named);
                msg[MAX_CHAT_LENGTH - 1] = '\0';
 
-               bool destruction_reported = FALSE;
+               bool destruction_reported = false;
 
                for (int i = 0; i < 32; i++) {
                   if (bots[i].is_used && bots[i].lastEnemySentryGun == deadSG) {
@@ -343,7 +341,7 @@ void BotEnemyCheck(bot_t *pBot) {
                            newJob->message[MAX_CHAT_LENGTH - 1] = '\0';
                            SubmitNewJob(&bots[i], JOB_REPORT, newJob);
 
-                           destruction_reported = TRUE;
+                           destruction_reported = true;
                         }
                      }
 
@@ -365,7 +363,7 @@ void BotEnemyCheck(bot_t *pBot) {
    }
 
    // clear this, it's tested below
-   pBot->enemy.seenWithFlag = FALSE;
+   pBot->enemy.seenWithFlag = false;
 
    // if the bot has a current enemy, check if it's still valid
    if (pBot->enemy.ptr != nullptr) {
@@ -386,7 +384,7 @@ void BotEnemyCheck(bot_t *pBot) {
          if (random_long(1, 100) <= 20)
             pBot->pEdict->v.button |= IN_JUMP;
          if (random_long(1, 100) <= 20)
-            BotSprayLogo(pBot->pEdict, TRUE);
+            BotSprayLogo(pBot->pEdict, true);
 
          // don't have an enemy anymore so null out the pointer...
          pBot->enemy.ptr = nullptr;
@@ -406,7 +404,7 @@ void BotEnemyCheck(bot_t *pBot) {
          // check and remember if the bots enemy has a flag
          // so that we can avoid repeating this test elsewhere
          if (PlayerHasFlag(pBot->enemy.ptr))
-            pBot->enemy.seenWithFlag = TRUE;
+            pBot->enemy.seenWithFlag = true;
 
          // this code segment sets up a snipers sniper rifle firing delay
          if (pBot->pEdict->v.playerclass == TFC_CLASS_SNIPER && pBot->current_weapon.iId == TF_WEAPON_SNIPERRIFLE) {
@@ -450,7 +448,7 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
    edict_t *pEdict = pBot->pEdict;
 
    int i;
-   bool return_null = FALSE;
+   bool return_null = false;
    edict_t *pNewEnemy = nullptr;
    edict_t *pent;
    Vector vecEnd;
@@ -460,11 +458,11 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
    if (mod_id == TFC_DLL) {
       // if bot is a disguised spy consider not targetting anyone
       if (pEdict->v.playerclass == TFC_CLASS_SPY && pBot->enemy.ptr == nullptr && pBot->disguise_state == DISGUISE_COMPLETE && pBot->f_injured_time + 0.5f < pBot->f_think_time)
-         return_null = TRUE;
+         return_null = true;
 
       // if injured whilst carrying a flag always shoot back
       if (pBot->f_injured_time + 0.3f > pBot->f_think_time && pBot->bot_has_flag)
-         return_null = FALSE;
+         return_null = false;
    }
 
    // if the bot currently has an enemy
@@ -492,7 +490,7 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
                nearestDistance = distance;
                pNewEnemy = pent;
 
-               return_null = FALSE;
+               return_null = false;
                BotSGSpotted(pBot, pent);
             }
          }
@@ -520,7 +518,7 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
                nearestDistance = distance;
                pNewEnemy = pent;
 
-               return_null = FALSE;
+               return_null = false;
                BotSGSpotted(pBot, pent);
             }
          }
@@ -666,7 +664,7 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
             if (distance < nearestDistance && FInViewCone(vecEnd, pEdict) && FVisible(vecEnd, pEdict)) {
                nearestDistance = distance;
                pNewEnemy = pent;
-               return_null = FALSE;
+               return_null = false;
 
                BotSGSpotted(pBot, pent);
             }
@@ -695,7 +693,7 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
             if (distance < nearestDistance && FInViewCone(vecEnd, pEdict) && FVisible(vecEnd, pEdict)) {
                nearestDistance = distance;
                pNewEnemy = pent;
-               return_null = FALSE;
+               return_null = false;
             }
          }
          // This function loops through the multiguns
@@ -718,9 +716,9 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
          BotCheckTeamplay();
 
       // track whether or not the bot is willing to escort an ally
-      bool canEscort = FALSE;
+      bool canEscort = false;
       if (!pBot->bot_has_flag && !BufferContainsJobType(pBot, JOB_ESCORT_ALLY))
-         canEscort = TRUE;
+         canEscort = true;
 
       // search the world for players...
       for (i = 1; i <= gpGlobals->maxClients; i++) {
@@ -737,7 +735,7 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
             if (b_observer_mode && !(pPlayer->v.flags & FL_FAKECLIENT))
                continue;
 
-            player_is_ally = FALSE;
+            player_is_ally = false;
 
             // is team play enabled?
             if (is_team_play > 0.0) {
@@ -745,12 +743,12 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
 
                // don't target your teammates...
                if (pBot->current_team == player_team)
-                  player_is_ally = TRUE;
+                  player_is_ally = true;
 
                if (mod_id == TFC_DLL) {
                   // don't target your allies either...
                   if (team_allies[pBot->current_team] & 1 << player_team)
-                     player_is_ally = TRUE;
+                     player_is_ally = true;
 
                   // so disguised spys wont attack other disguised spys
                   if (pEdict->v.playerclass == TFC_CLASS_SPY && pPlayer->v.playerclass == TFC_CLASS_SPY && pBot->current_team == UTIL_GetTeamColor(pPlayer))
@@ -777,8 +775,8 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
                      if (newJob != nullptr) {
                         newJob->player = pPlayer;
                         newJob->origin = pPlayer->v.origin; // remember where
-                        if (SubmitNewJob(pBot, JOB_ESCORT_ALLY, newJob) == TRUE)
-                           canEscort = FALSE;
+                        if (SubmitNewJob(pBot, JOB_ESCORT_ALLY, newJob) == true)
+                           canEscort = false;
                      }
                   }
                }
@@ -813,7 +811,7 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
       if (pBot->pEdict->v.playerclass == TFC_CLASS_SPY && pBot->bot_real_health > 25 && !pBot->enemy.ptr && pBot->disguise_state == DISGUISE_COMPLETE && distance < 400.0 && !(FInViewCone(vecEnd, pNewEnemy) && FVisible(vecEnd, pNewEnemy))) {
          // backstab routine...might work :)
          pBot->strafe_mod = STRAFE_MOD_STAB;
-         return_null = FALSE;
+         return_null = false;
       }
       // turn off backstab routine if too far away
       else if (pBot->pEdict->v.playerclass == TFC_CLASS_SPY && distance >= 400.0)
@@ -822,24 +820,24 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
       // return null(if return_null == true)
       // only if the enemy hasn't got your flag
       if (return_null && pNewEnemy != pEdict) {
-         bool enemy_has_flag = FALSE;
+         bool enemy_has_flag = false;
 
          // is the enemy carrying the flag/card/ball ?
          pent = nullptr;
          while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "item_tfgoal")) != nullptr && !FNullEnt(pent)) {
             if (pent->v.owner == pNewEnemy) {
-               enemy_has_flag = TRUE;
+               enemy_has_flag = true;
                break; // break out of while loop
             }
          }
 
-         if (enemy_has_flag == FALSE && pBot->enemy.f_lastSeen + 2.0 <= pBot->f_think_time)
+         if (enemy_has_flag == false && pBot->enemy.f_lastSeen + 2.0 <= pBot->f_think_time)
             return pBot->enemy.ptr; // if the enemy doesn't have the flag
       }
    }
 
    // check if the bot should continue to target a disguised/feigning Spy
-   if (return_null == FALSE && BotSpyDetectCheck(pBot, pNewEnemy) == FALSE)
+   if (return_null == false && BotSpyDetectCheck(pBot, pNewEnemy) == false)
       return pBot->enemy.ptr;
 
    if (pNewEnemy) {
@@ -885,7 +883,7 @@ static bool BotSpyDetectCheck(bot_t *pBot, edict_t *pNewEnemy) {
       if (pBot->current_team != UTIL_GetTeamColor(pNewEnemy) && pNewEnemy->v.deadflag != 5) {
          pBot->suspectedSpy = nullptr;
          pBot->f_suspectSpyTime = 0;
-         return TRUE;
+         return true;
       }
 
       const float distance = (pNewEnemy->v.origin - pBot->pEdict->v.origin).Length();
@@ -932,7 +930,7 @@ static bool BotSpyDetectCheck(bot_t *pBot, edict_t *pNewEnemy) {
          }
       }
 
-      return FALSE;
+      return false;
    }
 
    // the bot sees nobody
@@ -941,17 +939,17 @@ static bool BotSpyDetectCheck(bot_t *pBot, edict_t *pNewEnemy) {
       if (pBot->f_suspectSpyTime + 5.0f < pBot->f_think_time)
          pBot->suspectedSpy = nullptr;
 
-      return TRUE;
+      return true;
    }
    // the bot has decided to target it's suspected Spy
    else if ((pNewEnemy == pBot->suspectedSpy && pBot->f_suspectSpyTime < pBot->f_think_time) || (pBot->current_team != UTIL_GetTeamColor(pNewEnemy) && pNewEnemy->v.deadflag != 5)) {
       // keep the memory of this experience fresh
       pBot->f_suspectSpyTime = pBot->f_think_time - 0.5f;
 
-      return TRUE;
+      return true;
    }
 
-   return FALSE;
+   return false;
 }
 
 // BotSGSpotted - This function handles the storing, and communicating
@@ -972,7 +970,7 @@ static void BotSGSpotted(bot_t *pBot, edict_t *sg) {
 
    // allowed to report this now?
    // also check if bot is smart enough
-   if (offensive_chatter == FALSE || pBot->bot_skill > 3)
+   if (offensive_chatter == false || pBot->bot_skill > 3)
       return;
 
    // abort if the bot can't report something right now
@@ -1000,7 +998,7 @@ static void BotSGSpotted(bot_t *pBot, edict_t *sg) {
       }
 
       newJob->message[MAX_CHAT_LENGTH - 1] = '\0';
-      if (SubmitNewJob(pBot, JOB_REPORT, newJob) == TRUE) {
+      if (SubmitNewJob(pBot, JOB_REPORT, newJob) == true) {
          // get the other bots to know about this sg if they dont know of one already.
          for (int i = 0; i < MAX_BOTS; i++) {
             if (bots[i].is_used && bots[i].current_team == pBot->current_team && bots[i].lastEnemySentryGun == nullptr && bots[i].bot_skill < 3) // skill 5's are too dumb
@@ -1104,13 +1102,13 @@ int BotFindGrenadePoint(bot_t *const pBot, const Vector &r_vecOrigin) {
 
 // This function is used to trace a line in front of the bot a couple
 // of meters or so, to see if there is an obstacle blocking the bots
-// next shot.  It returns TRUE if there is.
+// next shot.  It returns true if there is.
 static bool BotClearShotCheck(bot_t *pBot) {
    // Return false if this function returned false less than a few seconds
    // ago.  This is done to stop the bot constantly swapping back and
    // forth between weapons in complex areas.
    if (pBot->f_safeWeaponTime > pBot->f_think_time)
-      return FALSE;
+      return false;
 
    TraceResult tr;
 
@@ -1127,15 +1125,15 @@ static bool BotClearShotCheck(bot_t *pBot) {
 
    UTIL_TraceLine(pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs, endpoint, dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
-   // report FALSE if the trace has hit something, and remember when
+   // report false if the trace has hit something, and remember when
    // it happened
    if (tr.flFraction < 1.0) {
       // don't swap back to this weapon for a short period of time
       pBot->f_safeWeaponTime = pBot->f_think_time + 2.0f;
-      return FALSE;
+      return false;
    }
 
-   return TRUE; // the shot is clear
+   return true; // the shot is clear
 }
 
 // This function initiates the process of firing the bots weapon at an enemy.
@@ -1404,7 +1402,7 @@ static Vector BotBodyTarget(edict_t *pBotEnemy, bot_t *pBot) {
 
 // specifing a weapon_choice allows you to choose the weapon the bot
 // will use (assuming enough ammo exists for that weapon)
-// BotFireWeapon will return TRUE if weapon was fired, FALSE otherwise
+// BotFireWeapon will return true if weapon was fired, false otherwise
 bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) {
    bot_weapon_select_t *pSelect = nullptr;
    bot_fire_delay_t *pDelay = nullptr;
@@ -1446,7 +1444,7 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
          sprintf(msg,"%f  %f", ang, diff);
          UTIL_HostSay(pEdict,0,msg);*/
       if (ang < diff) //|| (FInViewCone( v_enemy, pEdict ) && FVisible( v_enemy, pEdict )))
-         return FALSE;
+         return false;
    }
 
    //////////////////
@@ -1457,7 +1455,7 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
       distance = 100; // use autorifle when running
    } else {
       if (pEdict->v.playerclass == TFC_CLASS_SNIPER && pBot->current_weapon.iId == TF_WEAPON_SNIPERRIFLE && pBot->enemy.ptr != nullptr && mod_id == TFC_DLL && distance > 300)
-         return TRUE;
+         return true;
    }
 
    // demoman grenade launcher height restriction :D
@@ -1505,11 +1503,11 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
             const float max_delay = pDelay[select_index].primary_max_delay[pBot->bot_skill];
 
             pBot->f_shoot_time = pBot->f_think_time + base_delay + random_float(min_delay, max_delay);
-            return TRUE;
+            return true;
          } else {
             pEdict->v.button |= IN_ATTACK;           // charge the weapon
             pBot->f_shoot_time = pBot->f_think_time; // keep charging
-            return TRUE;
+            return true;
          }
       }
 
@@ -1532,17 +1530,17 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
                                             float min_delay = pDelay[select_index].secondary_min_delay[pBot->bot_skill];
                                             float max_delay = pDelay[select_index].secondary_max_delay[pBot->bot_skill];
             */
-            return TRUE;
+            return true;
          } else {
             pEdict->v.button |= IN_ATTACK2;          // charge the weapon
             pBot->f_shoot_time = pBot->f_think_time; // keep charging
-            return TRUE;
+            return true;
          }
       }
 
       select_index = 0;
-      bool use_primary = FALSE;
-      bool use_secondary = FALSE;
+      bool use_primary = false;
+      bool use_secondary = false;
 
       // loop through all the weapons until terminator is found...
       while (pSelect[select_index].iId && !use_primary && !use_secondary) {
@@ -1591,7 +1589,7 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
          }
 
          iId = pSelect[select_index].iId;
-         use_primary = use_secondary = FALSE;
+         use_primary = use_secondary = false;
          const int primary_percent = 0;
 
          // check if this weapon uses ammo and is running low
@@ -1606,7 +1604,7 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
 
          if (primary_percent <= pSelect[select_index].primary_fire_percent && (weapon_defs[iId].iAmmo1 == -1 || pBot->m_rgAmmo[weapon_defs[iId].iAmmo1] >= pSelect[select_index].min_primary_ammo) &&
              distance >= pSelect[select_index].primary_min_distance && distance <= pSelect[select_index].primary_max_distance) {
-            use_primary = TRUE;
+            use_primary = true;
          }
 
          // otherwise see if there is enough secondary ammo AND
@@ -1614,11 +1612,11 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
          // the bot is close enough to the enemy to use secondary fire
          else if ((weapon_defs[iId].iAmmo2 == -1 || pBot->m_rgAmmo[weapon_defs[iId].iAmmo2] >= pSelect[select_index].min_secondary_ammo) && distance >= pSelect[select_index].secondary_min_distance &&
                   distance <= pSelect[select_index].secondary_max_distance) {
-            use_secondary = TRUE;
+            use_secondary = true;
          }
 
          // see if there wasn't enough ammo to fire the weapon...
-         if (use_primary == FALSE && use_secondary == FALSE) {
+         if (use_primary == false && use_secondary == false) {
             select_index++; // skip to next weapon
             continue;
          }
@@ -1631,7 +1629,7 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
             char msg[80];
             sprintf(msg, "fire_delay mismatch for weapon id=%d\n", iId);
             ALERT(at_console, msg);
-            return FALSE;
+            return false;
          }
 
          if (mod_id == TFC_DLL) {
@@ -1641,7 +1639,7 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
 
                // don't press attack key until velocity is < 50
                if (pBot->pEdict->v.velocity.Length() > 50)
-                  return FALSE;
+                  return false;
             }
 
             if (pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC || pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER) {
@@ -1650,8 +1648,8 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
                // only heal your teammates or allies...
                if ((pBot->current_team == player_team || team_allies[pBot->current_team] & 1 << player_team) && (iId != TF_WEAPON_MEDIKIT && iId != TF_WEAPON_SPANNER)) {
                   pBot->strafe_mod = STRAFE_MOD_HEAL;
-                  // return FALSE;  // don't "fire" unless weapon is medikit
-                  use_primary = FALSE;
+                  // return false;  // don't "fire" unless weapon is medikit
+                  use_primary = false;
                }
             }
          }
@@ -1701,11 +1699,11 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
                }
             }
          }
-         return TRUE; // weapon was fired
+         return true; // weapon was fired
       }
    }
-   // didn't have any available weapons or ammo, return FALSE
-   return FALSE;
+   // didn't have any available weapons or ammo, return false
+   return false;
 }
 
 // BotNadeHandler - This function handles all grenade related actions,
@@ -1744,7 +1742,7 @@ int BotNadeHandler(bot_t *pBot, bool timed, const char newNadeType) {
    edict_t *pEdict = pBot->pEdict;
 
    // Do we need to toss?  No for now...
-   bool toss = FALSE;
+   bool toss = false;
 
    // Time left to detonation
    const float timeToDet = 4.0f - (pBot->f_think_time - pBot->primeTime);
@@ -1752,7 +1750,7 @@ int BotNadeHandler(bot_t *pBot, bool timed, const char newNadeType) {
 
    // if the bot has no target to throw at try to find a place to
    // dispose of the live grenade(anti-suicide code)
-   if (pBot->nadePrimed == TRUE && pBot->enemy.ptr == nullptr && timeToDet <= 2.0f) {
+   if (pBot->nadePrimed == true && pBot->enemy.ptr == nullptr && timeToDet <= 2.0f) {
       job_struct *newJob = InitialiseNewJob(pBot, JOB_BIN_GRENADE);
       if (newJob != nullptr)
          SubmitNewJob(pBot, JOB_BIN_GRENADE, newJob);
@@ -1775,7 +1773,7 @@ int BotNadeHandler(bot_t *pBot, bool timed, const char newNadeType) {
          //	sprintf(msg, "Tossing. release_time:%f  lost_health_percent:%d",
          //		release_time, lost_health_percent);
          //	UTIL_HostSay(pBot->pEdict, 0, msg);//DebugMessageOfDoom!
-         toss = TRUE;
+         toss = true;
       }
    }
 
@@ -1783,7 +1781,7 @@ int BotNadeHandler(bot_t *pBot, bool timed, const char newNadeType) {
    if (pBot->enemy.ptr) {
       zDiff = pBot->enemy.ptr->v.origin.z - pEdict->v.origin.z;
       if (zDiff > 100)
-         timed = TRUE;
+         timed = true;
    }
 
    // If we're targetting an enemy with a held grenade.
@@ -1794,7 +1792,7 @@ int BotNadeHandler(bot_t *pBot, bool timed, const char newNadeType) {
 
       // Throw it if we got a good chance at landing good splash damage.
       if (fabsf(distanceThrown - pBot->enemy.f_seenDistance) < 20.0f || distanceThrown - pBot->enemy.f_seenDistance < -200.0f) {
-         toss = TRUE;
+         toss = true;
          pBot->tossNade = 1;
          // UTIL_HostSay(pEdict, 0, "Die Bitch!!");
       }
@@ -1802,7 +1800,7 @@ int BotNadeHandler(bot_t *pBot, bool timed, const char newNadeType) {
       // If target is rapidly(ish) moving away from me, go ahead and throw.
       // Uses a timer delay between checks
       if (pBot->lastDistanceCheck <= pBot->f_think_time && (pBot->lastDistance > pBot->enemy.f_seenDistance + 375 && pBot->enemy.f_seenDistance > 500)) {
-         toss = TRUE;
+         toss = true;
          pBot->tossNade = 1;
          pBot->lastDistanceCheck = pBot->f_think_time + 1;
          // UTIL_HostSay(pEdict, 0, "Get over here!!");
@@ -1810,7 +1808,7 @@ int BotNadeHandler(bot_t *pBot, bool timed, const char newNadeType) {
 
       // go ahead and toss if enemy is our team
       if (pBot->current_team == UTIL_GetTeam(pBot->enemy.ptr)) {
-         toss = TRUE;
+         toss = true;
          pBot->tossNade = 2;
       }
 
@@ -1825,7 +1823,7 @@ int BotNadeHandler(bot_t *pBot, bool timed, const char newNadeType) {
       FakeClientCommand(pEdict, "-gren1", "102", nullptr);
       FakeClientCommand(pEdict, "-gren2", "101", nullptr);
       rtnValue = 1;
-      pBot->nadePrimed = FALSE;
+      pBot->nadePrimed = false;
       pBot->nadeType = 0;
    }
 
@@ -1873,7 +1871,7 @@ int BotNadeHandler(bot_t *pBot, bool timed, const char newNadeType) {
 
                                                                                    // prime a grenade in anticipation
                                                                                    newNadeType = GRENADE_DAMAGE;
-                                                                                   timed = TRUE;
+                                                                                   timed = true;
                                                                    }
 
                                                                    // try not to target the Sentry Gun until it's in view
@@ -2016,7 +2014,7 @@ int BotNadeHandler(bot_t *pBot, bool timed, const char newNadeType) {
       FakeClientCommand(pEdict, "-gren2", "101", nullptr);
       pBot->tossNade = 1;
       rtnValue = 1;
-      pBot->nadePrimed = FALSE;
+      pBot->nadePrimed = false;
    }
 
    return rtnValue;
@@ -2033,16 +2031,16 @@ static bool BotPrimeGrenade(bot_t *pBot, const int slot, const unsigned char nad
    else if (slot == SecondaryGrenade && pBot->grenades[SecondaryGrenade] > static_cast<int>(reserve))
       FakeClientCommand(pBot->pEdict, "+gren2", "101", nullptr);
    else
-      return FALSE;
+      return false;
 
    // Skill level based primed grenade hold time.
    const float primeError = -random_float(0.0, static_cast<float>(pBot->bot_skill)) * 0.1f;
 
    pBot->nadeType = nadeType;
-   pBot->nadePrimed = TRUE;
+   pBot->nadePrimed = true;
    pBot->primeTime = pBot->f_think_time + primeError;
 
-   return TRUE;
+   return true;
 }
 
 // Assess the threat level of the target using their class & my class.
@@ -2195,7 +2193,7 @@ int PickRandomEnemyTeam(const int my_team) {
 
    // count and index the hostile teams
    for (int index = 0; index < 4; index++) {
-      if (is_team[index] == TRUE && my_team != index && !(team_allies[my_team] & 1 << index)) {
+      if (is_team[index] == true && my_team != index && !(team_allies[my_team] & 1 << index)) {
          teamList[total] = index;
          ++total;
       }
@@ -2275,7 +2273,7 @@ void BotCheckForMultiguns(bot_t *pBot, float nearestdistance, edict_t *pNewEnemy
          if (distance < nearestdistance && FInViewCone(vecEnd, pBot->pEdict) && FVisible(vecEnd, pBot->pEdict)) {
             nearestdistance = distance;
             pNewEnemy = pent;
-            rtn = FALSE;
+            rtn = false;
 
             BotSGSpotted(pBot, pent);
          }
@@ -2288,7 +2286,7 @@ void BotCheckForMultiguns(bot_t *pBot, float nearestdistance, edict_t *pNewEnemy
 void UpdateFlagCarrierList() {
    // reset the list before updating it
    for (int i = 0; i < 32; i++) {
-      playerHasFlag[i] = FALSE;
+      playerHasFlag[i] = false;
    }
 
    // search for visible friendly flag carriers and track them.
@@ -2300,7 +2298,7 @@ void UpdateFlagCarrierList() {
 
          // remember if this player index owns(carries) this flag
          if (pPlayer && !pPlayer->free && pent->v.owner == pPlayer && IsAlive(pPlayer)) {
-            playerHasFlag[i - 1] = TRUE;
+            playerHasFlag[i - 1] = true;
 
             const int botIndex = i - 2; // -2 definitely not -1!
 
@@ -2314,20 +2312,20 @@ void UpdateFlagCarrierList() {
    }
 }
 
-// This function will return TRUE if the specified player is carrying a flag,
-// FALSE otherwise.
+// This function will return true if the specified player is carrying a flag,
+// false otherwise.
 bool PlayerHasFlag(edict_t *Player) {
    // search the world for players to find the one with the matching index
    for (int i = 1; i <= gpGlobals->maxClients; i++) {
       if (INDEXENT(i) == Player && playerHasFlag[i - 1])
-         return TRUE;
+         return true;
    }
 
-   return FALSE;
+   return false;
 }
 
-// This function returns TRUE if the specified player is infected,
-// FALSE otherwise.
+// This function returns true if the specified player is infected,
+// false otherwise.
 bool PlayerIsInfected(const edict_t *pEntity) {
    edict_t *pent = nullptr;
 
@@ -2338,9 +2336,9 @@ bool PlayerIsInfected(const edict_t *pEntity) {
          // a TFC class(used to check they were Medics, but that's no good if
          // the medic changes class after infecting someone)
          if (pent->v.enemy->v.playerclass >= TFC_CLASS_SCOUT && pent->v.enemy->v.playerclass <= TFC_CLASS_ENGINEER)
-            return TRUE;
+            return true;
       }
    }
 
-   return FALSE;
+   return false;
 }
