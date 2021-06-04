@@ -93,8 +93,8 @@ typedef struct {
    int use_percent;              // times out of 100 to use this weapon when available
    bool can_use_underwater;      // can use this weapon underwater
    int primary_fire_percent;     // times out of 100 to use primary fire
-   int min_primary_ammo;         // minimum ammout of primary ammo needed to fire
-   int min_secondary_ammo;       // minimum ammout of secondary ammo needed to fire
+   int min_primary_ammo;         // minimum amount of primary ammo needed to fire
+   int min_secondary_ammo;       // minimum amount of secondary ammo needed to fire
    bool primary_fire_hold;       // hold down primary fire button to use?
    bool secondary_fire_hold;     // hold down secondary fire button to use?
    bool primary_fire_charge;     // charge weapon using primary fire?
@@ -552,7 +552,7 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
 
    if (mod_id == TFC_DLL) {
       // get medics and engineers to heal/repair teammates
-      if ((pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER && pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > 90) || pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC) {
+      if ((pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER && pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > 70) || pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC) {
          nearestDistance = 1000.0;
          edict_t *pPlayer;
          int player_team;
@@ -1186,7 +1186,7 @@ void BotShootAtEnemy(bot_t *pBot) {
          //	char msg[80]; //DebugMessageOfDoom!
          //	sprintf(msg, "<my aim diff: %f>", aim_diff);
          //	UTIL_HostSay(pBot->pEdict, 0, msg);
-         pBot->f_shoot_time = pBot->f_think_time + 0.08f;
+         pBot->f_shoot_time = pBot->f_think_time + 0.1f;
       }
    }
 
@@ -1673,7 +1673,7 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
 
                                   pBot->f_shoot_time = pBot->f_think_time + base_delay +
                                      random_float(min_delay, max_delay);*/
-                  pBot->f_shoot_time = pBot->f_think_time + 0.05f;
+                  pBot->f_shoot_time = pBot->f_think_time + 0.15f;
                }
             }
          } else // MUST be use_secondary...
@@ -1695,7 +1695,7 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
                                   float max_delay = pDelay[select_index].secondary_max_delay[pBot->bot_skill];
                                   pBot->f_shoot_time = pBot->f_think_time + base_delay +
                                      random_float(min_delay, max_delay);*/
-                  pBot->f_shoot_time = pBot->f_think_time + 0.05;
+                  pBot->f_shoot_time = pBot->f_think_time + 0.15f;
                }
             }
          }

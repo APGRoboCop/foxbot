@@ -37,7 +37,6 @@
 #include "bot_navigate.h"
 #include "bot_weapons.h"
 
-
 #include "tf_defs.h"
 
 // types of damage to ignore...

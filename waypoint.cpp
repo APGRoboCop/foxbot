@@ -30,12 +30,13 @@
 #else
 #include <unistd.h>
 #endif
+
 #include <fcntl.h>
 
 #ifndef __linux__
-#include <sys/stat.h>
+#include <sys\stat.h>
 #else
-#include <string.h>
+#include <cstring>
 #include <sys/stat.h>
 #endif
 

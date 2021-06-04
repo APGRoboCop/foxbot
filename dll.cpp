@@ -29,12 +29,7 @@
 #include <enginecallback.h>
 #include <entity_state.h>
 
-#ifndef __linux__
 #include <cmath>
-#else
-#include <math.h>
-#endif
-
 #include <osdep.h>
 
 #include "bot.h"

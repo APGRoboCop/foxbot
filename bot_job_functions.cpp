@@ -1370,7 +1370,7 @@ int JobBuffAlly(bot_t *pBot) {
       else if (pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER && pBot->current_weapon.iId != TF_WEAPON_SPANNER)
          UTIL_SelectItem(pBot->pEdict, "tf_weapon_spanner");
 
-      if (allyDistance < 90.0)
+      if (allyDistance < 80.0)
          pBot->pEdict->v.button |= IN_ATTACK;
    }
 
