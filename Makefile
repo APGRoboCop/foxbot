@@ -13,7 +13,7 @@ ifeq ($(OSTYPE),win32)
 else
 	CPP = gcc -m32
 	ARCHFLAG = -fPIC
-	LINKFLAGS = -fPIC -shared -ldl -lm -s 
+	LINKFLAGS = -fPIC -shared -ldl -lm -s
 	DLLEND = .so
 endif
 

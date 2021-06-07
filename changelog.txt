@@ -17,8 +17,6 @@ Updated by RoboCop
 	
 - Added more reaction time delay for bots to attack enemies as they were too quick to respond
 	
-- Reduced accuracy for snipers as it was increased by 25% but reduced to 20% based on the bot_skill_1_aim cvar
-	
 - bot_job_think.cpp adjusted for the Medic and Engineer bots to heal their team mates more often
 
 --------------------------------------------------------------------------------
