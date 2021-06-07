@@ -124,7 +124,7 @@ char *ntfTargetChecks[] = {
 static bot_weapon_select_t tfc_weapon_select[] = {{TF_WEAPON_KNIFE, "tf_weapon_knife", 5, 0.0, 80.0, 0.0, 0.0, 100, true, 100, 0, 0, false, false, false, false, 0.0, 0.0},
                                                   {TF_WEAPON_SPANNER, "tf_weapon_spanner", 5, 0.0, 60.0, 0.0, 0.0, 100, true, 100, 0, 0, false, false, false, false, 0.0, 0.0},
                                                   {TF_WEAPON_MEDIKIT, "tf_weapon_medikit", 5, 0.0, 60.0, 0.0, 0.0, 100, true, 100, 0, 0, false, false, false, false, 0.0, 0.0},
-                                                  {TF_WEAPON_SNIPERRIFLE, "tf_weapon_sniperrifle", 5, 300.0, 4000.0, 0.0, 0.0, 100, true, 100, 1, 0, false, false, true, false, 2.0, 0.0},
+                                                  {TF_WEAPON_SNIPERRIFLE, "tf_weapon_sniperrifle", 5, 300.0, 4000.0, 0.0, 0.0, 100, true, 100, 1, 0, false, false, true, false, 2.5, 0.0},
                                                   {TF_WEAPON_FLAMETHROWER, "tf_weapon_flamethrower", 5, 0.0, 400.0, 0.0, 0.0, 100, false, 100, 1, 0, true, false, false, false, 0.0, 0.0},
                                                   {TF_WEAPON_AC, "tf_weapon_ac", 5, 0.0, 2000.0, 0.0, 0.0, 100, true, 100, 1, 0, true, false, false, false, 0.0, 0.0},
                                                   {TF_WEAPON_RPG, "tf_weapon_rpg", 5, 150.0, 3000.0, 0.0, 0.0, 100, true, 100, 1, 0, false, false, false, false, 0.0, 0.0},
@@ -1186,7 +1186,7 @@ void BotShootAtEnemy(bot_t *pBot) {
          //	char msg[80]; //DebugMessageOfDoom!
          //	sprintf(msg, "<my aim diff: %f>", aim_diff);
          //	UTIL_HostSay(pBot->pEdict, 0, msg);
-         pBot->f_shoot_time = pBot->f_think_time + 0.1f;
+         pBot->f_shoot_time = pBot->f_think_time + 0.2f;
       }
    }
 
@@ -1416,7 +1416,7 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
       pBot->FreezeDelay = pBot->f_think_time + 1.0;
       FakeClientCommand(pEdict, "freeze", "102", nullptr);
    } else
-      pBot->FreezeDelay = pBot->f_think_time + 0.2f;
+      pBot->FreezeDelay = pBot->f_think_time + 0.5f;
 
    // nobody documented this bit of code ;-(
    if (pBot->current_weapon.iId == TF_WEAPON_RPG || pBot->current_weapon.iId == TF_WEAPON_IC || pBot->current_weapon.iId == TF_WEAPON_GL) {
@@ -1673,7 +1673,7 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
 
                                   pBot->f_shoot_time = pBot->f_think_time + base_delay +
                                      random_float(min_delay, max_delay);*/
-                  pBot->f_shoot_time = pBot->f_think_time + 0.15f;
+                  pBot->f_shoot_time = pBot->f_think_time + 0.25f;
                }
             }
          } else // MUST be use_secondary...
@@ -1695,7 +1695,7 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
                                   float max_delay = pDelay[select_index].secondary_max_delay[pBot->bot_skill];
                                   pBot->f_shoot_time = pBot->f_think_time + base_delay +
                                      random_float(min_delay, max_delay);*/
-                  pBot->f_shoot_time = pBot->f_think_time + 0.15f;
+                  pBot->f_shoot_time = pBot->f_think_time + 0.25f;
                }
             }
          }
