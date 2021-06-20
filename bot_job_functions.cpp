@@ -140,7 +140,8 @@ int JobSeekWaypoint(bot_t *pBot) {
       }
 
       // wandered long enough or gotten stuck?
-      if ((pBot->f_move_speed > 5.0 && pBot->pEdict->v.velocity.Length() < 0.1) || job_ptr->phase_timer < pBot->f_think_time) {
+	  if (job_ptr->phase_timer < pBot->f_think_time ||
+			pBot->f_move_speed > 5.0 && pBot->pEdict->v.velocity.Length() < 0.1) {
          job_ptr->phase = 0;
          return JOB_UNDERWAY;
       }
@@ -2258,14 +2259,13 @@ int JobHarrassDefense(bot_t *pBot) {
          const int flagDistance = WaypointDistanceFromTo(pBot->current_wp, flagWP, pBot->current_team);
 
          // the nearer the bot is the more likely it will go for the flag
-         if (flagDistance != -1 && ((flagDistance < 2000 && random_long(1, 2000) > flagDistance)
-                                    // always when this close
-                                    || flagDistance < 800)) {
-            job_struct *newJob = InitialiseNewJob(pBot, JOB_GET_FLAG);
-            if (newJob != nullptr) {
-               newJob->waypoint = flagWP;
-               if (SubmitNewJob(pBot, JOB_GET_FLAG, newJob) == true)
-                  return JOB_TERMINATED; // end this job so the bot can go for the flag instead
+         if (flagDistance != -1 && (flagDistance < 800 // always when this close
+				|| flagDistance < 2000 && random_long(1, 2000) > flagDistance)) {
+				job_struct* newJob = InitialiseNewJob(pBot, JOB_GET_FLAG);
+				if (newJob != NULL) {
+					newJob->waypoint = flagWP;
+					if (SubmitNewJob(pBot, JOB_GET_FLAG, newJob) == TRUE)
+						return JOB_TERMINATED; // end this job so the bot can go for the flag instead
             }
          }
       }
@@ -2474,7 +2474,7 @@ int JobConcussionJump(bot_t *pBot) {
 
          // if the bot is descending, and lower than, or too far from the
          // concussion jump waypoint, assume the concussion jump failed
-         if ((zDiff < 100.0f && dist2d > 600.0f) || zDiff < -50.0f) {
+         if (zDiff < -50.0f || zDiff < 100.0f && dist2d > 600.0f) {
             BotFindCurrentWaypoint(pBot);
          } else
             pBot->current_wp = job_ptr->waypointTwo;
