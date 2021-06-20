@@ -774,8 +774,8 @@ bool BotHeadTowardWaypoint(bot_t *pBot, bool &r_navByStrafe) {
 
          // now to handle vertical movement when swimming(or bobbing on the surface of water)
          if (pBot->pEdict->v.waterlevel == WL_HEAD_IN_WATER ||
-				pBot->pEdict->v.waterlevel == WL_WAIST_IN_WATER // on the surface
-				&& !(pBot->pEdict->v.flags & FL_ONGROUND)) {
+				(pBot->pEdict->v.waterlevel == WL_WAIST_IN_WATER // on the surface
+				&& !(pBot->pEdict->v.flags & FL_ONGROUND))) {
 				// swim up if below the waypoint
 				if (pBot->pEdict->v.origin.z < waypoints[pBot->current_wp].origin.z - 5.0) {
 					//	WaypointDrawBeam(INDEXENT(1), pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs,
@@ -1685,7 +1685,7 @@ bool BotChangeRoute(bot_t *pBot) {
    static const WPT_INT32 ignoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING | W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_SNIPER | W_FL_TFC_TELEPORTER_ENTRANCE | W_FL_TFC_TELEPORTER_EXIT | W_FL_TFC_JUMP | W_FL_LIFT);
 
    // pick a random waypoint to start searching from
-   int index = static_cast<int>(RANDOM_LONG(0, num_waypoints - 1));
+   int index = RANDOM_LONG(0, num_waypoints - 1);
 
    // start the search
    for (int i = 0; i < num_waypoints; i++) {

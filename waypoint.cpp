@@ -552,7 +552,7 @@ int WaypointFindInRange(const Vector &v_src, const float min_range, const float 
 
    // pick a random waypoint to start searching from if requested to
    if (chooseRandom)
-      i = static_cast<int>(RANDOM_LONG(0, num_waypoints - 1));
+      i = RANDOM_LONG(0, num_waypoints - 1);
 
    // bit field of waypoint types to ignore
    static const WPT_INT32 ignoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING);
@@ -704,7 +704,7 @@ int WaypointFindRandomGoal(const int source_WP, const int team, const WPT_INT32 
 
    // start from a random waypoint in case there are more matching waypoints
    // than this function is ready to keep a list of
-   int index = static_cast<int>(RANDOM_LONG(0, num_waypoints - 1));
+   int index = RANDOM_LONG(0, num_waypoints - 1);
 
    // find all the waypoints with the matching flags...
    for (int i = 0; i < num_waypoints; i++, index++) {
@@ -756,7 +756,7 @@ int WaypointFindRandomGoal_D(const int source_WP, const int team, const int rang
 
    // start from a random waypoint in case there are more matching waypoints
    // than this function is ready to keep a list of
-   int index = static_cast<int>(RANDOM_LONG(0, num_waypoints - 1));
+   int index = RANDOM_LONG(0, num_waypoints - 1);
 
    // find all the waypoints with the matching flags...
    for (int i = 0; i < num_waypoints; i++, index++) {
@@ -812,7 +812,7 @@ int WaypointFindRandomGoal_R(const Vector &v_src, const bool checkVisibility, co
 
    // start from a random waypoint in case there are more matching waypoints
    // than this function is ready to remember and choose from
-   int index = static_cast<int>(RANDOM_LONG(0, num_waypoints - 1));
+   int index = RANDOM_LONG(0, num_waypoints - 1);
 
    TraceResult tr;
 

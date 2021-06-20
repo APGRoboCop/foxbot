@@ -1050,7 +1050,7 @@ void DispatchThink(edict_t *pent) {
             if (v.y < -180)
                v.y += 360;
 
-            double dgrad = static_cast<double>(v.y);
+            double dgrad = v.y;
             dgrad = dgrad + 180;
             if (dgrad > 180)
                dgrad -= 360;

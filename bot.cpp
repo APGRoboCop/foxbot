@@ -2728,7 +2728,7 @@ static void BotRoleCheck(bot_t *pBot) {
 					bots[i].pEdict->v.playerclass == TFC_CLASS_PYRO ||
 					bots[i].pEdict->v.playerclass == TFC_CLASS_HWGUY ||
 					bots[i].pEdict->v.playerclass == TFC_CLASS_ENGINEER ||
-					bots[i].pEdict->v.playerclass == TFC_CLASS_DEMOMAN && !ignoreDemomen) {
+					(bots[i].pEdict->v.playerclass == TFC_CLASS_DEMOMAN && !ignoreDemomen)) {
 					bots[i].mission = needed_mission;
                /*	char msg[80];//DebugMessageOfDoom!
                                sprintf(msg, "team %d needed_mission %d totalAttackers %d",
