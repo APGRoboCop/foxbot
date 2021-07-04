@@ -187,7 +187,7 @@ void WaypointInit() {
    }
 
    // erase the name of the waypoint files author
-   for (i = 0; i < 256; i++)
+   for (i = 0; i < 255; i++)
       waypoint_author[i] = '\0';
 
    for (i = 0; i < MAX_WAYPOINTS; i++) {
@@ -1075,8 +1075,8 @@ void WaypointAdd(edict_t *pEntity) {
    // look for lift, ammo, flag, health, armor, etc.
    //********************************************************
 
-   char item_name[64];
    while ((pent = FIND_ENTITY_IN_SPHERE(pent, pEntity->v.origin, radius)) != nullptr && !FNullEnt(pent)) {
+      char item_name[64];
       strcpy(item_name, STRING(pent->v.classname));
 
       if (strcmp("item_healthkit", item_name) == 0) {
@@ -1458,7 +1458,7 @@ bool WaypointLoad(edict_t *pEntity) {
    char mapname[64];
    char filename[256];
    WAYPOINT_HDR header;
-   char msg[80];
+   char msg[512];
    int index, i;
    short int num;
    short int path_index;
@@ -3840,7 +3840,6 @@ bool AreaDefLoad(edict_t *pEntity) {
    char mapname[64];
    char filename[256];
    AREA_HDR header;
-   char msg[80];
 
    // return false; //test to see if having areas loaded is
    // fucking up the server (mem crashes)
@@ -3852,6 +3851,7 @@ bool AreaDefLoad(edict_t *pEntity) {
    FILE *bfp = fopen(filename, "rb");
 
    if (bfp != nullptr) {
+      char msg[512];
       if (IS_DEDICATED_SERVER())
          printf("loading area file: %s\n", filename);
       fread(&header, sizeof header, 1, bfp);

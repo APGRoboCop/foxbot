@@ -15,9 +15,21 @@ Updated by RoboCop
 	+ lbdustbowl
 	+ mulch_dm2b1
 	
+- Reduced overflow issues and instability crashes
+
+- Reduced StartFrame stack by reducing some unwanted features and lines that exceed it
+	
 - Added more reaction time delay for bots to attack enemies as they were too quick to respond
 	
 - bot_job_think.cpp adjusted for the Medic and Engineer bots to heal their team mates more often
+
+Known bugs:-
+
+>> Soldier bots tend to struggle for rocket jumping in awkward areas that can block its way
+
+>> Sniper bots tend to TK when Friendly Fire is on, when interacting with their team's sentries and teleports
+
+>> min_bots, max_bots, bot_total_varies, bot_bot_balance and bot_team_balance cvars may not be 100% operational
 
 --------------------------------------------------------------------------------
 Version 0.793

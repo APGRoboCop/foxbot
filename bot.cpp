@@ -78,8 +78,6 @@ struct TeamLayout {
    int total[4];
 };
 
-
-
 // team data /////////////////////////
 extern int RoleStatus[];
 extern int team_allies[4];
@@ -193,8 +191,6 @@ static void BotEnemyCarrierAlert(bot_t *pBot);
 static void BotSenseEnvironment(bot_t *pBot);
 static void BotFight(bot_t *pBot);
 static void BotSpectatorDebug(bot_t *pBot);
-
-
 
 inline edict_t *CREATE_FAKE_CLIENT(const char *netname) {
    if (debug_engine) {
@@ -394,12 +390,12 @@ void BotSpawnInit(bot_t *pBot) {
 
 void BotNameInit() {
    char bot_name_filename[256];
-   char name_buffer[80];
 
    UTIL_BuildFileName(bot_name_filename, 255, "foxbot_names.txt", nullptr);
    FILE *bot_name_fp = fopen(bot_name_filename, "r");
 
    if (bot_name_fp != nullptr) {
+      char name_buffer[80];
       while (number_names < MAX_BOT_NAMES && fgets(name_buffer, 80, bot_name_fp) != nullptr) {
          int length = strlen(name_buffer);
 
@@ -532,7 +528,6 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
    int index = 0;
    int i;
    bool found = false;
-
    // min/max checking...
    if (max_bots > MAX_BOTS)
       max_bots = MAX_BOTS;
@@ -969,7 +964,6 @@ void BotFindItem(bot_t *pBot) {
    BotFlagSpottedCheck(pBot);
 
    edict_t *pPickupEntity = nullptr;
-   Vector pickup_origin;
    Vector entity_origin;
    bool can_pickup;
    float min_distance;
@@ -1418,6 +1412,7 @@ void BotFindItem(bot_t *pBot) {
 
          // see if it's the closest item so far...
          if (distance < min_distance && entity_origin.z > pEdict->v.origin.z - 80 && entity_origin.z < pEdict->v.origin.z + 80) {
+            Vector pickup_origin;
             min_distance = distance;       // update the minimum distance
             pPickupEntity = pent;          // remember this entity
             pickup_origin = entity_origin; // remember location of entity
@@ -3120,22 +3115,6 @@ static void BotPickNewClass(bot_t *pBot) {
    } else if (pBot->deathsTillClassChange > 0)
       --pBot->deathsTillClassChange;
 
-   /*	if(pBot->deathsTillClassChange < 1
-                                   || pBot->deathsTillClassChange > 9)
-                   {
-                                   char msg[80];
-                                   sprintf(msg, "ALERT:deaths left %hd, scored %d",
-                                                   pBot->deathsTillClassChange, (int)pBot->pEdict->v.frags - pBot->scoreAtSpawn);
-                                   UTIL_HostSay(pBot->pEdict, 0, msg); //DebugMessageOfDoom!
-                   }
-                   else
-                   {
-                                   char msg[80];
-                                   sprintf(msg, "deaths left %hd, scored %d",
-                                                   pBot->deathsTillClassChange, (int)pBot->pEdict->v.frags - pBot->scoreAtSpawn);
-                                   UTIL_HostSay(pBot->pEdict, 0, msg); //DebugMessageOfDoom!
-                   }*/
-
    // don't change class unless the bot has been killed
    // one time too many
    if (pBot->deathsTillClassChange > 0) {
@@ -3178,9 +3157,6 @@ static void BotPickNewClass(bot_t *pBot) {
          ++team_total;
          if (clients[i]->v.playerclass == TFC_CLASS_MEDIC || clients[i]->v.playerclass == TFC_CLASS_SPY || clients[i]->v.playerclass == TFC_CLASS_SCOUT || clients[i]->v.playerclass == TFC_CLASS_PYRO)
             ++attackers;
-         /*	else if(clients[i]->v.playerclass == TFC_CLASS_ENGINEER
-                                         || clients[i]->v.playerclass == TFC_CLASS_SNIPER)
-                                         ++defenders;*/
       }
    }
 
@@ -3196,22 +3172,6 @@ static void BotPickNewClass(bot_t *pBot) {
    // does this team have too few defenders?
    if (percentOffense - errorMargin > static_cast<float>(RoleStatus[pBot->current_team]))
       defender_required = true;
-
-   /*	//debug message: report what the bot is doing
-                   if(defender_required)
-                   {
-                   char msg[80];
-                   sprintf(msg, "[pickin defense] RoleStatus %d totalAttackers %d",
-                                   RoleStatus[team], attackers);
-                   UTIL_HostSay(pBot->pEdict, 0, msg);
-                   }
-                   else
-                   {
-                   char msg[80];
-                   sprintf(msg, "[pickin offense] RoleStatus %d totalAttackers %d",
-                                   RoleStatus[team], attackers);
-                   UTIL_HostSay(pBot->pEdict, 0, msg);
-                   }*/
 
    int new_class;
    if (defender_required)
@@ -3398,11 +3358,6 @@ static bool BotDemomanNeededCheck(bot_t *pBot) {
 
    if (class_not_allowed)
       return false;
-
-   //	char msg[80];
-   //	sprintf(msg, "Checking if Demo needed, our score:%d, theirs:%d>",
-   //		MatchScores[pBot->current_team], MatchScores[enemy_team]);
-   //	UTIL_HostSay(pBot->pEdict, 0, msg); //DebugMessageOfDoom!
 
    if (WaypointFindDetpackGoal(pBot->current_wp, pBot->current_team) != -1) {
       pBot->bot_class = TFC_CLASS_DEMOMAN;
@@ -3632,23 +3587,6 @@ static void BotEnemyCarrierAlert(bot_t *pBot) {
       newJob->message[MAX_CHAT_LENGTH - 1] = '\0'; // not all versions of snprintf terminate the string
       SubmitNewJob(pBot, JOB_REPORT, newJob);
       pBot->f_roleSayDelay = pBot->f_think_time + 30.0f;
-
-      // look for other defender bots who haven't seen an enemy for
-      // a while and maybe send them to help
-      /*	if(pBot->current_wp != -1)
-                      {
-                                      for(int i = 0; i < 32; i++)
-                                      {
-                                                      if(bots[i].is_used
-                                                                      && bots[i].mission == ROLE_DEFENDER
-                                                                      && bots[i].bot_has_flag == false
-                                                                      && bots[i].current_team == pBot->current_team
-                                                                      && (bots[i].enemy.f_lastSeen + 20.0f) < pBot->f_think_time)
-                                                      {
-                                                                      bots[i].goto_wp = pBot->current_wp;
-                                                      }
-                                      }
-                      }*/
    }
 }
 
@@ -3673,26 +3611,6 @@ void BotThink(bot_t *pBot) {
    const float fUpdateInterval = 1.0f / 60.0f; // update at 60 fps
    pBot->fUpdateTime = gpGlobals->time + fUpdateInterval;
 
-   // TheFatal - START from Advanced Bot Framework (Thanks Rich!)
-   /*
-   // adjust the millisecond delay based on the frame rate interval...
-   if (pBot->msecdel <= gpGlobals->time) {
-           pBot->msecdel = gpGlobals->time + 0.5; // default 0.5
-           if (pBot->msecnum > 0)
-                   pBot->msecval = 450.0 / pBot->msecnum;
-           pBot->msecnum = 0;
-   }
-   else
-           pBot->msecnum++;
-
-   if (pBot->msecval < 1) // don't allow msec to be less than 1...
-           pBot->msecval = 1;
-
-   if (pBot->msecval > 100) // ...or greater than 100
-           pBot->msecval = 100;
-
-   // TheFatal - END
-   */
    // this is the only place this should be set
    // (gpGlobals->time appears to run in another thread)
    pBot->f_think_time = gpGlobals->time;
@@ -3720,10 +3638,6 @@ void BotThink(bot_t *pBot) {
       return;
    }
 
-   //{ FILE *fp=UTIL_OpenFoxbotLog(); fprintf(fp,"name %s, flags %x, health
-   //%f\n",STRING(pBot->pEdict->v.netname),pEdict->v.deadflag,pEdict->v.health); fclose(fp); }
-   //{ FILE *fp=UTIL_OpenFoxbotLog(); fprintf(fp,"%d\n",pBot->pEdict->v.flags); fclose(fp); }
-
    // if the bot is dead, randomly press fire to respawn...
    if(pBot->pEdict->v.health < 1 ||
         (pBot->pEdict->v.deadflag != DEAD_NO && pBot->pEdict->v.deadflag != 5) // not a spy feigning death
@@ -3732,10 +3646,6 @@ void BotThink(bot_t *pBot) {
             pBot->bot_start3 = pBot->f_think_time;
 
       if (pBot->bot_start3 < pBot->f_think_time - 6 && pBot->bot_start3 != 0) {
-         /*char msg[255];
-         sprintf(msg," problem wif join, changing team..class t= %d c= %d",
-                         pBot->bot_team,pBot->bot_class);
-         UTIL_HostSay(pBot->pEdict, 0, msg);*/
          if (pBot->bot_start2 > 1) {
             pBot->bot_team = 5;
             pBot->bot_class = -1;
@@ -3745,16 +3655,6 @@ void BotThink(bot_t *pBot) {
          pBot->bot_start3 = 0;
          if (mod_id == TFC_DLL)
             pBot->start_action = MSG_TFC_IDLE;
-         /*else if(mod_id == CSTRIKE_DLL)
-                         pBot->start_action = MSG_CS_IDLE;
-         else if(mod_id == GEARBOX_DLL
-                         && pent_info_ctfdetect != NULL)
-                         pBot->start_action = MSG_OPFOR_IDLE;
-         else if(mod_id == FRONTLINE_DLL)
-                         pBot->start_action = MSG_FLF_IDLE;
-         else
-                         pBot->start_action = 0;  // not needed for non-team MODs
-         pBot->create_time = pBot->f_think_time;*/
       }
 
       if (pBot->need_to_initialize) {
@@ -3775,29 +3675,16 @@ void BotThink(bot_t *pBot) {
 
       pBot->f_duck_time = pBot->f_think_time;
       pBot->strafe_mod = STRAFE_MOD_NORMAL;
-      // bool crsh=false;
-      /*	UTIL_BotLogPrintf("pEdict %x\nx %f y %f z %f\nspeed %f\nbutton %d\nmsec %f\n name %s\n",
-                                      pBot->pEdict,pBot->pEdict->v.v_angle.x,pBot->pEdict->v.v_angle.y,
-                                      pBot->pEdict->v.v_angle.z,pBot->f_move_speed,pBot->pEdict->v.button,
-                                      pBot->msecval,pBot->name);*/
 
       // wait at least 1 second before trying to respawn..
       pBot->f_move_speed = 0;
       if (random_long(1, 100) > 50 && pBot->f_killed_time + 1 < pBot->f_think_time) {
-         /*	UTIL_BotLogPrintf(fp,"(1)pEdict %x\nx %f y %f z %f\nspeed %f\nbutton %d\nmsec %f\n name %s\n",
-                                         pBot->pEdict,pBot->pEdict->v.v_angle.x,pBot->pEdict->v.v_angle.y,
-                                         pBot->pEdict->v.v_angle.z,pBot->f_move_speed,pBot->pEdict->v.button,
-                                         pBot->msecval,pBot->name);*/
 
          pBot->pEdict->v.button = IN_ATTACK;
          pBot->f_killed_time = pBot->f_think_time;
-         // crsh=true;
       }
       g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, pBot->f_move_speed, 0, 0, pBot->pEdict->v.button, (byte)0, (byte)msecval);
 
-      // if(crsh)
-      //{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"returned ok(1)..\n"); fclose(fp); }
-      //{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"returned ok..\n"); fclose(fp); }
       return;
    }
 
@@ -3871,7 +3758,8 @@ void BotThink(bot_t *pBot) {
    }
 
    // crouch if the bots current waypoint is a crouch waypoint...
-   if (pBot->current_wp != -1 && waypoints[pBot->current_wp].flags & W_FL_CROUCH && VectorsNearerThan(pBot->pEdict->v.origin, waypoints[pBot->current_wp].origin, 100.0f)) {
+   if (pBot->current_wp != -1 && waypoints[pBot->current_wp].flags & W_FL_CROUCH &&
+       VectorsNearerThan(pBot->pEdict->v.origin, waypoints[pBot->current_wp].origin, 100.0f)) {
       pBot->f_duck_time = pBot->f_think_time + 2.0;
    }
 
@@ -3989,9 +3877,6 @@ static void BotSenseEnvironment(bot_t *pBot) {
       pBot->f_move_speed = 0;
       pBot->f_side_speed = 0;
       pBot->f_vertical_speed = 0;
-
-      // g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, 0, 0, 0,
-      //	pBot->pEdict->v.button, (byte)0, pBot->msecval);
    }
 
    if (pBot->enemy.ptr == nullptr)
@@ -4055,35 +3940,6 @@ static void BotFight(bot_t *pBot) {
       BotShootAtEnemy(pBot);
 
       BotCombatThink(pBot);
-
-      // if bot sniper has sniper rifle out and an enemy
-      /*	if(pBot->pEdict->v.playerclass == TFC_CLASS_SNIPER
-                                      && pBot->current_weapon.iId == TF_WEAPON_SNIPERRIFLE
-                                      && !pBot->bot_has_flag)
-                      {
-                                      //if were not in attack, strafe a bit slower
-                                      if(!(pBot->pEdict->v.button & IN_ATTACK))
-                                      {
-                                                      if(pBot->side_direction == SIDE_DIRECTION_RIGHT)
-                                                                      pBot->f_side_speed = pBot->f_max_speed / 4;
-                                                      else pBot->f_side_speed = -(pBot->f_max_speed / 4);
-                                                      //go half speed forwards..assuming we've already set the forward speed
-                                                      //nope... stop moving forward... we don't if we're sniping
-                                                      pBot->f_move_speed = 0;
-                                      }
-                                      if(pBot->f_pause_time > pBot->f_think_time // is the sniper "paused"?
-                                         && pBot->f_snipe_time > pBot->f_think_time)
-                                      {
-                                                      // you could make the bot look left then right, or look up
-                                                      // and down, to make it appear that the bot is hunting for something
-                                                      pBot->f_side_speed = 0;
-                                                      pBot->f_move_speed = 0;
-
-                                                      //just in case...dam timer vars
-                                                      if(pBot->f_pause_time > (pBot->f_think_time) + 100)
-                                                                      pBot->f_pause_time = 0;
-                                      }
-                      }*/
    }
 }
 
@@ -4123,45 +3979,9 @@ static void BotCombatThink(bot_t *pBot) {
             else if (pBot->f_duck_time < pBot->f_think_time)
                pBot->f_duck_time = pBot->f_think_time + 0.25f;
 
-            /*	if(random_long(1, 1000) <= 120)
-                                            pBot->pEdict->v.button |= IN_JUMP;
-                            if(random_long(1, 1000) <= 100)
-                                            pBot->f_duck_time = pBot->f_think_time + 0.6f;*/
          }
       }
    }
-
-   /*	// strafing??
-                   //can we get the bot to strafe whilst fighting?
-                   if(pBot->f_periodicAlert1
-                                   && random_long(0, 1000) < 200)
-                   {
-                                   if(pBot->side_direction == SIDE_DIRECTION_RIGHT)
-                                                   pBot->side_direction = SIDE_DIRECTION_LEFT;
-                                   else pBot->side_direction = SIDE_DIRECTION_RIGHT;
-                   }
-
-                   // once a second, make sure the bot isn't strafing into a wall
-                   if(pBot->f_periodicAlert1 < pBot->f_think_time)
-                   {
-                                   if(BotCheckWallOnRight(pBot))
-                                                   pBot->side_direction = SIDE_DIRECTION_LEFT;
-                                   else if(BotCheckWallOnLeft(pBot))
-                                                   pBot->side_direction = SIDE_DIRECTION_RIGHT;
-                   }
-
-                   if(pBot->strafe_mod == STRAFE_MOD_NORMAL)
-                   {
-                                   if(pBot->side_direction == SIDE_DIRECTION_RIGHT)
-                                                   pBot->f_side_speed = pBot->f_max_speed;
-                                   else pBot->f_side_speed = -(pBot->f_max_speed);
-                   }
-                   else if(pBot->strafe_mod == STRAFE_MOD_HEAL)
-                   {
-                                   if(pBot->side_direction == SIDE_DIRECTION_RIGHT)
-                                                   pBot->f_side_speed = pBot->f_max_speed / 4;
-                                   else pBot->f_side_speed = -(pBot->f_max_speed / 4);
-                   }*/
 
    // pursue the enemy?
    if ((ThreatLevel <= 25 || pBot->enemy.seenWithFlag) && !pBot->bot_has_flag && pBot->f_periodicAlert1 < pBot->f_think_time) {
@@ -4435,14 +4255,6 @@ static void BotSpectatorDebug(bot_t *pBot) {
 
       // if spectate_debug is set to 1 show the bots job list
       if (spectate_debug == 1) {
-         /*	if(pBot->currentJob > -1)
-                         {
-                                         char msgBuffer[128] = "";
-                                         snprintf(msgBuffer, 128, "CURRENT JOB - phase %d runtime %f\n",
-                                                         pBot->job[pBot->currentJob].phase, pBot->f_think_time -
-            pBot->job[pBot->currentJob].f_bufferedTime);
-                                         strncat(msg, msgBuffer, 255 - strlen(msg));
-                         }*/
 
          // list the jobs in the buffer
          for (int i = 0; i < JOB_BUFFER_MAX; i++) {
@@ -4458,9 +4270,6 @@ static void BotSpectatorDebug(bot_t *pBot) {
                } else
                   strncat(msg, "\n", 255 - strlen(msg)); // add a newline on the end
 
-               /*	if(pBot->currentJob == i)  // indicate the current job
-                                               strncat(msg, "     [CURRENT JOB]\n", 255 - strlen(msg));
-                               else strncat(msg, "\n", 255 - strlen(msg));  // add a newline on the end*/
             } else
                strncat(msg, "\n", 255 - strlen(msg)); // skip empty job indexes
          }
@@ -4503,10 +4312,6 @@ static void BotSpectatorDebug(bot_t *pBot) {
       WRITE_SHORT(FixedSigned16(1, -1 << 13)); // coordinates X
       WRITE_SHORT(FixedSigned16(1, 0 << 13));  // coordinates Y
 
-      /*			// left side of the screen
-                                                      WRITE_SHORT( 0 ); // coordinates X
-                                                      WRITE_SHORT( -8192 ); // coordinates Y*/
-
       WRITE_BYTE(1); // effect
 
       WRITE_BYTE(255);
@@ -4518,6 +4323,7 @@ static void BotSpectatorDebug(bot_t *pBot) {
       WRITE_BYTE(255);
       WRITE_BYTE(255);
       WRITE_BYTE(255);
+
       WRITE_SHORT(FixedUnsigned16(0, 1 << 8)); // fade-in time
       WRITE_SHORT(FixedUnsigned16(0, 1 << 8)); // fade-out time
       WRITE_SHORT(FixedUnsigned16(1, 1 << 8)); // hold time
