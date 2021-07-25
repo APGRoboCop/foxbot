@@ -29,7 +29,6 @@
 #include "enginecallback.h"
 
 #include "bot.h"
-#include "engine.h"
 
 // meta mod stuff
 #include <meta_api.h>
@@ -40,7 +39,7 @@ extern bool mr_meta;
 #ifndef __linux__
 HINSTANCE h_Library = nullptr;
 #else
-void *h_Library = NULL;
+void *h_Library = nullptr;
 #endif
 
 enginefuncs_t g_engfuncs;

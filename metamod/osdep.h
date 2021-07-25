@@ -159,7 +159,7 @@ extern mBOOL dlclose_handle_invalid DLLHIDDEN;
 		
 		// NOTE: Windows FreeLibrary returns success=nonzero, fail=zero,
 		// which is the opposite of the unix convention, thus the '!'.
-		return(!FreeLibrary(handle));
+		return(~FreeLibrary(handle));
 	}
 	// Windows doesn't provide a function corresponding to dlerror(), so
 	// we make our own.

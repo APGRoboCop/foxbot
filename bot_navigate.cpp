@@ -35,7 +35,6 @@
 #include "bot_job_think.h"
 #include "bot_navigate.h"
 #include "bot_weapons.h"
-#include "list.h"
 
 extern bot_weapon_t weapon_defs[MAX_WEAPONS];
 extern edict_t *clients[32];

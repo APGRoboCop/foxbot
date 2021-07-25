@@ -27,10 +27,7 @@
 
 
 #include "extdll.h"
-#include "tf_defs.h"
 #include <meta_api.h>
-
-#include "list.h"
 
 #include "bot.h"
 #include "waypoint.h"
@@ -461,7 +458,7 @@ void BotJobThink(bot_t *pBot) {
    if (pBot->f_periodicAlert1 > pBot->f_think_time)
       return;
 
-   job_struct *newJob = nullptr;
+   job_struct *newJob;
 
    // if the bot has an invalid or no current waypoint try to find it one
    if (pBot->current_wp < 0 || pBot->current_wp >= num_waypoints) {

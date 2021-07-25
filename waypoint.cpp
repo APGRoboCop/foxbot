@@ -31,8 +31,6 @@
 #include <unistd.h>
 #endif
 
-#include <fcntl.h>
-
 #ifndef __linux__
 #include <sys\stat.h>
 #else
@@ -48,7 +46,6 @@
 #include "waypoint.h"
 
 // me
-#include "engine.h"
 
 // linked list class.
 #include "list.h"
@@ -1886,7 +1883,7 @@ bool WaypointReachable(Vector v_src, Vector v_dest, edict_t *pEntity) {
 
          // is dest waypoint higher than src? (45 is max jump height)
          if (v_dest.z > v_src.z + 45.0) {
-            const Vector v_new_src = v_dest;
+            const Vector &v_new_src = v_dest;
             Vector v_new_dest = v_dest;
 
             v_new_dest.z = v_new_dest.z - 50; // straight down 50 units

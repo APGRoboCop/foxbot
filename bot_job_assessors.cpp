@@ -32,10 +32,7 @@
 
 
 #include "extdll.h"
-#include "tf_defs.h"
 #include <meta_api.h>
-
-#include "list.h"
 
 #include "bot.h"
 #include "waypoint.h"
@@ -43,7 +40,6 @@
 
 #include "bot_job_assessors.h"
 #include "bot_job_think.h"
-#include "bot_navigate.h"
 #include "bot_weapons.h"
 
 

@@ -1002,17 +1002,17 @@ void DispatchThink(edict_t *pent) {
                   p_vis = p_vis + 12.5;
             }
 
-            char msg[511];
+            char text[511];
             int amb = 0;
             int vidsize = 2;
             float sz = ((pBot->enemy.ptr->v.maxs.z) * (vidsize / distance)) * 100;
             int d = GETENTITYILLUM(pBot->enemy.ptr);
             if (amb == 0) {
-               edict_t *pent = nullptr;
+               edict_t *s = nullptr;
                edict_t *pPoint = nullptr;
-               while ((pent = FIND_ENTITY_IN_SPHERE(pent, pBot->enemy.ptr->v.origin, 50)) != nullptr && (!FNullEnt(pent)) && amb == 0) {
-                  if (strcmp(STRING(pent->v.classname), "entity_botlightvalue") == 0)
-                     pPoint = pent;
+               while ((s = FIND_ENTITY_IN_SPHERE(s, pBot->enemy.ptr->v.origin, 50)) != nullptr && (!FNullEnt(s)) && amb == 0) {
+                  if (strcmp(STRING(s->v.classname), "entity_botlightvalue") == 0)
+                     pPoint = s;
                }
                if (pPoint == nullptr) {
                   pPoint = CREATE_NAMED_ENTITY(MAKE_STRING("info_target"));
@@ -1074,7 +1074,7 @@ void DispatchThink(edict_t *pent) {
             float veloff = vel.x + vel.y + vel.z;
             veloff = (veloff * (vidsize / distance)) * 10;
 
-            snprintf(msg, 510, "Vis %.1f\nAmb %d %d\nSz %.1f\nveloff %.1f", p_vis, amb, d, sz, veloff);
+            snprintf(text, 510, "Vis %.1f\nAmb %d %d\nSz %.1f\nveloff %.1f", p_vis, amb, d, sz, veloff);
 
             MESSAGE_BEGIN(MSG_ONE, SVC_TEMPENTITY, nullptr, pent->v.owner);
             WRITE_BYTE(TE_TEXTMESSAGE);
@@ -1093,7 +1093,7 @@ void DispatchThink(edict_t *pent) {
             WRITE_SHORT(FixedUnsigned16(0, 1 << 8));
             WRITE_SHORT(FixedUnsigned16(0, 1 << 8));
             WRITE_SHORT(FixedUnsigned16(1, 1 << 8));
-            WRITE_STRING(msg);
+            WRITE_STRING(text);
             MESSAGE_END();
 
             MESSAGE_BEGIN(MSG_ONE, SVC_TEMPENTITY, nullptr, pent->v.owner);
@@ -1658,9 +1658,9 @@ void ClientCommand(edict_t *pEntity) {
       } else if (FStrEq(pcmd, "waypoint_author")) {
          if ((arg1 != nullptr)) {
             if ((*arg1 != 0)) {
-               char msg[512];
-               sprintf(msg, "Waypoint author set to : %s", arg1);
-               CLIENT_PRINTF(pEntity, print_console, UTIL_VarArgs(msg));
+               char message[512];
+               sprintf(message, "Waypoint author set to : %s", arg1);
+               CLIENT_PRINTF(pEntity, print_console, UTIL_VarArgs(message));
                strncpy(waypoint_author, arg1, 250);
                waypoint_author[251] = '\0';
 
@@ -1680,8 +1680,8 @@ void ClientCommand(edict_t *pEntity) {
                h.holdTime = 7;
                h.x = -1;
                h.y = 0.8;
-               sprintf(msg, "-- Waypoint author: %s --", waypoint_author);
-               FOX_HudMessage(INDEXENT(1), h, msg);
+               sprintf(message, "-- Waypoint author: %s --", waypoint_author);
+               FOX_HudMessage(INDEXENT(1), h, message);
             }
          }
          if (mr_meta)
@@ -2505,29 +2505,29 @@ void StartFrame() { // v7 last frame timing
          }
       } // are we currently respawning bots and is it time to spawn one yet?
       if ((respawn_time > 1.0) && (respawn_time <= gpGlobals->time)) {
-         int index = 0; //Not wanted? [APG]RoboCop[CL]
+         int index1 = 0; //Not wanted? [APG]RoboCop[CL]
          // find bot needing to be respawned...
-         while ((index < 32) && (bots[index].respawn_state != RESPAWN_NEED_TO_RESPAWN))
-            index++;
-         if (index < 32) {
-            bots[index].respawn_state = RESPAWN_IS_RESPAWNING;
-            bots[index].is_used = false; // free up this slot
+         while ((index1 < 32) && (bots[index1].respawn_state != RESPAWN_NEED_TO_RESPAWN))
+            index1++;
+         if (index1 < 32) {
+            bots[index1].respawn_state = RESPAWN_IS_RESPAWNING;
+            bots[index1].is_used = false; // free up this slot
             // respawn 1 bot then wait a while(otherwise engine crashes)
             if ((mod_id != TFC_DLL)) {
                char c_skill[2];
-               sprintf(c_skill, "%d", bots[index].bot_skill);
-               BotCreate(nullptr, bots[index].skin, bots[index].name, c_skill, nullptr);
+               sprintf(c_skill, "%d", bots[index1].bot_skill);
+               BotCreate(nullptr, bots[index1].skin, bots[index1].name, c_skill, nullptr);
             } else {
                char c_skill[2];
                char c_team[2];
                char c_class[3];
-               sprintf(c_skill, "%d", bots[index].bot_skill);
-               sprintf(c_team, "%d", bots[index].bot_team);
-               sprintf(c_class, "%d", bots[index].bot_class);
+               sprintf(c_skill, "%d", bots[index1].bot_skill);
+               sprintf(c_team, "%d", bots[index1].bot_team);
+               sprintf(c_class, "%d", bots[index1].bot_class);
                if ((mod_id == TFC_DLL))
-                  BotCreate(nullptr, nullptr, nullptr, bots[index].name, c_skill);
+                  BotCreate(nullptr, nullptr, nullptr, bots[index1].name, c_skill);
                else
-                  BotCreate(nullptr, c_team, c_class, bots[index].name, c_skill);
+                  BotCreate(nullptr, c_team, c_class, bots[index1].name, c_skill);
             }
             respawn_time = gpGlobals->time + 2.0; // set next respawn time
             bot_check_time = gpGlobals->time + 5.0;
@@ -2790,7 +2790,7 @@ void StartFrame() { // v7 last frame timing
             min_bots = -1;
          if (min_bots == 0)
             min_bots = -1; // count the number of players, and players per team
-         int count = 0; //Not wanted? [APG]RoboCop[CL]
+         int count1 = 0; //Not wanted? [APG]RoboCop[CL]
          {
             char cl_name[128];
             for (i = 1; i <= gpGlobals->maxClients; i++) {
@@ -2801,7 +2801,7 @@ void StartFrame() { // v7 last frame timing
                strcpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"));
                // is this a valid connected player?
                if (cl_name[0] != '\0') {
-                  count++;
+                  count1++;
                   int team = (INDEXENT(i)->v.team) - 1;
                   if (team > -1 && team < 4)
                      ++playersPerTeam[team];
@@ -2827,12 +2827,10 @@ void StartFrame() { // v7 last frame timing
          if (bot_total_varies)
             varyBotTotal(); // if there are currently less than the maximum number of players
                            // then add another bot using the default skill level...
-         if ((count < interested_bots || bot_total_varies == 0) && count < max_bots && max_bots != -1) {
+         if ((count1 < interested_bots || bot_total_varies == 0) && count1 < max_bots && max_bots != -1) {
             BotCreate(nullptr, nullptr, nullptr, nullptr, nullptr);
-         } // do bot max_bot kick here...
-         // if there are currently more than the minimum number of bots running
-         // then kick one of the bots off the server...
-         if (((count > interested_bots && bot_total_varies) || count > max_bots) && max_bots != -1) {
+         } // do bot max_bot kick here... if there are currently more than the minimum number of bots running then kick one of the bots off the server...
+         if (((count1 > interested_bots && bot_total_varies) || count1 > max_bots) && max_bots != -1) {
             // count the number of bots present
             int bot_count = 0;
             for (i = 0; i <= 31; i++) {
@@ -2851,8 +2849,7 @@ void StartFrame() { // v7 last frame timing
             bot_check_time = gpGlobals->time + 10.0;
       }
       previous_time = gpGlobals->time;
-   } // this is where the behaviour config is interpreted..
-   // i.e. new lev, load behaviour, and parse it
+   } // this is where the behaviour config is interpreted... i.e. new lev, load behaviour, and parse it
    if (strcmp(STRING(gpGlobals->mapname), prevmapname) != 0) {
       edict_t *pent = nullptr;
       while ((pent = FIND_ENTITY_IN_SPHERE(pent, Vector(0, 0, 0), 8000)) != nullptr && (!FNullEnt(pent))) {
@@ -2935,13 +2932,10 @@ void StartFrame() { // v7 last frame timing
       struct msg_com_struct *prev = nullptr;
       struct msg_com_struct *curr = nullptr;
       for (i = 0; i < MSG_MAX; i++) {
-         // assuming i only goes to 64 on next line..see msg_msg[64][msg_max]
-         // was [0][i] before...may be a problem
+         // assuming i only goes to 64 on next line..see msg_msg[64][msg_max] was [0][i] before...may be a problem
          msg_msg[0][i] = '\0'; // clear the messages, for level changes
          msg_com[i].ifs[0] = '\0';
-         // the idea behind this delete function is if the root.next isnt null,
-         // then it finds the last item in list (the one with item.next =null)
-         // and deletes it.. then repeats it all again.. if root.next etc
+         // the idea behind this delete function is if the root.next isnt null, then it finds the last item in list (the one with item.next =null) and deletes it.. then repeats it all again.. if root.next etc
          while (msg_com[i].next != nullptr) {
             curr = &msg_com[i];
             while (curr->next != nullptr && (int)curr->next != -1) {
@@ -2965,15 +2959,15 @@ void StartFrame() { // v7 last frame timing
          sprintf(msg, "\nExecuting FoXBot TFC script file:%s\n\n", filename);
          ALERT(at_console, msg);
          int ch = fgetc(bfp);
-         int i; //Not wanted? [APG]RoboCop[CL]
+         int i1; //Not wanted? [APG]RoboCop[CL]
          char buffer[14097];
-         for (i = 0; (i < 14096) && (feof(bfp) == 0); i++) {
-            buffer[i] = (char)ch;
-            if (buffer[i] == '\t')
-               buffer[i] = ' ';
+         for (i1 = 0; (i1 < 14096) && (feof(bfp) == 0); i1++) {
+            buffer[i1] = (char)ch;
+            if (buffer[i1] == '\t')
+               buffer[i1] = ' ';
             ch = fgetc(bfp);
          }
-         buffer[i] = '\0';  // we've read it into buffer, now we need to check the syntax..
+         buffer[i1] = '\0';  // we've read it into buffer, now we need to check the syntax..
          int braces = 0;           // check for an even number of braces i.e. {..}
          bool commentline = false; // used to ignore comment lines
          int start = 0;            // used to check if were in a start section or not
@@ -2982,14 +2976,14 @@ void StartFrame() { // v7 last frame timing
          int ifsec = 0;      // used to check if were in an if statement
          char *buf = buffer;
          bool random_shit_error = false;
-         for (i = 0; (i < 14096) && (buffer[i] != '\0') && (!random_shit_error); i++) {
+         for (i1 = 0; (i1 < 14096) && (buffer[i1] != '\0') && (!random_shit_error); i1++) {
             // first off... we need to ignore comment lines!
             if (strncmp(buf, "//", 2) == 0) {
                commentline = true;
-               i++;
+               i1++;
                buf = buf + 1;
             }
-            if (buffer[i] == '\n')
+            if (buffer[i1] == '\n')
                commentline = false;
             if (commentline == false) {
                // need to check for section definition (on_...)
@@ -3003,7 +2997,7 @@ void StartFrame() { // v7 last frame timing
                   else
                      havestart = 1;
                   for (int j = 0; j < 8; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // try and move to end of on start
                }
@@ -3013,20 +3007,20 @@ void StartFrame() { // v7 last frame timing
                   else
                      msgsection = 1;
                   for (int j = 0; j < 6; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // try and move to end of on_msg // now check input var!
-                  if (buffer[i] != '(')
+                  if (buffer[i1] != '(')
                      msgsection = 99;
                   // make sure it starts wif a (
                   else {
-                     i++;
+                     i1++;
                      buf = buf + 1;
-                     if (buffer[i] == ')')
+                     if (buffer[i1] == ')')
                         msgsection = 99; // make sure message isnt empty
                      else { // if it isn't empty, move to end (ignore msg)
-                        while (buffer[i] != ')') {
-                           i++;
+                        while (buffer[i1] != ')') {
+                           i1++;
                            buf = buf + 1;
                         }
                      }
@@ -3037,7 +3031,7 @@ void StartFrame() { // v7 last frame timing
                   if (start == 0 && msgsection == 0)
                      random_shit_error = true;
                   for (int j = 0; j < 11; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                      RoleStatus[0] = 90;
                   } // move to end
@@ -3046,7 +3040,7 @@ void StartFrame() { // v7 last frame timing
                   if (start == 0 && msgsection == 0)
                      random_shit_error = true;
                   for (int j = 0; j < 10; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                      RoleStatus[1] = 90;
                   } // move to end
@@ -3055,7 +3049,7 @@ void StartFrame() { // v7 last frame timing
                   if (start == 0 && msgsection == 0)
                      random_shit_error = true;
                   for (int j = 0; j < 13; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                      RoleStatus[3] = 90;
                   } // move to end
@@ -3064,7 +3058,7 @@ void StartFrame() { // v7 last frame timing
                   if (start == 0 && msgsection == 0)
                      random_shit_error = true;
                   for (int j = 0; j < 12; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                      RoleStatus[3] = 90;
                   } // move to end
@@ -3074,7 +3068,7 @@ void StartFrame() { // v7 last frame timing
                   if (start == 0 && msgsection == 0)
                      random_shit_error = true;
                   for (int j = 0; j < 11; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                      RoleStatus[0] = 15;
                   } // move to end
@@ -3083,7 +3077,7 @@ void StartFrame() { // v7 last frame timing
                   if (start == 0 && msgsection == 0)
                      random_shit_error = true;
                   for (int j = 0; j < 10; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                      RoleStatus[1] = 15;
                   } // move to end
@@ -3092,7 +3086,7 @@ void StartFrame() { // v7 last frame timing
                   if (start == 0 && msgsection == 0)
                      random_shit_error = true;
                   for (int j = 0; j < 13; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                      RoleStatus[2] = 15;
                   } // move to end
@@ -3101,7 +3095,7 @@ void StartFrame() { // v7 last frame timing
                   if (start == 0 && msgsection == 0)
                      random_shit_error = true;
                   for (int j = 0; j < 12; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                      RoleStatus[3] = 15;
                   } // move to end
@@ -3110,7 +3104,7 @@ void StartFrame() { // v7 last frame timing
                   if (start == 0 && msgsection == 0)
                      random_shit_error = true;
                   for (int j = 0; j < 11; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                      RoleStatus[0] = 50;
                   } // move to end
@@ -3119,7 +3113,7 @@ void StartFrame() { // v7 last frame timing
                   if (start == 0 && msgsection == 0)
                      random_shit_error = true;
                   for (int j = 0; j < 10; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                      RoleStatus[1] = 50;
                   } // move to end
@@ -3128,7 +3122,7 @@ void StartFrame() { // v7 last frame timing
                   if (start == 0 && msgsection == 0)
                      random_shit_error = true;
                   for (int j = 0; j < 13; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                      RoleStatus[2] = 50;
                   } // move to end
@@ -3137,7 +3131,7 @@ void StartFrame() { // v7 last frame timing
                   if (start == 0 && msgsection == 0)
                      random_shit_error = true;
                   for (int j = 0; j < 12; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                      RoleStatus[3] = 50;
                   } // move to end
@@ -3147,13 +3141,13 @@ void StartFrame() { // v7 last frame timing
                   if (start == 0 && msgsection == 0)
                      random_shit_error = true;
                   for (int j = 0; j < 25; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
-                  if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                  if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                      random_shit_error = true;
                   else {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
                } else if (strncmp(buf, "red_available_only_point", 24) == 0) {
@@ -3161,13 +3155,13 @@ void StartFrame() { // v7 last frame timing
                   if (start == 0 && msgsection == 0)
                      random_shit_error = true;
                   for (int j = 0; j < 24; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
-                  if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                  if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                      random_shit_error = true;
                   else {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
                } else if (strncmp(buf, "green_available_only_point", 26) == 0) {
@@ -3175,13 +3169,13 @@ void StartFrame() { // v7 last frame timing
                   if (start == 0 && msgsection == 0)
                      random_shit_error = true;
                   for (int j = 0; j < 26; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
-                  if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                  if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                      random_shit_error = true;
                   else {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
                } else if (strncmp(buf, "yellow_available_only_point", 27) == 0) {
@@ -3189,13 +3183,13 @@ void StartFrame() { // v7 last frame timing
                   if (start == 0 && msgsection == 0)
                      random_shit_error = true;
                   for (int j = 0; j < 27; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
-                  if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                  if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                      random_shit_error = true;
                   else {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
                } // point<n> available (set to true)
@@ -3204,13 +3198,13 @@ void StartFrame() { // v7 last frame timing
                   if (start == 0 && msgsection == 0)
                      random_shit_error = true;
                   for (int j = 0; j < 20; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
-                  if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                  if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                      random_shit_error = true;
                   else {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
                } else if (strncmp(buf, "red_available_point", 19) == 0) {
@@ -3218,13 +3212,13 @@ void StartFrame() { // v7 last frame timing
                   if (start == 0 && msgsection == 0)
                      random_shit_error = true;
                   for (int j = 0; j < 19; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
-                  if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                  if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                      random_shit_error = true;
                   else {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
                } else if (strncmp(buf, "green_available_point", 21) == 0) {
@@ -3232,13 +3226,13 @@ void StartFrame() { // v7 last frame timing
                   if (start == 0 && msgsection == 0)
                      random_shit_error = true;
                   for (int j = 0; j < 21; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
-                  if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                  if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                      random_shit_error = true;
                   else {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
                } else if (strncmp(buf, "yellow_available_point", 22) == 0) {
@@ -3246,13 +3240,13 @@ void StartFrame() { // v7 last frame timing
                   if (start == 0 && msgsection == 0)
                      random_shit_error = true;
                   for (int j = 0; j < 22; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
-                  if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                  if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                      random_shit_error = true;
                   else {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
                } // point<n> not_available (set to false)
@@ -3261,13 +3255,13 @@ void StartFrame() { // v7 last frame timing
                   if (start == 0 && msgsection == 0)
                      random_shit_error = true;
                   for (int j = 0; j < 23; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
-                  if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                  if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                      random_shit_error = true;
                   else {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
                } else if (strncmp(buf, "red_notavailable_point", 22) == 0) {
@@ -3275,13 +3269,13 @@ void StartFrame() { // v7 last frame timing
                   if (start == 0 && msgsection == 0)
                      random_shit_error = true;
                   for (int j = 0; j < 22; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
-                  if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                  if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                      random_shit_error = true;
                   else {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
                } else if (strncmp(buf, "green_notavailable_point", 24) == 0) {
@@ -3289,13 +3283,13 @@ void StartFrame() { // v7 last frame timing
                   if (start == 0 && msgsection == 0)
                      random_shit_error = true;
                   for (int j = 0; j < 24; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
-                  if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                  if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                      random_shit_error = true;
                   else {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
                } else if (strncmp(buf, "yellow_notavailable_point", 25) == 0) {
@@ -3303,13 +3297,13 @@ void StartFrame() { // v7 last frame timing
                   if (start == 0 && msgsection == 0)
                      random_shit_error = true;
                   for (int j = 0; j < 25; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
-                  if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                  if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                      random_shit_error = true;
                   else {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
                }  // is point<n> available?
@@ -3322,13 +3316,13 @@ void StartFrame() { // v7 last frame timing
                   else
                      ifsec = 1;
                   for (int j = 0; j < 13; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
-                  if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                  if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                      random_shit_error = true;
                   else {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
                } else if (strncmp(buf, "if_red_point", 12) == 0) {
@@ -3340,13 +3334,13 @@ void StartFrame() { // v7 last frame timing
                   else
                      ifsec = 1;
                   for (int j = 0; j < 12; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
-                  if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                  if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                      random_shit_error = true;
                   else {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
                } else if (strncmp(buf, "if_green_point", 14) == 0) {
@@ -3358,13 +3352,13 @@ void StartFrame() { // v7 last frame timing
                   else
                      ifsec = 1;
                   for (int j = 0; j < 14; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
-                  if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                  if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                      random_shit_error = true;
                   else {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
                } else if (strncmp(buf, "if_yellow_point", 15) == 0) {
@@ -3376,13 +3370,13 @@ void StartFrame() { // v7 last frame timing
                   else
                      ifsec = 1;
                   for (int j = 0; j < 15; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
-                  if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                  if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                      random_shit_error = true;
                   else {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
                } // is point<n> NOT available?
@@ -3395,13 +3389,13 @@ void StartFrame() { // v7 last frame timing
                   else
                      ifsec = 1;
                   for (int j = 0; j < 14; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
-                  if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                  if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                      random_shit_error = true;
                   else {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
                } else if (strncmp(buf, "ifn_red_point", 13) == 0) {
@@ -3413,13 +3407,13 @@ void StartFrame() { // v7 last frame timing
                   else
                      ifsec = 1;
                   for (int j = 0; j < 13; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
-                  if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                  if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                      random_shit_error = true;
                   else {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
                } else if (strncmp(buf, "ifn_green_point", 15) == 0) {
@@ -3431,13 +3425,13 @@ void StartFrame() { // v7 last frame timing
                   else
                      ifsec = 1;
                   for (int j = 0; j < 15; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
-                  if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                  if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                      random_shit_error = true;
                   else {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
                } else if (strncmp(buf, "ifn_yellow_point", 16) == 0) {
@@ -3449,13 +3443,13 @@ void StartFrame() { // v7 last frame timing
                   else
                      ifsec = 1;
                   for (int j = 0; j < 16; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
-                  if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                  if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                      random_shit_error = true;
                   else {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
                }  // multipoint ifs
@@ -3469,15 +3463,15 @@ void StartFrame() { // v7 last frame timing
                      ifsec = 1;
                   int j;
                   for (j = 0; j < 14; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
                   // check for 8 if vals
                   for (j = 0; j < 8; j++) {
-                     if (buffer[i] != '1' && buffer[i] != '0')
+                     if (buffer[i1] != '1' && buffer[i1] != '0')
                         random_shit_error = true;
                      else {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                   }
@@ -3491,15 +3485,15 @@ void StartFrame() { // v7 last frame timing
                      ifsec = 1;
                   int j;
                   for (j = 0; j < 13; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
                   // check for 8 if vals
                   for (j = 0; j < 8; j++) {
-                     if (buffer[i] != '1' && buffer[i] != '0')
+                     if (buffer[i1] != '1' && buffer[i1] != '0')
                         random_shit_error = true;
                      else {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                   }
@@ -3513,15 +3507,15 @@ void StartFrame() { // v7 last frame timing
                      ifsec = 1;
                   int j;
                   for (j = 0; j < 15; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
                   // check for 8 if vals
                   for (j = 0; j < 8; j++) {
-                     if (buffer[i] != '1' && buffer[i] != '0')
+                     if (buffer[i1] != '1' && buffer[i1] != '0')
                         random_shit_error = true;
                      else {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                   }
@@ -3535,26 +3529,26 @@ void StartFrame() { // v7 last frame timing
                      ifsec = 1;
                   int j;
                   for (j = 0; j < 16; j++) {
-                     i++;
+                     i1++;
                      buf = buf + 1;
                   } // move to end
                   // check for 8 if vals
                   for (j = 0; j < 8; j++) {
-                     if (buffer[i] != '1' && buffer[i] != '0')
+                     if (buffer[i1] != '1' && buffer[i1] != '0')
                         random_shit_error = true;
                      else {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                   }
                } // end of multipoint ifs
-               else if ((buffer[i] != '/' && buffer[i] != '{' && buffer[i] != '}' && buffer[i] != ' ' && buffer[i] != '\n') && commentline == false && random_shit_error == false) {
+               else if ((buffer[i1] != '/' && buffer[i1] != '{' && buffer[i1] != '}' && buffer[i1] != ' ' && buffer[i1] != '\n') && commentline == false && random_shit_error == false) {
                   random_shit_error = true;
                   ALERT(at_console, "\\/\\/\\/\\/\\/\\/\n");
                   ALERT(at_console, buf);
                   ALERT(at_console, "\n");
                } // do your magic lexical analysis here. first braces
-               switch (buffer[i]) {
+               switch (buffer[i1]) {
                case '{':
                   braces++;
                   if (start == 1)
@@ -3619,8 +3613,7 @@ void StartFrame() { // v7 last frame timing
          } // warnings
          if (havestart == 0)
             ALERT(at_console, "Warning, no on_start section\n");
-         // after all the lexical stuff, if we dont have any errors
-         // pass the text into the command data types for use
+         // after all the lexical stuff, if we dont have any errors, pass the text into the command data types for use
          if (syntax_error == false) {
             script_parsed = true;
             ALERT(at_console, "Passing data to behaviour arrays\n\n");
@@ -3637,14 +3630,14 @@ void StartFrame() { // v7 last frame timing
             int cnt;
             int current_msg;
             current_msg = -1;
-            for (i = 0; (i < 14096) && (buffer[i] != '\0'); i++) {
+            for (i1 = 0; (i1 < 14096) && (buffer[i1] != '\0'); i1++) {
                // first off.. need to ignore comment lines!
                if (strncmp(buf, "//", 2) == 0) {
                   commentline = true;
-                  i++;
+                  i1++;
                   buf = buf + 1;
                }
-               if (buffer[i] == '\n')
+               if (buffer[i1] == '\n')
                   commentline = false;
                if (commentline == false) {
                   // need to check for section definition (on_...)
@@ -3658,7 +3651,7 @@ void StartFrame() { // v7 last frame timing
                      else
                         havestart = 1;
                      for (int j = 0; j < 8; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // try and move to end of on start
                   }
@@ -3669,38 +3662,35 @@ void StartFrame() { // v7 last frame timing
                      else
                         msgsection = 1;
                      for (int j = 0; j < 6; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
-                     } // try and move to end of on_msg
-                     // now check input var!
-                     if (buffer[i] != '(')
+                     } // try and move to end of on_msg, now check input var!
+                     if (buffer[i1] != '(')
                         msgsection = 99;
                      // make sure it starts wif a (
                      else {
-                        i++;
+                        i1++;
                         buf = buf + 1;
-                        if (buffer[i] == ')')
+                        if (buffer[i1] == ')')
                            msgsection = 99;
                         // make sure message isnt empty
                         else {
                            cnt = 0;
                            // if it isn't empty, move to end (ignore msg)
-                           while (buffer[i] != ')') {
-                              msgtext[cnt] = buffer[i];
+                           while (buffer[i1] != ')') {
+                              msgtext[cnt] = buffer[i1];
                               cnt++;
-                              i++;
+                              i1++;
                               buf = buf + 1;
                            }
                            msgtext[cnt] = '\0'; // terminate string
                            strcpy(msg_msg[current_msg], msgtext);
-                           // ALERT( at_console, msg_msg[current_msg]);
-                           // now we have the message, we should probably clear out
-                           // all the available data
-                           for (int i = 0; i < 8; i++) {
-                              msg_com[current_msg].blue_av[i] = -1;
-                              msg_com[current_msg].red_av[i] = -1;
-                              msg_com[current_msg].yellow_av[i] = -1;
-                              msg_com[current_msg].green_av[i] = -1;
+                           // now we have the message, we should probably clear out, all the available data
+                           for (int i2 = 0; i2 < 8; i2++) {
+                              msg_com[current_msg].blue_av[i2] = -1;
+                              msg_com[current_msg].red_av[i2] = -1;
+                              msg_com[current_msg].yellow_av[i2] = -1;
+                              msg_com[current_msg].green_av[i2] = -1;
                            }
                            // clear the next pointer to stop it craching out.
                            msg_com[current_msg].next = nullptr;
@@ -3713,7 +3703,7 @@ void StartFrame() { // v7 last frame timing
                      if (start == 0 && msgsection == 0)
                         random_shit_error = true;
                      for (int j = 0; j < 11; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                      attack[0] = true;
@@ -3722,7 +3712,7 @@ void StartFrame() { // v7 last frame timing
                      if (start == 0 && msgsection == 0)
                         random_shit_error = true;
                      for (int j = 0; j < 10; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                      attack[1] = true;
@@ -3731,7 +3721,7 @@ void StartFrame() { // v7 last frame timing
                      if (start == 0 && msgsection == 0)
                         random_shit_error = true;
                      for (int j = 0; j < 12; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                      attack[2] = true;
@@ -3740,7 +3730,7 @@ void StartFrame() { // v7 last frame timing
                      if (start == 0 && msgsection == 0)
                         random_shit_error = true;
                      for (int j = 0; j < 13; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                      attack[3] = true;
@@ -3750,7 +3740,7 @@ void StartFrame() { // v7 last frame timing
                      if (start == 0 && msgsection == 0)
                         random_shit_error = true;
                      for (int j = 0; j < 11; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                      defend[0] = true;
@@ -3759,7 +3749,7 @@ void StartFrame() { // v7 last frame timing
                      if (start == 0 && msgsection == 0)
                         random_shit_error = true;
                      for (int j = 0; j < 10; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                      defend[1] = true;
@@ -3768,7 +3758,7 @@ void StartFrame() { // v7 last frame timing
                      if (start == 0 && msgsection == 0)
                         random_shit_error = true;
                      for (int j = 0; j < 12; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                      defend[2] = true;
@@ -3777,7 +3767,7 @@ void StartFrame() { // v7 last frame timing
                      if (start == 0 && msgsection == 0)
                         random_shit_error = true;
                      for (int j = 0; j < 13; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                      defend[3] = true;
@@ -3787,7 +3777,7 @@ void StartFrame() { // v7 last frame timing
                      if (start == 0 && msgsection == 0)
                         random_shit_error = true;
                      for (int j = 0; j < 11; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                   } else if (strncmp(buf, "red_normal", 10) == 0) {
@@ -3795,7 +3785,7 @@ void StartFrame() { // v7 last frame timing
                      if (start == 0 && msgsection == 0)
                         random_shit_error = true;
                      for (int j = 0; j < 10; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                   } else if (strncmp(buf, "green_normal", 12) == 0) {
@@ -3803,7 +3793,7 @@ void StartFrame() { // v7 last frame timing
                      if (start == 0 && msgsection == 0)
                         random_shit_error = true;
                      for (int j = 0; j < 12; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                   } else if (strncmp(buf, "yellow_normal", 13) == 0) {
@@ -3811,7 +3801,7 @@ void StartFrame() { // v7 last frame timing
                      if (start == 0 && msgsection == 0)
                         random_shit_error = true;
                      for (int j = 0; j < 13; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                   }  // point<n> available_only (exclusive)
@@ -3820,15 +3810,15 @@ void StartFrame() { // v7 last frame timing
                      if (start == 0 && msgsection == 0)
                         random_shit_error = true;
                      for (int j = 0; j < 25; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
-                     if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                     if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                         random_shit_error = true;
                      else {
-                        pnt = atoi(&buffer[i]); // get the var
+                        pnt = atoi(&buffer[i1]); // get the var
                         pnt--;
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                      if (start == 2) {
@@ -3854,15 +3844,15 @@ void StartFrame() { // v7 last frame timing
                      if (start == 0 && msgsection == 0)
                         random_shit_error = true;
                      for (int j = 0; j < 24; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
-                     if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                     if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                         random_shit_error = true;
                      else {
-                        pnt = atoi(&buffer[i]); // get the var
+                        pnt = atoi(&buffer[i1]); // get the var
                         pnt--;
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                      if (start == 2) {
@@ -3888,15 +3878,15 @@ void StartFrame() { // v7 last frame timing
                      if (start == 0 && msgsection == 0)
                         random_shit_error = true;
                      for (int j = 0; j < 26; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
-                     if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                     if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                         random_shit_error = true;
                      else {
-                        pnt = atoi(&buffer[i]); // get the var
+                        pnt = atoi(&buffer[i1]); // get the var
                         pnt--;
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                      if (start == 2) {
@@ -3922,15 +3912,15 @@ void StartFrame() { // v7 last frame timing
                      if (start == 0 && msgsection == 0)
                         random_shit_error = true;
                      for (int j = 0; j < 27; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
-                     if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                     if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                         random_shit_error = true;
                      else {
-                        pnt = atoi(&buffer[i]); // get the var
+                        pnt = atoi(&buffer[i1]); // get the var
                         pnt--;
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                      if (start == 2) {
@@ -3957,15 +3947,15 @@ void StartFrame() { // v7 last frame timing
                      if (start == 0 && msgsection == 0)
                         random_shit_error = true;
                      for (int j = 0; j < 20; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
-                     if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                     if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                         random_shit_error = true;
                      else {
-                        pnt = atoi(&buffer[i]); // get the var
+                        pnt = atoi(&buffer[i1]); // get the var
                         pnt--;
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                      if (start == 2) {
@@ -3982,15 +3972,15 @@ void StartFrame() { // v7 last frame timing
                      if (start == 0 && msgsection == 0)
                         random_shit_error = true;
                      for (int j = 0; j < 19; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
-                     if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                     if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                         random_shit_error = true;
                      else {
-                        pnt = atoi(&buffer[i]); // get the var
+                        pnt = atoi(&buffer[i1]); // get the var
                         pnt--;
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                      if (start == 2) {
@@ -4007,15 +3997,15 @@ void StartFrame() { // v7 last frame timing
                      if (start == 0 && msgsection == 0)
                         random_shit_error = true;
                      for (int j = 0; j < 21; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
-                     if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                     if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                         random_shit_error = true;
                      else {
-                        pnt = atoi(&buffer[i]); // get the var
+                        pnt = atoi(&buffer[i1]); // get the var
                         pnt--;
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                      if (start == 2) {
@@ -4032,15 +4022,15 @@ void StartFrame() { // v7 last frame timing
                      if (start == 0 && msgsection == 0)
                         random_shit_error = true;
                      for (int j = 0; j < 22; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
-                     if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                     if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                         random_shit_error = true;
                      else {
-                        pnt = atoi(&buffer[i]); // get the var
+                        pnt = atoi(&buffer[i1]); // get the var
                         pnt--;
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                      if (start == 2) {
@@ -4058,15 +4048,15 @@ void StartFrame() { // v7 last frame timing
                      if (start == 0 && msgsection == 0)
                         random_shit_error = true;
                      for (int j = 0; j < 23; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
-                     if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                     if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                         random_shit_error = true;
                      else {
-                        pnt = atoi(&buffer[i]); // get the var
+                        pnt = atoi(&buffer[i1]); // get the var
                         pnt--;
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                      if (start == 2) {
@@ -4083,15 +4073,15 @@ void StartFrame() { // v7 last frame timing
                      if (start == 0 && msgsection == 0)
                         random_shit_error = true;
                      for (int j = 0; j < 22; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
-                     if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                     if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                         random_shit_error = true;
                      else {
-                        pnt = atoi(&buffer[i]); // get the var
+                        pnt = atoi(&buffer[i1]); // get the var
                         pnt--;
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                      if (start == 2) {
@@ -4108,15 +4098,15 @@ void StartFrame() { // v7 last frame timing
                      if (start == 0 && msgsection == 0)
                         random_shit_error = true;
                      for (int j = 0; j < 24; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
-                     if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                     if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                         random_shit_error = true;
                      else {
-                        pnt = atoi(&buffer[i]); // get the var
+                        pnt = atoi(&buffer[i1]); // get the var
                         pnt--;
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                      if (start == 2) {
@@ -4133,15 +4123,15 @@ void StartFrame() { // v7 last frame timing
                      if (start == 0 && msgsection == 0)
                         random_shit_error = true;
                      for (int j = 0; j < 25; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
-                     if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                     if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                         random_shit_error = true;
                      else {
-                        pnt = atoi(&buffer[i]); // get the var
+                        pnt = atoi(&buffer[i1]); // get the var
                         pnt--;
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                      if (start == 2) {
@@ -4163,14 +4153,14 @@ void StartFrame() { // v7 last frame timing
                      else
                         ifsec = 1;
                      for (int j = 0; j < 13; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
-                     if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                     if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                         random_shit_error = true;
                      else {
-                        pnt = atoi(&buffer[i]); // get the var
-                        i++;
+                        pnt = atoi(&buffer[i1]); // get the var
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                      while (curr->next != nullptr && (int)curr->next != -1)
@@ -4178,11 +4168,11 @@ void StartFrame() { // v7 last frame timing
                      curr->next = new msg_com_struct;
                      curr = curr->next; // clear next pointer..
                      curr->next = nullptr;
-                     for (int i = 0; i < 8; i++) {
-                        curr->blue_av[i] = -1;
-                        curr->red_av[i] = -1;
-                        curr->yellow_av[i] = -1;
-                        curr->green_av[i] = -1;
+                     for (int i2 = 0; i2 < 8; i2++) {
+                        curr->blue_av[i2] = -1;
+                        curr->red_av[i2] = -1;
+                        curr->yellow_av[i2] = -1;
+                        curr->green_av[i2] = -1;
                      }
                      sprintf(msg, "b_p_%d", pnt);
                      strcpy(curr->ifs, msg);
@@ -4195,14 +4185,14 @@ void StartFrame() { // v7 last frame timing
                      else
                         ifsec = 1;
                      for (int j = 0; j < 12; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
-                     if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                     if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                         random_shit_error = true;
                      else {
-                        pnt = atoi(&buffer[i]); // get the var
-                        i++;
+                        pnt = atoi(&buffer[i1]); // get the var
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                      while (curr->next != nullptr && (int)curr->next != -1)
@@ -4210,11 +4200,11 @@ void StartFrame() { // v7 last frame timing
                      curr->next = new msg_com_struct;
                      curr = curr->next; // clear next pointer..
                      curr->next = nullptr;
-                     for (int i = 0; i < 8; i++) {
-                        curr->blue_av[i] = -1;
-                        curr->red_av[i] = -1;
-                        curr->yellow_av[i] = -1;
-                        curr->green_av[i] = -1;
+                     for (int i2 = 0; i2 < 8; i2++) {
+                        curr->blue_av[i2] = -1;
+                        curr->red_av[i2] = -1;
+                        curr->yellow_av[i2] = -1;
+                        curr->green_av[i2] = -1;
                      }
                      sprintf(msg, "r_p_%d", pnt);
                      strcpy(curr->ifs, msg);
@@ -4227,14 +4217,14 @@ void StartFrame() { // v7 last frame timing
                      else
                         ifsec = 1;
                      for (int j = 0; j < 14; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
-                     if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                     if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                         random_shit_error = true;
                      else {
-                        pnt = atoi(&buffer[i]); // get the var
-                        i++;
+                        pnt = atoi(&buffer[i1]); // get the var
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                      while (curr->next != nullptr && (int)curr->next != -1)
@@ -4242,11 +4232,11 @@ void StartFrame() { // v7 last frame timing
                      curr->next = new msg_com_struct;
                      curr = curr->next; // clear next pointer..
                      curr->next = nullptr;
-                     for (int i = 0; i < 8; i++) {
-                        curr->blue_av[i] = -1;
-                        curr->red_av[i] = -1;
-                        curr->yellow_av[i] = -1;
-                        curr->green_av[i] = -1;
+                     for (int i2 = 0; i2 < 8; i2++) {
+                        curr->blue_av[i2] = -1;
+                        curr->red_av[i2] = -1;
+                        curr->yellow_av[i2] = -1;
+                        curr->green_av[i2] = -1;
                      }
                      sprintf(msg, "g_p_%d", pnt);
                      strcpy(curr->ifs, msg);
@@ -4259,14 +4249,14 @@ void StartFrame() { // v7 last frame timing
                      else
                         ifsec = 1;
                      for (int j = 0; j < 15; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
-                     if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                     if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                         random_shit_error = true;
                      else {
-                        pnt = atoi(&buffer[i]); // get the var
-                        i++;
+                        pnt = atoi(&buffer[i1]); // get the var
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                      while (curr->next != nullptr && (int)curr->next != -1)
@@ -4274,11 +4264,11 @@ void StartFrame() { // v7 last frame timing
                      curr->next = new msg_com_struct;
                      curr = curr->next; // clear next pointer..
                      curr->next = nullptr;
-                     for (int i = 0; i < 8; i++) {
-                        curr->blue_av[i] = -1;
-                        curr->red_av[i] = -1;
-                        curr->yellow_av[i] = -1;
-                        curr->green_av[i] = -1;
+                     for (int i2 = 0; i2 < 8; i2++) {
+                        curr->blue_av[i2] = -1;
+                        curr->red_av[i2] = -1;
+                        curr->yellow_av[i2] = -1;
+                        curr->green_av[i2] = -1;
                      }
                      sprintf(msg, "y_p_%d", pnt);
                      strcpy(curr->ifs, msg);
@@ -4292,14 +4282,14 @@ void StartFrame() { // v7 last frame timing
                      else
                         ifsec = 1;
                      for (int j = 0; j < 14; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
-                     if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                     if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                         random_shit_error = true;
                      else {
-                        pnt = atoi(&buffer[i]); // get the var
-                        i++;
+                        pnt = atoi(&buffer[i1]); // get the var
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                      while (curr->next != nullptr && (int)curr->next != -1)
@@ -4308,11 +4298,11 @@ void StartFrame() { // v7 last frame timing
                      curr = curr->next;
                      // clear next pointer..
                      curr->next = nullptr;
-                     for (int i = 0; i < 8; i++) {
-                        curr->blue_av[i] = -1;
-                        curr->red_av[i] = -1;
-                        curr->yellow_av[i] = -1;
-                        curr->green_av[i] = -1;
+                     for (int i2 = 0; i2 < 8; i2++) {
+                        curr->blue_av[i2] = -1;
+                        curr->red_av[i2] = -1;
+                        curr->yellow_av[i2] = -1;
+                        curr->green_av[i2] = -1;
                      }
                      sprintf(msg, "b_pn_%d", pnt);
                      strcpy(curr->ifs, msg);
@@ -4325,27 +4315,26 @@ void StartFrame() { // v7 last frame timing
                      else
                         ifsec = 1;
                      for (int j = 0; j < 13; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
-                     if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                     if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                         random_shit_error = true;
                      else {
-                        pnt = atoi(&buffer[i]); // get the var
-                        i++;
+                        pnt = atoi(&buffer[i1]); // get the var
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                      while (curr->next != nullptr && (int)curr->next != -1)
                         curr = curr->next; // get to null
                      curr->next = new msg_com_struct;
-                     curr = curr->next;
-                     // clear next pointer..
+                     curr = curr->next; // clear next pointer...
                      curr->next = nullptr;
-                     for (int i = 0; i < 8; i++) {
-                        curr->blue_av[i] = -1;
-                        curr->red_av[i] = -1;
-                        curr->yellow_av[i] = -1;
-                        curr->green_av[i] = -1;
+                     for (int i2 = 0; i2 < 8; i2++) {
+                        curr->blue_av[i2] = -1;
+                        curr->red_av[i2] = -1;
+                        curr->yellow_av[i2] = -1;
+                        curr->green_av[i2] = -1;
                      }
                      sprintf(msg, "r_pn_%d", pnt);
                      strcpy(curr->ifs, msg);
@@ -4358,27 +4347,26 @@ void StartFrame() { // v7 last frame timing
                      else
                         ifsec = 1;
                      for (int j = 0; j < 15; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
-                     if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                     if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                         random_shit_error = true;
                      else {
-                        pnt = atoi(&buffer[i]); // get the var
-                        i++;
+                        pnt = atoi(&buffer[i1]); // get the var
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                      while (curr->next != nullptr && (int)curr->next != -1)
                         curr = curr->next; // get to null
                      curr->next = new msg_com_struct;
-                     curr = curr->next;
-                     // clear next pointer..
+                     curr = curr->next; // clear next pointer...
                      curr->next = nullptr;
-                     for (int i = 0; i < 8; i++) {
-                        curr->blue_av[i] = -1;
-                        curr->red_av[i] = -1;
-                        curr->yellow_av[i] = -1;
-                        curr->green_av[i] = -1;
+                     for (int i2 = 0; i2 < 8; i2++) {
+                        curr->blue_av[i2] = -1;
+                        curr->red_av[i2] = -1;
+                        curr->yellow_av[i2] = -1;
+                        curr->green_av[i2] = -1;
                      }
                      sprintf(msg, "g_pn_%d", pnt);
                      strcpy(curr->ifs, msg);
@@ -4391,26 +4379,26 @@ void StartFrame() { // v7 last frame timing
                      else
                         ifsec = 1;
                      for (int j = 0; j < 16; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end
-                     if (buffer[i] != '1' && buffer[i] != '2' && buffer[i] != '3' && buffer[i] != '4' && buffer[i] != '5' && buffer[i] != '6' && buffer[i] != '7' && buffer[i] != '8')
+                     if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
                         random_shit_error = true;
                      else {
-                        pnt = atoi(&buffer[i]); // get the var
-                        i++;
+                        pnt = atoi(&buffer[i1]); // get the var
+                        i1++;
                         buf = buf + 1;
                      } // move to end
                      while (curr->next != nullptr && (int)curr->next != -1)
                         curr = curr->next; // get to null
                      curr->next = new msg_com_struct;
-                     curr = curr->next; // clear next pointer..
+                     curr = curr->next; // clear next pointer...
                      curr->next = nullptr;
-                     for (int i = 0; i < 8; i++) {
-                        curr->blue_av[i] = -1;
-                        curr->red_av[i] = -1;
-                        curr->yellow_av[i] = -1;
-                        curr->green_av[i] = -1;
+                     for (int i2 = 0; i2 < 8; i2++) {
+                        curr->blue_av[i2] = -1;
+                        curr->red_av[i2] = -1;
+                        curr->yellow_av[i2] = -1;
+                        curr->green_av[i2] = -1;
                      }
                      sprintf(msg, "y_pn_%d", pnt);
                      strcpy(curr->ifs, msg);
@@ -4426,29 +4414,29 @@ void StartFrame() { // v7 last frame timing
                         ifsec = 1;
                      int j;
                      for (j = 0; j < 14; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end  // check for 8 if vals
                      char pnts[9];
                      for (j = 0; j < 8; j++) {
-                        if (buffer[i] != '1' && buffer[i] != '0')
+                        if (buffer[i1] != '1' && buffer[i1] != '0')
                            random_shit_error = true;
                         else {
-                           pnts[j] = buffer[i];
-                           i++;
+                           pnts[j] = buffer[i1];
+                           i1++;
                            buf = buf + 1;
                         } // move to end
                      }
                      while (curr->next != nullptr && (int)curr->next != -1)
                         curr = curr->next; // get to null
                      curr->next = new msg_com_struct;
-                     curr = curr->next; // clear next pointer..
+                     curr = curr->next; // clear next pointer...
                      curr->next = nullptr;
-                     for (int i = 0; i < 8; i++) {
-                        curr->blue_av[i] = -1;
-                        curr->red_av[i] = -1;
-                        curr->yellow_av[i] = -1;
-                        curr->green_av[i] = -1;
+                     for (int i2 = 0; i2 < 8; i2++) {
+                        curr->blue_av[i2] = -1;
+                        curr->red_av[i2] = -1;
+                        curr->yellow_av[i2] = -1;
+                        curr->green_av[i2] = -1;
                      }
                      pnts[8] = '\0';
                      sprintf(msg, "b_mp_%s", pnts);
@@ -4463,29 +4451,29 @@ void StartFrame() { // v7 last frame timing
                         ifsec = 1;
                      int j;
                      for (j = 0; j < 13; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end  // check for 8 if vals
                      char pnts[9];
                      for (j = 0; j < 8; j++) {
-                        if (buffer[i] != '1' && buffer[i] != '0')
+                        if (buffer[i1] != '1' && buffer[i1] != '0')
                            random_shit_error = true;
                         else {
-                           pnts[j] = buffer[i];
-                           i++;
+                           pnts[j] = buffer[i1];
+                           i1++;
                            buf = buf + 1;
                         } // move to end
                      }
                      while (curr->next != nullptr && (int)curr->next != -1)
                         curr = curr->next; // get to null
                      curr->next = new msg_com_struct;
-                     curr = curr->next; // clear next pointer..
+                     curr = curr->next; // clear next pointer...
                      curr->next = nullptr;
-                     for (int i = 0; i < 8; i++) {
-                        curr->blue_av[i] = -1;
-                        curr->red_av[i] = -1;
-                        curr->yellow_av[i] = -1;
-                        curr->green_av[i] = -1;
+                     for (int i2 = 0; i2 < 8; i2++) {
+                        curr->blue_av[i2] = -1;
+                        curr->red_av[i2] = -1;
+                        curr->yellow_av[i2] = -1;
+                        curr->green_av[i2] = -1;
                      }
                      pnts[8] = '\0';
                      sprintf(msg, "r_mp_%s", pnts);
@@ -4500,29 +4488,29 @@ void StartFrame() { // v7 last frame timing
                         ifsec = 1;
                      int j;
                      for (j = 0; j < 15; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end // check for 8 if vals
                      char pnts[9];
                      for (j = 0; j < 8; j++) {
-                        if (buffer[i] != '1' && buffer[i] != '0')
+                        if (buffer[i1] != '1' && buffer[i1] != '0')
                            random_shit_error = true;
                         else {
-                           pnts[j] = buffer[i];
-                           i++;
+                           pnts[j] = buffer[i1];
+                           i1++;
                            buf = buf + 1;
                         } // move to end
                      }
                      while (curr->next != nullptr && (int)curr->next != -1)
                         curr = curr->next; // get to null
                      curr->next = new msg_com_struct;
-                     curr = curr->next; // clear next pointer..
+                     curr = curr->next; // clear next pointer...
                      curr->next = nullptr;
-                     for (int i = 0; i < 8; i++) {
-                        curr->blue_av[i] = -1;
-                        curr->red_av[i] = -1;
-                        curr->yellow_av[i] = -1;
-                        curr->green_av[i] = -1;
+                     for (int i2 = 0; i2 < 8; i2++) {
+                        curr->blue_av[i2] = -1;
+                        curr->red_av[i2] = -1;
+                        curr->yellow_av[i2] = -1;
+                        curr->green_av[i2] = -1;
                      }
                      pnts[8] = '\0';
                      sprintf(msg, "g_mp_%s", pnts);
@@ -4537,51 +4525,49 @@ void StartFrame() { // v7 last frame timing
                         ifsec = 1;
                      int j;
                      for (j = 0; j < 16; j++) {
-                        i++;
+                        i1++;
                         buf = buf + 1;
                      } // move to end  // check for 8 if vals
                      char pnts[9];
                      for (j = 0; j < 8; j++) {
-                        if (buffer[i] != '1' && buffer[i] != '0')
+                        if (buffer[i1] != '1' && buffer[i1] != '0')
                            random_shit_error = true;
                         else {
-                           pnts[j] = buffer[i];
-                           i++;
+                           pnts[j] = buffer[i1];
+                           i1++;
                            buf = buf + 1;
                         } // move to end
                      }
                      while (curr->next != nullptr && (int)curr->next != -1)
                         curr = curr->next; // get to null
                      curr->next = new msg_com_struct;
-                     curr = curr->next; // clear next pointer..
+                     curr = curr->next; // clear next pointer...
                      curr->next = nullptr;
-                     for (int i = 0; i < 8; i++) {
-                        curr->blue_av[i] = -1;
-                        curr->red_av[i] = -1;
-                        curr->yellow_av[i] = -1;
-                        curr->green_av[i] = -1;
+                     for (int i2 = 0; i2 < 8; i2++) {
+                        curr->blue_av[i2] = -1;
+                        curr->red_av[i2] = -1;
+                        curr->yellow_av[i2] = -1;
+                        curr->green_av[i2] = -1;
                      }
                      pnts[8] = '\0';
                      sprintf(msg, "y_mp_%s", pnts);
                      strcpy(curr->ifs, msg);
                   } // end of multipoint ifs
-                  else if ((buffer[i] != '/' && buffer[i] != '{' && buffer[i] != '}' && buffer[i] != ' ' && buffer[i] != '\n') &&
+                  else if ((buffer[i1] != '/' && buffer[i1] != '{' && buffer[i1] != '}' && buffer[i1] != ' ' && buffer[i1] != '\n') &&
                            commentline == false && random_shit_error == false) {
                      random_shit_error = true;
                      ALERT(at_console, "\\/\\/\\/\\/\\/\\/\n");
                      ALERT(at_console, buf);
                      ALERT(at_console, "\n");
                   } // do your magic lexical analysis here.. // first braces
-                  switch (buffer[i]) {
+                  switch (buffer[i1]) {
                   case '{':
                      braces++;
                      if (start == 1)
                         start = 2;
                      else if (start > 0)
                         start = 99;
-                     // need to check that more braces aernt put in than nesesarry
-                     // i.e. start=2 then generate error,
-                     // cus only have variable setting in start section
+                     // need to check that more braces aernt put in than nesesarry i.e. start=2 then generate error, cus only have variable setting in start section
                      if (ifsec == 1)
                         ifsec = 2;
                      else if (ifsec > 0)

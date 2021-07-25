@@ -39,10 +39,7 @@
 #include "bot_navigate.h"
 #include "bot_weapons.h"
 
-#include "engine.h"
-
 #include <sys/stat.h>
-#include <sys/types.h>
 
 #ifdef WIN32
 #include <wtypes.h>
@@ -527,7 +524,6 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
    int skill;
    int index = 0;
    int i;
-   bool found = false;
    // min/max checking...
    if (max_bots > MAX_BOTS)
       max_bots = MAX_BOTS;
@@ -569,6 +565,7 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
    }
 
    if (mod_id == VALVE_DLL) {
+      bool found = false;
       int max_skin_index = 0;
 
       if (mod_id == VALVE_DLL)
@@ -967,7 +964,6 @@ void BotFindItem(bot_t *pBot) {
    Vector entity_origin;
    bool can_pickup;
    float min_distance;
-   char item_name[40];
    TraceResult tr;
    Vector vecStart;
    Vector vecEnd;
@@ -991,6 +987,7 @@ void BotFindItem(bot_t *pBot) {
 
    edict_t *pent = nullptr;
    while ((pent = FIND_ENTITY_IN_SPHERE(pent, searchCenter, radius)) != nullptr && !FNullEnt(pent)) {
+      char item_name[40];
       can_pickup = false; // assume can't use it until known otherwise
 
       strcpy(item_name, STRING(pent->v.classname));
@@ -3596,11 +3593,6 @@ void BotThink(bot_t *pBot) {
    // this sanity check might not be necessary, but wont hurt anything
    if (pBot == nullptr)
       return;
-
-   //{ fp=UTIL_OpenFoxbotLog(); fprintf(fp, "1\n"); fclose(fp); }
-   // int index = 0;
-   // float pitch_degrees, yaw_degrees;
-   TraceResult tr;
 
    pBot->pEdict->v.flags |= FL_FAKECLIENT;
 

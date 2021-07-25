@@ -30,7 +30,6 @@
 
 #include "bot.h"
 #include "bot_func.h"
-#include "bot_weapons.h"
 
 extern int mod_id;
 extern edict_t *pent_info_ctfdetect;
@@ -52,8 +51,6 @@ static int BotPickFavoredTeam_TFC(int faveClass);
 void BotStartGame(bot_t *pBot) {
    pBot->not_started = true;
 
-   char c_team[32];
-   char c_class[32];
    edict_t *pEdict = pBot->pEdict;
 
    if (mod_id == TFC_DLL) {
@@ -96,6 +93,7 @@ void BotStartGame(bot_t *pBot) {
       // handle Team Fortress Classic stuff here...
 
       if (pBot->start_action == MSG_TFC_TEAM_SELECT) {
+         char c_team[32];
          pBot->start_action = MSG_TFC_IDLE; // switch back to idle
 
          // reset the bots team if the team it's chosen is full already
@@ -141,6 +139,7 @@ void BotStartGame(bot_t *pBot) {
       }
 
       if (pBot->start_action == MSG_TFC_CLASS_SELECT) {
+         char c_class[32];
          pBot->start_action = MSG_TFC_IDLE; // switch back to idle
          if (pBot->bot_class < 1 || pBot->bot_class > 9)
             pBot->bot_class = -1;

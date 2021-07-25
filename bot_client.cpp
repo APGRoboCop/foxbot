@@ -205,7 +205,6 @@ void BotClient_Valve_CurrentWeapon(void *p, const int bot_index) {
    // static int state = 0;	// current state machine state
    static int iState;
    static int iId;
-   static int iClip;
 
    if (g_state == 0) {
       g_state++;
@@ -214,6 +213,7 @@ void BotClient_Valve_CurrentWeapon(void *p, const int bot_index) {
       g_state++;
       iId = *static_cast<int *>(p); // weapon ID of current weapon
    } else if (g_state == 2) {
+      static int iClip;
       // state = 0;
 
       iClip = *static_cast<int *>(p); // ammo currently in the clip for this weapon
@@ -260,12 +260,12 @@ void BotClient_FLF_CurrentWeapon(void* p, int bot_index)
 void BotClient_Valve_AmmoX(void *p, const int bot_index) {
    // static int state = 0;	// current state machine state
    static int index;
-   static int ammount;
 
    if (g_state == 0) {
       g_state++;
       index = *static_cast<int *>(p); // ammo index (for type of ammo)
    } else if (g_state == 1) {
+      static int ammount;
       // state = 0;
 
       ammount = *static_cast<int *>(p); // the amount of ammo currently available
@@ -310,12 +310,12 @@ void BotClient_FLF_AmmoX(void* p, int bot_index)
 void BotClient_Valve_AmmoPickup(void *p, const int bot_index) {
    static int state = 0; // current state machine state
    static int index;
-   static int ammount;
 
    if (state == 0) {
       state++;
       index = *static_cast<int *>(p);
    } else if (state == 1) {
+      static int ammount;
       state = 0;
 
       ammount = *static_cast<int *>(p);
@@ -593,10 +593,6 @@ void BotClient_Valve_DeathMsg(void *p, int bot_index) {
    static int state = 0; // current state machine state
    static int killer_index;
    static int victim_index;
-   static edict_t *victim_edict;
-   static edict_t *killer_edict;
-   static int index;
-   static int indexb;
 
    if (state == 0) {
       state++;
@@ -605,6 +601,10 @@ void BotClient_Valve_DeathMsg(void *p, int bot_index) {
       state++;
       victim_index = *static_cast<int *>(p); // ENTINDEX() of victim
    } else if (state == 2) {
+      static int indexb;
+      static int index;
+      static edict_t *killer_edict;
+      static edict_t *victim_edict;
       state = 0;
 
       victim_edict = INDEXENT(victim_index);

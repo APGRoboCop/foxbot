@@ -27,16 +27,12 @@
 
 
 #include "extdll.h"
-#include "tf_defs.h"
 #include <meta_api.h>
-
-#include "list.h"
 
 #include "bot.h"
 #include "waypoint.h"
 #include "bot_func.h"
 
-#include "bot_job_assessors.h"
 #include "bot_job_functions.h"
 #include "bot_job_think.h"
 #include "bot_navigate.h"
@@ -929,8 +925,6 @@ int JobBuildSentry(bot_t *pBot) {
             // check that this sentry gun is near to where the bot was
             // when it started building
             if (VectorsNearerThan(job_ptr->origin, pent->v.origin, 50.0)) {
-               //	UTIL_HostSay(pBot->pEdict, 0, "sentry gun built"); //DebugMessageOfDoom!
-               success = true;
                pBot->has_sentry = true;
                pBot->sentry_edict = pent;
                pBot->sentryWaypoint = job_ptr->waypoint;
@@ -1070,8 +1064,6 @@ int JobBuildDispenser(bot_t *pBot) {
             // check that this dispenser is near to where the bot was
             // when it started building
             if (VectorsNearerThan(job_ptr->origin, pent->v.origin, 50.0)) {
-               //	UTIL_HostSay(pBot->pEdict, 0, "dispenser built"); //DebugMessageOfDoom!
-               success = true;
                pBot->has_dispenser = true;
                pBot->dispenser_edict = pent;
                pBot->f_dispenserDetTime = 0.0; // don't blow it up yet!
@@ -1209,8 +1201,6 @@ int JobBuildTeleport(bot_t *pBot) {
             // check that this teleport is near to where the bot was
             // when it started building
             if (VectorsNearerThan(job_ptr->origin, pent->v.origin, 50.0)) {
-               //	UTIL_HostSay(pBot->pEdict, 0, "teleporter built"); //DebugMessageOfDoom!
-               success = true;
                if (buildExit) {
                   pBot->tpExit = pent;
                   pBot->tpExitWP = job_ptr->waypoint;

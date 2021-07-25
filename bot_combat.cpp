@@ -132,7 +132,7 @@ static bot_weapon_select_t tfc_weapon_select[] = {{TF_WEAPON_KNIFE, "tf_weapon_k
                                                   {TF_WEAPON_SUPERSHOTGUN, "tf_weapon_supershotgun", 5, 0.0, 2000.0, 0.0, 0.0, 100, true, 100, 2, 0, false, false, false, false, 0.0, 0.0},
                                                   {TF_WEAPON_SUPERNAILGUN, "tf_weapon_superng", 5, 40.0, 2000.0, 0.0, 0.0, 20, true, 100, 1, 0, true, false, false, false, 0.0, 0.0},
                                                   {TF_WEAPON_TRANQ, "tf_weapon_tranq", 5, 0.0, 100.0, 0.0, 0.0, 20, true, 20, 1, 0, false, false, false, false, 0.0, 0.0},
-                                                  {TF_WEAPON_AUTORIFLE, "tf_weapon_autorifle", 5, 0.0, 1000.0, 0.0, 0.0, 100, true, 100, 1, 0, false, false, false, false, 0.0, 0.0},
+                                                  {TF_WEAPON_AUTORIFLE, "tf_weapon_autorifle", 5, 0.0, 1000.0, 0.0, 0.0, 100, true, 100, 1, 0, true, false, false, false, 0.0, 0.0},
                                                   {TF_WEAPON_AXE, "tf_weapon_axe", 5, 0.0, 60.0, 0.0, 0.0, 100, true, 100, 0, 0, false, false, false, false, 0.0, 0.0},
                                                   {TF_WEAPON_PL, "tf_weapon_pl", 5, 150.0, 600.0, 0.0, 0.0, 100, true, 100, 1, 0, false, false, false, false, 0.0, 0.0},
                                                   {TF_WEAPON_GL, "tf_weapon_gl", 5, 150.0, 600.0, 0.0, 0.0, 100, true, 100, 1, 0, false, false, false, false, 0.0, 0.0},
@@ -1408,7 +1408,6 @@ static Vector BotBodyTarget(edict_t *pBotEnemy, bot_t *pBot) {
 bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) {
    bot_weapon_select_t *pSelect = nullptr;
    bot_fire_delay_t *pDelay = nullptr;
-   int iId;
 
    edict_t *pEdict = pBot->pEdict;
    const float f_distance = v_enemy.Length(); // how far away is the enemy?
@@ -1477,6 +1476,7 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
    }
 
    if (pSelect) {
+      int iId;
       int select_index;
 
       // are we charging the primary fire?
@@ -2274,7 +2274,6 @@ void BotCheckForMultiguns(bot_t *pBot, float nearestdistance, edict_t *pNewEnemy
          Vector vecEnd = pent->v.origin + pent->v.view_ofs;
          if (distance < nearestdistance && FInViewCone(vecEnd, pBot->pEdict) && FVisible(vecEnd, pBot->pEdict)) {
             nearestdistance = distance;
-            pNewEnemy = pent;
             rtn = false;
 
             BotSGSpotted(pBot, pent);
