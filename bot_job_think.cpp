@@ -25,7 +25,6 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
-
 #include "extdll.h"
 #include <meta_api.h>
 
@@ -38,7 +37,6 @@
 #include "bot_job_think.h"
 #include "bot_navigate.h"
 #include "bot_weapons.h"
-
 
 // team data /////////////////////////
 extern int RoleStatus[];
@@ -153,7 +151,7 @@ const jobList_struct jl[JOB_TYPE_TOTAL] = {
     {780, "JOB_CAPTURE_FLAG"},
     {340, "JOB_HARRASS_DEFENSE"},
     {380, "JOB_ROCKET_JUMP"}, // Reduced RJ until fix is provided [APG]RoboCop[CL]
-    {720, "JOB_CONCUSSION_JUMP"}, 
+    {720, "JOB_CONCUSSION_JUMP"},
     {390, "JOB_DETPACK_WAYPOINT"},
     {430, "JOB_PIPETRAP"},
     {600, "JOB_INVESTIGATE_AREA"},
@@ -577,7 +575,7 @@ void BotJobThink(bot_t *pBot) {
    case TFC_CLASS_CIVILIAN:
       break;
    case TFC_CLASS_SCOUT:
-      //FakeClientCommand(pBot->pEdict, "slot3", nullptr, nullptr);
+      // FakeClientCommand(pBot->pEdict, "slot3", nullptr, nullptr);
       break;
    case TFC_CLASS_SNIPER:
       // go snipe
@@ -608,10 +606,10 @@ void BotJobThink(bot_t *pBot) {
    case TFC_CLASS_PYRO:
       break;
    case TFC_CLASS_MEDIC:
-      //FakeClientCommand(pBot->pEdict, "slot3", nullptr, nullptr);
+      // FakeClientCommand(pBot->pEdict, "slot3", nullptr, nullptr);
       break;
    case TFC_CLASS_SPY:
-      //FakeClientCommand(pBot->pEdict, "slot1", nullptr, nullptr);
+      // FakeClientCommand(pBot->pEdict, "slot1", nullptr, nullptr);
       // time for a disguise?
       if (pBot->enemy.f_lastSeen + 2.0 < pBot->f_think_time) {
          if (pBot->current_team == UTIL_GetTeamColor(pBot->pEdict)) {
@@ -643,7 +641,7 @@ void BotJobThink(bot_t *pBot) {
       break;
    case TFC_CLASS_ENGINEER:
       BotEngineerThink(pBot);
-      //FakeClientCommand(pBot->pEdict, "slot1", nullptr, nullptr);
+      // FakeClientCommand(pBot->pEdict, "slot1", nullptr, nullptr);
       break;
    default:
       break;

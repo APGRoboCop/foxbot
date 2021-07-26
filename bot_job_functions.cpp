@@ -25,7 +25,6 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
-
 #include "extdll.h"
 #include <meta_api.h>
 
@@ -136,8 +135,7 @@ int JobSeekWaypoint(bot_t *pBot) {
       }
 
       // wandered long enough or gotten stuck?
-	  if (job_ptr->phase_timer < pBot->f_think_time ||
-			(pBot->f_move_speed > 5.0 && pBot->pEdict->v.velocity.Length() < 0.1)) {
+      if (job_ptr->phase_timer < pBot->f_think_time || (pBot->f_move_speed > 5.0 && pBot->pEdict->v.velocity.Length() < 0.1)) {
          job_ptr->phase = 0;
          return JOB_UNDERWAY;
       }
@@ -1353,7 +1351,7 @@ int JobBuffAlly(bot_t *pBot) {
       BotNavigateWaypointless(pBot);
       pBot->f_current_wp_deadline = pBot->f_think_time + BOT_WP_DEADLINE;
 
-      //pBot->strafe_mod = STRAFE_MOD_HEAL;
+      // pBot->strafe_mod = STRAFE_MOD_HEAL;
 
       // make sure the right weapon is selected
       if (pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC && pBot->current_weapon.iId != TF_WEAPON_MEDIKIT)
@@ -1781,7 +1779,7 @@ int JobDisguise(bot_t *pBot) {
       const int new_disguise = disguiseList[random_long(0, 6)];
 
       char choice[32];
-      sprintf (choice, "%d", new_disguise);
+      sprintf(choice, "%d", new_disguise);
 
       FakeClientCommand(pBot->pEdict, "disguise_enemy", choice, nullptr);
       pBot->disguise_state = DISGUISE_UNDERWAY;
@@ -2250,12 +2248,12 @@ int JobHarrassDefense(bot_t *pBot) {
 
          // the nearer the bot is the more likely it will go for the flag
          if (flagDistance != -1 && (flagDistance < 800 // always when this close
-				|| (flagDistance < 2000 && random_long(1, 2000) > flagDistance))) {
-				job_struct* newJob = InitialiseNewJob(pBot, JOB_GET_FLAG);
-				if (newJob != nullptr) {
-					newJob->waypoint = flagWP;
-					if (SubmitNewJob(pBot, JOB_GET_FLAG, newJob) == TRUE)
-						return JOB_TERMINATED; // end this job so the bot can go for the flag instead
+                                    || (flagDistance < 2000 && random_long(1, 2000) > flagDistance))) {
+            job_struct *newJob = InitialiseNewJob(pBot, JOB_GET_FLAG);
+            if (newJob != nullptr) {
+               newJob->waypoint = flagWP;
+               if (SubmitNewJob(pBot, JOB_GET_FLAG, newJob) == TRUE)
+                  return JOB_TERMINATED; // end this job so the bot can go for the flag instead
             }
          }
       }

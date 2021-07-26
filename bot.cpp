@@ -165,7 +165,7 @@ static char bot_names[MAX_BOT_NAMES][BOT_NAME_LEN + 1];
 // defend response distance per class
 const static float defendMaxRespondDist[] = {300.0f, 1500.0f, 500.0f, 1500.0f, 800.0f, 1500.0f, 1500.0f, 1500.0f, 1500.0f, 1500.0f};
 
-//const static double double_pi = 3.141592653589793238;
+// const static double double_pi = 3.141592653589793238;
 
 // FUNCTION PROTOTYPES /////////////////
 static int BotAssignDefaultSkill();
@@ -787,7 +787,7 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
       // and before we can add this shit for checking purposes
       bot_t *pBot = &bots[index];
       if (botJustJoined[index])
-         bzero (pBot, sizeof(bot_t)); // wipe out the bots data
+         bzero(pBot, sizeof(bot_t)); // wipe out the bots data
       pBot->pEdict = BotEnt;
 
       // clear the player info from the previous player who used this edict
@@ -948,7 +948,7 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
             }
          }
       }
-      memset (&pBot->job, 0, sizeof (job_struct) * JOB_BUFFER_MAX);
+      memset(&pBot->job, 0, sizeof(job_struct) * JOB_BUFFER_MAX);
 
       botJustJoined[index] = false; // the inititation ceremony is over!
    }
@@ -1565,10 +1565,9 @@ edict_t *BotContactThink(bot_t *pBot) {
             continue;
 
          // don't avoid if going for player with one of these weapons
-         if(pBot->enemy.ptr == pPlayer || (pBot->currentJob > -1 && pPlayer == pBot->job[pBot->currentJob].player)) {
-                if(pBot->current_weapon.iId == TF_WEAPON_KNIFE || pBot->current_weapon.iId == TF_WEAPON_MEDIKIT ||
-                    pBot->current_weapon.iId == TF_WEAPON_SPANNER || pBot->current_weapon.iId == TF_WEAPON_AXE)
-                    continue;
+         if (pBot->enemy.ptr == pPlayer || (pBot->currentJob > -1 && pPlayer == pBot->job[pBot->currentJob].player)) {
+            if (pBot->current_weapon.iId == TF_WEAPON_KNIFE || pBot->current_weapon.iId == TF_WEAPON_MEDIKIT || pBot->current_weapon.iId == TF_WEAPON_SPANNER || pBot->current_weapon.iId == TF_WEAPON_AXE)
+               continue;
          }
 
          vang = pPlayer->v.origin - pBot->pEdict->v.origin;
@@ -1585,9 +1584,7 @@ edict_t *BotContactThink(bot_t *pBot) {
          if (vang.y < 0.0)
             vang.y += 360.0;
 
-         if (!((UTIL_GetTeamColor(pBot->pEdict) == UTIL_GetTeamColor(pPlayer) ||
-				team_allies[pBot->current_team] & 1 << UTIL_GetTeam(pPlayer)) &&
-				pPlayer == pBot->enemy.ptr)) {
+         if (!((UTIL_GetTeamColor(pBot->pEdict) == UTIL_GetTeamColor(pPlayer) || team_allies[pBot->current_team] & 1 << UTIL_GetTeam(pPlayer)) && pPlayer == pBot->enemy.ptr)) {
             Vector vecEnd = pPlayer->v.origin + pPlayer->v.view_ofs;
 
             if (FInViewCone(vecEnd, pBot->pEdict) && FVisible(vecEnd, pBot->pEdict)) {
@@ -2573,12 +2570,10 @@ static void BotGrenadeAvoidance(bot_t *pBot) {
             avoid_action = avoid_retreat;
             threatEnt = pent;
          }
-      } else if(strncmp("tf_weapon_nailgrenade", classname, 29) == 0 ||
-            strncmp("tf_weapon_napalmgrenade", classname, 29) == 0 ||
-            (strncmp("tf_gl_grenade", classname, 29) == 0 && pBot->pEdict->v.playerclass != TFC_CLASS_DEMOMAN)) {
-            entity_origin = pent->v.origin;
-            if(FInViewCone(entity_origin, pBot->pEdict) && FVisible(entity_origin, pBot->pEdict)) {
-                if(pBot->trait.aggression < 33 || static_cast<int>(pBot->pEdict->v.health) > 70)
+      } else if (strncmp("tf_weapon_nailgrenade", classname, 29) == 0 || strncmp("tf_weapon_napalmgrenade", classname, 29) == 0 || (strncmp("tf_gl_grenade", classname, 29) == 0 && pBot->pEdict->v.playerclass != TFC_CLASS_DEMOMAN)) {
+         entity_origin = pent->v.origin;
+         if (FInViewCone(entity_origin, pBot->pEdict) && FVisible(entity_origin, pBot->pEdict)) {
+            if (pBot->trait.aggression < 33 || static_cast<int>(pBot->pEdict->v.health) > 70)
                pBot->pEdict->v.button |= IN_JUMP; // try jumping the grenade anyway
             else                                  // low health or aggression - retreat!
             {
@@ -2716,12 +2711,9 @@ static void BotRoleCheck(bot_t *pBot) {
          if (bots[i].is_used && bots[i].pEdict->v.playerclass && bots[i].current_team == team && bots[i].mission != needed_mission && !bots[i].lockMission && !bots[i].bot_has_flag) {
             // these classes are good candidates for switching between attack and defense
             // Engineers are also suitable here because EMP and armor repair is cool
-				if (bots[i].pEdict->v.playerclass == TFC_CLASS_SOLDIER ||
-					bots[i].pEdict->v.playerclass == TFC_CLASS_PYRO ||
-					bots[i].pEdict->v.playerclass == TFC_CLASS_HWGUY ||
-					bots[i].pEdict->v.playerclass == TFC_CLASS_ENGINEER ||
-					(bots[i].pEdict->v.playerclass == TFC_CLASS_DEMOMAN && !ignoreDemomen)) {
-					bots[i].mission = needed_mission;
+            if (bots[i].pEdict->v.playerclass == TFC_CLASS_SOLDIER || bots[i].pEdict->v.playerclass == TFC_CLASS_PYRO || bots[i].pEdict->v.playerclass == TFC_CLASS_HWGUY || bots[i].pEdict->v.playerclass == TFC_CLASS_ENGINEER ||
+                (bots[i].pEdict->v.playerclass == TFC_CLASS_DEMOMAN && !ignoreDemomen)) {
+               bots[i].mission = needed_mission;
                /*	char msg[80];//DebugMessageOfDoom!
                                sprintf(msg, "team %d needed_mission %d totalAttackers %d",
                                                team + 1, (int)needed_mission, totalAttackers);
@@ -2766,10 +2758,10 @@ static void BotComms(bot_t *pBot) {
          cmd[k] = '\0';
 
          // strcpy(buffb, cmd);
-         if (strcasecmp ("changeclass", cmd) == 0 || strcasecmp ("changeclassnow", cmd) == 0) {
+         if (strcasecmp("changeclass", cmd) == 0 || strcasecmp("changeclassnow", cmd) == 0) {
             // Check if this message is from another player on our team.
             char fromName[255] = {0};
-            if (strncasecmp ("(TEAM)", pBot->message + 1, 6) == 0)
+            if (strncasecmp("(TEAM)", pBot->message + 1, 6) == 0)
                strcpy(fromName, pBot->message + 8);
             else
                strcpy(fromName, pBot->message);
@@ -2798,7 +2790,7 @@ static void BotComms(bot_t *pBot) {
          if (strcasecmp("changerole", cmd) == 0 || strcasecmp("changerolenow", cmd) == 0) {
             // Check if this message is from another player on our team.
             char fromName[255] = {0};
-            if (strncasecmp ("(TEAM)", pBot->message + 1, 6) == 0)
+            if (strncasecmp("(TEAM)", pBot->message + 1, 6) == 0)
                strcpy(fromName, pBot->message + 8);
             else
                strcpy(fromName, pBot->message);
@@ -2836,8 +2828,8 @@ static void BotComms(bot_t *pBot) {
             // TraceResult tr;
             short model;
 
-            //UTIL_MakeVectors(pEdict->v.v_angle);
-            //Vector vecDir = gpGlobals->v_forward;
+            // UTIL_MakeVectors(pEdict->v.v_angle);
+            // Vector vecDir = gpGlobals->v_forward;
 
             /*UTIL_TraceLine( pEdict->v.origin,
                             pEdict->v.origin+vecDir*256,
@@ -3377,8 +3369,7 @@ static bool BotDemomanNeededCheck(bot_t *pBot) {
 bool SpyAmbushAreaCheck(bot_t *pBot, Vector &r_wallVector) {
    // perform some basic checks first
    // e.g. don't feign near a lift
- 	if(pBot->pEdict->v.waterlevel != WL_NOT_IN_WATER || pBot->nadePrimed == TRUE || pBot->bot_has_flag ||
-        PlayerIsInfected(pBot->pEdict) || (pBot->current_wp > -1 && waypoints[pBot->current_wp].flags & W_FL_LIFT)) {
+   if (pBot->pEdict->v.waterlevel != WL_NOT_IN_WATER || pBot->nadePrimed == TRUE || pBot->bot_has_flag || PlayerIsInfected(pBot->pEdict) || (pBot->current_wp > -1 && waypoints[pBot->current_wp].flags & W_FL_LIFT)) {
       return false;
    }
 
@@ -3542,25 +3533,21 @@ static void BotEnemyCarrierAlert(bot_t *pBot) {
    // don't say anything if the bot can see allies
    // or is quite healthy
    // or the bot has said enough already
-    if(!defensive_chatter || pBot->visAllyCount > 1 || pBot->f_roleSayDelay > pBot->f_think_time ||
-        (pBot->pEdict->v.health / pBot->pEdict->v.max_health) > 0.45)
-        return;
+   if (!defensive_chatter || pBot->visAllyCount > 1 || pBot->f_roleSayDelay > pBot->f_think_time || (pBot->pEdict->v.health / pBot->pEdict->v.max_health) > 0.45)
+      return;
 
    job_struct *newJob = InitialiseNewJob(pBot, JOB_REPORT);
    if (newJob == nullptr)
       return;
 
    // if there's only one enemy find out if the bot is outgunned
-    if(pBot->visEnemyCount < 2) {
-        if(pBot->bot_class == TFC_CLASS_SCOUT || pBot->bot_class == TFC_CLASS_SNIPER ||
-            pBot->bot_class == TFC_CLASS_DEMOMAN || pBot->bot_class == TFC_CLASS_MEDIC ||
-            pBot->bot_class == TFC_CLASS_SPY || pBot->bot_class == TFC_CLASS_ENGINEER) {
-            if(pBot->enemy.ptr->v.playerclass != TFC_CLASS_SOLDIER ||
-                pBot->enemy.ptr->v.playerclass != TFC_CLASS_HWGUY || pBot->enemy.ptr->v.playerclass != TFC_CLASS_PYRO ||
-                pBot->enemy.ptr->v.playerclass != TFC_CLASS_MEDIC)
-                return;
-        }
-    }
+   if (pBot->visEnemyCount < 2) {
+      if (pBot->bot_class == TFC_CLASS_SCOUT || pBot->bot_class == TFC_CLASS_SNIPER || pBot->bot_class == TFC_CLASS_DEMOMAN || pBot->bot_class == TFC_CLASS_MEDIC || pBot->bot_class == TFC_CLASS_SPY ||
+          pBot->bot_class == TFC_CLASS_ENGINEER) {
+         if (pBot->enemy.ptr->v.playerclass != TFC_CLASS_SOLDIER || pBot->enemy.ptr->v.playerclass != TFC_CLASS_HWGUY || pBot->enemy.ptr->v.playerclass != TFC_CLASS_PYRO || pBot->enemy.ptr->v.playerclass != TFC_CLASS_MEDIC)
+            return;
+      }
+   }
 
    const int found_area = AreaInsideClosest(pBot->enemy.ptr);
    if (found_area != -1) {
@@ -3631,11 +3618,10 @@ void BotThink(bot_t *pBot) {
    }
 
    // if the bot is dead, randomly press fire to respawn...
-   if(pBot->pEdict->v.health < 1 ||
-        (pBot->pEdict->v.deadflag != DEAD_NO && pBot->pEdict->v.deadflag != 5) // not a spy feigning death
-        || pBot->pEdict->v.playerclass == 0) {
-        if(pBot->bot_start2 > 0 && pBot->bot_start3 == 0)
-            pBot->bot_start3 = pBot->f_think_time;
+   if (pBot->pEdict->v.health < 1 || (pBot->pEdict->v.deadflag != DEAD_NO && pBot->pEdict->v.deadflag != 5) // not a spy feigning death
+       || pBot->pEdict->v.playerclass == 0) {
+      if (pBot->bot_start2 > 0 && pBot->bot_start3 == 0)
+         pBot->bot_start3 = pBot->f_think_time;
 
       if (pBot->bot_start3 < pBot->f_think_time - 6 && pBot->bot_start3 != 0) {
          if (pBot->bot_start2 > 1) {
@@ -3671,7 +3657,6 @@ void BotThink(bot_t *pBot) {
       // wait at least 1 second before trying to respawn..
       pBot->f_move_speed = 0;
       if (random_long(1, 100) > 50 && pBot->f_killed_time + 1 < pBot->f_think_time) {
-
          pBot->pEdict->v.button = IN_ATTACK;
          pBot->f_killed_time = pBot->f_think_time;
       }
@@ -3750,8 +3735,7 @@ void BotThink(bot_t *pBot) {
    }
 
    // crouch if the bots current waypoint is a crouch waypoint...
-   if (pBot->current_wp != -1 && waypoints[pBot->current_wp].flags & W_FL_CROUCH &&
-       VectorsNearerThan(pBot->pEdict->v.origin, waypoints[pBot->current_wp].origin, 100.0f)) {
+   if (pBot->current_wp != -1 && waypoints[pBot->current_wp].flags & W_FL_CROUCH && VectorsNearerThan(pBot->pEdict->v.origin, waypoints[pBot->current_wp].origin, 100.0f)) {
       pBot->f_duck_time = pBot->f_think_time + 2.0;
    }
 
@@ -3876,7 +3860,7 @@ static void BotSenseEnvironment(bot_t *pBot) {
 
    // check if bot should look for items now or not...
    if (pBot->f_find_item_time < pBot->f_think_time) {
-      BotFindItem (pBot); // see if there are any visible items
+      BotFindItem(pBot); // see if there are any visible items
 
       // only look for items every 0.5 seconds
       pBot->f_find_item_time = pBot->f_think_time + 0.5f;
@@ -3970,7 +3954,6 @@ static void BotCombatThink(bot_t *pBot) {
                pBot->pEdict->v.button |= IN_JUMP;
             else if (pBot->f_duck_time < pBot->f_think_time)
                pBot->f_duck_time = pBot->f_think_time + 0.25f;
-
          }
       }
    }
@@ -4247,7 +4230,6 @@ static void BotSpectatorDebug(bot_t *pBot) {
 
       // if spectate_debug is set to 1 show the bots job list
       if (spectate_debug == 1) {
-
          // list the jobs in the buffer
          for (int i = 0; i < JOB_BUFFER_MAX; i++) {
             // list one job per line
@@ -4261,7 +4243,6 @@ static void BotSpectatorDebug(bot_t *pBot) {
                   strncat(msg, msgBuffer, 255 - strlen(msg));
                } else
                   strncat(msg, "\n", 255 - strlen(msg)); // add a newline on the end
-
             } else
                strncat(msg, "\n", 255 - strlen(msg)); // skip empty job indexes
          }
@@ -4286,7 +4267,7 @@ static void BotSpectatorDebug(bot_t *pBot) {
       {
          char msgBuffer[128] = "";
          snprintf(msgBuffer, 128, "waypoint deadline %f\nnavDistance %f\nf_navProblemStartTime %f\n", pBot->f_current_wp_deadline - pBot->f_think_time, (waypoints[pBot->current_wp].origin - pBot->pEdict->v.origin).Length(),
-                   pBot->f_think_time - pBot->f_navProblemStartTime);
+                  pBot->f_think_time - pBot->f_navProblemStartTime);
          strncat(msg, msgBuffer, 255 - strlen(msg));
 
          snprintf(msgBuffer, 128, "velocity length 2D %f\n velocity Z %f\n", pBot->pEdict->v.velocity.Length2D(), pBot->pEdict->v.velocity.z);

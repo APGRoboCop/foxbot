@@ -27,7 +27,7 @@ static META_FUNCTIONS gMetaFunctionTable = {
     nullptr,                 // pfnGetEntityAPI2				HL SDK2; called	before game	DLL
     nullptr,                 // pfnGetEntityAPI2_Post		META; called after game	DLL
     nullptr,                 // pfnGetNewDLLFunctions		HL SDK2; called	before game	DLL
-    nullptr,                        // pfnGetNewDLLFunctions_Post	META; called after game	DLL
+    nullptr,                 // pfnGetNewDLLFunctions_Post	META; called after game	DLL
     GetEngineFunctions,      // pfnGetEngineFunctions		META; called before	HL engine
     GetEngineFunctions_Post, // pfnGetEngineFunctions_Post	META; called after HL engine
 };
@@ -36,8 +36,8 @@ static META_FUNCTIONS gMetaFunctionTable = {
 plugin_info_t Plugin_info = {
     META_INTERFACE_VERSION,                        // ifvers
     "FoxBot",                                      // name
-    "0.800-beta2",                                   // version
-    __DATE__,                                  // date
+    "0.800-beta2",                                 // version
+    __DATE__,                                      // date
     "Tom Simpson & RoboCop <robocop@lycos.co.uk>", // author
     "https://apg-clan.org/",                       // url
     //"http://www.omni-bot.com/",	// url

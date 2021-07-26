@@ -44,7 +44,9 @@ void *h_Library = nullptr;
 
 enginefuncs_t g_engfuncs;
 globalvars_t *gpGlobals;
-char g_argv[256] = { 0, };
+char g_argv[256] = {
+    0,
+};
 
 // static FILE *fp;
 
@@ -59,8 +61,8 @@ extern int mod_id;
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, const DWORD fdwReason, LPVOID lpvReserved) {
    if (fdwReason == DLL_PROCESS_ATTACH) {
    } else if (fdwReason == DLL_PROCESS_DETACH) {
-       if (h_Library)
-      	FreeLibrary(h_Library);
+      if (h_Library)
+         FreeLibrary(h_Library);
    }
 
    return true;
@@ -113,7 +115,6 @@ C_DLLEXPORT void WINAPI GiveFnptrsToDll(enginefuncs_t *pengfuncsFromEngine, glob
       // Directory error or Unsupported MOD!
 
       ALERT(at_error, "FoXBot - MOD dll not found (or unsupported MOD)!");
-      
    }
    other_GetEntityAPI = (GETENTITYAPI)GetProcAddress(h_Library, "GetEntityAPI");
 
@@ -134,38 +135,38 @@ C_DLLEXPORT void WINAPI GiveFnptrsToDll(enginefuncs_t *pengfuncsFromEngine, glob
    }
 
    GetEngineFunctions(pengfuncsFromEngine, nullptr);
-   
+
    // give the engine functions to the other DLL...
    other_GiveFnptrsToDll(pengfuncsFromEngine, pGlobals);
 }
 
-#if defined (__GNUC__)
+#if defined(__GNUC__)
 
 void *operator new(size_t size) {
    if (size == 0)
-      return(calloc (1, 1));
-   return(calloc (1, size));
+      return (calloc(1, 1));
+   return (calloc(1, size));
 }
 
 void *operator new[](size_t size) {
    if (size == 0)
-      return(calloc (1, 1));
-   return(calloc (1, size));
+      return (calloc(1, 1));
+   return (calloc(1, size));
 }
 
 void operator delete(void *ptr) {
    if (ptr)
-      free (ptr);
+      free(ptr);
 }
 
 void operator delete(void *ptr, size_t) {
    if (ptr)
-      free (ptr);
+      free(ptr);
 }
 
 void operator delete[](void *ptr) {
    if (ptr)
-      free (ptr);
+      free(ptr);
 }
 
 #endif

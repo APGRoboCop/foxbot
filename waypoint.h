@@ -45,28 +45,28 @@ typedef signed int WPT_INT32;
 
 // defines for waypoint flags field (32 bits are available)
 #define W_FL_TEAM ((1 << 0) + (1 << 1)) /* allow for 4 teams (0-3) */
-#define W_FL_TEAM_SPECIFIC (1 << 2)     /* waypoint only for specified team */
-#define W_FL_CROUCH (1 << 3)            /* must crouch to reach this waypoint */
-#define W_FL_LADDER (1 << 4)            /* waypoint is on a ladder */
-#define W_FL_LIFT (1 << 5)              /* wait for lift to be down before approaching this waypoint */
-#define W_FL_WALK (1 << 6)              /* walk towards this waypoint */
-#define W_FL_HEALTH (1 << 7)            /* health kit (or wall mounted) location */
-#define W_FL_ARMOR (1 << 8)             /* armor (or HEV) location */
-#define W_FL_AMMO (1 << 9)              /* ammo location */
-#define W_FL_SNIPER (1 << 10)           /* sniper waypoint (a good sniper spot) */
+#define W_FL_TEAM_SPECIFIC (1 << 2) /* waypoint only for specified team */
+#define W_FL_CROUCH (1 << 3) /* must crouch to reach this waypoint */
+#define W_FL_LADDER (1 << 4) /* waypoint is on a ladder */
+#define W_FL_LIFT (1 << 5) /* wait for lift to be down before approaching this waypoint */
+#define W_FL_WALK (1 << 6) /* walk towards this waypoint */
+#define W_FL_HEALTH (1 << 7) /* health kit (or wall mounted) location */
+#define W_FL_ARMOR (1 << 8) /* armor (or HEV) location */
+#define W_FL_AMMO (1 << 9) /* ammo location */
+#define W_FL_SNIPER (1 << 10) /* sniper waypoint (a good sniper spot) */
 
-#define W_FL_TFC_FLAG (1 << 11)      /* flag position (or hostage or president) */
+#define W_FL_TFC_FLAG (1 << 11) /* flag position (or hostage or president) */
 #define W_FL_TFC_FLAG_GOAL (1 << 12) /* flag return position (or rescue zone) */
 
-#define W_FL_TFC_SENTRY (1 << 13)     /* sentry gun */
+#define W_FL_TFC_SENTRY (1 << 13) /* sentry gun */
 #define W_FL_TFC_SENTRY_180 (1 << 28) /* 180 SG point!! */
-#define W_FL_AIMING (1 << 14)         /* aiming waypoint */
+#define W_FL_AIMING (1 << 14) /* aiming waypoint */
 
 #define W_FL_JUMP (1 << 15) /* standard jump waypoint */
 
-#define W_FL_TFC_PIPETRAP (1 << 24)      /* demoman pipetrap */
+#define W_FL_TFC_PIPETRAP (1 << 24) /* demoman pipetrap */
 #define W_FL_TFC_DETPACK_CLEAR (1 << 25) /* demoman detpack(blow passageway open) */
-#define W_FL_TFC_DETPACK_SEAL (1 << 16)  /* demoman detpack(blow passageway closed) */
+#define W_FL_TFC_DETPACK_SEAL (1 << 16) /* demoman detpack(blow passageway closed) */
 
 #define W_FL_TFC_JUMP (1 << 27) /* rocket/concussion jump */
 

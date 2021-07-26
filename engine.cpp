@@ -458,10 +458,10 @@ void pfnMessageBegin(const int msg_dest, const int msg_type, const float *pOrigi
 
          // is this message for a bot?
          if (index != -1) {
-            g_state = 0;              // reset global message state..where we at!
-            botMsgFunction = nullptr; // no msg function until known otherwise
-            botMsgEndFunction = nullptr;     // no msg end function until known otherwise
-            botMsgIndex = index;      // index of bot receiving message
+            g_state = 0;                 // reset global message state..where we at!
+            botMsgFunction = nullptr;    // no msg function until known otherwise
+            botMsgEndFunction = nullptr; // no msg end function until known otherwise
+            botMsgIndex = index;         // index of bot receiving message
 
             if (mod_id == TFC_DLL) {
                if (msg_type == message_VGUI)
@@ -503,10 +503,10 @@ void pfnMessageBegin(const int msg_dest, const int msg_type, const float *pOrigi
             }
          } else {
             // (index == -1)
-            g_state = 0;              // reset global message state..where we at!
-            botMsgFunction = nullptr; // no msg function until known otherwise
-            botMsgEndFunction = nullptr;     // no msg end function until known otherwise
-            botMsgIndex = index;      // index of bot receiving message
+            g_state = 0;                 // reset global message state..where we at!
+            botMsgFunction = nullptr;    // no msg function until known otherwise
+            botMsgEndFunction = nullptr; // no msg end function until known otherwise
+            botMsgIndex = index;         // index of bot receiving message
             if (mod_id == TFC_DLL) {
                if (msg_type == message_TextMsg || msg_type == message_StatusText)
                   botMsgFunction = BotClient_Engineer_BuildStatus;
@@ -514,7 +514,7 @@ void pfnMessageBegin(const int msg_dest, const int msg_type, const float *pOrigi
          }
       } else if (msg_dest == MSG_ALL) {
          botMsgFunction = nullptr; // no msg function until known otherwise
-         botMsgIndex = -1;      // index of bot receiving message (none)
+         botMsgIndex = -1;         // index of bot receiving message (none)
 
          if (mod_id == TFC_DLL) {
             if (msg_type == message_DeathMsg)
@@ -889,7 +889,7 @@ int pfnRegUserMsg_post(const char *pszName, const int iSize) {
 
    pfnRegUserMsg_common(pszName, msg);
 
-   RETURN_META_VALUE (MRES_IGNORED, 0); //Fix by Jeefo
+   RETURN_META_VALUE(MRES_IGNORED, 0); // Fix by Jeefo
 }
 
 int pfnRegUserMsg_pre(const char *pszName, const int iSize) {
@@ -1182,7 +1182,6 @@ C_DLLEXPORT int GetEngineFunctions(enginefuncs_t *pengfuncsFromEngine, int *inte
 }
 
 int GetEngineFunctions_Post(enginefuncs_t *pengfuncsFromEngine, int *interfaceVersion) {
-
    pengfuncsFromEngine->pfnRegUserMsg = pfnRegUserMsg_post;
    return true;
 }

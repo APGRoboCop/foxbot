@@ -72,8 +72,8 @@ const char *Cmd_Argv(int argc);
 int Cmd_Argc();
 
 // anologue of memset
-template <typename U> void bzero (U *ptr, size_t len) noexcept {
-   const auto zeroing = reinterpret_cast <unsigned char *> (ptr);
+template <typename U> void bzero(U *ptr, size_t len) noexcept {
+   const auto zeroing = reinterpret_cast<unsigned char *>(ptr);
 
    for (size_t i = 0; i < len; ++i) {
       zeroing[i] = 0;
@@ -149,11 +149,11 @@ template <typename U> void bzero (U *ptr, size_t len) noexcept {
 #define CHAT_TYPE_SUICIDE 5
 
 #ifndef max
-#define max(a,b)            (((a) > (b)) ? (a) : (b))
+#define max(a, b) (((a) > (b)) ? (a) : (b))
 #endif
 
 #ifndef min
-#define min(a,b)            (((a) < (b)) ? (a) : (b))
+#define min(a, b) (((a) < (b)) ? (a) : (b))
 #endif
 
 // a class for handling the bot chat messages
@@ -339,7 +339,7 @@ typedef struct {
    int strafe_mod; // this can tell bots to stab enemies or heal teammates
 
    unsigned bot_has_flag : 1;
-   float f_dontEvadeTime;   // sets how long the bot should not deviate from it's route
+   float f_dontEvadeTime; // sets how long the bot should not deviate from it's route
 
    int flag_impulse; // used to identify which flag the bot carried when killed
 
@@ -645,6 +645,5 @@ bool SpyAmbushAreaCheck(bot_t *pBot, Vector &r_wallVector);
 void ResetBotHomeInfo();
 
 void BotLookAbout(bot_t *pBot);
-
 
 #endif // BOT_H

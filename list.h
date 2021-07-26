@@ -172,8 +172,7 @@ template <typename Type> class LIter {
  public:
    // ctr : initialize the iterator class by specifying the list
    //       it will be used with.
-   explicit LIter(List<Type> *listToUse)
-      : currentNode(nullptr) { list = listToUse; }
+   explicit LIter(List<Type> *listToUse) : currentNode(nullptr) { list = listToUse; }
 
    // begin : start the iterator at the head or tail
    //         of the list to start an iteration.

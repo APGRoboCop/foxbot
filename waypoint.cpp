@@ -3517,8 +3517,8 @@ void WaypointAutoBuild(edict_t *pEntity) {
                   // displayed...
                   wp_display_time[index] = gpGlobals->time;
 
-                  //Vector start = tr.vecEndPos - Vector(0, 0, 34);
-                  //Vector end = start + Vector(0, 0, 68);
+                  // Vector start = tr.vecEndPos - Vector(0, 0, 34);
+                  // Vector end = start + Vector(0, 0, 68);
 
                   //********************************************************
                   // look for lift, ammo, flag, health, armor, etc.

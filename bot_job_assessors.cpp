@@ -30,7 +30,6 @@
 // of their priority level.  For example, the job of picking up a discarded
 // back pack will be less important if it is now quite far away.
 
-
 #include "extdll.h"
 #include <meta_api.h>
 
@@ -41,7 +40,6 @@
 #include "bot_job_assessors.h"
 #include "bot_job_think.h"
 #include "bot_weapons.h"
-
 
 extern bot_t bots[32];
 extern bot_weapon_t weapon_defs[MAX_WEAPONS];
@@ -512,8 +510,7 @@ int assess_JobFeignAmbush(const bot_t *pBot, const job_struct &r_job) {
       return PRIORITY_NONE;
 
    // check if the bot is in an unsuitable location
-   if (pBot->pEdict->v.waterlevel != WL_NOT_IN_WATER ||
-		(pBot->current_wp > -1 && waypoints[pBot->current_wp].flags & W_FL_LIFT))
+   if (pBot->pEdict->v.waterlevel != WL_NOT_IN_WATER || (pBot->current_wp > -1 && waypoints[pBot->current_wp].flags & W_FL_LIFT))
       return PRIORITY_NONE;
 
    return jl[JOB_FEIGN_AMBUSH].basePriority;
@@ -629,10 +626,8 @@ int assess_JobHarrassDefense(const bot_t *pBot, const job_struct &r_job) {
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobRocketJump(const bot_t *pBot, const job_struct &r_job) {
    // recommend the job be removed if it is invalid
-   if (r_job.f_bufferedTime < pBot->f_killed_time ||
-		pBot->m_rgAmmo[weapon_defs[TF_WEAPON_RPG].iAmmo1] < 4 // got enough rockets?
-		|| (r_job.phase == 0 && r_job.f_bufferedTime + 0.5 < pBot->f_think_time) ||
-		pBot->pEdict->v.waterlevel > WL_FEET_IN_WATER || r_job.waypoint < 0) {
+   if (r_job.f_bufferedTime < pBot->f_killed_time || pBot->m_rgAmmo[weapon_defs[TF_WEAPON_RPG].iAmmo1] < 4 // got enough rockets?
+       || (r_job.phase == 0 && r_job.f_bufferedTime + 0.5 < pBot->f_think_time) || pBot->pEdict->v.waterlevel > WL_FEET_IN_WATER || r_job.waypoint < 0) {
       //	UTIL_HostSay(pBot->pEdict,0,"JOB_ROCKET_JUMP invalid"); //DebugMessageOfDoom!
       return PRIORITY_NONE;
    }
@@ -645,8 +640,8 @@ int assess_JobRocketJump(const bot_t *pBot, const job_struct &r_job) {
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobConcussionJump(const bot_t *pBot, const job_struct &r_job) {
    // recommend the job be removed if it is invalid
-	if (r_job.f_bufferedTime < pBot->f_killed_time || r_job.f_bufferedTime + 10.0 < pBot->f_think_time // took too long
-		|| (r_job.phase == 0 && r_job.f_bufferedTime + 0.5 < pBot->f_think_time)) {
+   if (r_job.f_bufferedTime < pBot->f_killed_time || r_job.f_bufferedTime + 10.0 < pBot->f_think_time // took too long
+       || (r_job.phase == 0 && r_job.f_bufferedTime + 0.5 < pBot->f_think_time)) {
       return PRIORITY_NONE;
    }
 
@@ -662,7 +657,7 @@ int assess_JobConcussionJump(const bot_t *pBot, const job_struct &r_job) {
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobDetpackWaypoint(const bot_t *pBot, const job_struct &r_job) {
    // recommend the job be removed if it is invalid
-   if(pBot->pEdict->v.playerclass != TFC_CLASS_DEMOMAN || (r_job.phase == 0 && pBot->detpack != 2))
+   if (pBot->pEdict->v.playerclass != TFC_CLASS_DEMOMAN || (r_job.phase == 0 && pBot->detpack != 2))
       return PRIORITY_NONE;
 
    // check the waypoints validity
@@ -807,55 +802,49 @@ int assess_JobAttackTeleport(const bot_t *pBot, const job_struct &r_job) {
 // assessment function for the priority of a JOB_SEEK_BACKUP job.
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobSeekBackup(const bot_t *pBot, const job_struct &r_job) {
-	// recommend the job be removed if it is invalid
-	if (r_job.f_bufferedTime < pBot->f_killed_time ||
-		(r_job.phase == 0 // abort if the job has been asleep in the buffer for too long
-		&& r_job.f_bufferedTime + 4.0 < pBot->f_think_time))
-		return PRIORITY_NONE;
+   // recommend the job be removed if it is invalid
+   if (r_job.f_bufferedTime < pBot->f_killed_time || (r_job.phase == 0 // abort if the job has been asleep in the buffer for too long
+                                                      && r_job.f_bufferedTime + 4.0 < pBot->f_think_time))
+      return PRIORITY_NONE;
 
-	// check the waypoints validity
-	if (r_job.phase != 0 && (!WaypointAvailable(r_job.waypoint, pBot->current_team) ||
-		WaypointRouteFromTo(pBot->current_wp, r_job.waypoint, pBot->current_team) == -1)) {
-		return PRIORITY_NONE;
-	}
+   // check the waypoints validity
+   if (r_job.phase != 0 && (!WaypointAvailable(r_job.waypoint, pBot->current_team) || WaypointRouteFromTo(pBot->current_wp, r_job.waypoint, pBot->current_team) == -1)) {
+      return PRIORITY_NONE;
+   }
 
-	return jl[JOB_SEEK_BACKUP].basePriority;
+   return jl[JOB_SEEK_BACKUP].basePriority;
 }
 
 // assessment function for the priority of a JOB_AVOID_ENEMY job.
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobAvoidEnemy(const bot_t *pBot, const job_struct &r_job) {
-	// recommend the job be removed if it is invalid
-	if (r_job.f_bufferedTime < pBot->f_killed_time ||
-		(r_job.phase == 0 // abort if the job has been asleep in the buffer for too long
-		&& r_job.f_bufferedTime + 4.0 < pBot->f_think_time))
-		return PRIORITY_NONE;
+   // recommend the job be removed if it is invalid
+   if (r_job.f_bufferedTime < pBot->f_killed_time || (r_job.phase == 0 // abort if the job has been asleep in the buffer for too long
+                                                      && r_job.f_bufferedTime + 4.0 < pBot->f_think_time))
+      return PRIORITY_NONE;
 
-	// check the waypoints validity
-	if (r_job.phase != 0 && (!WaypointAvailable(r_job.waypoint, pBot->current_team) ||
-		WaypointRouteFromTo(pBot->current_wp, r_job.waypoint, pBot->current_team) == -1)) {
-		//	UTIL_HostSay(pBot->pEdict, 0, "JOB_AVOID_ENEMY - bad path"); //DebugMessageOfDoom!
-		return PRIORITY_NONE;
-	}
+   // check the waypoints validity
+   if (r_job.phase != 0 && (!WaypointAvailable(r_job.waypoint, pBot->current_team) || WaypointRouteFromTo(pBot->current_wp, r_job.waypoint, pBot->current_team) == -1)) {
+      //	UTIL_HostSay(pBot->pEdict, 0, "JOB_AVOID_ENEMY - bad path"); //DebugMessageOfDoom!
+      return PRIORITY_NONE;
+   }
 
-	return jl[JOB_AVOID_ENEMY].basePriority;
+   return jl[JOB_AVOID_ENEMY].basePriority;
 }
 
 // assessment function for the priority of a JOB_AVOID_AREA_DAMAGE job.
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobAvoidAreaDamage(const bot_t *pBot, const job_struct &r_job) {
-	// recommend the job be removed if it is invalid
-	if (r_job.f_bufferedTime < pBot->f_killed_time ||
-		(r_job.phase == 0 // abort if the job has been asleep in the buffer for too long
-		&& r_job.f_bufferedTime + 2.0 < pBot->f_think_time))
-		return PRIORITY_NONE;
+   // recommend the job be removed if it is invalid
+   if (r_job.f_bufferedTime < pBot->f_killed_time || (r_job.phase == 0 // abort if the job has been asleep in the buffer for too long
+                                                      && r_job.f_bufferedTime + 2.0 < pBot->f_think_time))
+      return PRIORITY_NONE;
 
-	// has the threatening object ceased to exist?
-	if (FNullEnt(r_job.object) || r_job.object->v.flags & FL_KILLME ||
-		!VectorsNearerThan(r_job.object->v.origin, r_job.origin, 200.0))
-		return PRIORITY_NONE;
+   // has the threatening object ceased to exist?
+   if (FNullEnt(r_job.object) || r_job.object->v.flags & FL_KILLME || !VectorsNearerThan(r_job.object->v.origin, r_job.origin, 200.0))
+      return PRIORITY_NONE;
 
-	return jl[JOB_AVOID_AREA_DAMAGE].basePriority;
+   return jl[JOB_AVOID_AREA_DAMAGE].basePriority;
 }
 
 // assessment function for the priority of a JOB_INFECTED_ATTACK job.

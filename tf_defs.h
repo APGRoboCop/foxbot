@@ -299,13 +299,13 @@ enum { CAREA_CLEAR, CAREA_BLOCKED, CAREA_NOBUILD };
 #define TF_SHOWLEGALCLASSES 137
 
 // Team Impulses
-#define TF_TEAM_1 140       // Join Team 1
-#define TF_TEAM_2 141       // Join Team 2
-#define TF_TEAM_3 142       // Join Team 3
-#define TF_TEAM_4 143       // Join Team 4
+#define TF_TEAM_1 140 // Join Team 1
+#define TF_TEAM_2 141 // Join Team 2
+#define TF_TEAM_3 142 // Join Team 3
+#define TF_TEAM_4 143 // Join Team 4
 #define TF_TEAM_CLASSES 144 // Impulse to display team classes
-#define TF_TEAM_SCORES 145  // Impulse to display team scores
-#define TF_TEAM_LIST 146    // Impulse to display the players in each team.
+#define TF_TEAM_SCORES 145 // Impulse to display team scores
+#define TF_TEAM_LIST 146 // Impulse to display the players in each team.
 
 // Grenade Impulses
 #define TF_GRENADE_1 150 // Prime grenade type 1
@@ -314,19 +314,19 @@ enum { CAREA_CLEAR, CAREA_BLOCKED, CAREA_NOBUILD };
 
 // Impulses for new items
 //#define TF_SCAN				159		// Scanner Pre-Impulse
-#define TF_AUTO_SCAN 159     // Scanner On/Off
-#define TF_SCAN_ENEMY 160    // Impulses to toggle scanning of enemies
+#define TF_AUTO_SCAN 159 // Scanner On/Off
+#define TF_SCAN_ENEMY 160 // Impulses to toggle scanning of enemies
 #define TF_SCAN_FRIENDLY 161 // Impulses to toggle scanning of friendlies
 //#define TF_SCAN_10			162		// Scan using 10 enery (1 cell)
-#define TF_SCAN_SOUND 162   // Scanner sounds on/off
-#define TF_SCAN_30 163      // Scan using 30 energy (2 cells)
-#define TF_SCAN_100 164     // Scan using 100 energy (5 cells)
-#define TF_DETPACK_5 165    // Detpack set to 5 seconds
-#define TF_DETPACK_20 166   // Detpack set to 20 seconds
-#define TF_DETPACK_50 167   // Detpack set to 50 seconds
-#define TF_DETPACK 168      // Detpack Pre-Impulse
+#define TF_SCAN_SOUND 162 // Scanner sounds on/off
+#define TF_SCAN_30 163 // Scan using 30 energy (2 cells)
+#define TF_SCAN_100 164 // Scan using 100 energy (5 cells)
+#define TF_DETPACK_5 165 // Detpack set to 5 seconds
+#define TF_DETPACK_20 166 // Detpack set to 20 seconds
+#define TF_DETPACK_50 167 // Detpack set to 50 seconds
+#define TF_DETPACK 168 // Detpack Pre-Impulse
 #define TF_DETPACK_STOP 169 // Impulse to stop setting detpack
-#define TF_PB_DETONATE 170  // Detonate Pipebombs
+#define TF_PB_DETONATE 170 // Detonate Pipebombs
 
 // Special skill
 #define TF_SPECIAL_SKILL 171
@@ -535,18 +535,18 @@ enum { CAREA_CLEAR, CAREA_BLOCKED, CAREA_NOBUILD };
 #define WEAP_SNIPER_RIFLE_MAX_MOVE 50
 
 // Medikit
-#define WEAP_MEDIKIT_HEAL 200    // Amount medikit heals per hit
+#define WEAP_MEDIKIT_HEAL 200 // Amount medikit heals per hit
 #define WEAP_MEDIKIT_OVERHEAL 50 // Amount of superhealth over max_health the medikit will dispense
 
 // Spanner
 #define WEAP_SPANNER_REPAIR 10
 
 // Detpack
-#define WEAP_DETPACK_DISARMTIME 3   // Time it takes to disarm a Detpack
-#define WEAP_DETPACK_SETTIME 3      // Time it takes to set a Detpack
-#define WEAP_DETPACK_SIZE 700       // Explosion Size
+#define WEAP_DETPACK_DISARMTIME 3 // Time it takes to disarm a Detpack
+#define WEAP_DETPACK_SETTIME 3 // Time it takes to set a Detpack
+#define WEAP_DETPACK_SIZE 700 // Explosion Size
 #define WEAP_DETPACK_GOAL_SIZE 1500 // Explosion Size for goal triggering
-#define WEAP_DETPACK_BITS_NO 12     // Bits that detpack explodes into
+#define WEAP_DETPACK_BITS_NO 12 // Bits that detpack explodes into
 
 // Tranquiliser Gun
 #define TRANQ_TIME 15
@@ -594,21 +594,21 @@ enum { CAREA_CLEAR, CAREA_BLOCKED, CAREA_NOBUILD };
 #define NIT_SCANNER 1
 
 #define NIT_SILVER_DOOR_OPENED #IT_KEY1 // 131072
-#define NIT_GOLD_DOOR_OPENED #IT_KEY2   // 262144
+#define NIT_GOLD_DOOR_OPENED #IT_KEY2 // 262144
 
 /*==================================================*/
 /* New Item Flags		                        	*/
 /*==================================================*/
-#define NIT_SCANNER_ENEMY 1    // Detect enemies
+#define NIT_SCANNER_ENEMY 1 // Detect enemies
 #define NIT_SCANNER_FRIENDLY 2 // Detect friendlies (team members)
-#define NIT_SCANNER_SOUND 4    // Motion detection. Only report moving entities.
+#define NIT_SCANNER_SOUND 4 // Motion detection. Only report moving entities.
 
 /*==================================================*/
 /* New Item Related Defines		                    */
 /*==================================================*/
 #define NIT_SCANNER_POWER                                                                                                                                                                                                                      \
-   25                          // The amount of power spent on a scan with the scanner
-                               // is multiplied by this to get the scanrange.
+   25 // The amount of power spent on a scan with the scanner
+      // is multiplied by this to get the scanrange.
 #define NIT_SCANNER_MAXCELL 50 // The maximum number of cells than can be used in one scan
 #define NIT_SCANNER_MIN_MOVEMENT                                                                                                                                                                                                               \
    50 // The minimum velocity an entity must have to be detected
@@ -618,46 +618,46 @@ enum { CAREA_CLEAR, CAREA_BLOCKED, CAREA_NOBUILD };
 /* Variables used for New Weapons and Reloading     */
 /*==================================================*/
 // Armor Classes : Bitfields. Use the "armorclass" of armor for the Armor Type.
-#define AT_SAVESHOT 1        // Kevlar  	 : Reduces bullet damage by 15%
-#define AT_SAVENAIL 2        // Wood :) 	 : Reduces nail damage by 15%
-#define AT_SAVEEXPLOSION 4   // Blast   	 : Reduces explosion damage by 15%
+#define AT_SAVESHOT 1 // Kevlar  	 : Reduces bullet damage by 15%
+#define AT_SAVENAIL 2 // Wood :) 	 : Reduces nail damage by 15%
+#define AT_SAVEEXPLOSION 4 // Blast   	 : Reduces explosion damage by 15%
 #define AT_SAVEELECTRICITY 8 // Shock	 : Reduces electricity damage by 15%
-#define AT_SAVEFIRE 16       // Asbestos	 : Reduces fire damage by 15%
+#define AT_SAVEFIRE 16 // Asbestos	 : Reduces fire damage by 15%
 
 /*==========================================================================*/
 /* TEAMFORTRESS CLASS DETAILS												*/
 /*==========================================================================*/
 // Class Details for SCOUT
-#define PC_SCOUT_SKIN 4             // Skin for this class when Classkin is on.
-#define PC_SCOUT_MAXHEALTH 75       // Maximum Health Level
-#define PC_SCOUT_MAXSPEED 400       // Maximum movement speed
+#define PC_SCOUT_SKIN 4 // Skin for this class when Classkin is on.
+#define PC_SCOUT_MAXHEALTH 75 // Maximum Health Level
+#define PC_SCOUT_MAXSPEED 400 // Maximum movement speed
 #define PC_SCOUT_MAXSTRAFESPEED 400 // Maximum strafing movement speed
-#define PC_SCOUT_MAXARMOR 50        // Maximum Armor Level, of any armor class
-#define PC_SCOUT_INITARMOR 25       // Armor level when respawned
-#define PC_SCOUT_MAXARMORTYPE 0.3   // Maximum level of Armor absorption
-#define PC_SCOUT_INITARMORTYPE 0.3  // Absorption Level of armor when respawned
-#define PC_SCOUT_ARMORCLASSES 3     // #AT_SAVESHOT | #AT_SAVENAIL   		<-Armor Classes allowed for this class
-#define PC_SCOUT_INITARMORCLASS 0   // Armorclass worn when respawned
+#define PC_SCOUT_MAXARMOR 50 // Maximum Armor Level, of any armor class
+#define PC_SCOUT_INITARMOR 25 // Armor level when respawned
+#define PC_SCOUT_MAXARMORTYPE 0.3 // Maximum level of Armor absorption
+#define PC_SCOUT_INITARMORTYPE 0.3 // Absorption Level of armor when respawned
+#define PC_SCOUT_ARMORCLASSES 3 // #AT_SAVESHOT | #AT_SAVENAIL   		<-Armor Classes allowed for this class
+#define PC_SCOUT_INITARMORCLASS 0 // Armorclass worn when respawned
 #define PC_SCOUT_WEAPONS (WEAP_AXE | WEAP_SHOTGUN | WEAP_NAILGUN)
-#define PC_SCOUT_MAXAMMO_SHOT 50                   // Maximum amount of shot ammo this class can carry
-#define PC_SCOUT_MAXAMMO_NAIL 200                  // Maximum amount of nail ammo this class can carry
-#define PC_SCOUT_MAXAMMO_CELL 100                  // Maximum amount of cell ammo this class can carry
-#define PC_SCOUT_MAXAMMO_ROCKET 25                 // Maximum amount of rocket ammo this class can carry
-#define PC_SCOUT_INITAMMO_SHOT 25                  // Amount of shot ammo this class has when respawned
-#define PC_SCOUT_INITAMMO_NAIL 100                 // Amount of nail ammo this class has when respawned
-#define PC_SCOUT_INITAMMO_CELL 50                  // Amount of cell ammo this class has when respawned
-#define PC_SCOUT_INITAMMO_ROCKET 0                 // Amount of rocket ammo this class has when respawned
-#define PC_SCOUT_GRENADE_TYPE_1 GR_TYPE_CALTROP    //    <- 1st Type of Grenade this class has
+#define PC_SCOUT_MAXAMMO_SHOT 50 // Maximum amount of shot ammo this class can carry
+#define PC_SCOUT_MAXAMMO_NAIL 200 // Maximum amount of nail ammo this class can carry
+#define PC_SCOUT_MAXAMMO_CELL 100 // Maximum amount of cell ammo this class can carry
+#define PC_SCOUT_MAXAMMO_ROCKET 25 // Maximum amount of rocket ammo this class can carry
+#define PC_SCOUT_INITAMMO_SHOT 25 // Amount of shot ammo this class has when respawned
+#define PC_SCOUT_INITAMMO_NAIL 100 // Amount of nail ammo this class has when respawned
+#define PC_SCOUT_INITAMMO_CELL 50 // Amount of cell ammo this class has when respawned
+#define PC_SCOUT_INITAMMO_ROCKET 0 // Amount of rocket ammo this class has when respawned
+#define PC_SCOUT_GRENADE_TYPE_1 GR_TYPE_CALTROP //    <- 1st Type of Grenade this class has
 #define PC_SCOUT_GRENADE_TYPE_2 GR_TYPE_CONCUSSION //    <- 2nd Type of Grenade this class has
-#define PC_SCOUT_GRENADE_INIT_1 2                  // Number of grenades of Type 1 this class has when respawned
-#define PC_SCOUT_GRENADE_INIT_2 3                  // Number of grenades of Type 2 this class has when respawned
-#define PC_SCOUT_TF_ITEMS NIT_SCANNER              // <- TeamFortress Items this class has
+#define PC_SCOUT_GRENADE_INIT_1 2 // Number of grenades of Type 1 this class has when respawned
+#define PC_SCOUT_GRENADE_INIT_2 3 // Number of grenades of Type 2 this class has when respawned
+#define PC_SCOUT_TF_ITEMS NIT_SCANNER // <- TeamFortress Items this class has
 
-#define PC_SCOUT_MOTION_MIN_I 0.5   // < Short range
+#define PC_SCOUT_MOTION_MIN_I 0.5 // < Short range
 #define PC_SCOUT_MOTION_MIN_MOVE 50 // Minimum vlen of player velocity to be picked up by motion detector
-#define PC_SCOUT_SCAN_TIME 2        // # of seconds between each scan pulse
-#define PC_SCOUT_SCAN_RANGE 100     // Default scanner range
-#define PC_SCOUT_SCAN_COST 2        // Default scanner cell useage per scan
+#define PC_SCOUT_SCAN_TIME 2 // # of seconds between each scan pulse
+#define PC_SCOUT_SCAN_RANGE 100 // Default scanner range
+#define PC_SCOUT_SCAN_COST 2 // Default scanner cell useage per scan
 
 // Class Details for SNIPER
 #define PC_SNIPER_SKIN 5
@@ -711,10 +711,10 @@ enum { CAREA_CLEAR, CAREA_BLOCKED, CAREA_NOBUILD };
 #define PC_SOLDIER_GRENADE_INIT_2 1
 #define PC_SOLDIER_TF_ITEMS 0
 
-#define MAX_NAIL_GRENS 2   // Can only have 2 Nail grens active
+#define MAX_NAIL_GRENS 2 // Can only have 2 Nail grens active
 #define MAX_NAPALM_GRENS 2 // Can only have 2 Napalm grens active
-#define MAX_GAS_GRENS 2    // Can only have 2 Gas grenades active
-#define MAX_MIRV_GRENS 2   // Can only have 2 Mirv's
+#define MAX_GAS_GRENS 2 // Can only have 2 Gas grenades active
+#define MAX_MIRV_GRENS 2 // Can only have 2 Mirv's
 #define MAX_CONCUSSION_GRENS 3
 #define MAX_CALTROP_CANS 3
 
@@ -773,7 +773,7 @@ enum { CAREA_CLEAR, CAREA_BLOCKED, CAREA_NOBUILD };
 #define PC_MEDIC_GRENADE_INIT_1 2
 #define PC_MEDIC_GRENADE_INIT_2 2
 #define PC_MEDIC_TF_ITEMS 0
-#define PC_MEDIC_REGEN_TIME 3   // Number of seconds between each regen.
+#define PC_MEDIC_REGEN_TIME 3 // Number of seconds between each regen.
 #define PC_MEDIC_REGEN_AMOUNT 2 // Amount of health regenerated each regen.
 
 // Class Details for HVYWEAP
@@ -812,7 +812,7 @@ enum { CAREA_CLEAR, CAREA_BLOCKED, CAREA_NOBUILD };
 #define PC_PYRO_INITARMOR 50
 #define PC_PYRO_MAXARMORTYPE 0.6
 #define PC_PYRO_INITARMORTYPE 0.6
-#define PC_PYRO_ARMORCLASSES 27   // ALL except EXPLOSION
+#define PC_PYRO_ARMORCLASSES 27 // ALL except EXPLOSION
 #define PC_PYRO_INITARMORCLASS 16 // #AT_SAVEFIRE
 #define PC_PYRO_WEAPONS (WEAP_INCENDIARY | WEAP_FLAMETHROWER | WEAP_AXE | WEAP_SHOTGUN)
 #define PC_PYRO_MAXAMMO_SHOT 40
@@ -837,9 +837,9 @@ enum { CAREA_CLEAR, CAREA_BLOCKED, CAREA_NOBUILD };
 #define PC_SPY_MAXSTRAFESPEED 300
 #define PC_SPY_MAXARMOR 100
 #define PC_SPY_INITARMOR 25
-#define PC_SPY_MAXARMORTYPE 0.6  // Was 0.3
+#define PC_SPY_MAXARMORTYPE 0.6 // Was 0.3
 #define PC_SPY_INITARMORTYPE 0.6 // Was 0.3
-#define PC_SPY_ARMORCLASSES 27   // ALL except EXPLOSION
+#define PC_SPY_ARMORCLASSES 27 // ALL except EXPLOSION
 #define PC_SPY_INITARMORCLASS 0
 #define PC_SPY_WEAPONS (WEAP_AXE | WEAP_TRANQ | WEAP_SUPER_SHOTGUN | WEAP_NAILGUN)
 #define PC_SPY_MAXAMMO_SHOT 40
@@ -857,7 +857,7 @@ enum { CAREA_CLEAR, CAREA_BLOCKED, CAREA_NOBUILD };
 #define PC_SPY_TF_ITEMS 0
 #define PC_SPY_CELL_REGEN_TIME 5
 #define PC_SPY_CELL_REGEN_AMOUNT 1
-#define PC_SPY_CELL_USAGE 3         // Amount of cells spent while invisible
+#define PC_SPY_CELL_USAGE 3 // Amount of cells spent while invisible
 #define PC_SPY_GO_UNDERCOVER_TIME 4 // Time it takes to go undercover
 
 // Class Details for ENGINEER
@@ -918,28 +918,28 @@ enum { CAREA_CLEAR, CAREA_BLOCKED, CAREA_NOBUILD };
 // For all these defines, see the tfortmap.txt that came with the zip
 // for complete descriptions.
 // Defines for Goal Activation types : goal_activation (in goals)
-#define TFGA_TOUCH 1           // Activated when touched
-#define TFGA_TOUCH_DETPACK 2   // Activated when touched by a detpack explosion
-#define TFGA_REVERSE_AP 4      // Activated when AP details are _not_ met
-#define TFGA_SPANNER 8         // Activated when hit by an engineer's spanner
+#define TFGA_TOUCH 1 // Activated when touched
+#define TFGA_TOUCH_DETPACK 2 // Activated when touched by a detpack explosion
+#define TFGA_REVERSE_AP 4 // Activated when AP details are _not_ met
+#define TFGA_SPANNER 8 // Activated when hit by an engineer's spanner
 #define TFGA_DROPTOGROUND 2048 // Drop to Ground when spawning
 
 // Defines for Goal Effects types : goal_effect
-#define TFGE_AP 1                // AP is affected. Default.
-#define TFGE_AP_TEAM 2           // All of the AP's team.
-#define TFGE_NOT_AP_TEAM 4       // All except AP's team.
-#define TFGE_NOT_AP 8            // All except AP.
-#define TFGE_WALL 16             // If set, walls stop the Radius effects
+#define TFGE_AP 1 // AP is affected. Default.
+#define TFGE_AP_TEAM 2 // All of the AP's team.
+#define TFGE_NOT_AP_TEAM 4 // All except AP's team.
+#define TFGE_NOT_AP 8 // All except AP.
+#define TFGE_WALL 16 // If set, walls stop the Radius effects
 #define TFGE_SAME_ENVIRONMENT 32 // If set, players in a different environment to the Goal are not affected
-#define TFGE_TIMER_CHECK_AP 64   // If set, Timer Goals check their critera for all players fitting their effects
+#define TFGE_TIMER_CHECK_AP 64 // If set, Timer Goals check their critera for all players fitting their effects
 
 // Defines for Goal Result types : goal_result
-#define TFGR_SINGLE 1             // Goal can only be activated once
-#define TFGR_ADD_BONUSES 2        // Any Goals activated by this one give their bonuses
-#define TFGR_ENDGAME 4            // Goal fires Intermission, displays scores, and ends level
-#define TFGR_NO_ITEM_RESULTS 8    // GoalItems given by this Goal don't do results
-#define TFGR_REMOVE_DISGUISE 16   // Prevent/Remove undercover from any Spy
-#define TFGR_FORCE_RESPAWN 32     // Forces the player to teleport to a respawn point
+#define TFGR_SINGLE 1 // Goal can only be activated once
+#define TFGR_ADD_BONUSES 2 // Any Goals activated by this one give their bonuses
+#define TFGR_ENDGAME 4 // Goal fires Intermission, displays scores, and ends level
+#define TFGR_NO_ITEM_RESULTS 8 // GoalItems given by this Goal don't do results
+#define TFGR_REMOVE_DISGUISE 16 // Prevent/Remove undercover from any Spy
+#define TFGR_FORCE_RESPAWN 32 // Forces the player to teleport to a respawn point
 #define TFGR_DESTROY_BUILDINGS 64 // Destroys this player's buildings, if anys
 
 // Defines for Goal Group Result types : goal_group
@@ -948,30 +948,30 @@ enum { CAREA_CLEAR, CAREA_BLOCKED, CAREA_NOBUILD };
 // that some will show up sometime.
 
 // Defines for Goal Item types, : goal_activation (in items)
-#define TFGI_GLOW 1             // Players carrying this GoalItem will glow
-#define TFGI_SLOW 2             // Players carrying this GoalItem will move at half-speed
-#define TFGI_DROP 4             // Players dying with this item will drop it
-#define TFGI_RETURN_DROP 8      // Return if a player with it dies
-#define TFGI_RETURN_GOAL 16     // Return if a player with it has it removed by a goal's activation
-#define TFGI_RETURN_REMOVE 32   // Return if it is removed by TFGI_REMOVE
-#define TFGI_REVERSE_AP 64      // Only pickup if the player _doesn't_ match AP Details
-#define TFGI_REMOVE 128         // Remove if left untouched for 2 minutes after being dropped
-#define TFGI_KEEP 256           // Players keep this item even when they die
-#define TFGI_ITEMGLOWS 512      // Item glows when on the ground
+#define TFGI_GLOW 1 // Players carrying this GoalItem will glow
+#define TFGI_SLOW 2 // Players carrying this GoalItem will move at half-speed
+#define TFGI_DROP 4 // Players dying with this item will drop it
+#define TFGI_RETURN_DROP 8 // Return if a player with it dies
+#define TFGI_RETURN_GOAL 16 // Return if a player with it has it removed by a goal's activation
+#define TFGI_RETURN_REMOVE 32 // Return if it is removed by TFGI_REMOVE
+#define TFGI_REVERSE_AP 64 // Only pickup if the player _doesn't_ match AP Details
+#define TFGI_REMOVE 128 // Remove if left untouched for 2 minutes after being dropped
+#define TFGI_KEEP 256 // Players keep this item even when they die
+#define TFGI_ITEMGLOWS 512 // Item glows when on the ground
 #define TFGI_DONTREMOVERES 1024 // Don't remove results when the item is removed
-#define TFGI_DROPTOGROUND 2048  // Drop To Ground when spawning
-#define TFGI_CANBEDROPPED 4096  // Can be voluntarily dropped by players
-#define TFGI_SOLID 8192         // Is solid... blocks bullets, etc
+#define TFGI_DROPTOGROUND 2048 // Drop To Ground when spawning
+#define TFGI_CANBEDROPPED 4096 // Can be voluntarily dropped by players
+#define TFGI_SOLID 8192 // Is solid... blocks bullets, etc
 
 // Defines for methods of GoalItem returning
-#define GI_RET_DROP_DEAD 0   // Dropped by a dead player
+#define GI_RET_DROP_DEAD 0 // Dropped by a dead player
 #define GI_RET_DROP_LIVING 1 // Dropped by a living player
-#define GI_RET_GOAL 2        // Returned by a Goal
-#define GI_RET_TIME 3        // Returned due to timeout
+#define GI_RET_GOAL 2 // Returned by a Goal
+#define GI_RET_TIME 3 // Returned due to timeout
 
 // Defines for TeamSpawnpoints : goal_activation (in teamspawns)
 #define TFSP_MULTIPLEITEMS 1 // Give out the GoalItem multiple times
-#define TFSP_MULTIPLEMSGS 2  // Display the message multiple times
+#define TFSP_MULTIPLEMSGS 2 // Display the message multiple times
 
 // Defines for TeamSpawnpoints : goal_effects (in teamspawns)
 #define TFSP_REMOVESELF 1 // Remove itself after being spawned on
@@ -984,8 +984,8 @@ enum { CAREA_CLEAR, CAREA_BLOCKED, CAREA_NOBUILD };
 
 // Defines for GoalItem Removing from Player Methods
 #define GI_DROP_PLAYERDEATH 0 // Dropped by a dying player
-#define GI_DROP_REMOVEGOAL 1  // Removed by a Goal
-#define GI_DROP_PLAYERDROP 2  // Dropped by a player
+#define GI_DROP_REMOVEGOAL 1 // Removed by a Goal
+#define GI_DROP_PLAYERDROP 2 // Dropped by a player
 
 // Legal Playerclass Handling
 #define TF_ILL_SCOUT 1
@@ -1009,16 +1009,16 @@ enum { CAREA_CLEAR, CAREA_BLOCKED, CAREA_NOBUILD };
 /* Flamethrower																*/
 /*==========================================================================*/
 #define FLAME_PLYRMAXTIME 5.0 // lifetime in seconds of a flame on a player
-#define FLAME_MAXBURNTIME 8   // lifetime in seconds of a flame on the world (big ones)
+#define FLAME_MAXBURNTIME 8 // lifetime in seconds of a flame on the world (big ones)
 #define NAPALM_MAXBURNTIME 20 // lifetime in seconds of flame from a napalm grenade
 #define FLAME_MAXPLYRFLAMES 4 // maximum number of flames on a player
-#define FLAME_NUMLIGHTS 1     // maximum number of light flame
-#define FLAME_BURNRATIO 0.3   // the chance of a flame not 'sticking'
-#define GR_TYPE_FLAMES_NO 15  // number of flames spawned when a grenade explode
-#define FLAME_DAMAGE_TIME 1   // Interval between damage burns from flames
+#define FLAME_NUMLIGHTS 1 // maximum number of light flame
+#define FLAME_BURNRATIO 0.3 // the chance of a flame not 'sticking'
+#define GR_TYPE_FLAMES_NO 15 // number of flames spawned when a grenade explode
+#define FLAME_DAMAGE_TIME 1 // Interval between damage burns from flames
 #define FLAME_EFFECT_TIME 0.2 // frequency at which we display flame effects.
-#define FLAME_THINK_TIME 0.1  // Seconds between times the flame checks burn
-#define PER_FLAME_DAMAGE 2    // Damage taken per second per flame by burning players
+#define FLAME_THINK_TIME 0.1 // Seconds between times the flame checks burn
+#define PER_FLAME_DAMAGE 2 // Damage taken per second per flame by burning players
 
 /*==================================================*/
 /* CTF Support defines 								*/
@@ -1111,22 +1111,22 @@ float already_chosen_map;
 // Some of the toggleflags aren't used anymore, but the bits are still
 // there to provide compatability with old maps
 #define TFLAG_CLASS_PERSIST (1 << 0) // Persistent Classes Bit
-#define TFLAG_CHEATCHECK (1 << 1)    // Cheatchecking Bit
-#define TFLAG_RESPAWNDELAY (1 << 2)  // RespawnDelay bit
+#define TFLAG_CHEATCHECK (1 << 1) // Cheatchecking Bit
+#define TFLAG_RESPAWNDELAY (1 << 2) // RespawnDelay bit
 //#define TFLAG_UN					(1 << 3)		// NOT USED ANYMORE
 #define TFLAG_OLD_GRENS (1 << 3) // Use old concussion grenade and flash grenade
-#define TFLAG_UN2 (1 << 4)       // NOT USED ANYMORE
-#define TFLAG_UN3 (1 << 5)       // NOT USED ANYMORE
-#define TFLAG_UN4 (1 << 6)       // NOT USED ANYMORE: Was Autoteam. CVAR tfc_autoteam used now.
+#define TFLAG_UN2 (1 << 4) // NOT USED ANYMORE
+#define TFLAG_UN3 (1 << 5) // NOT USED ANYMORE
+#define TFLAG_UN4 (1 << 6) // NOT USED ANYMORE: Was Autoteam. CVAR tfc_autoteam used now.
 #define TFLAG_TEAMFRAGS (1 << 7) // Individual Frags, or Frags = TeamScore
 #define TFLAG_FIRSTENTRY                                                                                                                                                                                                                       \
-   (1 << 8)                     // Used to determine the first time toggleflags is set
-                                // In a map. Cannot be toggled by players.
+   (1 << 8) // Used to determine the first time toggleflags is set
+            // In a map. Cannot be toggled by players.
 #define TFLAG_SPYINVIS (1 << 9) // Spy invisible only
 #define TFLAG_GRAPPLE (1 << 10) // Grapple on/off
 //#define TFLAG_FULLTEAMSCORE		(1 << 11)  	// Each Team's score is TeamScore + Frags
 #define TFLAG_FLAGEMULATION (1 << 12) // Flag emulation on for old TF maps
-#define TFLAG_USE_STANDARD (1 << 13)  // Use the TF War standard for Flag emulation
+#define TFLAG_USE_STANDARD (1 << 13) // Use the TF War standard for Flag emulation
 
 #define TFLAG_FRAGSCORING (1 << 14) // Use frag scoring only
 

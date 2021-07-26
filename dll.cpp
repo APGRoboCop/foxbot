@@ -1595,7 +1595,7 @@ void ClientCommand(edict_t *pEntity) {
          return;
       }
 
-         // botcam
+      // botcam
       else if (FStrEq(pcmd, "botcam")) {
          edict_t *pBot = nullptr;
          char botname[BOT_NAME_LEN + 1];
@@ -2336,7 +2336,7 @@ void ClientCommand(edict_t *pEntity) {
             RETURN_META(MRES_SUPERCEDE);
          return;
       }
-         // DREVIL CVARS
+      // DREVIL CVARS
       else if (FStrEq(pcmd, "defensive_chatter")) {
          if (FStrEq(arg1, "on")) {
             defensive_chatter = true;
@@ -4688,12 +4688,12 @@ const char *Cmd_Args() {
          RETURN_META_VALUE(MRES_SUPERCEDE, &g_argv[0] + 4); // skip the "say" bot client command (bug in HL engine)
       if (strncmp("say_team ", g_argv, 9) == 0)
          RETURN_META_VALUE(MRES_SUPERCEDE, &g_argv[0] + 9); // skip the "say_team" bot client command (bug in HL engine)
-         /*if(strncmp ("say ", g_argv, 4) == 0)
-               //return (&g_argv[0] + 4); // skip the "say" bot client command (bug in HL engine)
-               sprintf(g_argv,"%s",&g_argv[0] + 4);
-               else if(strncmp ("say_team ", g_argv, 9) == 0)
-               //return (&g_argv[0] + 9); // skip the "say_team" bot client command (bug in HL engine)
-               sprintf(g_argv,"%s",&g_argv[0] + 9);*/
+      /*if(strncmp ("say ", g_argv, 4) == 0)
+            //return (&g_argv[0] + 4); // skip the "say" bot client command (bug in HL engine)
+            sprintf(g_argv,"%s",&g_argv[0] + 4);
+            else if(strncmp ("say_team ", g_argv, 9) == 0)
+            //return (&g_argv[0] + 9); // skip the "say_team" bot client command (bug in HL engine)
+            sprintf(g_argv,"%s",&g_argv[0] + 9);*/
       RETURN_META_VALUE(MRES_SUPERCEDE, &g_argv[0]);
    }
    RETURN_META_VALUE(MRES_IGNORED, NULL);

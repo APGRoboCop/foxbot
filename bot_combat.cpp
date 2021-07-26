@@ -37,7 +37,6 @@
 #include "bot_navigate.h"
 #include "bot_weapons.h"
 
-
 extern WAYPOINT waypoints[MAX_WAYPOINTS];
 extern int num_waypoints; // number of waypoints currently in map
 
@@ -251,7 +250,7 @@ static void BotPipeBombCheck(bot_t *pBot) {
 // away from them.  i.e. backstabbing victims!
 static void BotFeigningEnemyCheck(bot_t *pBot) {
    pBot->lastEnemySentryGun = nullptr; // ignore all sentry guns, the bot is feigning
-   pBot->visAllyCount = 1;          // assume the bot can't see much because it has to stay still
+   pBot->visAllyCount = 1;             // assume the bot can't see much because it has to stay still
 
    for (int i = 1; i <= gpGlobals->maxClients; i++) {
       edict_t *pPlayer = INDEXENT(i);
@@ -390,7 +389,7 @@ void BotEnemyCheck(bot_t *pBot) {
          pBot->enemy.ptr = nullptr;
       } else if (!FInViewCone(vecEnd, pBot->pEdict) || !FVisible(vecEnd, pBot->pEdict)) {
          pBot->enemy.ptr = nullptr; // forget the enemy
-      } else                     // enemy is visible
+      } else                        // enemy is visible
       {
          // keep this up to date
          pBot->enemy.lastLocation = pBot->enemy.ptr->v.origin;
@@ -552,12 +551,10 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
 
    if (mod_id == TFC_DLL) {
       // get medics and engineers to heal/repair teammates
-		if (pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC ||
-			(pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER &&
-			pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > 80)) {
-			nearestDistance = 1000.0;
-			edict_t* pPlayer;
-			int player_team;
+      if (pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC || (pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER && pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > 80)) {
+         nearestDistance = 1000.0;
+         edict_t *pPlayer;
+         int player_team;
 
          // search the world for players...
          for (i = 1; i <= gpGlobals->maxClients; i++) {
@@ -1649,7 +1646,7 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
 
                // only heal your teammates or allies...
                if ((pBot->current_team == player_team || team_allies[pBot->current_team] & 1 << player_team) && (iId != TF_WEAPON_MEDIKIT && iId != TF_WEAPON_SPANNER)) {
-                  //pBot->strafe_mod = STRAFE_MOD_HEAL;
+                  // pBot->strafe_mod = STRAFE_MOD_HEAL;
                   // return false;  // don't "fire" unless weapon is medikit
                   use_primary = false;
                }
