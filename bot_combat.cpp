@@ -1649,7 +1649,7 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
 
                // only heal your teammates or allies...
                if ((pBot->current_team == player_team || team_allies[pBot->current_team] & 1 << player_team) && (iId != TF_WEAPON_MEDIKIT && iId != TF_WEAPON_SPANNER)) {
-                  pBot->strafe_mod = STRAFE_MOD_HEAL;
+                  //pBot->strafe_mod = STRAFE_MOD_HEAL;
                   // return false;  // don't "fire" unless weapon is medikit
                   use_primary = false;
                }
@@ -1730,9 +1730,9 @@ int BotNadeHandler(bot_t *pBot, bool timed, const char newNadeType) {
          BlacklistJob(pBot, JOB_PICKUP_ITEM, 2.0); // don't pick up your own pack
 
       if (pBot->mission == ROLE_ATTACKER)
-         pBot->f_discard_time = pBot->f_think_time + 7.0f;
+         pBot->f_discard_time = pBot->f_think_time + 10.0f;
       else if (pBot->mission == ROLE_DEFENDER)
-         pBot->f_discard_time = pBot->f_think_time + 15.0f;
+         pBot->f_discard_time = pBot->f_think_time + 20.0f;
       else
          pBot->f_discard_time = pBot->f_think_time + 15.0f;
    }

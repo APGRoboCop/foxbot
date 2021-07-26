@@ -367,7 +367,7 @@ void BotSpawnInit(bot_t *pBot) {
    pBot->f_shortcutCheckTime = gpGlobals->time + 2.0f;
 
    pBot->f_roleSayDelay = gpGlobals->time + 10.0f;
-   pBot->f_discard_time = gpGlobals->time + RANDOM_FLOAT(8.0f, 16.0f);
+   pBot->f_discard_time = gpGlobals->time + RANDOM_FLOAT(10.0f, 20.0f);
 
    pBot->f_grenadeScanTime = gpGlobals->time + 0.7f;
 

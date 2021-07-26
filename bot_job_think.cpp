@@ -135,7 +135,7 @@ const jobList_struct jl[JOB_TYPE_TOTAL] = {
     {790, "JOB_PUSH_BUTTON"},
     {680, "JOB_USE_TELEPORT"},
     {800, "JOB_MAINTAIN_OBJECT"},
-    {770, "JOB_BUILD_SENTRY"},
+    {780, "JOB_BUILD_SENTRY"},
     {520, "JOB_BUILD_DISPENSER"},
     {690, "JOB_BUILD_TELEPORT"},
     {620, "JOB_BUFF_ALLY"},
@@ -577,7 +577,7 @@ void BotJobThink(bot_t *pBot) {
    case TFC_CLASS_CIVILIAN:
       break;
    case TFC_CLASS_SCOUT:
-      // FakeClientCommand(pBot->pEdict, "slot3", NULL, NULL);
+      //FakeClientCommand(pBot->pEdict, "slot3", nullptr, nullptr);
       break;
    case TFC_CLASS_SNIPER:
       // go snipe
@@ -608,10 +608,10 @@ void BotJobThink(bot_t *pBot) {
    case TFC_CLASS_PYRO:
       break;
    case TFC_CLASS_MEDIC:
-      // FakeClientCommand(pBot->pEdict, "slot3", NULL, NULL);
+      //FakeClientCommand(pBot->pEdict, "slot3", nullptr, nullptr);
       break;
    case TFC_CLASS_SPY:
-      // FakeClientCommand(pBot->pEdict, "slot1", NULL, NULL);
+      //FakeClientCommand(pBot->pEdict, "slot1", nullptr, nullptr);
       // time for a disguise?
       if (pBot->enemy.f_lastSeen + 2.0 < pBot->f_think_time) {
          if (pBot->current_team == UTIL_GetTeamColor(pBot->pEdict)) {
@@ -643,7 +643,7 @@ void BotJobThink(bot_t *pBot) {
       break;
    case TFC_CLASS_ENGINEER:
       BotEngineerThink(pBot);
-      // FakeClientCommand(pBot->pEdict, "slot1", NULL, NULL);
+      //FakeClientCommand(pBot->pEdict, "slot1", nullptr, nullptr);
       break;
    default:
       break;
@@ -749,15 +749,15 @@ void BotEngineerThink(bot_t *pBot) {
    if (pBot->tpExitWP != -1 && !FNullEnt(pBot->tpExit) && !WaypointAvailable(pBot->tpExitWP, pBot->current_team))
       FakeClientCommand(pBot->pEdict, "detexitteleporter", nullptr, nullptr);
 
-   /*	// Sentry gun still alive? This script broken? [APG]RoboCop[CL]
+   /* // Sentry gun still alive? This script broken? [APG]RoboCop[CL]
                    if(pBot->has_sentry == true
-                                   && (pBot->sentry_edict == NULL
+                                   && (pBot->sentry_edict == nullptr
                                    || FNullEnt(pBot->sentry_edict)))
                    {
                                    pBot->has_sentry = false;
-                                   pBot->sentry_edict = NULL;
-                   }*/
-
+                                   pBot->sentry_edict = nullptr;
+                   }
+   */
    job_struct *newJob;
 
    // time to build a dispenser?

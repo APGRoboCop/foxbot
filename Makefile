@@ -36,7 +36,7 @@ INCLUDES = -I"./metamod" \
 	-I"./hlsdk/pm_shared"
 
 CFLAGS = ${BASEFLAGS} ${OPTFLAGS} ${ARCHFLAG} ${INCLUDES}
-CPPFLAGS += -fno-rtti -fno-exceptions -fno-threadsafe-statics ${CFLAGS} 
+CPPFLAGS += -fno-rtti -fno-exceptions -fno-threadsafe-statics ${CFLAGS}
 
 SRC = 	bot.cpp \
    bot_client.cpp \

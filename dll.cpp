@@ -62,9 +62,9 @@ cvar_t sv_bot = {"bot", "", 0, 0, nullptr};
 
 extern GETENTITYAPI other_GetEntityAPI;
 extern GETNEWDLLFUNCTIONS other_GetNewDLLFunctions;
-extern enginefuncs_t g_engfuncs;
+
 extern int debug_engine;
-extern globalvars_t *gpGlobals;
+
 extern char g_argv[256];
 extern bool g_waypoint_on;
 extern bool g_waypoint_cache;
@@ -132,7 +132,7 @@ extern int num_areas;
 extern struct msg_com_struct msg_com[MSG_MAX];
 extern char msg_msg[64][MSG_MAX];
 
-//const static double double_pi = 3.1415926535897932384626433832795;
+// const static double double_pi = 3.1415926535897932384626433832795;
 
 // define the sources that a bot option/setting can be changed from
 // used primarily by the changeBotSetting() function
@@ -167,7 +167,6 @@ bool checked_teamplay = false;
 int num_teams = 0;
 edict_t *pent_info_tfdetect = nullptr;
 edict_t *pent_info_ctfdetect = nullptr;
-// edict_t* pent_info_frontline = NULL;
 edict_t *pent_item_tfgoal = nullptr;
 int max_team_players[4];
 int team_class_limits[4];
@@ -329,7 +328,7 @@ static void varyBotTotal() {
          f_interested_bots_change = gpGlobals->time + random_float(10.0f, 120.0f);
       else if (bot_total_varies == 2)
          f_interested_bots_change = gpGlobals->time + random_float(40.0f, 360.0f);
-      else // slow changes in number of bots
+      else if (bot_total_varies == 1) // slow changes in number of bots
          f_interested_bots_change = gpGlobals->time + random_float(90.0f, 600.0f);
 
       //	UTIL_BotLogPrintf("interested_bots:%d, time:%f, next change:%f\n",
@@ -682,12 +681,12 @@ void GameDLLInit() {
 // Constructor for the chatClass class
 // sets up the names of the chat section headers
 chatClass::chatClass() {
-   strcpy (this->sectionNames[CHAT_TYPE_GREETING], "[GREETINGS]");
-   strcpy (this->sectionNames[CHAT_TYPE_KILL_HI], "[KILL WINNING]");
-   strcpy (this->sectionNames[CHAT_TYPE_KILL_LOW], "[KILL LOSING]");
-   strcpy (this->sectionNames[CHAT_TYPE_KILLED_HI], "[KILLED WINNING]");
-   strcpy (this->sectionNames[CHAT_TYPE_KILLED_LOW], "[KILLED LOSING]");
-   strcpy (this->sectionNames[CHAT_TYPE_SUICIDE], "[SUICIDE]");
+   strcpy(this->sectionNames[CHAT_TYPE_GREETING], "[GREETINGS]");
+   strcpy(this->sectionNames[CHAT_TYPE_KILL_HI], "[KILL WINNING]");
+   strcpy(this->sectionNames[CHAT_TYPE_KILL_LOW], "[KILL LOSING]");
+   strcpy(this->sectionNames[CHAT_TYPE_KILLED_HI], "[KILLED WINNING]");
+   strcpy(this->sectionNames[CHAT_TYPE_KILLED_LOW], "[KILLED LOSING]");
+   strcpy(this->sectionNames[CHAT_TYPE_SUICIDE], "[SUICIDE]");
 
    int j;
 
@@ -756,7 +755,7 @@ void chatClass::readChatFile() {
       if (chat_section != -1 && this->stringCount[chat_section] < MAX_CHAT_STRINGS && length > 0) {
          // UTIL_BotLogPrintf("buffer %s %d\n", buffer, this->stringCount[chat_section]);
 
-         strcpy (this->strings[chat_section][this->stringCount[chat_section]], buffer);
+         strcpy(this->strings[chat_section][this->stringCount[chat_section]], buffer);
          ++this->stringCount[chat_section];
       }
    }
@@ -837,7 +836,6 @@ int DispatchSpawn(edict_t *pent) {
 
          pent_info_tfdetect = nullptr;
          pent_info_ctfdetect = nullptr;
-         // pent_info_frontline = NULL;
          pent_item_tfgoal = nullptr;
 
          for (int index = 0; index < 4; index++) {
@@ -910,8 +908,7 @@ int DispatchSpawn(edict_t *pent) {
 
    if (!mr_meta)
       return (*other_gFunctionTable.pfnSpawn)(pent);
-   else
-      RETURN_META_VALUE(MRES_HANDLED, 0);
+   RETURN_META_VALUE(MRES_HANDLED, 0);
 }
 
 void DispatchThink(edict_t *pent) {
@@ -1054,7 +1051,7 @@ void DispatchThink(edict_t *pent) {
             Vector vel = pBot->enemy.ptr->v.velocity;
             vel.x = vel.x * sin(dgrad);
             vel.y = vel.y * cos(dgrad);
-            dgrad = static_cast<double>(v.x);
+            dgrad = double(v.x);
             dgrad = dgrad + 180;
             if (dgrad > 180)
                dgrad -= 360;
@@ -1156,7 +1153,6 @@ void DispatchThink(edict_t *pent) {
 }
 
 void DispatchKeyValue(edict_t *pentKeyvalue, KeyValueData *pkvd) {
-
    if (mod_id == TFC_DLL) {
       static int flag_index;
       static edict_t *temp_pent;
@@ -1277,8 +1273,7 @@ BOOL ClientConnect(edict_t *pEntity, const char *pszName, const char *pszAddress
 
    if (!mr_meta)
       return (*other_gFunctionTable.pfnClientConnect)(pEntity, pszName, pszAddress, szRejectReason);
-   else
-      RETURN_META_VALUE(MRES_HANDLED, true);
+   RETURN_META_VALUE(MRES_HANDLED, true);
 }
 
 BOOL ClientConnect_Post(edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[128]) {
@@ -1424,32 +1419,37 @@ void ClientCommand(edict_t *pEntity) {
          if (mr_meta)
             RETURN_META(MRES_SUPERCEDE);
          return;
-      } else if (FStrEq(pcmd, "min_bots")) {
+      }
+      if (FStrEq(pcmd, "min_bots")) {
          changeBotSetting("min_bots", &min_bots, arg1, -1, 31, SETTING_SOURCE_CLIENT_COMMAND);
 
          if (mr_meta)
             RETURN_META(MRES_SUPERCEDE);
          return;
-      } else if (FStrEq(pcmd, "max_bots")) {
+      }
+      if (FStrEq(pcmd, "max_bots")) {
          changeBotSetting("max_bots", &max_bots, arg1, -1, MAX_BOTS, SETTING_SOURCE_CLIENT_COMMAND);
 
          if (mr_meta)
             RETURN_META(MRES_SUPERCEDE);
          return;
-      } else if (FStrEq(pcmd, "bot_total_varies")) {
+      }
+      if (FStrEq(pcmd, "bot_total_varies")) {
          changeBotSetting("bot_total_varies", &bot_total_varies, arg1, 0, 3, SETTING_SOURCE_CLIENT_COMMAND);
 
          if (mr_meta)
             RETURN_META(MRES_SUPERCEDE);
          return;
-      } else if (FStrEq(pcmd, "bot_info")) {
+      }
+      if (FStrEq(pcmd, "bot_info")) {
          DisplayBotInfo();
          if (mr_meta)
             RETURN_META(MRES_SUPERCEDE);
          return;
-      } else if (FStrEq(pcmd, "bot_team_balance")) {
-      if (arg1 != nullptr) {
-         if (*arg1 != 0) {
+      }
+      if (FStrEq(pcmd, "bot_team_balance")) {
+         if (arg1 != nullptr) {
+            if (*arg1 != 0) {
                int temp = atoi(arg1);
                if (temp)
                   bot_team_balance = true;
@@ -1464,7 +1464,8 @@ void ClientCommand(edict_t *pEntity) {
          if (mr_meta)
             RETURN_META(MRES_SUPERCEDE);
          return;
-      } else if (FStrEq(pcmd, "bot_bot_balance")) {
+      }
+      if (FStrEq(pcmd, "bot_bot_balance")) {
          if ((arg1 != nullptr)) {
             if ((*arg1 != 0)) {
                int temp = atoi(arg1);
@@ -1483,7 +1484,8 @@ void ClientCommand(edict_t *pEntity) {
          if (mr_meta)
             RETURN_META(MRES_SUPERCEDE);
          return;
-      } else if (FStrEq(pcmd, "kickall") || FStrEq(pcmd, "foxbot_kickall")) {
+      }
+      if (FStrEq(pcmd, "kickall") || FStrEq(pcmd, "foxbot_kickall")) {
          // kick all bots off of the server after time/frag limit...
          kickBots(MAX_BOTS, -1);
       } else if (FStrEq(pcmd, "kickteam") || FStrEq(pcmd, "foxbot_kickteam")) {
@@ -1593,7 +1595,7 @@ void ClientCommand(edict_t *pEntity) {
          return;
       }
 
-      // botcam
+         // botcam
       else if (FStrEq(pcmd, "botcam")) {
          edict_t *pBot = nullptr;
          char botname[BOT_NAME_LEN + 1];
@@ -1613,7 +1615,6 @@ void ClientCommand(edict_t *pEntity) {
                while (index < 32) {
                   if ((bots[index].is_used && strcasecmp(bots[index].name, botname) == 0))
                      break;
-                  else
                   index++;
                }
 
@@ -2055,7 +2056,7 @@ void ClientCommand(edict_t *pEntity) {
                   RETURN_META(MRES_SUPERCEDE);
                return;
             }
-            else if (FStrEq(arg1, "2")) // display locations menu
+            if (FStrEq(arg1, "2")) // display locations menu
             {
                g_menu_state = MENU_3;
                UTIL_ShowMenu(pEntity, 0x07, -1, false, show_menu_3);
@@ -2064,7 +2065,7 @@ void ClientCommand(edict_t *pEntity) {
                   RETURN_META(MRES_SUPERCEDE);
                return;
             }
-            else if (FStrEq(arg1, "3")) // display items menu
+            if (FStrEq(arg1, "3")) // display items menu
             {
                g_menu_state = MENU_4;
                UTIL_ShowMenu(pEntity, 0x0F, -1, false, show_menu_4);
@@ -2073,7 +2074,7 @@ void ClientCommand(edict_t *pEntity) {
                   RETURN_META(MRES_SUPERCEDE);
                return;
             }
-            else if (FStrEq(arg1, "4")) // display actions menu 1
+            if (FStrEq(arg1, "4")) // display actions menu 1
             {
                g_menu_state = MENU_5;
                UTIL_ShowMenu(pEntity, 0xFF, -1, false, show_menu_5);
@@ -2082,7 +2083,7 @@ void ClientCommand(edict_t *pEntity) {
                   RETURN_META(MRES_SUPERCEDE);
                return;
             }
-            else if (FStrEq(arg1, "5")) // display actions menu 2
+            if (FStrEq(arg1, "5")) // display actions menu 2
             {
                g_menu_state = MENU_6;
                UTIL_ShowMenu(pEntity, 0xFF, -1, false, show_menu_6);
@@ -2091,7 +2092,7 @@ void ClientCommand(edict_t *pEntity) {
                   RETURN_META(MRES_SUPERCEDE);
                return;
             }
-            else if (FStrEq(arg1, "6")) // control points
+            if (FStrEq(arg1, "6")) // control points
             {
                g_menu_state = MENU_7;
                UTIL_ShowMenu(pEntity, 0x1FF, -1, false, show_menu_7);
@@ -2335,7 +2336,7 @@ void ClientCommand(edict_t *pEntity) {
             RETURN_META(MRES_SUPERCEDE);
          return;
       }
-      // DREVIL CVARS
+         // DREVIL CVARS
       else if (FStrEq(pcmd, "defensive_chatter")) {
          if (FStrEq(arg1, "on")) {
             defensive_chatter = true;
@@ -2367,34 +2368,6 @@ void ClientCommand(edict_t *pEntity) {
          }
          return;
       }
-      /*		else if(FStrEq(pcmd, "frag_commander"))
-                                      {
-                                                      if(FStrEq(arg1, "on"))
-                                                      {
-                                                                      frag_commander = true;
-                                                                      ClientPrint(pEntity, HUD_PRINTNOTIFY,
-                                                                                      "Score-based commander is ON\n");
-                                                      }
-                                                      else if(FStrEq(arg1, "off"))
-                                                      {
-                                                                      frag_commander = false;
-                                                                      ClientPrint(pEntity, HUD_PRINTNOTIFY,
-                                                                                      "Score-based commander is OFF\n");
-                                                      }
-                                                      else if(FStrEq(arg1, "1"))
-                                                      {
-                                                                      frag_commander = true;
-                                                                      ClientPrint(pEntity, HUD_PRINTNOTIFY,
-                                                                                      "Score-based commander is ON\n");
-                                                      }
-                                                      else if(FStrEq(arg1, "0"))
-                                                      {
-                                                                      frag_commander = false;
-                                                                      ClientPrint(pEntity, HUD_PRINTNOTIFY,
-                                                                                      "Score-based commander is OFF\n");
-                                                      }
-                                                      return;
-                                      }*/
    }
 
    if (!mr_meta)
@@ -2457,27 +2430,25 @@ void StartFrame() { // v7 last frame timing
                   {
                      bots[index].respawn_state = RESPAWN_NEED_TO_RESPAWN;
                      count++;
-                  }  // check for any bots that were very recently kicked...
+                  } // check for any bots that were very recently kicked...
                   if ((bots[index].f_kick_time + 5.0) > previous_time) {
                      bots[index].respawn_state = RESPAWN_NEED_TO_RESPAWN;
                      count++;
                   } else
                      bots[index].f_kick_time = 0.0; // reset to prevent false spawns later
-               } // set the respawn time
+               }                                    // set the respawn time
                if (IS_DEDICATED_SERVER())
                   respawn_time = gpGlobals->time + 10.0;
-               else
-                  respawn_time = gpGlobals->time + 20.0;
             }
          } // start updating client data again
          client_update_time = gpGlobals->time + 10.0;
          bot_check_time = gpGlobals->time + 30.0;
-      }  // end of config map check stuff.
+      } // end of config map check stuff.
       if (client_update_time <= gpGlobals->time) {
          client_update_time = gpGlobals->time + 1.0;
          for (i = 0; i < 32; i++) {
             if (bots[i].is_used) {
-               bzero (&cd,  sizeof cd);
+               bzero(&cd, sizeof cd);
                MDLL_UpdateClientData(bots[i].pEdict, 1, &cd); // see if a weapon was dropped...
                if (bots[i].bot_weapons != cd.weapons)
                   bots[i].bot_weapons = cd.weapons;
@@ -2505,7 +2476,7 @@ void StartFrame() { // v7 last frame timing
          }
       } // are we currently respawning bots and is it time to spawn one yet?
       if ((respawn_time > 1.0) && (respawn_time <= gpGlobals->time)) {
-         int index1 = 0; //Not wanted? [APG]RoboCop[CL]
+         int index1 = 0; // Not wanted? [APG]RoboCop[CL]
          // find bot needing to be respawned...
          while ((index1 < 32) && (bots[index1].respawn_state != RESPAWN_NEED_TO_RESPAWN))
             index1++;
@@ -2605,7 +2576,7 @@ void StartFrame() { // v7 last frame timing
                      ALERT(at_console, msg);
                }
             }
-         }  // end need config
+         } // end need config
          if (!IS_DEDICATED_SERVER() && !spawn_time_reset) {
             if (first_player != nullptr) {
                if (IsAlive(first_player)) {
@@ -2625,7 +2596,7 @@ void StartFrame() { // v7 last frame timing
             DisplayBotInfo();
             display_bot_vars = false;
          }
-      }  // if time to check for server commands then do so...
+      } // if time to check for server commands then do so...
       if ((check_server_cmd <= gpGlobals->time) && IS_DEDICATED_SERVER()) {
          check_server_cmd = gpGlobals->time + 1.0;
          char *cvar_bot = (char *)CVAR_GET_STRING("bot");
@@ -2754,7 +2725,6 @@ void StartFrame() { // v7 last frame timing
                   printf("bot xmas is ON\n");
                } else if (strcmp(arg1, "off") == 0) {
                   bot_xmas = false;
-
                   printf("bot xmas is OFF\n");
                }
             } else if (strcmp(cmd, "bot_allow_moods") == 0) {
@@ -2768,8 +2738,8 @@ void StartFrame() { // v7 last frame timing
                while ((pent = FIND_ENTITY_IN_SPHERE(pent, Vector(0, 0, 0), 8192)) != nullptr && (!FNullEnt(pent))) {
                   UTIL_SavePent(pent);
                }
-            }// dedicated server input
-         }// moved this line down one
+            } // dedicated server input
+         }    // moved this line down one
          CVAR_SET_STRING("bot", "");
       } // check if time to see if a bot needs to be created...
       if (bot_check_time < gpGlobals->time) {
@@ -2790,7 +2760,7 @@ void StartFrame() { // v7 last frame timing
             min_bots = -1;
          if (min_bots == 0)
             min_bots = -1; // count the number of players, and players per team
-         int count1 = 0; //Not wanted? [APG]RoboCop[CL]
+         int count1 = 0;   // Not wanted? [APG]RoboCop[CL]
          {
             char cl_name[128];
             for (i = 1; i <= gpGlobals->maxClients; i++) {
@@ -2823,10 +2793,10 @@ void StartFrame() { // v7 last frame timing
          }
          if (is_team[2] == false && is_team[3] == true)
             is_team[3] = false; // check if the teams need balancing
-         TeamBalanceCheck();  // random simulation of clients joining/leaving
+         TeamBalanceCheck();    // random simulation of clients joining/leaving
          if (bot_total_varies)
             varyBotTotal(); // if there are currently less than the maximum number of players
-                           // then add another bot using the default skill level...
+                            // then add another bot using the default skill level...
          if ((count1 < interested_bots || bot_total_varies == 0) && count1 < max_bots && max_bots != -1) {
             BotCreate(nullptr, nullptr, nullptr, nullptr, nullptr);
          } // do bot max_bot kick here... if there are currently more than the minimum number of bots running then kick one of the bots off the server...
@@ -2948,7 +2918,7 @@ void StartFrame() { // v7 last frame timing
             }
          }
          msg_com[i].next = nullptr; // make sure it dont crash..gr
-      }// check if mapname_bot.cfg file exists...
+      }                             // check if mapname_bot.cfg file exists...
       strcpy(mapname, STRING(gpGlobals->mapname));
       strcat(mapname, "_fb.cfg");
       UTIL_BuildFileName(filename, 255, "scripts", mapname);
@@ -2959,7 +2929,7 @@ void StartFrame() { // v7 last frame timing
          sprintf(msg, "\nExecuting FoXBot TFC script file:%s\n\n", filename);
          ALERT(at_console, msg);
          int ch = fgetc(bfp);
-         int i1; //Not wanted? [APG]RoboCop[CL]
+         int i1; // Not wanted? [APG]RoboCop[CL]
          char buffer[14097];
          for (i1 = 0; (i1 < 14096) && (feof(bfp) == 0); i1++) {
             buffer[i1] = (char)ch;
@@ -2967,7 +2937,7 @@ void StartFrame() { // v7 last frame timing
                buffer[i1] = ' ';
             ch = fgetc(bfp);
          }
-         buffer[i1] = '\0';  // we've read it into buffer, now we need to check the syntax..
+         buffer[i1] = '\0';        // we've read it into buffer, now we need to check the syntax..
          int braces = 0;           // check for an even number of braces i.e. {..}
          bool commentline = false; // used to ignore comment lines
          int start = 0;            // used to check if were in a start section or not
@@ -3018,7 +2988,7 @@ void StartFrame() { // v7 last frame timing
                      buf = buf + 1;
                      if (buffer[i1] == ')')
                         msgsection = 99; // make sure message isnt empty
-                     else { // if it isn't empty, move to end (ignore msg)
+                     else {              // if it isn't empty, move to end (ignore msg)
                         while (buffer[i1] != ')') {
                            i1++;
                            buf = buf + 1;
@@ -3062,7 +3032,7 @@ void StartFrame() { // v7 last frame timing
                      buf = buf + 1;
                      RoleStatus[3] = 90;
                   } // move to end
-               } // defend
+               }    // defend
                else if (strncmp(buf, "blue_defend", 11) == 0) {
                   // this can only be in a section
                   if (start == 0 && msgsection == 0)
@@ -3135,7 +3105,7 @@ void StartFrame() { // v7 last frame timing
                      buf = buf + 1;
                      RoleStatus[3] = 50;
                   } // move to end
-               } // point<n> available_only (exclusive)
+               }    // point<n> available_only (exclusive)
                else if (strncmp(buf, "blue_available_only_point", 25) == 0) {
                   // this can only be in a section
                   if (start == 0 && msgsection == 0)
@@ -3192,7 +3162,7 @@ void StartFrame() { // v7 last frame timing
                      i1++;
                      buf = buf + 1;
                   } // move to end
-               } // point<n> available (set to true)
+               }    // point<n> available (set to true)
                else if (strncmp(buf, "blue_available_point", 20) == 0) {
                   // this can only be in a section
                   if (start == 0 && msgsection == 0)
@@ -3249,7 +3219,7 @@ void StartFrame() { // v7 last frame timing
                      i1++;
                      buf = buf + 1;
                   } // move to end
-               } // point<n> not_available (set to false)
+               }    // point<n> not_available (set to false)
                else if (strncmp(buf, "blue_notavailable_point", 23) == 0) {
                   // this can only be in a section
                   if (start == 0 && msgsection == 0)
@@ -3306,7 +3276,7 @@ void StartFrame() { // v7 last frame timing
                      i1++;
                      buf = buf + 1;
                   } // move to end
-               }  // is point<n> available?
+               }    // is point<n> available?
                else if (strncmp(buf, "if_blue_point", 13) == 0) {
                   // this can only be in a section
                   if (msgsection == 0)
@@ -3379,7 +3349,7 @@ void StartFrame() { // v7 last frame timing
                      i1++;
                      buf = buf + 1;
                   } // move to end
-               } // is point<n> NOT available?
+               }    // is point<n> NOT available?
                else if (strncmp(buf, "ifn_blue_point", 14) == 0) {
                   // this can only be in a section
                   if (msgsection == 0)
@@ -3452,7 +3422,7 @@ void StartFrame() { // v7 last frame timing
                      i1++;
                      buf = buf + 1;
                   } // move to end
-               }  // multipoint ifs
+               }    // multipoint ifs
                else if (strncmp(buf, "if_blue_mpoint", 14) == 0) {
                   // this can only be in a section
                   if (msgsection == 0)
@@ -3804,7 +3774,7 @@ void StartFrame() { // v7 last frame timing
                         i1++;
                         buf = buf + 1;
                      } // move to end
-                  }  // point<n> available_only (exclusive)
+                  }    // point<n> available_only (exclusive)
                   else if (strncmp(buf, "blue_available_only_point", 25) == 0) {
                      // this can only be in a section
                      if (start == 0 && msgsection == 0)
@@ -4553,8 +4523,7 @@ void StartFrame() { // v7 last frame timing
                      sprintf(msg, "y_mp_%s", pnts);
                      strcpy(curr->ifs, msg);
                   } // end of multipoint ifs
-                  else if ((buffer[i1] != '/' && buffer[i1] != '{' && buffer[i1] != '}' && buffer[i1] != ' ' && buffer[i1] != '\n') &&
-                           commentline == false && random_shit_error == false) {
+                  else if ((buffer[i1] != '/' && buffer[i1] != '{' && buffer[i1] != '}' && buffer[i1] != ' ' && buffer[i1] != '\n') && commentline == false && random_shit_error == false) {
                      random_shit_error = true;
                      ALERT(at_console, "\\/\\/\\/\\/\\/\\/\n");
                      ALERT(at_console, buf);
@@ -4619,14 +4588,14 @@ C_DLLEXPORT int GetEntityAPI(DLL_FUNCTIONS *pFunctionTable, int interfaceVersion
       gpGamedllFuncs = &gGameDLLFunc;
       memcpy(pFunctionTable, &other_gFunctionTable, sizeof(DLL_FUNCTIONS));
    }
-      pFunctionTable->pfnStartFrame = StartFrame;
-      pFunctionTable->pfnGameInit = GameDLLInit;
-      pFunctionTable->pfnSpawn = DispatchSpawn;
-      pFunctionTable->pfnThink = DispatchThink;
-      pFunctionTable->pfnKeyValue = DispatchKeyValue;
-      pFunctionTable->pfnClientConnect = ClientConnect;
-      pFunctionTable->pfnClientDisconnect = ClientDisconnect;
-      pFunctionTable->pfnClientCommand = ClientCommand;
+   pFunctionTable->pfnStartFrame = StartFrame;
+   pFunctionTable->pfnGameInit = GameDLLInit;
+   pFunctionTable->pfnSpawn = DispatchSpawn;
+   pFunctionTable->pfnThink = DispatchThink;
+   pFunctionTable->pfnKeyValue = DispatchKeyValue;
+   pFunctionTable->pfnClientConnect = ClientConnect;
+   pFunctionTable->pfnClientDisconnect = ClientDisconnect;
+   pFunctionTable->pfnClientCommand = ClientCommand;
    return true;
 }
 
@@ -4653,7 +4622,7 @@ void FakeClientCommand(edict_t *pBot, char *arg1, char *arg2, char *arg3) {
       return;
 
    if (strncmp(arg1, "kill", 4) == 0) {
-         MDLL_ClientKill(pBot);
+      MDLL_ClientKill(pBot);
       return;
    }
 
@@ -4698,40 +4667,36 @@ const char *Cmd_Args() {
          if (strncmp("say ", g_argv, 4) == 0)
             return (&g_argv[0] + 4); // skip the "say" bot client command (bug in HL engine)
          // sprintf(g_argv,"%s",&g_argv[0] + 4);
-         else if (strncmp("say_team ", g_argv, 9) == 0)
+         if (strncmp("say_team ", g_argv, 9) == 0)
             return (&g_argv[0] + 9);
          // skip the "say_team" bot client command (bug in HL engine)
          // sprintf(g_argv,"%s",&g_argv[0] + 9);
 
          return &g_argv[0];
-      } else {
-         return (*g_engfuncs.pfnCmd_Args)();
       }
-   } else {
-      if (isFakeClientCommand) {
-         if (debug_engine) {
-            fp = UTIL_OpenFoxbotLog();
-            fprintf(fp, "fake cmd_args%s\n", &g_argv[0]);
-            fclose(fp);
-         }
+      return (*g_engfuncs.pfnCmd_Args)();
+   }
+   if (isFakeClientCommand) {
+      if (debug_engine) {
+         fp = UTIL_OpenFoxbotLog();
+         fprintf(fp, "fake cmd_args%s\n", &g_argv[0]);
+         fclose(fp);
+      }
 
-         // is it a "say" or "say_team" client command ?
-         if (strncmp("say ", g_argv, 4) == 0)
-            RETURN_META_VALUE(MRES_SUPERCEDE, &g_argv[0] + 4); // skip the "say" bot client command (bug in HL engine)
-         else if (strncmp("say_team ", g_argv, 9) == 0)
-            RETURN_META_VALUE(MRES_SUPERCEDE, &g_argv[0] + 9); // skip the "say_team" bot client command (bug in HL engine)
-         else
-            /*if(strncmp ("say ", g_argv, 4) == 0)
+      // is it a "say" or "say_team" client command ?
+      if (strncmp("say ", g_argv, 4) == 0)
+         RETURN_META_VALUE(MRES_SUPERCEDE, &g_argv[0] + 4); // skip the "say" bot client command (bug in HL engine)
+      if (strncmp("say_team ", g_argv, 9) == 0)
+         RETURN_META_VALUE(MRES_SUPERCEDE, &g_argv[0] + 9); // skip the "say_team" bot client command (bug in HL engine)
+         /*if(strncmp ("say ", g_argv, 4) == 0)
                //return (&g_argv[0] + 4); // skip the "say" bot client command (bug in HL engine)
                sprintf(g_argv,"%s",&g_argv[0] + 4);
                else if(strncmp ("say_team ", g_argv, 9) == 0)
                //return (&g_argv[0] + 9); // skip the "say_team" bot client command (bug in HL engine)
                sprintf(g_argv,"%s",&g_argv[0] + 9);*/
-            RETURN_META_VALUE(MRES_SUPERCEDE, &g_argv[0]);
-      } else {
-         RETURN_META_VALUE(MRES_IGNORED, NULL);
-      }
+      RETURN_META_VALUE(MRES_SUPERCEDE, &g_argv[0]);
    }
+   RETURN_META_VALUE(MRES_IGNORED, NULL);
 }
 
 const char *GetArg(const char *command, int arg_number) {
@@ -4791,15 +4756,12 @@ const char *Cmd_Argv(int argc) {
    if (isFakeClientCommand) {
       if (!mr_meta)
          return GetArg(g_argv, argc); // if so, then return the wanted argument we know
-      else
-         RETURN_META_VALUE(MRES_SUPERCEDE, GetArg(g_argv, argc));
-   } else {
-      if (!mr_meta) {
-         return (*g_engfuncs.pfnCmd_Argv)(argc);
-      } else {
-         RETURN_META_VALUE(MRES_IGNORED, NULL);
-      }
+      RETURN_META_VALUE(MRES_SUPERCEDE, GetArg(g_argv, argc));
    }
+   if (!mr_meta) {
+      return (*g_engfuncs.pfnCmd_Argv)(argc);
+   }
+   RETURN_META_VALUE(MRES_IGNORED, NULL);
 }
 
 int Cmd_Argc() {
@@ -4809,16 +4771,13 @@ int Cmd_Argc() {
 
       if (isFakeClientCommand) {
          return fake_arg_count;
-      } else {
-         return (*g_engfuncs.pfnCmd_Argc)();
       }
-   } else {
-      if (isFakeClientCommand) {
-         RETURN_META_VALUE(MRES_SUPERCEDE, fake_arg_count);
-      } else {
-         RETURN_META_VALUE(MRES_IGNORED, 0);
-      }
+      return (*g_engfuncs.pfnCmd_Argc)();
    }
+   if (isFakeClientCommand) {
+      RETURN_META_VALUE(MRES_SUPERCEDE, fake_arg_count);
+   }
+   RETURN_META_VALUE(MRES_IGNORED, 0);
 }
 
 // meta mod post functions
@@ -4899,14 +4858,15 @@ void DispatchKeyValue_Post(edict_t *pentKeyvalue, KeyValueData *pkvd) {
             // max_teams = value;
          }
       }
-   } 
+   }
    SET_META_RESULT(MRES_HANDLED);
 }
 
 C_DLLEXPORT int GetEntityAPI_Post(DLL_FUNCTIONS *pFunctionTable, const int interfaceVersion) {
    if (!pFunctionTable) {
       return false;
-   } else if (interfaceVersion != INTERFACE_VERSION) {
+   }
+   if (interfaceVersion != INTERFACE_VERSION) {
       return false;
    }
    pFunctionTable->pfnClientConnect = ClientConnect_Post;
@@ -4948,7 +4908,7 @@ static void ProcessBotCfgFile() {
          ch = ' ';
 
       //{fp=UTIL_OpenFoxbotLog(); fprintf(fp,"cfg %d %i\n",cmd_index,ch); fclose(fp); }
-      cmd_line[cmd_index] = static_cast<char>(ch);
+      cmd_line[cmd_index] = char(ch);
 
       ch = fgetc(bot_cfg_fp);
 
@@ -5240,7 +5200,7 @@ static void ProcessBotCfgFile() {
    }
 
    if (strcmp(cmd, "bot_create_interval") == 0) {
-      bot_create_interval = static_cast<float>(atoi(arg1));
+      bot_create_interval = float(atoi(arg1));
       if (bot_create_interval < 1.0 || bot_create_interval > 8.0)
          bot_create_interval = 3.0;
 
@@ -5844,8 +5804,8 @@ static void flag_team_check()
 			continue;
 
 		// look for a flag very near to this flag waypoint
-		edict_t* pent = NULL;
-		while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "item_tfgoal")) != NULL
+		edict_t* pent = nullptr;
+		while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "item_tfgoal")) != nullptr
 			&& !FNullEnt(pent))
 		{
 			if (!(pent->v.effects & EF_NODRAW)

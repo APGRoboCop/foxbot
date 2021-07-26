@@ -720,14 +720,14 @@ static void UTIL_FindFoxbotPath() {
    if (strcmp(foxbot_path, "") == 0) {
       // try the addons directory first(for Foxbot 0.76 and newer)
       FILE *fptr = fopen("tfc/addons/foxbot/tfc/foxbot.cfg", "r");
-      if (fptr != NULL) {
+      if (fptr != nullptr) {
          strcpy(foxbot_path, "tfc/addons/foxbot/tfc/");
          strcpy(foxbot_logname, "tfc/addons/foxbot/foxbot.log");
          fclose(fptr);
       } else // try the older directory location(Foxbot 0.75 and older)
       {
          fptr = fopen("foxbot/tfc/foxbot.cfg", "r");
-         if (fptr != NULL) {
+         if (fptr != nullptr) {
             strcpy(foxbot_path, "foxbot/tfc/");
             strcpy(foxbot_logname, "foxbot/foxbot.log");
             fclose(fptr);
@@ -769,7 +769,7 @@ bool UTIL_ReadFileLine(char *string, const unsigned int max_length, FILE *file_p
    // go look for it
    if (!line_end_found) {
       // printf("finding line end\n");
-      int c;
+      int c = 0;
       do {
          c = fgetc(file_ptr);
       } while (c != '\n' && c != '\r' && c != EOF);
