@@ -914,7 +914,7 @@ int JobBuildSentry(bot_t *pBot) {
    if (job_ptr->phase == 2) {
       if (job_ptr->phase_timer < pBot->f_think_time) {
          // find and remember the sentry gun the bot just built
-         bool success = false;
+         const bool success = false;
          edict_t *pent = nullptr;
          while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "building_sentrygun")) != nullptr && !FNullEnt(pent)) {
             //	UTIL_BotLogPrintf("%s: sentry gun distance %f\n",
@@ -1054,7 +1054,7 @@ int JobBuildDispenser(bot_t *pBot) {
       if (job_ptr->phase_timer < pBot->f_think_time) {
          // find and remember the dispenser the bot just built
          edict_t *pent = nullptr;
-         bool success = false;
+         const bool success = false;
          while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "building_dispenser")) != nullptr && !FNullEnt(pent)) {
             //	UTIL_BotLogPrintf("%s: dispenser distance %f\n",
             //		pBot->name, (job_ptr->origin - pent->v.origin).Length());
@@ -1191,7 +1191,7 @@ int JobBuildTeleport(bot_t *pBot) {
       if (job_ptr->phase_timer < pBot->f_think_time) {
          // find and remember the teleport the bot just built
          edict_t *pent = nullptr;
-         bool success = false;
+         const bool success = false;
          while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "building_teleporter")) != nullptr && !FNullEnt(pent)) {
             //	UTIL_BotLogPrintf("%s: Teleport distance %f\n",
             //		pBot->name, (job_ptr->origin - pent->v.origin).Length());
