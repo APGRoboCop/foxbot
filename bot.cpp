@@ -104,9 +104,9 @@ extern int botskill_lower;
 extern int botskill_upper;
 extern bool defensive_chatter;
 extern bool offensive_chatter;
-extern bool b_observer_mode;
-extern bool b_botdontshoot;
-extern bool b_botdontmove;
+extern bool observer_mode;
+extern bool botdontshoot;
+extern bool botdontmove;
 
 extern int bot_chat;
 extern int min_bots;
@@ -1561,7 +1561,7 @@ edict_t *BotContactThink(bot_t *pBot) {
 
       // skip invalid players and skip self (i.e. this bot)
       if (pPlayer != nullptr && !pPlayer->free && pPlayer != pBot->pEdict && IsAlive(pPlayer)) {
-         if (b_observer_mode && !((pPlayer->v.flags & FL_FAKECLIENT) == FL_FAKECLIENT))
+         if (observer_mode && !((pPlayer->v.flags & FL_FAKECLIENT) == FL_FAKECLIENT))
             continue;
 
          // don't avoid if going for player with one of these weapons
@@ -2088,7 +2088,7 @@ static void BotAttackerCheck(bot_t *pBot) {
 
       // skip invalid players and skip self (i.e. this bot)
       if (pPlayer && !pPlayer->free && pPlayer != pBot->pEdict && IsAlive(pPlayer)) {
-         if (b_observer_mode && !(pPlayer->v.flags & FL_FAKECLIENT))
+         if (observer_mode && !(pPlayer->v.flags & FL_FAKECLIENT))
             continue;
 
          // is team play enabled?
@@ -2812,12 +2812,12 @@ static void BotComms(bot_t *pBot) {
                          //	pBot->follow = true;
                                          pBot->tracked_player = NULL;
                          //	pBot->track_ttime = pBot->f_think_time;
-                         }*/
+                         
          if (strcasecmp("die", cmd) == 0) {
             EMIT_SOUND_DYN2(pBot->pEdict, CHAN_VOICE, "barney/c1a4_ba_octo4.wav", 0, 0, SND_STOP, PITCH_NORM);
             EMIT_SOUND_DYN2(pBot->pEdict, CHAN_VOICE, "barney/c1a4_ba_octo4.wav", 1.0, ATTN_NORM, 0, PITCH_NORM);
          }
-         /*if(strcasecmp("roam", cmd) == 0)
+         if(strcasecmp("roam", cmd) == 0)
          {
                          UTIL_HostSay(pEdict, 0, "Roam mode");
                          pBot->follow = false;
@@ -3380,7 +3380,7 @@ bool SpyAmbushAreaCheck(bot_t *pBot, Vector &r_wallVector) {
       // skip invalid players and skip self (i.e. this bot)
       if (pPlayer && !pPlayer->free && pPlayer != pBot->pEdict && IsAlive(pPlayer)) {
          // ignore humans in observer mode
-         if (b_observer_mode && !(pPlayer->v.flags & FL_FAKECLIENT))
+         if (observer_mode && !(pPlayer->v.flags & FL_FAKECLIENT))
             continue;
 
          // ignore allied players
@@ -3842,14 +3842,14 @@ static void BotSenseEnvironment(bot_t *pBot) {
    BotGrenadeAvoidance(pBot);
 
    // if the bots are allowed to shoot(via the .cfg file or console)
-   if (b_botdontshoot == 0)
+   if (botdontshoot == 0)
       BotEnemyCheck(pBot);
    else
-      pBot->enemy.ptr = nullptr; // clear enemy pointer(b_botdontshoot is true)
+      pBot->enemy.ptr = nullptr; // clear enemy pointer(botdontshoot is true)
 
    BotAmmoCheck(pBot);
 
-   if (b_botdontmove == 1) { // Stationary bots for TFC minigolf maps [APG]RoboCop[CL]
+   if (botdontmove == 1) { // Stationary bots for TFC minigolf maps [APG]RoboCop[CL]
       pBot->f_move_speed = 0;
       pBot->f_side_speed = 0;
       pBot->f_vertical_speed = 0;

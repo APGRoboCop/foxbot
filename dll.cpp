@@ -91,9 +91,9 @@ extern bool botJustJoined[MAX_BOTS]; // tracks if bot is new to the game
 // bot settings //////////////////
 bool defensive_chatter = true;
 bool offensive_chatter = true;
-bool b_observer_mode = false;
-bool b_botdontshoot = false;
-bool b_botdontmove = false;
+bool observer_mode = false;
+bool botdontshoot = false;
+bool botdontmove = false;
 int bot_chat = 500;
 int bot_allow_moods = 1;  // whether bots can have different personality traits or not
 int bot_allow_humour = 1; // whether bots can choose to do daft things or not
@@ -1497,12 +1497,12 @@ void ClientCommand(edict_t *pEntity) {
          if (arg1 != nullptr && *arg1 != 0) {
             int temp = atoi(arg1);
             if (temp)
-               b_observer_mode = true;
+               observer_mode = true;
             else
-               b_observer_mode = false;
+               observer_mode = false;
          }
 
-         if (b_observer_mode)
+         if (observer_mode)
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "observer mode ENABLED\n");
          else
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "observer mode DISABLED\n");
@@ -1547,13 +1547,13 @@ void ClientCommand(edict_t *pEntity) {
             if ((*arg1 != 0)) {
                int temp = atoi(arg1);
                if (temp)
-                  b_botdontshoot = true;
+                  botdontshoot = true;
                else
-                  b_botdontshoot = false;
+                  botdontshoot = false;
             }
          }
 
-         if (b_botdontshoot)
+         if (botdontshoot)
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "botdontshoot ENABLED\n");
          else
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "botdontshoot DISABLED\n");
@@ -1566,13 +1566,13 @@ void ClientCommand(edict_t *pEntity) {
             if ((*arg1 != 0)) {
                int temp = atoi(arg1);
                if (temp)
-                  b_botdontmove = true;
+                  botdontmove = true;
                else
-                  b_botdontmove = false;
+                  botdontmove = false;
             }
          }
 
-         if (b_botdontmove)
+         if (botdontmove)
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "botdontmove ENABLED\n");
          else
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "botdontmove DISABLED\n");
@@ -5041,9 +5041,9 @@ static void ProcessBotCfgFile() {
       const int temp = atoi(arg1);
 
       if (temp)
-         b_observer_mode = true;
+         observer_mode = true;
       else
-         b_observer_mode = false;
+         observer_mode = false;
 
       return;
    }

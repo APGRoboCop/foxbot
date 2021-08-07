@@ -46,7 +46,7 @@ extern int num_areas;
 
 extern int mod_id;
 extern bot_weapon_t weapon_defs[MAX_WEAPONS];
-extern bool b_observer_mode;
+extern bool observer_mode;
 extern edict_t *pent_info_ctfdetect;
 extern float is_team_play;
 extern bool checked_teamplay;
@@ -258,7 +258,7 @@ static void BotFeigningEnemyCheck(bot_t *pBot) {
       // skip invalid players and skip self (i.e. this bot)
       if (pPlayer && !pPlayer->free && pPlayer != pBot->pEdict && IsAlive(pPlayer)) {
          // ignore humans in observer mode
-         if (b_observer_mode && !(pPlayer->v.flags & FL_FAKECLIENT))
+         if (observer_mode && !(pPlayer->v.flags & FL_FAKECLIENT))
             continue;
 
          // ignore allied players
@@ -567,7 +567,7 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
                   continue;
 
                // skip human players in observer mode
-               if (b_observer_mode && !(pPlayer->v.flags & FL_FAKECLIENT))
+               if (observer_mode && !(pPlayer->v.flags & FL_FAKECLIENT))
                   continue;
 
                player_team = UTIL_GetTeamColor(pPlayer);
@@ -731,7 +731,7 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
                continue;
 
             // skip human players in observer mode
-            if (b_observer_mode && !(pPlayer->v.flags & FL_FAKECLIENT))
+            if (observer_mode && !(pPlayer->v.flags & FL_FAKECLIENT))
                continue;
 
             player_is_ally = false;
@@ -888,7 +888,7 @@ static bool BotSpyDetectCheck(bot_t *pBot, edict_t *pNewEnemy) {
       const float distance = (pNewEnemy->v.origin - pBot->pEdict->v.origin).Length();
 
       // only consider disguised/feigning Spies who are near enough
-      if (distance < 1200.0f) {
+      if (distance < 1000.0f) {
          // a cool laser effect to show who has just spotted a Spy
          // (for debugging purposes)
          //	WaypointDrawBeam(INDEXENT(1), pBot->pEdict->v.origin,
