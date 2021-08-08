@@ -11,14 +11,17 @@ ifeq ($(OSTYPE),win32)
 	LINKFLAGS = -mdll -lm -Xlinker -add-stdcall-alias -s
 	DLLEND = .dll
 else
-	CPP = gcc-4.8 -m32
+	CPP = gcc -m32
 	ARCHFLAG = -fPIC
 	LINKFLAGS = -fPIC -shared -ldl -lm -s
 	DLLEND = .so
 endif
 
 TARGET = foxbot
-BASEFLAGS = -Wall -Wno-write-strings -Wno-attributes -std=gnu++11
+
+BASEFLAGS = -Wall -Wno-write-strings -Wno-attributes -std=gnu++14 \
+			-static-libstdc++ -shared-libgcc
+
 ARCHFLAG += -march=i686 -mtune=generic -msse -msse2 -mmmx
 
 ifeq ($(DBG_FLGS),1)
