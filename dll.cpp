@@ -374,7 +374,7 @@ static void varyBotTotal() {
    } else {
       // make sure f_interested_bots_change is sane
       // (gpGlobals->time resets on map change)
-      if ((f_interested_bots_change - 601.0f) > gpGlobals->time)
+      if (f_interested_bots_change - 601.0f > gpGlobals->time)
          f_interested_bots_change = gpGlobals->time + random_float(10.0f, 120.0f);
    }
 }
@@ -495,7 +495,7 @@ static void BotBalanceTeams_Casual() {
       nextBalanceCheck = gpGlobals->time + random_float(30.0f, 120.0f);
    else {
       // make sure nextBalanceCheck is sane(gpGlobals->time resets on map change)
-      if ((nextBalanceCheck - 600.0f) > gpGlobals->time)
+      if (nextBalanceCheck - 600.0f > gpGlobals->time)
          nextBalanceCheck = gpGlobals->time + random_float(15.0f, 120.0f);
       return;
    }
@@ -606,7 +606,7 @@ static bool BBotBalanceTeams(int a, int b) {
          char *infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(bots[i].pEdict);
          strcpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"));
          if (cl_name[0] != '\0') {
-            const int team = (bots[i].pEdict->v.team) - 1;
+            const int team = bots[i].pEdict->v.team - 1;
 
             if (team >= 0 && team < 4)
                bteams[team] = bteams[team] + 1;
@@ -635,7 +635,7 @@ static bool BBotBalanceTeams(int a, int b) {
 // This function will balance the human players amongst the teams by forcing
 // them to switch teams if necessary.
 static bool HBalanceTeams(int a, int b) {
-   if ((playersPerTeam[a - 1] - 1) > playersPerTeam[b - 1] && (max_team_players[b - 1] > playersPerTeam[b - 1] || max_team_players[b - 1] == 0) && is_team[b - 1]) {
+   if (playersPerTeam[a - 1] - 1 > playersPerTeam[b - 1] && (max_team_players[b - 1] > playersPerTeam[b - 1] || max_team_players[b - 1] == 0) && is_team[b - 1]) {
       for (int i = 1; i <= 32; i++) {
          bool not_bot = true;
          for (int j = 31; j >= 0; j--) {
@@ -664,7 +664,7 @@ void GameDLLInit() {
       clients[i] = nullptr;
 
    // initialize the bots array of structures...
-   memset(bots, 0, sizeof(bots));
+   memset(bots, 0, sizeof bots);
 
    // read the bot names from the bot name file
    BotNameInit();
@@ -810,7 +810,7 @@ void chatClass::pickRandomChatString(char *msg, size_t maxLength, const int chat
 
 int DispatchSpawn(edict_t *pent) {
    if (gpGlobals->deathmatch) {
-      char *pClassname = (char *)STRING(pent->v.classname);
+      auto pClassname = (char *)STRING(pent->v.classname);
 
       if (debug_engine) {
          fp = UTIL_OpenFoxbotLog();
@@ -959,9 +959,9 @@ void DispatchThink(edict_t *pent) {
             Vector end;
             Vector st;
             float zz = pBot->enemy.ptr->v.maxs.z;
-            zz = (zz / 4) / 2;
+            zz = zz / 4 / 2;
             float xx = pBot->enemy.ptr->v.maxs.x;
-            xx = (xx / 2);
+            xx = xx / 2;
 
             if (scanpos > 1)
                zz = zz * 2;
@@ -1002,12 +1002,12 @@ void DispatchThink(edict_t *pent) {
             char text[511];
             int amb = 0;
             int vidsize = 2;
-            float sz = ((pBot->enemy.ptr->v.maxs.z) * (vidsize / distance)) * 100;
+            float sz = pBot->enemy.ptr->v.maxs.z * (vidsize / distance) * 100;
             int d = GETENTITYILLUM(pBot->enemy.ptr);
             if (amb == 0) {
                edict_t *s = nullptr;
                edict_t *pPoint = nullptr;
-               while ((s = FIND_ENTITY_IN_SPHERE(s, pBot->enemy.ptr->v.origin, 50)) != nullptr && (!FNullEnt(s)) && amb == 0) {
+               while ((s = FIND_ENTITY_IN_SPHERE(s, pBot->enemy.ptr->v.origin, 50)) != nullptr && !FNullEnt(s) && amb == 0) {
                   if (strcmp(STRING(s->v.classname), "entity_botlightvalue") == 0)
                      pPoint = s;
                }
@@ -1069,7 +1069,7 @@ void DispatchThink(edict_t *pent) {
                vel.z = -vel.z;
 
             float veloff = vel.x + vel.y + vel.z;
-            veloff = (veloff * (vidsize / distance)) * 10;
+            veloff = veloff * (vidsize / distance) * 10;
 
             snprintf(text, 510, "Vis %.1f\nAmb %d %d\nSz %.1f\nveloff %.1f", p_vis, amb, d, sz, veloff);
 
@@ -1184,7 +1184,7 @@ void DispatchKeyValue(edict_t *pentKeyvalue, KeyValueData *pkvd) {
          else if (strcmp(pkvd->szKeyName, "team4_allies") == 0) // GREEN allies
             team_allies[3] = atoi(pkvd->szValue);
       } else if (pent_info_tfdetect == nullptr) {
-         if ((strcmp(pkvd->szKeyName, "classname") == 0) && (strcmp(pkvd->szValue, "info_tfdetect") == 0)) {
+         if (strcmp(pkvd->szKeyName, "classname") == 0 && strcmp(pkvd->szValue, "info_tfdetect") == 0) {
             pent_info_tfdetect = pentKeyvalue;
          }
       }
@@ -1193,12 +1193,12 @@ void DispatchKeyValue(edict_t *pentKeyvalue, KeyValueData *pkvd) {
          if (strcmp(pkvd->szKeyName, "team_no") == 0)
             flags[flag_index].team_no = atoi(pkvd->szValue);
 
-         if ((strcmp(pkvd->szKeyName, "mdl") == 0) && ((strcmp(pkvd->szValue, "models/flag.mdl") == 0) || (strcmp(pkvd->szValue, "models/keycard.mdl") == 0) || (strcmp(pkvd->szValue, "models/ball.mdl") == 0))) {
+         if (strcmp(pkvd->szKeyName, "mdl") == 0 && (strcmp(pkvd->szValue, "models/flag.mdl") == 0 || strcmp(pkvd->szValue, "models/keycard.mdl") == 0 || strcmp(pkvd->szValue, "models/ball.mdl") == 0)) {
             flags[flag_index].mdl_match = true;
             num_flags++;
          }
       } else if (pent_item_tfgoal == nullptr) {
-         if ((strcmp(pkvd->szKeyName, "classname") == 0) && (strcmp(pkvd->szValue, "item_tfgoal") == 0)) {
+         if (strcmp(pkvd->szKeyName, "classname") == 0 && strcmp(pkvd->szValue, "item_tfgoal") == 0) {
             if (num_flags < MAX_FLAGS) {
                pent_item_tfgoal = pentKeyvalue;
 
@@ -1212,7 +1212,7 @@ void DispatchKeyValue(edict_t *pentKeyvalue, KeyValueData *pkvd) {
       } else
          pent_item_tfgoal = nullptr; // reset for non-flag item_tfgoal's
 
-      if ((strcmp(pkvd->szKeyName, "classname") == 0) && ((strcmp(pkvd->szValue, "info_player_teamspawn") == 0) || (strcmp(pkvd->szValue, "info_tf_teamcheck") == 0) || (strcmp(pkvd->szValue, "i_p_t") == 0))) {
+      if (strcmp(pkvd->szKeyName, "classname") == 0 && (strcmp(pkvd->szValue, "info_player_teamspawn") == 0 || strcmp(pkvd->szValue, "info_tf_teamcheck") == 0 || strcmp(pkvd->szValue, "i_p_t") == 0)) {
          temp_pent = pentKeyvalue;
       } else if (pentKeyvalue == temp_pent) {
          if (strcmp(pkvd->szKeyName, "team_no") == 0) {
@@ -1257,7 +1257,7 @@ BOOL ClientConnect(edict_t *pEntity, const char *pszName, const char *pszAddress
       // check if this is NOT a bot joining the server...
       if (strcmp(pszAddress, "127.0.0.1") != 0) {
          int i = 0;
-         while ((i < 32) && (clients[i] != nullptr && clients[i] != pEntity))
+         while (i < 32 && (clients[i] != nullptr && clients[i] != pEntity))
             i++;
          if (i < 32)
             clients[i] = pEntity;
@@ -1327,7 +1327,7 @@ void ClientDisconnect(edict_t *pEntity) {
       } else {
          i = 0;
 
-         while ((i < 32) && (clients[i] != pEntity))
+         while (i < 32 && clients[i] != pEntity)
             i++;
 
          if (i < 32)
@@ -1355,20 +1355,20 @@ void ClientCommand(edict_t *pEntity) {
       if (debug_engine) {
          fp = UTIL_OpenFoxbotLog();
          fprintf(fp, "ClientCommand: %s %p", pcmd, (void *)pEntity);
-         if ((arg1 != nullptr)) {
-            if ((*arg1 != 0))
+         if (arg1 != nullptr) {
+            if (*arg1 != 0)
                fprintf(fp, " 1:%s", arg1);
          }
-         if ((arg2 != nullptr)) {
-            if ((*arg2 != 0))
+         if (arg2 != nullptr) {
+            if (*arg2 != 0)
                fprintf(fp, " 2:%s", arg2);
          }
-         if ((arg3 != nullptr)) {
-            if ((*arg3 != 0))
+         if (arg3 != nullptr) {
+            if (*arg3 != 0)
                fprintf(fp, " 3:%s", arg3);
          }
-         if ((arg4 != nullptr)) {
-            if ((*arg4 != 0))
+         if (arg4 != nullptr) {
+            if (*arg4 != 0)
                fprintf(fp, " 4:%s", arg4);
          }
          fprintf(fp, "\n");
@@ -1376,7 +1376,7 @@ void ClientCommand(edict_t *pEntity) {
       }
    }
 
-   if ((gpGlobals->deathmatch) && (!IS_DEDICATED_SERVER()) && pEntity == INDEXENT(1)) {
+   if (gpGlobals->deathmatch && !IS_DEDICATED_SERVER() && pEntity == INDEXENT(1)) {
       const char *pcmd = CMD_ARGV(0);
       const char *arg1 = CMD_ARGV(1);
       const char *arg2 = CMD_ARGV(2);
@@ -1387,20 +1387,20 @@ void ClientCommand(edict_t *pEntity) {
       if (debug_engine) {
          fp = UTIL_OpenFoxbotLog();
          fprintf(fp, "ClientCommand: %s %p", pcmd, (void *)pEntity);
-         if ((arg1 != nullptr)) {
-            if ((*arg1 != 0))
+         if (arg1 != nullptr) {
+            if (*arg1 != 0)
                fprintf(fp, " '%s'(1)", arg1);
          }
-         if ((arg2 != nullptr)) {
-            if ((*arg2 != 0))
+         if (arg2 != nullptr) {
+            if (*arg2 != 0)
                fprintf(fp, " '%s'(2)", arg2);
          }
-         if ((arg3 != nullptr)) {
-            if ((*arg3 != 0))
+         if (arg3 != nullptr) {
+            if (*arg3 != 0)
                fprintf(fp, " '%s'(3)", arg3);
          }
-         if ((arg4 != nullptr)) {
-            if ((*arg4 != 0))
+         if (arg4 != nullptr) {
+            if (*arg4 != 0)
                fprintf(fp, " '%s'(4)", arg4);
          }
          fprintf(fp, "\n");
@@ -1408,7 +1408,7 @@ void ClientCommand(edict_t *pEntity) {
       }
 
       if (FStrEq(pcmd, "addbot") || FStrEq(pcmd, "foxbot_addbot")) {
-         if (arg2 != nullptr && (*arg2 != 0))
+         if (arg2 != nullptr && *arg2 != 0)
             BotCreate(pEntity, arg1, arg2, arg3, arg4);
          else {
             char c[8];
@@ -1466,8 +1466,8 @@ void ClientCommand(edict_t *pEntity) {
          return;
       }
       if (FStrEq(pcmd, "bot_bot_balance")) {
-         if ((arg1 != nullptr)) {
-            if ((*arg1 != 0)) {
+         if (arg1 != nullptr) {
+            if (*arg1 != 0) {
                int temp = atoi(arg1);
                if (temp)
                   bot_bot_balance = true;
@@ -1543,8 +1543,8 @@ void ClientCommand(edict_t *pEntity) {
             RETURN_META(MRES_SUPERCEDE);
          return;
       } else if (FStrEq(pcmd, "botdontshoot")) {
-         if ((arg1 != nullptr)) {
-            if ((*arg1 != 0)) {
+         if (arg1 != nullptr) {
+            if (*arg1 != 0) {
                int temp = atoi(arg1);
                if (temp)
                   botdontshoot = true;
@@ -1562,8 +1562,8 @@ void ClientCommand(edict_t *pEntity) {
             RETURN_META(MRES_SUPERCEDE);
          return;
       } else if (FStrEq(pcmd, "botdontmove")) {
-         if ((arg1 != nullptr)) {
-            if ((*arg1 != 0)) {
+         if (arg1 != nullptr) {
+            if (*arg1 != 0) {
                int temp = atoi(arg1);
                if (temp)
                   botdontmove = true;
@@ -1613,7 +1613,7 @@ void ClientCommand(edict_t *pEntity) {
                index = 0;
 
                while (index < 32) {
-                  if ((bots[index].is_used && strcasecmp(bots[index].name, botname) == 0))
+                  if (bots[index].is_used && strcasecmp(bots[index].name, botname) == 0)
                      break;
                   index++;
                }
@@ -1625,7 +1625,7 @@ void ClientCommand(edict_t *pEntity) {
          } else {
             index = 0;
 
-            while ((bots[index].is_used == false) && (index < 32))
+            while (bots[index].is_used == false && index < 32)
                index++;
 
             if (index < 32) {
@@ -1657,8 +1657,8 @@ void ClientCommand(edict_t *pEntity) {
             RETURN_META(MRES_SUPERCEDE);
          return;
       } else if (FStrEq(pcmd, "waypoint_author")) {
-         if ((arg1 != nullptr)) {
-            if ((*arg1 != 0)) {
+         if (arg1 != nullptr) {
+            if (*arg1 != 0) {
                char message[512];
                sprintf(message, "Waypoint author set to : %s", arg1);
                CLIENT_PRINTF(pEntity, print_console, UTIL_VarArgs(message));
@@ -2045,7 +2045,7 @@ void ClientCommand(edict_t *pEntity) {
          if (mr_meta)
             RETURN_META(MRES_SUPERCEDE);
          return;
-      } else if (FStrEq(pcmd, "menuselect") && (g_menu_state != MENU_NONE)) {
+      } else if (FStrEq(pcmd, "menuselect") && g_menu_state != MENU_NONE) {
          if (g_menu_state == MENU_1) // main menu...
          {
             if (FStrEq(arg1, "1")) // team specific...
@@ -2104,7 +2104,7 @@ void ClientCommand(edict_t *pEntity) {
          {
             int team = atoi(arg1);
             team--; // make 0 - 3
-            if ((waypoints[g_menu_waypoint].flags & W_FL_TEAM_SPECIFIC) && (team >= 0 && team <= 3)) {
+            if (waypoints[g_menu_waypoint].flags & W_FL_TEAM_SPECIFIC && (team >= 0 && team <= 3)) {
                waypoints[g_menu_waypoint].flags &= ~W_FL_TEAM;
                waypoints[g_menu_waypoint].flags &= ~W_FL_TEAM_SPECIFIC; // off
             } else {
@@ -2318,7 +2318,7 @@ void ClientCommand(edict_t *pEntity) {
       } else if (FStrEq(pcmd, "search")) {
          edict_t *pent = nullptr;
          ClientPrint(pEntity, HUD_PRINTCONSOLE, "searching...\n");
-         while ((pent = FIND_ENTITY_IN_SPHERE(pent, pEntity->v.origin, 200.0f)) != nullptr && (!FNullEnt(pent))) {
+         while ((pent = FIND_ENTITY_IN_SPHERE(pent, pEntity->v.origin, 200.0f)) != nullptr && !FNullEnt(pent)) {
             char str[80];
             sprintf(str, "Found %s at %5.2f %5.2f %5.2f modelindex- %d t %s tn %s\n", STRING(pent->v.classname), pent->v.origin.x, pent->v.origin.y, pent->v.origin.z, pent->v.modelindex, STRING(pent->v.target), STRING(pent->v.targetname));
             ClientPrint(pEntity, HUD_PRINTCONSOLE, str);
@@ -2398,7 +2398,7 @@ void StartFrame() { // v7 last frame timing
          display_start_time = gpGlobals->time + 10;
          need_to_open_cfg = true;
          // check if mapname_bot.cfg file exists...
-         if ((gpGlobals->time + 0.1) < previous_time) {
+         if (gpGlobals->time + 0.1 < previous_time) {
             char mapname[64];
             char filename[256];
             strcpy(mapname, STRING(gpGlobals->mapname));
@@ -2431,7 +2431,7 @@ void StartFrame() { // v7 last frame timing
                      bots[index].respawn_state = RESPAWN_NEED_TO_RESPAWN;
                      count++;
                   } // check for any bots that were very recently kicked...
-                  if ((bots[index].f_kick_time + 5.0) > previous_time) {
+                  if (bots[index].f_kick_time + 5.0 > previous_time) {
                      bots[index].respawn_state = RESPAWN_NEED_TO_RESPAWN;
                      count++;
                   } else
@@ -2459,7 +2459,7 @@ void StartFrame() { // v7 last frame timing
       UpdateFlagCarrierList(); // need to do this once per frame
       for (bot_index = 0; bot_index < gpGlobals->maxClients; bot_index++) {
          // if this bot is active, and the bot is not respawning
-         if ((bots[bot_index].is_used) && (bots[bot_index].respawn_state == RESPAWN_IDLE)) {
+         if (bots[bot_index].is_used && bots[bot_index].respawn_state == RESPAWN_IDLE) {
             BotThink(&bots[bot_index]);
             count++;
          }
@@ -2475,16 +2475,16 @@ void StartFrame() { // v7 last frame timing
             }
          }
       } // are we currently respawning bots and is it time to spawn one yet?
-      if ((respawn_time > 1.0) && (respawn_time <= gpGlobals->time)) {
+      if (respawn_time > 1.0 && respawn_time <= gpGlobals->time) {
          int index1 = 0; // Not wanted? [APG]RoboCop[CL]
          // find bot needing to be respawned...
-         while ((index1 < 32) && (bots[index1].respawn_state != RESPAWN_NEED_TO_RESPAWN))
+         while (index1 < 32 && bots[index1].respawn_state != RESPAWN_NEED_TO_RESPAWN)
             index1++;
          if (index1 < 32) {
             bots[index1].respawn_state = RESPAWN_IS_RESPAWNING;
             bots[index1].is_used = false; // free up this slot
             // respawn 1 bot then wait a while(otherwise engine crashes)
-            if ((mod_id != TFC_DLL)) {
+            if (mod_id != TFC_DLL) {
                char c_skill[2];
                sprintf(c_skill, "%d", bots[index1].bot_skill);
                BotCreate(nullptr, bots[index1].skin, bots[index1].name, c_skill, nullptr);
@@ -2495,7 +2495,7 @@ void StartFrame() { // v7 last frame timing
                sprintf(c_skill, "%d", bots[index1].bot_skill);
                sprintf(c_team, "%d", bots[index1].bot_team);
                sprintf(c_class, "%d", bots[index1].bot_class);
-               if ((mod_id == TFC_DLL))
+               if (mod_id == TFC_DLL)
                   BotCreate(nullptr, nullptr, nullptr, bots[index1].name, c_skill);
                else
                   BotCreate(nullptr, c_team, c_class, bots[index1].name, c_skill);
@@ -2588,7 +2588,7 @@ void StartFrame() { // v7 last frame timing
                }
             }
          }
-         if ((bot_cfg_pause_time >= 1.0) && (bot_cfg_pause_time <= gpGlobals->time)) {
+         if (bot_cfg_pause_time >= 1.0 && bot_cfg_pause_time <= gpGlobals->time) {
             // process bot.cfg file options...
             ProcessBotCfgFile();
             display_start_time = 0;
@@ -2597,9 +2597,9 @@ void StartFrame() { // v7 last frame timing
             display_bot_vars = false;
          }
       } // if time to check for server commands then do so...
-      if ((check_server_cmd <= gpGlobals->time) && IS_DEDICATED_SERVER()) {
+      if (check_server_cmd <= gpGlobals->time && IS_DEDICATED_SERVER()) {
          check_server_cmd = gpGlobals->time + 1.0;
-         char *cvar_bot = (char *)CVAR_GET_STRING("bot");
+         auto cvar_bot = const_cast<char *>(CVAR_GET_STRING("bot"));
          if (cvar_bot && cvar_bot[0]) {
             char cmd_line[80];
             char *cmd, *arg1, *arg2, *arg3, *arg4;
@@ -2607,22 +2607,22 @@ void StartFrame() { // v7 last frame timing
             index = 0;
             cmd = cmd_line;
             arg1 = arg2 = arg3 = arg4 = nullptr; // skip to blank or end of string...
-            while ((cmd_line[index] != ' ') && (cmd_line[index] != 0))
+            while (cmd_line[index] != ' ' && cmd_line[index] != 0)
                index++;
             if (cmd_line[index] == ' ') {
                cmd_line[index++] = 0;
                arg1 = &cmd_line[index]; // skip to blank or end of string...
-               while ((cmd_line[index] != ' ') && (cmd_line[index] != 0))
+               while (cmd_line[index] != ' ' && cmd_line[index] != 0)
                   index++;
                if (cmd_line[index] == ' ') {
                   cmd_line[index++] = 0;
                   arg2 = &cmd_line[index]; // skip to blank or end of string...
-                  while ((cmd_line[index] != ' ') && (cmd_line[index] != 0))
+                  while (cmd_line[index] != ' ' && cmd_line[index] != 0)
                      index++;
                   if (cmd_line[index] == ' ') {
                      cmd_line[index++] = 0;
                      arg3 = &cmd_line[index]; // skip to blank or end of string...
-                     while ((cmd_line[index] != ' ') && (cmd_line[index] != 0))
+                     while (cmd_line[index] != ' ' && cmd_line[index] != 0)
                         index++;
                      if (cmd_line[index] == ' ') {
                         cmd_line[index++] = 0;
@@ -2643,8 +2643,8 @@ void StartFrame() { // v7 last frame timing
             } else if (strcmp(cmd, "bot_info") == 0) {
                DisplayBotInfo();
             } else if (strcmp(cmd, "bot_team_balance") == 0) {
-               if ((arg1 != nullptr)) {
-                  if ((*arg1 != 0)) {
+               if (arg1 != nullptr) {
+                  if (*arg1 != 0) {
                      int temp = atoi(arg1);
                      if (temp)
                         bot_team_balance = true;
@@ -2657,8 +2657,8 @@ void StartFrame() { // v7 last frame timing
                else
                   printf("bot_team_balance (0) Off\n");
             } else if (strcmp(cmd, "bot_bot_balance") == 0) {
-               if ((arg1 != nullptr)) {
-                  if ((*arg1 != 0)) {
+               if (arg1 != nullptr) {
+                  if (*arg1 != 0) {
                      int temp = atoi(arg1);
                      if (temp)
                         bot_bot_balance = true;
@@ -2672,18 +2672,18 @@ void StartFrame() { // v7 last frame timing
                   printf("bot_bot_balance (0) Off\n");
             } else if (strcmp(cmd, "kickall") == 0) { // kick all bots off of the server after time/frag limit...
                kickBots(MAX_BOTS, -1);
-            } else if ((strcmp(cmd, "kickteam") == 0) || (strcmp(cmd, "foxbot_kickteam") == 0)) {
+            } else if (strcmp(cmd, "kickteam") == 0 || strcmp(cmd, "foxbot_kickteam") == 0) {
                if (!arg1)
                   printf("Proper syntax, e.g. bot \"kickteam 1\"\n");
                else {
                   int whichTeam;
-                  if ((strcmp(arg1, "blue") == 0))
+                  if (strcmp(arg1, "blue") == 0)
                      whichTeam = 1;
-                  else if ((strcmp(arg1, "red") == 0))
+                  else if (strcmp(arg1, "red") == 0)
                      whichTeam = 2;
-                  else if ((strcmp(arg1, "yellow") == 0))
+                  else if (strcmp(arg1, "yellow") == 0)
                      whichTeam = 3;
-                  else if ((strcmp(arg1, "green") == 0))
+                  else if (strcmp(arg1, "green") == 0)
                      whichTeam = 4;
                   else
                      whichTeam = atoi(arg1);
@@ -2735,7 +2735,7 @@ void StartFrame() { // v7 last frame timing
                changeBotSetting("bot_use_grenades", &bot_use_grenades, arg1, 0, 2, SETTING_SOURCE_SERVER_COMMAND);
             } else if (strcmp(cmd, "dump") == 0) {
                edict_t *pent = nullptr;
-               while ((pent = FIND_ENTITY_IN_SPHERE(pent, Vector(0, 0, 0), 8192)) != nullptr && (!FNullEnt(pent))) {
+               while ((pent = FIND_ENTITY_IN_SPHERE(pent, Vector(0, 0, 0), 8192)) != nullptr && !FNullEnt(pent)) {
                   UTIL_SavePent(pent);
                }
             } // dedicated server input
@@ -2772,7 +2772,7 @@ void StartFrame() { // v7 last frame timing
                // is this a valid connected player?
                if (cl_name[0] != '\0') {
                   count1++;
-                  int team = (INDEXENT(i)->v.team) - 1;
+                  int team = INDEXENT(i)->v.team - 1;
                   if (team > -1 && team < 4)
                      ++playersPerTeam[team];
                }
@@ -2800,7 +2800,7 @@ void StartFrame() { // v7 last frame timing
          if ((count1 < interested_bots || bot_total_varies == 0) && count1 < max_bots && max_bots != -1) {
             BotCreate(nullptr, nullptr, nullptr, nullptr, nullptr);
          } // do bot max_bot kick here... if there are currently more than the minimum number of bots running then kick one of the bots off the server...
-         if (((count1 > interested_bots && bot_total_varies) || count1 > max_bots) && max_bots != -1) {
+         if ((count1 > interested_bots && bot_total_varies || count1 > max_bots) && max_bots != -1) {
             // count the number of bots present
             int bot_count = 0;
             for (i = 0; i <= 31; i++) {
@@ -2822,7 +2822,7 @@ void StartFrame() { // v7 last frame timing
    } // this is where the behaviour config is interpreted... i.e. new lev, load behaviour, and parse it
    if (strcmp(STRING(gpGlobals->mapname), prevmapname) != 0) {
       edict_t *pent = nullptr;
-      while ((pent = FIND_ENTITY_IN_SPHERE(pent, Vector(0, 0, 0), 8000)) != nullptr && (!FNullEnt(pent))) {
+      while ((pent = FIND_ENTITY_IN_SPHERE(pent, Vector(0, 0, 0), 8000)) != nullptr && !FNullEnt(pent)) {
          if (pent->v.absmin.x == -1 && pent->v.absmin.y == -1 && pent->v.absmin.z == -1) {
             if (pent->v.absmax.x == 1 && pent->v.absmax.y == 1 && pent->v.absmax.z == 1) {
                fp = UTIL_OpenFoxbotLog();
@@ -2923,7 +2923,7 @@ void StartFrame() { // v7 last frame timing
       strcat(mapname, "_fb.cfg");
       UTIL_BuildFileName(filename, 255, "scripts", mapname);
       FILE *bfp = fopen(filename, "r");
-      if ((bfp != nullptr) && mod_id == TFC_DLL) {
+      if (bfp != nullptr && mod_id == TFC_DLL) {
          script_loaded = true;
          char msg[293];
          sprintf(msg, "\nExecuting FoXBot TFC script file:%s\n\n", filename);
@@ -2931,7 +2931,7 @@ void StartFrame() { // v7 last frame timing
          int ch = fgetc(bfp);
          int i1; // Not wanted? [APG]RoboCop[CL]
          char buffer[14097];
-         for (i1 = 0; (i1 < 14096) && (feof(bfp) == 0); i1++) {
+         for (i1 = 0; i1 < 14096 && feof(bfp) == 0; i1++) {
             buffer[i1] = (char)ch;
             if (buffer[i1] == '\t')
                buffer[i1] = ' ';
@@ -2946,7 +2946,7 @@ void StartFrame() { // v7 last frame timing
          int ifsec = 0;      // used to check if were in an if statement
          char *buf = buffer;
          bool random_shit_error = false;
-         for (i1 = 0; (i1 < 14096) && (buffer[i1] != '\0') && (!random_shit_error); i1++) {
+         for (i1 = 0; i1 < 14096 && buffer[i1] != '\0' && !random_shit_error; i1++) {
             // first off... we need to ignore comment lines!
             if (strncmp(buf, "//", 2) == 0) {
                commentline = true;
@@ -3512,7 +3512,7 @@ void StartFrame() { // v7 last frame timing
                      } // move to end
                   }
                } // end of multipoint ifs
-               else if ((buffer[i1] != '/' && buffer[i1] != '{' && buffer[i1] != '}' && buffer[i1] != ' ' && buffer[i1] != '\n') && commentline == false && random_shit_error == false) {
+               else if (buffer[i1] != '/' && buffer[i1] != '{' && buffer[i1] != '}' && buffer[i1] != ' ' && buffer[i1] != '\n' && commentline == false && random_shit_error == false) {
                   random_shit_error = true;
                   ALERT(at_console, "\\/\\/\\/\\/\\/\\/\n");
                   ALERT(at_console, buf);
@@ -3544,7 +3544,7 @@ void StartFrame() { // v7 last frame timing
                      ifsec = 0; // cancel ifs before ending message section
                   break;
                default:;
-               };
+               }
             }
             if (!random_shit_error)
                buf = buf + 1; // like i++ but for stringcmp stuff
@@ -3600,7 +3600,7 @@ void StartFrame() { // v7 last frame timing
             int cnt;
             int current_msg;
             current_msg = -1;
-            for (i1 = 0; (i1 < 14096) && (buffer[i1] != '\0'); i1++) {
+            for (i1 = 0; i1 < 14096 && buffer[i1] != '\0'; i1++) {
                // first off.. need to ignore comment lines!
                if (strncmp(buf, "//", 2) == 0) {
                   commentline = true;
@@ -4523,7 +4523,7 @@ void StartFrame() { // v7 last frame timing
                      sprintf(msg, "y_mp_%s", pnts);
                      strcpy(curr->ifs, msg);
                   } // end of multipoint ifs
-                  else if ((buffer[i1] != '/' && buffer[i1] != '{' && buffer[i1] != '}' && buffer[i1] != ' ' && buffer[i1] != '\n') && commentline == false && random_shit_error == false) {
+                  else if (buffer[i1] != '/' && buffer[i1] != '{' && buffer[i1] != '}' && buffer[i1] != ' ' && buffer[i1] != '\n' && commentline == false && random_shit_error == false) {
                      random_shit_error = true;
                      ALERT(at_console, "\\/\\/\\/\\/\\/\\/\n");
                      ALERT(at_console, buf);
@@ -4556,7 +4556,7 @@ void StartFrame() { // v7 last frame timing
                         msgsection = 0;
                      break;
                   default:;
-                  };
+                  }
                }
                buf = buf + 1; // like i++ but for stringcmp stuff
             }
@@ -4618,7 +4618,7 @@ void FakeClientCommand(edict_t *pBot, char *arg1, char *arg2, char *arg3) {
       g_argv[i] = '\0';
       i++;
    }
-   if ((arg1 == nullptr) || (*arg1 == 0))
+   if (arg1 == nullptr || *arg1 == 0)
       return;
 
    if (strncmp(arg1, "kill", 4) == 0) {
@@ -4626,10 +4626,10 @@ void FakeClientCommand(edict_t *pBot, char *arg1, char *arg2, char *arg3) {
       return;
    }
 
-   if ((arg2 == nullptr) || (*arg2 == 0)) {
+   if (arg2 == nullptr || *arg2 == 0) {
       length = snprintf(&g_argv[0], 250, "%s", arg1);
       fake_arg_count = 1;
-   } else if ((arg3 == nullptr) || (*arg3 == 0)) {
+   } else if (arg3 == nullptr || *arg3 == 0) {
       length = snprintf(&g_argv[0], 250, "%s %s", arg1, arg2);
       fake_arg_count = 2;
    } else {
@@ -4665,10 +4665,10 @@ const char *Cmd_Args() {
 
          // is it a "say" or "say_team" client command ?
          if (strncmp("say ", g_argv, 4) == 0)
-            return (&g_argv[0] + 4); // skip the "say" bot client command (bug in HL engine)
+            return &g_argv[0] + 4; // skip the "say" bot client command (bug in HL engine)
          // sprintf(g_argv,"%s",&g_argv[0] + 4);
          if (strncmp("say_team ", g_argv, 9) == 0)
-            return (&g_argv[0] + 9);
+            return &g_argv[0] + 9;
          // skip the "say_team" bot client command (bug in HL engine)
          // sprintf(g_argv,"%s",&g_argv[0] + 9);
 
@@ -4712,20 +4712,20 @@ const char *GetArg(const char *command, int arg_number) {
    arg[0] = 0;                         // reset arg
    const int length = strlen(command); // get length of command
    // while we have not reached end of line
-   while ((index < length) && (arg_count <= arg_number)) {
-      while ((index < length) && (command[index] == ' '))
+   while (index < length && arg_count <= arg_number) {
+      while (index < length && command[index] == ' ')
          index++; // ignore spaces
       // is this field multi-word between quotes or single word ?
       if (command[index] == '"') {
          index++;            // move one step further to bypass the quote
          fieldstart = index; // save field start position
-         while ((index < length) && (command[index] != '"'))
+         while (index < length && command[index] != '"')
             index++;            // reach end of field
          fieldstop = index - 1; // save field stop position
          index++;               // move one step further to bypass the quote
       } else {
          fieldstart = index; // save field start position
-         while ((index < length) && (command[index] != ' '))
+         while (index < length && command[index] != ' ')
             index++;            // reach end of field
          fieldstop = index - 1; // save field stop position
       }
@@ -4737,7 +4737,7 @@ const char *GetArg(const char *command, int arg_number) {
       }
       arg_count++; // we have processed one argument more
    }
-   return (&arg[0]); // returns the wanted argument
+   return &arg[0]; // returns the wanted argument
 }
 
 const char *Cmd_Argv(int argc) {
@@ -4782,7 +4782,7 @@ int Cmd_Argc() {
 
 // meta mod post functions
 
-void DispatchKeyValue_Post(edict_t *pentKeyvalue, KeyValueData *pkvd) {
+void DispatchKeyValue_Post(edict_t *pentKeyvalue, const KeyValueData *pkvd) {
    // fp=UTIL_OpenFoxbotLog(); fprintf(fp, "DispatchKeyValue: %x %s=%s\n",pentKeyvalue,pkvd->szKeyName,pkvd->szValue);
    // fclose(fp);
 
@@ -4817,7 +4817,7 @@ void DispatchKeyValue_Post(edict_t *pentKeyvalue, KeyValueData *pkvd) {
          else if (strcmp(pkvd->szKeyName, "team4_allies") == 0) // GREEN allies
             team_allies[3] = atoi(pkvd->szValue);
       } else if (pent_info_tfdetect == nullptr) {
-         if ((strcmp(pkvd->szKeyName, "classname") == 0) && (strcmp(pkvd->szValue, "info_tfdetect") == 0)) {
+         if (strcmp(pkvd->szKeyName, "classname") == 0 && strcmp(pkvd->szValue, "info_tfdetect") == 0) {
             pent_info_tfdetect = pentKeyvalue;
          }
       }
@@ -4826,12 +4826,12 @@ void DispatchKeyValue_Post(edict_t *pentKeyvalue, KeyValueData *pkvd) {
          if (strcmp(pkvd->szKeyName, "team_no") == 0)
             flags[flag_index].team_no = atoi(pkvd->szValue);
 
-         if ((strcmp(pkvd->szKeyName, "mdl") == 0) && ((strcmp(pkvd->szValue, "models/flag.mdl") == 0) || (strcmp(pkvd->szValue, "models/keycard.mdl") == 0) || (strcmp(pkvd->szValue, "models/ball.mdl") == 0))) {
+         if (strcmp(pkvd->szKeyName, "mdl") == 0 && (strcmp(pkvd->szValue, "models/flag.mdl") == 0 || strcmp(pkvd->szValue, "models/keycard.mdl") == 0 || strcmp(pkvd->szValue, "models/ball.mdl") == 0)) {
             flags[flag_index].mdl_match = true;
             num_flags++;
          }
       } else if (pent_item_tfgoal == nullptr) {
-         if ((strcmp(pkvd->szKeyName, "classname") == 0) && (strcmp(pkvd->szValue, "item_tfgoal") == 0)) {
+         if (strcmp(pkvd->szKeyName, "classname") == 0 && strcmp(pkvd->szValue, "item_tfgoal") == 0) {
             if (num_flags < MAX_FLAGS) {
                pent_item_tfgoal = pentKeyvalue;
 
@@ -4847,7 +4847,7 @@ void DispatchKeyValue_Post(edict_t *pentKeyvalue, KeyValueData *pkvd) {
          pent_item_tfgoal = nullptr; // reset for non-flag item_tfgoal's
       }
 
-      if ((strcmp(pkvd->szKeyName, "classname") == 0) && ((strcmp(pkvd->szValue, "info_player_teamspawn") == 0) || (strcmp(pkvd->szValue, "info_tf_teamcheck") == 0) || (strcmp(pkvd->szValue, "i_p_t") == 0))) {
+      if (strcmp(pkvd->szKeyName, "classname") == 0 && (strcmp(pkvd->szValue, "info_player_teamspawn") == 0 || strcmp(pkvd->szValue, "info_tf_teamcheck") == 0 || strcmp(pkvd->szValue, "i_p_t") == 0)) {
          temp_pent = pentKeyvalue;
       } else if (pentKeyvalue == temp_pent) {
          if (strcmp(pkvd->szKeyName, "team_no") == 0) {
@@ -4903,7 +4903,7 @@ static void ProcessBotCfgFile() {
    while (ch == ' ')
       ch = fgetc(bot_cfg_fp);
 
-   while ((ch != EOF) && (ch != '\r') && (ch != '\n') && (cmd_index < 510)) {
+   while (ch != EOF && ch != '\r' && ch != '\n' && cmd_index < 510) {
       if (ch == '\t') // convert tabs to spaces
          ch = ' ';
 
@@ -4913,7 +4913,7 @@ static void ProcessBotCfgFile() {
       ch = fgetc(bot_cfg_fp);
 
       // skip multiple spaces in input file
-      while ((cmd_line[cmd_index] == ' ') && (ch == ' '))
+      while (cmd_line[cmd_index] == ' ' && ch == ' ')
          ch = fgetc(bot_cfg_fp);
 
       cmd_index++;
@@ -4946,7 +4946,7 @@ static void ProcessBotCfgFile() {
 
    cmd_line[cmd_index] = 0; // terminate the command line
 
-   if ((cmd_line[0] == '#') || (cmd_line[0] == 0))
+   if (cmd_line[0] == '#' || cmd_line[0] == 0)
       return; // return if comment or blank line
 
    // DREVIL
@@ -4962,28 +4962,28 @@ static void ProcessBotCfgFile() {
    char *arg1 = arg2 = arg3 = arg4 = nullptr;
 
    // skip to blank or end of string...
-   while ((cmd_line[cmd_index] != ' ') && (cmd_line[cmd_index] != 0) && (cmd_index < 510))
+   while (cmd_line[cmd_index] != ' ' && cmd_line[cmd_index] != 0 && cmd_index < 510)
       cmd_index++;
-   if (cmd_line[cmd_index] == ' ' && (cmd_index < 510)) {
+   if (cmd_line[cmd_index] == ' ' && cmd_index < 510) {
       cmd_line[cmd_index++] = 0;
       arg1 = &cmd_line[cmd_index];
 
       // skip to blank or end of string...
-      while ((cmd_line[cmd_index] != ' ') && (cmd_line[cmd_index] != 0) && (cmd_index < 510))
+      while (cmd_line[cmd_index] != ' ' && cmd_line[cmd_index] != 0 && cmd_index < 510)
          cmd_index++;
-      if (cmd_line[cmd_index] == ' ' && (cmd_index < 510)) {
+      if (cmd_line[cmd_index] == ' ' && cmd_index < 510) {
          cmd_line[cmd_index++] = 0;
          arg2 = &cmd_line[cmd_index];
 
-         while ((cmd_line[cmd_index] != ' ') && (cmd_line[cmd_index] != 0) && (cmd_index < 510))
+         while (cmd_line[cmd_index] != ' ' && cmd_line[cmd_index] != 0 && cmd_index < 510)
             cmd_index++;
-         if (cmd_line[cmd_index] == ' ' && (cmd_index < 510)) {
+         if (cmd_line[cmd_index] == ' ' && cmd_index < 510) {
             cmd_line[cmd_index++] = 0;
             arg3 = &cmd_line[cmd_index];
 
-            while ((cmd_line[cmd_index] != ' ') && (cmd_line[cmd_index] != 0) && (cmd_index < 510))
+            while (cmd_line[cmd_index] != ' ' && cmd_line[cmd_index] != 0 && cmd_index < 510)
                cmd_index++;
-            if (cmd_line[cmd_index] == ' ' && (cmd_index < 510)) {
+            if (cmd_line[cmd_index] == ' ' && cmd_index < 510) {
                cmd_line[cmd_index++] = 0;
                arg4 = &cmd_line[cmd_index];
             }
@@ -5079,7 +5079,7 @@ static void ProcessBotCfgFile() {
    }
 
    if (strcmp(cmd, "bot_team_balance") == 0) {
-      if ((arg1 != nullptr)) {
+      if (arg1 != nullptr) {
          const int temp = atoi(arg1);
          if (temp)
             bot_team_balance = true;
@@ -5101,7 +5101,7 @@ static void ProcessBotCfgFile() {
       return;
    }
    if (strcmp(cmd, "bot_bot_balance") == 0) {
-      if ((arg1 != nullptr)) {
+      if (arg1 != nullptr) {
          const int temp = atoi(arg1);
          if (temp)
             bot_bot_balance = true;
@@ -5318,7 +5318,7 @@ void UTIL_SavePent(edict_t *pent) {
    fprintf(fp, "gravity %f\n", pent->v.gravity);
    fprintf(fp, "friction %f\n", pent->v.friction);
    fprintf(fp, "light_level %d %d\n", pent->v.light_level, GETENTITYILLUM(pent));
-   if ((pent->v.pContainingEntity) != nullptr)
+   if (pent->v.pContainingEntity != nullptr)
       fprintf(fp, "cont light_level %d\n", GETENTITYILLUM(pent->v.pContainingEntity));
    fprintf(fp, "health %f\n", pent->v.health);
    fprintf(fp, "frags %f\n", pent->v.frags);
@@ -5359,7 +5359,7 @@ void UTIL_SavePent(edict_t *pent) {
    fprintf(fp, "speed %f\n", pent->v.speed);
    fprintf(fp, "air_finished %f\n", pent->v.air_finished);
    fprintf(fp, "pain_finished %f\n", pent->v.pain_finished);
-   fprintf(fp, "pContainingEntity %p\n", (void *)(pent->v.pContainingEntity));
+   fprintf(fp, "pContainingEntity %p\n", (void *)pent->v.pContainingEntity);
    fprintf(fp, "playerclass %d\n", pent->v.playerclass);
    fprintf(fp, "maxspeed %f\n", pent->v.maxspeed);
    fprintf(fp, "fov %f\n", pent->v.fov);
@@ -5386,10 +5386,10 @@ void UTIL_SavePent(edict_t *pent) {
    fprintf(fp, "vuser2 %f %f %f\n", pent->v.vuser2.x, pent->v.vuser2.y, pent->v.vuser2.z);
    fprintf(fp, "vuser3 %f %f %f\n", pent->v.vuser3.x, pent->v.vuser3.y, pent->v.vuser3.z);
    fprintf(fp, "vuser4 %f %f %f\n", pent->v.vuser4.x, pent->v.vuser4.y, pent->v.vuser4.z);
-   fprintf(fp, "euser1 %p\n", (void *)(pent->v.euser1));
-   fprintf(fp, "euser2 %p\n", (void *)(pent->v.euser2));
-   fprintf(fp, "euser3 %p\n", (void *)(pent->v.euser3));
-   fprintf(fp, "euser4 %p\n", (void *)(pent->v.euser4));
+   fprintf(fp, "euser1 %p\n", (void *)pent->v.euser1);
+   fprintf(fp, "euser2 %p\n", (void *)pent->v.euser2);
+   fprintf(fp, "euser3 %p\n", (void *)pent->v.euser3);
+   fprintf(fp, "euser4 %p\n", (void *)pent->v.euser4);
 
    fprintf(fp, "-info buffer %s\n", g_engfuncs.pfnGetInfoKeyBuffer(pent));
    fclose(fp);
@@ -5631,7 +5631,7 @@ static void changeBotSetting(const char *settingName, int *setting, const char *
       configMessage[0] = '\0';
 
    // if an argument was supplied change the setting with it
-   if (arg1 != nullptr && (*arg1 != 0)) {
+   if (arg1 != nullptr && *arg1 != 0) {
       const int temp = atoi(arg1);
       if (temp >= minValue && temp <= maxValue) {
          *setting = temp;
