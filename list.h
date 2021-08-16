@@ -141,7 +141,7 @@ template <typename Type> void List<Type>::clear() {
    // delete head node over and over again
    // until list is empty
    while (!isEmpty()) {
-      Node *n = head;
+      const Node *n = head;
       head = head->next;
       delete n;
    }

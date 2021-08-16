@@ -2246,12 +2246,12 @@ static void BotCheckForRocketJump(bot_t *pBot) {
    if (pBot->current_wp == -1 || pBot->bot_skill > 3 || num_waypoints < 1 || BufferContainsJobType(pBot, JOB_ROCKET_JUMP))
       return;
 
-   char *cvar_ntf = const_cast<char *>(CVAR_GET_STRING("neotf"));
+   const char *cvar_ntf = const_cast<char *>(CVAR_GET_STRING("neotf"));
    // char *cvar_ntfexclusive = (char *)CVAR_GET_STRING("ntf_feature_exclusive");
 
    // allow Neotf spies and pyros to jump at RJ points
    if (pBot->pEdict->v.playerclass == TFC_CLASS_PYRO) {
-      char *cvar_jetpack = const_cast<char *>(CVAR_GET_STRING("ntf_feature_jetpack"));
+      const char *cvar_jetpack = const_cast<char *>(CVAR_GET_STRING("ntf_feature_jetpack"));
       if (strcmp(cvar_ntf, "1") == 0 && strcmp(cvar_jetpack, "1") == 0) // No neotf or jetpack
       {
          // Jetpack enabled

@@ -62,7 +62,7 @@ void BotStartGame(bot_t *pBot) {
             spawn_check_crash = true;
             spawn_check_crash_count = 0;
             spawn_check_crash_edict = pEdict;
-            char *cvar_specs = const_cast<char *>(CVAR_GET_STRING("allow_spectators"));
+            const char *cvar_specs = const_cast<char *>(CVAR_GET_STRING("allow_spectators"));
             if (strcmp(cvar_specs, "0") == 0) {
                CVAR_SET_STRING("allow_spectators", "1");
                FakeClientCommand(pBot->pEdict, "spectate", nullptr, nullptr);

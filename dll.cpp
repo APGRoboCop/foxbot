@@ -4908,7 +4908,7 @@ static void ProcessBotCfgFile() {
          ch = ' ';
 
       //{fp=UTIL_OpenFoxbotLog(); fprintf(fp,"cfg %d %i\n",cmd_index,ch); fclose(fp); }
-      cmd_line[cmd_index] = char(ch);
+      cmd_line[cmd_index] = static_cast<char>(ch);
 
       ch = fgetc(bot_cfg_fp);
 
@@ -4958,7 +4958,7 @@ static void ProcessBotCfgFile() {
    strcat(server_cmd, "\n");
 
    cmd_index = 0;
-   char *cmd = cmd_line;
+   const char *cmd = cmd_line;
    char *arg1 = arg2 = arg3 = arg4 = nullptr;
 
    // skip to blank or end of string...
@@ -5200,7 +5200,7 @@ static void ProcessBotCfgFile() {
    }
 
    if (strcmp(cmd, "bot_create_interval") == 0) {
-      bot_create_interval = float(atoi(arg1));
+      bot_create_interval = static_cast<float>(atoi(arg1));
       if (bot_create_interval < 1.0 || bot_create_interval > 8.0)
          bot_create_interval = 3.0;
 
@@ -5484,7 +5484,7 @@ static void DisplayBotInfo() {
       // clear it up if it was 0
    } else {
       // have to switch developer 'on' if its not already
-      char *cvar_dev = (char *)CVAR_GET_STRING("developer");
+      const char *cvar_dev = (char *)CVAR_GET_STRING("developer");
       int dev;
       if (strcmp(cvar_dev, "0") == 0)
          dev = 0;

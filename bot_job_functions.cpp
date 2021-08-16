@@ -1972,7 +1972,7 @@ int JobSnipe(bot_t *pBot) {
 
       if (VectorsNearerThan(pBot->pEdict->v.origin, waypoints[job_ptr->waypoint].origin, 20.0)) {
          // drop a neoTF grenade pod if possible
-         char *cvar_ntf_feature_antimissile = const_cast<char *>(CVAR_GET_STRING("ntf_feature_antimissile"));
+         const char *cvar_ntf_feature_antimissile = const_cast<char *>(CVAR_GET_STRING("ntf_feature_antimissile"));
          if (strcmp(cvar_ntf_feature_antimissile, "1") == 0)
             FakeClientCommand(pBot->pEdict, "buildspecial", nullptr, nullptr);
 

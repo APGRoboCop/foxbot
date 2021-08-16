@@ -1404,7 +1404,7 @@ static Vector BotBodyTarget(edict_t *pBotEnemy, bot_t *pBot) {
 // BotFireWeapon will return true if weapon was fired, false otherwise
 bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) {
    bot_weapon_select_t *pSelect = nullptr;
-   bot_fire_delay_t *pDelay = nullptr;
+   const bot_fire_delay_t *pDelay = nullptr;
 
    edict_t *pEdict = pBot->pEdict;
    const float f_distance = v_enemy.Length(); // how far away is the enemy?
@@ -2247,7 +2247,7 @@ void BotCheckForMultiguns(bot_t *pBot, float nearestdistance, edict_t *pNewEnemy
    // simple as adding another string to the ntfTargetChecks array.
 
    // Skip this shit if neotf isnt present
-   char *cvar_ntf = const_cast<char *>(CVAR_GET_STRING("neotf"));
+   const char *cvar_ntf = const_cast<char *>(CVAR_GET_STRING("neotf"));
    if (strcmp(cvar_ntf, "1")) // No neotf
       return;
 

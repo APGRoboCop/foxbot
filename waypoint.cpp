@@ -3169,7 +3169,7 @@ int WaypointRouteFromTo(const int src, const int dest, int team) {
    if (from_to[team] == nullptr)
       return -1;
 
-   unsigned int *pFromTo = from_to[team];
+   const unsigned int *pFromTo = from_to[team];
 
    return static_cast<int>(pFromTo[src * route_num_waypoints + dest]);
 }
@@ -3203,7 +3203,7 @@ int WaypointDistanceFromTo(const int src, const int dest, int team) {
    if (from_to[team] == nullptr)
       return -1;
 
-   unsigned int *pShortestPath = shortest_path[team];
+   const unsigned int *pShortestPath = shortest_path[team];
 
    return static_cast<int>(pShortestPath[src * route_num_waypoints + dest]);
 }
