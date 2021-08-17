@@ -106,7 +106,7 @@ bool BufferContainsJobType(const bot_t *pBot, int JobType);
 
 int BufferedJobIndex(const bot_t *pBot, int JobType);
 
-job_struct *InitialiseNewJob(bot_t *pBot, int newJobType);
+job_struct *InitialiseNewJob(const bot_t *pBot, int newJobType);
 
 bool SubmitNewJob(bot_t *pBot, int newJobType, job_struct *newJob);
 

@@ -72,7 +72,7 @@ typedef struct {
 
 // probably best to keep these function pointers private to this file
 // these must be in the right order for each job to run properly
-static const jobFunctions_struct jf[JOB_TYPE_TOTAL] = {
+static constexpr jobFunctions_struct jf[JOB_TYPE_TOTAL] = {
     {assess_JobSeekWaypoint, JobSeekWaypoint},
     {assess_JobGetUnstuck, JobGetUnstuck},
     {assess_JobRoam, JobRoam},
@@ -255,7 +255,7 @@ int BufferedJobIndex(const bot_t *pBot, const int JobType) {
 // pointer to a common data storage area that you can use for the new job
 // you wish to add.  Importantly it will clear all of the new job's data before
 // giving you a pointer to it.
-job_struct *InitialiseNewJob(bot_t *pBot, const int newJobType) {
+job_struct *InitialiseNewJob(const bot_t *pBot, const int newJobType) {
    int i;
 
    // abort if the job is in the job buffer already

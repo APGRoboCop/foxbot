@@ -218,8 +218,8 @@ void pfnSetOrigin(edict_t *e, const float *rgflOrigin) {
             if (l < 0)
                l = -l;
 
-            const int xa = (int)(*(Vector *)rgflOrigin).x;
-            const int ya = (int)(*(Vector *)rgflOrigin).y;
+            const int xa = static_cast<int>((*(Vector *)rgflOrigin).x);
+            const int ya = static_cast<int>((*(Vector *)rgflOrigin).y);
             const int xb = static_cast<int>(bots[bot_index].sentry_edict->v.origin.x);
             const int yb = static_cast<int>(bots[bot_index].sentry_edict->v.origin.y);
             // FILE *fp;
@@ -1119,7 +1119,7 @@ void pfnServerPrint(const char *szMsg) {
 // This function returns true if the bots name is in the indicated message.
 static bool name_message_check(const char *msg_string, const char *name_string) {
    const size_t msg_length = strlen(msg_string);
-   const size_t name_end = strlen(name_string) - (size_t)1;
+   const size_t name_end = strlen(name_string) - static_cast<size_t>(1);
 
    if (msg_length < name_end)
       return false;

@@ -124,7 +124,7 @@ static FILE *fp;
 static void WaypointFloyds(unsigned int *shortest_path, unsigned int *from_to);
 static void WaypointRouteInit();
 static bool WaypointLoadVersion4(FILE *bfp, int number_of_waypoints);
-static bool WaypointDeleteAimArtifact(edict_t *pEntity);
+static bool WaypointDeleteAimArtifact(const edict_t *pEntity);
 
 void WaypointDebug() {
    fp = UTIL_OpenFoxbotLog();
@@ -420,13 +420,13 @@ int WaypointFindPath(PATH **pPath, int *path_index, const int waypoint_index, co
 // find the index of the nearest waypoint to the indicated player
 // (-1 if not found)
 // This function also checks that the waypoint is visible to the specified entity.
-int WaypointFindNearest_E(edict_t *pEntity, const float range, const int team) {
+int WaypointFindNearest_E(const edict_t *pEntity, const float range, const int team) {
    int min_index = -1;
    double min_distance_squared = range * range + 0.1f;
    TraceResult tr;
 
    // bit field of waypoint types to ignore
-   static const WPT_INT32 ignoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING);
+   static constexpr WPT_INT32 ignoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING);
 
    // find the nearest waypoint...
    for (int i = 0; i < num_waypoints; i++) {
@@ -466,7 +466,7 @@ int WaypointFindNearest_V(const Vector &v_src, const float range, const int team
    float min_distance = range;
 
    // bit field of waypoint types to ignore
-   static const WPT_INT32 ignoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING);
+   static constexpr WPT_INT32 ignoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING);
 
    // find the nearest waypoint...
    for (int index = 0; index < num_waypoints; index++) {
@@ -552,7 +552,7 @@ int WaypointFindInRange(const Vector &v_src, const float min_range, const float 
       i = RANDOM_LONG(0, num_waypoints - 1);
 
    // bit field of waypoint types to ignore
-   static const WPT_INT32 ignoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING);
+   static constexpr WPT_INT32 ignoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING);
 
    // start the search
    for (int waypoints_checked = 0; waypoints_checked < num_waypoints; waypoints_checked++, i++) {
@@ -1032,7 +1032,7 @@ void WaypointAdd(edict_t *pEntity) {
       return;
 
    edict_t *pent = nullptr;
-   const float radius = 40.0f;
+   constexpr float radius = 40.0f;
    int index = 0;
 
    // find the next available slot for the new waypoint...
@@ -1278,7 +1278,7 @@ void WaypointDelete(edict_t *pEntity) {
 // This function checks for the nearest aim waypoint and and will delete it
 // if it is an artifact(i.e. is not attached to another waypoint).
 // It returns false if it did not delete an aim artifact.
-static bool WaypointDeleteAimArtifact(edict_t *pEntity) {
+static bool WaypointDeleteAimArtifact(const edict_t *pEntity) {
    if (num_waypoints < 1)
       return false;
 
@@ -1692,7 +1692,7 @@ static bool WaypointLoadVersion4(FILE *bfp, const int number_of_waypoints) {
    WAYPOINT_VERSION4 dummy_waypoint;
 
    // these script flags used to be in the main waypoint flag
-   const int OLD_POINT1 = 1 << 16, OLD_POINT2 = 1 << 17, OLD_POINT3 = 1 << 18, OLD_POINT4 = 1 << 19, OLD_POINT5 = 1 << 20, OLD_POINT6 = 1 << 21, OLD_POINT7 = 1 << 22, OLD_POINT8 = 1 << 23;
+   constexpr int OLD_POINT1 = 1 << 16, OLD_POINT2 = 1 << 17, OLD_POINT3 = 1 << 18, OLD_POINT4 = 1 << 19, OLD_POINT5 = 1 << 20, OLD_POINT6 = 1 << 21, OLD_POINT7 = 1 << 22, OLD_POINT8 = 1 << 23;
 
    int i;
    short int num;
@@ -1861,7 +1861,7 @@ void WaypointSave() {
 
 // This function can check to see if bots will be able to get from one
 // waypoint to another.
-bool WaypointReachable(Vector v_src, Vector v_dest, edict_t *pEntity) {
+bool WaypointReachable(Vector v_src, Vector v_dest, const edict_t *pEntity) {
    float distance = (v_dest - v_src).Length();
 
    // is the destination close enough?
@@ -3708,7 +3708,7 @@ void AreaDefCreate(edict_t *pEntity) {
    }
 }
 
-int AreaDefPointFindNearest(edict_t *pEntity, const float range, const int flags) {
+int AreaDefPointFindNearest(const edict_t *pEntity, const float range, const int flags) {
    if (num_areas < 1)
       return -1;
 
@@ -3973,7 +3973,7 @@ void AreaDefPrintInfo(edict_t *pEntity) {
    }
 }
 
-bool AreaInside(edict_t *pEntity, const int i) {
+bool AreaInside(const edict_t *pEntity, const int i) {
    bool inside = false;
    if ((areas[i].flags & A_FL_1) == A_FL_1 && (areas[i].flags & A_FL_2) == A_FL_2 && (areas[i].flags & A_FL_3) == A_FL_3 && (areas[i].flags & A_FL_4) == A_FL_4) {
       const float x = pEntity->v.origin.x;
@@ -4039,7 +4039,7 @@ bool AreaInside(edict_t *pEntity, const int i) {
 
 // rix note - I think this function returns the index of the area
 // around the specified entity, or -1 on failure at finding one.
-int AreaInsideClosest(edict_t *pEntity) {
+int AreaInsideClosest(const edict_t *pEntity) {
    int index = -1;
    float distance = 9999.0f;
 
@@ -4541,7 +4541,7 @@ void AreaAutoMerge() {
    // could use wpts aswell, but loading a saved area grid won't
    // include them
    bool a, b, c, d;
-   const int stk_sz = 512;
+   constexpr int stk_sz = 512;
    int stk[stk_sz];
    int stk_cnt;
 
@@ -5299,7 +5299,7 @@ void ProcessCommanderList() {
    //{
    //}
    commanders.clear();
-   char invalidChars[] = " abcdefghijklmnopqrstuvwxyz,./<>?;'\"[]{}-=+!@#$%^&*()";
+   constexpr char invalidChars[] = " abcdefghijklmnopqrstuvwxyz,./<>?;'\"[]{}-=+!@#$%^&*()";
 
    UTIL_BuildFileName(filename, 255, "foxbot_commanders.txt", nullptr);
    FILE *inFile = fopen(filename, "r");

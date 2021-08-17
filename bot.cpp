@@ -163,7 +163,7 @@ static int number_names = 0;
 static char bot_names[MAX_BOT_NAMES][BOT_NAME_LEN + 1];
 
 // defend response distance per class
-const static float defendMaxRespondDist[] = {300.0f, 1500.0f, 500.0f, 1500.0f, 800.0f, 1500.0f, 1500.0f, 1500.0f, 1500.0f, 1500.0f};
+constexpr static float defendMaxRespondDist[] = {300.0f, 1500.0f, 500.0f, 1500.0f, 800.0f, 1500.0f, 1500.0f, 1500.0f, 1500.0f, 1500.0f};
 
 // const static double double_pi = 3.141592653589793238;
 
@@ -182,7 +182,7 @@ static bool BotChangeClass(bot_t *pBot, int iClass, const char *from);
 static void BotPickNewClass(bot_t *pBot);
 static bool BotChooseCounterClass(bot_t *pBot);
 static bool BotDemomanNeededCheck(bot_t *pBot);
-static int guessThreatLevel(bot_t *pBot);
+static int guessThreatLevel(const bot_t *pBot);
 static void BotReportMyFlagDrop(bot_t *pBot);
 static void BotEnemyCarrierAlert(bot_t *pBot);
 static void BotSenseEnvironment(bot_t *pBot);
@@ -241,7 +241,7 @@ inline void SET_CLIENT_KEY_VALUE(const int clientIndex, char *infobuffer, char *
 void player(entvars_t *pev) {
    static LINK_ENTITY_FUNC otherClassName = nullptr;
    if (otherClassName == nullptr) {
-      otherClassName = (LINK_ENTITY_FUNC)GetProcAddress(h_Library, "player");
+      otherClassName = reinterpret_cast<LINK_ENTITY_FUNC>(GetProcAddress(h_Library, "player"));
    }
    if (otherClassName != nullptr) {
       (*otherClassName)(pev);
@@ -1142,7 +1142,7 @@ void BotFindItem(bot_t *pBot) {
                strcpy(temp, STRING(pent->v.model));
 
                if (strlen(temp) >= 8)
-                  strncpy(mdlname, temp + ((int)strlen(temp) - 8), 4);
+                  strncpy(mdlname, temp + (static_cast<int>(strlen(temp)) - 8), 4);
                else
                   continue;
 
@@ -1176,7 +1176,7 @@ void BotFindItem(bot_t *pBot) {
                // cut pent->v.model down in size from:
                // "models/backpack.mdl"
                if (strlen(temp) >= 8) {
-                  strncpy(mdlname, temp + ((int)strlen(temp) - 8), 4);
+                  strncpy(mdlname, temp + (static_cast<int>(strlen(temp)) - 8), 4);
                   mdlname[63] = '\0';
                }
 
@@ -1735,7 +1735,7 @@ void script(const char *sz) {
                             fprintf(fp,"b %d\n",current_msg); fclose(fp); }*/
 
             msg_com_struct *curr = &msg_com[current_msg];
-            while (curr != nullptr && (int)curr != -1) {
+            while (curr != nullptr && reinterpret_cast<int>(curr) != -1) {
                /*{ fp=UTIL_OpenFoxbotLog();
                                fprintf(fp,"Started while %s %d\n",sz,current_msg);
                                fclose(fp); }*/
@@ -1924,7 +1924,7 @@ void script(const char *sz) {
 
 // BotArmorValue - returns the percentage of armor a bot has.
 int PlayerArmorPercent(const edict_t *pEdict) {
-   const static int tfc_max_armor[10] = {0, 50, 50, 200, 120, 100, 300, 150, 100, 50};
+   constexpr static int tfc_max_armor[10] = {0, 50, 50, 200, 120, 100, 300, 150, 100, 50};
 
    if (mod_id == TFC_DLL && pEdict->v.playerclass >= 0 && pEdict->v.playerclass <= 9)
       return static_cast<int>(pEdict->v.armorvalue / tfc_max_armor[pEdict->v.playerclass] * 100);
@@ -3093,8 +3093,8 @@ static void BotPickNewClass(bot_t *pBot) {
    if (pBot->lockClass || mod_id != TFC_DLL)
       return;
 
-   static const short defense_classes[] = {2, 3, 4, 6, 7, 9};
-   static const short offense_classes[] = {1, 3, 4, 5, 6, 7, 8, 9};
+   static constexpr short defense_classes[] = {2, 3, 4, 6, 7, 9};
+   static constexpr short offense_classes[] = {1, 3, 4, 5, 6, 7, 8, 9};
 
    // reward/penalise bots based on how they scored until they last died
    if (static_cast<int>(pBot->pEdict->v.frags) > pBot->scoreAtSpawn) {
@@ -3366,7 +3366,7 @@ static bool BotDemomanNeededCheck(bot_t *pBot) {
 //	This function checks if the bot is in a narrow area and is near
 // enough to an enemy and returns true if so.
 // On success r_wallVector will remember the position of a nearby wall.
-bool SpyAmbushAreaCheck(bot_t *pBot, Vector &r_wallVector) {
+bool SpyAmbushAreaCheck(const bot_t *pBot, Vector &r_wallVector) {
    // perform some basic checks first
    // e.g. don't feign near a lift
    if (pBot->pEdict->v.waterlevel != WL_NOT_IN_WATER || pBot->nadePrimed == TRUE || pBot->bot_has_flag || PlayerIsInfected(pBot->pEdict) || (pBot->current_wp > -1 && waypoints[pBot->current_wp].flags & W_FL_LIFT)) {
@@ -3587,8 +3587,7 @@ void BotThink(bot_t *pBot) {
    const float msecval = (gpGlobals->time - pBot->fLastRunPlayerMoveTime) * 1000.0f;
    pBot->fLastRunPlayerMoveTime = gpGlobals->time;
 
-   //const float fUpdateInterval = 1.0f / 60.0f; // update at 60 fps
-   const float fUpdateInterval = 1.0f / 100.0f; // update at 100 fps
+   constexpr float fUpdateInterval = 1.0f / 60.0f; // update at 60 fps
    pBot->fUpdateTime = gpGlobals->time + fUpdateInterval;
 
    // this is the only place this should be set
@@ -3606,7 +3605,7 @@ void BotThink(bot_t *pBot) {
       pBot->sentry_edict = nullptr;
       pBot->SGRotated = false;
       BotStartGame(pBot);
-      g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, 0.0, 0, 0, pBot->pEdict->v.button, (byte)0, (byte)msecval);
+      g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, 0.0, 0, 0, pBot->pEdict->v.button, static_cast<byte>(0), static_cast<byte>(msecval));
       return;
    }
 
@@ -3661,7 +3660,7 @@ void BotThink(bot_t *pBot) {
          pBot->pEdict->v.button = IN_ATTACK;
          pBot->f_killed_time = pBot->f_think_time;
       }
-      g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, pBot->f_move_speed, 0, 0, pBot->pEdict->v.button, (byte)0, (byte)msecval);
+      g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, pBot->f_move_speed, 0, 0, pBot->pEdict->v.button, static_cast<byte>(0), static_cast<byte>(msecval));
 
       return;
    }
@@ -3699,7 +3698,7 @@ void BotThink(bot_t *pBot) {
       BotChangeYaw(pBot->pEdict, pBot->pEdict->v.yaw_speed / 2);
       // UTIL_HostSay(pBot->pEdict,0,"a");
 
-      g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, pBot->f_move_speed, 0, 0, pBot->pEdict->v.button, (byte)0, (byte)msecval);
+      g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, pBot->f_move_speed, 0, 0, pBot->pEdict->v.button, static_cast<byte>(0), static_cast<byte>(msecval));
       return;
    }
 
@@ -3818,7 +3817,7 @@ void BotThink(bot_t *pBot) {
    /////////////////////////////////////////////////
    // THIS FUNCTION ACTUALLY MOVES THE BOT INGAME //
    /////////////////////////////////////////////////
-   g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, pBot->f_move_speed, pBot->f_side_speed, pBot->f_vertical_speed, pBot->pEdict->v.button, (byte)0, (byte)msecval);
+   g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, pBot->f_move_speed, pBot->f_side_speed, pBot->f_vertical_speed, pBot->pEdict->v.button, static_cast<byte>(0), static_cast<byte>(msecval));
    //////////////////////////////////////////////////
 
    // check if bots aim should still be affected by concussion and fire etc.
@@ -4011,7 +4010,7 @@ static void BotCombatThink(bot_t *pBot) {
 // Assess the threat level of the target using their class & my class.
 // 0-100 scale higher is more dangerous
 // Used in the assessment of when to evade enemies.
-static int guessThreatLevel(bot_t *pBot) {
+static int guessThreatLevel(const bot_t *pBot) {
    // show no fear if infected
    if (PlayerIsInfected(pBot->pEdict))
       return 0;

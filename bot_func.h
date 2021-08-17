@@ -36,11 +36,11 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
 
 void BotStartGame(bot_t *pBot);
 
-int BotInFieldOfView(bot_t *pBot, const Vector &dest);
+int BotInFieldOfView(const bot_t *pBot, const Vector &dest);
 
-bool BotCanSeeOrigin(bot_t *pBot, Vector &r_dest);
+bool BotCanSeeOrigin(const bot_t *pBot, const Vector &r_dest);
 
-float BotViewAngleDiff(Vector &r_pOrigin, const edict_t *pEdict);
+float BotViewAngleDiff(const Vector &r_pOrigin, const edict_t *pEdict);
 
 long random_long(long lowval, long highval);
 
@@ -61,15 +61,15 @@ void BotShootAtEnemy(bot_t *pBot);
 // DrEvils functions.
 int BotNadeHandler(bot_t *pBot, bool timed, char nadeTyp);
 
-int BotAssessThreatLevel(bot_t *pBot);
+int BotAssessThreatLevel(const bot_t *pBot);
 
 int BotTeamColorCheck(const edict_t *pent);
 
 int PickRandomEnemyTeam(int my_team);
 
-int BotGuessPlayerPosition(bot_t *pBot, const Vector &r_playerOrigin);
+int BotGuessPlayerPosition(const bot_t *pBot, const Vector &r_playerOrigin);
 
-int BotFindGrenadePoint(bot_t *pBot, const Vector &r_vecOrigin);
+int BotFindGrenadePoint(const bot_t *pBot, const Vector &r_vecOrigin);
 
 void BotCheckForMultiguns(bot_t *pBot, float nearestdistance, edict_t *pNewEnemy, bool &rtn);
 

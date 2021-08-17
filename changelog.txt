@@ -19,7 +19,7 @@ Updated by RoboCop
 
 - Reduced fire delay for Sniper's Auto-Rifle
 
-- Limited the bot frame rate movement to 100Hz
+- Reduced further more redundant codes and added more C++11 support
 	
 - Reduced overflow issues and instability crashes
 

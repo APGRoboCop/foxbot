@@ -810,11 +810,11 @@ void chatClass::pickRandomChatString(char *msg, size_t maxLength, const int chat
 
 int DispatchSpawn(edict_t *pent) {
    if (gpGlobals->deathmatch) {
-      auto pClassname = (char *)STRING(pent->v.classname);
+      const auto pClassname = const_cast<char *>(STRING(pent->v.classname));
 
       if (debug_engine) {
          fp = UTIL_OpenFoxbotLog();
-         fprintf(fp, "DispatchSpawn: %p %s\n", (void *)pent, pClassname);
+         fprintf(fp, "DispatchSpawn: %p %s\n", static_cast<void *>(pent), pClassname);
          if (pent->v.model != 0)
             fprintf(fp, " model=%s\n", STRING(pent->v.model));
          if (pent->v.target != 0)
@@ -1051,7 +1051,7 @@ void DispatchThink(edict_t *pent) {
             Vector vel = pBot->enemy.ptr->v.velocity;
             vel.x = vel.x * sin(dgrad);
             vel.y = vel.y * cos(dgrad);
-            dgrad = double(v.x);
+            dgrad = static_cast<double>(v.x);
             dgrad = dgrad + 180;
             if (dgrad > 180)
                dgrad -= 360;
@@ -1237,7 +1237,7 @@ BOOL ClientConnect(edict_t *pEntity, const char *pszName, const char *pszAddress
       if (debug_engine) {
          fp = UTIL_OpenFoxbotLog();
          if (fp != nullptr) {
-            fprintf(fp, "ClientConnect: pent=%p name=%s\n", (void *)pEntity, pszName);
+            fprintf(fp, "ClientConnect: pent=%p name=%s\n", static_cast<void *>(pEntity), pszName);
             fclose(fp);
          }
       }
@@ -1281,7 +1281,7 @@ BOOL ClientConnect_Post(edict_t *pEntity, const char *pszName, const char *pszAd
       if (debug_engine) {
          fp = UTIL_OpenFoxbotLog();
          if (fp != nullptr) {
-            fprintf(fp, "ClientConnect_Post: pent=%p name=%s\n", (void *)pEntity, pszName);
+            fprintf(fp, "ClientConnect_Post: pent=%p name=%s\n", static_cast<void *>(pEntity), pszName);
             fclose(fp);
          }
       }
@@ -1304,7 +1304,7 @@ void ClientDisconnect(edict_t *pEntity) {
       if (debug_engine) {
          fp = UTIL_OpenFoxbotLog();
          if (fp != nullptr) {
-            fprintf(fp, "ClientDisconnect: %p\n", (void *)pEntity);
+            fprintf(fp, "ClientDisconnect: %p\n", static_cast<void *>(pEntity));
             fclose(fp);
          }
       }
@@ -1354,7 +1354,7 @@ void ClientCommand(edict_t *pEntity) {
       // char msg[80];
       if (debug_engine) {
          fp = UTIL_OpenFoxbotLog();
-         fprintf(fp, "ClientCommand: %s %p", pcmd, (void *)pEntity);
+         fprintf(fp, "ClientCommand: %s %p", pcmd, static_cast<void *>(pEntity));
          if (arg1 != nullptr) {
             if (*arg1 != 0)
                fprintf(fp, " 1:%s", arg1);
@@ -1386,7 +1386,7 @@ void ClientCommand(edict_t *pEntity) {
 
       if (debug_engine) {
          fp = UTIL_OpenFoxbotLog();
-         fprintf(fp, "ClientCommand: %s %p", pcmd, (void *)pEntity);
+         fprintf(fp, "ClientCommand: %s %p", pcmd, static_cast<void *>(pEntity));
          if (arg1 != nullptr) {
             if (*arg1 != 0)
                fprintf(fp, " '%s'(1)", arg1);
@@ -2841,32 +2841,32 @@ void StartFrame() { // v7 last frame timing
                      DispatchSpawn(pent);
                } else { // is info goal
                   int max = 0;
-                  int t = (int)pent->v.mins.x;
+                  int t = static_cast<int>(pent->v.mins.x);
                   if (t < 0)
                      t = -t;
                   if (t > max)
                      max = t;
-                  t = (int)pent->v.mins.y;
+                  t = static_cast<int>(pent->v.mins.y);
                   if (t < 0)
                      t = -t;
                   if (t > max)
                      max = t;
-                  t = (int)pent->v.mins.z;
+                  t = static_cast<int>(pent->v.mins.z);
                   if (t < 0)
                      t = -t;
                   if (t > max)
                      max = t;
-                  t = (int)pent->v.maxs.x;
+                  t = static_cast<int>(pent->v.maxs.x);
                   if (t < 0)
                      t = -t;
                   if (t > max)
                      max = t;
-                  t = (int)pent->v.maxs.y;
+                  t = static_cast<int>(pent->v.maxs.y);
                   if (t < 0)
                      t = -t;
                   if (t > max)
                      max = t;
-                  t = (int)pent->v.maxs.z;
+                  t = static_cast<int>(pent->v.maxs.z);
                   if (t < 0)
                      t = -t;
                   if (t > max)
@@ -2910,7 +2910,7 @@ void StartFrame() { // v7 last frame timing
          // the idea behind this delete function is if the root.next isnt null, then it finds the last item in list (the one with item.next =null) and deletes it.. then repeats it all again.. if root.next etc
          while (msg_com[i].next != nullptr) {
             curr = &msg_com[i];
-            while (curr->next != nullptr && (int)curr->next != -1) {
+            while (curr->next != nullptr && reinterpret_cast<int>(curr->next) != -1) {
                prev = curr;
                curr = curr->next;
             }
@@ -2934,7 +2934,7 @@ void StartFrame() { // v7 last frame timing
          int i1; // Not wanted? [APG]RoboCop[CL]
          char buffer[14097];
          for (i1 = 0; i1 < 14096 && feof(bfp) == 0; i1++) {
-            buffer[i1] = (char)ch;
+            buffer[i1] = static_cast<char>(ch);
             if (buffer[i1] == '\t')
                buffer[i1] = ' ';
             ch = fgetc(bfp);
@@ -4135,7 +4135,7 @@ void StartFrame() { // v7 last frame timing
                         i1++;
                         buf = buf + 1;
                      } // move to end
-                     while (curr->next != nullptr && (int)curr->next != -1)
+                     while (curr->next != nullptr && reinterpret_cast<int>(curr->next) != -1)
                         curr = curr->next; // get to null
                      curr->next = new msg_com_struct;
                      curr = curr->next; // clear next pointer..
@@ -4167,7 +4167,7 @@ void StartFrame() { // v7 last frame timing
                         i1++;
                         buf = buf + 1;
                      } // move to end
-                     while (curr->next != nullptr && (int)curr->next != -1)
+                     while (curr->next != nullptr && reinterpret_cast<int>(curr->next) != -1)
                         curr = curr->next; // get to null
                      curr->next = new msg_com_struct;
                      curr = curr->next; // clear next pointer..
@@ -4199,7 +4199,7 @@ void StartFrame() { // v7 last frame timing
                         i1++;
                         buf = buf + 1;
                      } // move to end
-                     while (curr->next != nullptr && (int)curr->next != -1)
+                     while (curr->next != nullptr && reinterpret_cast<int>(curr->next) != -1)
                         curr = curr->next; // get to null
                      curr->next = new msg_com_struct;
                      curr = curr->next; // clear next pointer..
@@ -4231,7 +4231,7 @@ void StartFrame() { // v7 last frame timing
                         i1++;
                         buf = buf + 1;
                      } // move to end
-                     while (curr->next != nullptr && (int)curr->next != -1)
+                     while (curr->next != nullptr && reinterpret_cast<int>(curr->next) != -1)
                         curr = curr->next; // get to null
                      curr->next = new msg_com_struct;
                      curr = curr->next; // clear next pointer..
@@ -4264,7 +4264,7 @@ void StartFrame() { // v7 last frame timing
                         i1++;
                         buf = buf + 1;
                      } // move to end
-                     while (curr->next != nullptr && (int)curr->next != -1)
+                     while (curr->next != nullptr && reinterpret_cast<int>(curr->next) != -1)
                         curr = curr->next; // get to null
                      curr->next = new msg_com_struct;
                      curr = curr->next;
@@ -4297,7 +4297,7 @@ void StartFrame() { // v7 last frame timing
                         i1++;
                         buf = buf + 1;
                      } // move to end
-                     while (curr->next != nullptr && (int)curr->next != -1)
+                     while (curr->next != nullptr && reinterpret_cast<int>(curr->next) != -1)
                         curr = curr->next; // get to null
                      curr->next = new msg_com_struct;
                      curr = curr->next; // clear next pointer...
@@ -4329,7 +4329,7 @@ void StartFrame() { // v7 last frame timing
                         i1++;
                         buf = buf + 1;
                      } // move to end
-                     while (curr->next != nullptr && (int)curr->next != -1)
+                     while (curr->next != nullptr && reinterpret_cast<int>(curr->next) != -1)
                         curr = curr->next; // get to null
                      curr->next = new msg_com_struct;
                      curr = curr->next; // clear next pointer...
@@ -4361,7 +4361,7 @@ void StartFrame() { // v7 last frame timing
                         i1++;
                         buf = buf + 1;
                      } // move to end
-                     while (curr->next != nullptr && (int)curr->next != -1)
+                     while (curr->next != nullptr && reinterpret_cast<int>(curr->next) != -1)
                         curr = curr->next; // get to null
                      curr->next = new msg_com_struct;
                      curr = curr->next; // clear next pointer...
@@ -4399,7 +4399,7 @@ void StartFrame() { // v7 last frame timing
                            buf = buf + 1;
                         } // move to end
                      }
-                     while (curr->next != nullptr && (int)curr->next != -1)
+                     while (curr->next != nullptr && reinterpret_cast<int>(curr->next) != -1)
                         curr = curr->next; // get to null
                      curr->next = new msg_com_struct;
                      curr = curr->next; // clear next pointer...
@@ -4436,7 +4436,7 @@ void StartFrame() { // v7 last frame timing
                            buf = buf + 1;
                         } // move to end
                      }
-                     while (curr->next != nullptr && (int)curr->next != -1)
+                     while (curr->next != nullptr && reinterpret_cast<int>(curr->next) != -1)
                         curr = curr->next; // get to null
                      curr->next = new msg_com_struct;
                      curr = curr->next; // clear next pointer...
@@ -4473,7 +4473,7 @@ void StartFrame() { // v7 last frame timing
                            buf = buf + 1;
                         } // move to end
                      }
-                     while (curr->next != nullptr && (int)curr->next != -1)
+                     while (curr->next != nullptr && reinterpret_cast<int>(curr->next) != -1)
                         curr = curr->next; // get to null
                      curr->next = new msg_com_struct;
                      curr = curr->next; // clear next pointer...
@@ -4510,7 +4510,7 @@ void StartFrame() { // v7 last frame timing
                            buf = buf + 1;
                         } // move to end
                      }
-                     while (curr->next != nullptr && (int)curr->next != -1)
+                     while (curr->next != nullptr && reinterpret_cast<int>(curr->next) != -1)
                         curr = curr->next; // get to null
                      curr->next = new msg_com_struct;
                      curr = curr->next; // clear next pointer...
@@ -4643,7 +4643,7 @@ void FakeClientCommand(edict_t *pBot, char *arg1, char *arg2, char *arg3) {
 
    if (debug_engine) {
       fp = UTIL_OpenFoxbotLog();
-      fprintf(fp, "FakeClientCommand=%s %p\n", g_argv, (void *)pBot);
+      fprintf(fp, "FakeClientCommand=%s %p\n", g_argv, static_cast<void *>(pBot));
       fclose(fp);
    }
 
@@ -5279,7 +5279,7 @@ void UTIL_SavePent(edict_t *pent) {
    if (fp == nullptr)
       return;
 
-   fprintf(fp, "*edict_t %p\n", (void *)pent);
+   fprintf(fp, "*edict_t %p\n", static_cast<void *>(pent));
    fprintf(fp, "classname %s\n", STRING(pent->v.classname));
    fprintf(fp, "globalname %s\n", STRING(pent->v.globalname));
    fprintf(fp, "origin %f %f %f\n", pent->v.origin.x, pent->v.origin.y, pent->v.origin.z);
@@ -5330,12 +5330,12 @@ void UTIL_SavePent(edict_t *pent) {
    fprintf(fp, "view_ofs %f %f %f\n", pent->v.view_ofs.x, pent->v.view_ofs.y, pent->v.view_ofs.z);
    fprintf(fp, "button %d\n", pent->v.button);
    fprintf(fp, "impulse %d\n", pent->v.impulse);
-   fprintf(fp, "*chain %p\n", (void *)pent->v.chain);
-   fprintf(fp, "*dmg_inflictor %p\n", (void *)pent->v.dmg_inflictor);
-   fprintf(fp, "*enemy %p\n", (void *)pent->v.enemy);
-   fprintf(fp, "*aiment %p\n", (void *)pent->v.aiment);
-   fprintf(fp, "*owner %p\n", (void *)pent->v.owner);
-   fprintf(fp, "*grounentity %p\n", (void *)pent->v.groundentity);
+   fprintf(fp, "*chain %p\n", static_cast<void *>(pent->v.chain));
+   fprintf(fp, "*dmg_inflictor %p\n", static_cast<void *>(pent->v.dmg_inflictor));
+   fprintf(fp, "*enemy %p\n", static_cast<void *>(pent->v.enemy));
+   fprintf(fp, "*aiment %p\n", static_cast<void *>(pent->v.aiment));
+   fprintf(fp, "*owner %p\n", static_cast<void *>(pent->v.owner));
+   fprintf(fp, "*grounentity %p\n", static_cast<void *>(pent->v.groundentity));
    fprintf(fp, "spawnflags %d\n", pent->v.spawnflags);
    fprintf(fp, "flags %d\n", pent->v.flags);
    fprintf(fp, "colormap %d\n", pent->v.colormap);
@@ -5361,7 +5361,7 @@ void UTIL_SavePent(edict_t *pent) {
    fprintf(fp, "speed %f\n", pent->v.speed);
    fprintf(fp, "air_finished %f\n", pent->v.air_finished);
    fprintf(fp, "pain_finished %f\n", pent->v.pain_finished);
-   fprintf(fp, "pContainingEntity %p\n", (void *)pent->v.pContainingEntity);
+   fprintf(fp, "pContainingEntity %p\n", static_cast<void *>(pent->v.pContainingEntity));
    fprintf(fp, "playerclass %d\n", pent->v.playerclass);
    fprintf(fp, "maxspeed %f\n", pent->v.maxspeed);
    fprintf(fp, "fov %f\n", pent->v.fov);
@@ -5388,10 +5388,10 @@ void UTIL_SavePent(edict_t *pent) {
    fprintf(fp, "vuser2 %f %f %f\n", pent->v.vuser2.x, pent->v.vuser2.y, pent->v.vuser2.z);
    fprintf(fp, "vuser3 %f %f %f\n", pent->v.vuser3.x, pent->v.vuser3.y, pent->v.vuser3.z);
    fprintf(fp, "vuser4 %f %f %f\n", pent->v.vuser4.x, pent->v.vuser4.y, pent->v.vuser4.z);
-   fprintf(fp, "euser1 %p\n", (void *)pent->v.euser1);
-   fprintf(fp, "euser2 %p\n", (void *)pent->v.euser2);
-   fprintf(fp, "euser3 %p\n", (void *)pent->v.euser3);
-   fprintf(fp, "euser4 %p\n", (void *)pent->v.euser4);
+   fprintf(fp, "euser1 %p\n", static_cast<void *>(pent->v.euser1));
+   fprintf(fp, "euser2 %p\n", static_cast<void *>(pent->v.euser2));
+   fprintf(fp, "euser3 %p\n", static_cast<void *>(pent->v.euser3));
+   fprintf(fp, "euser4 %p\n", static_cast<void *>(pent->v.euser4));
 
    fprintf(fp, "-info buffer %s\n", g_engfuncs.pfnGetInfoKeyBuffer(pent));
    fclose(fp);
@@ -5486,7 +5486,7 @@ static void DisplayBotInfo() {
       // clear it up if it was 0
    } else {
       // have to switch developer 'on' if its not already
-      const char *cvar_dev = (char *)CVAR_GET_STRING("developer");
+      const char *cvar_dev = const_cast<char *>(CVAR_GET_STRING("developer"));
       int dev;
       if (strcmp(cvar_dev, "0") == 0)
          dev = 0;

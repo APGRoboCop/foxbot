@@ -154,7 +154,7 @@ void WaypointInit();
 
 int WaypointFindPath(PATH **pPath, int *path_index, int waypoint_index, int team);
 
-int WaypointFindNearest_E(edict_t *pEntity, float range, int team);
+int WaypointFindNearest_E(const edict_t *pEntity, float range, int team);
 
 int WaypointFindNearest_V(const Vector &v_src, float range, int team);
 
@@ -194,7 +194,7 @@ bool WaypointLoad(edict_t *pEntity);
 
 void WaypointSave();
 
-bool WaypointReachable(Vector v_srv, Vector v_dest, edict_t *pEntity);
+bool WaypointReachable(Vector v_srv, Vector v_dest, const edict_t *pEntity);
 
 bool WaypointDirectPathCheck(int srcWP, int destWP);
 
@@ -218,7 +218,7 @@ void WaypointAutoBuild(edict_t *pEntity);
 
 void AreaDefCreate(edict_t *pEntity);
 
-int AreaDefPointFindNearest(edict_t *pEntity, float range, int flags);
+int AreaDefPointFindNearest(const edict_t *pEntity, float range, int flags);
 
 void AreaDefDelete(edict_t *pEntity);
 
@@ -228,9 +228,9 @@ bool AreaDefLoad(edict_t *pEntity);
 
 void AreaDefPrintInfo(edict_t *pEntity);
 
-bool AreaInside(edict_t *pEntity, int i);
+bool AreaInside(const edict_t *pEntity, int i);
 
-int AreaInsideClosest(edict_t *pEntity);
+int AreaInsideClosest(const edict_t *pEntity);
 
 void AreaAutoBuild1();
 

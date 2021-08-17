@@ -596,11 +596,11 @@ Vector GetGunPosition(const edict_t *pEdict);
 
 void UTIL_SelectItem(edict_t *pEdict, char *item_name);
 
-Vector VecBModelOrigin(edict_t *pEdict);
+Vector VecBModelOrigin(const edict_t *pEdict);
 
-bool UTIL_FootstepsHeard(edict_t *pEdict, edict_t *pPlayer);
+bool UTIL_FootstepsHeard(const edict_t *pEdict, edict_t *pPlayer);
 
-void UTIL_ShowMenu(edict_t *pEdict, int slots, int displaytime, bool needmore, char *pText);
+void UTIL_ShowMenu(edict_t *pEdict, int slots, int displaytime, bool needmore, const char *pText);
 
 FILE *UTIL_OpenFoxbotLog();
 
@@ -640,7 +640,7 @@ edict_t *BotEntityAtPoint(const char *entityName, const Vector &location, float 
 
 bot_t *BotDefenderAtWaypoint(const bot_t *pBot, int waypoint, float range);
 
-bool SpyAmbushAreaCheck(bot_t *pBot, Vector &r_wallVector);
+bool SpyAmbushAreaCheck(const bot_t *pBot, Vector &r_wallVector);
 
 void ResetBotHomeInfo();
 

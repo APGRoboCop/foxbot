@@ -66,15 +66,15 @@ extern float last_frame_time;
 
 // bit field of waypoint types to ignore when the bot is lost
 // and looking for a new current waypoint to head for
-static const WPT_INT32 lostBotIgnoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING | W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_TFC_DETPACK_CLEAR | W_FL_TFC_DETPACK_SEAL | W_FL_SNIPER | W_FL_TFC_TELEPORTER_ENTRANCE |
+static constexpr WPT_INT32 lostBotIgnoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING | W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_TFC_DETPACK_CLEAR | W_FL_TFC_DETPACK_SEAL | W_FL_SNIPER | W_FL_TFC_TELEPORTER_ENTRANCE |
                                                  W_FL_TFC_TELEPORTER_EXIT | W_FL_TFC_JUMP | W_FL_LIFT | W_FL_PATHCHECK);
 
 int spawnAreaWP[4] = {-1, -1, -1, -1}; // used for tracking the areas where each team spawns
 extern int team_allies[4];
 
 // FUNCTION PROTOTYPES
-static int BotShouldJumpOver(bot_t *pBot);
-static int BotShouldDuckUnder(bot_t *pBot);
+static int BotShouldJumpOver(const bot_t *pBot);
+static int BotShouldDuckUnder(const bot_t *pBot);
 static bool BotFallenOffCheck(bot_t *pBot);
 static bool BotEscapeWaypointTrap(bot_t *pBot, int goalWP);
 static bool BotUpdateRoute(bot_t *pBot);
@@ -86,7 +86,7 @@ static void BotCheckForConcJump(bot_t *pBot);
 // nearby.
 // This should be run each time a bot spawns, so as to keep the information
 // up to date on maps such as warpath where the spawn areas keep changing.
-void BotUpdateHomeInfo(bot_t *pBot) {
+void BotUpdateHomeInfo(const bot_t *pBot) {
    if (mod_id != TFC_DLL)
       return;
 
@@ -190,7 +190,7 @@ void BotFindCurrentWaypoint(bot_t *pBot) {
    }
 }
 // This function will tell the bot to face the map coordinates indicated by v_focus
-void BotSetFacing(bot_t *pBot, Vector v_focus) {
+void BotSetFacing(const bot_t *pBot, Vector v_focus) {
    v_focus = v_focus - (pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs);
    const Vector bot_angles = UTIL_VecToAngles(v_focus);
    pBot->pEdict->v.ideal_yaw = bot_angles.y;
@@ -201,7 +201,7 @@ void BotSetFacing(bot_t *pBot, Vector v_focus) {
 
 // This function will tell the bot to face the map coordinates
 // indicated by v_focus
-void BotMatchFacing(bot_t *pBot, const Vector &v_source, Vector v_focus) {
+void BotMatchFacing(const bot_t *pBot, const Vector &v_source, Vector v_focus) {
    v_focus = v_focus - (pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs);
    const Vector bot_angles = UTIL_VecToAngles(v_focus);
    pBot->pEdict->v.ideal_yaw = bot_angles.y;
@@ -1066,7 +1066,7 @@ void BotUseLift(bot_t *pBot) {
 
 // This function returns 1 if the bot has detected an obstacle at ankle height.
 // 2 if that obstacle can be jumped over.  0 if no such obstacles were found.
-static int BotShouldJumpOver(bot_t *pBot) {
+static int BotShouldJumpOver(const bot_t *pBot) {
    // bots have a standing height of 72 units
    // and their origin is 37 units above the bottom of their boots
    // when crouching bots are 36 units tall and their origin is 19 units high
@@ -1195,7 +1195,7 @@ static int BotShouldJumpOver(bot_t *pBot) {
 
 // This function returns 1 if the bot has detected an obstacle at head height.
 // 2 if that obstacle can be ducked under.  0 if no such obstacles were found.
-static int BotShouldDuckUnder(bot_t *pBot) {
+static int BotShouldDuckUnder(const bot_t *pBot) {
    // doh!
    if (pBot->pEdict->v.button & IN_DUCK)
       return 2;
@@ -1368,7 +1368,7 @@ static bool BotFallenOffCheck(bot_t *const pBot) {
 
 // This function traces a line several units out to the bots left.
 // It returns true if an obstacle was encountered, false otherwise.
-bool BotCheckWallOnLeft(bot_t *pBot) {
+bool BotCheckWallOnLeft(const bot_t *pBot) {
    UTIL_MakeVectors(pBot->pEdict->v.v_angle);
 
    // do a trace 40 units to the left
@@ -1393,7 +1393,7 @@ bool BotCheckWallOnLeft(bot_t *pBot) {
 
 // This function traces a line several units out to the bots right.
 // It returns true if an obstacle was encountered, false otherwise.
-bool BotCheckWallOnRight(bot_t *pBot) {
+bool BotCheckWallOnRight(const bot_t *pBot) {
    UTIL_MakeVectors(pBot->pEdict->v.v_angle);
 
    // do a trace 40 units to the right
@@ -1418,7 +1418,7 @@ bool BotCheckWallOnRight(bot_t *pBot) {
 
 // This function returns the index of a waypoint suitable for building a
 // dispenser at, or -1 on failure.
-int BotGetDispenserBuildWaypoint(bot_t *pBot) {
+int BotGetDispenserBuildWaypoint(const bot_t *pBot) {
    // if the bot has a sentry build the dispenser near it
    if (pBot->has_sentry == true && !FNullEnt(pBot->sentry_edict)) {
       return WaypointFindRandomGoal_R(pBot->sentry_edict->v.origin, false, 800.0, -1, 0);
@@ -1438,7 +1438,7 @@ int BotGetDispenserBuildWaypoint(bot_t *pBot) {
 
 // This function returns the index of a waypoint suitable for building a
 // Teleporter at, or -1 on failure.
-int BotGetTeleporterBuildWaypoint(bot_t *pBot, const bool buildEntrance) {
+int BotGetTeleporterBuildWaypoint(const bot_t *pBot, const bool buildEntrance) {
    WPT_INT32 neededFlags;
    int otherEndWP = -1; // remembers the waypoint for the other built teleport
 
@@ -1512,7 +1512,7 @@ void BotFindSideRoute(bot_t *pBot) {
       return;
 
    // bit field of waypoint types to ignore
-   static const WPT_INT32 ignoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING | W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_SNIPER | W_FL_TFC_DETPACK_CLEAR | W_FL_TFC_DETPACK_SEAL | W_FL_TFC_TELEPORTER_ENTRANCE |
+   static constexpr WPT_INT32 ignoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING | W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_SNIPER | W_FL_TFC_DETPACK_CLEAR | W_FL_TFC_DETPACK_SEAL | W_FL_TFC_TELEPORTER_ENTRANCE |
                                              W_FL_TFC_TELEPORTER_EXIT | W_FL_HEALTH | W_FL_ARMOR | W_FL_AMMO | W_FL_TFC_JUMP);
 
    // find out if the bot is at a junction waypoint by counting
@@ -1680,7 +1680,7 @@ bool BotChangeRoute(bot_t *pBot) {
    int newBranchWP = -1;
 
    // bit field of waypoint types to ignore
-   static const WPT_INT32 ignoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING | W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_SNIPER | W_FL_TFC_TELEPORTER_ENTRANCE | W_FL_TFC_TELEPORTER_EXIT | W_FL_TFC_JUMP | W_FL_LIFT);
+   static constexpr WPT_INT32 ignoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING | W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_SNIPER | W_FL_TFC_TELEPORTER_ENTRANCE | W_FL_TFC_TELEPORTER_EXIT | W_FL_TFC_JUMP | W_FL_LIFT);
 
    // pick a random waypoint to start searching from
    int index = RANDOM_LONG(0, num_waypoints - 1);
@@ -1856,7 +1856,7 @@ int BotFindRetreatPoint(bot_t *const pBot, const int min_dist, const Vector &r_t
       return -1;
 
    // bit field of waypoint types to ignore
-   static const WPT_INT32 ignoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING | W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_SNIPER | W_FL_TFC_TELEPORTER_ENTRANCE | W_FL_TFC_TELEPORTER_EXIT | W_FL_TFC_JUMP | W_FL_LIFT);
+   static constexpr WPT_INT32 ignoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING | W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_SNIPER | W_FL_TFC_TELEPORTER_ENTRANCE | W_FL_TFC_TELEPORTER_EXIT | W_FL_TFC_JUMP | W_FL_LIFT);
 
    // distance from bot to threat
    const float botThreatDistance = (pBot->pEdict->v.origin - r_threatOrigin).Length();
@@ -1933,12 +1933,12 @@ int BotFindRetreatPoint(bot_t *const pBot, const int min_dist, const Vector &r_t
 // specified entity(which is assumed to be some kind of explosive object).
 // min_dist specifies the minimum retreat distance you want.
 // Returns the waypoint found on success, -1 on failure.
-int BotFindThreatAvoidPoint(bot_t *const pBot, const int min_dist, edict_t *pent) {
+int BotFindThreatAvoidPoint(bot_t *const pBot, const int min_dist, const edict_t *pent) {
    if (pBot->current_wp == -1 || FNullEnt(pent))
       return -1;
 
    // bit field of waypoint types to ignore
-   static const WPT_INT32 ignoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING | W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_SNIPER | W_FL_TFC_TELEPORTER_ENTRANCE | W_FL_TFC_TELEPORTER_EXIT | W_FL_TFC_JUMP | W_FL_LIFT);
+   static constexpr WPT_INT32 ignoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING | W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_SNIPER | W_FL_TFC_TELEPORTER_ENTRANCE | W_FL_TFC_TELEPORTER_EXIT | W_FL_TFC_JUMP | W_FL_LIFT);
 
    // distance from bot to threat
    const float botThreatDistance = (pBot->pEdict->v.origin - pent->v.origin).Length();
@@ -1990,7 +1990,7 @@ int BotFindThreatAvoidPoint(bot_t *const pBot, const int min_dist, edict_t *pent
 
 // This function returns the waypoint of a randomly selected flag waypoint
 // or -1 on failure.
-int BotFindFlagWaypoint(bot_t *pBot) {
+int BotFindFlagWaypoint(const bot_t *pBot) {
    int flagWP = -1;
 
    if (WaypointTypeExists(W_FL_TFC_FLAG, pBot->current_team))
@@ -2004,7 +2004,7 @@ int BotFindFlagWaypoint(bot_t *pBot) {
 
 // This function finds a waypoint near a random enemy defender waypoint.
 // Returns the waypoint found on success, -1 on failure.
-int BotTargetDefenderWaypoint(bot_t *pBot) {
+int BotTargetDefenderWaypoint(const bot_t *pBot) {
    // perform basic sanity checks
    if (pBot->current_wp < 0 || pBot->current_wp >= num_waypoints)
       return false;
@@ -2018,7 +2018,7 @@ int BotTargetDefenderWaypoint(bot_t *pBot) {
    int index = static_cast<int>(random_long(0, num_waypoints - 1));
 
    // bit field of waypoint types the bot is looking for
-   static const WPT_INT32 validFlags = 0 + (W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_SNIPER);
+   static constexpr WPT_INT32 validFlags = 0 + (W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_SNIPER);
 
    for (int waypoints_checked = 0; waypoints_checked < num_waypoints; waypoints_checked++, index++) {
       // wrap the search if it exceeds the number of available waypoints
@@ -2064,7 +2064,7 @@ int BotTargetDefenderWaypoint(bot_t *pBot) {
 // This function finds a waypoint near the furthest enemy defender
 // waypoint, and was mainly intended for use when a bot becomes infected.
 // Returns the waypoint found, -1 on failure.
-int BotFindSuicideGoal(bot_t *pBot) {
+int BotFindSuicideGoal(const bot_t *pBot) {
    if (pBot->current_wp == -1)
       return -1;
 
@@ -2080,7 +2080,7 @@ int BotFindSuicideGoal(bot_t *pBot) {
       waypoint_from = pBot->current_wp;
 
    // bit field of waypoint types the bot is looking for
-   static const WPT_INT32 validFlags = 0 + (W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_SNIPER);
+   static constexpr WPT_INT32 validFlags = 0 + (W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_SNIPER);
 
    // try to find a waypoint which is further from the bot
    int furthestIndex = -1;
@@ -2119,7 +2119,7 @@ int BotFindSuicideGoal(bot_t *pBot) {
 
 // BotFindFlagGoal - This function looks for a flag goal waypoint.
 // Returns the waypoint found if successful, -1 otherwise.
-int BotFindFlagGoal(bot_t *pBot) {
+int BotFindFlagGoal(const bot_t *pBot) {
    int goalWP = WaypointFindRandomGoal(pBot->current_wp, pBot->current_team, W_FL_TFC_FLAG_GOAL);
 
    if (goalWP == -1)
@@ -2130,7 +2130,7 @@ int BotFindFlagGoal(bot_t *pBot) {
 
 // BotGoForSniperSpot - This function sends a bot after a sniper spot.
 // Returns the waypoint found.
-int BotGoForSniperSpot(bot_t *pBot) {
+int BotGoForSniperSpot(const bot_t *pBot) {
    int sniperWP;
 
    // occasionally go for the nearest snipe point(nearer is usually safer)
@@ -2154,7 +2154,7 @@ int BotGoForSniperSpot(bot_t *pBot) {
 // This function will search for the nearest waypoint that is higher than the bot
 // and near or above the surface of water.  i.e. somewhere a bot can go breathe.
 // Returns the waypoint found, or -1 if not found.
-int BotDrowningWaypointSearch(bot_t *pBot) {
+int BotDrowningWaypointSearch(const bot_t *pBot) {
    int minDistance = 2500;
    int bestIndex = -1;
 

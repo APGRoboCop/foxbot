@@ -72,14 +72,14 @@ extern bot_t bots[32];
 static bool playerHasFlag[32];
 
 // FUNCTION PROTOTYPES ///////////////
-static void BotPipeBombCheck(bot_t *pBot);
+static void BotPipeBombCheck(const bot_t *pBot);
 static edict_t *BotFindEnemy(bot_t *pBot);
 static bool BotSpyDetectCheck(bot_t *pBot, edict_t *pNewEnemy);
 static void BotSGSpotted(bot_t *pBot, edict_t *sg);
 static bool BotPrimeGrenade(bot_t *pBot, int slot, unsigned char nadeType, unsigned short reserve);
 static bool BotClearShotCheck(bot_t *pBot);
-static Vector BotBodyTarget(edict_t *pBotEnemy, bot_t *pBot);
-static int BotLeadTarget(edict_t *pBotEnemy, bot_t *pBot, int projSpeed, float &d_x, float &d_y, float &d_z);
+static Vector BotBodyTarget(const edict_t *pBotEnemy, bot_t *pBot);
+static int BotLeadTarget(const edict_t *pBotEnemy, const bot_t *pBot, int projSpeed, float &d_x, float &d_y, float &d_z);
 
 typedef struct {
    int iId;                      // the weapon ID value
@@ -235,7 +235,7 @@ void BotUpdateSkillInaccuracy() {
 }
 
 // Set pipebombs off if they are near to the bots enemy.
-static void BotPipeBombCheck(bot_t *pBot) {
+static void BotPipeBombCheck(const bot_t *pBot) {
    edict_t *pent = nullptr;
    while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "tf_gl_pipebomb")) != nullptr && !FNullEnt(pent)) {
       if (pBot->pEdict == pent->v.owner && VectorsNearerThan(pBot->enemy.ptr->v.origin, pent->v.origin, 90.0)) {
@@ -1014,7 +1014,7 @@ static void BotSGSpotted(bot_t *pBot, edict_t *sg) {
 // This function is fairly intensive because it attempts to guess a waypoint
 // that a player may be found at.
 //  It returns the waypoint chosen or -1 on failure.
-int BotGuessPlayerPosition(bot_t *const pBot, const Vector &r_playerOrigin) {
+int BotGuessPlayerPosition(const bot_t *const pBot, const Vector &r_playerOrigin) {
    if (pBot->current_wp == -1)
       return -1;
 
@@ -1061,7 +1061,7 @@ int BotGuessPlayerPosition(bot_t *const pBot, const Vector &r_playerOrigin) {
 // behind a bit of scenery(e.g. a wall).  It will search for and return a waypoint that
 // is near enough to the enemy to splash them, and visible to both the enemy and the bot.
 // Returns -1 on failure to find a suitable waypoint.
-int BotFindGrenadePoint(bot_t *const pBot, const Vector &r_vecOrigin) {
+int BotFindGrenadePoint(const bot_t *const pBot, const Vector &r_vecOrigin) {
    TraceResult tr;
 
    for (int index = 0; index < num_waypoints; index++) {
@@ -1226,7 +1226,7 @@ void BotShootAtEnemy(bot_t *pBot) {
 }
 
 // This function handles the aiming of whatever weapon a bot is holding.
-static Vector BotBodyTarget(edict_t *pBotEnemy, bot_t *pBot) {
+static Vector BotBodyTarget(const edict_t *pBotEnemy, bot_t *pBot) {
    Vector target;
    const float f_distance = pBot->enemy.f_seenDistance;
    float f_scale; // for scaling accuracy based on distance
@@ -1569,7 +1569,7 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
             continue;
          }
 
-         const int use_percent = 0;
+         constexpr int use_percent = 0;
 
          // is use percent greater than weapon use percent?
          if (use_percent > pSelect[select_index].use_percent) {
@@ -1589,7 +1589,7 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
 
          iId = pSelect[select_index].iId;
          use_primary = use_secondary = false;
-         const int primary_percent = 0;
+         constexpr int primary_percent = 0;
 
          // check if this weapon uses ammo and is running low
          if (pBot->m_rgAmmo[weapon_defs[iId].iAmmo1] < pSelect[select_index].min_primary_ammo)
@@ -2045,7 +2045,7 @@ static bool BotPrimeGrenade(bot_t *pBot, const int slot, const unsigned char nad
 // Assess the threat level of the target using their class & my class.
 // 0-100 scale higher is more dangerous
 // returns -1 if error or no target.
-int BotAssessThreatLevel(bot_t *pBot) {
+int BotAssessThreatLevel(const bot_t *pBot) {
    // BotAssessThreatLevel - This function evaluates the threat level
    // of a target based on the following.
    // 1) This bots class
@@ -2215,7 +2215,7 @@ int PickRandomEnemyTeam(const int my_team) {
    return -1;
 }
 
-static int BotLeadTarget(edict_t *pBotEnemy, bot_t *pBot, const int projSpeed, float &d_x, float &d_y, float &d_z) {
+static int BotLeadTarget(const edict_t *pBotEnemy, const bot_t *pBot, const int projSpeed, float &d_x, float &d_y, float &d_z) {
    // BotLeadTarget - I moved the leading into a function, so that
    // I could use it for grenades as well without duplicating code.
    // This leads a target based on a passed projectile speed.

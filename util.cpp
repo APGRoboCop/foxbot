@@ -103,7 +103,7 @@ float random_float(const float lowval, const float highval) {
 
    lseed = (lseed * 1103515245 + 12345) % 2147483647;
 
-   return lowval + (float)lseed / ((float)LONG_MAX / (highval - lowval));
+   return lowval + static_cast<float>(lseed) / (static_cast<float>(LONG_MAX) / (highval - lowval));
 }
 
 // This function is a quick simple way of testing the distance between two
@@ -465,7 +465,7 @@ bool FInViewCone(const Vector &r_pOrigin, const edict_t *pEdict) {
 // how much the entities view is facing away from the given origin.
 // 0.99999 means the bot is looking right at the given origin.
 // The lower the number the more the bot is looking away from it.
-float BotViewAngleDiff(Vector &r_pOrigin, const edict_t *pEdict) {
+float BotViewAngleDiff(const Vector &r_pOrigin, const edict_t *pEdict) {
    UTIL_MakeVectors(pEdict->v.angles);
 
    Vector2D vec2LOS = (r_pOrigin - pEdict->v.origin).Make2D();
@@ -474,7 +474,7 @@ float BotViewAngleDiff(Vector &r_pOrigin, const edict_t *pEdict) {
    return DotProduct(vec2LOS, gpGlobals->v_forward.Make2D());
 }
 
-bool BotCanSeeOrigin(bot_t *pBot, Vector &r_dest) {
+bool BotCanSeeOrigin(const bot_t *pBot, const Vector &r_dest) {
    TraceResult tr;
 
    // trace a line from bot's eyes to destination...
@@ -491,7 +491,7 @@ bool BotCanSeeOrigin(bot_t *pBot, Vector &r_dest) {
 // to the destination.  Zero degrees means the destination is straight
 // ahead, 45 degrees to the left or 45 degrees to the right
 // is the limit of the normal view angle.
-int BotInFieldOfView(bot_t *pBot, const Vector &dest) {
+int BotInFieldOfView(const bot_t *pBot, const Vector &dest) {
    // find angles from source to destination...
    Vector entity_angles = UTIL_VecToAngles(dest);
 
@@ -546,11 +546,11 @@ void UTIL_SelectItem(edict_t *pEdict, char *item_name) {
 }
 
 // Some entities have a Vector of (0, 0, 0), so you need this function.
-Vector VecBModelOrigin(edict_t *pEdict) { return pEdict->v.absmin + pEdict->v.size * 0.5; }
+Vector VecBModelOrigin(const edict_t *pEdict) { return pEdict->v.absmin + pEdict->v.size * 0.5; }
 
 // This function checks if footstep sounds are on and if the indicated player
 // is moving fast enough to make footstep sounds.
-bool UTIL_FootstepsHeard(edict_t *pEdict, edict_t *pPlayer) {
+bool UTIL_FootstepsHeard(const edict_t *pEdict, edict_t *pPlayer) {
    static bool check_footstep_sounds = true;
    static bool footstep_sounds_on = false;
 
@@ -573,7 +573,7 @@ bool UTIL_FootstepsHeard(edict_t *pEdict, edict_t *pPlayer) {
    return false;
 }
 
-void UTIL_ShowMenu(edict_t *pEdict, const int slots, const int displaytime, const bool needmore, char *pText) {
+void UTIL_ShowMenu(edict_t *pEdict, const int slots, const int displaytime, const bool needmore, const char *pText) {
    if (gmsgShowMenu == 0)
       gmsgShowMenu = REG_USER_MSG("ShowMenu", -1);
 
@@ -661,7 +661,7 @@ void UTIL_BuildFileName(char *filename, const int max_fn_length, char *arg1, cha
       return;
 
    // add the foxbot directory path, unless it is not valid
-   if (strcmp(foxbot_path, "") != 0 && strlen(foxbot_path) < (unsigned)max_fn_length) {
+   if (strcmp(foxbot_path, "") != 0 && strlen(foxbot_path) < static_cast<unsigned>(max_fn_length)) {
       strncpy(filename, foxbot_path, max_fn_length);
       filename[max_fn_length - 1] = '\0';
    } else
