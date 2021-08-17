@@ -31,13 +31,13 @@ Updated by RoboCop
 	
 - bot_job_think.cpp adjusted for the Medic and Engineer bots to heal their team mates more often
 
+- botdontmove, bot_chat, min_bots, max_bots, bot_bot_balance and bot_team_balance cvars should now operate properly
+
 Known bugs:-
 
 >> Soldier bots tend to struggle for rocket jumping in awkward areas that can block its way
 
 >> Sniper bots tend to TK when Friendly Fire is on, when interacting with their team's sentries and teleports
-
->> min_bots, max_bots, bot_total_varies, bot_bot_balance and bot_team_balance cvars may not be 100% operational
 
 --------------------------------------------------------------------------------
 Version 0.793
