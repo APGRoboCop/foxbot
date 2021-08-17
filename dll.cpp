@@ -2802,7 +2802,7 @@ void StartFrame() { // v7 last frame timing
          if ((count1 < interested_bots || bot_total_varies == 0) && count1 < max_bots && max_bots != -1) {
             BotCreate(nullptr, nullptr, nullptr, nullptr, nullptr);
          } // do bot max_bot kick here... if there are currently more than the minimum number of bots running then kick one of the bots off the server...
-         if ((count1 > (interested_bots && bot_total_varies) || count1 > max_bots) && max_bots != -1) {
+         if ((count1 > interested_bots && bot_total_varies || count1 > max_bots) && max_bots != -1) {
             // count the number of bots present
             int bot_count = 0;
             for (i = 0; i <= 31; i++) {
