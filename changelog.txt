@@ -4,7 +4,7 @@
 
 --------------------------------------------------------------------------------
 Version 0.800
-????-??-202?
+????-??-2021
 Updated by RoboCop
 --------------------------------------------------------------------------------
 
@@ -15,9 +15,13 @@ Updated by RoboCop
 	+ lbdustbowl
 	+ mulch_dm2b1
 
+- Reinstated the 'foxbot_commander' feature
+
 - Reduced fire delay for Sniper's Auto-Rifle
 	
 - Reduced overflow issues and instability crashes
+
+- Fixed Listenserver foxbot.cfg and other .cfg load failures
 
 - Reduced StartFrame stack by reducing some unwanted features and lines that exceed it
 	
