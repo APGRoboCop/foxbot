@@ -18,6 +18,8 @@ Updated by RoboCop
 - Reinstated the 'foxbot_commander' feature
 
 - Reduced fire delay for Sniper's Auto-Rifle
+
+- Limited the bot frame rate movement to 100Hz
 	
 - Reduced overflow issues and instability crashes
 

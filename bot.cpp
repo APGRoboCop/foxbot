@@ -3587,7 +3587,8 @@ void BotThink(bot_t *pBot) {
    const float msecval = (gpGlobals->time - pBot->fLastRunPlayerMoveTime) * 1000.0f;
    pBot->fLastRunPlayerMoveTime = gpGlobals->time;
 
-   const float fUpdateInterval = 1.0f / 60.0f; // update at 60 fps
+   //const float fUpdateInterval = 1.0f / 60.0f; // update at 60 fps
+   const float fUpdateInterval = 1.0f / 100.0f; // update at 100 fps
    pBot->fUpdateTime = gpGlobals->time + fUpdateInterval;
 
    // this is the only place this should be set
