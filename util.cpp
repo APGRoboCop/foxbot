@@ -769,7 +769,7 @@ bool UTIL_ReadFileLine(char *string, const unsigned int max_length, FILE *file_p
    // go look for it
    if (!line_end_found) {
       // printf("finding line end\n");
-      int c = 0;
+      int c;
       do {
          c = fgetc(file_ptr);
       } while (c != '\n' && c != '\r' && c != EOF);
