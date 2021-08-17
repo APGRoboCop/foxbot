@@ -2535,6 +2535,8 @@ void StartFrame() { // v7 last frame timing
             }
             if (IS_DEDICATED_SERVER())
                bot_cfg_pause_time = gpGlobals->time + 2.0;
+            else //Required for Listenservers to exec .cfg [APG]RoboCop[CL]
+               bot_cfg_pause_time = gpGlobals->time + 2.0; // was 20
          }
          if (need_to_open_cfg2) // have we opened foxbot.cfg file yet?
          {
