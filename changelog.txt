@@ -14,6 +14,7 @@ Updated by RoboCop
 	+ insideout
 	+ lbdustbowl
 	+ mulch_dm2b1
+	+ turbine
 
 - Reinstated the 'foxbot_commander' feature
 

@@ -877,7 +877,7 @@ static bool BotUpdateRoute(bot_t *pBot) {
       // this check can solve waypoint circling problems
       else if (dist < 100.0 && pBot->f_navProblemStartTime > 0.1 && pBot->f_navProblemStartTime + 0.5 < pBot->f_think_time) {
          if (nextWP != -1 && nextWP != pBot->goto_wp) {
-            const float pathDistance = static_cast<float>(WaypointDistanceFromTo(new_current_wp, nextWP, pBot->current_team));
+            const auto pathDistance = static_cast<float>(WaypointDistanceFromTo(new_current_wp, nextWP, pBot->current_team));
             const float distToNext = (waypoints[nextWP].origin - pBot->pEdict->v.origin).Length();
 
             // see if the bot is near enough to the next waypoint despite
