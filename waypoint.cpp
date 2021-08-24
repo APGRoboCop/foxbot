@@ -45,8 +45,6 @@
 #include "bot.h"
 #include "waypoint.h"
 
-// me
-
 // linked list class.
 #include "list.h"
 List<char *> commanders;
@@ -1455,7 +1453,7 @@ bool WaypointLoad(edict_t *pEntity) {
    char mapname[64];
    char filename[256];
    WAYPOINT_HDR header;
-   char msg[512];
+   char msg[256];
    int index, i;
    short int num;
    short int path_index;
@@ -1488,26 +1486,27 @@ bool WaypointLoad(edict_t *pEntity) {
       // make sure the waypoint file is Foxbot specific
       if (strcmp(header.filetype, "FoXBot") != 0) {
          if (pEntity) {
-            sprintf(msg, "%s is not a valid FoXBot waypoint file!\n", filename);
+            sprintf(msg, "%s isn't a valid FoXBot waypoint file\n", filename);
             ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
          }
 
          if (IS_DEDICATED_SERVER())
-            printf("%s is not a valid FoXBot waypoint file!\n", filename);
+            printf("%s isn't a valid FoXBot waypoint file\n", filename);
 
          fclose(bfp);
          return false;
       }
       // make sure the waypoint file was meant for the current map
       header.mapname[31] = 0;
+
       if (strcasecmp(header.mapname, STRING(gpGlobals->mapname)) != 0) {
          if (pEntity) {
-            sprintf(msg, "%s FoXBot waypoints are not for this map!\n", filename);
+            sprintf(msg, "%s FoXBot waypoints aren't for this map\n", filename);
             ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
          }
 
          if (IS_DEDICATED_SERVER())
-            printf("%s FoXBot waypoints are not for this map!\n", filename);
+            printf("%s FoXBot waypoints aren't for this map\n", filename);
 
          fclose(bfp);
          return false;
@@ -1586,12 +1585,12 @@ bool WaypointLoad(edict_t *pEntity) {
       return true;
    } else {
       if (pEntity) {
-         sprintf(msg, "Waypoint file %s does not exist!\nLooking for HPB bot file instead\n", filename);
+         sprintf(msg, "Waypoint file %s doesn't exist!\nLooking for HPB file instead\n", filename);
          ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
       }
 
       if (IS_DEDICATED_SERVER())
-         printf("waypoint file %s not found!\nLooking for HPB bot file instead\n", filename);
+         printf("waypoint file %s not found!\nLooking for HPB file instead\n", filename);
    }
 
    // try for hpb_bot file instead
@@ -1612,7 +1611,7 @@ bool WaypointLoad(edict_t *pEntity) {
       if (strcmp(header.filetype, "HPB_bot") == 0) {
          if (header.waypoint_file_version != WAYPOINT_VERSION) {
             if (pEntity)
-               ClientPrint(pEntity, HUD_PRINTNOTIFY, "Incompatible HPB bot waypoint file version!\nWaypoints not loaded!\n");
+               ClientPrint(pEntity, HUD_PRINTNOTIFY, "Incompatible HPB bot waypoint file version!\nWaypoints not loaded\n");
 
             fclose(bfp);
             return false;
@@ -1643,7 +1642,7 @@ bool WaypointLoad(edict_t *pEntity) {
             g_waypoint_paths = true; // keep track so path can be freed
          } else {
             if (pEntity) {
-               sprintf(msg, "%s HPB bot waypoints are not for this map!\n", filename);
+               sprintf(msg, "%s HPB waypoints aren't for this map\n", filename);
                ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
             }
 
@@ -1652,7 +1651,7 @@ bool WaypointLoad(edict_t *pEntity) {
          }
       } else {
          if (pEntity) {
-            sprintf(msg, "%s is not a HPB bot waypoint file!\n", filename);
+            sprintf(msg, "%s is not a HPB waypoint file\n", filename);
             ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
          }
 
@@ -1666,12 +1665,12 @@ bool WaypointLoad(edict_t *pEntity) {
       WaypointRouteInit();
    } else {
       if (pEntity) {
-         sprintf(msg, "Waypoint file %s does not exist!\n", filename);
+         sprintf(msg, "Waypoint file %s doesn't exist\n", filename);
          ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
       }
 
       if (IS_DEDICATED_SERVER())
-         printf("waypoint file %s not found!\n", filename);
+         printf("waypoint file %s not found\n", filename);
 
       return false;
    }
@@ -3848,7 +3847,7 @@ bool AreaDefLoad(edict_t *pEntity) {
    FILE *bfp = fopen(filename, "rb");
 
    if (bfp != nullptr) {
-      char msg[512];
+      char msg[256];
       if (IS_DEDICATED_SERVER())
          printf("loading area file: %s\n", filename);
       fread(&header, sizeof header, 1, bfp);
@@ -3857,7 +3856,7 @@ bool AreaDefLoad(edict_t *pEntity) {
       if (strcmp(header.filetype, "FoXBot") == 0) {
          if (header.area_file_version != AREA_VERSION) {
             if (pEntity)
-               ClientPrint(pEntity, HUD_PRINTNOTIFY, "Incompatible FoXBot area file version!\nAreas not loaded!\n");
+               ClientPrint(pEntity, HUD_PRINTNOTIFY, "Incompatible FoXBot area file version\nAreas not loaded\n");
 
             fclose(bfp);
             return false;
@@ -3894,7 +3893,7 @@ bool AreaDefLoad(edict_t *pEntity) {
             }
          } else {
             if (pEntity) {
-               sprintf(msg, "%s FoXBot areas are not for this map!\n", filename);
+               sprintf(msg, "%s FoXBot areas aren't for this map\n", filename);
 
                ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
             }
@@ -3904,7 +3903,7 @@ bool AreaDefLoad(edict_t *pEntity) {
          }
       } else {
          if (pEntity) {
-            sprintf(msg, "%s is not a FoXBot area file!\n", filename);
+            sprintf(msg, "%s is not a FoXBot area file\n", filename);
             ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
          }
 

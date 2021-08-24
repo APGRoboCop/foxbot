@@ -882,7 +882,7 @@ int DispatchSpawn(edict_t *pent) {
          PRECACHE_MODEL("models/presentlg.mdl");
          PRECACHE_MODEL("models/presentsm.mdl");
 
-         PRECACHE_SOUND("barney/c1a4_ba_octo4.wav");
+         //PRECACHE_SOUND("barney/c1a4_ba_octo4.wav");
          PRECACHE_SOUND("misc/b2.wav");
          PRECACHE_SOUND("misc/party2.wav");
          PRECACHE_SOUND("misc/party1.wav");
