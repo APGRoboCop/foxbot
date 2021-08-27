@@ -11,7 +11,7 @@ Updated by RoboCop
 - Added new waypoints:-
 	+ botspree
 	+ dustbowl_old (incomplete)
-	+ dustbowl2_v3
+	+ dustbowl2_v3 (map broken)
 	+ gen_complex
 	+ insideout
 	+ lbdustbowl
@@ -33,6 +33,8 @@ Updated by RoboCop
 - Reduced StartFrame stack by reducing some unwanted features and lines that exceed it
 	
 - Added more reaction time delay for bots to attack enemies as they were too quick to respond
+
+- Improved dustbowl waypoint by removing rogue pathways in the Jump Point for Capture Point 1, 2 and 3
 	
 - bot_job_think.cpp adjusted for the Medic and Engineer bots to heal their team mates more often
 
