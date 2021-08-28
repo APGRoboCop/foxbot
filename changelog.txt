@@ -10,8 +10,8 @@ Updated by RoboCop
 
 - Added new waypoints:-
 	+ botspree
-	+ dustbowl_old (incomplete)
-	+ dustbowl2_v3 (map broken)
+	+ dustbowl_old
+	+ dustbowl2_v2
 	+ gen_complex
 	+ insideout
 	+ lbdustbowl
@@ -27,6 +27,8 @@ Updated by RoboCop
 - Reduced further more redundant codes and added more C++14 support
 	
 - Reduced overflow issues and instability crashes
+
+- Reduced Reachable Range to prevent waypoints creation from adding too many junctions
 
 - Fixed Listenserver foxbot.cfg and other .cfg load failures
 

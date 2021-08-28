@@ -56,7 +56,7 @@
 #define MENU_6 6
 #define MENU_7 7
 
-cvar_t foxbot = {"foxbot", "0.800-beta2", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr};
+cvar_t foxbot = {"foxbot", "0.800-beta3", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr};
 cvar_t enable_foxbot = {"enable_foxbot", "1", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr};
 cvar_t sv_bot = {"bot", "", 0, 0, nullptr};
 
@@ -2536,7 +2536,7 @@ void StartFrame() { // v7 last frame timing
             if (IS_DEDICATED_SERVER())
                bot_cfg_pause_time = gpGlobals->time + 2.0;
             else //Required for Listenservers to exec .cfg [APG]RoboCop[CL]
-               bot_cfg_pause_time = gpGlobals->time + 2.0; // was 20
+               bot_cfg_pause_time = gpGlobals->time + 5.0; // was 20
          }
          if (need_to_open_cfg2) // have we opened foxbot.cfg file yet?
          {
