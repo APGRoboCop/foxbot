@@ -40,50 +40,43 @@ Updated by RoboCop
 
 - Added new waypoints:-
 	+ botspree
+	+ dustbowl_old
+	+ dustbowl2_v2
 	+ gen_complex
 	+ insideout
 	+ lbdustbowl
 	+ mulch_dm2b1
+	+ rock2_2way_r
+	+ rock2_open_r
+	+ turbine (incomplete)
 
---------------------------------------------------------------------------------
-Version 0.793
-September-26-2020
-Updated by RoboCop
---------------------------------------------------------------------------------
+- Reinstated the 'foxbot_commander' feature
 
-- Fixed high bots CPU usage and buffer overruns
+- Reduced fire delay for Sniper's Auto-Rifle
 
-- Fixed load with non-metamod crashing the game
+- Reduced further more redundant codes and added more C++14 support
+	
+- Reduced overflow issues and instability crashes
 
-- Removed some more redundant codes
+- Reduced Reachable Range to prevent waypoints creation from adding too many junctions
 
-- Added some Clang compiler fixes and performance fixes
+- Fixed Listenserver foxbot.cfg and other .cfg load failures
 
-- Spies won't select enemy Scouts, Medics, HWs and Engineers disguises as their speeds and lame default weapons can easily blow their covers
+- Reduced StartFrame stack by reducing some unwanted features and lines that exceed it
+	
+- Added more reaction time delay for bots to attack enemies as they were too quick to respond
 
-- Repaired some rogue pathwaypoints for 2fort, avanti, cz2, palermo, rock2, sandbowl_r2, shutdown2 and well
+- Improved dustbowl waypoint by removing rogue pathways in the Jump Point for Capture Point 1, 2 and 3
+	
+- bot_job_think.cpp adjusted for the Medic and Engineer bots to heal their team mates more often
 
-- Allowing bots to avoid firing lame weapons like nailguns, laser railguns and dart tranq guns too often
-
-- Limited the bot frame rate movement to 60Hz
-
-- Increased bot job priority for collecting ammo and healing teammates
-
-- Added script for the bots to know how to disable flag room security
-
-- Reduced bot job priority for solders to avoid rocket jumping too often
-
-- Removed excess Conc/Rocket Jump waypoints in dustbowl in awkward areas and due to the lack of conc nades
-
-- Optimised 'foxbot_commander.txt' by removing excess 'strlen' loops
+- botdontmove, bot_chat, min_bots, max_bots, bot_bot_balance and bot_team_balance cvars should now operate properly
 
 Known bugs:-
 
->> Soldier bots tend to struggle for rocket jumping in certain areas that can block its way
+>> Soldier bots tend to struggle for rocket jumping in awkward areas that can block its way
 
 >> Sniper bots tend to TK when Friendly Fire is on, when interacting with their team's sentries and teleports
-
->> botdontmove, bot_chat, min_bots, max_bots, bot_bot_balance and bot_team_balance cvars may not be 100% operational
 
 --------------------------------------------------------------------------------
 
