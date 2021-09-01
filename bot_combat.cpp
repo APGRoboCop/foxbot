@@ -213,7 +213,7 @@ int FriendlyClassTotal(edict_t *pEdict, const int specifiedClass, const bool ign
 // are changed, because it updates the bot inaccuracy levels based on those two
 // config settings.
 void BotUpdateSkillInaccuracy() {
-   const auto f_aim_per_skill = static_cast<float>(bot_aim_per_skill);
+   const float f_aim_per_skill = static_cast<float>(bot_aim_per_skill);
 
    bot_max_inaccuracy[0] = static_cast<float>(bot_skill_1_aim);
    bot_max_inaccuracy[1] = bot_max_inaccuracy[0] + f_aim_per_skill;

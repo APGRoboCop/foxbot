@@ -2439,6 +2439,8 @@ void StartFrame() { // v7 last frame timing
                }                                    // set the respawn time
                if (IS_DEDICATED_SERVER())
                   respawn_time = gpGlobals->time + 10.0;
+			   else
+                  respawn_time = gpGlobals->time + 15.0; //Reduce Listenserver crash? [APG]RoboCop[CL]
             }
          } // start updating client data again
          client_update_time = gpGlobals->time + 10.0;
@@ -2536,7 +2538,7 @@ void StartFrame() { // v7 last frame timing
             if (IS_DEDICATED_SERVER())
                bot_cfg_pause_time = gpGlobals->time + 2.0;
             else //Required for Listenservers to exec .cfg [APG]RoboCop[CL]
-               bot_cfg_pause_time = gpGlobals->time + 5.0; // was 20
+               bot_cfg_pause_time = gpGlobals->time + 10.0; // was 20
          }
          if (need_to_open_cfg2) // have we opened foxbot.cfg file yet?
          {

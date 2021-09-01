@@ -40,7 +40,7 @@ extern void *h_Library;
 
 void helper_LinkEntity(LINK_ENTITY_FUNC &addr, const char *name, entvars_t *pev) {
    if (addr == nullptr) {
-      addr = reinterpret_cast<LINK_ENTITY_FUNC>(GetProcAddress(h_Library, name));
+      addr = (LINK_ENTITY_FUNC)GetProcAddress(h_Library, name);
    }
 
    if (addr == nullptr) {

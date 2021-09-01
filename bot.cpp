@@ -241,7 +241,7 @@ inline void SET_CLIENT_KEY_VALUE(const int clientIndex, char *infobuffer, char *
 void player(entvars_t *pev) {
    static LINK_ENTITY_FUNC otherClassName = nullptr;
    if (otherClassName == nullptr) {
-      otherClassName = reinterpret_cast<LINK_ENTITY_FUNC>(GetProcAddress(h_Library, "player"));
+      otherClassName = (LINK_ENTITY_FUNC)GetProcAddress(h_Library, "player");
    }
    if (otherClassName != nullptr) {
       (*otherClassName)(pev);

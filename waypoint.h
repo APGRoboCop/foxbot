@@ -41,7 +41,7 @@ typedef signed int WPT_INT32;
 
 #define MAX_WAYPOINTS 32000
 
-#define REACHABLE_RANGE 500.0
+#define REACHABLE_RANGE 600.0
 
 // defines for waypoint flags field (32 bits are available)
 #define W_FL_TEAM ((1 << 0) + (1 << 1)) /* allow for 4 teams (0-3) */

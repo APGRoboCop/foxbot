@@ -15,10 +15,13 @@ Updated by RoboCop
 	+ gen_complex
 	+ insideout
 	+ lbdustbowl
+	+ madcanyon
 	+ mulch_dm2b1
+	+ murderball1_3
 	+ rock2_2way_r
 	+ rock2_open_r
 	+ turbine (incomplete)
+	+ warpath_r2
 
 - Reinstated the 'foxbot_commander' feature
 
@@ -31,6 +34,10 @@ Updated by RoboCop
 - Reduced Reachable Range to prevent waypoints creation from adding too many junctions
 
 - Fixed Listenserver foxbot.cfg and other .cfg load failures
+
+- Added some support for murderball1_3 and murderball-2002
+
+- Fixed the unreachable waypoint in warpath as well as enhanced its other waypoints
 
 - Reduced StartFrame stack by reducing some unwanted features and lines that exceed it
 	
