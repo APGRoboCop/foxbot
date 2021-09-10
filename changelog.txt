@@ -4,7 +4,7 @@
 
 --------------------------------------------------------------------------------
 Version 0.800
-????-??-2021
+September-10-2021
 Updated by RoboCop
 --------------------------------------------------------------------------------
 
@@ -25,7 +25,7 @@ Updated by RoboCop
 	+ rock2_2way_r
 	+ rock2_open_r
 	+ sandbowl_r
-	+ turbine (incomplete)
+	+ turbine
 	+ warpath_r2
 
 - Reinstated the 'foxbot_commander' feature

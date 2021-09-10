@@ -2248,7 +2248,7 @@ void BotCheckForMultiguns(bot_t *pBot, float nearestdistance, edict_t *pNewEnemy
 
    // Skip this shit if neotf isnt present
    const char *cvar_ntf = const_cast<char *>(CVAR_GET_STRING("neotf"));
-   if (strcmp(cvar_ntf, "1")) // No neotf
+   if (strcmp(cvar_ntf, "1") != 0) // No neotf
       return;
 
    // Loop through all the multigun types, checking for a closer target

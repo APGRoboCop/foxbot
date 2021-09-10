@@ -24,13 +24,8 @@
 #include "extdll.h"
 #include <util.h>
 
-#ifndef __linux__
-#include <time.h>
-#include <math.h>
-#else
 #include <ctime>
 #include <cmath>
-#endif
 
 #include "bot.h"
 #include "bot_func.h"

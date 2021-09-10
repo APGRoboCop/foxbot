@@ -29,18 +29,17 @@
 #define BOT_H
 
 #include "osdep.h"
+#include <cstring>
 
 // stuff for Win32 vs. Linux builds
 
 #ifndef __linux__
-#include <string.h>
 typedef int(FAR *GETENTITYAPI)(DLL_FUNCTIONS *, int);
 typedef int(FAR *GETNEWDLLFUNCTIONS)(NEW_DLL_FUNCTIONS *, int *);
 typedef void(__stdcall *GIVEFNPTRSTODLL)(enginefuncs_t *, globalvars_t *);
 typedef void(FAR *LINK_ENTITY_FUNC)(entvars_t *);
 
 #else
-#include <cstring>
 #include <dlfcn.h>
 #define GetProcAddress dlsym
 

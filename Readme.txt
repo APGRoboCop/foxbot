@@ -34,21 +34,29 @@ a section specifically about compiling the Linux version of Foxbot.
 
 --------------------------------------------------------------------------------
 Version 0.800
-????-??-202?
+September-10-2021
 Updated by RoboCop
 --------------------------------------------------------------------------------
 
 - Added new waypoints:-
+	+ axlfly
 	+ botspree
 	+ dustbowl_old
 	+ dustbowl2_v2
 	+ gen_complex
 	+ insideout
 	+ lbdustbowl
+	+ madcanyon
 	+ mulch_dm2b1
+	+ murderball1_3
+	+ osaka_l
+	+ osaka_r2
+	+ rats2v2
 	+ rock2_2way_r
 	+ rock2_open_r
-	+ turbine (incomplete)
+	+ sandbowl_r
+	+ turbine
+	+ warpath_r2
 
 - Reinstated the 'foxbot_commander' feature
 
@@ -61,6 +69,10 @@ Updated by RoboCop
 - Reduced Reachable Range to prevent waypoints creation from adding too many junctions
 
 - Fixed Listenserver foxbot.cfg and other .cfg load failures
+
+- Added some support for murderball, murderball1_3 and murderball-2002
+
+- Fixed the unreachable waypoint in warpath as well as enhanced its other waypoints
 
 - Reduced StartFrame stack by reducing some unwanted features and lines that exceed it
 	
@@ -77,8 +89,6 @@ Known bugs:-
 >> Soldier bots tend to struggle for rocket jumping in awkward areas that can block its way
 
 >> Sniper bots tend to TK when Friendly Fire is on, when interacting with their team's sentries and teleports
-
---------------------------------------------------------------------------------
 
 ____________________________________________________________
 
