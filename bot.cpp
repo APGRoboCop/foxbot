@@ -4074,7 +4074,7 @@ static int guessThreatLevel(const bot_t *pBot) {
       break;
    case TFC_CLASS_DEMOMAN:
       Threat += 13;
-      if (pBot->enemy.f_seenDistance < 600.0f)
+      if (pBot->enemy.f_seenDistance < 400.0f)
          Threat += 25;
       break;
    case TFC_CLASS_MEDIC:
