@@ -4234,7 +4234,7 @@ static void BotSpectatorDebug(bot_t *pBot) {
          for (int i = 0; i < JOB_BUFFER_MAX; i++) {
             // list one job per line
             if (pBot->jobType[i] > JOB_NONE && pBot->jobType[i] < JOB_TYPE_TOTAL) {
-               strncat(msg, jl[pBot->jobType[i]].jobNames, 255 - strlen(msg));
+               strncat(msg, jl1[pBot->jobType[i]].jobNames, 255 - strlen(msg));
 
                // indicate the current job and how long it's been running
                if (pBot->currentJob == i) {
@@ -4253,7 +4253,7 @@ static void BotSpectatorDebug(bot_t *pBot) {
          for (int i = 0; i < JOB_BLACKLIST_MAX; i++) {
             // list one blacklisted job per line
             if (pBot->jobBlacklist[i].type > JOB_NONE && pBot->jobBlacklist[i].f_timeOut >= pBot->f_think_time && pBot->jobBlacklist[i].type < JOB_TYPE_TOTAL) {
-               strncat(msg, jl[pBot->jobBlacklist[i].type].jobNames, 255 - strlen(msg));
+               strncat(msg, jl1[pBot->jobBlacklist[i].type].jobNames, 255 - strlen(msg));
                strncat(msg, "\n", 255 - strlen(msg)); // add a newline on the end
             } else
                strncat(msg, "\n", 255 - strlen(msg)); // skip empty blacklist indexes

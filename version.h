@@ -37,7 +37,7 @@
  * If not, we provide it here.
  */
 #ifndef VERSION
-#define VERSION 0.800
+#define VERSION 0.801
 #endif
 
 /*

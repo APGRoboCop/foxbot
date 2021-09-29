@@ -122,7 +122,7 @@ static constexpr jobFunctions_struct jf[JOB_TYPE_TOTAL] = {
 
 // list of essential data for all known job types
 // these must be in the right order for each job to run properly
-const jobList_struct jl[JOB_TYPE_TOTAL] = {
+const jobList_struct jl1[JOB_TYPE_TOTAL] = {
     {PRIORITY_MAXIMUM, "JOB_GET_UNSTUCK"},
     {800, "JOB_MAINTAIN_OBJECT"},
     {790, "JOB_PUSH_BUTTON"},
@@ -154,7 +154,10 @@ const jobList_struct jl[JOB_TYPE_TOTAL] = {
     {490, "JOB_PICKUP_ITEM"},
     {480, "JOB_CALL_MEDIC"}, // this should be a higher priority than JOB_GET_HEALTH
     {470, "JOB_GET_HEALTH"},
-    {460, "JOB_GET_ARMOR"},
+    {460, "JOB_GET_ARMOR"}, // Bots appear to maybe not go beyond this line as the max is 32 tasks and could be out of range? [APG]RoboCop[CL]
+};
+
+const jobList_struct jl2[JOB_TYPE_TOTAL] = {
     {450, "JOB_ATTACK_TELEPORT"},
     {430, "JOB_PIPETRAP"},
     {410, "JOB_DETPACK_WAYPOINT"},

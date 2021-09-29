@@ -3,6 +3,22 @@
 ==============================
 
 --------------------------------------------------------------------------------
+Version 0.801
+??-??-202?
+Updated by RoboCop
+--------------------------------------------------------------------------------
+
+TODO List:-
+
+>> Fix bot_chat cvars
+
+>> Allow bots to toss grenades at a higher angle and low range as their target aim is too short
+
+>> Find a way to allow bot_job_think.cpp task priorities work properly (45 jobs in total too much?)
+
+>> BONUS: Maybe add a feature for bots to have experience and wisdom in order to be more human
+
+--------------------------------------------------------------------------------
 Version 0.800
 September-10-2021
 Updated by RoboCop
