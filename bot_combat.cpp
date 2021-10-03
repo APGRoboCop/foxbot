@@ -1169,7 +1169,7 @@ void BotShootAtEnemy(bot_t *pBot) {
    // if the bot is a disguised Spy targetting a Sentry Gun
    // and is near enough to throw frag grenades at it
    if (bot_use_grenades && pBot->pEdict->v.playerclass == TFC_CLASS_SPY && pBot->enemy.ptr == pBot->lastEnemySentryGun && pBot->disguise_state == DISGUISE_COMPLETE && !FNullEnt(pBot->lastEnemySentryGun) &&
-       pBot->grenades[PrimaryGrenade] > 0 && f_distance < 1000.0f) {
+       pBot->grenades[PrimaryGrenade] > 0 && f_distance < 800.0f) {
       // don't shoot until the Spy has no frag grenades left
       pBot->f_shoot_time = pBot->f_think_time + 3.0f;
 

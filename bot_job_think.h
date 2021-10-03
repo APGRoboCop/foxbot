@@ -95,8 +95,7 @@ typedef struct {
    char jobNames[32]; // useful in debugging
 } jobList_struct;
 
-extern const jobList_struct jl1[JOB_TYPE_TOTAL];
-extern const jobList_struct jl2[JOB_TYPE_TOTAL];
+extern const jobList_struct jl[JOB_TYPE_TOTAL];
 
 // function prototypes below /////////////
 void BotResetJobBuffer(bot_t *pBot);

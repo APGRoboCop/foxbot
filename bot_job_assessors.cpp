@@ -61,7 +61,7 @@ int assess_JobSeekWaypoint(const bot_t *pBot, const job_struct &r_job) {
    if (pBot->current_wp > -1 && pBot->current_wp < num_waypoints)
       return PRIORITY_NONE;
 
-   return jl1[JOB_SEEK_WAYPOINT].basePriority;
+   return jl[JOB_SEEK_WAYPOINT].basePriority;
 }
 
 // assessment function for the priority of a JOB_GET_UNSTUCK job.
@@ -71,7 +71,7 @@ int assess_JobGetUnstuck(const bot_t *pBot, const job_struct &r_job) {
    if (r_job.f_bufferedTime < pBot->f_killed_time)
       return PRIORITY_NONE;
 
-   return jl1[JOB_GET_UNSTUCK].basePriority;
+   return jl[JOB_GET_UNSTUCK].basePriority;
 }
 
 // assessment function for the priority of a JOB_ROAM job.
@@ -85,7 +85,7 @@ int assess_JobRoam(const bot_t *pBot, const job_struct &r_job) {
    // this job kicks in if no other job is working(e.g. because of route failure)
    // let the job itself try to cope with route failure
 
-   return jl2[JOB_ROAM].basePriority;
+   return jl[JOB_ROAM].basePriority;
 }
 
 // assessment function for the priority of a JOB_CHAT job.
@@ -96,7 +96,7 @@ int assess_JobChat(const bot_t *pBot, const job_struct &r_job) {
       return PRIORITY_NONE;
    }
 
-   return jl2[JOB_CHAT].basePriority;
+   return jl[JOB_CHAT].basePriority;
 }
 
 // assessment function for the priority of a JOB_REPORT job.
@@ -107,7 +107,7 @@ int assess_JobReport(const bot_t *pBot, const job_struct &r_job) {
       return PRIORITY_NONE;
    }
 
-   return jl1[JOB_REPORT].basePriority;
+   return jl[JOB_REPORT].basePriority;
 }
 
 // assessment function for the priority of a JOB_PICKUP_ITEM job.
@@ -138,7 +138,7 @@ int assess_JobPickUpItem(const bot_t *pBot, const job_struct &r_job) {
    if (!VectorsNearerThan(r_job.object->v.origin, r_job.origin, 100.0))
       return PRIORITY_NONE;
 
-   return jl1[JOB_PICKUP_ITEM].basePriority;
+   return jl[JOB_PICKUP_ITEM].basePriority;
 }
 
 // assessment function for the priority of a JOB_PICKUP_FLAG job.
@@ -164,7 +164,7 @@ int assess_JobPickUpFlag(const bot_t *pBot, const job_struct &r_job) {
    if (!VectorsNearerThan(r_job.object->v.origin, r_job.origin, 200.0))
       return PRIORITY_NONE;
 
-   return jl1[JOB_PICKUP_FLAG].basePriority;
+   return jl[JOB_PICKUP_FLAG].basePriority;
 }
 
 // assessment function for the priority of a JOB_PUSH_BUTTON job.
@@ -190,7 +190,7 @@ int assess_JobPushButton(const bot_t *pBot, const job_struct &r_job) {
    if (!(tr.flFraction >= 1.0 || tr.pHit == r_job.object))
       return PRIORITY_NONE;
 
-   return jl1[JOB_PUSH_BUTTON].basePriority;
+   return jl[JOB_PUSH_BUTTON].basePriority;
 }
 
 // assessment function for the priority of a JOB_USE_TELEPORT job.
@@ -236,7 +236,7 @@ int assess_JobUseTeleport(const bot_t *pBot, const job_struct &r_job) {
       }
    }
 
-   return jl1[JOB_USE_TELEPORT].basePriority;
+   return jl[JOB_USE_TELEPORT].basePriority;
 }
 
 // assessment function for the priority of a JOB_MAINTAIN_OBJECT job.
@@ -261,7 +261,7 @@ int assess_JobMaintainObject(const bot_t *pBot, const job_struct &r_job) {
       return PRIORITY_NONE;
    }
 
-   return jl1[JOB_MAINTAIN_OBJECT].basePriority;
+   return jl[JOB_MAINTAIN_OBJECT].basePriority;
 }
 
 // assessment function for the priority of a JOB_BUILD_SENTRY job.
@@ -286,7 +286,7 @@ int assess_JobBuildSentry(const bot_t *pBot, const job_struct &r_job) {
    if (r_job.phase == 2)
       return PRIORITY_MAXIMUM;
 
-   return jl1[JOB_BUILD_SENTRY].basePriority;
+   return jl[JOB_BUILD_SENTRY].basePriority;
 }
 
 // assessment function for the priority of a JOB_BUILD_DISPENSER job.
@@ -311,7 +311,7 @@ int assess_JobBuildDispenser(const bot_t *pBot, const job_struct &r_job) {
    if (r_job.phase == 2)
       return PRIORITY_MAXIMUM;
 
-   return jl1[JOB_BUILD_DISPENSER].basePriority;
+   return jl[JOB_BUILD_DISPENSER].basePriority;
 }
 
 // assessment function for the priority of a JOB_BUILD_TELEPORT job.
@@ -336,7 +336,7 @@ int assess_JobBuildTeleport(const bot_t *pBot, const job_struct &r_job) {
    if (r_job.phase == 2)
       return PRIORITY_MAXIMUM;
 
-   return jl1[JOB_BUILD_TELEPORT].basePriority;
+   return jl[JOB_BUILD_TELEPORT].basePriority;
 }
 
 // assessment function for the priority of a JOB_BUFF_ALLY job.
@@ -362,7 +362,7 @@ int assess_JobBuffAlly(const bot_t *pBot, const job_struct &r_job) {
          return PRIORITY_NONE;
    }
 
-   return jl1[JOB_BUFF_ALLY].basePriority;
+   return jl[JOB_BUFF_ALLY].basePriority;
 }
 
 // assessment function for the priority of a JOB_ESCORT_ALLY job.
@@ -391,7 +391,7 @@ int assess_JobEscortAlly(const bot_t *pBot, const job_struct &r_job) {
    if (r_job.phase != 0 && (!WaypointAvailable(r_job.waypoint, pBot->current_team) || WaypointRouteFromTo(pBot->current_wp, r_job.waypoint, pBot->current_team) == -1))
       return PRIORITY_NONE;
 
-   return jl1[JOB_ESCORT_ALLY].basePriority;
+   return jl[JOB_ESCORT_ALLY].basePriority;
 }
 
 // assessment function for the priority of a JOB_CALL_MEDIC job.
@@ -422,9 +422,9 @@ int assess_JobCallMedic(const bot_t *pBot, const job_struct &r_job) {
 
    // boost the priority if infected(just above that of JOB_INFECTED_ATTACK)
    if (PlayerIsInfected(pBot->pEdict))
-      return jl1[JOB_INFECTED_ATTACK].basePriority + 1;
+      return jl[JOB_INFECTED_ATTACK].basePriority + 1;
 
-   return jl1[JOB_CALL_MEDIC].basePriority;
+   return jl[JOB_CALL_MEDIC].basePriority;
 }
 
 // assessment function for the priority of a JOB_GET_HEALTH job.
@@ -443,7 +443,7 @@ int assess_JobGetHealth(const bot_t *pBot, const job_struct &r_job) {
    if (routeDistance == -1 || routeDistance > 4000)
       return PRIORITY_NONE;
 
-   return jl1[JOB_GET_HEALTH].basePriority;
+   return jl[JOB_GET_HEALTH].basePriority;
 }
 
 // assessment function for the priority of a JOB_GET_ARMOR job.
@@ -462,7 +462,7 @@ int assess_JobGetArmor(const bot_t *pBot, const job_struct &r_job) {
    if (routeDistance == -1 || routeDistance > 4000)
       return PRIORITY_NONE;
 
-   return jl1[JOB_GET_ARMOR].basePriority;
+   return jl[JOB_GET_ARMOR].basePriority;
 }
 
 // assessment function for the priority of a JOB_GET_AMMO job.
@@ -481,7 +481,7 @@ int assess_JobGetAmmo(const bot_t *pBot, const job_struct &r_job) {
    if (routeDistance == -1 || routeDistance > 5000)
       return PRIORITY_NONE;
 
-   return jl1[JOB_GET_AMMO].basePriority;
+   return jl[JOB_GET_AMMO].basePriority;
 }
 
 // assessment function for the priority of a JOB_DISGUISE job.
@@ -495,7 +495,7 @@ int assess_JobDisguise(const bot_t *pBot, const job_struct &r_job) {
    if (r_job.phase > 0 && (!WaypointAvailable(r_job.waypoint, pBot->current_team) || WaypointRouteFromTo(pBot->current_wp, r_job.waypoint, pBot->current_team) == -1))
       return PRIORITY_NONE;
 
-   return jl1[JOB_DISGUISE].basePriority;
+   return jl[JOB_DISGUISE].basePriority;
 }
 
 // assessment function for the priority of a JOB_FEIGN_AMBUSH job.
@@ -513,7 +513,7 @@ int assess_JobFeignAmbush(const bot_t *pBot, const job_struct &r_job) {
    if (pBot->pEdict->v.waterlevel != WL_NOT_IN_WATER || (pBot->current_wp > -1 && waypoints[pBot->current_wp].flags & W_FL_LIFT))
       return PRIORITY_NONE;
 
-   return jl2[JOB_FEIGN_AMBUSH].basePriority;
+   return jl[JOB_FEIGN_AMBUSH].basePriority;
 }
 
 // assessment function for the priority of a JOB_SNIPE job.
@@ -527,7 +527,7 @@ int assess_JobSnipe(const bot_t *pBot, const job_struct &r_job) {
    if (!WaypointAvailable(r_job.waypoint, pBot->current_team) || WaypointRouteFromTo(pBot->current_wp, r_job.waypoint, pBot->current_team) == -1)
       return PRIORITY_NONE;
 
-   return jl1[JOB_SNIPE].basePriority;
+   return jl[JOB_SNIPE].basePriority;
 }
 
 // assessment function for the priority of a JOB_GUARD_WAYPOINT job.
@@ -542,7 +542,7 @@ int assess_JobGuardWaypoint(const bot_t *pBot, const job_struct &r_job) {
    if (!WaypointAvailable(r_job.waypoint, pBot->current_team) || WaypointRouteFromTo(pBot->current_wp, r_job.waypoint, pBot->current_team) == -1)
       return PRIORITY_NONE;
 
-   return jl2[JOB_GUARD_WAYPOINT].basePriority;
+   return jl[JOB_GUARD_WAYPOINT].basePriority;
 }
 
 // assessment function for the priority of a JOB_DEFEND_FLAG job.
@@ -577,7 +577,7 @@ int assess_JobDefendFlag(const bot_t *pBot, const job_struct &r_job) {
       }
    }
 
-   return jl1[JOB_DEFEND_FLAG].basePriority;
+   return jl[JOB_DEFEND_FLAG].basePriority;
 }
 
 // assessment function for the priority of a JOB_GET_FLAG job.
@@ -591,7 +591,7 @@ int assess_JobGetFlag(const bot_t *pBot, const job_struct &r_job) {
    if (!WaypointAvailable(r_job.waypoint, pBot->current_team) || WaypointRouteFromTo(pBot->current_wp, r_job.waypoint, pBot->current_team) == -1)
       return PRIORITY_NONE;
 
-   return jl1[JOB_GET_FLAG].basePriority;
+   return jl[JOB_GET_FLAG].basePriority;
 }
 
 // assessment function for the priority of a JOB_CAPTURE_FLAG job.
@@ -605,7 +605,7 @@ int assess_JobCaptureFlag(const bot_t *pBot, const job_struct &r_job) {
    if (r_job.phase != 0 && (!WaypointAvailable(r_job.waypoint, pBot->current_team) || WaypointRouteFromTo(pBot->current_wp, r_job.waypoint, pBot->current_team) == -1))
       return PRIORITY_NONE;
 
-   return jl1[JOB_CAPTURE_FLAG].basePriority;
+   return jl[JOB_CAPTURE_FLAG].basePriority;
 }
 
 // assessment function for the priority of a JOB_HARRASS_DEFENSE job.
@@ -619,7 +619,7 @@ int assess_JobHarrassDefense(const bot_t *pBot, const job_struct &r_job) {
    if (WaypointAvailable(r_job.waypoint, pBot->current_team) && WaypointRouteFromTo(pBot->current_wp, r_job.waypoint, pBot->current_team) == -1)
       return PRIORITY_NONE;
 
-   return jl2[JOB_HARRASS_DEFENSE].basePriority;
+   return jl[JOB_HARRASS_DEFENSE].basePriority;
 }
 
 // assessment function for the priority of a JOB_ROCKET_JUMP job.
@@ -668,7 +668,7 @@ int assess_JobDetpackWaypoint(const bot_t *pBot, const job_struct &r_job) {
    if (r_job.phase == 2)
       return 700;
 
-   return jl2[JOB_DETPACK_WAYPOINT].basePriority;
+   return jl[JOB_DETPACK_WAYPOINT].basePriority;
 }
 
 // assessment function for the priority of a JOB_PIPETRAP job.
@@ -682,7 +682,7 @@ int assess_JobPipetrap(const bot_t *pBot, const job_struct &r_job) {
    if (!WaypointAvailable(r_job.waypoint, pBot->current_team) || WaypointRouteFromTo(pBot->current_wp, r_job.waypoint, pBot->current_team) == -1)
       return PRIORITY_NONE;
 
-   return jl2[JOB_PIPETRAP].basePriority;
+   return jl[JOB_PIPETRAP].basePriority;
 }
 
 // assessment function for the priority of a JOB_INVESTIGATE_AREA job.
@@ -698,7 +698,7 @@ int assess_JobInvestigateArea(const bot_t *pBot, const job_struct &r_job) {
       return PRIORITY_NONE;
    }
 
-   return jl1[JOB_INVESTIGATE_AREA].basePriority;
+   return jl[JOB_INVESTIGATE_AREA].basePriority;
 }
 
 // assessment function for the priority of a JOB_PURSUE_ENEMY job.
@@ -736,7 +736,7 @@ int assess_JobPursueEnemy(const bot_t *pBot, const job_struct &r_job) {
    if (r_job.phase != 0 && (!WaypointAvailable(r_job.waypoint, pBot->current_team) || WaypointRouteFromTo(pBot->current_wp, r_job.waypoint, pBot->current_team) == -1))
       return PRIORITY_NONE;
 
-   return jl1[JOB_PURSUE_ENEMY].basePriority;
+   return jl[JOB_PURSUE_ENEMY].basePriority;
 }
 
 // assessment function for the priority of a JOB_PATROL_HOME job.
@@ -751,7 +751,7 @@ int assess_JobPatrolHome(const bot_t *pBot, const job_struct &r_job) {
    if (r_job.f_bufferedTime + 60.0 < pBot->f_think_time && pBot->f_periodicAlert3 < pBot->f_think_time && random_long(1, 1000) < 200)
       return PRIORITY_NONE;
 
-   return jl2[JOB_PATROL_HOME].basePriority;
+   return jl[JOB_PATROL_HOME].basePriority;
 }
 
 // assessment function for the priority of a JOB_SPOT_STIMULUS job.
@@ -766,7 +766,7 @@ int assess_JobSpotStimulus(const bot_t *pBot, const job_struct &r_job) {
    if (pBot->pEdict->v.movetype == MOVETYPE_FLY && (pBot->pEdict->v.velocity.z > 5.0 || pBot->pEdict->v.velocity.z < -5.0))
       return PRIORITY_NONE;
 
-   return jl1[JOB_SPOT_STIMULUS].basePriority;
+   return jl[JOB_SPOT_STIMULUS].basePriority;
 }
 
 // assessment function for the priority of a JOB_ATTACK_BREAKABLE job.
@@ -781,7 +781,7 @@ int assess_JobAttackBreakable(const bot_t *pBot, const job_struct &r_job) {
    if (!VectorsNearerThan(pBot->pEdict->v.origin, entity_origin, 500.0))
       return PRIORITY_NONE;
 
-   return jl1[JOB_ATTACK_BREAKABLE].basePriority;
+   return jl[JOB_ATTACK_BREAKABLE].basePriority;
 }
 
 // assessment function for the priority of a JOB_ATTACK_TELEPORT job.
@@ -796,7 +796,7 @@ int assess_JobAttackTeleport(const bot_t *pBot, const job_struct &r_job) {
    if (r_job.phase != 0 && (!WaypointAvailable(r_job.waypoint, pBot->current_team) || WaypointRouteFromTo(pBot->current_wp, r_job.waypoint, pBot->current_team) == -1))
       return PRIORITY_NONE;
 
-   return jl2[JOB_ATTACK_TELEPORT].basePriority;
+   return jl[JOB_ATTACK_TELEPORT].basePriority;
 }
 
 // assessment function for the priority of a JOB_SEEK_BACKUP job.
@@ -812,7 +812,7 @@ int assess_JobSeekBackup(const bot_t *pBot, const job_struct &r_job) {
       return PRIORITY_NONE;
    }
 
-   return jl1[JOB_SEEK_BACKUP].basePriority;
+   return jl[JOB_SEEK_BACKUP].basePriority;
 }
 
 // assessment function for the priority of a JOB_AVOID_ENEMY job.
@@ -829,7 +829,7 @@ int assess_JobAvoidEnemy(const bot_t *pBot, const job_struct &r_job) {
       return PRIORITY_NONE;
    }
 
-   return jl2[JOB_AVOID_ENEMY].basePriority;
+   return jl[JOB_AVOID_ENEMY].basePriority;
 }
 
 // assessment function for the priority of a JOB_AVOID_AREA_DAMAGE job.
@@ -844,7 +844,7 @@ int assess_JobAvoidAreaDamage(const bot_t *pBot, const job_struct &r_job) {
    if (FNullEnt(r_job.object) || r_job.object->v.flags & FL_KILLME || !VectorsNearerThan(r_job.object->v.origin, r_job.origin, 200.0))
       return PRIORITY_NONE;
 
-   return jl1[JOB_AVOID_AREA_DAMAGE].basePriority;
+   return jl[JOB_AVOID_AREA_DAMAGE].basePriority;
 }
 
 // assessment function for the priority of a JOB_INFECTED_ATTACK job.
@@ -854,7 +854,7 @@ int assess_JobInfectedAttack(const bot_t *pBot, const job_struct &r_job) {
    if (r_job.f_bufferedTime < pBot->f_killed_time || pBot->bot_has_flag || PlayerIsInfected(pBot->pEdict) == false)
       return PRIORITY_NONE;
 
-   return jl1[JOB_INFECTED_ATTACK].basePriority;
+   return jl[JOB_INFECTED_ATTACK].basePriority;
 }
 
 // assessment function for the priority of a JOB_BIN_GRENADE job.
@@ -865,7 +865,7 @@ int assess_JobBinGrenade(const bot_t *pBot, const job_struct &r_job) {
       return PRIORITY_NONE;
    }
 
-   return jl1[JOB_BIN_GRENADE].basePriority;
+   return jl[JOB_BIN_GRENADE].basePriority;
 }
 
 // assessment function for the priority of a JOB_DROWN_RECOVER job.
@@ -879,7 +879,7 @@ int assess_JobDrownRecover(const bot_t *pBot, const job_struct &r_job) {
    if (!WaypointAvailable(r_job.waypoint, pBot->current_team) || WaypointRouteFromTo(pBot->current_wp, r_job.waypoint, pBot->current_team) == -1)
       return PRIORITY_NONE;
 
-   return jl1[JOB_DROWN_RECOVER].basePriority;
+   return jl[JOB_DROWN_RECOVER].basePriority;
 }
 
 // assessment function for the priority of a JOB_MELEE_WARRIOR job.
@@ -893,7 +893,7 @@ int assess_JobMeleeWarrior(const bot_t *pBot, const job_struct &r_job) {
    if (r_job.phase != 0 && (!WaypointAvailable(r_job.waypoint, pBot->current_team) || WaypointRouteFromTo(pBot->current_wp, r_job.waypoint, pBot->current_team) == -1))
       return PRIORITY_NONE;
 
-   return jl2[JOB_MELEE_WARRIOR].basePriority;
+   return jl[JOB_MELEE_WARRIOR].basePriority;
 }
 
 // assessment function for the priority of a JOB_GRAFFITI_ARTIST job.
@@ -904,5 +904,5 @@ int assess_JobGraffitiArtist(const bot_t *pBot, const job_struct &r_job) {
       return PRIORITY_NONE;
    }
 
-   return jl2[JOB_GRAFFITI_ARTIST].basePriority;
+   return jl[JOB_GRAFFITI_ARTIST].basePriority;
 }

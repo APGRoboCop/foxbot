@@ -73,7 +73,7 @@ distclean:
 	rm -f Rules.depend ${TARGET}.dll ${TARGET}.so addons/foxbot/bin/*
 
 %.o: %.cpp
-	${CPP} ${CPPFLAGS} ${LTOFLAGS} -c $< -o $@
+	${CPP} ${CPPFLAGS} -c $< -o $@
 
 depend: Rules.depend
 
