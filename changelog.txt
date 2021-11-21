@@ -13,6 +13,8 @@ Updated by RoboCop
 
 - Added area for bots to report Sentry Built in dustbowl hut entry in CP1
 
+- Reverted waypoint max Reachable Range
+
 TODO List:-
 
 >> Fix bot_chat cvars
