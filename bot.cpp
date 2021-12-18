@@ -961,6 +961,7 @@ void BotFindItem(bot_t *pBot) {
    BotFlagSpottedCheck(pBot);
 
    edict_t *pPickupEntity = nullptr;
+   Vector pickup_origin;
    Vector entity_origin;
    bool can_pickup;
    float min_distance;
@@ -1394,7 +1395,7 @@ void BotFindItem(bot_t *pBot) {
                if (pent->v.team == UTIL_GetTeam(pEdict) + 1)
                   can_pickup = true;
                else {
-                  char *cvar_ntf_capture_mg = const_cast<char *>(CVAR_GET_STRING("ntf_capture_mg"));
+                  auto cvar_ntf_capture_mg = const_cast<char *>(CVAR_GET_STRING("ntf_capture_mg"));
 
                   if (strcmp(cvar_ntf_capture_mg, "1") == 0)
                      can_pickup = true;
@@ -1409,7 +1410,7 @@ void BotFindItem(bot_t *pBot) {
 
          // see if it's the closest item so far...
          if (distance < min_distance && entity_origin.z > pEdict->v.origin.z - 80 && entity_origin.z < pEdict->v.origin.z + 80) {
-            Vector pickup_origin;
+            //Vector pickup_origin;
             min_distance = distance;       // update the minimum distance
             pPickupEntity = pent;          // remember this entity
             pickup_origin = entity_origin; // remember location of entity
@@ -1419,6 +1420,14 @@ void BotFindItem(bot_t *pBot) {
 
    // if the bot has found something to pick up set up a job to pick it up
    if (pPickupEntity != nullptr) {
+
+      // let's head off toward that item...
+      const Vector v_item = pickup_origin - pEdict->v.origin;
+      const Vector bot_angles = UTIL_VecToAngles(v_item);
+      pEdict->v.ideal_yaw = bot_angles.y;
+      BotFixIdealYaw(pEdict);
+      pBot->pBotPickupItem = pPickupEntity;  // save the item bot is trying to get
+
       newJob = InitialiseNewJob(pBot, JOB_PICKUP_ITEM);
       if (newJob != nullptr) {
          newJob->object = pPickupEntity;

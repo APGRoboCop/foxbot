@@ -280,6 +280,7 @@ typedef struct {
    float create_time;
    int bot_start2;
    float bot_start3;
+   edict_t* pBotPickupItem;
 
    // this is used as the bots version of gpGlobals->time
    // because gpGlobals->time appears to run in another thread
