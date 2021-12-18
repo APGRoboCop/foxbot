@@ -129,7 +129,7 @@ extern bool g_area_def;
 extern AREA areas[MAX_WAYPOINTS];
 extern int num_areas;
 
-extern struct msg_com_struct msg_com[MSG_MAX];
+extern msg_com_struct msg_com[MSG_MAX];
 extern char msg_msg[64][MSG_MAX];
 
 // const static double double_pi = 3.1415926535897932384626433832795;
@@ -234,7 +234,7 @@ extern char sz_error_check[255];
 // FUNCTION PROTOTYPES /////////////////
 static void DisplayBotInfo();
 void BotNameInit();
-void UpdateClientData(const struct edict_s *ent, int sendweapons, struct clientdata_s *cd);
+void UpdateClientData(const edict_s *ent, int sendweapons, clientdata_s *cd);
 static void varyBotTotal();
 static void TeamBalanceCheck();
 static void BotBalanceTeams_Casual();
@@ -2903,8 +2903,8 @@ void StartFrame() { // v7 last frame timing
          yellow_av[i] = false;
       }
       ResetBotHomeInfo();
-      struct msg_com_struct *prev = nullptr;
-      struct msg_com_struct *curr = nullptr;
+      msg_com_struct *prev = nullptr;
+      msg_com_struct *curr = nullptr;
       for (i = 0; i < MSG_MAX; i++) {
          // assuming i only goes to 64 on next line..see msg_msg[64][msg_max] was [0][i] before...may be a problem
          msg_msg[0][i] = '\0'; // clear the messages, for level changes

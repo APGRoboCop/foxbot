@@ -1646,7 +1646,7 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
 
                // only heal your teammates or allies...
                if ((pBot->current_team == player_team || team_allies[pBot->current_team] & 1 << player_team) && (iId != TF_WEAPON_MEDIKIT && iId != TF_WEAPON_SPANNER)) {
-                  // pBot->strafe_mod = STRAFE_MOD_HEAL;
+                  pBot->strafe_mod = STRAFE_MOD_HEAL;
                   // return false;  // don't "fire" unless weapon is medikit
                   use_primary = false;
                }

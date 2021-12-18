@@ -189,7 +189,7 @@ struct msg_com_struct {
    int red_av[8];
    int green_av[8];
    int yellow_av[8];
-   struct msg_com_struct *next;
+   msg_com_struct *next;
 };
 
 typedef struct {

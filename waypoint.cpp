@@ -5353,11 +5353,9 @@ void ProcessCommanderList() {
          strcpy(uId, buffer);
 
          // Get rid of line feeds
-         if (uId[strlen(uId) - 1] == '\n' || uId[strlen(uId) - 1] == '\r' || uId[strlen(uId) - 1] == EOF) /*{
-                 uId[strlen(uId) - 1] = '\0';
-         }*/
-
+         if (uId[strlen(uId) - 1] == '\n')
             fp = UTIL_OpenFoxbotLog();
+
          if (fp != nullptr) {
             fprintf(fp, "LOAD USERID: %s\n", uId);
             fclose(fp);

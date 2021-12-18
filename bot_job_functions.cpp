@@ -1351,7 +1351,7 @@ int JobBuffAlly(bot_t *pBot) {
       BotNavigateWaypointless(pBot);
       pBot->f_current_wp_deadline = pBot->f_think_time + BOT_WP_DEADLINE;
 
-      // pBot->strafe_mod = STRAFE_MOD_HEAL;
+      pBot->strafe_mod = STRAFE_MOD_HEAL;
 
       // make sure the right weapon is selected
       if (pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC && pBot->current_weapon.iId != TF_WEAPON_MEDIKIT)

@@ -135,7 +135,7 @@ bool green_av[8];
 bool yellow_av[8];
 
 // pre defined msg type.. 64 empty msg command list
-struct msg_com_struct msg_com[MSG_MAX];
+msg_com_struct msg_com[MSG_MAX];
 
 // and 64 empty msg's, to be filled with messages to intercept
 char msg_msg[64][MSG_MAX];

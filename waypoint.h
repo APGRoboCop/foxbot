@@ -119,7 +119,7 @@ typedef struct {
 // contains head pointers to these structures for each waypoint index.
 typedef struct path {
    WPT_INT16 index[MAX_PATH_INDEX]; // indexes of waypoints (-1 means not used)
-   struct path *next;               // link to next structure
+   path *next;                      // link to next structure
 } PATH;
 
 #define A_FL_1 (1 << 0)

@@ -17,7 +17,7 @@
 //
 
 #ifdef _WIN32
-#include <windef.h>
+#include <WinDef.h>
 #endif
 
 #include <string.h>
