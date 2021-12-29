@@ -132,7 +132,7 @@ const jobList_struct jl[JOB_TYPE_TOTAL] = {
     {740, "JOB_BIN_GRENADE"},
     {730, "JOB_AVOID_AREA_DAMAGE"},
     {720, "JOB_CONCUSSION_JUMP"},
-    {710, "JOB_INFECTED_ATTACK"},
+    {710, "JOB_PICKUP_FLAG"},
     {700, "JOB_SPOT_STIMULUS"},
     {690, "JOB_BUILD_TELEPORT"},
     {680, "JOB_USE_TELEPORT"},
@@ -149,7 +149,7 @@ const jobList_struct jl[JOB_TYPE_TOTAL] = {
     {570, "JOB_SEEK_BACKUP"},
     {560, "JOB_SNIPE"},
     {520, "JOB_BUILD_DISPENSER"},
-    {510, "JOB_PICKUP_FLAG"},
+    {510, "JOB_INFECTED_ATTACK"},
     {500, "JOB_SEEK_WAYPOINT"},
     {490, "JOB_PICKUP_ITEM"},
     {480, "JOB_CALL_MEDIC"}, // this should be a higher priority than JOB_GET_HEALTH
