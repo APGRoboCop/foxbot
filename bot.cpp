@@ -3838,7 +3838,7 @@ void BotThink(bot_t *pBot) {
    // reset the periodic timer alerts, if they have activated (this must be done
    // at the end of botThink() so that the alerts can be used by other code)
    if (pBot->f_periodicAlertFifth < pBot->f_think_time)
-      pBot->f_periodicAlertFifth = pBot->f_think_time + 0.2f;
+      pBot->f_periodicAlertFifth = pBot->f_think_time + 0.3f;
    if (pBot->f_periodicAlert1 < pBot->f_think_time)
       pBot->f_periodicAlert1 = pBot->f_think_time + 1.0f;
    if (pBot->f_periodicAlert3 < pBot->f_think_time)

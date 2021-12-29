@@ -124,9 +124,9 @@ static constexpr jobFunctions_struct jf[JOB_TYPE_TOTAL] = {
 // these must be in the right order for each job to run properly
 const jobList_struct jl[JOB_TYPE_TOTAL] = {
     {PRIORITY_MAXIMUM, "JOB_GET_UNSTUCK"},
-    {800, "JOB_MAINTAIN_OBJECT"},
-    {790, "JOB_PUSH_BUTTON"},
-    {780, "JOB_CAPTURE_FLAG"},
+    {800, "JOB_CAPTURE_FLAG"},
+    {790, "JOB_MAINTAIN_OBJECT"},
+    {780, "JOB_PUSH_BUTTON"},
     {770, "JOB_BUILD_SENTRY"},
     {760, "JOB_DROWN_RECOVER"},
     {740, "JOB_BIN_GRENADE"},

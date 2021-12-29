@@ -59,7 +59,7 @@ extern int bot_aim_per_skill; // accuracy modifier for bots from skill 1 downwar
 
 // accuracy levels for each bot skill level
 static float bot_max_inaccuracy[5] = {20.0, 30.0, 40.0, 50.0, 60.0};
-static float bot_snipe_max_inaccuracy[5] = {15.0, 25.0, 35.0, 45.0, 55.0};
+static float bot_snipe_max_inaccuracy[5] = {18.0, 27.0, 36.0, 45.0, 54.0};
 
 extern bool is_team[4];
 extern int team_allies[4];
@@ -1672,7 +1672,7 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
 
                                   pBot->f_shoot_time = pBot->f_think_time + base_delay +
                                      random_float(min_delay, max_delay);*/
-                  pBot->f_shoot_time = pBot->f_think_time + 0.25f;
+                  pBot->f_shoot_time = pBot->f_think_time + 0.30f;
                }
             }
          } else // MUST be use_secondary...
@@ -1694,7 +1694,7 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
                                   float max_delay = pDelay[select_index].secondary_max_delay[pBot->bot_skill];
                                   pBot->f_shoot_time = pBot->f_think_time + base_delay +
                                      random_float(min_delay, max_delay);*/
-                  pBot->f_shoot_time = pBot->f_think_time + 0.25f;
+                  pBot->f_shoot_time = pBot->f_think_time + 0.3f;
                }
             }
          }
