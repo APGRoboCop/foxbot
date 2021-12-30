@@ -4,7 +4,7 @@
 
 --------------------------------------------------------------------------------
 Version 0.801
-??-??-202?
+??-??-2022
 Updated by RoboCop
 --------------------------------------------------------------------------------
 
@@ -12,6 +12,8 @@ Updated by RoboCop
 	+ congestus_lg
 
 - Added area for bots to report Sentry Built in dustbowl hut entry in CP1
+
+- Increased priority for bots to steal flags
 
 - Optimised pathway for shutdown2 and dustbowl
 
