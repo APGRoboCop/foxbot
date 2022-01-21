@@ -72,7 +72,7 @@ typedef struct {
 
 // probably best to keep these function pointers private to this file
 // these must be in the right order for each job to run properly
-static constexpr jobFunctions_struct jf[JOB_TYPE_TOTAL] = {
+static const jobFunctions_struct jf[JOB_TYPE_TOTAL] = {
     {assess_JobSeekWaypoint, JobSeekWaypoint},
     {assess_JobGetUnstuck, JobGetUnstuck},
     {assess_JobRoam, JobRoam},

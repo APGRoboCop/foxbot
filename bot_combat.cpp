@@ -1569,7 +1569,7 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
             continue;
          }
 
-         constexpr int use_percent = 0;
+         const int use_percent = 0;
 
          // is use percent greater than weapon use percent?
          if (use_percent > pSelect[select_index].use_percent) {
@@ -1589,7 +1589,7 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
 
          iId = pSelect[select_index].iId;
          use_primary = use_secondary = false;
-         constexpr int primary_percent = 0;
+         const int primary_percent = 0;
 
          // check if this weapon uses ammo and is running low
          if (pBot->m_rgAmmo[weapon_defs[iId].iAmmo1] < pSelect[select_index].min_primary_ammo)

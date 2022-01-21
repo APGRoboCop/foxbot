@@ -163,7 +163,7 @@ static int number_names = 0;
 static char bot_names[MAX_BOT_NAMES][BOT_NAME_LEN + 1];
 
 // defend response distance per class
-constexpr static float defendMaxRespondDist[] = {300.0f, 1500.0f, 500.0f, 1500.0f, 800.0f, 1500.0f, 1500.0f, 1500.0f, 1500.0f, 1500.0f};
+const static float defendMaxRespondDist[] = {300.0f, 1500.0f, 500.0f, 1500.0f, 800.0f, 1500.0f, 1500.0f, 1500.0f, 1500.0f, 1500.0f};
 
 // const static double double_pi = 3.141592653589793238;
 
@@ -1933,7 +1933,7 @@ void script(const char *sz) {
 
 // BotArmorValue - returns the percentage of armor a bot has.
 int PlayerArmorPercent(const edict_t *pEdict) {
-   constexpr static int tfc_max_armor[10] = {0, 50, 50, 200, 120, 100, 300, 150, 100, 50};
+   const static int tfc_max_armor[10] = {0, 50, 50, 200, 120, 100, 300, 150, 100, 50};
 
    if (mod_id == TFC_DLL && pEdict->v.playerclass >= 0 && pEdict->v.playerclass <= 9)
       return static_cast<int>(pEdict->v.armorvalue / tfc_max_armor[pEdict->v.playerclass] * 100);
@@ -3102,8 +3102,8 @@ static void BotPickNewClass(bot_t *pBot) {
    if (pBot->lockClass || mod_id != TFC_DLL)
       return;
 
-   static constexpr short defense_classes[] = {2, 3, 4, 6, 7, 9};
-   static constexpr short offense_classes[] = {1, 3, 4, 5, 6, 7, 8, 9};
+   static const short defense_classes[] = {2, 3, 4, 6, 7, 9};
+   static const short offense_classes[] = {1, 3, 4, 5, 6, 7, 8, 9};
 
    // reward/penalise bots based on how they scored until they last died
    if (static_cast<int>(pBot->pEdict->v.frags) > pBot->scoreAtSpawn) {
@@ -3596,7 +3596,7 @@ void BotThink(bot_t *pBot) {
    const float msecval = (gpGlobals->time - pBot->fLastRunPlayerMoveTime) * 1000.0f;
    pBot->fLastRunPlayerMoveTime = gpGlobals->time;
 
-   constexpr float fUpdateInterval = 1.0f / 60.0f; // update at 60 fps
+   const float fUpdateInterval = 1.0f / 60.0f; // update at 60 fps
    pBot->fUpdateTime = gpGlobals->time + fUpdateInterval;
 
    // this is the only place this should be set
