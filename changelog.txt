@@ -17,6 +17,8 @@ Updated by RoboCop
 
 - Optimised pathway for shutdown2 and dustbowl
 
+- Repaired rock2 waypoints and the rock2 variants by allowing bots to cap properly
+
 - Reduced the likelihood for blue bots to go in wrong way after capping CP2
 
 - Improve bot's visual on locating stray ammo bags
