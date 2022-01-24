@@ -1,0 +1,168 @@
+import os
+
+#
+# Detect Metamod and HLSDK
+#
+
+def detectMetamod():
+  metamod_path = builder.options.metamod_path
+  if not len(metamod_path):
+    metamod_path = os.getenv('METAMOD', '')
+
+  if len(metamod_path):
+    metamod_path = os.path.join(builder.originalCwd, metamod_path)
+    if not os.path.exists(os.path.join(metamod_path, 'metamod')):
+      raise Exception('Metamod path does not exist: {0}'.format(metamod_path))
+  else:
+    try_paths = [
+      os.path.join(builder.sourcePath, '..', 'metamod'),
+    ]
+    for try_path in try_paths:
+      if os.path.exists(os.path.join(try_path, 'metamod')):
+        metamod_path = os.path.normpath(try_path)
+        break
+    if not metamod_path:
+      raise Exception('Could not find the source code to Metamod! Try passing --metamod to configure.py.')
+
+  return metamod_path
+
+def detectHlsdk():
+  hlsdk_path = builder.options.hlsdk_path
+  if not len(hlsdk_path):
+    hlsdk_path = os.getenv('HLSDK', '')
+
+  if len(hlsdk_path):
+    hlsdk_path = os.path.join(builder.originalCwd, hlsdk_path)
+    if not os.path.exists(hlsdk_path):
+      raise Exception('Metamod path does not exist: {0}'.format(hlsdk_path))
+  else:
+    try_paths = [
+      os.path.join(builder.sourcePath, '..', 'hlsdk'),
+    ]
+    for try_path in try_paths:
+      if os.path.exists(try_path):
+        hlsdk_path = os.path.normpath(try_path)
+        break
+    if not hlsdk_path:
+      raise Exception('Could not find the HLSDK! Try passing --hlsdk to configure.py.')
+
+  return hlsdk_path
+
+
+metamod_path = detectMetamod()
+hlsdk_path = detectHlsdk()
+
+#
+# Compiler settings
+#
+cxx = builder.DetectCompilers()
+
+cxx.defines += [
+    'HAVE_STDINT_H'
+  ]
+
+if cxx.like('gcc'):
+  cxx.cflags += [
+    '-Wall',
+    #'-Werror',
+	'-Wno-write-strings',
+    '-Wno-error=unused-result',
+    '-Wno-error=unused-variable',
+    '-Wno-unused-value',
+    '-fno-strict-aliasing',
+    '-fPIC',
+    '-m32'
+  ]
+
+  cxx.cxxflags += [
+    '-std=gnu++14',
+    '-fno-exceptions',
+    '-fno-rtti'
+  ]
+
+  cxx.linkflags += [
+    '-m32',
+	'-static-libstdc++'
+  ]
+
+  if builder.options.opt == '1':
+    cxx.cflags += ['-O2']
+
+elif cxx.like('msvc'):
+  cxx.cflags += [
+    '/W3'
+  ]
+
+  cxx.cxxflags += [
+    '/EHsc'
+  ]
+
+  cxx.linkflags += [
+    '/MACHINE:X86',
+    '/SUBSYSTEM:WINDOWS',
+    '/EXPORT:GiveFnptrsToDll=_GiveFnptrsToDll@8,@1',
+    'kernel32.lib'
+  ]
+
+  if builder.options.opt == '1':
+    cxx.cflags += ['/Ox']
+    cxx.linkflags += ['/OPT:ICF', '/OPT:REF']
+
+  if builder.options.debug == '1':
+    cxx.cflags += ['/MTd', '/Od', '/RTC1']
+    cxx.linkflags += ['/NODEFAULTLIB:libcmt']
+  else:
+    cxx.cflags += ['/MT']
+
+
+# Optimization
+if builder.options.opt == '1':
+  cxx.defines += ['NDEBUG']
+
+# Debugging
+if builder.options.debug == '1':
+  cxx.defines += ['DEBUG', '_DEBUG']
+
+
+cxx.includes += [
+  os.path.join(metamod_path, 'metamod'),
+  os.path.join(hlsdk_path, 'common'),
+  os.path.join(hlsdk_path, 'engine'),
+  os.path.join(hlsdk_path, 'dlls'),
+  os.path.join(hlsdk_path, 'pm_shared'),
+]
+
+
+name = 'foxbot'
+if builder.target_platform == 'linux':
+  name += ''
+
+binary = cxx.Library(name)
+binary.sources += [
+  'bot.cpp',
+  'bot_client.cpp',
+  'bot_combat.cpp',
+  'bot_job_assessors.cpp',
+  'bot_job_functions.cpp',
+  'bot_job_think.cpp',
+  'bot_navigate.cpp',
+  'bot_start.cpp',
+  'botcam.cpp',
+  'dll.cpp',
+  'engine.cpp',
+  'h_export.cpp',
+  'linkfunc.cpp',
+  'meta_api.cpp',
+  'sdk_util.cpp',
+  'util.cpp',
+  'version.cpp',
+  'waypoint.cpp',
+]
+
+
+#
+# Run scripts, add binaries
+#
+
+builder.Add(binary)
+

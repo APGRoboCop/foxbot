@@ -63,3 +63,4 @@ msvc/Release/*
 addons/*
 build/*
 Rules.depend
+obj-windows/*
