@@ -71,6 +71,7 @@ if cxx.like('gcc'):
     '-Wno-unused-value',
     '-fno-strict-aliasing',
     '-fPIC',
+	'-msse2',
     '-m32'
   ]
 
