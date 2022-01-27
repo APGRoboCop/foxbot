@@ -142,8 +142,9 @@ enum {
    SETTING_SOURCE_CONFIG_FILE
 }; // command issued by a config file
 
-static FILE *fp;
-
+namespace global {
+    static FILE* fp;
+}
 DLL_FUNCTIONS other_gFunctionTable;
 DLL_GLOBAL const Vector g_vecZero = Vector(0, 0, 0);
 
@@ -813,15 +814,15 @@ int DispatchSpawn(edict_t *pent) {
       const auto pClassname = const_cast<char *>(STRING(pent->v.classname));
 
       if (debug_engine) {
-         fp = UTIL_OpenFoxbotLog();
-         fprintf(fp, "DispatchSpawn: %p %s\n", static_cast<void *>(pent), pClassname);
+         global::fp = UTIL_OpenFoxbotLog();
+         fprintf(global::fp, "DispatchSpawn: %p %s\n", static_cast<void *>(pent), pClassname);
          if (pent->v.model != 0)
-            fprintf(fp, " model=%s\n", STRING(pent->v.model));
+            fprintf(global::fp, " model=%s\n", STRING(pent->v.model));
          if (pent->v.target != 0)
-            fprintf(fp, " t=%s\n", STRING(pent->v.target));
+            fprintf(global::fp, " t=%s\n", STRING(pent->v.target));
          if (pent->v.targetname != 0)
-            fprintf(fp, " tn=%s\n", STRING(pent->v.targetname));
-         fclose(fp);
+            fprintf(global::fp, " tn=%s\n", STRING(pent->v.targetname));
+         fclose(global::fp);
       }
 
       if (strcmp(pClassname, "worldspawn") == 0) {
@@ -1235,10 +1236,10 @@ BOOL ClientConnect(edict_t *pEntity, const char *pszName, const char *pszAddress
    if (gpGlobals->deathmatch) {
       // int count = 0;
       if (debug_engine) {
-         fp = UTIL_OpenFoxbotLog();
-         if (fp != nullptr) {
-            fprintf(fp, "ClientConnect: pent=%p name=%s\n", static_cast<void *>(pEntity), pszName);
-            fclose(fp);
+         global::fp = UTIL_OpenFoxbotLog();
+         if (global::fp != nullptr) {
+            fprintf(global::fp, "ClientConnect: pent=%p name=%s\n", static_cast<void *>(pEntity), pszName);
+            fclose(global::fp);
          }
       }
 
@@ -1279,10 +1280,10 @@ BOOL ClientConnect(edict_t *pEntity, const char *pszName, const char *pszAddress
 BOOL ClientConnect_Post(edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[128]) {
    if (gpGlobals->deathmatch) {
       if (debug_engine) {
-         fp = UTIL_OpenFoxbotLog();
-         if (fp != nullptr) {
-            fprintf(fp, "ClientConnect_Post: pent=%p name=%s\n", static_cast<void *>(pEntity), pszName);
-            fclose(fp);
+         global::fp = UTIL_OpenFoxbotLog();
+         if (global::fp != nullptr) {
+            fprintf(global::fp, "ClientConnect_Post: pent=%p name=%s\n", static_cast<void *>(pEntity), pszName);
+            fclose(global::fp);
          }
       }
 
@@ -1302,10 +1303,10 @@ BOOL ClientConnect_Post(edict_t *pEntity, const char *pszName, const char *pszAd
 void ClientDisconnect(edict_t *pEntity) {
    if (gpGlobals->deathmatch) {
       if (debug_engine) {
-         fp = UTIL_OpenFoxbotLog();
-         if (fp != nullptr) {
-            fprintf(fp, "ClientDisconnect: %p\n", static_cast<void *>(pEntity));
-            fclose(fp);
+         global::fp = UTIL_OpenFoxbotLog();
+         if (global::fp != nullptr) {
+            fprintf(global::fp, "ClientDisconnect: %p\n", static_cast<void *>(pEntity));
+            fclose(global::fp);
          }
       }
 
@@ -1353,26 +1354,26 @@ void ClientCommand(edict_t *pEntity) {
       const char *arg4 = CMD_ARGV(4);
       // char msg[80];
       if (debug_engine) {
-         fp = UTIL_OpenFoxbotLog();
-         fprintf(fp, "ClientCommand: %s %p", pcmd, static_cast<void *>(pEntity));
+         global::fp = UTIL_OpenFoxbotLog();
+         fprintf(global::fp, "ClientCommand: %s %p", pcmd, static_cast<void *>(pEntity));
          if (arg1 != nullptr) {
             if (*arg1 != 0)
-               fprintf(fp, " 1:%s", arg1);
+               fprintf(global::fp, " 1:%s", arg1);
          }
          if (arg2 != nullptr) {
             if (*arg2 != 0)
-               fprintf(fp, " 2:%s", arg2);
+               fprintf(global::fp, " 2:%s", arg2);
          }
          if (arg3 != nullptr) {
             if (*arg3 != 0)
-               fprintf(fp, " 3:%s", arg3);
+               fprintf(global::fp, " 3:%s", arg3);
          }
          if (arg4 != nullptr) {
             if (*arg4 != 0)
-               fprintf(fp, " 4:%s", arg4);
+               fprintf(global::fp, " 4:%s", arg4);
          }
-         fprintf(fp, "\n");
-         fclose(fp);
+         fprintf(global::fp, "\n");
+         fclose(global::fp);
       }
    }
 
@@ -1385,26 +1386,26 @@ void ClientCommand(edict_t *pEntity) {
       char msg[512];
 
       if (debug_engine) {
-         fp = UTIL_OpenFoxbotLog();
-         fprintf(fp, "ClientCommand: %s %p", pcmd, static_cast<void *>(pEntity));
+         global::fp = UTIL_OpenFoxbotLog();
+         fprintf(global::fp, "ClientCommand: %s %p", pcmd, static_cast<void *>(pEntity));
          if (arg1 != nullptr) {
             if (*arg1 != 0)
-               fprintf(fp, " '%s'(1)", arg1);
+               fprintf(global::fp, " '%s'(1)", arg1);
          }
          if (arg2 != nullptr) {
             if (*arg2 != 0)
-               fprintf(fp, " '%s'(2)", arg2);
+               fprintf(global::fp, " '%s'(2)", arg2);
          }
          if (arg3 != nullptr) {
             if (*arg3 != 0)
-               fprintf(fp, " '%s'(3)", arg3);
+               fprintf(global::fp, " '%s'(3)", arg3);
          }
          if (arg4 != nullptr) {
             if (*arg4 != 0)
-               fprintf(fp, " '%s'(4)", arg4);
+               fprintf(global::fp, " '%s'(4)", arg4);
          }
-         fprintf(fp, "\n");
-         fclose(fp);
+         fprintf(global::fp, "\n");
+         fclose(global::fp);
       }
 
       if (FStrEq(pcmd, "addbot") || FStrEq(pcmd, "foxbot_addbot")) {
@@ -2829,10 +2830,10 @@ void StartFrame() { // v7 last frame timing
       while ((pent = FIND_ENTITY_IN_SPHERE(pent, Vector(0, 0, 0), 8000)) != nullptr && !FNullEnt(pent)) {
          if (pent->v.absmin.x == -1 && pent->v.absmin.y == -1 && pent->v.absmin.z == -1) {
             if (pent->v.absmax.x == 1 && pent->v.absmax.y == 1 && pent->v.absmax.z == 1) {
-               fp = UTIL_OpenFoxbotLog();
-               if (fp != nullptr) {
-                  fprintf(fp, "Fixing entity current map %s last map %s\n", STRING(gpGlobals->mapname), prevmapname);
-                  fclose(fp);
+               global::fp = UTIL_OpenFoxbotLog();
+               if (global::fp != nullptr) {
+                  fprintf(global::fp, "Fixing entity current map %s last map %s\n", STRING(gpGlobals->mapname), prevmapname);
+                  fclose(global::fp);
                } // UTIL_SavePent(pent);
                if (strcmp(STRING(pent->v.classname), "info_tfgoal") != 0) {
                   pent->v.absmin = pent->v.absmin + pent->v.mins;
@@ -4644,9 +4645,9 @@ void FakeClientCommand(edict_t *pBot, char *arg1, char *arg2, char *arg3) {
    g_argv[length] = '\0'; // null terminate just in case
 
    if (debug_engine) {
-      fp = UTIL_OpenFoxbotLog();
-      fprintf(fp, "FakeClientCommand=%s %p\n", g_argv, static_cast<void *>(pBot));
-      fclose(fp);
+      global::fp = UTIL_OpenFoxbotLog();
+      fprintf(global::fp, "FakeClientCommand=%s %p\n", g_argv, static_cast<void *>(pBot));
+      fclose(global::fp);
    }
 
    // allow the MOD DLL to execute the ClientCommand...
@@ -4662,9 +4663,9 @@ const char *Cmd_Args() {
    if (!mr_meta) {
       if (isFakeClientCommand) {
          if (debug_engine) {
-            fp = UTIL_OpenFoxbotLog();
-            fprintf(fp, "fake cmd_args%s\n", &g_argv[0]);
-            fclose(fp);
+            global::fp = UTIL_OpenFoxbotLog();
+            fprintf(global::fp, "fake cmd_args%s\n", &g_argv[0]);
+            fclose(global::fp);
          }
 
          // is it a "say" or "say_team" client command ?
@@ -4682,9 +4683,9 @@ const char *Cmd_Args() {
    }
    if (isFakeClientCommand) {
       if (debug_engine) {
-         fp = UTIL_OpenFoxbotLog();
-         fprintf(fp, "fake cmd_args%s\n", &g_argv[0]);
-         fclose(fp);
+         global::fp = UTIL_OpenFoxbotLog();
+         fprintf(global::fp, "fake cmd_args%s\n", &g_argv[0]);
+         fclose(global::fp);
       }
 
       // is it a "say" or "say_team" client command ?

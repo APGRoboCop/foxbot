@@ -92,10 +92,10 @@ enum knownJobTypes {
 // list of essential data for all known job types
 typedef struct {
    int basePriority;
-   char jobNames[32]; // useful in debugging //Only handles 32 not 45? [APG]RoboCop[CL]
+   char jobNames[45]; // useful in debugging
 } jobList_struct;
 
-extern const jobList_struct jl[JOB_TYPE_TOTAL];
+extern jobList_struct jl[JOB_TYPE_TOTAL];
 
 // function prototypes below /////////////
 void BotResetJobBuffer(bot_t *pBot);

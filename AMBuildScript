@@ -65,6 +65,7 @@ if cxx.like('gcc'):
   cxx.cflags += [
     '-Wall',
     #'-Werror',
+	'-Wno-attributes',
 	'-Wno-write-strings',
     '-Wno-error=unused-result',
     '-Wno-error=unused-variable',
@@ -74,6 +75,8 @@ if cxx.like('gcc'):
 	'-msse2',
     '-m32'
   ]
+  
+  cxx.c_only_flags += ['-std=gnu99']
 
   cxx.cxxflags += [
     '-std=gnu++14',
@@ -87,7 +90,10 @@ if cxx.like('gcc'):
   ]
 
   if builder.options.opt == '1':
-    cxx.cflags += ['-O2']
+    cxx.cflags += ['-O2','-pipe']
+	
+  if builder.options.debug == '1':
+    cxx.cflags += ['-g','-ggdb3']
 
 elif cxx.like('msvc'):
   cxx.defines += [
@@ -99,6 +105,7 @@ elif cxx.like('msvc'):
   ]
 
   cxx.cxxflags += [
+  	'/arch:SSE2',
     '/EHsc'
   ]
 
@@ -106,7 +113,7 @@ elif cxx.like('msvc'):
     '/MACHINE:X86',
     '/SUBSYSTEM:WINDOWS',
     '/EXPORT:GiveFnptrsToDll=_GiveFnptrsToDll@8,@1',
-    'kernel32.lib'
+    'kernel32.lib',
     'user32.lib',
     'gdi32.lib',
     'winspool.lib',

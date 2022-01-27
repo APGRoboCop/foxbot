@@ -116,7 +116,7 @@ C_DLLEXPORT void WINAPI GiveFnptrsToDll(enginefuncs_t *pengfuncsFromEngine, glob
 
       ALERT(at_error, "FoXBot - MOD dll not found (or unsupported MOD)!");
    }
-   other_GetEntityAPI = GETENTITYAPI(GetProcAddress(h_Library, "GetEntityAPI"));
+   other_GetEntityAPI = reinterpret_cast<GETENTITYAPI>(GetProcAddress(h_Library, "GetEntityAPI"));
 
    if (other_GetEntityAPI == nullptr) {
       // Can't find GetEntityAPI!
@@ -124,9 +124,9 @@ C_DLLEXPORT void WINAPI GiveFnptrsToDll(enginefuncs_t *pengfuncsFromEngine, glob
       ALERT(at_error, "FoXBot - Can't get MOD's GetEntityAPI!");
    }
 
-   other_GetNewDLLFunctions = GETNEWDLLFUNCTIONS(GetProcAddress(h_Library, "GetNewDLLFunctions"));
+   other_GetNewDLLFunctions = reinterpret_cast<GETNEWDLLFUNCTIONS>(GetProcAddress(h_Library, "GetNewDLLFunctions"));
 
-   other_GiveFnptrsToDll = GIVEFNPTRSTODLL(GetProcAddress(h_Library, "GiveFnptrsToDll"));
+   other_GiveFnptrsToDll = reinterpret_cast<GIVEFNPTRSTODLL>(GetProcAddress(h_Library, "GiveFnptrsToDll"));
 
    if (other_GiveFnptrsToDll == nullptr) {
       // Can't find GiveFnptrsToDll!
