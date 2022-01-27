@@ -332,13 +332,13 @@ void BotEnemyCheck(bot_t *pBot) {
                for (int i = 0; i < 32; i++) {
                   if (bots[i].is_used && bots[i].lastEnemySentryGun == deadSG) {
                      // get one bot that saw the sentry get destroyed to report it
-                     if (!destruction_reported && bots[i].current_team == pBot->current_team && !BufferContainsJobType(&bots[i], JOB_REPORT) && VectorsNearerThan(deadSG->v.origin, bots[i].pEdict->v.origin, 1400.0f) &&
+                     if (!destruction_reported && bots[i].current_team == pBot->current_team && !BufferContainsJobType(&bots[i], job_report) && VectorsNearerThan(deadSG->v.origin, bots[i].pEdict->v.origin, 1400.0f) &&
                          FVisible(deadSG->v.origin + deadSG->v.view_ofs, bots[i].pEdict)) {
-                        job_struct *newJob = InitialiseNewJob(&bots[i], JOB_REPORT);
+                        job_struct *newJob = InitialiseNewJob(&bots[i], job_report);
                         if (newJob != nullptr) {
                            strncpy(newJob->message, msg, MAX_CHAT_LENGTH);
                            newJob->message[MAX_CHAT_LENGTH - 1] = '\0';
-                           SubmitNewJob(&bots[i], JOB_REPORT, newJob);
+                           SubmitNewJob(&bots[i], job_report, newJob);
 
                            destruction_reported = true;
                         }
@@ -591,11 +591,11 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
                   nearestDistance = distance;
 
                   // set up a job to handle the healing/repairing
-                  job_struct *newJob = InitialiseNewJob(pBot, JOB_BUFF_ALLY);
+                  job_struct *newJob = InitialiseNewJob(pBot, job_buff_ally);
                   if (newJob != nullptr) {
                      newJob->player = pPlayer;
                      newJob->origin = pPlayer->v.origin; // remember where the player was seen
-                     SubmitNewJob(pBot, JOB_BUFF_ALLY, newJob);
+                     SubmitNewJob(pBot, job_buff_ally, newJob);
                   }
                   break;
                }
@@ -651,9 +651,9 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
 
                   // discard uneeded ammo when near friendly SG's
                   FakeClientCommand(pEdict, "discard", nullptr, nullptr);
-                  BlacklistJob(pBot, JOB_SPOT_STIMULUS, 2.0); // ignore the pack as it drops
+                  BlacklistJob(pBot, job_spot_stimulus, 2.0); // ignore the pack as it drops
                   if (pBot->ammoStatus != AMMO_UNNEEDED)
-                     BlacklistJob(pBot, JOB_PICKUP_ITEM, 2.0); // don't pick up your pack
+                     BlacklistJob(pBot, job_pickup_item, 2.0); // don't pick up your pack
                }
                continue;
             }
@@ -716,7 +716,7 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
 
       // track whether or not the bot is willing to escort an ally
       bool canEscort = false;
-      if (!pBot->bot_has_flag && !BufferContainsJobType(pBot, JOB_ESCORT_ALLY))
+      if (!pBot->bot_has_flag && !BufferContainsJobType(pBot, job_escort_ally))
          canEscort = true;
 
       // search the world for players...
@@ -770,11 +770,11 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
 
                   // try and set up an escort job if the ally has a flag
                   if (canEscort && PlayerHasFlag(pPlayer)) {
-                     job_struct *newJob = InitialiseNewJob(pBot, JOB_ESCORT_ALLY);
+                     job_struct *newJob = InitialiseNewJob(pBot, job_escort_ally);
                      if (newJob != nullptr) {
                         newJob->player = pPlayer;
                         newJob->origin = pPlayer->v.origin; // remember where
-                        if (SubmitNewJob(pBot, JOB_ESCORT_ALLY, newJob) == true)
+                        if (SubmitNewJob(pBot, job_escort_ally, newJob) == true)
                            canEscort = false;
                      }
                   }
@@ -807,13 +807,13 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
       vecEnd = pEdict->v.origin + pEdict->v.view_ofs;
 
       // if the enemy can't see this bot and this bot is a Spy
-      if (pBot->pEdict->v.playerclass == TFC_CLASS_SPY && pBot->bot_real_health > 25 && !pBot->enemy.ptr && pBot->disguise_state == DISGUISE_COMPLETE && distance < 400.0 && !(FInViewCone(vecEnd, pNewEnemy) && FVisible(vecEnd, pNewEnemy))) {
+      if (pBot->pEdict->v.playerclass == TFC_CLASS_SPY && pBot->bot_real_health > 25 && !pBot->enemy.ptr && pBot->disguise_state == DISGUISE_COMPLETE && distance < 400 && !(FInViewCone(vecEnd, pNewEnemy) && FVisible(vecEnd, pNewEnemy))) {
          // backstab routine...might work :)
          pBot->strafe_mod = STRAFE_MOD_STAB;
          return_null = false;
       }
       // turn off backstab routine if too far away
-      else if (pBot->pEdict->v.playerclass == TFC_CLASS_SPY && distance >= 400.0)
+      else if (pBot->pEdict->v.playerclass == TFC_CLASS_SPY && distance >= 400)
          pBot->strafe_mod = STRAFE_MOD_NORMAL;
 
       // return null(if return_null == true)
@@ -830,7 +830,7 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
             }
          }
 
-         if (enemy_has_flag == false && pBot->enemy.f_lastSeen + 2.0 <= pBot->f_think_time)
+         if (enemy_has_flag == false && pBot->enemy.f_lastSeen + 2 <= pBot->f_think_time)
             return pBot->enemy.ptr; // if the enemy doesn't have the flag
       }
    }
@@ -902,11 +902,11 @@ static bool BotSpyDetectCheck(bot_t *pBot, edict_t *pNewEnemy) {
 
             // maybe track the spy about for a bit whilst suspicious
             if (pBot->bot_class != TFC_CLASS_CIVILIAN && random_long(0, 1000) < 250) {
-               job_struct *newJob = InitialiseNewJob(pBot, JOB_PURSUE_ENEMY);
+               job_struct *newJob = InitialiseNewJob(pBot, job_pursue_enemy);
                if (newJob != nullptr) {
                   newJob->player = pBot->suspectedSpy;
                   newJob->origin = pBot->suspectedSpy->v.origin; // remember where
-                  SubmitNewJob(pBot, JOB_PURSUE_ENEMY, newJob);
+                  SubmitNewJob(pBot, job_pursue_enemy, newJob);
                }
 
                pBot->f_suspectSpyTime += 2.0f;
@@ -917,11 +917,11 @@ static bool BotSpyDetectCheck(bot_t *pBot, edict_t *pNewEnemy) {
 
             // maybe track the spy about for a bit whilst suspicious
             if (pBot->bot_class != TFC_CLASS_CIVILIAN && random_long(0, 1000) < 100) {
-               job_struct *newJob = InitialiseNewJob(pBot, JOB_PURSUE_ENEMY);
+               job_struct *newJob = InitialiseNewJob(pBot, job_pursue_enemy);
                if (newJob != nullptr) {
                   newJob->player = pBot->suspectedSpy;
                   newJob->origin = pBot->suspectedSpy->v.origin; // remember where
-                  SubmitNewJob(pBot, JOB_PURSUE_ENEMY, newJob);
+                  SubmitNewJob(pBot, job_pursue_enemy, newJob);
                }
 
                pBot->f_suspectSpyTime += 2.0f;
@@ -973,7 +973,7 @@ static void BotSGSpotted(bot_t *pBot, edict_t *sg) {
       return;
 
    // abort if the bot can't report something right now
-   job_struct *newJob = InitialiseNewJob(pBot, JOB_REPORT);
+   job_struct *newJob = InitialiseNewJob(pBot, job_report);
    if (newJob == nullptr)
       return;
 
@@ -997,7 +997,7 @@ static void BotSGSpotted(bot_t *pBot, edict_t *sg) {
       }
 
       newJob->message[MAX_CHAT_LENGTH - 1] = '\0';
-      if (SubmitNewJob(pBot, JOB_REPORT, newJob) == true) {
+      if (SubmitNewJob(pBot, job_report, newJob) == true) {
          // get the other bots to know about this sg if they dont know of one already.
          for (int i = 0; i < MAX_BOTS; i++) {
             if (bots[i].is_used && bots[i].current_team == pBot->current_team && bots[i].lastEnemySentryGun == nullptr && bots[i].bot_skill < 3) // skill 5's are too dumb
@@ -1078,7 +1078,7 @@ int BotFindGrenadePoint(const bot_t *const pBot, const Vector &r_vecOrigin) {
          //		waypoints[index].origin, 10, 2, 250, 50, 50, 200, 10);
 
          // is this waypoint visible to the enemy?
-         if (tr.flFraction >= 1.0) {
+         if (tr.flFraction >= 1) {
             UTIL_TraceLine(pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs, waypoints[index].origin, ignore_monsters, nullptr, &tr);
 
             // debug stuff
@@ -1087,7 +1087,7 @@ int BotFindGrenadePoint(const bot_t *const pBot, const Vector &r_vecOrigin) {
 
             // is this waypoint visible to the bot also?
             // if so we've found a suitable waypoint for throwing at
-            if (tr.flFraction >= 1.0) {
+            if (tr.flFraction >= 1) {
                //	UTIL_BotLogPrintf("BotFindGrenadePoint success\n");
                return index;
             }
@@ -1126,7 +1126,7 @@ static bool BotClearShotCheck(bot_t *pBot) {
 
    // report false if the trace has hit something, and remember when
    // it happened
-   if (tr.flFraction < 1.0) {
+   if (tr.flFraction < 1) {
       // don't swap back to this weapon for a short period of time
       pBot->f_safeWeaponTime = pBot->f_think_time + 2.0f;
       return false;
@@ -1190,12 +1190,12 @@ void BotShootAtEnemy(bot_t *pBot) {
    }
 
    // return if the spy isn't in range to backstab... muwhahaha!
-   if (pBot->strafe_mod == STRAFE_MOD_STAB && f_distance > 50.0)
+   if (pBot->strafe_mod == STRAFE_MOD_STAB && f_distance > 50)
       return;
 
    // if on the same team(follow) don't shoot!
    // is team play enabled?
-   if (is_team_play > 0.0) {
+   if (is_team_play > 0) {
       if (pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC || pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER) {
          // try to get medic to heal only.
          // is it time to shoot yet?
@@ -1231,15 +1231,15 @@ static Vector BotBodyTarget(const edict_t *pBotEnemy, bot_t *pBot) {
    const float f_distance = pBot->enemy.f_seenDistance;
    float f_scale; // for scaling accuracy based on distance
 
-   if (f_distance > 1000.0)
+   if (f_distance > 1000)
       f_scale = 1.0;
    else
-      f_scale = f_distance / 1000.0;
+      f_scale = f_distance / 1000;
 
    // aim at the enemies feet if the bot is using a rocket launcher
    // and the enemy is not much higher up than the bot
    if ((pBot->current_weapon.iId == TF_WEAPON_RPG || pBot->current_weapon.iId == TF_WEAPON_IC) // pyro RPG
-       && pBot->enemy.ptr->v.origin.z < pBot->pEdict->v.origin.z + 35.0) {
+       && pBot->enemy.ptr->v.origin.z < pBot->pEdict->v.origin.z + 35) {
       target.x = pBotEnemy->v.origin.x;
       target.y = pBotEnemy->v.origin.y;
       target.z = pBotEnemy->v.absmin.z;
@@ -1260,7 +1260,7 @@ static Vector BotBodyTarget(const edict_t *pBotEnemy, bot_t *pBot) {
          float aim_error = random_float(0.0, enemy_velocity) * 0.05;
 
          // Make the bot less accurate if the enemy was just seen
-         if (pBot->enemy.f_firstSeen + 2.0 > pBot->f_think_time)
+         if (pBot->enemy.f_firstSeen + 2 > pBot->f_think_time)
             aim_error += (pBot->bot_skill + 1) * random_float(5.0, 20.0);
 
          const float aim_offset = bot_snipe_max_inaccuracy[pBot->bot_skill] + aim_error;
@@ -1302,7 +1302,7 @@ static Vector BotBodyTarget(const edict_t *pBotEnemy, bot_t *pBot) {
          aim_error += random_float(0.0, enemy_velocity) * 0.05;
 
          // Make the bot less accurate if the enemy was just seen
-         if (pBot->enemy.f_firstSeen + 2.0 > pBot->f_think_time)
+         if (pBot->enemy.f_firstSeen + 2 > pBot->f_think_time)
             aim_error += (pBot->bot_skill + 1) * random_float(5.0, 20.0);
 
          const float aim_offset = bot_max_inaccuracy[pBot->bot_skill] + aim_error;
@@ -1392,7 +1392,7 @@ static Vector BotBodyTarget(const edict_t *pBotEnemy, bot_t *pBot) {
 
    // if the enemy is a feigning spy - aim lower(soldiers aim lower anyway)
    if (pBotEnemy->v.deadflag == 5 && pBot->pEdict->v.playerclass != TFC_CLASS_SOLDIER) {
-      d_z -= 32.0;
+      d_z -= 32;
    }
 
    target = target + Vector(d_x, d_y, d_z);
@@ -1410,8 +1410,8 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
    const float f_distance = v_enemy.Length(); // how far away is the enemy?
 
    // NeoTF pyro stuff
-   if (pBot->pEdict->v.playerclass == TFC_CLASS_PYRO && pBot->FreezeDelay < pBot->f_think_time && f_distance < 200.0 && random_long(1, 10) > 2 + pBot->bot_skill) {
-      pBot->FreezeDelay = pBot->f_think_time + 1.0;
+   if (pBot->pEdict->v.playerclass == TFC_CLASS_PYRO && pBot->FreezeDelay < pBot->f_think_time && f_distance < 200 && random_long(1, 10) > 2 + pBot->bot_skill) {
+      pBot->FreezeDelay = pBot->f_think_time + 1;
       FakeClientCommand(pEdict, "freeze", "102", nullptr);
    } else
       pBot->FreezeDelay = pBot->f_think_time + 0.5f;
@@ -1722,9 +1722,9 @@ int BotNadeHandler(bot_t *pBot, bool timed, const char newNadeType) {
    // Lets try putting discard code in here. (dont let the engineer discard)
    if (pBot->f_discard_time < pBot->f_think_time && pBot->pEdict->v.playerclass != TFC_CLASS_ENGINEER) {
       FakeClientCommand(pBot->pEdict, "discard", nullptr, nullptr);
-      BlacklistJob(pBot, JOB_SPOT_STIMULUS, 2.0); // ignore the pack as it drops
+      BlacklistJob(pBot, job_spot_stimulus, 2.0); // ignore the pack as it drops
       if (pBot->ammoStatus != AMMO_UNNEEDED)
-         BlacklistJob(pBot, JOB_PICKUP_ITEM, 2.0); // don't pick up your own pack
+         BlacklistJob(pBot, job_pickup_item, 2.0); // don't pick up your own pack
 
       if (pBot->mission == ROLE_ATTACKER)
          pBot->f_discard_time = pBot->f_think_time + 10.0f;
@@ -1750,9 +1750,9 @@ int BotNadeHandler(bot_t *pBot, bool timed, const char newNadeType) {
    // if the bot has no target to throw at try to find a place to
    // dispose of the live grenade(anti-suicide code)
    if (pBot->nadePrimed == true && pBot->enemy.ptr == nullptr && timeToDet <= 2.0f) {
-      job_struct *newJob = InitialiseNewJob(pBot, JOB_BIN_GRENADE);
+      job_struct *newJob = InitialiseNewJob(pBot, job_bin_grenade);
       if (newJob != nullptr)
-         SubmitNewJob(pBot, JOB_BIN_GRENADE, newJob);
+         SubmitNewJob(pBot, job_bin_grenade, newJob);
    }
 
    // Go ahead and throw if its about to explode.

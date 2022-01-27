@@ -526,11 +526,11 @@ void BotClient_Valve_Damage(void *p, const int bot_index) {
          if (damage_bits & DMG_DROWN
              //	&& bots[bot_index].pEdict->v.waterlevel == WL_HEAD_IN_WATER
              && bots[bot_index].bot_skill < 3) {
-            job_struct *newJob = InitialiseNewJob(&bots[bot_index], JOB_DROWN_RECOVER);
+            job_struct *newJob = InitialiseNewJob(&bots[bot_index], job_drown_recover);
             if (newJob != nullptr) {
                newJob->waypoint = BotDrowningWaypointSearch(&bots[bot_index]);
                if (newJob->waypoint != -1)
-                  SubmitNewJob(&bots[bot_index], JOB_DROWN_RECOVER, newJob);
+                  SubmitNewJob(&bots[bot_index], job_drown_recover, newJob);
             }
          }
 
@@ -780,7 +780,7 @@ void BotClient_Valve_ScreenFade(void *p, const int bot_index) {
       state = 0;
 
       const int length = (duration + hold_time) / 4096;
-      bots[bot_index].f_blinded_time = gpGlobals->time + length - 2.0;
+      bots[bot_index].f_blinded_time = gpGlobals->time + length - 2;
    } else {
       state++;
    }
@@ -890,7 +890,7 @@ void BotClient_Engineer_BuildStatus(void *p, const int bot_index) {
                while ((pent = FIND_ENTITY_IN_SPHERE(pent, clients[i]->v.origin, 200)) != nullptr && !FNullEnt(pent)) {
                   const float l = (clients[i]->v.origin - pent->v.origin).Length2D();
 
-                  if (strcmp("building_teleporter", STRING(pent->v.classname)) == 0 && l >= 16.0 && l <= 96.0) {
+                  if (strcmp("building_teleporter", STRING(pent->v.classname)) == 0 && l >= 16 && l <= 96) {
                      // Set the owner on the teleport
                      pent->v.euser1 = clients[i];
                      pent->v.iuser1 = teleportType;

@@ -94,7 +94,7 @@ bool offensive_chatter = true;
 bool observer_mode = false;
 bool botdontshoot = false;
 bool botdontmove = false;
-int bot_chat = 500;
+int bot_chat = 50;
 int bot_allow_moods = 1;  // whether bots can have different personality traits or not
 int bot_allow_humour = 1; // whether bots can choose to do daft things or not
 bool bot_can_use_teleporter = true;
@@ -294,8 +294,8 @@ void KewlHUDNotify(edict_t *pEntity, const char *msg_name) {
    MESSAGE_BEGIN(MSG_ONE, SVC_TEMPENTITY, nullptr, pEntity);
    WRITE_BYTE(TE_TEXTMESSAGE);
    WRITE_BYTE(3 & 0xFF);
-   WRITE_SHORT(FixedSigned16(1, -1 << 13));
-   WRITE_SHORT(FixedSigned16(1, -1 << 13));
+   WRITE_SHORT(FixedSigned16(1, 0 << 13));
+   WRITE_SHORT(FixedSigned16(1, 0 << 13));
    WRITE_BYTE(2); // effect
 
    WRITE_BYTE(205);
@@ -307,7 +307,7 @@ void KewlHUDNotify(edict_t *pEntity, const char *msg_name) {
    WRITE_BYTE(0);
    WRITE_BYTE(255);
    WRITE_BYTE(255);
-   WRITE_SHORT(FixedUnsigned16(0.03, 1 << 8));
+   WRITE_SHORT(FixedUnsigned16(0.3, 1 << 8));
    WRITE_SHORT(FixedUnsigned16(1, 1 << 8));
    WRITE_SHORT(FixedUnsigned16(6, 1 << 8));
    WRITE_SHORT(FixedUnsigned16(4, 1 << 8));
@@ -563,7 +563,7 @@ static void BotBalanceTeams_Casual() {
          bots[i].bot_team = smallest_team; // choose your team
          bots[i].not_started = true;       // join the team, pick a class
          bots[i].start_action = MSG_TFC_IDLE;
-         bots[i].create_time = gpGlobals->time + 2.0;
+         bots[i].create_time = gpGlobals->time + 2;
          ClearKickedBotsData(i, false);
 
          //	UTIL_BotLogPrintf("joined team:%d, vteam:%d, team:%d\n",
@@ -585,7 +585,7 @@ static bool BotBalanceTeams(int a, int b) {
             bots[i].bot_team = b;       // choose your team
             bots[i].not_started = true; // join the team, pick a class
             bots[i].start_action = MSG_TFC_IDLE;
-            bots[i].create_time = gpGlobals->time + 2.0;
+            bots[i].create_time = gpGlobals->time + 2;
             ClearKickedBotsData(i, false);
             return true;
          }
@@ -624,7 +624,7 @@ static bool BBotBalanceTeams(int a, int b) {
             bots[i].bot_team = b;       // choose your team
             bots[i].not_started = true; // join the team, pick a class
             bots[i].start_action = MSG_TFC_IDLE;
-            bots[i].create_time = gpGlobals->time + 2.0;
+            bots[i].create_time = gpGlobals->time + 2;
             ClearKickedBotsData(i, false);
             return true;
          }
@@ -925,7 +925,7 @@ void DispatchThink(edict_t *pent) {
          MESSAGE_BEGIN(MSG_ONE, SVC_TEMPENTITY, nullptr, pent->v.owner);
          WRITE_BYTE(TE_TEXTMESSAGE);
          WRITE_BYTE(2 & 0xFF);
-         WRITE_SHORT(FixedSigned16(1, -1 << 13));
+         WRITE_SHORT(FixedSigned16(1, 0 << 13));
          WRITE_SHORT(FixedSigned16(1, 0 << 13));
          WRITE_BYTE(1); // effect
 
@@ -2439,16 +2439,16 @@ void StartFrame() { // v7 last frame timing
                      bots[index].f_kick_time = 0.0; // reset to prevent false spawns later
                }                                    // set the respawn time
                if (IS_DEDICATED_SERVER())
-                  respawn_time = gpGlobals->time + 10.0;
+                  respawn_time = gpGlobals->time + 10;
 			   else
-                  respawn_time = gpGlobals->time + 15.0; //Reduce Listenserver crash? [APG]RoboCop[CL]
+                  respawn_time = gpGlobals->time + 15; //Reduce Listenserver crash? [APG]RoboCop[CL]
             }
          } // start updating client data again
-         client_update_time = gpGlobals->time + 10.0;
-         bot_check_time = gpGlobals->time + 30.0;
+         client_update_time = gpGlobals->time + 10;
+         bot_check_time = gpGlobals->time + 30;
       } // end of config map check stuff.
       if (client_update_time <= gpGlobals->time) {
-         client_update_time = gpGlobals->time + 1.0;
+         client_update_time = gpGlobals->time + 1;
          for (i = 0; i < 32; i++) {
             if (bots[i].is_used) {
                bzero(&cd, sizeof cd);
@@ -2503,8 +2503,8 @@ void StartFrame() { // v7 last frame timing
                else
                   BotCreate(nullptr, c_team, c_class, bots[index1].name, c_skill);
             }
-            respawn_time = gpGlobals->time + 2.0; // set next respawn time
-            bot_check_time = gpGlobals->time + 5.0;
+            respawn_time = gpGlobals->time + 2; // set next respawn time
+            bot_check_time = gpGlobals->time + 5;
          } else
             respawn_time = 0.0;
       }
@@ -2537,13 +2537,13 @@ void StartFrame() { // v7 last frame timing
                   ALERT(at_console, msg);
             }
             if (IS_DEDICATED_SERVER())
-               bot_cfg_pause_time = gpGlobals->time + 2.0;
+               bot_cfg_pause_time = gpGlobals->time + 2;
             else //Required for Listenservers to exec .cfg [APG]RoboCop[CL]
-               bot_cfg_pause_time = gpGlobals->time + 10.0; // was 20
+               bot_cfg_pause_time = gpGlobals->time + 10; // was 20
          }
          if (need_to_open_cfg2) // have we opened foxbot.cfg file yet?
          {
-            bot_cfg_pause_time = gpGlobals->time + 1.0;
+            bot_cfg_pause_time = gpGlobals->time + 1;
             char filename[256];
             char mapname[64];
             need_to_open_cfg2 = false; // only do this once!!!
@@ -2588,7 +2588,7 @@ void StartFrame() { // v7 last frame timing
                   spawn_time_reset = true;
                   if (respawn_time >= 1.0)
                      respawn_time = min(respawn_time, gpGlobals->time + 1.0f);
-                  if (bot_cfg_pause_time >= 1.0)
+                  if (bot_cfg_pause_time >= 1)
                      bot_cfg_pause_time = min(bot_cfg_pause_time, gpGlobals->time + 1.0f);
                }
             }
@@ -2820,8 +2820,8 @@ void StartFrame() { // v7 last frame timing
             }
          }
       } else { // make sure the delay is not insanely long
-         if (bot_check_time > gpGlobals->time + 100.0)
-            bot_check_time = gpGlobals->time + 10.0;
+         if (bot_check_time > gpGlobals->time + 100)
+            bot_check_time = gpGlobals->time + 10;
       }
       previous_time = gpGlobals->time;
    } // this is where the behaviour config is interpreted... i.e. new lev, load behaviour, and parse it

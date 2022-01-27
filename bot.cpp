@@ -292,7 +292,7 @@ void BotSpawnInit(bot_t *pBot) {
    // enemy stuff
    pBot->enemy.ptr = nullptr;
    pBot->enemy.seenWithFlag = 0;
-   pBot->enemy.f_firstSeen = gpGlobals->time - 1000.0;
+   pBot->enemy.f_firstSeen = gpGlobals->time - 1000;
    pBot->enemy.f_lastSeen = pBot->enemy.f_firstSeen;
    pBot->enemy.f_seenDistance = 400.0f;
    pBot->enemy.lastLocation = Vector(0.0, 0.0, 0.0);
@@ -824,7 +824,7 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
 
       pBot->is_used = true;
       pBot->respawn_state = RESPAWN_IDLE;
-      pBot->create_time = gpGlobals->time + 1.0;
+      pBot->create_time = gpGlobals->time + 1;
       //{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"a%f %f\n",pBot->create_time,gpGlobals->time); fclose(fp); }
       pBot->name[0] = 0; // name not set by server yet
       pBot->f_think_time = gpGlobals->time;
@@ -855,7 +855,7 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
          BotForgetTeleportPair(pBot, teleIndex);
       }
 
-      roleCheckTimer += 4.0;
+      roleCheckTimer += 4;
 
       // stop the bot from autonomously changing class if
       // a class was specified
@@ -1010,12 +1010,12 @@ void BotFindItem(bot_t *pBot) {
          UTIL_TraceLine(vecStart, vecEnd, dont_ignore_monsters, pEdict->v.pContainingEntity, &tr);
 
          // can we see the item?  if not skip it
-         if (tr.flFraction < 1.0 && tr.pHit != pent)
+         if (tr.flFraction < 1 && tr.pHit != pent)
             continue;
 
          // check if the entity is a button...
          if (strcmp("func_button", item_name) == 0 || strcmp("func_rot_button", item_name) == 0) {
-            newJob = InitialiseNewJob(pBot, JOB_PUSH_BUTTON);
+            newJob = InitialiseNewJob(pBot, job_push_button);
             if (newJob != nullptr && pent->v.target != 0 && VectorsNearerThan(pBot->pEdict->v.origin, entity_origin, 250.0)) {
                // ignore this button if the nearest waypoint to it is unavailable
                const int nearestWP = WaypointFindNearest_V(entity_origin, 80.0, -1);
@@ -1024,7 +1024,7 @@ void BotFindItem(bot_t *pBot) {
 
                // set up a job for pushing the button
                newJob->object = pent;
-               SubmitNewJob(pBot, JOB_PUSH_BUTTON, newJob);
+               SubmitNewJob(pBot, job_push_button, newJob);
                continue;
             }
          } else {
@@ -1092,10 +1092,10 @@ void BotFindItem(bot_t *pBot) {
                   if (pEdict->v.playerclass == TFC_CLASS_MEDIC && pBot->ammoStatus == AMMO_LOW)
                      continue;
 
-                  newJob = InitialiseNewJob(pBot, JOB_ATTACK_BREAKABLE);
+                  newJob = InitialiseNewJob(pBot, job_attack_breakable);
                   if (newJob != nullptr) {
                      newJob->object = pent;
-                     if (SubmitNewJob(pBot, JOB_ATTACK_BREAKABLE, newJob) == true)
+                     if (SubmitNewJob(pBot, job_attack_breakable, newJob) == true)
                         return;
                   }
 
@@ -1234,10 +1234,10 @@ void BotFindItem(bot_t *pBot) {
                // if the spotted sentry gun is damaged or not at level 3
                if (strcmp(modelName, "models/sentry3.mdl") != 0 || pent->v.health < 91) {
                   // set up a job to help this sentry gun out
-                  newJob = InitialiseNewJob(pBot, JOB_MAINTAIN_OBJECT);
+                  newJob = InitialiseNewJob(pBot, job_maintain_object);
                   if (newJob != nullptr) {
                      newJob->object = pent;
-                     SubmitNewJob(pBot, JOB_MAINTAIN_OBJECT, newJob);
+                     SubmitNewJob(pBot, job_maintain_object, newJob);
                   }
                }
             }
@@ -1255,10 +1255,10 @@ void BotFindItem(bot_t *pBot) {
                // if it's an enemy teleporter maybe set up a job to attack it
                const int TeleportTeam = BotTeamColorCheck(pent);
                if (pBot->current_team != TeleportTeam && !(team_allies[pBot->current_team] & 1 << TeleportTeam)) {
-                  newJob = InitialiseNewJob(pBot, JOB_ATTACK_TELEPORT);
+                  newJob = InitialiseNewJob(pBot, job_attack_teleport);
                   if (newJob != nullptr) {
                      newJob->object = pent;
-                     if (SubmitNewJob(pBot, JOB_ATTACK_TELEPORT, newJob) == true)
+                     if (SubmitNewJob(pBot, job_attack_teleport, newJob) == true)
                         return;
                   }
                }
@@ -1270,12 +1270,12 @@ void BotFindItem(bot_t *pBot) {
                   if (telePairIndex == -1                            // unknown entrance
                       || pBot->telePair[telePairIndex].exitWP == -1) // unknown exit
                   {
-                     newJob = InitialiseNewJob(pBot, JOB_USE_TELEPORT);
+                     newJob = InitialiseNewJob(pBot, job_use_teleport);
                      if (newJob != nullptr) {
                         newJob->object = pent;
                         newJob->waypoint = WaypointFindNearest_E(pent, 500.0, pBot->current_team);
                         newJob->waypointTwo = -1; // remember that destination is unknown
-                        if (SubmitNewJob(pBot, JOB_USE_TELEPORT, newJob) == true)
+                        if (SubmitNewJob(pBot, job_use_teleport, newJob) == true)
                            return;
                      }
                   }
@@ -1428,12 +1428,12 @@ void BotFindItem(bot_t *pBot) {
       BotFixIdealYaw(pEdict);
       pBot->pBotPickupItem = pPickupEntity;  // save the item bot is trying to get
 
-      newJob = InitialiseNewJob(pBot, JOB_PICKUP_ITEM);
+      newJob = InitialiseNewJob(pBot, job_pickup_item);
       if (newJob != nullptr) {
          newJob->object = pPickupEntity;
          newJob->origin = pPickupEntity->v.origin; // remember it's exact location too
          newJob->waypoint = WaypointFindNearest_E(pPickupEntity, 500.0, pBot->current_team);
-         SubmitNewJob(pBot, JOB_PICKUP_ITEM, newJob);
+         SubmitNewJob(pBot, job_pickup_item, newJob);
       }
 
       // a cool laser effect to show who has just seen a pickup
@@ -1446,7 +1446,7 @@ void BotFindItem(bot_t *pBot) {
 // This function can be used periodically to get bots to spot flags that
 // are quite far away so that they can home in on them.
 static void BotFlagSpottedCheck(bot_t *pBot) {
-   if (pBot->bot_has_flag || BufferedJobIndex(pBot, JOB_PICKUP_FLAG) != -1)
+   if (pBot->bot_has_flag || BufferedJobIndex(pBot, job_pickup_flag) != -1)
       return;
 
    // only check for flags the bot can see
@@ -1466,12 +1466,12 @@ static void BotFlagSpottedCheck(bot_t *pBot) {
 
          if (nearestWP != -1) {
             // set up a job to retrieve the flag
-            job_struct *newJob = InitialiseNewJob(pBot, JOB_PICKUP_FLAG);
+            job_struct *newJob = InitialiseNewJob(pBot, job_pickup_flag);
             if (newJob != nullptr) {
                newJob->waypoint = nearestWP;
                newJob->object = pent;
                newJob->origin = pent->v.origin;
-               SubmitNewJob(pBot, JOB_PICKUP_FLAG, newJob);
+               SubmitNewJob(pBot, job_pickup_flag, newJob);
             }
          }
 
@@ -1587,11 +1587,11 @@ edict_t *BotContactThink(bot_t *pBot) {
             continue;
 
          vang = UTIL_VecToAngles(vang);
-         const float pv = pBot->pEdict->v.v_angle.y + 180.0;
+         const float pv = pBot->pEdict->v.v_angle.y + 180;
 
          vang.y -= pv;
-         if (vang.y < 0.0)
-            vang.y += 360.0;
+         if (vang.y < 0)
+            vang.y += 360;
 
          if (!((UTIL_GetTeamColor(pBot->pEdict) == UTIL_GetTeamColor(pPlayer) || team_allies[pBot->current_team] & 1 << UTIL_GetTeam(pPlayer)) && pPlayer == pBot->enemy.ptr)) {
             Vector vecEnd = pPlayer->v.origin + pPlayer->v.view_ofs;
@@ -1655,7 +1655,7 @@ edict_t *BotContactThink(bot_t *pBot) {
          // back off if very near and the other player is
          // looking at the bot
          const Vector vecEnd = pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs;
-         if (nearestdistance <= 70.0 && FInViewCone(vecEnd, playerToAvoid))
+         if (nearestdistance <= 70 && FInViewCone(vecEnd, playerToAvoid))
             pBot->f_move_speed = -pBot->f_max_speed;
       }
 
@@ -2036,7 +2036,7 @@ void BotSprayLogo(edict_t *pEntity, const bool sprayDownwards) {
    TraceResult pTrace;
    UTIL_TraceLine(v_src, v_dest, ignore_monsters, pEntity->v.pContainingEntity, &pTrace);
 
-   if (pTrace.pHit && pTrace.flFraction < 1.0) {
+   if (pTrace.pHit && pTrace.flFraction < 1) {
       if (pTrace.pHit->v.solid != SOLID_BSP)
          return;
 
@@ -2080,7 +2080,7 @@ static void BotAttackerCheck(bot_t *pBot) {
    edict_t *mysteryPlayer = nullptr; // unseen enemies
    bool readyDefender = false;
    if (pBot->mission == ROLE_DEFENDER && pBot->visAllyCount < 4 // too many allies nearby = white noise
-       && pBot->bot_skill < 4 && PlayerHealthPercent(pBot->pEdict) >= pBot->trait.health && pBot->enemy.f_lastSeen + 5.0 < pBot->f_think_time)
+       && pBot->bot_skill < 4 && PlayerHealthPercent(pBot->pEdict) >= pBot->trait.health && pBot->enemy.f_lastSeen + 5 < pBot->f_think_time)
       readyDefender = true;
 
    // start checking from a randomly selected player, this is
@@ -2129,11 +2129,11 @@ static void BotAttackerCheck(bot_t *pBot) {
          if (FVisible(vecEnd, pBot->pEdict)) {
             if (!FInViewCone(vecEnd, pBot->pEdict)) {
                // set up a job for spotting the unseen assailant
-               job_struct *newJob = InitialiseNewJob(pBot, JOB_SPOT_STIMULUS);
+               job_struct *newJob = InitialiseNewJob(pBot, job_spot_stimulus);
                if (newJob != nullptr) {
                   newJob->origin = pPlayer->v.origin + pPlayer->v.view_ofs;
                   newJob->waypoint = pBot->goto_wp;
-                  SubmitNewJob(pBot, JOB_SPOT_STIMULUS, newJob);
+                  SubmitNewJob(pBot, job_spot_stimulus, newJob);
                }
 
                // don't check for gunshot "sounds" again for a few seconds
@@ -2151,12 +2151,12 @@ static void BotAttackerCheck(bot_t *pBot) {
    // no visible enemies were found, were any non-visible enemies found
    // near enough to go investigate
    if (mysteryPlayer != nullptr) {
-      job_struct *newJob = InitialiseNewJob(pBot, JOB_INVESTIGATE_AREA);
+      job_struct *newJob = InitialiseNewJob(pBot, job_investigate_area);
       if (newJob != nullptr) {
          newJob->waypoint = WaypointFindNearest_V(mysteryPlayer->v.origin, 500.0, pBot->current_team);
 
          if (newJob->waypoint != -1) {
-            SubmitNewJob(pBot, JOB_INVESTIGATE_AREA, newJob);
+            SubmitNewJob(pBot, job_investigate_area, newJob);
             /* // debug stuff
                             {
                                             WaypointDrawBeam(INDEXENT(1), pBot->pEdict->v.origin,
@@ -2231,10 +2231,10 @@ void BotSoundSense(edict_t *pEdict, const char *pszSample, const float fVolume) 
 
                      if (!FInViewCone(pEdict->v.origin, bots[i].pEdict)) {
                         // set up a job to investigate the sound
-                        newJob = InitialiseNewJob(&bots[i], JOB_INVESTIGATE_AREA);
+                        newJob = InitialiseNewJob(&bots[i], job_investigate_area);
                         if (newJob != nullptr) {
                            newJob->waypoint = closestWPToThreat;
-                           SubmitNewJob(&bots[i], JOB_INVESTIGATE_AREA, newJob);
+                           SubmitNewJob(&bots[i], job_investigate_area, newJob);
                         }
                      }
                      // UTIL_HostSay(bots[i].pEdict, 0, "Heard something.");
@@ -2281,16 +2281,16 @@ void BotSoundSense(edict_t *pEdict, const char *pszSample, const float fVolume) 
          if (FInViewCone(pEdict->v.origin, bots[nearestMedic].pEdict) && FVisible(pEdict->v.origin, bots[nearestMedic].pEdict)) {
             if (bots[nearestMedic].current_team == UTIL_GetTeam(pEdict)) {
                // set up a job to handle the healing/repairing
-               newJob = InitialiseNewJob(&bots[nearestMedic], JOB_BUFF_ALLY);
+               newJob = InitialiseNewJob(&bots[nearestMedic], job_buff_ally);
                if (newJob != nullptr) {
                   newJob->player = pEdict;
                   newJob->origin = pEdict->v.origin; // remember where the player was
-                  SubmitNewJob(&bots[nearestMedic], JOB_BUFF_ALLY, newJob);
+                  SubmitNewJob(&bots[nearestMedic], job_buff_ally, newJob);
                }
             }
          } else // go find the person who called for a Medic
          {
-            newJob = InitialiseNewJob(&bots[nearestMedic], JOB_INVESTIGATE_AREA);
+            newJob = InitialiseNewJob(&bots[nearestMedic], job_investigate_area);
             if (newJob != nullptr) {
                const int closestWPToSound = WaypointFindNearest_V(pEdict->v.origin, 500.0, bots[nearestMedic].current_team);
 
@@ -2301,7 +2301,7 @@ void BotSoundSense(edict_t *pEdict, const char *pszSample, const float fVolume) 
 
                   // set up a job to investigate the sound
                   newJob->waypoint = closestWPToSound;
-                  SubmitNewJob(&bots[nearestMedic], JOB_INVESTIGATE_AREA, newJob);
+                  SubmitNewJob(&bots[nearestMedic], job_investigate_area, newJob);
                }
             }
          }
@@ -2313,16 +2313,16 @@ void BotSoundSense(edict_t *pEdict, const char *pszSample, const float fVolume) 
          if (FInViewCone(pEdict->v.origin, bots[nearestEngy].pEdict) && FVisible(pEdict->v.origin, bots[nearestEngy].pEdict)) {
             if (bots[nearestEngy].current_team == UTIL_GetTeam(pEdict) && !PlayerIsInfected(pEdict) && PlayerArmorPercent(pEdict) < 100) {
                // set up a job to handle the healing/repairing
-               newJob = InitialiseNewJob(&bots[nearestEngy], JOB_BUFF_ALLY);
+               newJob = InitialiseNewJob(&bots[nearestEngy], job_buff_ally);
                if (newJob != nullptr) {
                   newJob->player = pEdict;
                   newJob->origin = pEdict->v.origin; // remember where the player was
-                  SubmitNewJob(&bots[nearestEngy], JOB_BUFF_ALLY, newJob);
+                  SubmitNewJob(&bots[nearestEngy], job_buff_ally, newJob);
                }
             }
          } else // go find the person who called for a Medic
          {
-            newJob = InitialiseNewJob(&bots[nearestEngy], JOB_INVESTIGATE_AREA);
+            newJob = InitialiseNewJob(&bots[nearestEngy], job_investigate_area);
             if (newJob != nullptr) {
                const int closestWPToSound = WaypointFindNearest_V(pEdict->v.origin, 500.0, bots[nearestEngy].current_team);
 
@@ -2333,7 +2333,7 @@ void BotSoundSense(edict_t *pEdict, const char *pszSample, const float fVolume) 
 
                   // set up a job to investigate the sound
                   newJob->waypoint = closestWPToSound;
-                  SubmitNewJob(&bots[nearestEngy], JOB_INVESTIGATE_AREA, newJob);
+                  SubmitNewJob(&bots[nearestEngy], job_investigate_area, newJob);
                }
             }
          }
@@ -2347,7 +2347,7 @@ void BotSoundSense(edict_t *pEdict, const char *pszSample, const float fVolume) 
       if (bots[i].is_used                                                                        // Is this a bot?
           && bots[i].f_soundReactTime < bots[i].f_think_time && bots[i].pEdict->v.deadflag != 5) // skip feigning spies(for now)
       {
-         newJob = InitialiseNewJob(&bots[i], JOB_SPOT_STIMULUS);
+         newJob = InitialiseNewJob(&bots[i], job_spot_stimulus);
          if (newJob == nullptr)
             continue;
 
@@ -2364,7 +2364,7 @@ void BotSoundSense(edict_t *pEdict, const char *pszSample, const float fVolume) 
                // set up a job for spotting the unseen activity
                newJob->origin = pEdict->v.origin;
                newJob->waypoint = bots[i].goto_wp;
-               SubmitNewJob(&bots[i], JOB_SPOT_STIMULUS, newJob);
+               SubmitNewJob(&bots[i], job_spot_stimulus, newJob);
 
                // don't react to sounds again for a few seconds
                // longer if underwater(don't want to drown)
@@ -2445,7 +2445,7 @@ edict_t *BotAllyAtVector(const bot_t *pBot, const Vector &r_vecOrigin, const flo
       if (pPlayer != nullptr && !pPlayer->free && pPlayer != pBot->pEdict // ignore this bot
           && UTIL_GetTeam(pPlayer) == pBot->current_team && VectorsNearerThan(pPlayer->v.origin, r_vecOrigin, range)) {
          if (stationaryOnly) {
-            if (pPlayer->v.velocity.Length() < 1.0)
+            if (pPlayer->v.velocity.Length() < 1)
                return pPlayer;
          } else
             return pPlayer;
@@ -2611,11 +2611,11 @@ static void BotGrenadeAvoidance(bot_t *pBot) {
    }
 
    if (avoid_action == avoid_retreat && threatEnt != nullptr) {
-      job_struct *newJob = InitialiseNewJob(pBot, JOB_AVOID_AREA_DAMAGE);
+      job_struct *newJob = InitialiseNewJob(pBot, job_avoid_area_damage);
       if (newJob != nullptr) {
          newJob->object = threatEnt;           // remember the object
          newJob->origin = threatEnt->v.origin; // remember the object's origin too
-         SubmitNewJob(pBot, JOB_AVOID_AREA_DAMAGE, newJob);
+         SubmitNewJob(pBot, job_avoid_area_damage, newJob);
       }
    }
 }
@@ -2624,7 +2624,7 @@ static void BotGrenadeAvoidance(bot_t *pBot) {
 // and defenders on each team, and attempts to balance them out,
 // by making bots switch combat roles.
 static void BotRoleCheck(bot_t *pBot) {
-   if (roleCheckTimer > gpGlobals->time && roleCheckTimer < gpGlobals->time + 300.0) // make sure roleCheckTimer is sane
+   if (roleCheckTimer > gpGlobals->time && roleCheckTimer < gpGlobals->time + 300) // make sure roleCheckTimer is sane
       return;
 
    roleCheckTimer = gpGlobals->time + 10.0f; // reset the timer
@@ -2871,18 +2871,18 @@ static void BotComms(bot_t *pBot) {
 
    // chat related stuff below, ignore if already chatting
    // or if the bot has no current waypoint
-   job_struct *newJob = InitialiseNewJob(pBot, JOB_CHAT);
+   job_struct *newJob = InitialiseNewJob(pBot, job_chat);
    if (newJob == nullptr || pBot->current_wp < 0)
       return;
 
    // greetings from the bots
-   if (pBot->greeting == false && pBot->create_time + 3.0 > pBot->f_think_time) {
+   if (pBot->greeting == false && pBot->create_time + 3 > pBot->f_think_time) {
       pBot->greeting = true;
       if (random_long(1, 1000) < static_cast<long>(bot_chat)) {
          chat.pickRandomChatString(newJob->message, MAX_CHAT_LENGTH, CHAT_TYPE_GREETING, nullptr);
 
          newJob->message[MAX_CHAT_LENGTH - 1] = '\0';
-         SubmitNewJob(pBot, JOB_CHAT, newJob);
+         SubmitNewJob(pBot, job_chat, newJob);
       }
       if (bot_xmas) {
          strcpy(pBot->message, "xmas");
@@ -2901,7 +2901,7 @@ static void BotComms(bot_t *pBot) {
       }
 
       newJob->message[MAX_CHAT_LENGTH - 1] = '\0';
-      SubmitNewJob(pBot, JOB_CHAT, newJob);
+      SubmitNewJob(pBot, job_chat, newJob);
 
       if (bot_xmas && random_long(1, 100) <= 30 && pBot->killer_edict != nullptr) {
          strcpy(pBot->message, "xmas");
@@ -2920,7 +2920,7 @@ static void BotComms(bot_t *pBot) {
       }
 
       newJob->message[MAX_CHAT_LENGTH - 1] = '\0';
-      SubmitNewJob(pBot, JOB_CHAT, newJob);
+      SubmitNewJob(pBot, job_chat, newJob);
 
       if (bot_xmas && random_long(1, 100) <= 30 && pBot->killed_edict != nullptr) {
          strcpy(pBot->message, "xmas");
@@ -3425,7 +3425,7 @@ bool SpyAmbushAreaCheck(const bot_t *pBot, Vector &r_wallVector) {
    UTIL_TraceLine(v_src, endpoint, dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
    // report a failure if the trace didn't hit anything
-   if (tr.flFraction >= 1.0)
+   if (tr.flFraction >= 1)
       return false;
 
    if (!rememberLeftWall)
@@ -3436,7 +3436,7 @@ bool SpyAmbushAreaCheck(const bot_t *pBot, Vector &r_wallVector) {
    UTIL_TraceLine(v_src, endpoint, dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
    // report a failure if the trace didn't hit anything
-   if (tr.flFraction >= 1.0)
+   if (tr.flFraction >= 1)
       return false;
 
    if (rememberLeftWall)
@@ -3487,12 +3487,12 @@ static void BotReportMyFlagDrop(bot_t *pBot) {
       return;
 
    // set up a job to retrieve the flag
-   job_struct *newJob = InitialiseNewJob(pBot, JOB_PICKUP_FLAG);
+   job_struct *newJob = InitialiseNewJob(pBot, job_pickup_flag);
    if (newJob != nullptr) {
       newJob->waypoint = WaypointFindNearest_E(pent, 600.0, pBot->current_team);
       newJob->object = pent;
       newJob->origin = pent->v.origin;
-      SubmitNewJob(pBot, JOB_PICKUP_FLAG, newJob);
+      SubmitNewJob(pBot, job_pickup_flag, newJob);
    }
 
    // let the other players know where the flag was dropped
@@ -3504,12 +3504,12 @@ static void BotReportMyFlagDrop(bot_t *pBot) {
          for (int i = 0; i < 32; i++) {
             if (bots[i].is_used && &bots[i] != pBot // not this bot
                 && bots[i].bot_has_flag == false && bots[i].mission == ROLE_ATTACKER && bots[i].current_team == pBot->current_team) {
-               SubmitNewJob(&bots[i], JOB_PICKUP_FLAG, newJob);
+               SubmitNewJob(&bots[i], job_pickup_flag, newJob);
             }
          }
       }
 
-      newJob = InitialiseNewJob(pBot, JOB_REPORT);
+      newJob = InitialiseNewJob(pBot, job_report);
       if (newJob != nullptr) {
          switch (pBot->current_team) {
          case 0:
@@ -3529,7 +3529,7 @@ static void BotReportMyFlagDrop(bot_t *pBot) {
          }
 
          newJob->message[MAX_CHAT_LENGTH - 1] = '\0';
-         SubmitNewJob(pBot, JOB_REPORT, newJob);
+         SubmitNewJob(pBot, job_report, newJob);
       }
    }
 }
@@ -3545,7 +3545,7 @@ static void BotEnemyCarrierAlert(bot_t *pBot) {
    if (!defensive_chatter || pBot->visAllyCount > 1 || pBot->f_roleSayDelay > pBot->f_think_time || (pBot->pEdict->v.health / pBot->pEdict->v.max_health) > 0.45)
       return;
 
-   job_struct *newJob = InitialiseNewJob(pBot, JOB_REPORT);
+   job_struct *newJob = InitialiseNewJob(pBot, job_report);
    if (newJob == nullptr)
       return;
 
@@ -3578,7 +3578,7 @@ static void BotEnemyCarrierAlert(bot_t *pBot) {
       }
 
       newJob->message[MAX_CHAT_LENGTH - 1] = '\0'; // not all versions of snprintf terminate the string
-      SubmitNewJob(pBot, JOB_REPORT, newJob);
+      SubmitNewJob(pBot, job_report, newJob);
       pBot->f_roleSayDelay = pBot->f_think_time + 30.0f;
    }
 }
@@ -3697,7 +3697,7 @@ void BotThink(bot_t *pBot) {
       if (pBot->idle_angle_time <= pBot->f_think_time) {
          pBot->idle_angle_time = pBot->f_think_time + RANDOM_FLOAT(0.5, 2.0);
 
-         pBot->pEdict->v.ideal_yaw = pBot->idle_angle + RANDOM_FLOAT(0.0, 40.0) - 20.0;
+         pBot->pEdict->v.ideal_yaw = pBot->idle_angle + RANDOM_FLOAT(0.0, 40.0) - 20;
 
          BotFixIdealYaw(pBot->pEdict);
       }
@@ -3745,7 +3745,7 @@ void BotThink(bot_t *pBot) {
 
    // crouch if the bots current waypoint is a crouch waypoint...
    if (pBot->current_wp != -1 && waypoints[pBot->current_wp].flags & W_FL_CROUCH && VectorsNearerThan(pBot->pEdict->v.origin, waypoints[pBot->current_wp].origin, 100.0f)) {
-      pBot->f_duck_time = pBot->f_think_time + 2.0;
+      pBot->f_duck_time = pBot->f_think_time + 2;
    }
 
    // put it here so we can do duck jumps :D
@@ -3906,7 +3906,7 @@ static void BotFight(bot_t *pBot) {
    // DrEvils Nade update, or toss a nade if threatlevel high enuff.
    if (pBot->lastEnemySentryGun && pBot->enemy.ptr == pBot->lastEnemySentryGun && !FNullEnt(pBot->lastEnemySentryGun))
       BotNadeHandler(pBot, false, GRENADE_STATIONARY);
-   else if (pBot->enemy.ptr != nullptr && pBot->enemy.f_firstSeen + 1.0 < pBot->f_think_time && BotAssessThreatLevel(pBot) > 50)
+   else if (pBot->enemy.ptr != nullptr && pBot->enemy.f_firstSeen + 1 < pBot->f_think_time && BotAssessThreatLevel(pBot) > 50)
       BotNadeHandler(pBot, true, GRENADE_RANDOM);
    else
       BotNadeHandler(pBot, true, 0);
@@ -3954,7 +3954,7 @@ static void BotCombatThink(bot_t *pBot) {
       {
          // jump a lot if the enemy is a nearby soldier or pyro
          // (extra annoying for the enemy!)
-         if (pBot->f_periodicAlert1 < pBot->f_think_time && (pBot->enemy.ptr->v.playerclass == TFC_CLASS_SOLDIER || pBot->enemy.ptr->v.playerclass == TFC_CLASS_PYRO) && pBot->bot_skill < 2 && pBot->enemy.f_seenDistance < 800.0)
+         if (pBot->f_periodicAlert1 < pBot->f_think_time && (pBot->enemy.ptr->v.playerclass == TFC_CLASS_SOLDIER || pBot->enemy.ptr->v.playerclass == TFC_CLASS_PYRO) && pBot->bot_skill < 2 && pBot->enemy.f_seenDistance < 800)
             pBot->pEdict->v.button |= IN_JUMP;
 
          // duck/jump randomly in battle
@@ -3974,34 +3974,34 @@ static void BotCombatThink(bot_t *pBot) {
          tooBusySniping = true;
 
       if (tooBusySniping == false) {
-         job_struct *newJob = InitialiseNewJob(pBot, JOB_PURSUE_ENEMY);
+         job_struct *newJob = InitialiseNewJob(pBot, job_pursue_enemy);
          if (newJob != nullptr) {
             newJob->player = pBot->enemy.ptr;
             newJob->origin = pBot->enemy.ptr->v.origin; // remember where
-            SubmitNewJob(pBot, JOB_PURSUE_ENEMY, newJob);
+            SubmitNewJob(pBot, job_pursue_enemy, newJob);
          }
       }
    }
 
    // make the hunted seek backup when alone(the snipers love a lone fawn in the woods!)
-   if (pBot->pEdict->v.playerclass == TFC_CLASS_CIVILIAN && pBot->bot_has_flag && pBot->visAllyCount <= 1 && pBot->f_lastAllySeenTime + 15.0 > pBot->f_think_time && pBot->f_lastAllySeenTime > pBot->f_killed_time) {
-      job_struct *newJob = InitialiseNewJob(pBot, JOB_SEEK_BACKUP);
+   if (pBot->pEdict->v.playerclass == TFC_CLASS_CIVILIAN && pBot->bot_has_flag && pBot->visAllyCount <= 1 && pBot->f_lastAllySeenTime + 15 > pBot->f_think_time && pBot->f_lastAllySeenTime > pBot->f_killed_time) {
+      job_struct *newJob = InitialiseNewJob(pBot, job_seek_backup);
       if (newJob != nullptr)
-         SubmitNewJob(pBot, JOB_SEEK_BACKUP, newJob);
+         SubmitNewJob(pBot, job_seek_backup, newJob);
    }
 
    // should the bot retreat from it's enemy?
    if (ThreatLevel >= 66 && (pBot->pEdict->v.playerclass == TFC_CLASS_CIVILIAN || !pBot->bot_has_flag)) // the civilian has an invisible flag in hunted
    {
       // seek an ally if the bot is alone and saw an ally recently
-      job_struct *newJob = InitialiseNewJob(pBot, JOB_SEEK_BACKUP);
-      if (newJob != nullptr && pBot->visAllyCount < 2 && pBot->f_lastAllySeenTime + 15.0 > pBot->f_think_time) {
-         SubmitNewJob(pBot, JOB_SEEK_BACKUP, newJob);
+      job_struct *newJob = InitialiseNewJob(pBot, job_seek_backup);
+      if (newJob != nullptr && pBot->visAllyCount < 2 && pBot->f_lastAllySeenTime + 15 > pBot->f_think_time) {
+         SubmitNewJob(pBot, job_seek_backup, newJob);
       } else {
-         job_struct *newJob2 = InitialiseNewJob(pBot, JOB_AVOID_ENEMY);
+         job_struct *newJob2 = InitialiseNewJob(pBot, job_avoid_enemy);
          if (newJob2 != nullptr) {
             newJob2->player = pBot->enemy.ptr;
-            SubmitNewJob(pBot, JOB_AVOID_ENEMY, newJob2);
+            SubmitNewJob(pBot, job_avoid_enemy, newJob2);
          }
       }
    }
@@ -4201,7 +4201,7 @@ void BotLookAbout(bot_t *pBot) {
       UTIL_TraceLine(pBot->pEdict->v.origin, v_forwards, dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
       // if the new view angle is relatively unblocked make the bot turn to match it
-      if (tr.flFraction >= 1.0) {
+      if (tr.flFraction >= 1) {
          pBot->pEdict->v.ideal_yaw = newAngle.y;
          BotFixIdealYaw(pBot->pEdict);
          pBot->pEdict->v.idealpitch = random_float(-15.0, 15.0);
@@ -4242,8 +4242,8 @@ static void BotSpectatorDebug(bot_t *pBot) {
          // list the jobs in the buffer
          for (int i = 0; i < JOB_BUFFER_MAX; i++) {
             // list one job per line
-            if (pBot->jobType[i] > JOB_NONE && pBot->jobType[i] < JOB_TYPE_TOTAL) {
-               strncat(msg, jl[pBot->jobType[i]].jobNames, 255 - strlen(msg));
+            if (pBot->jobType[i] > job_none && pBot->jobType[i] < job_type_total) {
+               strncat(msg, jl[pBot->jobType[i]].job_names, 255 - strlen(msg));
 
                // indicate the current job and how long it's been running
                if (pBot->currentJob == i) {
@@ -4261,8 +4261,8 @@ static void BotSpectatorDebug(bot_t *pBot) {
          strncat(msg, "Blacklist:\n", 255 - strlen(msg));
          for (int i = 0; i < JOB_BLACKLIST_MAX; i++) {
             // list one blacklisted job per line
-            if (pBot->jobBlacklist[i].type > JOB_NONE && pBot->jobBlacklist[i].f_timeOut >= pBot->f_think_time && pBot->jobBlacklist[i].type < JOB_TYPE_TOTAL) {
-               strncat(msg, jl[pBot->jobBlacklist[i].type].jobNames, 255 - strlen(msg));
+            if (pBot->jobBlacklist[i].type > job_none && pBot->jobBlacklist[i].f_timeOut >= pBot->f_think_time && pBot->jobBlacklist[i].type < job_type_total) {
+               strncat(msg, jl[pBot->jobBlacklist[i].type].job_names, 255 - strlen(msg));
                strncat(msg, "\n", 255 - strlen(msg)); // add a newline on the end
             } else
                strncat(msg, "\n", 255 - strlen(msg)); // skip empty blacklist indexes
@@ -4291,7 +4291,7 @@ static void BotSpectatorDebug(bot_t *pBot) {
       WRITE_BYTE(2 & 0xFF);
 
       // top of the screen
-      WRITE_SHORT(FixedSigned16(1, -1 << 13)); // coordinates X
+      WRITE_SHORT(FixedSigned16(1, 0 << 13)); // coordinates X
       WRITE_SHORT(FixedSigned16(1, 0 << 13));  // coordinates Y
 
       WRITE_BYTE(1); // effect

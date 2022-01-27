@@ -27,7 +27,7 @@ typedef struct
 	float		force_retouch;
 	string_t	mapname;
 	string_t	startspot;
-	float		deathmatch;
+	bool		deathmatch;
 	float		coop;
 	float		teamplay;
 	float		serverflags;

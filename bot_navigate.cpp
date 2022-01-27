@@ -514,9 +514,9 @@ bool BotNavigateWaypoints(bot_t *pBot, bool navByStrafe) {
       // buoyed by water, or on a ladder?
       if ((pBot->pEdict->v.waterlevel > WL_FEET_IN_WATER && !(pBot->pEdict->v.flags & FL_ONGROUND)) || pBot->pEdict->v.movetype == MOVETYPE_FLY) {
          if (pBot->f_navProblemStartTime + 2.0 < pBot->f_think_time) {
-            job_struct *newJob = InitialiseNewJob(pBot, JOB_GET_UNSTUCK);
+            job_struct *newJob = InitialiseNewJob(pBot, job_get_unstuck);
             if (newJob != nullptr)
-               SubmitNewJob(pBot, JOB_GET_UNSTUCK, newJob);
+               SubmitNewJob(pBot, job_get_unstuck, newJob);
          }
       } else // not on a ladder or in some water
       {
@@ -546,9 +546,9 @@ bool BotNavigateWaypoints(bot_t *pBot, bool navByStrafe) {
                         || duckResult == 1) {
                   // try to get unstuck, but not too soon
                   if (pBot->f_navProblemStartTime + 2.0 < pBot->f_think_time) {
-                     job_struct *newJob = InitialiseNewJob(pBot, JOB_GET_UNSTUCK);
+                     job_struct *newJob = InitialiseNewJob(pBot, job_get_unstuck);
                      if (newJob != nullptr)
-                        SubmitNewJob(pBot, JOB_GET_UNSTUCK, newJob);
+                        SubmitNewJob(pBot, job_get_unstuck, newJob);
                   } else // a little too soon for calling JOB_GET_UNSTUCK
                   {
                      // randomly switch direction to try and get unstuck
@@ -2184,7 +2184,7 @@ int BotDrowningWaypointSearch(const bot_t *pBot) {
 // that will provide a quicker route to its ultimate goal.
 // It returns true on success, false on failure.
 bool BotFindTeleportShortCut(bot_t *pBot) {
-   if (bot_can_use_teleporter == false || pBot->bot_has_flag || BufferContainsJobType(pBot, JOB_USE_TELEPORT))
+   if (bot_can_use_teleporter == false || pBot->bot_has_flag || BufferContainsJobType(pBot, job_use_teleport))
       return false;
 
    // the teleporter found has got to cut the route distance to less than this amount
@@ -2215,11 +2215,11 @@ bool BotFindTeleportShortCut(bot_t *pBot) {
 
    // found a teleporter to use that saves travel time?
    if (shortestIndex != -1) {
-      job_struct *newJob = InitialiseNewJob(pBot, JOB_USE_TELEPORT);
+      job_struct *newJob = InitialiseNewJob(pBot, job_use_teleport);
       if (newJob != nullptr) {
          newJob->object = pBot->telePair[shortestIndex].entrance;
          newJob->waypoint = pBot->telePair[shortestIndex].entranceWP;
-         SubmitNewJob(pBot, JOB_USE_TELEPORT, newJob);
+         SubmitNewJob(pBot, job_use_teleport, newJob);
          //	UTIL_BotLogPrintf("%s, got tele shortcut via %d\n", pBot->name, newJob->waypoint);
       }
 
@@ -2243,7 +2243,7 @@ bool BotFindTeleportShortCut(bot_t *pBot) {
 // checking for visibility.
 static void BotCheckForRocketJump(bot_t *pBot) {
    // sanity checking
-   if (pBot->current_wp == -1 || pBot->bot_skill > 3 || num_waypoints < 1 || BufferContainsJobType(pBot, JOB_ROCKET_JUMP))
+   if (pBot->current_wp == -1 || pBot->bot_skill > 3 || num_waypoints < 1 || BufferContainsJobType(pBot, job_rocket_jump))
       return;
 
    const char *cvar_ntf = const_cast<char *>(CVAR_GET_STRING("neotf"));
@@ -2346,10 +2346,10 @@ static void BotCheckForRocketJump(bot_t *pBot) {
       //	UTIL_HostSay(pBot->pEdict, 0, "RJ waypoint seen");
 
       // set up a job to handle the jump
-      job_struct *newJob = InitialiseNewJob(pBot, JOB_ROCKET_JUMP);
+      job_struct *newJob = InitialiseNewJob(pBot, job_rocket_jump);
       if (newJob != nullptr) {
          newJob->waypoint = closestRJ;
-         SubmitNewJob(pBot, JOB_ROCKET_JUMP, newJob);
+         SubmitNewJob(pBot, job_rocket_jump, newJob);
       }
 
       //	UTIL_BotLogPrintf("%s: RJ waypoint %d\n", pBot->name, newJob.waypoint);
@@ -2382,7 +2382,7 @@ static void BotCheckForConcJump(bot_t *pBot) {
       return;
 
    // make sure we can set up a concussion jump job to handle the jump itself
-   if (BufferContainsJobType(pBot, JOB_CONCUSSION_JUMP))
+   if (BufferContainsJobType(pBot, job_concussion_jump))
       return;
 
    // We need to look ahead based on this speed, to try and estimate
@@ -2484,12 +2484,12 @@ static void BotCheckForConcJump(bot_t *pBot) {
       return; // can't see it
    else       // success - it's time to set up a concussion jump job
    {
-      job_struct *newJob = InitialiseNewJob(pBot, JOB_CONCUSSION_JUMP);
+      job_struct *newJob = InitialiseNewJob(pBot, job_concussion_jump);
       if (newJob != nullptr) {
          newJob->waypoint = endWP;
          newJob->waypointTwo = closestJumpWP;
 
-         SubmitNewJob(pBot, JOB_CONCUSSION_JUMP, newJob);
+         SubmitNewJob(pBot, job_concussion_jump, newJob);
       }
    }
 }
