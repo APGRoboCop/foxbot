@@ -91,7 +91,6 @@ if cxx.like('gcc'):
 
   if builder.options.opt == '1':
     cxx.cflags += ['-O2','-pipe']
-	#cxx.cflags -= ['-g','-ggdb3']
 	
   if builder.options.debug == '1':
     cxx.cflags += ['-g','-ggdb3']
