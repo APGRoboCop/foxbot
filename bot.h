@@ -29,7 +29,7 @@
 #define BOT_H
 
 #include "osdep.h"
-#include <cstring>
+#include <string>
 
 // stuff for Win32 vs. Linux builds
 
@@ -159,16 +159,16 @@ template <typename U> void bzero(U *ptr, size_t len) noexcept {
 class chatClass {
  private:
    // section header names for each chat type, as used in the chat file
-   char sectionNames[TOTAL_CHAT_TYPES][64];
+     std::string sectionNames[TOTAL_CHAT_TYPES];
 
-   // chat strings, organised by groups of chat types
-   char strings[TOTAL_CHAT_TYPES][MAX_CHAT_STRINGS][512];
+     // chat strings, organised by groups of chat types
+     std::string strings[TOTAL_CHAT_TYPES][MAX_CHAT_STRINGS];
 
-   // counts the number of strings read from the chat file
-   int stringCount[TOTAL_CHAT_TYPES];
+     // counts the number of strings read from the chat file
+     int stringCount[TOTAL_CHAT_TYPES];
 
-   // used to avoid repeating the same message twice in a row
-   int recentStrings[TOTAL_CHAT_TYPES][5];
+     // used to avoid repeating the same message twice in a row
+     int recentStrings[TOTAL_CHAT_TYPES][5];
 
  public:
    chatClass(); // constructor, sets up the names of the chat section headers
