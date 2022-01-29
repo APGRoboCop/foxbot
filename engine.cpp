@@ -186,7 +186,7 @@ void pfnSetOrigin(edict_t *e, const float *rgflOrigin) {
       // clear up current wpt
       for (int bot_index = 0; bot_index < 32; bot_index++) {
          // only consider existing bots that haven't died very recently
-         if (bots[bot_index].pEdict == e && bots[bot_index].is_used && bots[bot_index].f_killed_time + 3.0 < gpGlobals->time) {
+         if (bots[bot_index].pEdict == e && bots[bot_index].is_used && bots[bot_index].f_killed_time + 3 < gpGlobals->time) {
             // see if a teleporter pad moved the bot
             const edict_t *teleExit = BotEntityAtPoint("building_teleporter", bots[bot_index].pEdict->v.origin, 90.0);
 

@@ -476,7 +476,7 @@ bool BotCanSeeOrigin(const bot_t *pBot, const Vector &r_dest) {
    UTIL_TraceLine(pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs, r_dest, ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
    // check if line of sight to the object is not blocked
-   if (tr.flFraction >= 1.0)
+   if (tr.flFraction >= 1)
       return true;
 
    return false;
@@ -491,18 +491,18 @@ int BotInFieldOfView(const bot_t *pBot, const Vector &dest) {
    Vector entity_angles = UTIL_VecToAngles(dest);
 
    // make yaw angle 0 to 360 degrees if negative...
-   if (entity_angles.y < 0.0)
-      entity_angles.y += 360.0;
+   if (entity_angles.y < 0)
+      entity_angles.y += 360;
 
    // get bot's current view angle...
    float view_angle = pBot->pEdict->v.v_angle.y;
 
    // make view angle 0 to 360 degrees if negative...
-   if (view_angle < 0.0)
-      view_angle += 360.0;
+   if (view_angle < 0)
+      view_angle += 360;
 
    // rsm - START angle bug fix
-   int angle = abs(static_cast<int>(view_angle) - static_cast<int>(entity_angles.y));
+   int angle = std::abs(static_cast<int>(view_angle) - static_cast<int>(entity_angles.y));
 
    if (angle > 180)
       angle = 360 - angle;
@@ -527,7 +527,7 @@ bool FVisible(const Vector &r_vecOrigin, edict_t *pEdict) {
    // was ignore glass
    UTIL_TraceLine(vecLookerOrigin, r_vecOrigin, ignore_monsters, dont_ignore_glass, pEdict, &tr);
 
-   if (tr.flFraction < 1.0)
+   if (tr.flFraction < 1)
       return false; // Line of sight is not established
    else
       return true; // line of sight is valid.
@@ -560,7 +560,7 @@ bool UTIL_FootstepsHeard(const edict_t *pEdict, edict_t *pPlayer) {
    if (footstep_sounds_on == true) {
       // check if this player is near enough and moving fast enough on
       // the ground to make sounds
-      if (pPlayer->v.flags & FL_ONGROUND && VectorsNearerThan(pPlayer->v.origin, pEdict->v.origin, 600.0) && pPlayer->v.velocity.Length2D() > 220.0) {
+      if (pPlayer->v.flags & FL_ONGROUND && VectorsNearerThan(pPlayer->v.origin, pEdict->v.origin, 600.0) && pPlayer->v.velocity.Length2D() > 220) {
          return true;
       }
    }

@@ -903,7 +903,7 @@ int DispatchSpawn(edict_t *pent) {
          prev_num_bots = num_bots;
          num_bots = 0;
 
-         bot_check_time = gpGlobals->time + 30.0;
+         bot_check_time = gpGlobals->time + 30;
       }
    }
 
@@ -987,7 +987,7 @@ void DispatchThink(edict_t *pent) {
             tr.pHit = nullptr;
             UTIL_TraceLine(pent->v.euser1->v.origin + pent->v.euser1->v.view_ofs, pBot->enemy.ptr->v.origin + Vector(xx, yy, zz), dont_ignore_monsters, dont_ignore_glass, pent->v.euser1, &tr);
 
-            if (tr.pHit == pBot->enemy.ptr || tr.flFraction == 1.0)
+            if (tr.pHit == pBot->enemy.ptr || tr.flFraction == 1)
                player_vis[scanpos] = true;
             else
                player_vis[scanpos] = false;
@@ -1265,7 +1265,7 @@ BOOL ClientConnect(edict_t *pEntity, const char *pszName, const char *pszAddress
          if (welcome_index == -1)
             welcome_index = i;
          // don't try to add bots for 30 seconds, give client time to get added
-         bot_check_time = gpGlobals->time + 30.0;
+         bot_check_time = gpGlobals->time + 30;
          // save the edict of the first player to join this server...
          if (first_player == nullptr)
             first_player = pEntity;
@@ -1416,7 +1416,7 @@ void ClientCommand(edict_t *pEntity) {
             strcpy(c, "-1");
             BotCreate(pEntity, arg1, c, arg3, arg4);
          }
-         bot_check_time = gpGlobals->time + 5.0;
+         bot_check_time = gpGlobals->time + 5;
          if (mr_meta)
             RETURN_META(MRES_SUPERCEDE);
          return;
@@ -2432,11 +2432,11 @@ void StartFrame() { // v7 last frame timing
                      bots[index].respawn_state = RESPAWN_NEED_TO_RESPAWN;
                      count++;
                   } // check for any bots that were very recently kicked...
-                  if (bots[index].f_kick_time + 5.0 > previous_time) {
+                  if (bots[index].f_kick_time + 5 > previous_time) {
                      bots[index].respawn_state = RESPAWN_NEED_TO_RESPAWN;
                      count++;
                   } else
-                     bots[index].f_kick_time = 0.0; // reset to prevent false spawns later
+                     bots[index].f_kick_time = 0;   // reset to prevent false spawns later
                }                                    // set the respawn time
                if (IS_DEDICATED_SERVER())
                   respawn_time = gpGlobals->time + 10;
@@ -2478,7 +2478,7 @@ void StartFrame() { // v7 last frame timing
             }
          }
       } // are we currently respawning bots and is it time to spawn one yet?
-      if (respawn_time > 1.0 && respawn_time <= gpGlobals->time) {
+      if (respawn_time > 1 && respawn_time <= gpGlobals->time) {
          int index1 = 0; // Not wanted? [APG]RoboCop[CL]
          // find bot needing to be respawned...
          while (index1 < 32 && bots[index1].respawn_state != RESPAWN_NEED_TO_RESPAWN)
@@ -2586,7 +2586,7 @@ void StartFrame() { // v7 last frame timing
             if (first_player != nullptr) {
                if (IsAlive(first_player)) {
                   spawn_time_reset = true;
-                  if (respawn_time >= 1.0)
+                  if (respawn_time >= 1)
                      respawn_time = min(respawn_time, gpGlobals->time + 1.0f);
                   if (bot_cfg_pause_time >= 1)
                      bot_cfg_pause_time = min(bot_cfg_pause_time, gpGlobals->time + 1.0f);
@@ -2603,7 +2603,7 @@ void StartFrame() { // v7 last frame timing
          }
       } // if time to check for server commands then do so...
       if (check_server_cmd <= gpGlobals->time && IS_DEDICATED_SERVER()) {
-         check_server_cmd = gpGlobals->time + 1.0;
+         check_server_cmd = gpGlobals->time + 1;
          auto cvar_bot = const_cast<char *>(CVAR_GET_STRING("bot"));
          if (cvar_bot && cvar_bot[0]) {
             char cmd_line[80];
@@ -2638,7 +2638,7 @@ void StartFrame() { // v7 last frame timing
             }
             if (strcmp(cmd, "addbot") == 0) {
                BotCreate(nullptr, arg1, arg2, arg3, arg4);
-               bot_check_time = gpGlobals->time + 5.0;
+               bot_check_time = gpGlobals->time + 5;
             } else if (strcmp(cmd, "min_bots") == 0) {
                changeBotSetting("min_bots", &min_bots, arg1, -1, 31, SETTING_SOURCE_SERVER_COMMAND);
             } else if (strcmp(cmd, "max_bots") == 0) {
@@ -5206,7 +5206,7 @@ static void ProcessBotCfgFile() {
 
    if (strcmp(cmd, "bot_create_interval") == 0) {
       bot_create_interval = static_cast<float>(atoi(arg1));
-      if (bot_create_interval < 1.0 || bot_create_interval > 8.0)
+      if (bot_create_interval < 1 || bot_create_interval > 8)
          bot_create_interval = 3.0;
 
       if (IS_DEDICATED_SERVER())
@@ -5524,7 +5524,7 @@ static void DisplayBotInfo() {
 
       sprintf(msg, "--* foxbot v%d.%d *--\n", VER_MAJOR, VER_MINOR);
       ALERT(at_console, msg);
-      strncat(msg2, msg, 511 - strlen(msg2));
+      strncat(msg2, msg, 512 - strlen(msg2));
       sprintf(msg, "\n--FoxBot info--\n");
       ALERT(at_console, msg);
       strncat(msg2, msg, 511 - strlen(msg2));

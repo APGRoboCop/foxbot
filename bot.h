@@ -79,8 +79,8 @@ template <typename U> void bzero(U *ptr, size_t len) noexcept {
    }
 }
 
-#define BOT_PITCH_SPEED 20
-#define BOT_YAW_SPEED 20
+#define BOT_PITCH_SPEED 30
+#define BOT_YAW_SPEED 30
 
 #define RESPAWN_IDLE 1
 #define RESPAWN_NEED_TO_RESPAWN 2

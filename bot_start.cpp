@@ -54,8 +54,8 @@ void BotStartGame(bot_t *pBot) {
    edict_t *pEdict = pBot->pEdict;
 
    if (mod_id == TFC_DLL) {
-      if (pBot->create_time > gpGlobals->time + 1.0 || pBot->create_time + 3.0 <= gpGlobals->time)
-         pBot->create_time = gpGlobals->time + 1.0;
+      if (pBot->create_time > gpGlobals->time + 1 || pBot->create_time + 3 <= gpGlobals->time)
+         pBot->create_time = gpGlobals->time + 1;
 
       if (pBot->create_time > gpGlobals->time && pBot->create_time - 0.5 < gpGlobals->time) {
          if (!spawn_check_crash) {
@@ -80,14 +80,14 @@ void BotStartGame(bot_t *pBot) {
       }
 
       // force team selection
-      if (pBot->create_time + 1.0 <= gpGlobals->time)
+      if (pBot->create_time + 1 <= gpGlobals->time)
          pBot->start_action = MSG_TFC_TEAM_SELECT;
 
       if (pBot->create_time + 1.5 <= gpGlobals->time)
          pBot->start_action = MSG_TFC_CLASS_SELECT;
 
       // if we dont start after 2, sort other stuff
-      if (pBot->create_time + 2.0 <= gpGlobals->time)
+      if (pBot->create_time + 2 <= gpGlobals->time)
          pBot->not_started = false;
 
       // handle Team Fortress Classic stuff here...

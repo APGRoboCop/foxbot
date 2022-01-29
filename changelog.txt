@@ -13,21 +13,25 @@ Updated by RoboCop
 
 - Added area for bots to report Sentry Built in dustbowl hut entry in CP1
 
+- Added more delay for bots to Team Report to prevent annoying chat flooding
+
 - Increased priority for bots to steal flags
 
-- Optimised pathway for shutdown2 and dustbowl
+- Optimised pathway for 2fort, shutdown2, rock2, well and dustbowl
 
 - Repaired rock2 waypoints and the rock2 variants by allowing bots to cap properly
 
-- Reduced the likelihood for blue bots to go in wrong way after capping CP2
+- Reduced the likelihood for blue bots to go in wrong way after capping CP2 in dustbowl
 
-- Improve bot's visual on locating stray ammo bags
+- Improved bot's visual on locating stray ammo bags
 
 - Reverted waypoint max Reachable Range
 
 TODO List:-
 
 >> Fix bot_chat cvars
+
+>> Train spies to not flag hold and aim properly to destroy SG Turrets
 
 >> Allow bots to toss grenades at a higher angle and low range as their target aim is too short
 

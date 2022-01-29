@@ -172,7 +172,7 @@ int JobGetUnstuck(bot_t *pBot) {
          UTIL_TraceLine(pBot->pEdict->v.origin, v_forwards, dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
          // if the new view angle is clear or a blockage is not too near
-         if (tr.flFraction >= 1.0 || !VectorsNearerThan(pBot->pEdict->v.origin, tr.vecEndPos, 80)) {
+         if (tr.flFraction >= 1 || !VectorsNearerThan(pBot->pEdict->v.origin, tr.vecEndPos, 80)) {
             job_ptr->origin = tr.vecEndPos; // remember where to go
             job_ptr->phase = 1;
             job_ptr->phase_timer = pBot->f_think_time + random_float(1.0, 3.0);
@@ -202,7 +202,7 @@ int JobGetUnstuck(bot_t *pBot) {
          pBot->pEdict->v.button |= IN_JUMP;
 
       // wandered long enough?
-      if (job_ptr->phase_timer < pBot->f_think_time || (pBot->pEdict->v.origin - job_ptr->origin).Length2D() < 20.0) {
+      if (job_ptr->phase_timer < pBot->f_think_time || (pBot->pEdict->v.origin - job_ptr->origin).Length2D() < 20) {
          BlacklistJob(pBot, job_get_unstuck, 1.0); // don't get caught in a loop
          return JOB_TERMINATED;
       }
@@ -302,7 +302,7 @@ int JobReport(bot_t *pBot) {
          job_ptr->phase = 1;
 
          // create a delay so the bot can "type"
-         job_ptr->phase_timer = pBot->f_think_time + random_float(2.0, 5.0);
+         job_ptr->phase_timer = pBot->f_think_time + random_float(5.0, 10.0);
       }
    }
 
@@ -1285,7 +1285,7 @@ int JobBuffAlly(bot_t *pBot) {
 
       // if the patient is moving about then heal them to full health only
       const float patientVelocity = job_ptr->player->v.velocity.Length();
-      if (patientVelocity > 50.0 && job_ptr->player->v.health >= job_ptr->player->v.max_health)
+      if (patientVelocity > 50 && job_ptr->player->v.health >= job_ptr->player->v.max_health)
          return JOB_TERMINATED;
    }
 
@@ -1302,7 +1302,7 @@ int JobBuffAlly(bot_t *pBot) {
    if (job_ptr->phase == 1) {
       // go for the ally if they are near and visible
       const float allyDistance = (pBot->pEdict->v.origin - job_ptr->player->v.origin).Length();
-      if (allyDistance < 500.1 && FVisible(job_ptr->player->v.origin + job_ptr->player->v.view_ofs, pBot->pEdict)) {
+      if (allyDistance < 500 && FVisible(job_ptr->player->v.origin + job_ptr->player->v.view_ofs, pBot->pEdict)) {
          job_ptr->phase = 2;
          return JOB_UNDERWAY;
       }
@@ -1339,7 +1339,7 @@ int JobBuffAlly(bot_t *pBot) {
 
       // go back to looking for the patient if they disappear from view
       const float allyDistance = (pBot->pEdict->v.origin - job_ptr->player->v.origin).Length();
-      if (allyDistance >= 500.1 || !FVisible(job_ptr->player->v.origin + job_ptr->player->v.view_ofs, pBot->pEdict)) {
+      if (allyDistance >= 500 || !FVisible(job_ptr->player->v.origin + job_ptr->player->v.view_ofs, pBot->pEdict)) {
          job_ptr->phase = 0;
          return JOB_UNDERWAY;
       }
@@ -1902,7 +1902,7 @@ int JobSnipe(bot_t *pBot) {
       const int nextWP = WaypointRouteFromTo(pBot->current_wp, job_ptr->waypoint, pBot->current_team);
 
       // near enough to the waypoint the bot can walk to it whilst charging the rifle?
-      if (pBot->pEdict->v.flags & FL_ONGROUND && (pBot->current_wp == job_ptr->waypoint || nextWP == job_ptr->waypoint) && zDiff > -45.1 && zDiff < 15.0 // walkable step height(hopefully)
+      if (pBot->pEdict->v.flags & FL_ONGROUND && (pBot->current_wp == job_ptr->waypoint || nextWP == job_ptr->waypoint) && zDiff > -45 && zDiff < 15 // walkable step height(hopefully)
           && VectorsNearerThan(waypoints[job_ptr->waypoint].origin, pBot->pEdict->v.origin, 200.0) && FVisible(waypoints[job_ptr->waypoint].origin, pBot->pEdict)) {
          // minimum time to charge rifle based on skill level
          // (skills 4 - 5 shouldn't pre-charge)

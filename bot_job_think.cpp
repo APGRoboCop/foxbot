@@ -123,50 +123,50 @@ static jobFunctions_struct jf[job_type_total] = {
 // list of essential data for all known job types
 // these must be in the right order for each job to run properly
 job_list_struct jl[job_type_total] = {   //Only handles 32 not 45? [APG]RoboCop[CL]
-    {PRIORITY_MAXIMUM, {job_get_unstuck}},
-    {800, {job_capture_flag}},
+    {PRIORITY_MAXIMUM, {job_capture_flag}},
+    {800, {job_get_unstuck}},
     {790, {job_maintain_object}},
     {780, {job_push_button}},
     {770, {job_build_sentry}},
-    {760, {job_drown_recover}},
     {750, {job_pickup_flag}},
-    {740, {job_bin_grenade}},
-    {730, {job_avoid_area_damage}},
-    {720, {job_concussion_jump}},
-    {710, {job_get_flag}},
-    {700, {job_spot_stimulus}},
-    {690, {job_build_teleport}},
-    {680, {job_use_teleport}},
-    {670, {job_defend_flag}},
-    {650, {job_pursue_enemy}},
-    {640, {job_get_ammo}},
-    {630, {job_disguise}},
-    {620, {job_buff_ally}},
-    {610, {job_escort_ally}},
-    {600, {job_investigate_area}},
-    {590, {job_attack_breakable}},
-    {580, {job_report}},
-    {570, {job_seek_backup}},
-    {560, {job_snipe}},
-    {520, {job_build_dispenser}},
-    {510, {job_infected_attack}},
-    {500, {job_seek_waypoint}},
-    {490, {job_pickup_item}},
-    {480, {job_call_medic}}, // this should be a higher priority than job_get_health
-    {470, {job_get_health}},
-    {460, {job_get_armor}}, // Bots appear to maybe not go beyond this line as the max is 32 tasks and could be out of range? [APG]RoboCop[CL]
-    {450, {job_attack_teleport}},
-    {430, {job_pipetrap}},
+    {720, {job_drown_recover}},
+    {710, {job_bin_grenade}},
+    {700, {job_avoid_area_damage}},
+    {680, {job_get_flag}},
+    {660, {job_concussion_jump}},
+    {650, {job_spot_stimulus}},
+    {640, {job_build_teleport}},
+    {630, {job_use_teleport}},
+    {620, {job_attack_breakable}},
+    {610, {job_build_dispenser}},
+    {600, {job_defend_flag}},
+    {590, {job_snipe}},
+    {580, {job_buff_ally}},
+    {570, {job_disguise}},
+    {560, {job_pursue_enemy}},
+    {550, {job_escort_ally}},
+    {540, {job_investigate_area}},
+    {530, {job_infected_attack}},
+    {520, {job_report}},
+    {510, {job_get_ammo}},
+    {500, {job_get_armor}},
+    {490, {job_seek_backup}},
+    {480, {job_pickup_item}},
+    {470, {job_call_medic}}, // this should be a higher priority than job_get_health
+    {460, {job_get_health}},
+    {450, {job_avoid_enemy}}, // Bots appear to maybe not go beyond this line as the max is 32 tasks and could be out of range? [APG]RoboCop[CL]
+    {440, {job_seek_waypoint}},
+    {430, {job_attack_teleport}},
+    {420, {job_pipetrap}},
     {410, {job_detpack_waypoint}},
     {400, {job_chat}},
-    {380, {job_rocket_jump}}, // Reduced RJ until fix is provided [APG]RoboCop[CL]
-    {350, {job_harrass_defense}},
-    {300, {job_avoid_enemy}},
+    {350, {job_rocket_jump}}, // Reduced RJ until fix is provided [APG]RoboCop[CL]
+    {300, {job_harrass_defense}},
     {250, {job_guard_waypoint}},
     {220, {job_melee_warrior}},
-    {210, {job_patrol_home}},
-    {200, {job_graffiti_artist}},
-    {190, {job_feign_ambush}},
+    {200, {job_patrol_home}},
+    {150, {job_graffiti_artist}},
+    {100, {job_feign_ambush}},
     {0, {job_roam}},
 };
 
@@ -434,7 +434,7 @@ void BotRunJobs(bot_t *pBot) {
    // abort if no jobs were found in the buffer
    if (pBot->jobType[pBot->currentJob] == job_none) {
       // if the buffer is completely empty, add JOB_ROAM as a backup
-      if (pBot->f_killed_time + 3.0 < pBot->f_think_time) {
+      if (pBot->f_killed_time + 3 < pBot->f_think_time) {
          job_struct *newJob = InitialiseNewJob(pBot, job_roam);
          if (newJob != nullptr)
             SubmitNewJob(pBot, job_roam, newJob);
@@ -500,7 +500,7 @@ void BotJobThink(bot_t *pBot) {
    }
 
    // need armor(e.g. just spawned)?
-   if ((PlayerArmorPercent(pBot->pEdict) < pBot->trait.health || pBot->f_killed_time + 3.1 > pBot->f_think_time) && pBot->f_periodicAlert3 < pBot->f_think_time && random_float(1, 1000) > 600) {
+   if ((PlayerArmorPercent(pBot->pEdict) < pBot->trait.health || pBot->f_killed_time + 3 > pBot->f_think_time) && pBot->f_periodicAlert3 < pBot->f_think_time && random_float(1, 1000) > 600) {
       newJob = InitialiseNewJob(pBot, job_get_armor);
       if (newJob != nullptr) {
          newJob->waypoint = WaypointFindNearestGoal(pBot->current_wp, pBot->current_team, 3000, W_FL_ARMOR);
@@ -526,14 +526,14 @@ void BotJobThink(bot_t *pBot) {
    }
 
    // call for a medic?
-   if (pBot->pEdict->v.playerclass != TFC_CLASS_MEDIC && PlayerHealthPercent(pBot->pEdict) < pBot->trait.health && pBot->enemy.f_lastSeen + 3.0 < pBot->f_think_time) {
+   if (pBot->pEdict->v.playerclass != TFC_CLASS_MEDIC && PlayerHealthPercent(pBot->pEdict) < pBot->trait.health && pBot->enemy.f_lastSeen + 3 < pBot->f_think_time) {
       // just call if the bot isn't going anywhere
       if (pBot->current_wp == pBot->goto_wp) {
          if (pBot->currentJob > -1 && pBot->jobType[pBot->currentJob] != job_get_health && FriendlyClassTotal(pBot->pEdict, TFC_CLASS_MEDIC, false) > 0 && random_long(0, 1000) < 200)
             FakeClientCommand(pBot->pEdict, "saveme", nullptr, nullptr);
       }
       // if the bot saw a medic recently make it a job to call and wait for them
-      else if (pBot->f_alliedMedicSeenTime + 5.0 > pBot->f_think_time && (newJob = InitialiseNewJob(pBot, job_call_medic)) != nullptr) {
+      else if (pBot->f_alliedMedicSeenTime + 5 > pBot->f_think_time && (newJob = InitialiseNewJob(pBot, job_call_medic)) != nullptr) {
          const int healthJobIndex = BufferedJobIndex(pBot, job_get_health);
 
          // if infected or not going for health already call the seen medic
@@ -555,7 +555,7 @@ void BotJobThink(bot_t *pBot) {
       pBot->f_humour_time = pBot->f_think_time + random_float(60.0, 180.0);
 
       // no mucking about if enemies were recently seen or the bot spawned recently
-      if (pBot->enemy.f_lastSeen + 40.0 < pBot->f_think_time && pBot->f_killed_time + 40.0 < pBot->f_think_time && BufferedJobIndex(pBot, job_melee_warrior) == -1 && BufferedJobIndex(pBot, job_graffiti_artist) == -1 &&
+      if (pBot->enemy.f_lastSeen + 40 < pBot->f_think_time && pBot->f_killed_time + 40 < pBot->f_think_time && BufferedJobIndex(pBot, job_melee_warrior) == -1 && BufferedJobIndex(pBot, job_graffiti_artist) == -1 &&
           random_long(1, 200) < pBot->trait.humour) {
          // take your pick of fun things to do
          if (random_long(1, 1000) > 400) {
@@ -575,7 +575,8 @@ void BotJobThink(bot_t *pBot) {
    case TFC_CLASS_CIVILIAN:
       break;
    case TFC_CLASS_SCOUT:
-      // FakeClientCommand(pBot->pEdict, "slot3", nullptr, nullptr);
+      //pBot->f_think_time = 0.5f;
+      //FakeClientCommand(pBot->pEdict, "slot3", nullptr, nullptr);
       break;
    case TFC_CLASS_SNIPER:
       // go snipe
@@ -606,12 +607,14 @@ void BotJobThink(bot_t *pBot) {
    case TFC_CLASS_PYRO:
       break;
    case TFC_CLASS_MEDIC:
-      // FakeClientCommand(pBot->pEdict, "slot3", nullptr, nullptr);
+      //pBot->f_think_time = 0.5f;
+      //FakeClientCommand(pBot->pEdict, "slot3", nullptr, nullptr);
       break;
    case TFC_CLASS_SPY:
-      // FakeClientCommand(pBot->pEdict, "slot1", nullptr, nullptr);
+      //pBot->f_think_time = 0.5f;
+      //FakeClientCommand(pBot->pEdict, "slot1", nullptr, nullptr);
       // time for a disguise?
-      if (pBot->enemy.f_lastSeen + 2.0 < pBot->f_think_time) {
+      if (pBot->enemy.f_lastSeen + 2 < pBot->f_think_time) {
          if (pBot->current_team == UTIL_GetTeamColor(pBot->pEdict)) {
             newJob = InitialiseNewJob(pBot, job_disguise);
             if (newJob != nullptr && SubmitNewJob(pBot, job_disguise, newJob) == true)
@@ -628,7 +631,7 @@ void BotJobThink(bot_t *pBot) {
          pBot->f_spyFeignAmbushTime = pBot->f_think_time + random_float(12.0, 24.0);
 
          newJob = InitialiseNewJob(pBot, job_feign_ambush);
-         if (newJob != nullptr && pBot->enemy.f_lastSeen + 3.0 < pBot->f_think_time && pBot->current_wp > -1 && spawnAreaWP[pBot->current_team] > -1 && spawnAreaWP[pBot->current_team] < num_waypoints) {
+         if (newJob != nullptr && pBot->enemy.f_lastSeen + 3 < pBot->f_think_time && pBot->current_wp > -1 && spawnAreaWP[pBot->current_team] > -1 && spawnAreaWP[pBot->current_team] < num_waypoints) {
             const int homeDistance = WaypointDistanceFromTo(spawnAreaWP[pBot->current_team], pBot->current_wp, pBot->current_team);
 
             // if the bot has left respawn behind and the area is suitable start a
@@ -641,7 +644,7 @@ void BotJobThink(bot_t *pBot) {
       break;
    case TFC_CLASS_ENGINEER:
       BotEngineerThink(pBot);
-      // FakeClientCommand(pBot->pEdict, "slot1", nullptr, nullptr);
+      FakeClientCommand(pBot->pEdict, "slot1", nullptr, nullptr);
       break;
    default:
       break;

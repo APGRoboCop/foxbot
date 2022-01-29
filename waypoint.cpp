@@ -444,7 +444,7 @@ int WaypointFindNearest_E(const edict_t *pEntity, const float range, const int t
          // (even behind head)...
          UTIL_TraceLine(pEntity->v.origin + pEntity->v.view_ofs, waypoints[i].origin, ignore_monsters, pEntity->v.pContainingEntity, &tr);
 
-         if (tr.flFraction >= 1.0) {
+         if (tr.flFraction >= 1) {
             min_index = i;
             min_distance_squared = distance_squared;
          }
@@ -523,7 +523,7 @@ int WaypointFindNearest_S(const Vector &v_src, edict_t *pEntity, const float ran
             UTIL_TraceLine(waypoints[index].origin, v_src, ignore_monsters, nullptr, &tr);
 
          // it is visible, so store it
-         if (tr.flFraction >= 1.0) {
+         if (tr.flFraction >= 1) {
             min_index = index;
             min_distance_squared = distance_squared;
          }
@@ -573,7 +573,7 @@ int WaypointFindInRange(const Vector &v_src, const float min_range, const float 
          UTIL_TraceLine(waypoints[i].origin, v_src, ignore_monsters, nullptr, &tr);
 
          // if the source is visible from this waypoint
-         if (tr.flFraction >= 1.0) {
+         if (tr.flFraction >= 1) {
             // a cool laser effect (for debugging purposes)
             // 	WaypointDrawBeam(INDEXENT(1), waypoints[i].origin,
             // 		v_src, 10, 2, 50, 250, 50, 200, 10);
@@ -836,7 +836,7 @@ int WaypointFindRandomGoal_R(const Vector &v_src, const bool checkVisibility, co
          if (checkVisibility)
             UTIL_TraceLine(v_src, waypoints[index].origin, ignore_monsters, nullptr, &tr);
 
-         if (!checkVisibility || tr.flFraction >= 1.0) {
+         if (!checkVisibility || tr.flFraction >= 1) {
             indexes[count] = index;
             ++count;
 
@@ -925,7 +925,7 @@ bool DetpackClearIsBlocked(const int index) {
             ++path_total;
             UTIL_TraceLine(waypoints[index].origin, waypoints[p->index[i]].origin, ignore_monsters, nullptr, &tr);
 
-            if (tr.flFraction < 1.0)
+            if (tr.flFraction < 1)
                return true; // a path is blocked by something
          }
       }
@@ -956,7 +956,7 @@ bool DetpackSealIsClear(const int index) {
          if (p->index[i] != -1) {
             UTIL_TraceLine(waypoints[index].origin, waypoints[p->index[i]].origin, ignore_monsters, nullptr, &tr);
 
-            if (tr.flFraction < 1.0)
+            if (tr.flFraction < 1)
                return false; // a path is blocked by something
          }
       }
@@ -1321,7 +1321,7 @@ static bool WaypointDeleteAimArtifact(const edict_t *pEntity) {
 
          // if there is line of sight from this waypoint to the
          // aim waypoint
-         if (tr.flFraction >= 1.0) {
+         if (tr.flFraction >= 1) {
             waypoint_is_artifact = false;
 
             // draw a beam to the nearest waypoint found to show
@@ -1873,7 +1873,7 @@ bool WaypointReachable(Vector v_src, Vector v_dest, const edict_t *pEntity) {
 
       // if waypoint is visible from current position
       // (even behind head)...
-      if (tr.flFraction >= 1.0) {
+      if (tr.flFraction >= 1) {
          // check for special case of both waypoints being underwater...
          if (POINT_CONTENTS(v_src) == CONTENTS_WATER && POINT_CONTENTS(v_dest) == CONTENTS_WATER)
             return true;
@@ -1881,7 +1881,7 @@ bool WaypointReachable(Vector v_src, Vector v_dest, const edict_t *pEntity) {
          // check for special case of waypoint being suspended in mid-air...
 
          // is dest waypoint higher than src? (45 is max jump height)
-         if (v_dest.z > v_src.z + 45.0) {
+         if (v_dest.z > v_src.z + 45) {
             const Vector &v_new_src = v_dest;
             Vector v_new_dest = v_dest;
 
@@ -1891,7 +1891,7 @@ bool WaypointReachable(Vector v_src, Vector v_dest, const edict_t *pEntity) {
 
             // check if we didn't hit anything,
             // if not then it's in mid-air
-            if (tr.flFraction >= 1.0) {
+            if (tr.flFraction >= 1) {
                return false; // can't reach this one
             }
          }
@@ -1903,28 +1903,28 @@ bool WaypointReachable(Vector v_src, Vector v_dest, const edict_t *pEntity) {
          Vector v_check = v_src;
          Vector v_down = v_src;
 
-         v_down.z = v_down.z - 1000.0; // straight down 1000 units
+         v_down.z = v_down.z - 1000; // straight down 1000 units
 
          UTIL_TraceLine(v_check, v_down, ignore_monsters, pEntity->v.pContainingEntity, &tr);
 
-         float last_height = tr.flFraction * 1000.0; // height from ground
+         float last_height = tr.flFraction * 1000; // height from ground
 
          distance = (v_dest - v_check).Length(); // distance from goal
 
-         while (distance > 10.0) {
+         while (distance > 10) {
             // move 10 units closer to the goal...
             v_check = v_check + v_direction * 10.0;
 
             v_down = v_check;
-            v_down.z = v_down.z - 1000.0; // straight down 1000 units
+            v_down.z = v_down.z - 1000; // straight down 1000 units
 
             UTIL_TraceLine(v_check, v_down, ignore_monsters, pEntity->v.pContainingEntity, &tr);
 
-            const float curr_height = tr.flFraction * 1000.0; // height from ground
+            const float curr_height = tr.flFraction * 1000; // height from ground
 
             // is the difference in the last height and the current
             // height higher that the jump height?
-            if (last_height - curr_height > 45.0) {
+            if (last_height - curr_height > 45) {
                // can't get there from here...
                return false;
             }
@@ -2403,7 +2403,7 @@ void WaypointThink(edict_t *pEntity) {
                      MESSAGE_END();
 
                      // draw 2 crossed lines to create a blockage symbol
-                     if (wp_display_time[i] + 1.0 < gpGlobals->time) {
+                     if (wp_display_time[i] + 1 < gpGlobals->time) {
                         Vector beam_start = waypoints[i].origin + Vector(20, 0, 20);
                         Vector beam_end = waypoints[i].origin - Vector(20, 0, 0) - Vector(0, 0, 20);
                         WaypointDrawBeam(pEntity, beam_start, beam_end, 10, 2, 250, 0, 250, 200, 10);
@@ -2437,7 +2437,7 @@ void WaypointThink(edict_t *pEntity) {
                      WRITE_BYTE(128);
                      MESSAGE_END();
                   }
-                  if (flags & W_FL_PATHCHECK && wp_display_time[i] + 1.0 < gpGlobals->time) {
+                  if (flags & W_FL_PATHCHECK && wp_display_time[i] + 1 < gpGlobals->time) {
                      // draw 2 crossed lines to create a signpost symbol
                      // near the top of the waypoint
                      Vector beam_start = waypoints[i].origin + Vector(15, 0, 25);
@@ -2647,7 +2647,7 @@ void WaypointThink(edict_t *pEntity) {
                min_distance = distance;
             }
 
-            if (wp_display_time[i] + 1.0 < gpGlobals->time) {
+            if (wp_display_time[i] + 1 < gpGlobals->time) {
                if (waypoints[i].flags & W_FL_CROUCH) {
                   start = waypoints[i].origin - Vector(0, 0, 17);
                   end = start + Vector(0, 0, 34);
@@ -2812,7 +2812,7 @@ void WaypointThink(edict_t *pEntity) {
                //		min_distance = distance;
                //	}
 
-               if (a_display_time[i] + 1.0 < gpGlobals->time) {
+               if (a_display_time[i] + 1 < gpGlobals->time) {
                   start = areas[i].a - Vector(0, 0, 34);
                   end = start + Vector(0, 0, 68);
                   // draw a red waypoint
@@ -2833,7 +2833,7 @@ void WaypointThink(edict_t *pEntity) {
                //		min_distance = distance;
                //	}
 
-               if (a_display_time[i] + 1.0 < gpGlobals->time) {
+               if (a_display_time[i] + 1 < gpGlobals->time) {
                   start = areas[i].b - Vector(0, 0, 34);
                   end = start + Vector(0, 0, 68);
                   // draw a red waypoint
@@ -2854,7 +2854,7 @@ void WaypointThink(edict_t *pEntity) {
                //		min_distance = distance;
                //	}
 
-               if (a_display_time[i] + 1.0 < gpGlobals->time) {
+               if (a_display_time[i] + 1 < gpGlobals->time) {
                   start = areas[i].c - Vector(0, 0, 34);
                   end = start + Vector(0, 0, 68);
                   // draw a red waypoint
@@ -2875,7 +2875,7 @@ void WaypointThink(edict_t *pEntity) {
                //		min_distance = distance;
                //	}
 
-               if (a_display_time[i] + 1.0 < gpGlobals->time) {
+               if (a_display_time[i] + 1 < gpGlobals->time) {
                   start = areas[i].d - Vector(0, 0, 34);
                   end = start + Vector(0, 0, 68);
                   // draw a red waypoint
@@ -2887,7 +2887,7 @@ void WaypointThink(edict_t *pEntity) {
          }
 
          // connect the dots :)
-         if (a_display_time[i] + 1.0 < gpGlobals->time && timr) {
+         if (a_display_time[i] + 1 < gpGlobals->time && timr) {
             int g = 0;
             // if(AreaInside(pEntity,i)) g=64;
             if (AreaInsideClosest(pEntity) == i) {
@@ -3749,7 +3749,7 @@ int AreaDefPointFindNearest(const edict_t *pEntity, const float range, const int
          // (even behind head)...
          UTIL_TraceLine(pEntity->v.origin + pEntity->v.view_ofs, o, ignore_monsters, pEntity->v.pContainingEntity, &tr);
 
-         if (tr.flFraction >= 1.0) {
+         if (tr.flFraction >= 1) {
             min_index = i;
             min_distance = distance;
          }

@@ -737,7 +737,7 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
             player_is_ally = false;
 
             // is team play enabled?
-            if (is_team_play > 0.0) {
+            if (is_team_play > 0) {
                player_team = UTIL_GetTeam(pPlayer);
 
                // don't target your teammates...
