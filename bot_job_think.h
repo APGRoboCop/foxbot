@@ -29,7 +29,8 @@
 #define BOT_JOB_THINK_H
 
 // list of job types that the bots can try to accomplish
-enum known_job_types {
+typedef enum
+{
    job_none = -1,
    job_seek_waypoint, // used when the bot can't find a current waypoint
    job_get_unstuck,
@@ -81,7 +82,7 @@ enum known_job_types {
    // the number of job types in the list.
    // When adding a new job type to this list, make sure it appears above this.
    job_type_total
-};
+}known_job_types;
 
 // a job should be removed from the buffer if the job's function returns this signal
 #define JOB_TERMINATED (-1)
