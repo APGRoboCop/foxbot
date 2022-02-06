@@ -17,13 +17,13 @@ Updated by RoboCop
 
 - Increased priority for bots to steal flags
 
-- Increased the bot's flexabilty to steer quickly when turning corners and aim faster
+- Increased the bot's flexibility to steer quickly when turning corners and aim faster
 
 - Optimised pathway for 2fort, shutdown2, rock2, well and dustbowl
 
 - Repaired rock2 waypoints and the rock2 variants by allowing bots to cap properly
 
-- Reduced the likelihood for blue bots to go in wrong way after capping CP2 in dustbowl
+- Reduced the likelihood for blue bots to go the wrong way after capping CP2 in dustbowl
 
 - Improved bot's visual on locating stray ammo bags
 
