@@ -141,26 +141,26 @@ static bot_weapon_select_t tfc_weapon_select[] = {{TF_WEAPON_KNIFE, "tf_weapon_k
                                                   /* terminator */
                                                   {0, "", 0, 0.0, 0.0, 0.0, 0.0, 0, true, 0, 1, 1, false, false, false, false, 0.0, 0.0}};
 
-static bot_fire_delay_t tfc_fire_delay[] = {{TF_WEAPON_KNIFE, 0.3, {0.0, 0.2, 0.3, 0.4, 0.6}, {0.1, 0.3, 0.5, 0.7, 1.0}, 0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}},
-                                            {TF_WEAPON_SPANNER, 0.3, {0.0, 0.2, 0.3, 0.4, 0.6}, {0.1, 0.3, 0.5, 0.7, 1.0}, 0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}},
-                                            {TF_WEAPON_MEDIKIT, 0.3, {0.0, 0.2, 0.3, 0.4, 0.6}, {0.1, 0.3, 0.5, 0.7, 1.0}, 0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}},
-                                            {TF_WEAPON_SNIPERRIFLE, 0.5, {0.0, 0.2, 0.6, 0.8, 1.0}, {0.3, 0.5, 0.7, 0.9, 1.1}, 0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}},
-                                            {TF_WEAPON_FLAMETHROWER, 0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}, 0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}},
-                                            {TF_WEAPON_AC, 0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}, 0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}},
-                                            {TF_WEAPON_RPG, 0.6, {0.0, 0.1, 0.3, 0.6, 1.0}, {0.1, 0.2, 0.7, 1.0, 2.0}, 0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}},
-                                            {TF_WEAPON_IC, 0.6, {1.0, 2.0, 3.0, 4.0, 5.0}, {3.0, 4.0, 5.0, 6.0, 7.0}, 0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}},
-                                            {TF_WEAPON_SUPERSHOTGUN, 0.6, {0.0, 0.2, 0.5, 0.8, 1.0}, {0.25, 0.4, 0.7, 1.0, 1.3}, 0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}},
-                                            {TF_WEAPON_SUPERNAILGUN, 0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}, 0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}},
-                                            {TF_WEAPON_TRANQ, 1.5, {1.0, 2.0, 3.0, 4.0, 5.0}, {3.0, 4.0, 5.0, 6.0, 7.0}, 0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}},
-                                            {TF_WEAPON_AUTORIFLE, 0.1, {0.0, 0.1, 0.2, 0.4, 0.6}, {0.1, 0.2, 0.5, 0.7, 1.0}, 0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}},
-                                            {TF_WEAPON_AXE, 0.3, {0.0, 0.2, 0.3, 0.4, 0.6}, {0.1, 0.3, 0.5, 0.7, 1.0}, 0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}},
-                                            {TF_WEAPON_PL, 0.6, {0.0, 0.2, 0.5, 0.8, 1.0}, {0.25, 0.4, 0.7, 1.0, 1.3}, 0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}},
-                                            {TF_WEAPON_GL, 0.6, {0.0, 0.2, 0.5, 0.8, 1.0}, {0.25, 0.4, 0.7, 1.0, 1.3}, 0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}},
-                                            {TF_WEAPON_SHOTGUN, 0.5, {0.0, 0.2, 0.4, 0.6, 0.8}, {0.25, 0.5, 0.8, 1.2, 2.0}, 0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}},
-                                            {TF_WEAPON_NAILGUN, 0.1, {0.0, 0.1, 0.2, 0.4, 0.6}, {0.1, 0.2, 0.5, 0.7, 1.0}, 0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}},
-                                            {TF_WEAPON_RAILGUN, 0.4, {0.0, 0.1, 0.2, 0.3, 0.4}, {0.1, 0.2, 0.3, 0.4, 0.5}, 0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}},
+static bot_fire_delay_t tfc_fire_delay[] = {{TF_WEAPON_KNIFE, 0.3f, {0.0f, 0.2f, 0.3f, 0.4f, 0.6f}, {0.1f, 0.3f, 0.5f, 0.7f, 1.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+                                            {TF_WEAPON_SPANNER, 0.3f, {0.0f, 0.2f, 0.3f, 0.4f, 0.6f}, {0.1f, 0.3f, 0.5, 0.7f, 1.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+                                            {TF_WEAPON_MEDIKIT, 0.3f, {0.0f, 0.2f, 0.3f, 0.4f, 0.6f}, {0.1f, 0.3f, 0.5f, 0.7f, 1.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+                                            {TF_WEAPON_SNIPERRIFLE, 0.5f, {0.0f, 0.2f, 0.6f, 0.8f, 1.0f}, {0.3f, 0.5f, 0.7f, 0.9f, 1.1f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+                                            {TF_WEAPON_FLAMETHROWER, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+                                            {TF_WEAPON_AC, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+                                            {TF_WEAPON_RPG, 0.6f, {0.0f, 0.1f, 0.3f, 0.6f, 1.0f}, {0.1f, 0.2f, 0.7f, 1.0f, 2.0}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+                                            {TF_WEAPON_IC, 0.6f, {1.0f, 2.0, 3.0, 4.0, 5.0}, {3.0, 4.0, 5.0, 6.0, 7.0}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+                                            {TF_WEAPON_SUPERSHOTGUN, 0.6f, {0.0f, 0.2f, 0.5f, 0.8f, 1.0f}, {0.25f, 0.4f, 0.7f, 1.0f, 1.3f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+                                            {TF_WEAPON_SUPERNAILGUN, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+                                            {TF_WEAPON_TRANQ, 1.5f, {1.0f, 2.0, 3.0, 4.0, 5.0}, {3.0, 4.0, 5.0, 6.0, 7.0}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+                                            {TF_WEAPON_AUTORIFLE, 0.1f, {0.0f, 0.1f, 0.2f, 0.4f, 0.6f}, {0.1f, 0.2f, 0.5f, 0.7f, 1.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+                                            {TF_WEAPON_AXE, 0.3f, {0.0f, 0.2f, 0.3f, 0.4f, 0.6f}, {0.1f, 0.3f, 0.5f, 0.7f, 1.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+                                            {TF_WEAPON_PL, 0.6f, {0.0f, 0.2f, 0.5f, 0.8f, 1.0f}, {0.25f, 0.4f, 0.7f, 1.0f, 1.3f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+                                            {TF_WEAPON_GL, 0.6f, {0.0f, 0.2f, 0.5f, 0.8f, 1.0f}, {0.25f, 0.4f, 0.7f, 1.0f, 1.3f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+                                            {TF_WEAPON_SHOTGUN, 0.5f, {0.0f, 0.2f, 0.4f, 0.6f, 0.8f}, {0.25f, 0.5f, 0.8f, 1.2f, 2.0}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+                                            {TF_WEAPON_NAILGUN, 0.1f, {0.0f, 0.1f, 0.2f, 0.4f, 0.6f}, {0.1f, 0.2f, 0.5f, 0.7f, 1.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+                                            {TF_WEAPON_RAILGUN, 0.4f, {0.0f, 0.1f, 0.2f, 0.3f, 0.4f}, {0.1f, 0.2f, 0.3f, 0.4f, 0.5f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
                                             /* terminator */
-                                            {0, 0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}, 0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}}};
+                                            {0, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}}};
 
 void BotCheckTeamplay() {
    // is this TFC?
@@ -223,7 +223,7 @@ void BotUpdateSkillInaccuracy() {
 
    // sniper rifle inaccuracy starts out a bit lower than with other weapons
    // but then scales up in the same way
-   bot_snipe_max_inaccuracy[0] = 0.75 * bot_max_inaccuracy[0];
+   bot_snipe_max_inaccuracy[0] = 0.75f * bot_max_inaccuracy[0];
    bot_snipe_max_inaccuracy[1] = bot_snipe_max_inaccuracy[0] + f_aim_per_skill;
    bot_snipe_max_inaccuracy[2] = bot_snipe_max_inaccuracy[1] + f_aim_per_skill;
    bot_snipe_max_inaccuracy[3] = bot_snipe_max_inaccuracy[2] + f_aim_per_skill;
@@ -407,12 +407,12 @@ void BotEnemyCheck(bot_t *pBot) {
 
          // this code segment sets up a snipers sniper rifle firing delay
          if (pBot->pEdict->v.playerclass == TFC_CLASS_SNIPER && pBot->current_weapon.iId == TF_WEAPON_SNIPERRIFLE) {
-            const float timeVal = (pBot->bot_skill + 1) * 0.4;
+            const float timeVal = (pBot->bot_skill + 1) * 0.4f;
 
             // if f_snipe_time is too high or too low reset it
-            if (pBot->f_snipe_time + 0.3 < pBot->f_think_time || pBot->f_snipe_time > pBot->f_think_time + timeVal) {
+            if (pBot->f_snipe_time + 0.3f < pBot->f_think_time || pBot->f_snipe_time > pBot->f_think_time + timeVal) {
                // set pBot->f_snipe_time for a short delay
-               pBot->f_snipe_time = pBot->f_think_time + random_float(0.0, timeVal);
+               pBot->f_snipe_time = pBot->f_think_time + random_float(0.0f, timeVal);
 
                pBot->pEdict->v.button |= IN_ATTACK;
                pBot->f_pause_time = pBot->f_snipe_time;
@@ -1257,11 +1257,11 @@ static Vector BotBodyTarget(const edict_t *pBotEnemy, bot_t *pBot) {
          // Make the bot less accurate based on it's targets speed.
          // ignore the bots own speed - it's sniping!
          const float enemy_velocity = pBot->enemy.ptr->v.velocity.Length();
-         float aim_error = random_float(0.0, enemy_velocity) * 0.05;
+         float aim_error = random_float(0.0f, enemy_velocity) * 0.05f;
 
          // Make the bot less accurate if the enemy was just seen
          if (pBot->enemy.f_firstSeen + 2 > pBot->f_think_time)
-            aim_error += (pBot->bot_skill + 1) * random_float(5.0, 20.0);
+            aim_error += (pBot->bot_skill + 1) * random_float(5.0f, 20.0f);
 
          const float aim_offset = bot_snipe_max_inaccuracy[pBot->bot_skill] + aim_error;
          switch (pBot->bot_skill) {
@@ -1295,15 +1295,15 @@ static Vector BotBodyTarget(const edict_t *pBotEnemy, bot_t *pBot) {
       {
          // Make the bot less accurate based on it's own speed.
          const float my_velocity = pBot->pEdict->v.velocity.Length();
-         float aim_error = random_float(0.0, my_velocity) * 0.05;
+         float aim_error = random_float(0.0f, my_velocity) * 0.05f;
 
          // Make the bot less accurate based on it's targets speed.
          const float enemy_velocity = pBot->enemy.ptr->v.velocity.Length();
-         aim_error += random_float(0.0, enemy_velocity) * 0.05;
+         aim_error += random_float(0.0f, enemy_velocity) * 0.05f;
 
          // Make the bot less accurate if the enemy was just seen
          if (pBot->enemy.f_firstSeen + 2 > pBot->f_think_time)
-            aim_error += (pBot->bot_skill + 1) * random_float(5.0, 20.0);
+            aim_error += (pBot->bot_skill + 1) * random_float(5.0f, 20.0f);
 
          const float aim_offset = bot_max_inaccuracy[pBot->bot_skill] + aim_error;
          switch (pBot->bot_skill) {
@@ -1438,7 +1438,7 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
       if (diff < 0)
          diff = -diff;
 
-      /*char msg[512];
+      /*char msg[255];
          sprintf(msg,"%f  %f", ang, diff);
          UTIL_HostSay(pEdict,0,msg);*/
       if (ang < diff) //|| (FInViewCone( v_enemy, pEdict ) && FVisible( v_enemy, pEdict )))

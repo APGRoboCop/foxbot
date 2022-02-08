@@ -191,8 +191,8 @@ static bool script_parsed = false;
 static short scanpos;
 static bool player_vis[8];
 
-static float bot_cfg_pause_time = 0.0;
-static float respawn_time = 0.0;
+static float bot_cfg_pause_time = 0.0f;
+static float respawn_time = 0.0f;
 static bool spawn_time_reset = false;
 bool botcamEnabled = false;
 
@@ -2441,7 +2441,7 @@ void StartFrame() { // v7 last frame timing
                if (IS_DEDICATED_SERVER())
                   respawn_time = gpGlobals->time + 10;
 			   else
-                  respawn_time = gpGlobals->time + 15; //Reduce Listenserver crash? [APG]RoboCop[CL]
+                  respawn_time = gpGlobals->time + 20; //Reduce Listenserver crash? [APG]RoboCop[CL]
             }
          } // start updating client data again
          client_update_time = gpGlobals->time + 10;
@@ -2503,7 +2503,7 @@ void StartFrame() { // v7 last frame timing
                else
                   BotCreate(nullptr, c_team, c_class, bots[index1].name, c_skill);
             }
-            respawn_time = gpGlobals->time + 2; // set next respawn time
+            respawn_time = gpGlobals->time + 3; // set next respawn time
             bot_check_time = gpGlobals->time + 5;
          } else
             respawn_time = 0.0;
