@@ -191,7 +191,7 @@ int JobGetUnstuck(bot_t *pBot) {
    if (job_ptr->phase == 1) {
       BotSetFacing(pBot, job_ptr->origin);
       pBot->f_move_speed = pBot->f_max_speed;
-      pBot->f_side_speed = 0.0;
+      pBot->f_side_speed = 0.0f;
       pBot->f_pause_time = 0.0;
 
       // in case bot connects with a ladder or movable crate
@@ -234,8 +234,8 @@ int JobRoam(bot_t *pBot) {
       if (pBot->f_periodicAlert1 < pBot->f_think_time && random_long(1, 1000) < 400)
          job_ptr->waypoint = -1;
       else {
-         pBot->f_move_speed = 0.0;
-         pBot->f_side_speed = 0.0;
+         pBot->f_move_speed = 0.0f;
+         pBot->f_side_speed = 0.0f;
 
          BotLookAbout(pBot); // keep the bots eyes open
       }
@@ -256,8 +256,8 @@ int JobChat(bot_t *pBot) {
    job_struct *job_ptr = &pBot->job[pBot->currentJob];
 
    // make the bot pause whilst "typing"
-   pBot->f_move_speed = 0.0;
-   pBot->f_side_speed = 0.0;
+   pBot->f_move_speed = 0.0f;
+   pBot->f_side_speed = 0.0f;
 
    // give the bot time to return to it's waypoint afterwards
    pBot->f_current_wp_deadline = pBot->f_think_time + BOT_WP_DEADLINE;
@@ -290,8 +290,8 @@ int JobReport(bot_t *pBot) {
    job_struct *job_ptr = &pBot->job[pBot->currentJob];
 
    // make the bot pause whilst "typing"
-   pBot->f_move_speed = 0.0;
-   pBot->f_side_speed = 0.0;
+   pBot->f_move_speed = 0.0f;
+   pBot->f_side_speed = 0.0f;
 
    // give the bot time to return to it's waypoint afterwards
    pBot->f_current_wp_deadline = pBot->f_think_time + BOT_WP_DEADLINE;
@@ -639,8 +639,8 @@ int JobUseTeleport(bot_t *pBot) {
                                                       pBot->name, job_ptr->waypoint,
                                                       (pBot->pEdict->v.origin - job_ptr->object->v.origin).Length());*/
 
-      pBot->f_move_speed = 0.0;
-      pBot->f_side_speed = 0.0;
+      pBot->f_move_speed = 0.0f;
+      pBot->f_side_speed = 0.0f;
       pBot->f_vertical_speed = 0.0;
       pBot->f_pause_time = pBot->f_think_time + 0.3;
       BotLookAbout(pBot);
@@ -841,8 +841,8 @@ int JobBuildSentry(bot_t *pBot) {
             }
          } else // the bot has arrived at the waypoint
          {
-            pBot->f_move_speed = 0.0;
-            pBot->f_side_speed = 0.0;
+            pBot->f_move_speed = 0.0f;
+            pBot->f_side_speed = 0.0f;
 
             // make sure the bot is facing the right way before continuing
             const int aim_index = WaypointFindNearestAiming(waypoints[job_ptr->waypoint].origin);
@@ -892,7 +892,7 @@ int JobBuildSentry(bot_t *pBot) {
          // when it started building
          if (!(pent->v.flags & FL_KILLME) && VectorsNearerThan(pBot->pEdict->v.origin, pent->v.origin, 85.0)) {
             job_ptr->origin = pent->v.origin;
-            pBot->f_move_speed = 0.0;
+            pBot->f_move_speed = 0.0f;
             job_ptr->phase = 2;
             job_ptr->phase_timer = pBot->f_think_time + 7;
             return JOB_UNDERWAY;
@@ -1031,7 +1031,7 @@ int JobBuildDispenser(bot_t *pBot) {
          // when it started building
          if (!(pent->v.flags & FL_KILLME) && VectorsNearerThan(pBot->pEdict->v.origin, pent->v.origin, 85.0)) {
             job_ptr->origin = pent->v.origin;
-            pBot->f_move_speed = 0.0;
+            pBot->f_move_speed = 0.0f;
             job_ptr->phase = 2;
             job_ptr->phase_timer = pBot->f_think_time + 4;
             return JOB_UNDERWAY;
@@ -1104,8 +1104,8 @@ int JobBuildTeleport(bot_t *pBot) {
                return JOB_TERMINATED;
             }
          } else {
-            pBot->f_move_speed = 0.0;
-            pBot->f_side_speed = 0.0;
+            pBot->f_move_speed = 0.0f;
+            pBot->f_side_speed = 0.0f;
 
             // make sure the bot is facing the right way before continuing
             const int aim_index = WaypointFindNearestAiming(waypoints[job_ptr->waypoint].origin);
@@ -1165,7 +1165,7 @@ int JobBuildTeleport(bot_t *pBot) {
          // when it started building
          if (!(pent->v.flags & FL_KILLME) && VectorsNearerThan(pBot->pEdict->v.origin, pent->v.origin, 85.0)) {
             job_ptr->origin = pent->v.origin;
-            pBot->f_move_speed = 0.0;
+            pBot->f_move_speed = 0.0f;
             job_ptr->phase = 2;
             job_ptr->phase_timer = pBot->f_think_time + 5;
             return JOB_UNDERWAY;
@@ -1417,8 +1417,8 @@ int JobEscortAlly(bot_t *pBot) {
          if (pBot->f_periodicAlert3 < pBot->f_think_time && random_long(1, 1000) < 501) {
             job_ptr->phase = SET_WAYPOINT_VISIBLE_ALLY;
          } else {
-            pBot->f_move_speed = 0.0;
-            pBot->f_side_speed = 0.0;
+            pBot->f_move_speed = 0.0f;
+            pBot->f_side_speed = 0.0f;
 
             BotLookAbout(pBot); // keep the bots eyes open
          }
@@ -1799,8 +1799,8 @@ int JobDisguise(bot_t *pBot) {
    if (job_ptr->phase == 1) {
       // check if the bot has arrived
       if (pBot->current_wp == job_ptr->waypoint && VectorsNearerThan(waypoints[pBot->current_wp].origin, pBot->pEdict->v.origin, 40.0)) {
-         pBot->f_move_speed = 0.0;
-         pBot->f_side_speed = 0.0;
+         pBot->f_move_speed = 0.0f;
+         pBot->f_side_speed = 0.0f;
 
          pBot->pEdict->v.button |= IN_DUCK;
          BotLookAbout(pBot);
@@ -1843,7 +1843,7 @@ int JobFeignAmbush(bot_t *pBot) {
       BotSetFacing(pBot, job_ptr->origin);
       pBot->pEdict->v.ideal_yaw += 180; // face away from the wall
 
-      pBot->f_move_speed = 0.0;
+      pBot->f_move_speed = 0.0f;
    }
 
    // phase 2 - back into a nearby wall
@@ -2022,8 +2022,8 @@ int JobSnipe(bot_t *pBot) {
       pBot->f_current_wp_deadline = pBot->f_think_time + BOT_WP_DEADLINE;
 
       // remain paused
-      pBot->f_move_speed = 0.0;
-      pBot->f_side_speed = 0.0;
+      pBot->f_move_speed = 0.0f;
+      pBot->f_side_speed = 0.0f;
 
       // make sure the sniper rifle is selected
       if (pBot->current_weapon.iId != TF_WEAPON_SNIPERRIFLE)
@@ -2077,8 +2077,8 @@ int JobGuardWaypoint(bot_t *pBot) {
          return JOB_TERMINATED;
 
       // remain paused and looking in the right direction.
-      pBot->f_move_speed = 0.0;
-      pBot->f_side_speed = 0.0;
+      pBot->f_move_speed = 0.0f;
+      pBot->f_side_speed = 0.0f;
 
       // give the bot time to return to it's waypoint afterwards
       pBot->f_current_wp_deadline = pBot->f_think_time + BOT_WP_DEADLINE;
@@ -2183,8 +2183,8 @@ int JobGetFlag(bot_t *pBot) {
       if (!VectorsNearerThan(waypoints[job_ptr->waypoint].origin, pBot->pEdict->v.origin, 20.0)) {
          job_ptr->phase = 0;
       } else {
-         pBot->f_move_speed = 0.0;
-         pBot->f_side_speed = 0.0;
+         pBot->f_move_speed = 0.0f;
+         pBot->f_side_speed = 0.0f;
 
          // look about whilst waiting
          BotLookAbout(pBot);
@@ -2277,8 +2277,8 @@ int JobHarrassDefense(bot_t *pBot) {
       if (pBot->f_periodicAlert1 < pBot->f_think_time && random_long(1, 1000) < 400)
          job_ptr->waypoint = -1;
       else {
-         pBot->f_move_speed = 0.0;
-         pBot->f_side_speed = 0.0;
+         pBot->f_move_speed = 0.0f;
+         pBot->f_side_speed = 0.0f;
 
          // look about whilst waiting
          BotLookAbout(pBot);
@@ -2451,7 +2451,7 @@ int JobConcussionJump(bot_t *pBot) {
       // head for the CJ waypoint
       pBot->pEdict->v.button |= IN_FORWARD;
       pBot->f_move_speed = pBot->f_max_speed;
-      pBot->f_side_speed = 0.0;
+      pBot->f_side_speed = 0.0f;
 
       // Abort this routine once we are decending.
       if (pBot->pEdict->v.velocity.z < -1) {
@@ -2557,8 +2557,8 @@ int JobPipetrap(bot_t *pBot) {
    // phase zero - get to the pipetrap waypoint
    if (job_ptr->phase == 0) {
       if (pBot->current_wp == job_ptr->waypoint && VectorsNearerThan(waypoints[pBot->current_wp].origin, pBot->pEdict->v.origin, 20.0)) {
-         pBot->f_move_speed = 0.0;
-         pBot->f_side_speed = 0.0;
+         pBot->f_move_speed = 0.0f;
+         pBot->f_side_speed = 0.0f;
 
          // make sure the bot faces the right way
          const int aim_index = WaypointFindNearestAiming(waypoints[pBot->current_wp].origin);
@@ -2669,8 +2669,8 @@ int JobInvestigateArea(bot_t *pBot) {
       if (pBot->f_periodicAlert1 < pBot->f_think_time && random_long(1, 1000) < 500)
          job_ptr->waypoint = -1;
       else {
-         pBot->f_move_speed = 0.0;
-         pBot->f_side_speed = 0.0;
+         pBot->f_move_speed = 0.0f;
+         pBot->f_side_speed = 0.0f;
 
          // look about whilst waiting
          BotLookAbout(pBot);
@@ -2810,8 +2810,8 @@ int JobPatrolHome(bot_t *pBot) {
       if (pBot->f_periodicAlert1 < pBot->f_think_time && random_long(1, 1000) < 300)
          job_ptr->waypoint = -1;
       else {
-         pBot->f_move_speed = 0.0;
-         pBot->f_side_speed = 0.0;
+         pBot->f_move_speed = 0.0f;
+         pBot->f_side_speed = 0.0f;
 
          // look about whilst waiting
          BotLookAbout(pBot);
@@ -2875,8 +2875,8 @@ int JobSpotStimulus(bot_t *pBot) {
       // give the bot time to return to it's waypoint afterwards
       pBot->f_current_wp_deadline = pBot->f_think_time + BOT_WP_DEADLINE;
 
-      pBot->f_move_speed = 0.0;
-      pBot->f_side_speed = 0.0;
+      pBot->f_move_speed = 0.0f;
+      pBot->f_side_speed = 0.0f;
    }
 
    // phase 2 - keep moving whilst looking at whatever got the bots attention
@@ -2893,8 +2893,8 @@ int JobSpotStimulus(bot_t *pBot) {
          }
       } else // just in case
       {
-         pBot->f_move_speed = 0.0;
-         pBot->f_side_speed = 0.0;
+         pBot->f_move_speed = 0.0f;
+         pBot->f_side_speed = 0.0f;
       }
    }
 
@@ -3012,8 +3012,8 @@ int JobAttackTeleport(bot_t *pBot) {
 
       // near enough to attack it?
       if (dist2D < 100) {
-         pBot->f_move_speed = 0.0;
-         pBot->f_side_speed = 0.0;
+         pBot->f_move_speed = 0.0f;
+         pBot->f_side_speed = 0.0f;
 
          if (pBot->current_weapon.iId == TF_WEAPON_SHOTGUN || pBot->current_weapon.iId == TF_WEAPON_SUPERSHOTGUN) {
             if (pBot->current_weapon.iClip > 1)
@@ -3140,8 +3140,8 @@ int JobAvoidEnemy(bot_t *pBot) {
          if (pBot->enemy.f_lastSeen + 5 < pBot->f_think_time && pBot->visAllyCount > 1)
             return JOB_TERMINATED;
 
-         pBot->f_move_speed = 0.0;
-         pBot->f_side_speed = 0.0;
+         pBot->f_move_speed = 0.0f;
+         pBot->f_side_speed = 0.0f;
          BotLookAbout(pBot);
          return JOB_UNDERWAY;
       } else {
@@ -3208,8 +3208,8 @@ int JobAvoidAreaDamage(bot_t *pBot) {
 
       // check if the bot has arrived at it's retreat waypoint
       if (pBot->current_wp == job_ptr->waypoint && VectorsNearerThan(waypoints[pBot->current_wp].origin, pBot->pEdict->v.origin, 60.0)) {
-         pBot->f_move_speed = 0.0;
-         pBot->f_side_speed = 0.0;
+         pBot->f_move_speed = 0.0f;
+         pBot->f_side_speed = 0.0f;
          BotLookAbout(pBot);
          return JOB_UNDERWAY;
       } else {
@@ -3267,7 +3267,7 @@ int JobInfectedAttack(bot_t *pBot) {
       // check if the bot has arrived at it's chosen waypoint
       if (pBot->current_wp == job_ptr->waypoint && VectorsNearerThan(waypoints[pBot->current_wp].origin, pBot->pEdict->v.origin, 60.0)) {
          if (pBot->visEnemyCount < 1) {
-            pBot->f_move_speed = 0.0;
+            pBot->f_move_speed = 0.0f;
             BotLookAbout(pBot);
          } else
             pBot->f_move_speed = pBot->f_max_speed;
@@ -3312,8 +3312,8 @@ int JobBinGrenade(bot_t *pBot) {
 
    // phase 1 - face where to throw the grenade
    if (job_ptr->phase == 1) {
-      pBot->f_side_speed = 0.0;
-      pBot->f_move_speed = 0.0;
+      pBot->f_side_speed = 0.0f;
+      pBot->f_move_speed = 0.0f;
       BotSetFacing(pBot, job_ptr->origin);
 
       const Vector v_aim = job_ptr->origin - pBot->pEdict->v.origin;
@@ -3326,7 +3326,7 @@ int JobBinGrenade(bot_t *pBot) {
          }
          return JOB_UNDERWAY;
       } else
-         pBot->f_move_speed = 0.0;
+         pBot->f_move_speed = 0.0f;
    }
 
    // phase 2 - keep backing away for a second or two, after throwing the grenade
@@ -3336,7 +3336,7 @@ int JobBinGrenade(bot_t *pBot) {
          return JOB_TERMINATED;
 
       BotSetFacing(pBot, job_ptr->origin);
-      pBot->f_side_speed = 0.0;
+      pBot->f_side_speed = 0.0f;
       pBot->f_move_speed = -pBot->f_max_speed;
    }
 
@@ -3378,7 +3378,7 @@ int JobDrownRecover(bot_t *pBot) {
       BotChangePitch(pBot->pEdict, 99999);
       pBot->pEdict->v.button |= IN_FORWARD;
       pBot->f_move_speed = pBot->f_max_speed;
-      pBot->f_side_speed = 0.0;
+      pBot->f_side_speed = 0.0f;
    }
 
    return JOB_UNDERWAY;
@@ -3455,8 +3455,8 @@ int JobMeleeWarrior(bot_t *pBot) {
             if (random_long(1, 1000) < 100)
                pBot->f_duck_time = pBot->f_think_time + random_float(0.2, 1.5);
 
-            pBot->f_move_speed = 0.0;
-            pBot->f_side_speed = 0.0;
+            pBot->f_move_speed = 0.0f;
+            pBot->f_side_speed = 0.0f;
             BotLookAbout(pBot);
          }
       }

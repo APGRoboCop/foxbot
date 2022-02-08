@@ -599,7 +599,7 @@ static bool BBotBalanceTeams(int a, int b) {
    // now just set up teams to include bots in them :D
    int bteams[4] = {0, 0, 0, 0};
 
-   for (int i = 0; i < 32; i++) //<32
+   for (int i = 0; i < 32; i++) ///<
    {
       if (bots[i].is_used) {
          char cl_name[128];
@@ -5007,7 +5007,7 @@ static void ProcessBotCfgFile() {
 
       // have to delay here or engine gives "Tried to write to
       // uninitialized sizebuf_t" error and crashes...
-      bot_cfg_pause_time = gpGlobals->time + 2.0f;
+      bot_cfg_pause_time = gpGlobals->time + 5.0f;
       bot_check_time = gpGlobals->time + 5.0f;
 
       return;

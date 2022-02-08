@@ -144,7 +144,7 @@ int UTIL_SentryLevel(edict_t* pEntity)
 Vector UTIL_VecToAngles(const Vector &vec) {
    float rgflVecOut[3];
    VEC_TO_ANGLES(vec, rgflVecOut);
-   return Vector(rgflVecOut);
+   return {rgflVecOut};
 }
 
 // Overloaded to add IGNORE_GLASS
@@ -156,7 +156,7 @@ void UTIL_TraceLine(const Vector &vecStart, const Vector &vecEnd, const IGNORE_M
 
 void UTIL_MakeVectors(const Vector &vecAngles) { MAKE_VECTORS(vecAngles); }
 
-edict_t *UTIL_FindEntityInSphere(edict_t *pentStart, const Vector &vecCenter, const float flRadius) {
+edict_t *UTIL_FindEntityInSphere(edict_t *pentStart, Vector &vecCenter, const float flRadius) {
    edict_t *pentEntity = FIND_ENTITY_IN_SPHERE(pentStart, vecCenter, flRadius);
 
    if (!FNullEnt(pentEntity))
@@ -181,7 +181,7 @@ int UTIL_PointContents(const Vector &vec) { return POINT_CONTENTS(vec); }
 
 void UTIL_SetSize(entvars_t *pev, const Vector &vecMin, const Vector &vecMax) { SET_SIZE(ENT(pev), vecMin, vecMax); }
 
-void UTIL_SetOrigin(entvars_t *pev, const Vector &vecOrigin) { SET_ORIGIN(ENT(pev), vecOrigin); }
+void UTIL_SetOrigin(entvars_t *pev, Vector &vecOrigin) { SET_ORIGIN(ENT(pev), vecOrigin); }
 
 void HUDNotify(edict_t *pEntity, const char *msg_name) {
    if (gmsgHUDNotify == 0)
@@ -450,7 +450,7 @@ bool FInViewCone(const Vector &r_pOrigin, const edict_t *pEdict) {
 
    const float flDot = DotProduct(vec2LOS, gpGlobals->v_forward.Make2D());
 
-   if (flDot > 0.50) // 60 degree field of view
+   if (flDot > 0.5f) // 60 degree field of view
       return true;
    else
       return false;

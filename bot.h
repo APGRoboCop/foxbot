@@ -636,7 +636,7 @@ short BotTeammatesNearWaypoint(const bot_t *pBot, int waypoint);
 
 edict_t *BotAllyAtVector(const bot_t *pBot, const Vector &r_vecOrigin, float range, bool stationaryOnly);
 
-edict_t *BotEntityAtPoint(const char *entityName, const Vector &location, float range);
+edict_t *BotEntityAtPoint(const char *entityName, Vector &location, float range);
 
 bot_t *BotDefenderAtWaypoint(const bot_t *pBot, int waypoint, float range);
 

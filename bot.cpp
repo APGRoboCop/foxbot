@@ -140,7 +140,7 @@ msg_com_struct msg_com[MSG_MAX];
 // and 64 empty msg's, to be filled with messages to intercept
 char msg_msg[64][MSG_MAX];
 
-#define PLAYER_SEARCH_RADIUS 50.0
+#define PLAYER_SEARCH_RADIUS 60.0
 //#define FLF_PLAYER_SEARCH_RADIUS 60.0
 
 #define GETPLAYERAUTHID (*g_engfuncs.pfnGetPlayerAuthId)
@@ -163,7 +163,7 @@ static int number_names = 0;
 static char bot_names[MAX_BOT_NAMES][BOT_NAME_LEN + 1];
 
 // defend response distance per class
-const static float defendMaxRespondDist[] = {300.0f, 1500.0f, 500.0f, 1500.0f, 800.0f, 1500.0f, 1500.0f, 1500.0f, 1500.0f, 1500.0f};
+static float defendMaxRespondDist[] = {300.0f, 1500.0f, 500.0f, 1500.0f, 800.0f, 1500.0f, 1500.0f, 1500.0f, 1500.0f, 1500.0f};
 
 // const static double double_pi = 3.141592653589793238;
 
@@ -2424,7 +2424,7 @@ int BotGetFreeTeleportIndex(const bot_t *pBot) {
 // to check, it will return the first entity with the specified name at the location
 // passed, or NULL if none. This should be useful for stopping engineers
 // building guns at the same defense points.
-edict_t *BotEntityAtPoint(const char *entityName, const Vector &location, const float range) {
+edict_t *BotEntityAtPoint(const char *entityName, Vector &location, const float range) {
    edict_t *pent = nullptr;
    while ((pent = FIND_ENTITY_IN_SPHERE(pent, location, range)) != nullptr && !FNullEnt(pent)) {
       // strcpy(item_name, STRING(pent->v.classname));

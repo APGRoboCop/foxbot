@@ -2071,10 +2071,10 @@ int BotAssessThreatLevel(const bot_t *pBot) {
       Threat = 20;
       break;
    case TFC_CLASS_SCOUT:
-      Threat = 20;
+      Threat = 19;
       break;
    case TFC_CLASS_SNIPER:
-      Threat = 17;
+      Threat = 18;
       break;
    case TFC_CLASS_SOLDIER:
       Threat = 8;
@@ -2083,7 +2083,7 @@ int BotAssessThreatLevel(const bot_t *pBot) {
       Threat = 12;
       break;
    case TFC_CLASS_MEDIC:
-      Threat = 12;
+      Threat = 14;
       break;
    case TFC_CLASS_HWGUY:
       Threat = 0;
@@ -2092,7 +2092,7 @@ int BotAssessThreatLevel(const bot_t *pBot) {
       Threat = 15;
       break;
    case TFC_CLASS_SPY:
-      Threat = 15;
+      Threat = 16;
       break;
    case TFC_CLASS_ENGINEER:
       Threat = 17;
