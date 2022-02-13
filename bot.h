@@ -162,7 +162,7 @@ class chatClass {
      char sectionNames[TOTAL_CHAT_TYPES][64];
 
      // chat strings, organised by groups of chat types
-     char strings[TOTAL_CHAT_TYPES][MAX_CHAT_STRINGS][512];
+     char strings[TOTAL_CHAT_TYPES][MAX_CHAT_STRINGS][255];
 
      // counts the number of strings read from the chat file
      int stringCount[TOTAL_CHAT_TYPES];

@@ -92,7 +92,7 @@ int assess_JobRoam(const bot_t *pBot, const job_struct &r_job) {
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobChat(const bot_t *pBot, const job_struct &r_job) {
    // recommend the job be removed if it is invalid
-   if (r_job.phase == 0 && r_job.f_bufferedTime + 12 < pBot->f_think_time) {
+   if (r_job.phase == 0 && r_job.f_bufferedTime + 12.0f < pBot->f_think_time) {
       return PRIORITY_NONE;
    }
 
@@ -103,7 +103,7 @@ int assess_JobChat(const bot_t *pBot, const job_struct &r_job) {
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobReport(const bot_t *pBot, const job_struct &r_job) {
    // recommend the job be removed if it is invalid
-   if (r_job.phase == 0 && r_job.f_bufferedTime + 10 < pBot->f_think_time) {
+   if (r_job.phase == 0 && r_job.f_bufferedTime + 10.0f < pBot->f_think_time) {
       return PRIORITY_NONE;
    }
 
@@ -146,7 +146,7 @@ int assess_JobPickUpItem(const bot_t *pBot, const job_struct &r_job) {
 int assess_JobPickUpFlag(const bot_t *pBot, const job_struct &r_job) {
    // recommend the job be removed if it is invalid
    if (pBot->bot_has_flag == true || FNullEnt(r_job.object) || r_job.object->v.owner != nullptr // i.e. someone is carrying it
-       || r_job.f_bufferedTime + 300 < pBot->f_think_time)
+       || r_job.f_bufferedTime + 300.0f < pBot->f_think_time)
       return PRIORITY_NONE;
 
    // if the bot is guarding this dropped flag already don't pick it up
@@ -171,7 +171,7 @@ int assess_JobPickUpFlag(const bot_t *pBot, const job_struct &r_job) {
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobPushButton(const bot_t *pBot, const job_struct &r_job) {
    // recommend the job be removed if it is invalid
-   if (FNullEnt(r_job.object) || pBot->f_use_button_time + 3 >= pBot->f_think_time || r_job.f_bufferedTime < pBot->f_killed_time || r_job.f_bufferedTime + 15 < pBot->f_think_time) {
+   if (FNullEnt(r_job.object) || pBot->f_use_button_time + 3.0f >= pBot->f_think_time || r_job.f_bufferedTime < pBot->f_killed_time || r_job.f_bufferedTime + 15 < pBot->f_think_time) {
       return PRIORITY_NONE;
    }
 
@@ -187,7 +187,7 @@ int assess_JobPushButton(const bot_t *pBot, const job_struct &r_job) {
    UTIL_TraceLine(vecStart, buttonOrigin, dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
    // make sure the button is visible
-   if (!(tr.flFraction >= 1 || tr.pHit == r_job.object))
+   if (!(tr.flFraction >= 1.0f || tr.pHit == r_job.object))
       return PRIORITY_NONE;
 
    return jl[job_push_button].base_priority;
@@ -343,7 +343,7 @@ int assess_JobBuildTeleport(const bot_t *pBot, const job_struct &r_job) {
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobBuffAlly(const bot_t *pBot, const job_struct &r_job) {
    // recommend the job be removed if it is invalid
-   if (FNullEnt(r_job.player) || !IsAlive(r_job.player) || r_job.f_bufferedTime < pBot->f_killed_time || r_job.f_bufferedTime + 30 < pBot->f_think_time)
+   if (FNullEnt(r_job.player) || !IsAlive(r_job.player) || r_job.f_bufferedTime < pBot->f_killed_time || r_job.f_bufferedTime + 30.0f < pBot->f_think_time)
       return PRIORITY_NONE;
 
    // a metal wrench doth not cureth the contagion
@@ -502,11 +502,11 @@ int assess_JobDisguise(const bot_t *pBot, const job_struct &r_job) {
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobFeignAmbush(const bot_t *pBot, const job_struct &r_job) {
    // recommend the job be removed if it is invalid
-   if (pBot->bot_has_flag || r_job.f_bufferedTime < pBot->f_killed_time || pBot->f_injured_time + 1 > pBot->f_think_time || pBot->nadePrimed == true || PlayerIsInfected(pBot->pEdict))
+   if (pBot->bot_has_flag || r_job.f_bufferedTime < pBot->f_killed_time || pBot->f_injured_time + 1.0f > pBot->f_think_time || pBot->nadePrimed == true || PlayerIsInfected(pBot->pEdict))
       return PRIORITY_NONE;
 
    // the job can't be left to sleep, it's best done where it was triggered
-   if (r_job.phase == 0 && (r_job.f_bufferedTime + 1 < pBot->f_think_time))
+   if (r_job.phase == 0 && (r_job.f_bufferedTime + 1.0f < pBot->f_think_time))
       return PRIORITY_NONE;
 
    // check if the bot is in an unsuitable location
@@ -627,7 +627,7 @@ int assess_JobHarrassDefense(const bot_t *pBot, const job_struct &r_job) {
 int assess_JobRocketJump(const bot_t *pBot, const job_struct &r_job) {
    // recommend the job be removed if it is invalid
    if (r_job.f_bufferedTime < pBot->f_killed_time || pBot->m_rgAmmo[weapon_defs[TF_WEAPON_RPG].iAmmo1] < 4 // got enough rockets?
-       || (r_job.phase == 0 && r_job.f_bufferedTime + 0.5 < pBot->f_think_time) || pBot->pEdict->v.waterlevel > WL_FEET_IN_WATER || r_job.waypoint < 0) {
+       || (r_job.phase == 0 && r_job.f_bufferedTime + 0.5f < pBot->f_think_time) || pBot->pEdict->v.waterlevel > WL_FEET_IN_WATER || r_job.waypoint < 0) {
       //	UTIL_HostSay(pBot->pEdict,0,"JOB_ROCKET_JUMP invalid"); //DebugMessageOfDoom!
       return PRIORITY_NONE;
    }
@@ -640,8 +640,8 @@ int assess_JobRocketJump(const bot_t *pBot, const job_struct &r_job) {
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobConcussionJump(const bot_t *pBot, const job_struct &r_job) {
    // recommend the job be removed if it is invalid
-   if (r_job.f_bufferedTime < pBot->f_killed_time || r_job.f_bufferedTime + 10 < pBot->f_think_time // took too long
-       || (r_job.phase == 0 && r_job.f_bufferedTime + 0.5 < pBot->f_think_time)) {
+   if (r_job.f_bufferedTime < pBot->f_killed_time || r_job.f_bufferedTime + 10.0f < pBot->f_think_time // took too long
+       || (r_job.phase == 0 && r_job.f_bufferedTime + 0.5f < pBot->f_think_time)) {
       return PRIORITY_NONE;
    }
 
@@ -689,7 +689,7 @@ int assess_JobPipetrap(const bot_t *pBot, const job_struct &r_job) {
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobInvestigateArea(const bot_t *pBot, const job_struct &r_job) {
    // recommend the job be removed if it is invalid
-   if (!WaypointAvailable(r_job.waypoint, pBot->current_team) || r_job.f_bufferedTime < pBot->f_killed_time || r_job.f_bufferedTime + 15 < pBot->f_think_time)
+   if (!WaypointAvailable(r_job.waypoint, pBot->current_team) || r_job.f_bufferedTime < pBot->f_killed_time || r_job.f_bufferedTime + 15.0f < pBot->f_think_time)
       return PRIORITY_NONE;
 
    // recommend the job be removed if the waypoint can't be reached or is too far away
@@ -709,7 +709,7 @@ int assess_JobPursueEnemy(const bot_t *pBot, const job_struct &r_job) {
       return PRIORITY_NONE;
 
    // still pursue the enemy after being killed? (check once after dying)
-   if (r_job.f_bufferedTime < pBot->f_killed_time && pBot->f_think_time + 3.1 > pBot->f_killed_time && pBot->f_periodicAlert3 < pBot->f_think_time) {
+   if (r_job.f_bufferedTime < pBot->f_killed_time && pBot->f_think_time + 3.1f > pBot->f_killed_time && pBot->f_periodicAlert3 < pBot->f_think_time) {
       // know where to go?
       if (!WaypointAvailable(r_job.waypoint, pBot->current_team))
          return PRIORITY_NONE;
@@ -748,7 +748,7 @@ int assess_JobPatrolHome(const bot_t *pBot, const job_struct &r_job) {
 
    // allow the bot to get bored of patrolling, so that it can rethink
    // what it wants to do(maybe even start a new career in patrolling again!)
-   if (r_job.f_bufferedTime + 60 < pBot->f_think_time && pBot->f_periodicAlert3 < pBot->f_think_time && random_long(1, 1000) < 200)
+   if (r_job.f_bufferedTime + 60.0f < pBot->f_think_time && pBot->f_periodicAlert3 < pBot->f_think_time && random_long(1l, 1000l) < 200)
       return PRIORITY_NONE;
 
    return jl[job_patrol_home].base_priority;
@@ -758,12 +758,12 @@ int assess_JobPatrolHome(const bot_t *pBot, const job_struct &r_job) {
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobSpotStimulus(const bot_t *pBot, const job_struct &r_job) {
    // recommend the job be removed if it is invalid
-   if (pBot->visEnemyCount > 0 || r_job.f_bufferedTime + 5 < pBot->f_think_time || r_job.f_bufferedTime < pBot->f_killed_time)
+   if (pBot->visEnemyCount > 0 || r_job.f_bufferedTime + 5.0f < pBot->f_think_time || r_job.f_bufferedTime < pBot->f_killed_time)
       return PRIORITY_NONE;
 
    // don't interrupt the bot if it's climbing a ladder,
    // unless it's already stuck on the ladder
-   if (pBot->pEdict->v.movetype == MOVETYPE_FLY && (pBot->pEdict->v.velocity.z > 5 || pBot->pEdict->v.velocity.z < -5))
+   if (pBot->pEdict->v.movetype == MOVETYPE_FLY && (pBot->pEdict->v.velocity.z > 5.0f || pBot->pEdict->v.velocity.z < -5.0f))
       return PRIORITY_NONE;
 
    return jl[job_spot_stimulus].base_priority;
@@ -804,7 +804,7 @@ int assess_JobAttackTeleport(const bot_t *pBot, const job_struct &r_job) {
 int assess_JobSeekBackup(const bot_t *pBot, const job_struct &r_job) {
    // recommend the job be removed if it is invalid
    if (r_job.f_bufferedTime < pBot->f_killed_time || (r_job.phase == 0 // abort if the job has been asleep in the buffer for too long
-                                                      && r_job.f_bufferedTime + 4 < pBot->f_think_time))
+                                                      && r_job.f_bufferedTime + 4.0f < pBot->f_think_time))
       return PRIORITY_NONE;
 
    // check the waypoints validity
@@ -820,7 +820,7 @@ int assess_JobSeekBackup(const bot_t *pBot, const job_struct &r_job) {
 int assess_JobAvoidEnemy(const bot_t *pBot, const job_struct &r_job) {
    // recommend the job be removed if it is invalid
    if (r_job.f_bufferedTime < pBot->f_killed_time || (r_job.phase == 0 // abort if the job has been asleep in the buffer for too long
-                                                      && r_job.f_bufferedTime + 4 < pBot->f_think_time))
+                                                      && r_job.f_bufferedTime + 4.0f < pBot->f_think_time))
       return PRIORITY_NONE;
 
    // check the waypoints validity
@@ -837,7 +837,7 @@ int assess_JobAvoidEnemy(const bot_t *pBot, const job_struct &r_job) {
 int assess_JobAvoidAreaDamage(const bot_t *pBot, const job_struct &r_job) {
    // recommend the job be removed if it is invalid
    if (r_job.f_bufferedTime < pBot->f_killed_time || (r_job.phase == 0 // abort if the job has been asleep in the buffer for too long
-                                                      && r_job.f_bufferedTime + 2 < pBot->f_think_time))
+                                                      && r_job.f_bufferedTime + 2.0f < pBot->f_think_time))
       return PRIORITY_NONE;
 
    // has the threatening object ceased to exist?
@@ -861,7 +861,7 @@ int assess_JobInfectedAttack(const bot_t *pBot, const job_struct &r_job) {
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobBinGrenade(const bot_t *pBot, const job_struct &r_job) {
    // recommend the job be removed if it is invalid
-   if ((r_job.phase == 0 && pBot->nadePrimed == false) || pBot->enemy.ptr != nullptr || r_job.f_bufferedTime < pBot->f_killed_time || r_job.f_bufferedTime + 5 < pBot->f_think_time) {
+   if ((r_job.phase == 0 && pBot->nadePrimed == false) || pBot->enemy.ptr != nullptr || r_job.f_bufferedTime < pBot->f_killed_time || r_job.f_bufferedTime + 5.0f < pBot->f_think_time) {
       return PRIORITY_NONE;
    }
 
@@ -900,7 +900,7 @@ int assess_JobMeleeWarrior(const bot_t *pBot, const job_struct &r_job) {
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobGraffitiArtist(const bot_t *pBot, const job_struct &r_job) {
    // recommend the job be removed if it is invalid
-   if (pBot->bot_has_flag || pBot->visEnemyCount > 0 || r_job.f_bufferedTime < pBot->f_killed_time || r_job.f_bufferedTime + 25 < pBot->f_think_time || PlayerIsInfected(pBot->pEdict)) {
+   if (pBot->bot_has_flag || pBot->visEnemyCount > 0 || r_job.f_bufferedTime < pBot->f_killed_time || r_job.f_bufferedTime + 25.0f < pBot->f_think_time || PlayerIsInfected(pBot->pEdict)) {
       return PRIORITY_NONE;
    }
 

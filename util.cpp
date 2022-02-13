@@ -79,7 +79,7 @@ long random_long(const long lowval, const long highval) {
    const long spread = highval - lowval + 1;
 
    // make sure a sensible number was requested
-   if (spread < 2) {
+   if (spread < 2l) {
       //	UTIL_BotLogPrintf("dumb random request: %d, %d\n", lowval, highval);
       return lowval;
    }
@@ -109,7 +109,7 @@ bool VectorsNearerThan(const Vector &r_vOne, const Vector &r_vTwo, double value)
    value = value * value;
 
    const Vector distance = r_vOne - r_vTwo;
-   double temp = distance.x * distance.x + distance.y * distance.y;
+   float temp = distance.x * distance.x + distance.y * distance.y;
 
    // perform an early 2 dimensional check, because most maps
    // are wider/longer than they are tall
@@ -181,7 +181,7 @@ int UTIL_PointContents(const Vector &vec) { return POINT_CONTENTS(vec); }
 
 void UTIL_SetSize(entvars_t *pev, const Vector &vecMin, const Vector &vecMax) { SET_SIZE(ENT(pev), vecMin, vecMax); }
 
-void UTIL_SetOrigin(entvars_t *pev, Vector &vecOrigin) { SET_ORIGIN(ENT(pev), vecOrigin); }
+void UTIL_SetOrigin(const entvars_t *pev, Vector &vecOrigin) { SET_ORIGIN(ENT(pev), vecOrigin); }
 
 void HUDNotify(edict_t *pEntity, const char *msg_name) {
    if (gmsgHUDNotify == 0)
@@ -450,7 +450,7 @@ bool FInViewCone(const Vector &r_pOrigin, const edict_t *pEdict) {
 
    const float flDot = DotProduct(vec2LOS, gpGlobals->v_forward.Make2D());
 
-   if (flDot > 0.5f) // 60 degree field of view
+   if (flDot > 0.50f) // 60 degree field of view
       return true;
    else
       return false;
@@ -476,7 +476,7 @@ bool BotCanSeeOrigin(const bot_t *pBot, const Vector &r_dest) {
    UTIL_TraceLine(pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs, r_dest, ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
    // check if line of sight to the object is not blocked
-   if (tr.flFraction >= 1)
+   if (tr.flFraction >= 1.0f)
       return true;
 
    return false;
@@ -491,15 +491,15 @@ int BotInFieldOfView(const bot_t *pBot, const Vector &dest) {
    Vector entity_angles = UTIL_VecToAngles(dest);
 
    // make yaw angle 0 to 360 degrees if negative...
-   if (entity_angles.y < 0)
-      entity_angles.y += 360;
+   if (entity_angles.y < 0.0f)
+      entity_angles.y += 360.0f;
 
    // get bot's current view angle...
    float view_angle = pBot->pEdict->v.v_angle.y;
 
    // make view angle 0 to 360 degrees if negative...
-   if (view_angle < 0)
-      view_angle += 360;
+   if (view_angle < 0.0f)
+      view_angle += 360.0f;
 
    // rsm - START angle bug fix
    int angle = std::abs(static_cast<int>(view_angle) - static_cast<int>(entity_angles.y));
@@ -527,7 +527,7 @@ bool FVisible(const Vector &r_vecOrigin, edict_t *pEdict) {
    // was ignore glass
    UTIL_TraceLine(vecLookerOrigin, r_vecOrigin, ignore_monsters, dont_ignore_glass, pEdict, &tr);
 
-   if (tr.flFraction < 1)
+   if (tr.flFraction < 1.0f)
       return false; // Line of sight is not established
    else
       return true; // line of sight is valid.
@@ -560,7 +560,7 @@ bool UTIL_FootstepsHeard(const edict_t *pEdict, edict_t *pPlayer) {
    if (footstep_sounds_on == true) {
       // check if this player is near enough and moving fast enough on
       // the ground to make sounds
-      if (pPlayer->v.flags & FL_ONGROUND && VectorsNearerThan(pPlayer->v.origin, pEdict->v.origin, 600.0) && pPlayer->v.velocity.Length2D() > 220) {
+      if (pPlayer->v.flags & FL_ONGROUND && VectorsNearerThan(pPlayer->v.origin, pEdict->v.origin, 600.0) && pPlayer->v.velocity.Length2D() > 220.0f) {
          return true;
       }
    }

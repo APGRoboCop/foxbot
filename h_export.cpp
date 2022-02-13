@@ -81,7 +81,7 @@ C_DLLEXPORT void WINAPI GiveFnptrsToDll(enginefuncs_t *pengfuncsFromEngine, glob
    if (mr_meta) {
       return;
    }
-   char game_dir[256];
+   char game_dir[255];
    char mod_name[32];
 
    // find the directory name of the currently running MOD...

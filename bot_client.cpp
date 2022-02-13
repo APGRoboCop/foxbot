@@ -779,8 +779,8 @@ void BotClient_Valve_ScreenFade(void *p, const int bot_index) {
    } else if (state == 6) {
       state = 0;
 
-      const int length = (duration + hold_time) / 4096;
-      bots[bot_index].f_blinded_time = gpGlobals->time + length - 2;
+      const float length = (static_cast<float>(duration) + static_cast<float>(hold_time)) / 4096;
+      bots[bot_index].f_blinded_time = gpGlobals->time + length - 2.0f;
    } else {
       state++;
    }
@@ -860,7 +860,7 @@ void BotClient_Engineer_BuildStatus(void *p, const int bot_index) {
          if (bot_index != -1) {
             // set up the time when the bot will detonate it's dispenser
             if (bots[bot_index].bot_skill < 3)
-               bots[bot_index].f_dispenserDetTime = gpGlobals->time + random_float(0.5, static_cast<float>(bots[bot_index].bot_skill) + 0.5);
+               bots[bot_index].f_dispenserDetTime = gpGlobals->time + random_float(0.5f, static_cast<float>(bots[bot_index].bot_skill) + 0.5f);
          }
          g_state++;
       } else if (strcmp(static_cast<char *>(p), "#Teleporter_Entrance_Built") == 0) {
@@ -890,7 +890,7 @@ void BotClient_Engineer_BuildStatus(void *p, const int bot_index) {
                while ((pent = FIND_ENTITY_IN_SPHERE(pent, clients[i]->v.origin, 200)) != nullptr && !FNullEnt(pent)) {
                   const float l = (clients[i]->v.origin - pent->v.origin).Length2D();
 
-                  if (strcmp("building_teleporter", STRING(pent->v.classname)) == 0 && l >= 16 && l <= 96) {
+                  if (strcmp("building_teleporter", STRING(pent->v.classname)) == 0 && l >= 16.0f && l <= 96.0f) {
                      // Set the owner on the teleport
                      pent->v.euser1 = clients[i];
                      pent->v.iuser1 = teleportType;

@@ -33,13 +33,13 @@
 
 char *UTIL_VarArgs(char *format, ...) {
    va_list argptr;
-   static char string[1024];
+   static char string[255];
 
    va_start(argptr, format);
 #ifdef WIN32
-   _vsnprintf(string, 1024, format, argptr);
+   _vsnprintf(string, 255, format, argptr);
 #else
-   _vsnprintf(string, 1024, format, argptr);
+   _vsnprintf(string, 255, format, argptr);
 #endif
    va_end(argptr);
 
@@ -52,13 +52,13 @@ char *UTIL_VarArgs(char *format, ...) {
 //=========================================================
 void UTIL_LogPrintf(char *format, ...) {
    va_list argptr;
-   static char string[1024];
+   static char string[255];
 
    va_start(argptr, format);
 #ifdef WIN32
-   _vsnprintf(string, 1024, format, argptr);
+   _vsnprintf(string, 255, format, argptr);
 #else
-   _vsnprintf(string, 1024, format, argptr);
+   _vsnprintf(string, 255, format, argptr);
 #endif
    va_end(argptr);
 

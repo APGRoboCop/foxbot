@@ -54,10 +54,10 @@ void BotStartGame(bot_t *pBot) {
    edict_t *pEdict = pBot->pEdict;
 
    if (mod_id == TFC_DLL) {
-      if (pBot->create_time > gpGlobals->time + 1 || pBot->create_time + 3 <= gpGlobals->time)
-         pBot->create_time = gpGlobals->time + 1;
+      if (pBot->create_time > gpGlobals->time + 1.0f || pBot->create_time + 3.0f <= gpGlobals->time)
+         pBot->create_time = gpGlobals->time + 1.0f;
 
-      if (pBot->create_time > gpGlobals->time && pBot->create_time - 0.5 < gpGlobals->time) {
+      if (pBot->create_time > gpGlobals->time && pBot->create_time - 0.5f < gpGlobals->time) {
          if (!spawn_check_crash) {
             spawn_check_crash = true;
             spawn_check_crash_count = 0;
@@ -80,14 +80,14 @@ void BotStartGame(bot_t *pBot) {
       }
 
       // force team selection
-      if (pBot->create_time + 1 <= gpGlobals->time)
+      if (pBot->create_time + 1.0f <= gpGlobals->time)
          pBot->start_action = MSG_TFC_TEAM_SELECT;
 
-      if (pBot->create_time + 1.5 <= gpGlobals->time)
+      if (pBot->create_time + 1.5f <= gpGlobals->time)
          pBot->start_action = MSG_TFC_CLASS_SELECT;
 
       // if we dont start after 2, sort other stuff
-      if (pBot->create_time + 2 <= gpGlobals->time)
+      if (pBot->create_time + 2.0f <= gpGlobals->time)
          pBot->not_started = false;
 
       // handle Team Fortress Classic stuff here...
@@ -108,7 +108,7 @@ void BotStartGame(bot_t *pBot) {
             // if the bot is not a fair player(a scoundrel) then
             // let the bot choose the team it prefers, otherwise
             // auto-assign the bots team(auto-assign keeps the teams balanced)
-            if (bot_team_balance == false && RANDOM_LONG(1, 1000) > pBot->trait.fairplay) {
+            if (bot_team_balance == false && RANDOM_LONG(1l, 1000l) > pBot->trait.fairplay) {
                // add one to what BotPickFavoredTeam_TFC() returns, because
                // it returns team values from 0 to 3
                pBot->bot_team = BotPickFavoredTeam_TFC(pBot->trait.faveClass) + 1;
@@ -144,7 +144,7 @@ void BotStartGame(bot_t *pBot) {
          if (pBot->bot_class < 1 || pBot->bot_class > 9)
             pBot->bot_class = -1;
          if (pBot->bot_class == -1)
-            pBot->bot_class = RANDOM_LONG(1, 9);
+            pBot->bot_class = RANDOM_LONG(1l, 9l);
          const int team = UTIL_GetTeam(pEdict);
 
          if (team_class_limits[team] == -1) // civilian only?
@@ -160,7 +160,7 @@ void BotStartGame(bot_t *pBot) {
                class_not_allowed = team_class_limits[team] & 1 << pBot->bot_class;
 
             while (class_not_allowed) {
-               pBot->bot_class = RANDOM_LONG(1, 9);
+               pBot->bot_class = RANDOM_LONG(1l, 9l);
 
                if (pBot->bot_class == 10)
                   class_not_allowed = team_class_limits[team] & 1 << 7;
@@ -396,5 +396,5 @@ static int BotPickFavoredTeam_TFC(const int faveClass) {
       return -1;
 
    // pick a suitable team at random
-   return activeTeamList[random_long(0, activeTeamTotal - 1)];
+   return activeTeamList[random_long(0l, activeTeamTotal - 1l)];
 }

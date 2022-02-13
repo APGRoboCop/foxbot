@@ -25,7 +25,7 @@ BASEFLAGS = -Wall -Wno-write-strings -Wno-attributes -std=gnu++14 \
 ARCHFLAG += -march=i686 -mtune=generic -msse -msse2 -mmmx
 
 ifeq ($(DBG_FLGS),1)
-	OPTFLAGS = -O0 -g
+	OPTFLAGS = -O0 -g -ggdb3 -D_DEBUG
 else
 	OPTFLAGS = -O2 -fomit-frame-pointer -g
 	OPTFLAGS += -funsafe-math-optimizations

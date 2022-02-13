@@ -183,7 +183,7 @@ void BotResetJobBuffer(bot_t *pBot) {
    // reset the job blacklist
    for (i = 0; i < JOB_BLACKLIST_MAX; i++) {
       pBot->jobBlacklist[i].type = job_none;
-      pBot->jobBlacklist[i].f_timeOut = 0.0;
+      pBot->jobBlacklist[i].f_timeOut = 0.0f;
    }
 }
 
@@ -191,10 +191,10 @@ void BotResetJobBuffer(bot_t *pBot) {
 // index, and is the preferred method of terminating any job.
 static void DropJobFromBuffer(bot_t *pBot, const int buffer_index) {
    pBot->jobType[buffer_index] = job_none;
-   pBot->job[buffer_index].f_bufferedTime = 0.0;
+   pBot->job[buffer_index].f_bufferedTime = 0.0f;
    pBot->job[buffer_index].priority = PRIORITY_NONE;
    pBot->job[buffer_index].phase = 0;
-   pBot->job[buffer_index].phase_timer = 0.0;
+   pBot->job[buffer_index].phase_timer = 0.0f;
    pBot->job[buffer_index].waypoint = -1;
    pBot->job[buffer_index].waypointTwo = -1;
    pBot->job[buffer_index].player = nullptr;
@@ -276,7 +276,7 @@ job_struct *InitialiseNewJob(const bot_t *pBot, const int newJobType) {
    newJob.f_bufferedTime = pBot->f_think_time;
    newJob.priority = PRIORITY_NONE;
    newJob.phase = 0;
-   newJob.phase_timer = 0.0;
+   newJob.phase_timer = 0.0f;
    newJob.waypoint = -1;
    newJob.waypointTwo = -1;
    newJob.player = nullptr;
@@ -309,7 +309,7 @@ bool SubmitNewJob(bot_t *pBot, const int newJobType, job_struct *newJob) {
    // set some defaults for the new job
    newJob->f_bufferedTime = pBot->f_think_time;
    newJob->phase = 0;
-   newJob->phase_timer = 0.0;
+   newJob->phase_timer = 0.0f;
 
    // assess the proposed new jobs validity and priority
    newJob->priority = jf[newJobType].assessFuncPtr(pBot, *newJob);
@@ -360,7 +360,7 @@ bool SubmitNewJob(bot_t *pBot, const int newJobType, job_struct *newJob) {
 
       pBot->job[worstJobFound].f_bufferedTime = pBot->f_think_time;
       pBot->job[worstJobFound].phase = 0;
-      pBot->job[worstJobFound].phase_timer = 0.0;
+      pBot->job[worstJobFound].phase_timer = 0.0f;
       return true;
    }
 
@@ -407,7 +407,7 @@ static void RefreshJobBuffer(bot_t *pBot) {
    for (i = 0; i < JOB_BUFFER_MAX; i++) {
       if (i != pBot->currentJob) {
          pBot->job[i].phase = 0;
-         pBot->job[i].phase_timer = 0.0;
+         pBot->job[i].phase_timer = 0.0f;
       }
    }
 }
@@ -434,7 +434,7 @@ void BotRunJobs(bot_t *pBot) {
    // abort if no jobs were found in the buffer
    if (pBot->jobType[pBot->currentJob] == job_none) {
       // if the buffer is completely empty, add JOB_ROAM as a backup
-      if (pBot->f_killed_time + 3 < pBot->f_think_time) {
+      if (pBot->f_killed_time + 3.0f < pBot->f_think_time) {
          job_struct *newJob = InitialiseNewJob(pBot, job_roam);
          if (newJob != nullptr)
             SubmitNewJob(pBot, job_roam, newJob);
@@ -500,7 +500,7 @@ void BotJobThink(bot_t *pBot) {
    }
 
    // need armor(e.g. just spawned)?
-   if ((PlayerArmorPercent(pBot->pEdict) < pBot->trait.health || pBot->f_killed_time + 3 > pBot->f_think_time) && pBot->f_periodicAlert3 < pBot->f_think_time && random_float(1, 1000) > 600) {
+   if ((PlayerArmorPercent(pBot->pEdict) < pBot->trait.health || pBot->f_killed_time + 3.1f > pBot->f_think_time) && pBot->f_periodicAlert3 < pBot->f_think_time && random_float(1.0f, 1000.0f) > 600) {
       newJob = InitialiseNewJob(pBot, job_get_armor);
       if (newJob != nullptr) {
          newJob->waypoint = WaypointFindNearestGoal(pBot->current_wp, pBot->current_team, 3000, W_FL_ARMOR);
@@ -526,14 +526,14 @@ void BotJobThink(bot_t *pBot) {
    }
 
    // call for a medic?
-   if (pBot->pEdict->v.playerclass != TFC_CLASS_MEDIC && PlayerHealthPercent(pBot->pEdict) < pBot->trait.health && pBot->enemy.f_lastSeen + 3 < pBot->f_think_time) {
+   if (pBot->pEdict->v.playerclass != TFC_CLASS_MEDIC && PlayerHealthPercent(pBot->pEdict) < pBot->trait.health && pBot->enemy.f_lastSeen + 3.0f < pBot->f_think_time) {
       // just call if the bot isn't going anywhere
       if (pBot->current_wp == pBot->goto_wp) {
-         if (pBot->currentJob > -1 && pBot->jobType[pBot->currentJob] != job_get_health && FriendlyClassTotal(pBot->pEdict, TFC_CLASS_MEDIC, false) > 0 && random_long(0, 1000) < 200)
+         if (pBot->currentJob > -1 && pBot->jobType[pBot->currentJob] != job_get_health && FriendlyClassTotal(pBot->pEdict, TFC_CLASS_MEDIC, false) > 0 && random_long(0l, 1000l) < 200)
             FakeClientCommand(pBot->pEdict, "saveme", nullptr, nullptr);
       }
       // if the bot saw a medic recently make it a job to call and wait for them
-      else if (pBot->f_alliedMedicSeenTime + 5 > pBot->f_think_time && (newJob = InitialiseNewJob(pBot, job_call_medic)) != nullptr) {
+      else if (pBot->f_alliedMedicSeenTime + 5.0f > pBot->f_think_time && (newJob = InitialiseNewJob(pBot, job_call_medic)) != nullptr) {
          const int healthJobIndex = BufferedJobIndex(pBot, job_get_health);
 
          // if infected or not going for health already call the seen medic
@@ -552,13 +552,13 @@ void BotJobThink(bot_t *pBot) {
 
    // time for the bot to let off some steam with a bit of messing about?
    if (bot_allow_humour && pBot->f_humour_time < pBot->f_think_time) {
-      pBot->f_humour_time = pBot->f_think_time + random_float(60.0, 180.0);
+      pBot->f_humour_time = pBot->f_think_time + random_float(60.0f, 180.0f);
 
       // no mucking about if enemies were recently seen or the bot spawned recently
-      if (pBot->enemy.f_lastSeen + 40 < pBot->f_think_time && pBot->f_killed_time + 40 < pBot->f_think_time && BufferedJobIndex(pBot, job_melee_warrior) == -1 && BufferedJobIndex(pBot, job_graffiti_artist) == -1 &&
-          random_long(1, 200) < pBot->trait.humour) {
+      if (pBot->enemy.f_lastSeen + 40.0f < pBot->f_think_time && pBot->f_killed_time + 40.0f < pBot->f_think_time && BufferedJobIndex(pBot, job_melee_warrior) == -1 && BufferedJobIndex(pBot, job_graffiti_artist) == -1 &&
+          random_long(1l, 200l) < pBot->trait.humour) {
          // take your pick of fun things to do
-         if (random_long(1, 1000) > 400) {
+         if (random_long(1l, 1000l) > 400) {
             newJob = InitialiseNewJob(pBot, job_melee_warrior);
             if (newJob != nullptr)
                SubmitNewJob(pBot, job_melee_warrior, newJob);
@@ -593,7 +593,7 @@ void BotJobThink(bot_t *pBot) {
       break;
    case TFC_CLASS_DEMOMAN:
       // go set a detpack?
-      if (pBot->detpack == 2 && WaypointTypeExists(W_FL_TFC_DETPACK_CLEAR | W_FL_TFC_DETPACK_SEAL, pBot->current_team) && random_long(1, 1000) < 334) {
+      if (pBot->detpack == 2 && WaypointTypeExists(W_FL_TFC_DETPACK_CLEAR | W_FL_TFC_DETPACK_SEAL, pBot->current_team) && random_long(1l, 1000l) < 334) {
          newJob = InitialiseNewJob(pBot, job_detpack_waypoint);
          if (newJob != nullptr) {
             newJob->waypoint = WaypointFindDetpackGoal(pBot->current_wp, pBot->current_team);
@@ -628,10 +628,10 @@ void BotJobThink(bot_t *pBot) {
       // if the ambush check timer has run down see if the bot could start an ambush
       if (pBot->f_spyFeignAmbushTime < pBot->f_think_time) {
          // reset the ambush timer
-         pBot->f_spyFeignAmbushTime = pBot->f_think_time + random_float(12.0, 24.0);
+         pBot->f_spyFeignAmbushTime = pBot->f_think_time + random_float(12.0f, 24.0f);
 
          newJob = InitialiseNewJob(pBot, job_feign_ambush);
-         if (newJob != nullptr && pBot->enemy.f_lastSeen + 3 < pBot->f_think_time && pBot->current_wp > -1 && spawnAreaWP[pBot->current_team] > -1 && spawnAreaWP[pBot->current_team] < num_waypoints) {
+         if (newJob != nullptr && pBot->enemy.f_lastSeen + 3.0f < pBot->f_think_time && pBot->current_wp > -1 && spawnAreaWP[pBot->current_team] > -1 && spawnAreaWP[pBot->current_team] < num_waypoints) {
             const int homeDistance = WaypointDistanceFromTo(spawnAreaWP[pBot->current_team], pBot->current_wp, pBot->current_team);
 
             // if the bot has left respawn behind and the area is suitable start a
@@ -644,7 +644,7 @@ void BotJobThink(bot_t *pBot) {
       break;
    case TFC_CLASS_ENGINEER:
       BotEngineerThink(pBot);
-      FakeClientCommand(pBot->pEdict, "slot1", nullptr, nullptr);
+      //FakeClientCommand(pBot->pEdict, "slot1", nullptr, nullptr);
       break;
    default:
       break;
@@ -662,7 +662,7 @@ void BotJobThink(bot_t *pBot) {
             return; // no need, guarding already
 
          // 50% chance the demoman will set up a pipetrap or just guard
-         if (random_long(1, 1000) <= 500) {
+         if (random_long(1l, 1000l) <= 500) {
             newJob = InitialiseNewJob(pBot, job_pipetrap);
             if (newJob != nullptr && WaypointTypeExists(W_FL_TFC_PIPETRAP, pBot->current_team)) {
                newJob->waypoint = WaypointFindRandomGoal(pBot->current_wp, pBot->current_team, W_FL_TFC_PIPETRAP);
@@ -695,7 +695,7 @@ void BotJobThink(bot_t *pBot) {
                }
             }
 
-            if (random_long(1, 1000) <= guardChance) {
+            if (random_long(1l, 1000l) <= guardChance) {
                newJob->waypoint = WaypointFindRandomGoal(pBot->current_wp, pBot->current_team, W_FL_TFC_PL_DEFEND);
                if (newJob->waypoint != -1 && SubmitNewJob(pBot, job_guard_waypoint, newJob) == true)
                   return; // success
@@ -718,7 +718,7 @@ void BotJobThink(bot_t *pBot) {
          getFlagChance = 750;
 
       // does the bot "feel" like going straight for a flag
-      if (random_long(1, 1000) <= getFlagChance) {
+      if (random_long(1l, 1000l) <= getFlagChance) {
          newJob = InitialiseNewJob(pBot, job_get_flag);
          if (newJob != nullptr) {
             newJob->waypoint = BotFindFlagWaypoint(pBot);
@@ -762,7 +762,7 @@ void BotEngineerThink(bot_t *pBot) {
    job_struct *newJob;
 
    // time to build a dispenser?
-   if (pBot->has_dispenser == false && pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > 139 && random_long(1, 1000) < 400) {
+   if (pBot->has_dispenser == false && pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > 139 && random_long(1l, 1000l) < 400) {
       newJob = InitialiseNewJob(pBot, job_build_dispenser);
       if (newJob != nullptr) {
          newJob->waypoint = BotGetDispenserBuildWaypoint(pBot);
@@ -812,7 +812,7 @@ void BotEngineerThink(bot_t *pBot) {
    }
 
    // build a teleporter entrance?
-   if (FNullEnt(pBot->tpEntrance) && bot_can_build_teleporter == true && pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > 190 && random_long(1, 1000) < 101) {
+   if (FNullEnt(pBot->tpEntrance) && bot_can_build_teleporter == true && pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > 190 && random_long(1l, 1000l) < 101) {
       newJob = InitialiseNewJob(pBot, job_build_teleport);
       if (newJob != nullptr) {
          newJob->waypoint = BotGetTeleporterBuildWaypoint(pBot, true);
