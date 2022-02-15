@@ -17,6 +17,8 @@ Updated by RoboCop
 
 - Increased priority for bots to steal flags
 
+- Improved floating point precision
+
 - Increased the bot's flexibility to steer quickly when turning corners and aim faster
 
 - Optimised pathway for 2fort, shutdown2, rock2, well and dustbowl
@@ -34,6 +36,8 @@ TODO List:-
 >> Fix bot_chat cvars
 
 >> Train spies to not flag hold and aim properly to destroy SG Turrets
+
+>> To allow bots to use Nail Guns for destroying SG Turrets, when out of nades or from a distance
 
 >> Allow bots to toss grenades at a higher angle and low range as their target aim is too short
 

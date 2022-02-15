@@ -526,11 +526,11 @@ void BotClient_Valve_Damage(void *p, const int bot_index) {
          if (damage_bits & DMG_DROWN
              //	&& bots[bot_index].pEdict->v.waterlevel == WL_HEAD_IN_WATER
              && bots[bot_index].bot_skill < 3) {
-            job_struct *newJob = InitialiseNewJob(&bots[bot_index], job_drown_recover);
+            job_struct *newJob = InitialiseNewJob(&bots[bot_index], JOB_DROWN_RECOVER);
             if (newJob != nullptr) {
                newJob->waypoint = BotDrowningWaypointSearch(&bots[bot_index]);
                if (newJob->waypoint != -1)
-                  SubmitNewJob(&bots[bot_index], job_drown_recover, newJob);
+                  SubmitNewJob(&bots[bot_index], JOB_DROWN_RECOVER, newJob);
             }
          }
 
@@ -779,7 +779,7 @@ void BotClient_Valve_ScreenFade(void *p, const int bot_index) {
    } else if (state == 6) {
       state = 0;
 
-      const float length = (static_cast<float>(duration) + static_cast<float>(hold_time)) / 4096;
+      const int length = (duration + hold_time) / 4096;
       bots[bot_index].f_blinded_time = gpGlobals->time + length - 2.0f;
    } else {
       state++;
@@ -860,7 +860,7 @@ void BotClient_Engineer_BuildStatus(void *p, const int bot_index) {
          if (bot_index != -1) {
             // set up the time when the bot will detonate it's dispenser
             if (bots[bot_index].bot_skill < 3)
-               bots[bot_index].f_dispenserDetTime = gpGlobals->time + random_float(0.5f, static_cast<float>(bots[bot_index].bot_skill) + 0.5f);
+               bots[bot_index].f_dispenserDetTime = gpGlobals->time + random_float(0.5, static_cast<float>(bots[bot_index].bot_skill) + 0.5f);
          }
          g_state++;
       } else if (strcmp(static_cast<char *>(p), "#Teleporter_Entrance_Built") == 0) {

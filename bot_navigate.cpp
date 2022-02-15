@@ -92,7 +92,7 @@ void BotUpdateHomeInfo(const bot_t *pBot) {
 
    // if the spawn location is totally unknown try to update it now
    if (spawnAreaWP[pBot->current_team] < 0 && pBot->f_killed_time + 15.0f > gpGlobals->time) {
-      spawnAreaWP[pBot->current_team] = WaypointFindNearest_V(pBot->pEdict->v.origin, 800.0f, pBot->current_team);
+      spawnAreaWP[pBot->current_team] = WaypointFindNearest_V(pBot->pEdict->v.origin, 800.0, pBot->current_team);
 
       return;
    }
@@ -152,7 +152,7 @@ void BotFindCurrentWaypoint(bot_t *pBot) {
             UTIL_TraceLine(pBot->pEdict->v.origin, waypoints[index].origin, dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
             // it is visible, so store it
-            if (tr.flFraction >= 1.0f)
+            if (tr.flFraction >= 1.0)
                runnerUp = index;
          }
 
@@ -165,7 +165,7 @@ void BotFindCurrentWaypoint(bot_t *pBot) {
          UTIL_TraceLine(pBot->pEdict->v.origin, waypoints[index].origin, dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
          // it is visible, so store it
-         if (tr.flFraction >= 1.0f) {
+         if (tr.flFraction >= 1.0) {
             min_index = index;
             min_distance_squared = distance_squared;
          }
@@ -212,10 +212,10 @@ void BotMatchFacing(const bot_t *pBot, const Vector &v_source, Vector v_focus) {
 
 void BotFixIdealPitch(edict_t *pEdict) {
    // check for wrap around of angle...
-   if (pEdict->v.idealpitch > 180.0f)
-      pEdict->v.idealpitch -= 360.0f;
-   else if (pEdict->v.idealpitch < -180.0f)
-      pEdict->v.idealpitch += 360.0f;
+   if (pEdict->v.idealpitch > 180)
+      pEdict->v.idealpitch -= 360;
+   else if (pEdict->v.idealpitch < -180)
+      pEdict->v.idealpitch += 360;
 }
 
 float BotChangePitch(edict_t *pEdict, float speed) {
@@ -233,7 +233,7 @@ float BotChangePitch(edict_t *pEdict, float speed) {
 
    // should keep turn speed the same under any fps...hopefully
    speed *= gpGlobals->time - last_frame_time;
-   speed *= 10.0f;
+   speed *= 10;
 
    // check if difference is less than the max degrees per turn
    if (diff < speed)
@@ -243,21 +243,21 @@ float BotChangePitch(edict_t *pEdict, float speed) {
    // the other negative, one negative and the other positive, or
    // both negative.  handle each case separately...
 
-   if (current >= 0.0f && ideal >= 0.0f) // both positive
+   if (current >= 0 && ideal >= 0) // both positive
    {
       if (current > ideal)
          current -= speed;
       else
          current += speed;
-   } else if (current >= 0.0f && ideal < 0.0f) {
-       const float current_180 = current - 180.0f;
+   } else if (current >= 0 && ideal < 0) {
+      const float current_180 = current - 180;
 
       if (current_180 > ideal)
          current += speed;
       else
          current -= speed;
-   } else if (current < 0.0f && ideal >= 0.0f) {
-       const float current_180 = current + 180.0f;
+   } else if (current < 0 && ideal >= 0) {
+      const float current_180 = current + 180;
       if (current_180 > ideal)
          current += speed;
       else
@@ -271,10 +271,10 @@ float BotChangePitch(edict_t *pEdict, float speed) {
    }
 
    // check for wrap around of angle...
-   if (current > 180.0f)
-      current -= 360.0f;
-   else if (current < -180.0f)
-      current += 360.0f;
+   if (current > 180)
+      current -= 360;
+   else if (current < -180)
+      current += 360;
 
    pEdict->v.v_angle.x = current + pEdict->v.punchangle.x;
    pEdict->v.angles.x = pEdict->v.v_angle.x / 3;
@@ -286,10 +286,10 @@ float BotChangePitch(edict_t *pEdict, float speed) {
 
 void BotFixIdealYaw(edict_t *pEdict) {
    // check for wrap around of angle...
-   if (pEdict->v.ideal_yaw > 180.0f)
-      pEdict->v.ideal_yaw -= 360.0f;
-   else if (pEdict->v.ideal_yaw < -180.0f)
-      pEdict->v.ideal_yaw += 360.0f;
+   if (pEdict->v.ideal_yaw > 180)
+      pEdict->v.ideal_yaw -= 360;
+   else if (pEdict->v.ideal_yaw < -180)
+      pEdict->v.ideal_yaw += 360;
 }
 
 float BotChangeYaw(edict_t *pEdict, float speed) {
@@ -306,7 +306,7 @@ float BotChangeYaw(edict_t *pEdict, float speed) {
       return diff; // return number of degrees turned
 
    speed *= gpGlobals->time - last_frame_time;
-   speed *= 10.0f;
+   speed *= 10;
 
    // check if difference is less than the max degrees per turn
    if (diff < speed)
@@ -315,20 +315,20 @@ float BotChangeYaw(edict_t *pEdict, float speed) {
    // here we have four cases, both angle positive, one positive and
    // the other negative, one negative and the other positive, or
    // both negative.  handle each case separately...
-   if (current >= 0.0f && ideal >= 0.0f) // both positive
+   if (current >= 0 && ideal >= 0) // both positive
    {
       if (current > ideal)
          current -= speed;
       else
          current += speed;
-   } else if (current >= 0.0f && ideal < 0.0f) {
-      const float current_180 = current - 180.0f;
+   } else if (current >= 0 && ideal < 0) {
+      const float current_180 = current - 180;
       if (current_180 > ideal)
          current += speed;
       else
          current -= speed;
-   } else if (current < 0.0f && ideal >= 0.0f) {
-      const float current_180 = current + 180.0f;
+   } else if (current < 0 && ideal >= 0) {
+      const float current_180 = current + 180;
       if (current_180 > ideal)
          current += speed;
       else
@@ -342,14 +342,14 @@ float BotChangeYaw(edict_t *pEdict, float speed) {
    }
 
    // check for wrap around of angle...
-   if (current > 180.0f)
-      current -= 360.0f;
-   else if (current < -180.0f)
-      current += 360.0f;
+   if (current > 180)
+      current -= 360;
+   else if (current < -180)
+      current += 360;
 
    pEdict->v.v_angle.y = current + pEdict->v.punchangle.y;
    pEdict->v.angles.y = pEdict->v.v_angle.y;
-   pEdict->v.angles.z = 0.0f;
+   pEdict->v.angles.z = 0;
 
    return speed; // return number of degrees turned
 }
@@ -398,7 +398,7 @@ void BotNavigateWaypointless(bot_t *pBot) {
                {
                   // some maps(e.g. hunted) have undetectable obstacles
                   // jumping and/or ducking can overcome some of those
-                  if (pBot->f_periodicAlert1 < pBot->f_think_time && random_long(1l, 1000l) <= 501) {
+                  if (pBot->f_periodicAlert1 < pBot->f_think_time && random_long(1, 1000) <= 501) {
                      if (random_long(1, 1000) <= 501)
                         pBot->pEdict->v.button |= IN_JUMP;
                      else
@@ -406,7 +406,7 @@ void BotNavigateWaypointless(bot_t *pBot) {
                   }
 
                   // randomly switch direction to try and get unstuck
-                  if (pBot->f_periodicAlert3 < pBot->f_think_time && random_long(1l, 1000l) <= 501) {
+                  if (pBot->f_periodicAlert3 < pBot->f_think_time && random_long(1, 1000) <= 501) {
                      if (pBot->side_direction == SIDE_DIRECTION_RIGHT)
                         pBot->side_direction = SIDE_DIRECTION_LEFT;
                      else
@@ -449,7 +449,7 @@ bool BotNavigateWaypoints(bot_t *pBot, bool navByStrafe) {
    }
 
    pBot->f_move_speed = pBot->f_max_speed;
-   pBot->f_side_speed = 0.0f;
+   pBot->f_side_speed = 0.0;
 
    // is it time to consider taking some kind of route shortcut?
    if (pBot->f_shortcutCheckTime < pBot->f_think_time || pBot->f_shortcutCheckTime - 60.0f > pBot->f_think_time) // sanity check
@@ -492,7 +492,7 @@ bool BotNavigateWaypoints(bot_t *pBot, bool navByStrafe) {
          pBot->f_progressToWaypoint = waypointDistance;
 
          // no problem - so reset this
-         pBot->f_navProblemStartTime = 0.0f;
+         pBot->f_navProblemStartTime = 0.0;
       } else // uh-oh - looks liek troubble!
       {
          // remember when the poor bots troubles began(tell us about your mother)
@@ -514,9 +514,9 @@ bool BotNavigateWaypoints(bot_t *pBot, bool navByStrafe) {
       // buoyed by water, or on a ladder?
       if ((pBot->pEdict->v.waterlevel > WL_FEET_IN_WATER && !(pBot->pEdict->v.flags & FL_ONGROUND)) || pBot->pEdict->v.movetype == MOVETYPE_FLY) {
          if (pBot->f_navProblemStartTime + 2.0f < pBot->f_think_time) {
-            job_struct *newJob = InitialiseNewJob(pBot, job_get_unstuck);
+            job_struct *newJob = InitialiseNewJob(pBot, JOB_GET_UNSTUCK);
             if (newJob != nullptr)
-               SubmitNewJob(pBot, job_get_unstuck, newJob);
+               SubmitNewJob(pBot, JOB_GET_UNSTUCK, newJob);
          }
       } else // not on a ladder or in some water
       {
@@ -546,13 +546,13 @@ bool BotNavigateWaypoints(bot_t *pBot, bool navByStrafe) {
                         || duckResult == 1) {
                   // try to get unstuck, but not too soon
                   if (pBot->f_navProblemStartTime + 2.0f < pBot->f_think_time) {
-                     job_struct *newJob = InitialiseNewJob(pBot, job_get_unstuck);
+                     job_struct *newJob = InitialiseNewJob(pBot, JOB_GET_UNSTUCK);
                      if (newJob != nullptr)
-                        SubmitNewJob(pBot, job_get_unstuck, newJob);
+                        SubmitNewJob(pBot, JOB_GET_UNSTUCK, newJob);
                   } else // a little too soon for calling JOB_GET_UNSTUCK
                   {
                      // randomly switch direction to try and get unstuck
-                     if (pBot->f_periodicAlert3 < pBot->f_think_time && random_long(1l, 1000l) <= 501) {
+                     if (pBot->f_periodicAlert3 < pBot->f_think_time && random_long(1, 1000) <= 501) {
                         // jump too(it might help occasionally)
                         pBot->pEdict->v.button |= IN_JUMP;
 
@@ -597,8 +597,8 @@ bool BotNavigateWaypoints(bot_t *pBot, bool navByStrafe) {
 
                      // some maps(e.g. hunted) have undetectable obstacles
                      // jumping and/or ducking can overcome some of those
-                     if (pBot->f_periodicAlert1 < pBot->f_think_time && random_long(1l, 1000l) <= 501) {
-                        if (random_long(1l, 1000l) <= 501)
+                     if (pBot->f_periodicAlert1 < pBot->f_think_time && random_long(1, 1000) <= 501) {
+                        if (random_long(1, 1000) <= 501)
                            pBot->pEdict->v.button |= IN_JUMP;
                         else
                            pBot->f_duck_time = pBot->f_think_time + random_float(0.3f, 1.2f);
@@ -623,14 +623,14 @@ bool BotNavigateWaypoints(bot_t *pBot, bool navByStrafe) {
          // slow the bot down as it approaches the final waypoint on it's route
          if (pBot->current_wp == pBot->goto_wp) {
             if (current_wp_distance < 70.0f)
-               pBot->f_move_speed = pBot->f_max_speed / 4.0f;
+               pBot->f_move_speed = pBot->f_max_speed / 4;
             else if (current_wp_distance < 130.0f)
-               pBot->f_move_speed = pBot->f_max_speed / 2.0f;
+               pBot->f_move_speed = pBot->f_max_speed / 2;
          }
 
          // slow down if the next waypoint is a walk waypoint...
          if (waypoints[pBot->current_wp].flags & W_FL_WALK && navByStrafe == false)
-            pBot->f_move_speed = pBot->f_max_speed / 3.0f;
+            pBot->f_move_speed = pBot->f_max_speed / 3;
       }
 
       // if the bot is approaching a lift
@@ -757,7 +757,7 @@ bool BotHeadTowardWaypoint(bot_t *pBot, bool &r_navByStrafe) {
          else if (vang.y > 95.0f && vang.y < 265.0f)
             pBot->f_move_speed = -pBot->f_move_speed;
          else
-            pBot->f_move_speed = 0.0f; // waypoint is not ahead or behind
+            pBot->f_move_speed = 0.0; // waypoint is not ahead or behind
 
          // if the waypoint is on the left, sidestep left
          if (vang.y > 185.0f && vang.y < 355.0f) {
@@ -769,7 +769,7 @@ bool BotHeadTowardWaypoint(bot_t *pBot, bool &r_navByStrafe) {
             pBot->side_direction = SIDE_DIRECTION_RIGHT;
             pBot->f_side_speed = pBot->f_max_speed;
          } else
-            pBot->f_side_speed = 0.0f; // not on left or right, don't strafe sideways
+            pBot->f_side_speed = 0.0; // not on left or right, don't strafe sideways
 
          // now to handle vertical movement when swimming(or bobbing on the surface of water)
          if (pBot->pEdict->v.waterlevel == WL_HEAD_IN_WATER || (pBot->pEdict->v.waterlevel == WL_WAIST_IN_WATER // on the surface
@@ -850,22 +850,22 @@ static bool BotUpdateRoute(bot_t *pBot) {
 
       // figure out how near to the bot's current waypoint the bot has to be
       // before it will move on the next waypoint
-      float needed_distance = 50.0f; // standard distance for most waypoint types
+      float needed_distance = 50.0; // standard distance for most waypoint types
       bool heightCheck = true;      // used only when climbing ladders
       if (pBot->pEdict->v.movetype == MOVETYPE_FLY) {
          // if the bot is on a ladder make sure it is just above the waypoint
-         needed_distance = 20.0f; // got to be near when on a ladder
+         needed_distance = 20.0; // got to be near when on a ladder
          if (pBot->pEdict->v.origin.z < waypoints[new_current_wp].origin.z || pBot->pEdict->v.origin.z > waypoints[new_current_wp].origin.z + 10.0f)
             heightCheck = false;
       } else if (waypoints[new_current_wp].flags & W_FL_JUMP) {
          // gotta be similar height or higher than jump waypoint
          if (pBot->pEdict->v.origin.z < waypoints[new_current_wp].origin.z - 15.0f || pBot->pEdict->v.flags & FL_ONGROUND)
             heightCheck = false;
-         needed_distance = 80.0f;
+         needed_distance = 80.0;
       } else if (waypoints[new_current_wp].flags & W_FL_LIFT)
-         needed_distance = 25.0f; // some lifts are small(e.g. rock2's lifts)
+         needed_distance = 25.0; // some lifts are small(e.g. rock2's lifts)
       else if (waypoints[new_current_wp].flags & W_FL_WALK)
-         needed_distance = 20.0f;
+         needed_distance = 20.0;
 
       bool waypointTouched = false;
 
@@ -941,10 +941,10 @@ static void BotHandleLadderTraffic(bot_t *pBot) {
 
    // trace a line straight down
    TraceResult tr;
-   UTIL_TraceLine(pBot->pEdict->v.origin, pBot->pEdict->v.origin - Vector(0.0f, 0.0f, 120.0f), dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
+   UTIL_TraceLine(pBot->pEdict->v.origin, pBot->pEdict->v.origin - Vector(0, 0, 120.0), dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
    // see if we detected a player below
-   if (tr.flFraction < 1.0f && tr.pHit != nullptr) {
+   if (tr.flFraction < 1.0 && tr.pHit != nullptr) {
       // search the world for players...
       for (int i = 1; i <= gpGlobals->maxClients; i++) {
          edict_t *pPlayer = INDEXENT(i);
@@ -999,7 +999,7 @@ void BotUseLift(bot_t *pBot) {
          // traceline a short distance up from the waypoint to make sure
          // the lift isn't there
          TraceResult tr;
-         UTIL_TraceLine(waypoints[pBot->current_wp].origin, waypoints[pBot->current_wp].origin + Vector(0.0f, 0.0f, 36.0f), dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
+         UTIL_TraceLine(waypoints[pBot->current_wp].origin, waypoints[pBot->current_wp].origin + Vector(0.0, 0.0, 36.0), dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
          if (tr.pHit != nullptr) {
             char className[10];
@@ -1013,7 +1013,7 @@ void BotUseLift(bot_t *pBot) {
                // is the lift unoccupied by bot teammates?
                if (BotTeammatesNearWaypoint(pBot, pBot->current_wp) < 1) {
                   // do a traceline straight down, to see if the lift is there
-                  UTIL_TraceLine(waypoints[pBot->current_wp].origin, waypoints[pBot->current_wp].origin - Vector(0.0f, 0.0f, 50.0f), ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
+                  UTIL_TraceLine(waypoints[pBot->current_wp].origin, waypoints[pBot->current_wp].origin - Vector(0.0, 0.0, 50.0), ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
                   if (tr.pHit != nullptr) {
                      strncpy(className, STRING(tr.pHit->v.classname), 10);
@@ -1034,13 +1034,13 @@ void BotUseLift(bot_t *pBot) {
 
          if (liftReady) {
             // walk into the lift
-            pBot->f_move_speed = pBot->f_max_speed / 2.0f;
+            pBot->f_move_speed = pBot->f_max_speed / 2;
             //	UTIL_HostSay(pBot->pEdict, 0, "approaching lift"); //DebugMessageOfDoom!
          } else {
             //	UTIL_HostSay(pBot->pEdict, 0, "awaiting lift's return"); //DebugMessageOfDoom!
 
             if (distanceWP2D < 300.0f)
-               pBot->f_move_speed = -(pBot->f_max_speed / 3.0f);
+               pBot->f_move_speed = -(pBot->f_max_speed / 3);
             else
                pBot->f_pause_time = pBot->f_think_time + 0.2f;
          }
@@ -1048,7 +1048,7 @@ void BotUseLift(bot_t *pBot) {
       {
          // do a traceline straight down, to see if the bot is on a lift
          TraceResult tr;
-         UTIL_TraceLine(pBot->pEdict->v.origin, pBot->pEdict->v.origin - Vector(0.0f, 0.0f, 50.0f), ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
+         UTIL_TraceLine(pBot->pEdict->v.origin, pBot->pEdict->v.origin - Vector(0.0, 0.0, 50.0), ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
          if (tr.pHit != nullptr) {
             char className[10];
@@ -1074,22 +1074,22 @@ static int BotShouldJumpOver(const bot_t *pBot) {
    bool obstacleFound = false;
 
    // make vectors based upon the bots view yaw angle only
-   UTIL_MakeVectors(Vector(0.0f, pBot->pEdict->v.v_angle.y, 0.0f));
+   UTIL_MakeVectors(Vector(0.0, pBot->pEdict->v.v_angle.y, 0.0));
 
    TraceResult tr;
-   const Vector botBottom = Vector(pBot->pEdict->v.origin.x, pBot->pEdict->v.origin.y, pBot->pEdict->v.absmin.z) + gpGlobals->v_forward * 4.0f; // to the front of the bot slightly
+   const Vector botBottom = Vector(pBot->pEdict->v.origin.x, pBot->pEdict->v.origin.y, pBot->pEdict->v.absmin.z) + gpGlobals->v_forward * 4.0; // to the front of the bot slightly
 
    // set how far apart the left and right scans will be,
    // decide randomly so that we increase the bots chances of detecting
    // a jumpable obstacle
-   const float aperture = 5.0f * static_cast<float>(random_long(1.0l, 3.0l));
+   const float aperture = 5.0f * static_cast<float>(random_long(1, 3));
 
    Vector v_source;
 
    // whether or not to trace down from the bots origin or up from the bots ankles
    // random so as to maximise chance of detecting obstacles
    bool searchDownwards = true;
-   if (random_long(1l, 1000l) > 500)
+   if (random_long(1, 1000) > 500)
       searchDownwards = false; // search upwards instead
 
    // here we can check from the left leg of the bot, first to see if there's
@@ -1098,16 +1098,16 @@ static int BotShouldJumpOver(const bot_t *pBot) {
       // trace a short line forward and left at the lowest height
       // of something that needs jumping
       if (searchDownwards)
-         v_source = botBottom + Vector(0.0f, 0.0f, 45.0f); // waist downwards
+         v_source = botBottom + Vector(0, 0, 45.0); // waist downwards
       else
-         v_source = botBottom + Vector(0.0f, 0.0f, 15.0); // ankles upwards
+         v_source = botBottom + Vector(0, 0, 15.0); // ankles upwards
 
-      Vector v_dest = botBottom + Vector(0.0f, 0.0f, 17.0f) + gpGlobals->v_forward * 24.0f; // forwards
+      Vector v_dest = botBottom + Vector(0, 0, 17.0) + gpGlobals->v_forward * 24.0; // forwards
       v_dest = v_dest + gpGlobals->v_right * -aperture;                             // left a bit
       UTIL_TraceLine(v_source, v_dest, dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
       // obstructed by something?
-      if (tr.flFraction < 1.0f) {
+      if (tr.flFraction < 1.0) {
          // show where the traceline hit
          //	WaypointDrawBeam(INDEXENT(1), v_source, v_dest, 10, 2, 250, 250, 250, 200, 10);
 
@@ -1117,10 +1117,10 @@ static int BotShouldJumpOver(const bot_t *pBot) {
          // trace a short line forward and left at maximum jump/mantling height
          // also take into account whether or not the bot is crouching
          if (pBot->pEdict->v.button & IN_DUCK)
-            v_source = botBottom + Vector(0.0f, 0.0f, 37.0f);
+            v_source = botBottom + Vector(0, 0, 37.0f);
          else
-            v_source = botBottom + Vector(0.0f, 0.0f, 49.9f);
-         v_dest = v_source + gpGlobals->v_forward * 24.0f;  // forwards a bit
+            v_source = botBottom + Vector(0, 0, 49.9f);
+         v_dest = v_source + gpGlobals->v_forward * 24.0;  // forwards a bit
          v_dest = v_dest + gpGlobals->v_right * -aperture; // left a bit
          UTIL_TraceLine(v_source, v_dest, dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
@@ -1128,7 +1128,7 @@ static int BotShouldJumpOver(const bot_t *pBot) {
          //	WaypointDrawBeam(INDEXENT(1), v_source, v_dest, 10, 2, 250, 250, 250, 200, 10);
 
          // if there is line of sight report that the bot can try jumping here
-         if (tr.flFraction >= 1.0f)
+         if (tr.flFraction >= 1.0)
             return 2;
          // did the traceline go further then it did when traced from lower down the body?
          // if so then there appears to be some kind of ledge here
@@ -1146,16 +1146,16 @@ static int BotShouldJumpOver(const bot_t *pBot) {
       // trace a short line forward and right at the lowest height
       // of something that needs jumping
       if (searchDownwards)
-         v_source = botBottom + Vector(0.0f, 0.0f, 45.0f); // waist downwards
+         v_source = botBottom + Vector(0, 0, 45.0); // waist downwards
       else
-         v_source = botBottom + Vector(0.0f, 0.0f, 15.0f); // ankles upwards
+         v_source = botBottom + Vector(0, 0, 15.0); // ankles upwards
 
-      Vector v_dest = botBottom + Vector(0.0f, 0.0f, 17.0f) + gpGlobals->v_forward * 24.0f; // forwards
+      Vector v_dest = botBottom + Vector(0, 0, 17.0) + gpGlobals->v_forward * 24.0; // forwards
       v_dest = v_dest + gpGlobals->v_right * aperture;                              // right a bit
       UTIL_TraceLine(v_source, v_dest, dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
       // obstructed by something?
-      if (tr.flFraction < 1.0f) {
+      if (tr.flFraction < 1.0) {
          // show where the traceline hit
          //	WaypointDrawBeam(INDEXENT(1), v_source, v_dest, 10, 2, 250, 250, 250, 200, 10);
 
@@ -1165,10 +1165,10 @@ static int BotShouldJumpOver(const bot_t *pBot) {
          // trace a short line forward and right at maximum jump/mantling height
          // also take into account whether or not the bot is crouching
          if (pBot->pEdict->v.button & IN_DUCK)
-            v_source = botBottom + Vector(0.0f, 0.0f, 37.0f);
+            v_source = botBottom + Vector(0, 0, 37.0f);
          else
-            v_source = botBottom + Vector(0.0f, 0.0f, 49.9f);
-         v_dest = v_source + gpGlobals->v_forward * 24.0f; // forwards a bit
+            v_source = botBottom + Vector(0, 0, 49.9f);
+         v_dest = v_source + gpGlobals->v_forward * 24.0; // forwards a bit
          v_dest = v_dest + gpGlobals->v_right * aperture; // right a bit
          UTIL_TraceLine(v_source, v_dest, dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
@@ -1176,7 +1176,7 @@ static int BotShouldJumpOver(const bot_t *pBot) {
          //	WaypointDrawBeam(INDEXENT(1), v_source, v_dest, 10, 2, 250, 250, 250, 200, 10);
 
          // if there is line of sight report that the bot can try jumping here
-         if (tr.flFraction >= 1.0f)
+         if (tr.flFraction >= 1.0)
             return 2;
          // did the traceline go further then it did when traced from lower down the body?
          // if so then there appears to be some kind of ledge here
@@ -1203,9 +1203,9 @@ static int BotShouldDuckUnder(const bot_t *pBot) {
    bool obstacleFound = false;
 
    // make vectors based upon the bots view yaw angle only
-   UTIL_MakeVectors(Vector(0.0f, pBot->pEdict->v.v_angle.y, 0.0f));
+   UTIL_MakeVectors(Vector(0.0, pBot->pEdict->v.v_angle.y, 0.0));
 
-   const Vector botBottom = Vector(pBot->pEdict->v.origin.x, pBot->pEdict->v.origin.y, pBot->pEdict->v.absmin.z) + gpGlobals->v_forward * 4.0f; // to the front of the bot slightly
+   const Vector botBottom = Vector(pBot->pEdict->v.origin.x, pBot->pEdict->v.origin.y, pBot->pEdict->v.absmin.z) + gpGlobals->v_forward * 4.0; // to the front of the bot slightly
 
    TraceResult tr;
 
@@ -1215,29 +1215,29 @@ static int BotShouldDuckUnder(const bot_t *pBot) {
       // trace a short line forward and left at the height of the bot's head
       // to see if there's something that needs ducking
       Vector v_source = pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs;
-      Vector v_dest = v_source + gpGlobals->v_forward * 24.0f; // forwards a bit
-      v_dest = v_dest + gpGlobals->v_right * -10.0f;           // left a bit
+      Vector v_dest = v_source + gpGlobals->v_forward * 24.0; // forwards a bit
+      v_dest = v_dest + gpGlobals->v_right * -10.0;           // left a bit
       UTIL_TraceLine(v_source, v_dest, dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
       // show where the traceline goes
       //	WaypointDrawBeam(INDEXENT(1), v_source, v_dest, 10, 2, 50, 50, 250, 200, 10);
 
       // obstructed by something?
-      if (tr.flFraction < 1.0f) {
+      if (tr.flFraction < 1.0) {
          // get the distance of the obstacle from the bots head
          const float headObstacleDistance = (v_source - tr.vecEndPos).Length();
 
          // trace a short line forward and right just above ducking height
-         v_source = botBottom + Vector(0.0f, 0.0f, 37.0f);
-         v_dest = v_source + gpGlobals->v_forward * 24.0f; // forwards a bit
-         v_dest = v_dest + gpGlobals->v_right * -10.0f;    // left a bit
+         v_source = botBottom + Vector(0, 0, 37.0);
+         v_dest = v_source + gpGlobals->v_forward * 24.0; // forwards a bit
+         v_dest = v_dest + gpGlobals->v_right * -10.0;    // left a bit
          UTIL_TraceLine(v_source, v_dest, dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
          // show where the traceline goes
          //	WaypointDrawBeam(INDEXENT(1), v_source, v_dest, 10, 2, 50, 50, 250, 200, 10);
 
          // if there is line of sight report that the bot can try ducking here
-         if (tr.flFraction >= 1.0f)
+         if (tr.flFraction >= 1.0)
             return 2;
          // did the traceline go further then it did when traced from the head?
          // if so then ducking may help
@@ -1255,33 +1255,33 @@ static int BotShouldDuckUnder(const bot_t *pBot) {
       // trace a short line forward and right at the height of the bot's head
       // to see if there's something that needs ducking
       Vector v_source = pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs;
-      Vector v_dest = v_source + gpGlobals->v_forward * 24.0f; // forwards a bit
-      v_dest = v_dest + gpGlobals->v_right * 10.0f;            // right a bit
+      Vector v_dest = v_source + gpGlobals->v_forward * 24.0; // forwards a bit
+      v_dest = v_dest + gpGlobals->v_right * 10.0;            // right a bit
       UTIL_TraceLine(v_source, v_dest, dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
       // show where the traceline goes
       //	WaypointDrawBeam(INDEXENT(1), v_source, v_dest, 10, 2, 50, 50, 250, 200, 10);
 
       // obstructed by something?
-      if (tr.flFraction < 1.0f) {
+      if (tr.flFraction < 1.0) {
          // get the distance of the obstacle from the bots head
          const float headObstacleDistance = (v_source - tr.vecEndPos).Length();
 
          // trace a short line forward and right just above ducking height
-         v_source = botBottom + Vector(0.0f, 0.0f, 37.0f);
-         v_dest = v_source + gpGlobals->v_forward * 24.0f; // forwards a bit
-         v_dest = v_dest + gpGlobals->v_right * 10.0f;     // right a bit
+         v_source = botBottom + Vector(0, 0, 37.0);
+         v_dest = v_source + gpGlobals->v_forward * 24.0; // forwards a bit
+         v_dest = v_dest + gpGlobals->v_right * 10.0;     // right a bit
          UTIL_TraceLine(v_source, v_dest, dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
          // show where the traceline goes
          //	WaypointDrawBeam(INDEXENT(1), v_source, v_dest, 10, 2, 50, 50, 250, 200, 10);
 
          // if there is line of sight report that the bot can try ducking here
-         if (tr.flFraction >= 1.0f)
+         if (tr.flFraction >= 1.0)
             return 2;
          // did the traceline go further then it did when traced from the head?
          // if so then ducking may help
-         else if ((v_source - tr.vecEndPos).Length() > headObstacleDistance + 1)
+         else if ((v_source - tr.vecEndPos).Length() > headObstacleDistance + 1.0f)
             return 2;
          else
             obstacleFound = true;
@@ -1381,7 +1381,7 @@ bool BotCheckWallOnLeft(const bot_t *pBot) {
    UTIL_TraceLine(pBot->pEdict->v.origin, v_left, dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
    // check if the trace hit something...
-   if (tr.flFraction < 1.0f) {
+   if (tr.flFraction < 1.0) {
       //	WaypointDrawBeam(INDEXENT(1), pBot->pEdict->v.origin,
       //		v_left, 10, 2, 250, 50, 50, 200, 10);
 
@@ -1397,7 +1397,7 @@ bool BotCheckWallOnRight(const bot_t *pBot) {
    UTIL_MakeVectors(pBot->pEdict->v.v_angle);
 
    // do a trace 40 units to the right
-   Vector v_right = pBot->pEdict->v.origin + gpGlobals->v_right * 40.0f;
+   Vector v_right = pBot->pEdict->v.origin + gpGlobals->v_right * 40.0;
 
    // lower v_right to height of a low wall
    v_right.z = pBot->pEdict->v.absmin.z + 17.0f;
@@ -1406,7 +1406,7 @@ bool BotCheckWallOnRight(const bot_t *pBot) {
    UTIL_TraceLine(pBot->pEdict->v.origin, v_right, dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
    // check if the trace hit something...
-   if (tr.flFraction < 1.0f) {
+   if (tr.flFraction < 1.0) {
       //	WaypointDrawBeam(INDEXENT(1), pBot->pEdict->v.origin,
       //		v_right, 10, 2, 250, 50, 50, 200, 10);
 
@@ -1421,7 +1421,7 @@ bool BotCheckWallOnRight(const bot_t *pBot) {
 int BotGetDispenserBuildWaypoint(const bot_t *pBot) {
    // if the bot has a sentry build the dispenser near it
    if (pBot->has_sentry == true && !FNullEnt(pBot->sentry_edict)) {
-      return WaypointFindRandomGoal_R(pBot->sentry_edict->v.origin, false, 800.0f, -1, 0);
+      return WaypointFindRandomGoal_R(pBot->sentry_edict->v.origin, false, 800.0, -1, 0);
    } else // build near a random sentry waypoint
    {
       if (pBot->current_wp < 0)
@@ -1432,7 +1432,7 @@ int BotGetDispenserBuildWaypoint(const bot_t *pBot) {
       if (sentryWP == -1)
          return -1;
 
-      return WaypointFindRandomGoal_R(waypoints[sentryWP].origin, false, 800.0f, -1, 0);
+      return WaypointFindRandomGoal_R(waypoints[sentryWP].origin, false, 800.0, -1, 0);
    }
 }
 
@@ -1491,7 +1491,7 @@ int BotGetTeleporterBuildWaypoint(const bot_t *pBot, const bool buildEntrance) {
    }
 
    if (count > 0)
-      return indices[random_long(0l, count - 1l)];
+      return indices[random_long(0, count - 1)];
    else
       return -1;
 }
@@ -1508,7 +1508,7 @@ void BotFindSideRoute(bot_t *pBot) {
       return;
 
    // 50/50 chance of not branching at all
-   if (random_long(1l, 1000l) > 500)
+   if (random_long(1, 1000) > 500)
       return;
 
    // bit field of waypoint types to ignore
@@ -1546,9 +1546,9 @@ void BotFindSideRoute(bot_t *pBot) {
 
    // has the bot changed it's mind on how far it's willing to branch?
    if (pBot->f_side_route_time < pBot->f_think_time) {
-      pBot->f_side_route_time = pBot->f_think_time + random_float(15.0f, 60.0f);
+      pBot->f_side_route_time = pBot->f_think_time + random_float(15.0, 60.0);
 
-      const int randomatic = random_long(1l, 1000l);
+      const int randomatic = random_long(1, 1000);
       if (randomatic < 401)
          pBot->sideRouteTolerance = 400; // very short route changes
       else if (randomatic < 701)
@@ -1558,7 +1558,7 @@ void BotFindSideRoute(bot_t *pBot) {
    }
 
    // start the search(from a randomly selected waypoint)
-   i = static_cast<int>(random_long(0l, num_waypoints - 1l));
+   i = static_cast<int>(random_long(0, num_waypoints - 1));
    for (int index = 0; index < num_waypoints; index++, i++) {
       // wrap the search if the number of waypoints has been exceeded
       if (i >= num_waypoints)
@@ -1645,7 +1645,7 @@ bool BotPathCheck(const int sourceWP, const int destWP) {
    UTIL_TraceLine(waypoints[sourceWP].origin, waypoints[destWP].origin, ignore_monsters, nullptr, &tr);
 
    // if line of sight is not blocked
-   if (tr.flFraction >= 1.0f)
+   if (tr.flFraction >= 1.0)
       return true;
 
    return false;
@@ -1903,7 +1903,7 @@ int BotFindRetreatPoint(bot_t *const pBot, const int min_dist, const Vector &r_t
 
             // is this waypoint hidden by scenery?
             // if so immediately accept this waypoint as the best candidate
-            if (tr.flFraction < 1.0f)
+            if (tr.flFraction < 1.0)
                break;
          }
       }
@@ -2015,7 +2015,7 @@ int BotTargetDefenderWaypoint(const bot_t *pBot) {
       return false;
 
    // pick a random waypoint to start searching from
-   int index = static_cast<int>(random_long(0l, num_waypoints - 1l));
+   int index = static_cast<int>(random_long(0, num_waypoints - 1));
 
    // bit field of waypoint types the bot is looking for
    static const WPT_INT32 validFlags = 0 + (W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_SNIPER);
@@ -2046,7 +2046,7 @@ int BotTargetDefenderWaypoint(const bot_t *pBot) {
          continue;
 
       // look for a waypoint near the target and return true
-      const int goalWP = WaypointFindRandomGoal_R(waypoints[index].origin, true, 500.0f, -1, 0);
+      const int goalWP = WaypointFindRandomGoal_R(waypoints[index].origin, true, 500.0, -1, 0);
 
       if (goalWP != -1) {
          //	char msg[80]; //DebugMessageOfDoom!
@@ -2134,7 +2134,7 @@ int BotGoForSniperSpot(const bot_t *pBot) {
    int sniperWP;
 
    // occasionally go for the nearest snipe point(nearer is usually safer)
-   if (static_cast<int>(pBot->pEdict->v.frags) <= pBot->scoreAtSpawn && random_long(1l, 1000l) < 334) {
+   if (static_cast<int>(pBot->pEdict->v.frags) <= pBot->scoreAtSpawn && random_long(1, 1000) < 334) {
       sniperWP = WaypointFindNearestGoal(pBot->current_wp, pBot->current_team, INT_MAX, W_FL_SNIPER);
 
       if (sniperWP == -1)
@@ -2170,7 +2170,7 @@ int BotDrowningWaypointSearch(const bot_t *pBot) {
       const int routeDistance = WaypointDistanceFromTo(pBot->current_wp, index, pBot->current_team);
       if (routeDistance < minDistance && routeDistance != -1) {
          // accept the waypoint if there is empty space just above it
-         if (UTIL_PointContents(waypoints[index].origin + Vector(0.0f, 0.0f, 40.0f)) == CONTENTS_EMPTY) {
+         if (UTIL_PointContents(waypoints[index].origin + Vector(0.0, 0.0, 40.0)) == CONTENTS_EMPTY) {
             minDistance = routeDistance;
             bestIndex = index;
          }
@@ -2184,7 +2184,7 @@ int BotDrowningWaypointSearch(const bot_t *pBot) {
 // that will provide a quicker route to its ultimate goal.
 // It returns true on success, false on failure.
 bool BotFindTeleportShortCut(bot_t *pBot) {
-   if (bot_can_use_teleporter == false || pBot->bot_has_flag || BufferContainsJobType(pBot, job_use_teleport))
+   if (bot_can_use_teleporter == false || pBot->bot_has_flag || BufferContainsJobType(pBot, JOB_USE_TELEPORT))
       return false;
 
    // the teleporter found has got to cut the route distance to less than this amount
@@ -2215,11 +2215,11 @@ bool BotFindTeleportShortCut(bot_t *pBot) {
 
    // found a teleporter to use that saves travel time?
    if (shortestIndex != -1) {
-      job_struct *newJob = InitialiseNewJob(pBot, job_use_teleport);
+      job_struct *newJob = InitialiseNewJob(pBot, JOB_USE_TELEPORT);
       if (newJob != nullptr) {
          newJob->object = pBot->telePair[shortestIndex].entrance;
          newJob->waypoint = pBot->telePair[shortestIndex].entranceWP;
-         SubmitNewJob(pBot, job_use_teleport, newJob);
+         SubmitNewJob(pBot, JOB_USE_TELEPORT, newJob);
          //	UTIL_BotLogPrintf("%s, got tele shortcut via %d\n", pBot->name, newJob->waypoint);
       }
 
@@ -2243,7 +2243,7 @@ bool BotFindTeleportShortCut(bot_t *pBot) {
 // checking for visibility.
 static void BotCheckForRocketJump(bot_t *pBot) {
    // sanity checking
-   if (pBot->current_wp == -1 || pBot->bot_skill > 3 || num_waypoints < 1 || BufferContainsJobType(pBot, job_rocket_jump))
+   if (pBot->current_wp == -1 || pBot->bot_skill > 3 || num_waypoints < 1 || BufferContainsJobType(pBot, JOB_ROCKET_JUMP))
       return;
 
    const char *cvar_ntf = const_cast<char *>(CVAR_GET_STRING("neotf"));
@@ -2278,7 +2278,7 @@ static void BotCheckForRocketJump(bot_t *pBot) {
    float zDiff;
 
    // random to simulate how high the bot thinks the jump will go this time
-   const float maxJumpHeight = random_float(340.0f, 440.0f);
+   const float maxJumpHeight = random_float(340.0, 440.0);
 
    // find the closest rocket jump point
    for (int i = 0; i < MAXRJWAYPOINTS; i++) {
@@ -2327,16 +2327,16 @@ static void BotCheckForRocketJump(bot_t *pBot) {
    // Check visibility from where the bot's head is to a point in the air above
    // i.e. check for a low ceiling
    zDiff = waypoints[closestRJ].origin.z - pBot->pEdict->v.origin.z;
-   UTIL_TraceLine(pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs, pBot->pEdict->v.origin + Vector(0.0f, 0.0f, zDiff), ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
+   UTIL_TraceLine(pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs, pBot->pEdict->v.origin + Vector(0.0, 0.0, zDiff), ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
 
-   if (result.flFraction < 1.0f)
+   if (result.flFraction < 1.0)
       return; // can't see it
 
    // Check visibility from a point in the air above the bot to the RJ waypoint
    // this improves the bots ability to properly detect RJ waypoints
    UTIL_TraceLine(pBot->pEdict->v.origin + Vector(0.0, 0.0, zDiff), waypoints[closestRJ].origin, ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
 
-   if (result.flFraction < 1.0f)
+   if (result.flFraction < 1.0)
       return; // can't see it
    else {
       // debug stuff
@@ -2346,10 +2346,10 @@ static void BotCheckForRocketJump(bot_t *pBot) {
       //	UTIL_HostSay(pBot->pEdict, 0, "RJ waypoint seen");
 
       // set up a job to handle the jump
-      job_struct *newJob = InitialiseNewJob(pBot, job_rocket_jump);
+      job_struct *newJob = InitialiseNewJob(pBot, JOB_ROCKET_JUMP);
       if (newJob != nullptr) {
          newJob->waypoint = closestRJ;
-         SubmitNewJob(pBot, job_rocket_jump, newJob);
+         SubmitNewJob(pBot, JOB_ROCKET_JUMP, newJob);
       }
 
       //	UTIL_BotLogPrintf("%s: RJ waypoint %d\n", pBot->name, newJob.waypoint);
@@ -2382,7 +2382,7 @@ static void BotCheckForConcJump(bot_t *pBot) {
       return;
 
    // make sure we can set up a concussion jump job to handle the jump itself
-   if (BufferContainsJobType(pBot, job_concussion_jump))
+   if (BufferContainsJobType(pBot, JOB_CONCUSSION_JUMP))
       return;
 
    // We need to look ahead based on this speed, to try and estimate
@@ -2398,7 +2398,7 @@ static void BotCheckForConcJump(bot_t *pBot) {
 
    int currentWP = pBot->current_wp;
    int endWP = -1;
-   float distAhead = 0.0f;
+   float distAhead = 0;
    int safetyCounter = 0;
 
    // try to predict what waypoint the bot will be at a few seconds
@@ -2425,7 +2425,7 @@ static void BotCheckForConcJump(bot_t *pBot) {
    }
 
    int closestJumpWP = -1;
-   float closest2D = random_float(400.0f, 700.0f); // random to cover different situations
+   float closest2D = random_float(400.0, 700.0); // random to cover different situations
    float zDiff;
 
    // Find the closest RJ point from the bots predicted waypoint location
@@ -2471,25 +2471,25 @@ static void BotCheckForConcJump(bot_t *pBot) {
    // Check visibility from where the bot's head will be to a point in the air above
    // i.e. check for a low ceiling
    zDiff = waypoints[closestJumpWP].origin.z - waypoints[endWP].origin.z;
-   UTIL_TraceLine(waypoints[endWP].origin + pBot->pEdict->v.view_ofs, waypoints[endWP].origin + Vector(0.0f, 0.0f, zDiff), ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
+   UTIL_TraceLine(waypoints[endWP].origin + pBot->pEdict->v.view_ofs, waypoints[endWP].origin + Vector(0.0, 0.0, zDiff), ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
 
-   if (result.flFraction < 1.0f)
+   if (result.flFraction < 1.0)
       return; // can't see it
 
    // Check visibility from a point in the air above the bot to the RJ waypoint
    // this improves the bots ability to properly detect RJ waypoints
-   UTIL_TraceLine(waypoints[endWP].origin + Vector(0.0f, 0.0f, zDiff), waypoints[closestJumpWP].origin, ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
+   UTIL_TraceLine(waypoints[endWP].origin + Vector(0.0, 0.0, zDiff), waypoints[closestJumpWP].origin, ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
 
-   if (result.flFraction < 1.0f)
+   if (result.flFraction < 1.0)
       return; // can't see it
    else       // success - it's time to set up a concussion jump job
    {
-      job_struct *newJob = InitialiseNewJob(pBot, job_concussion_jump);
+      job_struct *newJob = InitialiseNewJob(pBot, JOB_CONCUSSION_JUMP);
       if (newJob != nullptr) {
          newJob->waypoint = endWP;
          newJob->waypointTwo = closestJumpWP;
 
-         SubmitNewJob(pBot, job_concussion_jump, newJob);
+         SubmitNewJob(pBot, JOB_CONCUSSION_JUMP, newJob);
       }
    }
 }

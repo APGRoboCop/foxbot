@@ -159,16 +159,16 @@ template <typename U> void bzero(U *ptr, size_t len) noexcept {
 class chatClass {
  private:
    // section header names for each chat type, as used in the chat file
-     char sectionNames[TOTAL_CHAT_TYPES][64];
+   char sectionNames[TOTAL_CHAT_TYPES][64];
 
-     // chat strings, organised by groups of chat types
-     char strings[TOTAL_CHAT_TYPES][MAX_CHAT_STRINGS][255];
+   // chat strings, organised by groups of chat types
+   char strings[TOTAL_CHAT_TYPES][MAX_CHAT_STRINGS][512];
 
-     // counts the number of strings read from the chat file
-     int stringCount[TOTAL_CHAT_TYPES];
+   // counts the number of strings read from the chat file
+   int stringCount[TOTAL_CHAT_TYPES];
 
-     // used to avoid repeating the same message twice in a row
-     int recentStrings[TOTAL_CHAT_TYPES][5];
+   // used to avoid repeating the same message twice in a row
+   int recentStrings[TOTAL_CHAT_TYPES][5];
 
  public:
    chatClass(); // constructor, sets up the names of the chat section headers
@@ -636,7 +636,7 @@ short BotTeammatesNearWaypoint(const bot_t *pBot, int waypoint);
 
 edict_t *BotAllyAtVector(const bot_t *pBot, const Vector &r_vecOrigin, float range, bool stationaryOnly);
 
-edict_t *BotEntityAtPoint(const char *entityName, Vector &location, float range);
+edict_t *BotEntityAtPoint(const char *entityName, const Vector &location, float range);
 
 bot_t *BotDefenderAtWaypoint(const bot_t *pBot, int waypoint, float range);
 

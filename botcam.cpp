@@ -46,7 +46,7 @@ void CreateCamera(edict_t *pPlayer, edict_t *pEntity) {
       pCamera->v.movetype = MOVETYPE_FLY; // noclip
       pCamera->v.classname = MAKE_STRING("entity_botcam");
       pCamera->v.nextthink = gpGlobals->time;
-      pCamera->v.renderamt = 0.0f;
+      pCamera->v.renderamt = 0;
       // pCamera->v.rendermode = kRenderTransColor;
       // pCamera->v.renderfx = kRenderFxNone;
       SET_MODEL(pCamera, "models/mechgibs.mdl");

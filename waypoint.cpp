@@ -79,7 +79,7 @@ WAYPOINT waypoints[MAX_WAYPOINTS];
 int num_waypoints;
 
 // waypoint author
-char waypoint_author[255];
+char waypoint_author[256];
 
 // declare the array of head pointers to the path structures...
 // basically an array of linked lists
@@ -94,12 +94,12 @@ bool g_waypoint_on = false;
 bool g_auto_waypoint = false;
 bool g_path_waypoint = false;
 bool g_find_waypoint = false;
-long g_find_wp = 0l;
+long g_find_wp = 0;
 bool g_path_connect = true;
 bool g_path_oneway = false;
 bool g_path_twoway = false;
 static Vector last_waypoint;
-static float f_path_time = 0.0f;
+static float f_path_time = 0.0;
 
 static float a_display_time[MAX_WAYPOINTS];
 bool g_area_def;
@@ -188,18 +188,18 @@ void WaypointInit() {
    for (i = 0; i < MAX_WAYPOINTS; i++) {
       waypoints[i].flags = 0;
       waypoints[i].script_flags = 0;
-      waypoints[i].origin = Vector(0.0f, 0.0f, 0.0f);
+      waypoints[i].origin = Vector(0, 0, 0);
 
-      wp_display_time[i] = 0.0f;
+      wp_display_time[i] = 0.0;
 
       paths[i] = nullptr; // no paths allocated yet
 
       a_display_time[i] = 0.0;
       areas[i].flags = 0;
-      areas[i].a = Vector(0.0f, 0.0f, 0.0f);
-      areas[i].b = Vector(0.0f, 0.0f, 0.0f);
-      areas[i].c = Vector(0.0f, 0.0f, 0.0f);
-      areas[i].d = Vector(0.0f, 0.0f, 0.0f);
+      areas[i].a = Vector(0, 0, 0);
+      areas[i].b = Vector(0, 0, 0);
+      areas[i].c = Vector(0, 0, 0);
+      areas[i].d = Vector(0, 0, 0);
       areas[i].namea[0] = '\0';
       areas[i].nameb[0] = '\0';
       areas[i].namec[0] = '\0';
@@ -208,12 +208,12 @@ void WaypointInit() {
       is_junction[i] = false;
    }
 
-   f_path_time = 0.0f; // reset waypoint path display time
+   f_path_time = 0.0; // reset waypoint path display time
 
    num_waypoints = 0;
    num_areas = 0;
 
-   last_waypoint = Vector(0.0f, 0.0f, 0.0f);
+   last_waypoint = Vector(0, 0, 0);
 
    for (i = 0; i < 4; i++) {
       shortest_path[i] = nullptr;
@@ -437,14 +437,14 @@ int WaypointFindNearest_E(const edict_t *pEntity, const float range, const int t
          continue;
 
       const Vector distance = waypoints[i].origin - pEntity->v.origin;
-      const double distance_squared = distance.x * distance.x + distance.y * distance.y + static_cast<double>(distance.z * distance.z);
+      const double distance_squared = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
 
       if (distance_squared < min_distance_squared) {
          // if waypoint is visible from current position
          // (even behind head)...
          UTIL_TraceLine(pEntity->v.origin + pEntity->v.view_ofs, waypoints[i].origin, ignore_monsters, pEntity->v.pContainingEntity, &tr);
 
-         if (tr.flFraction >= 1.0f) {
+         if (tr.flFraction >= 1.0) {
             min_index = i;
             min_distance_squared = distance_squared;
          }
@@ -523,7 +523,7 @@ int WaypointFindNearest_S(const Vector &v_src, edict_t *pEntity, const float ran
             UTIL_TraceLine(waypoints[index].origin, v_src, ignore_monsters, nullptr, &tr);
 
          // it is visible, so store it
-         if (tr.flFraction >= 1.0f) {
+         if (tr.flFraction >= 1.0) {
             min_index = index;
             min_distance_squared = distance_squared;
          }
@@ -573,7 +573,7 @@ int WaypointFindInRange(const Vector &v_src, const float min_range, const float 
          UTIL_TraceLine(waypoints[i].origin, v_src, ignore_monsters, nullptr, &tr);
 
          // if the source is visible from this waypoint
-         if (tr.flFraction >= 1.0f) {
+         if (tr.flFraction >= 1.0) {
             // a cool laser effect (for debugging purposes)
             // 	WaypointDrawBeam(INDEXENT(1), waypoints[i].origin,
             // 		v_src, 10, 2, 50, 250, 50, 200, 10);
@@ -836,7 +836,7 @@ int WaypointFindRandomGoal_R(const Vector &v_src, const bool checkVisibility, co
          if (checkVisibility)
             UTIL_TraceLine(v_src, waypoints[index].origin, ignore_monsters, nullptr, &tr);
 
-         if (!checkVisibility || tr.flFraction >= 1.0f) {
+         if (!checkVisibility || tr.flFraction >= 1.0) {
             indexes[count] = index;
             ++count;
 
@@ -925,7 +925,7 @@ bool DetpackClearIsBlocked(const int index) {
             ++path_total;
             UTIL_TraceLine(waypoints[index].origin, waypoints[p->index[i]].origin, ignore_monsters, nullptr, &tr);
 
-            if (tr.flFraction < 1.0f)
+            if (tr.flFraction < 1.0)
                return true; // a path is blocked by something
          }
       }
@@ -956,7 +956,7 @@ bool DetpackSealIsClear(const int index) {
          if (p->index[i] != -1) {
             UTIL_TraceLine(waypoints[index].origin, waypoints[p->index[i]].origin, ignore_monsters, nullptr, &tr);
 
-            if (tr.flFraction < 1.0f)
+            if (tr.flFraction < 1.0)
                return false; // a path is blocked by something
          }
       }
@@ -1198,7 +1198,7 @@ void WaypointDelete(edict_t *pEntity) {
    if (WaypointDeleteAimArtifact(pEntity))
       return;
 
-   const int index = WaypointFindNearest_E(pEntity, 50.0f, -1);
+   const int index = WaypointFindNearest_E(pEntity, 50.0, -1);
 
    if (index == -1)
       return;
@@ -1229,9 +1229,9 @@ void WaypointDelete(edict_t *pEntity) {
          waypoints[min_index].flags = W_FL_DELETED; // not being used
          waypoints[min_index].script_flags = 0;
 
-         waypoints[min_index].origin = Vector(0.0f, 0.0f, 0.0f);
+         waypoints[min_index].origin = Vector(0, 0, 0);
 
-         wp_display_time[min_index] = 0.0f;
+         wp_display_time[min_index] = 0.0;
       }
    }
 
@@ -1266,9 +1266,9 @@ void WaypointDelete(edict_t *pEntity) {
    // delete the waypoint
    waypoints[index].flags = W_FL_DELETED; // not being used
    waypoints[index].script_flags = 0;
-   waypoints[index].origin = Vector(0.0f, 0.0f, 0.0f);
+   waypoints[index].origin = Vector(0, 0, 0);
 
-   wp_display_time[index] = 0.0f;
+   wp_display_time[index] = 0.0;
 
    EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "weapons/mine_activate.wav", 1.0, ATTN_NORM, 0, 100);
 }
@@ -1321,7 +1321,7 @@ static bool WaypointDeleteAimArtifact(const edict_t *pEntity) {
 
          // if there is line of sight from this waypoint to the
          // aim waypoint
-         if (tr.flFraction >= 1.0f) {
+         if (tr.flFraction >= 1.0) {
             waypoint_is_artifact = false;
 
             // draw a beam to the nearest waypoint found to show
@@ -1337,9 +1337,9 @@ static bool WaypointDeleteAimArtifact(const edict_t *pEntity) {
    if (waypoint_is_artifact) {
       waypoints[min_index].flags = W_FL_DELETED;
       waypoints[min_index].script_flags = 0;
-      waypoints[min_index].origin = Vector(0.0f, 0.0f, 0.0f);
+      waypoints[min_index].origin = Vector(0, 0, 0);
 
-      wp_display_time[min_index] = 0.0f;
+      wp_display_time[min_index] = 0.0;
       return true;
    }
 
@@ -1353,7 +1353,7 @@ void WaypointCreatePath(edict_t *pEntity, const int cmd) {
 
    if (cmd == 1) // assign source of path
    {
-      waypoint1 = WaypointFindNearest_E(pEntity, 50.0f, -1);
+      waypoint1 = WaypointFindNearest_E(pEntity, 50.0, -1);
 
       if (waypoint1 == -1) {
          // play "cancelled" sound...
@@ -1369,7 +1369,7 @@ void WaypointCreatePath(edict_t *pEntity, const int cmd) {
 
    if (cmd == 2) // assign dest of path and make path
    {
-      waypoint2 = WaypointFindNearest_E(pEntity, 50.0f, -1);
+      waypoint2 = WaypointFindNearest_E(pEntity, 50.0, -1);
 
       if (waypoint1 == -1 || waypoint2 == -1) {
          // play "error" sound...
@@ -1392,7 +1392,7 @@ void WaypointRemovePath(edict_t *pEntity, const int cmd) {
 
    if (cmd == 1) // assign source of path
    {
-      waypoint1 = WaypointFindNearest_E(pEntity, 50.0f, -1);
+      waypoint1 = WaypointFindNearest_E(pEntity, 50.0, -1);
 
       if (waypoint1 == -1) {
          // play "cancelled" sound...
@@ -1409,7 +1409,7 @@ void WaypointRemovePath(edict_t *pEntity, const int cmd) {
 
    if (cmd == 2) // assign dest of path and make path
    {
-      waypoint2 = WaypointFindNearest_E(pEntity, 50.0f, -1);
+      waypoint2 = WaypointFindNearest_E(pEntity, 50.0, -1);
 
       if (waypoint1 == -1 || waypoint2 == -1) {
          // play "error" sound...
@@ -1451,9 +1451,9 @@ bool WaypointTypeExists(const WPT_INT32 flags, const int team) {
 
 bool WaypointLoad(edict_t *pEntity) {
    char mapname[64];
-   char filename[255];
+   char filename[256];
    WAYPOINT_HDR header;
-   char msg[255];
+   char msg[256];
    int index, i;
    short int num;
    short int path_index;
@@ -1776,7 +1776,7 @@ static bool WaypointLoadVersion4(FILE *bfp, const int number_of_waypoints) {
 
 // this function is run when you type 'waypoint save' in the console
 void WaypointSave() {
-   char filename[255];
+   char filename[256];
    char mapname[64];
    WAYPOINT_HDR header;
 
@@ -1873,7 +1873,7 @@ bool WaypointReachable(Vector v_src, Vector v_dest, const edict_t *pEntity) {
 
       // if waypoint is visible from current position
       // (even behind head)...
-      if (tr.flFraction >= 1.0f) {
+      if (tr.flFraction >= 1.0) {
          // check for special case of both waypoints being underwater...
          if (POINT_CONTENTS(v_src) == CONTENTS_WATER && POINT_CONTENTS(v_dest) == CONTENTS_WATER)
             return true;
@@ -1891,7 +1891,7 @@ bool WaypointReachable(Vector v_src, Vector v_dest, const edict_t *pEntity) {
 
             // check if we didn't hit anything,
             // if not then it's in mid-air
-            if (tr.flFraction >= 1.0f) {
+            if (tr.flFraction >= 1.0) {
                return false; // can't reach this one
             }
          }
@@ -1913,7 +1913,7 @@ bool WaypointReachable(Vector v_src, Vector v_dest, const edict_t *pEntity) {
 
          while (distance > 10.0f) {
             // move 10 units closer to the goal...
-            v_check = v_check + v_direction * 10.0f;
+            v_check = v_check + v_direction * 10.0;
 
             v_down = v_check;
             v_down.z = v_down.z - 1000.0f; // straight down 1000 units
@@ -2007,7 +2007,7 @@ bool WaypointDirectPathCheck(const int srcWP, const int destWP) {
                                                                 waypoints[i].origin,	ignore_monsters,
                                                                 pEntity->v.pContainingEntity, &tr );
 
-                                                if(tr.flFraction >= 1.0f)
+                                                if(tr.flFraction >= 1.0)
                                                 {
                                                                 if(WaypointReachable(pEntity->v.origin, waypoints[i].origin, pEntity))
                                                                 {
@@ -2027,7 +2027,7 @@ void WaypointPrintInfo(edict_t *pEntity) {
    char msg[96];
 
    // find the nearest waypoint...
-   const int index = WaypointFindNearest_E(pEntity, 50.0f, -1);
+   const int index = WaypointFindNearest_E(pEntity, 50.0, -1);
 
    if (index == -1)
       return;
@@ -2710,7 +2710,7 @@ void WaypointThink(edict_t *pEntity) {
          // paths to the one you're standing at..
          for (int ii = 0; ii < num_waypoints; ii++) {
             // only include ones close enough
-            if ((waypoints[index].origin - waypoints[ii].origin).Length() < 800.0f) {
+            if ((waypoints[index].origin - waypoints[ii].origin).Length() < 800) {
                p = paths[ii];
                while (p != nullptr) {
                   i = 0;
@@ -2760,7 +2760,7 @@ void WaypointThink(edict_t *pEntity) {
          edict_t *pPlayer = INDEXENT(1);
 
          // try to find out the route distance to the waypoint
-         int nearWP = WaypointFindNearest_E(pEntity, 50.0f, -1);
+         int nearWP = WaypointFindNearest_E(pEntity, 50.0, -1);
          int routeDistance = WaypointDistanceFromTo(nearWP, g_find_wp, -1);
 
          char msg[128];
@@ -2805,7 +2805,7 @@ void WaypointThink(edict_t *pEntity) {
             // display 1 of 4..(a)
             distance = (areas[i].a - pEntity->v.origin).Length();
 
-            if (distance < 300.0f) {
+            if (distance < 300) {
                //	if(distance < min_distance)
                //	{
                //	index = i; // store index of nearest waypoint
@@ -2826,7 +2826,7 @@ void WaypointThink(edict_t *pEntity) {
             // display 2 of 4..(b)
             distance = (areas[i].b - pEntity->v.origin).Length();
 
-            if (distance < 300.0f) {
+            if (distance < 300) {
                //	if(distance < min_distance)
                //	{
                //	index = i; // store index of nearest waypoint
@@ -2868,7 +2868,7 @@ void WaypointThink(edict_t *pEntity) {
             // display 4 of 4..(d)
             distance = (areas[i].d - pEntity->v.origin).Length();
 
-            if (distance < 300.0f) {
+            if (distance < 300) {
                //	if(distance < min_distance)
                //	{
                //	index = i; // store index of nearest waypoint
@@ -2887,7 +2887,7 @@ void WaypointThink(edict_t *pEntity) {
          }
 
          // connect the dots :)
-         if (a_display_time[i] + 1 < gpGlobals->time && timr) {
+         if (a_display_time[i] + 1.0f < gpGlobals->time && timr) {
             int g = 0;
             // if(AreaInside(pEntity,i)) g=64;
             if (AreaInsideClosest(pEntity) == i) {
@@ -3408,7 +3408,7 @@ bool WaypointAvailable(const int index, const int team) {
 }
 
 void WaypointRunOneWay(edict_t *pEntity) {
-   const int temp = WaypointFindNearest_E(pEntity, 50.0f, -1);
+   const int temp = WaypointFindNearest_E(pEntity, 50.0, -1);
 
    if (temp != -1) {
       if (wpt1 == -1) {
@@ -3432,7 +3432,7 @@ void WaypointRunOneWay(edict_t *pEntity) {
 }
 
 void WaypointRunTwoWay(edict_t *pEntity) {
-   const int temp = WaypointFindNearest_E(pEntity, 50.0f, -1);
+   const int temp = WaypointFindNearest_E(pEntity, 50.0, -1);
 
    if (temp != -1) {
       if (wpt1 == -1) {
@@ -3482,7 +3482,7 @@ void WaypointAutoBuild(edict_t *pEntity) {
                             fprintf(fp,"%f\n",tr.flFraction); fclose(fp); }*/
 
             // while(tr.flFraction<1)
-            if (tr.flFraction < 1) {
+            if (tr.flFraction < 1.0f) {
                if (num_waypoints >= MAX_WAYPOINTS)
                   return;
                // make sure player can at least duck in this space!
@@ -3712,7 +3712,7 @@ int AreaDefPointFindNearest(const edict_t *pEntity, const float range, const int
       return -1;
 
    int min_index = -1;
-   float min_distance = 9999.0f;
+   float min_distance = 9999.0;
    TraceResult tr;
    Vector o;
 
@@ -3722,7 +3722,7 @@ int AreaDefPointFindNearest(const edict_t *pEntity, const float range, const int
       if (areas[i].flags & W_FL_DELETED)
          continue; // skip any deleted area points
 
-      float distance = 9999.0f;
+      float distance = 9999;
 
       if (flags == A_FL_1) {
          distance = (areas[i].a - pEntity->v.origin).Length();
@@ -3741,7 +3741,7 @@ int AreaDefPointFindNearest(const edict_t *pEntity, const float range, const int
          o = areas[i].d;
       }
 
-      if (distance == 9999.0f)
+      if (distance == 9999)
          continue;
 
       if (distance < min_distance && distance < range) {
@@ -3765,7 +3765,7 @@ void AreaDefDelete(edict_t *pEntity) {
 
    // int count = 0;
 
-   int index = AreaDefPointFindNearest(pEntity, 50.0f, A_FL_1);
+   int index = AreaDefPointFindNearest(pEntity, 50.0, A_FL_1);
    if (index != -1) {
       areas[index].flags &= ~A_FL_1;
       areas[index].a = Vector(0, 0, 0);
@@ -3773,7 +3773,7 @@ void AreaDefDelete(edict_t *pEntity) {
       EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "weapons/mine_activate.wav", 1.0, ATTN_NORM, 0, 100);
       return;
    }
-   index = AreaDefPointFindNearest(pEntity, 50.0f, A_FL_2);
+   index = AreaDefPointFindNearest(pEntity, 50.0, A_FL_2);
    if (index != -1) {
       areas[index].flags &= ~A_FL_2;
       areas[index].b = Vector(0, 0, 0);
@@ -3781,7 +3781,7 @@ void AreaDefDelete(edict_t *pEntity) {
       EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "weapons/mine_activate.wav", 1.0, ATTN_NORM, 0, 100);
       return;
    }
-   index = AreaDefPointFindNearest(pEntity, 50.0f, A_FL_3);
+   index = AreaDefPointFindNearest(pEntity, 50.0, A_FL_3);
    if (index != -1) {
       areas[index].flags &= ~A_FL_3;
       areas[index].c = Vector(0, 0, 0);
@@ -3789,7 +3789,7 @@ void AreaDefDelete(edict_t *pEntity) {
       EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "weapons/mine_activate.wav", 1.0, ATTN_NORM, 0, 100);
       return;
    }
-   index = AreaDefPointFindNearest(pEntity, 50.0f, A_FL_4);
+   index = AreaDefPointFindNearest(pEntity, 50.0, A_FL_4);
    if (index != -1) {
       areas[index].flags &= ~A_FL_4;
       areas[index].d = Vector(0, 0, 0);
@@ -3800,7 +3800,7 @@ void AreaDefDelete(edict_t *pEntity) {
 }
 
 void AreaDefSave() {
-   char filename[255];
+   char filename[256];
    char mapname[64];
    AREA_HDR header;
 
@@ -3834,7 +3834,7 @@ void AreaDefSave() {
 
 bool AreaDefLoad(edict_t *pEntity) {
    char mapname[64];
-   char filename[255];
+   char filename[256];
    AREA_HDR header;
 
    // return false; //test to see if having areas loaded is
@@ -3918,24 +3918,24 @@ bool AreaDefLoad(edict_t *pEntity) {
 }
 
 void AreaDefPrintInfo(edict_t *pEntity) {
-   char msg[240];
+   char msg[1024];
    // int flags;
 
    const int i = AreaInsideClosest(pEntity);
    if (i != -1) {
-      snprintf(msg, 240, "Area %d of %d total\n", i, num_areas);
+      snprintf(msg, 1020, "Area %d of %d total\n", i, num_areas);
       ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
-      snprintf(msg, 240, "Name1 = %s\n", areas[i].namea);
+      snprintf(msg, 1020, "Name1 = %s\n", areas[i].namea);
       ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
-      snprintf(msg, 240, "Name2 = %s\n", areas[i].nameb);
+      snprintf(msg, 1020, "Name2 = %s\n", areas[i].nameb);
       ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
-      snprintf(msg, 240, "Name3 = %s\n", areas[i].namec);
+      snprintf(msg, 1020, "Name3 = %s\n", areas[i].namec);
       ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
-      snprintf(msg, 240, "Name4 = %s\n", areas[i].named);
+      snprintf(msg, 1020, "Name4 = %s\n", areas[i].named);
       ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
    }
 
-   int index = AreaDefPointFindNearest(pEntity, 50.0f, A_FL_1);
+   int index = AreaDefPointFindNearest(pEntity, 50.0, A_FL_1);
 
    if (index != -1) {
       sprintf(msg, "Area %d of %d total\n", index, num_areas);
@@ -3944,7 +3944,7 @@ void AreaDefPrintInfo(edict_t *pEntity) {
       return;
    }
 
-   index = AreaDefPointFindNearest(pEntity, 50.0f, A_FL_2);
+   index = AreaDefPointFindNearest(pEntity, 50.0, A_FL_2);
 
    if (index != -1) {
       sprintf(msg, "Area %d of %d total\n", index, num_areas);
@@ -3953,7 +3953,7 @@ void AreaDefPrintInfo(edict_t *pEntity) {
       return;
    }
 
-   index = AreaDefPointFindNearest(pEntity, 50.0f, A_FL_3);
+   index = AreaDefPointFindNearest(pEntity, 50.0, A_FL_3);
 
    if (index != -1) {
       sprintf(msg, "Area %d of %d total\n", index, num_areas);
@@ -3962,7 +3962,7 @@ void AreaDefPrintInfo(edict_t *pEntity) {
       return;
    }
 
-   index = AreaDefPointFindNearest(pEntity, 50.0f, A_FL_4);
+   index = AreaDefPointFindNearest(pEntity, 50.0, A_FL_4);
 
    if (index != -1) {
       sprintf(msg, "Area %d of %d total\n", index, num_areas);

@@ -79,7 +79,7 @@ long random_long(const long lowval, const long highval) {
    const long spread = highval - lowval + 1;
 
    // make sure a sensible number was requested
-   if (spread < 2l) {
+   if (spread < 2) {
       //	UTIL_BotLogPrintf("dumb random request: %d, %d\n", lowval, highval);
       return lowval;
    }
@@ -109,7 +109,7 @@ bool VectorsNearerThan(const Vector &r_vOne, const Vector &r_vTwo, double value)
    value = value * value;
 
    const Vector distance = r_vOne - r_vTwo;
-   float temp = distance.x * distance.x + distance.y * distance.y;
+   double temp = distance.x * distance.x + distance.y * distance.y;
 
    // perform an early 2 dimensional check, because most maps
    // are wider/longer than they are tall
@@ -144,7 +144,7 @@ int UTIL_SentryLevel(edict_t* pEntity)
 Vector UTIL_VecToAngles(const Vector &vec) {
    float rgflVecOut[3];
    VEC_TO_ANGLES(vec, rgflVecOut);
-   return {rgflVecOut};
+   return Vector(rgflVecOut);
 }
 
 // Overloaded to add IGNORE_GLASS
@@ -156,7 +156,7 @@ void UTIL_TraceLine(const Vector &vecStart, const Vector &vecEnd, const IGNORE_M
 
 void UTIL_MakeVectors(const Vector &vecAngles) { MAKE_VECTORS(vecAngles); }
 
-edict_t *UTIL_FindEntityInSphere(edict_t *pentStart, Vector &vecCenter, const float flRadius) {
+edict_t *UTIL_FindEntityInSphere(edict_t *pentStart, const Vector &vecCenter, const float flRadius) {
    edict_t *pentEntity = FIND_ENTITY_IN_SPHERE(pentStart, vecCenter, flRadius);
 
    if (!FNullEnt(pentEntity))
@@ -181,7 +181,7 @@ int UTIL_PointContents(const Vector &vec) { return POINT_CONTENTS(vec); }
 
 void UTIL_SetSize(entvars_t *pev, const Vector &vecMin, const Vector &vecMax) { SET_SIZE(ENT(pev), vecMin, vecMax); }
 
-void UTIL_SetOrigin(const entvars_t *pev, Vector &vecOrigin) { SET_ORIGIN(ENT(pev), vecOrigin); }
+void UTIL_SetOrigin(entvars_t *pev, const Vector &vecOrigin) { SET_ORIGIN(ENT(pev), vecOrigin); }
 
 void HUDNotify(edict_t *pEntity, const char *msg_name) {
    if (gmsgHUDNotify == 0)
@@ -476,7 +476,7 @@ bool BotCanSeeOrigin(const bot_t *pBot, const Vector &r_dest) {
    UTIL_TraceLine(pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs, r_dest, ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
    // check if line of sight to the object is not blocked
-   if (tr.flFraction >= 1.0f)
+   if (tr.flFraction >= 1.0)
       return true;
 
    return false;
@@ -527,7 +527,7 @@ bool FVisible(const Vector &r_vecOrigin, edict_t *pEdict) {
    // was ignore glass
    UTIL_TraceLine(vecLookerOrigin, r_vecOrigin, ignore_monsters, dont_ignore_glass, pEdict, &tr);
 
-   if (tr.flFraction < 1.0f)
+   if (tr.flFraction < 1.0)
       return false; // Line of sight is not established
    else
       return true; // line of sight is valid.

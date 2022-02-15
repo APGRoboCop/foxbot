@@ -65,7 +65,7 @@ extern GETNEWDLLFUNCTIONS other_GetNewDLLFunctions;
 
 extern int debug_engine;
 
-extern char g_argv[255];
+extern char g_argv[256];
 extern bool g_waypoint_on;
 extern bool g_waypoint_cache;
 extern bool g_auto_waypoint;
@@ -94,7 +94,7 @@ bool offensive_chatter = true;
 bool observer_mode = false;
 bool botdontshoot = false;
 bool botdontmove = false;
-int bot_chat = 50;
+int bot_chat = 500;
 int bot_allow_moods = 1;  // whether bots can have different personality traits or not
 int bot_allow_humour = 1; // whether bots can choose to do daft things or not
 bool bot_can_use_teleporter = true;
@@ -115,7 +115,7 @@ bool g_bot_debug = false;
 int spectate_debug = 0; // spectators can trigger debug messages from bots
 
 // waypoint author
-extern char waypoint_author[255];
+extern char waypoint_author[256];
 
 // this tracks the number of bots "wanting" to play on the server
 // it should never be less than min_bots or more than max_bots
@@ -191,8 +191,8 @@ static bool script_parsed = false;
 static short scanpos;
 static bool player_vis[8];
 
-static float bot_cfg_pause_time = 0.0f;
-static float respawn_time = 0.0f;
+static float bot_cfg_pause_time = 0.0;
+static float respawn_time = 0.0;
 static bool spawn_time_reset = false;
 bool botcamEnabled = false;
 
@@ -278,12 +278,12 @@ void FOX_HudMessage(edict_t *pEntity, const hudtextparms_t &textparms, const cha
    if (textparms.effect == 2)
       WRITE_SHORT(FixedUnsigned16(textparms.fxTime, 1 << 8));
 
-   if (strlen(pMessage) < 256) {
+   if (strlen(pMessage) < 512) {
       WRITE_STRING(pMessage);
    } else {
-      char temp[255];
-      strncpy(temp, pMessage, 255);
-      temp[254] = '\0';
+      char temp[512];
+      strncpy(temp, pMessage, 511);
+      temp[511] = '\0';
       WRITE_STRING(temp);
    }
 
@@ -294,8 +294,8 @@ void KewlHUDNotify(edict_t *pEntity, const char *msg_name) {
    MESSAGE_BEGIN(MSG_ONE, SVC_TEMPENTITY, nullptr, pEntity);
    WRITE_BYTE(TE_TEXTMESSAGE);
    WRITE_BYTE(3 & 0xFF);
-   WRITE_SHORT(FixedSigned16(1, 0 << 13));
-   WRITE_SHORT(FixedSigned16(1, 0 << 13));
+   WRITE_SHORT(FixedSigned16(1, -1 << 13));
+   WRITE_SHORT(FixedSigned16(1, -1 << 13));
    WRITE_BYTE(2); // effect
 
    WRITE_BYTE(205);
@@ -307,7 +307,7 @@ void KewlHUDNotify(edict_t *pEntity, const char *msg_name) {
    WRITE_BYTE(0);
    WRITE_BYTE(255);
    WRITE_BYTE(255);
-   WRITE_SHORT(FixedUnsigned16(0.03f, 1 << 8));
+   WRITE_SHORT(FixedUnsigned16(0.03, 1 << 8));
    WRITE_SHORT(FixedUnsigned16(1, 1 << 8));
    WRITE_SHORT(FixedUnsigned16(6, 1 << 8));
    WRITE_SHORT(FixedUnsigned16(4, 1 << 8));
@@ -322,7 +322,7 @@ static void varyBotTotal() {
       return; // just in case
 
    // this governs when the number of bots wanting to play will next change
-   static float f_interested_bots_change = 0.0f;
+   static float f_interested_bots_change = 0;
 
    if (f_interested_bots_change < gpGlobals->time) {
       if (bot_total_varies == 3) // busy server(players coming/going often)
@@ -349,7 +349,7 @@ static void varyBotTotal() {
 
       // randomly increase/decrease the number of interested bots
       if (max_bots > 0 && max_bots > min_bots) {
-         if (random_long(1l, 1000l) > 500) {
+         if (random_long(1, 1000) > 500) {
             // favor increasing the bots
             // if max_bots is reached decrease the bots
             if (interested_bots < max_bots)
@@ -552,7 +552,7 @@ static void BotBalanceTeams_Casual() {
    for (i = 0; i < 32; i++) {
       // is this an active bot on the bigger team?
       // and is it willing to change teams?
-      if (bots[i].is_used && bots[i].pEdict->v.team == biggest_team && random_long(1l, 1000l) < bots[i].trait.fairplay) {
+      if (bots[i].is_used && bots[i].pEdict->v.team == biggest_team && random_long(1, 1000) < bots[i].trait.fairplay) {
          //	UTIL_BotLogPrintf("vteam:%d, team:%d\n",
          //		bots[i].pEdict->v.team, bots[i].bot_team);
 
@@ -682,33 +682,33 @@ void GameDLLInit() {
 // Constructor for the chatClass class
 // sets up the names of the chat section headers
 chatClass::chatClass() {
-    strcpy(this->sectionNames[CHAT_TYPE_GREETING], "[GREETINGS]");
-    strcpy(this->sectionNames[CHAT_TYPE_KILL_HI], "[KILL WINNING]");
-    strcpy(this->sectionNames[CHAT_TYPE_KILL_LOW], "[KILL LOSING]");
-    strcpy(this->sectionNames[CHAT_TYPE_KILLED_HI], "[KILLED WINNING]");
-    strcpy(this->sectionNames[CHAT_TYPE_KILLED_LOW], "[KILLED LOSING]");
-    strcpy(this->sectionNames[CHAT_TYPE_SUICIDE], "[SUICIDE]");
+   strcpy(this->sectionNames[CHAT_TYPE_GREETING], "[GREETINGS]");
+   strcpy(this->sectionNames[CHAT_TYPE_KILL_HI], "[KILL WINNING]");
+   strcpy(this->sectionNames[CHAT_TYPE_KILL_LOW], "[KILL LOSING]");
+   strcpy(this->sectionNames[CHAT_TYPE_KILLED_HI], "[KILLED WINNING]");
+   strcpy(this->sectionNames[CHAT_TYPE_KILLED_LOW], "[KILLED LOSING]");
+   strcpy(this->sectionNames[CHAT_TYPE_SUICIDE], "[SUICIDE]");
 
-    int j;
+   int j;
 
-    // explicitly clear all the chat strings
-    for (int i = 0; i < TOTAL_CHAT_TYPES; i++) {
-        this->stringCount[i] = 0;
-        for (j = 0; j < MAX_CHAT_STRINGS; j++) {
-            this->strings[i][j][0] = 0x0;
-        }
+   // explicitly clear all the chat strings
+   for (int i = 0; i < TOTAL_CHAT_TYPES; i++) {
+      this->stringCount[i] = 0;
+      for (j = 0; j < MAX_CHAT_STRINGS; j++) {
+         this->strings[i][j][0] = 0x0;
+      }
 
-        for (j = 0; j < 5; j++) {
-            this->recentStrings[i][j] = -1;
-        }
-    }
+      for (j = 0; j < 5; j++) {
+         this->recentStrings[i][j] = -1;
+      }
+   }
 }
 
 // This function is responsible for reading in the chat from the bot chat file.
 void chatClass::readChatFile() {
-   char filename[255];
+   char filename[256];
 
-   UTIL_BuildFileName(filename, 250, "foxbot_chat.txt", nullptr);
+   UTIL_BuildFileName(filename, 255, "foxbot_chat.txt", nullptr);
    FILE *bfp = fopen(filename, "r");
 
    if (bfp == nullptr) {
@@ -802,7 +802,7 @@ void chatClass::pickRandomChatString(char *msg, size_t maxLength, const int chat
    // set up the message string
    // is "%s" in the text?
    if (playerName != nullptr && strstr(this->strings[chatSection][randomIndex], "%s") != nullptr) {
-       snprintf(msg, maxLength, this->strings[chatSection][randomIndex], playerName);
+      snprintf(msg, maxLength, this->strings[chatSection][randomIndex], playerName);
    } else
       printf("%s", msg);
 
@@ -892,12 +892,12 @@ int DispatchSpawn(edict_t *pent) {
 
          g_GameRules = true;
 
-         is_team_play = 0.0f;
+         is_team_play = 0.0;
          //	memset(team_names, 0, sizeof(team_names));
          num_teams = 0;
          checked_teamplay = false;
 
-         respawn_time = 0.0f;
+         respawn_time = 0.0;
          spawn_time_reset = false;
 
          prev_num_bots = num_bots;
@@ -925,7 +925,7 @@ void DispatchThink(edict_t *pent) {
          MESSAGE_BEGIN(MSG_ONE, SVC_TEMPENTITY, nullptr, pent->v.owner);
          WRITE_BYTE(TE_TEXTMESSAGE);
          WRITE_BYTE(2 & 0xFF);
-         WRITE_SHORT(FixedSigned16(1, 0 << 13));
+         WRITE_SHORT(FixedSigned16(1, -1 << 13));
          WRITE_SHORT(FixedSigned16(1, 0 << 13));
          WRITE_BYTE(1); // effect
 
@@ -976,31 +976,31 @@ void DispatchThink(edict_t *pent) {
             Vector vang = pBot->enemy.ptr->v.origin - pBot->pEdict->v.origin;
             float distance = vang.Length();
             vang = UTIL_VecToAngles(vang);
-            vang.y = vang.y + 45.0f;
+            vang.y = vang.y + 45;
             if (vang.y < 0)
-               vang.y += 360.0f;
+               vang.y += 360;
             vang.y = vang.y * M_PI;
-            vang.y = vang.y / 180.0f;
+            vang.y = vang.y / 180;
             xx = xo * cos(vang.y);
             float yy = xo * sin(vang.y);
 
             tr.pHit = nullptr;
             UTIL_TraceLine(pent->v.euser1->v.origin + pent->v.euser1->v.view_ofs, pBot->enemy.ptr->v.origin + Vector(xx, yy, zz), dont_ignore_monsters, dont_ignore_glass, pent->v.euser1, &tr);
 
-            if (tr.pHit == pBot->enemy.ptr || tr.flFraction == 1.0f)
+            if (tr.pHit == pBot->enemy.ptr || tr.flFraction == 1.0)
                player_vis[scanpos] = true;
             else
                player_vis[scanpos] = false;
             scanpos++;
             if (scanpos > 7) // 7
                scanpos = 0;
-            float p_vis = 0.0f;
+            float p_vis = 0;
             for (int i = 0; i < 8; i++) {
                if (player_vis[i])
                   p_vis = p_vis + 12.5f;
             }
 
-            char text[255];
+            char text[511];
             int amb = 0;
             int vidsize = 2;
             float sz = pBot->enemy.ptr->v.maxs.z * (vidsize / distance) * 100;
@@ -1072,13 +1072,13 @@ void DispatchThink(edict_t *pent) {
             float veloff = vel.x + vel.y + vel.z;
             veloff = veloff * (vidsize / distance) * 10;
 
-            snprintf(text, 250, "Vis %.1f\nAmb %d %d\nSz %.1f\nveloff %.1f", p_vis, amb, d, sz, veloff);
+            snprintf(text, 510, "Vis %.1f\nAmb %d %d\nSz %.1f\nveloff %.1f", p_vis, amb, d, sz, veloff);
 
             MESSAGE_BEGIN(MSG_ONE, SVC_TEMPENTITY, nullptr, pent->v.owner);
             WRITE_BYTE(TE_TEXTMESSAGE);
             WRITE_BYTE(4 & 0xFF);
-            WRITE_SHORT(FixedSigned16(0.3f, 1 << 13));
-            WRITE_SHORT(FixedSigned16(0.3f, 1 << 13));
+            WRITE_SHORT(FixedSigned16(0.3, 1 << 13));
+            WRITE_SHORT(FixedSigned16(0.3, 1 << 13));
             WRITE_BYTE(1); // effect
             WRITE_BYTE(255);
             WRITE_BYTE(255);
@@ -1140,11 +1140,11 @@ void DispatchThink(edict_t *pent) {
       pent->v.origin = tr.vecEndPos;
 
       pent->v.angles = pent->v.euser1->v.v_angle;
-      pent->v.velocity = Vector(0.0f, 0.0f, 0.0f);
-      if (pent->v.angles.y >= 360.0f)
-         pent->v.angles.y -= 360.0f;
-      if (pent->v.angles.y < 0.0f)
-         pent->v.angles.y += 360.0f;
+      pent->v.velocity = Vector(0, 0, 0);
+      if (pent->v.angles.y >= 360)
+         pent->v.angles.y -= 360;
+      if (pent->v.angles.y < 0)
+         pent->v.angles.y += 360;
       pent->v.nextthink = gpGlobals->time;
    }
    if (!mr_meta)
@@ -1383,7 +1383,7 @@ void ClientCommand(edict_t *pEntity) {
       const char *arg2 = CMD_ARGV(2);
       const char *arg3 = CMD_ARGV(3);
       const char *arg4 = CMD_ARGV(4);
-      char msg[255];
+      char msg[512];
 
       if (debug_engine) {
          global::fp = UTIL_OpenFoxbotLog();
@@ -1660,7 +1660,7 @@ void ClientCommand(edict_t *pEntity) {
       } else if (FStrEq(pcmd, "waypoint_author")) {
          if (arg1 != nullptr) {
             if (*arg1 != 0) {
-               char message[255];
+               char message[512];
                sprintf(message, "Waypoint author set to : %s", arg1);
                CLIENT_PRINTF(pEntity, print_console, UTIL_VarArgs(message));
                strncpy(waypoint_author, arg1, 250);
@@ -1681,7 +1681,7 @@ void ClientCommand(edict_t *pEntity) {
                h.fadeoutTime = 1;
                h.holdTime = 7;
                h.x = -1;
-               h.y = 0.8f;
+               h.y = 0.8;
                sprintf(message, "-- Waypoint author: %s --", waypoint_author);
                FOX_HudMessage(INDEXENT(1), h, message);
             }
@@ -2389,19 +2389,19 @@ void StartFrame() { // v7 last frame timing
       check_server_cmd = gpGlobals->time;
       static int i, index, player_index, bot_index;
       static float previous_time = -1.0f;
-      static float client_update_time = 0.0f;
+      static float client_update_time = 0.0;
       clientdata_s cd;
       int count;
       // if a new map has started then (MUST BE FIRST IN StartFrame)...
       if (strcmp(STRING(gpGlobals->mapname), prevmapname) != 0) {
          first_player = nullptr;
          display_bot_vars = true;
-         display_start_time = gpGlobals->time + 10.0f;
+         display_start_time = gpGlobals->time + 10;
          need_to_open_cfg = true;
          // check if mapname_bot.cfg file exists...
          if (gpGlobals->time + 0.1f < previous_time) {
             char mapname[64];
-            char filename[255];
+            char filename[256];
             strcpy(mapname, STRING(gpGlobals->mapname));
             strcat(mapname, "_bot.cfg");
             bot_cfg_fp = nullptr;
@@ -2414,8 +2414,8 @@ void StartFrame() { // v7 last frame timing
             if (bot_cfg_fp != nullptr) {
                for (index = 0; index < 32; index++) {
                   bots[index].is_used = false;
-                  bots[index].respawn_state = 0.0f;
-                  bots[index].f_kick_time = 0.0f;
+                  bots[index].respawn_state = 0;
+                  bots[index].f_kick_time = 0.0;
                }
                fclose(bot_cfg_fp);
                bot_cfg_fp = nullptr;
@@ -2424,8 +2424,8 @@ void StartFrame() { // v7 last frame timing
                for (index = 0; index < 32; index++) {
                   if (count >= prev_num_bots) {
                      bots[index].is_used = false;
-                     bots[index].respawn_state = 0.0f;
-                     bots[index].f_kick_time = 0.0f;
+                     bots[index].respawn_state = 0;
+                     bots[index].f_kick_time = 0.0;
                   }
                   if (bots[index].is_used) // is this slot used?
                   {
@@ -2436,7 +2436,7 @@ void StartFrame() { // v7 last frame timing
                      bots[index].respawn_state = RESPAWN_NEED_TO_RESPAWN;
                      count++;
                   } else
-                     bots[index].f_kick_time = 0.0f;   // reset to prevent false spawns later
+                     bots[index].f_kick_time = 0.0; // reset to prevent false spawns later
                }                                    // set the respawn time
                if (IS_DEDICATED_SERVER())
                   respawn_time = gpGlobals->time + 10.0f;
@@ -2506,14 +2506,14 @@ void StartFrame() { // v7 last frame timing
             respawn_time = gpGlobals->time + 3.0f; // set next respawn time
             bot_check_time = gpGlobals->time + 5.0f;
          } else
-            respawn_time = 0.0f;
+            respawn_time = 2.0f;
       }
       if (g_GameRules) {
-         char msg[255];
-         char msg2[255];
+         char msg[256];
+         char msg2[512];
          if (need_to_open_cfg) // have we opened foxbot.cfg file yet?
          {
-            char filename[255];
+            char filename[256];
             char mapname[64];
             need_to_open_cfg = false; // only do this once!!!
             cfg_file = 1;
@@ -2537,14 +2537,14 @@ void StartFrame() { // v7 last frame timing
                   ALERT(at_console, msg);
             }
             if (IS_DEDICATED_SERVER())
-               bot_cfg_pause_time = gpGlobals->time + 2;
+               bot_cfg_pause_time = gpGlobals->time + 2.0f;
             else //Required for Listenservers to exec .cfg [APG]RoboCop[CL]
-               bot_cfg_pause_time = gpGlobals->time + 10; // was 20
+               bot_cfg_pause_time = gpGlobals->time + 10.0f; // was 20
          }
          if (need_to_open_cfg2) // have we opened foxbot.cfg file yet?
          {
-            bot_cfg_pause_time = gpGlobals->time + 1;
-            char filename[255];
+            bot_cfg_pause_time = gpGlobals->time + 1.0f;
+            char filename[256];
             char mapname[64];
             need_to_open_cfg2 = false; // only do this once!!!
             cfg_file = 2;
@@ -2593,17 +2593,17 @@ void StartFrame() { // v7 last frame timing
                }
             }
          }
-         if (bot_cfg_pause_time >= 1.0f && bot_cfg_pause_time <= gpGlobals->time) {
+         if (bot_cfg_pause_time >= 1.0 && bot_cfg_pause_time <= gpGlobals->time) {
             // process bot.cfg file options...
             ProcessBotCfgFile();
-            display_start_time = 0.0f;
+            display_start_time = 0;
          } else if (bot_cfg_fp == nullptr && display_bot_vars && display_start_time <= gpGlobals->time) {
             DisplayBotInfo();
             display_bot_vars = false;
          }
       } // if time to check for server commands then do so...
       if (check_server_cmd <= gpGlobals->time && IS_DEDICATED_SERVER()) {
-         check_server_cmd = gpGlobals->time + 1;
+         check_server_cmd = gpGlobals->time + 1.0f;
          auto cvar_bot = const_cast<char *>(CVAR_GET_STRING("bot"));
          if (cvar_bot && cvar_bot[0]) {
             char cmd_line[80];
@@ -2740,7 +2740,7 @@ void StartFrame() { // v7 last frame timing
                changeBotSetting("bot_use_grenades", &bot_use_grenades, arg1, 0, 2, SETTING_SOURCE_SERVER_COMMAND);
             } else if (strcmp(cmd, "dump") == 0) {
                edict_t *pent = nullptr;
-               while ((pent = FIND_ENTITY_IN_SPHERE(pent, Vector(0.0f, 0.0f, 0.0f), 8192)) != nullptr && !FNullEnt(pent)) {
+               while ((pent = FIND_ENTITY_IN_SPHERE(pent, Vector(0, 0, 0), 8192)) != nullptr && !FNullEnt(pent)) {
                   UTIL_SavePent(pent);
                }
             } // dedicated server input
@@ -2827,7 +2827,7 @@ void StartFrame() { // v7 last frame timing
    } // this is where the behaviour config is interpreted... i.e. new lev, load behaviour, and parse it
    if (strcmp(STRING(gpGlobals->mapname), prevmapname) != 0) {
       edict_t *pent = nullptr;
-      while ((pent = FIND_ENTITY_IN_SPHERE(pent, Vector(0.0f, 0.0f, 0.0f), 8000)) != nullptr && !FNullEnt(pent)) {
+      while ((pent = FIND_ENTITY_IN_SPHERE(pent, Vector(0, 0, 0), 8000)) != nullptr && !FNullEnt(pent)) {
          if (pent->v.absmin.x == -1 && pent->v.absmin.y == -1 && pent->v.absmin.z == -1) {
             if (pent->v.absmax.x == 1 && pent->v.absmax.y == 1 && pent->v.absmax.z == 1) {
                global::fp = UTIL_OpenFoxbotLog();
@@ -2930,13 +2930,13 @@ void StartFrame() { // v7 last frame timing
       FILE *bfp = fopen(filename, "r");
       if (bfp != nullptr && mod_id == TFC_DLL) {
          script_loaded = true;
-         char msg[255];
+         char msg[293];
          sprintf(msg, "\nExecuting FoXBot TFC script file:%s\n\n", filename);
          ALERT(at_console, msg);
          int ch = fgetc(bfp);
          int i1; // Not wanted? [APG]RoboCop[CL]
-         char buffer[255];
-         for (i1 = 0; i1 < 250 && feof(bfp) == 0; i1++) {
+         char buffer[14097];
+         for (i1 = 0; i1 < 14096 && feof(bfp) == 0; i1++) {
             buffer[i1] = static_cast<char>(ch);
             if (buffer[i1] == '\t')
                buffer[i1] = ' ';
@@ -2951,7 +2951,7 @@ void StartFrame() { // v7 last frame timing
          int ifsec = 0;      // used to check if were in an if statement
          char *buf = buffer;
          bool random_shit_error = false;
-         for (i1 = 0; i1 < 255 && buffer[i1] != '\0' && !random_shit_error; i1++) {
+         for (i1 = 0; i1 < 14096 && buffer[i1] != '\0' && !random_shit_error; i1++) {
             // first off... we need to ignore comment lines!
             if (strncmp(buf, "//", 2) == 0) {
                commentline = true;
@@ -3605,7 +3605,7 @@ void StartFrame() { // v7 last frame timing
             int cnt;
             int current_msg;
             current_msg = -1;
-            for (i1 = 0; i1 < 255 && buffer[i1] != '\0'; i1++) {
+            for (i1 = 0; i1 < 14096 && buffer[i1] != '\0'; i1++) {
                // first off.. need to ignore comment lines!
                if (strncmp(buf, "//", 2) == 0) {
                   commentline = true;
@@ -4879,11 +4879,11 @@ C_DLLEXPORT int GetEntityAPI_Post(DLL_FUNCTIONS *pFunctionTable, const int inter
 }
 
 static void ProcessBotCfgFile() {
-   char cmd_line[255];
-   static char server_cmd[255];
+   char cmd_line[512];
+   static char server_cmd[512];
    char *arg2, *arg3, *arg4;
-   char msg[255];
-   char msg2[255];
+   char msg[256];
+   char msg2[524];
 
    if (bot_cfg_pause_time > gpGlobals->time)
       return;
@@ -4893,14 +4893,14 @@ static void ProcessBotCfgFile() {
          need_to_open_cfg2 = true;
       if (cfg_file == 2) {
          cfg_file = 0;
-         bot_cfg_pause_time = 0.0f; // stop it checking the file again :)
+         bot_cfg_pause_time = 0.0; // stop it checking the file again :)
       }
       return;
    }
 
    int cmd_index = 0;
    cmd_line[cmd_index] = 0;
-   cmd_line[254] = 0;
+   cmd_line[510] = 0;
 
    int ch = fgetc(bot_cfg_fp);
 
@@ -4908,7 +4908,7 @@ static void ProcessBotCfgFile() {
    while (ch == ' ')
       ch = fgetc(bot_cfg_fp);
 
-   while (ch != EOF && ch != '\r' && ch != '\n' && cmd_index < 250) {
+   while (ch != EOF && ch != '\r' && ch != '\n' && cmd_index < 510) {
       if (ch == '\t') // convert tabs to spaces
          ch = ' ';
 
@@ -4967,28 +4967,28 @@ static void ProcessBotCfgFile() {
    char *arg1 = arg2 = arg3 = arg4 = nullptr;
 
    // skip to blank or end of string...
-   while (cmd_line[cmd_index] != ' ' && cmd_line[cmd_index] != 0 && cmd_index < 220)
+   while (cmd_line[cmd_index] != ' ' && cmd_line[cmd_index] != 0 && cmd_index < 510)
       cmd_index++;
-   if (cmd_line[cmd_index] == ' ' && cmd_index < 220) {
+   if (cmd_line[cmd_index] == ' ' && cmd_index < 510) {
       cmd_line[cmd_index++] = 0;
       arg1 = &cmd_line[cmd_index];
 
       // skip to blank or end of string...
-      while (cmd_line[cmd_index] != ' ' && cmd_line[cmd_index] != 0 && cmd_index < 220)
+      while (cmd_line[cmd_index] != ' ' && cmd_line[cmd_index] != 0 && cmd_index < 510)
          cmd_index++;
-      if (cmd_line[cmd_index] == ' ' && cmd_index < 220) {
+      if (cmd_line[cmd_index] == ' ' && cmd_index < 510) {
          cmd_line[cmd_index++] = 0;
          arg2 = &cmd_line[cmd_index];
 
-         while (cmd_line[cmd_index] != ' ' && cmd_line[cmd_index] != 0 && cmd_index < 220)
+         while (cmd_line[cmd_index] != ' ' && cmd_line[cmd_index] != 0 && cmd_index < 510)
             cmd_index++;
-         if (cmd_line[cmd_index] == ' ' && cmd_index < 220) {
+         if (cmd_line[cmd_index] == ' ' && cmd_index < 510) {
             cmd_line[cmd_index++] = 0;
             arg3 = &cmd_line[cmd_index];
 
-            while (cmd_line[cmd_index] != ' ' && cmd_line[cmd_index] != 0 && cmd_index < 220)
+            while (cmd_line[cmd_index] != ' ' && cmd_line[cmd_index] != 0 && cmd_index < 510)
                cmd_index++;
-            if (cmd_line[cmd_index] == ' ' && cmd_index < 220) {
+            if (cmd_line[cmd_index] == ' ' && cmd_index < 510) {
                cmd_line[cmd_index++] = 0;
                arg4 = &cmd_line[cmd_index];
             }
@@ -5007,7 +5007,7 @@ static void ProcessBotCfgFile() {
 
       // have to delay here or engine gives "Tried to write to
       // uninitialized sizebuf_t" error and crashes...
-      bot_cfg_pause_time = gpGlobals->time + 5.0f;
+      bot_cfg_pause_time = gpGlobals->time + 2.0f;
       bot_check_time = gpGlobals->time + 5.0f;
 
       return;
@@ -5402,13 +5402,13 @@ void UTIL_SavePent(edict_t *pent) {
 
 static void DisplayBotInfo() {
    char msg[255];
-   char msg2[255];
+   char msg2[512];
 
    if (IS_DEDICATED_SERVER()) {
       // tell the console all the bot vars
 
-      snprintf(msg2, 250, "--FoxBot Loaded--\n--Visit 'www.apg-clan.org' for updates and info--\n");
-      msg2[250] = '\0'; // just in case
+      snprintf(msg2, 511, "--FoxBot Loaded--\n--Visit 'www.apg-clan.org' for updates and info--\n");
+      msg2[511] = '\0'; // just in case
       printf("%s", msg2);
 
       /*	sprintf(msg,"--* foxbot v%d.%d build# %d *--\n",
@@ -5417,24 +5417,24 @@ static void DisplayBotInfo() {
       sprintf(msg, "--* foxbot v%d.%d *--\n", VER_MAJOR, VER_MINOR);
       printf("%s", msg);
 
-      strncat(msg2, msg, 250 - strlen(msg2));
+      strncat(msg2, msg, 511 - strlen(msg2));
       sprintf(msg, "\n--FoxBot info--\n");
       printf("%s", msg);
-      strncat(msg2, msg, 250 - strlen(msg2));
+      strncat(msg2, msg, 511 - strlen(msg2));
       // waypoints
       if (num_waypoints > 0)
          sprintf(msg, "Waypoints loaded\n");
       else
          sprintf(msg, "Waypoints NOT loaded\n--Warning bots will not navigate correctly!--\n");
       printf("%s", msg);
-      strncat(msg2, msg, 250 - strlen(msg2));
+      strncat(msg2, msg, 511 - strlen(msg2));
       // area file
       if (num_areas > 0)
          sprintf(msg, "Areas loaded\n");
       else
          sprintf(msg, "Areas not loaded\n");
       printf("%s", msg);
-      strncat(msg2, msg, 250 - strlen(msg2));
+      strncat(msg2, msg, 511 - strlen(msg2));
       // scripts...loaded/passed?
       if (script_loaded) {
          if (script_parsed)
@@ -5444,47 +5444,47 @@ static void DisplayBotInfo() {
       } else
          sprintf(msg, "No script file loaded\n");
       printf("%s", msg);
-      strncat(msg2, msg, 250 - strlen(msg2));
+      strncat(msg2, msg, 511 - strlen(msg2));
 
       // now bots vars
       sprintf(msg, "\n--FoxBot vars--\n");
       printf("%s", msg);
-      strncat(msg2, msg, 250 - strlen(msg2));
+      strncat(msg2, msg, 511 - strlen(msg2));
 
       // bot skill levels
       sprintf(msg, "botskill_lower %d\nbotskill_upper %d\n", botskill_lower, botskill_upper);
       printf("%s", msg);
-      strncat(msg2, msg, 250 - strlen(msg2));
+      strncat(msg2, msg, 511 - strlen(msg2));
 
       sprintf(msg, "max_bots %d\nmin_bots %d\n", max_bots, min_bots);
       printf("%s", msg);
-      strncat(msg2, msg, 250 - strlen(msg2));
+      strncat(msg2, msg, 511 - strlen(msg2));
 
       // bot chat
       sprintf(msg, "Bot chat %d\n", bot_chat);
       printf("%s", msg);
-      strncat(msg2, msg, 250 - strlen(msg2));
+      strncat(msg2, msg, 511 - strlen(msg2));
 
       if (bot_team_balance)
          sprintf(msg, "Bot auto team balance On\n");
       else
          sprintf(msg, "Bot auto team balance Off\n");
       printf("%s", msg);
-      strncat(msg2, msg, 250 - strlen(msg2));
+      strncat(msg2, msg, 511 - strlen(msg2));
 
       if (bot_bot_balance)
          sprintf(msg, "Bot per team balance On\n");
       else
          sprintf(msg, "Bot per team balance Off\n");
       printf("%s", msg);
-      strncat(msg2, msg, 250 - strlen(msg2));
+      strncat(msg2, msg, 511 - strlen(msg2));
 
       sprintf(msg, "\n--All bot commands must be enclosed in quotes--\n");
       printf("%s", msg);
-      strncat(msg2, msg, 250 - strlen(msg2));
+      strncat(msg2, msg, 511 - strlen(msg2));
       sprintf(msg, "e.g. bot \"bot_chat 20\"\n\n");
       printf("%s", msg);
-      strncat(msg2, msg, 250 - strlen(msg2));
+      strncat(msg2, msg, 511 - strlen(msg2));
       ALERT(at_logged, "[FOXBOT]: %s", msg2);
       // clear it up if it was 0
    } else {
@@ -5524,10 +5524,10 @@ static void DisplayBotInfo() {
 
       sprintf(msg, "--* foxbot v%d.%d *--\n", VER_MAJOR, VER_MINOR);
       ALERT(at_console, msg);
-      strncat(msg2, msg, 250 - strlen(msg2));
+      strncat(msg2, msg, 511 - strlen(msg2));
       sprintf(msg, "\n--FoxBot info--\n");
       ALERT(at_console, msg);
-      strncat(msg2, msg, 250 - strlen(msg2));
+      strncat(msg2, msg, 511 - strlen(msg2));
 
       // waypoints
       if (num_waypoints > 0)
@@ -5535,7 +5535,7 @@ static void DisplayBotInfo() {
       else
          sprintf(msg, "Waypoints NOT loaded\n--Warning, bots will not navigate correctly!--\n");
       ALERT(at_console, msg);
-      strncat(msg2, msg, 250 - strlen(msg2));
+      strncat(msg2, msg, 511 - strlen(msg2));
 
       // area file
       if (num_areas > 0)
@@ -5544,7 +5544,7 @@ static void DisplayBotInfo() {
          sprintf(msg, "Areas not loaded\n");
 
       ALERT(at_console, msg);
-      strncat(msg2, msg, 250 - strlen(msg2));
+      strncat(msg2, msg, 511 - strlen(msg2));
 
       // scripts...loaded/passed?
       if (script_loaded) {
@@ -5555,43 +5555,43 @@ static void DisplayBotInfo() {
       } else
          sprintf(msg, "No script file loaded\n");
       ALERT(at_console, msg);
-      strncat(msg2, msg, 250 - strlen(msg2));
+      strncat(msg2, msg, 511 - strlen(msg2));
 
       // now bots vars
       sprintf(msg, "\n--FoxBot vars--\n");
       ALERT(at_console, msg);
-      strncat(msg2, msg, 250 - strlen(msg2));
+      strncat(msg2, msg, 511 - strlen(msg2));
 
       // bot skill levels
       sprintf(msg, "botskill_lower %d\nbotskill_upper %d\n", botskill_lower, botskill_upper);
       ALERT(at_console, msg);
-      strncat(msg2, msg, 250 - strlen(msg2));
+      strncat(msg2, msg, 511 - strlen(msg2));
 
       sprintf(msg, "max_bots %d\nmin_bots %d\n", max_bots, min_bots);
       ALERT(at_console, msg);
-      strncat(msg2, msg, 250 - strlen(msg2));
+      strncat(msg2, msg, 511 - strlen(msg2));
 
       // bot chat
       sprintf(msg, "Bot chat %d\n", bot_chat);
       ALERT(at_console, msg);
-      strncat(msg2, msg, 250 - strlen(msg2));
+      strncat(msg2, msg, 511 - strlen(msg2));
 
       if (bot_team_balance)
          sprintf(msg, "Bot auto team balance On\n");
       else
          sprintf(msg, "Bot auto team balance Off\n");
       ALERT(at_console, msg);
-      strncat(msg2, msg, 250 - strlen(msg2));
+      strncat(msg2, msg, 511 - strlen(msg2));
 
       if (bot_bot_balance)
          sprintf(msg, "Bot per team balance On\n");
       else
          sprintf(msg, "Bot per team balance Off\n");
       ALERT(at_console, msg);
-      strncat(msg2, msg, 250 - strlen(msg2));
+      strncat(msg2, msg, 511 - strlen(msg2));
       sprintf(msg, "\n");
       ALERT(at_console, msg);
-      strncat(msg2, msg, 250 - strlen(msg2));
+      strncat(msg2, msg, 511 - strlen(msg2));
       ALERT(at_logged, "[FOXBOT]: %s", msg2);
       ALERT(at_console, "\n\n\n");
       // clear it up if it was 0
@@ -5614,7 +5614,7 @@ static void DisplayBotInfo() {
          h.fadeoutTime = 1;
          h.holdTime = 7;
          h.x = -1;
-         h.y = 0.8f;
+         h.y = 0.8;
          sprintf(msg2, "-- Waypoint author: %s --", waypoint_author);
          FOX_HudMessage(INDEXENT(1), h, msg);
       }

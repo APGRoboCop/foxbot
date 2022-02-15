@@ -41,7 +41,7 @@ typedef signed int WPT_INT32;
 
 #define MAX_WAYPOINTS 32000
 
-#define REACHABLE_RANGE 800.0
+#define REACHABLE_RANGE 800.0f
 
 // defines for waypoint flags field (32 bits are available)
 #define W_FL_TEAM ((1 << 0) + (1 << 1)) /* allow for 4 teams (0-3) */
@@ -194,7 +194,7 @@ bool WaypointLoad(edict_t *pEntity);
 
 void WaypointSave();
 
-bool WaypointReachable(Vector v_src, Vector v_dest, const edict_t *pEntity);
+bool WaypointReachable(Vector v_srv, Vector v_dest, const edict_t *pEntity);
 
 bool WaypointDirectPathCheck(int srcWP, int destWP);
 

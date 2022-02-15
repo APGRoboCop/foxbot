@@ -125,7 +125,7 @@ edict_t *pfnFindEntityInSphere(edict_t *pEdictStartSearchAfter, const float *org
    }
    if (spawn_check_crash && rad == 96) {
       spawn_check_crash_count++;
-      if (spawn_check_crash_count > 255) {
+      if (spawn_check_crash_count > 512) {
          // pfnSetSize: 958fd0 (-16.000000 -16.000000 -36.000000) (16.000000 16.000000 36.000000)
          SET_ORIGIN(spawn_check_crash_edict, org);
          {
@@ -188,15 +188,15 @@ void pfnSetOrigin(edict_t *e, const float *rgflOrigin) {
          // only consider existing bots that haven't died very recently
          if (bots[bot_index].pEdict == e && bots[bot_index].is_used && bots[bot_index].f_killed_time + 3.0f < gpGlobals->time) {
             // see if a teleporter pad moved the bot
-            const edict_t *teleExit = BotEntityAtPoint("building_teleporter", bots[bot_index].pEdict->v.origin, 90.0f);
+            const edict_t *teleExit = BotEntityAtPoint("building_teleporter", bots[bot_index].pEdict->v.origin, 90.0);
 
             if (teleExit == nullptr) {
                //	UTIL_BotLogPrintf("%s Non-teleport translocation, time %f\n",
                //		bots[bot_index].name, gpGlobals->time);
 
                bots[bot_index].current_wp = -1;
-               bots[bot_index].f_snipe_time = 0.0f;
-               bots[bot_index].f_primary_charging = 0.0f;
+               bots[bot_index].f_snipe_time = 0;
+               bots[bot_index].f_primary_charging = 0;
             }
             /*	else
                             {
@@ -321,7 +321,7 @@ void pfnClientCommand(edict_t *pEdict, char *szFmt, ...) {
       //if(mr_meta) RETURN_META(MRES_SUPERCEDE);
       }
       }*/
-   char tempFmt[255];
+   char tempFmt[1024];
 
    va_list argp;
    va_start(argp, szFmt);

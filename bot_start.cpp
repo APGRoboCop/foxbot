@@ -108,7 +108,7 @@ void BotStartGame(bot_t *pBot) {
             // if the bot is not a fair player(a scoundrel) then
             // let the bot choose the team it prefers, otherwise
             // auto-assign the bots team(auto-assign keeps the teams balanced)
-            if (bot_team_balance == false && RANDOM_LONG(1l, 1000l) > pBot->trait.fairplay) {
+            if (bot_team_balance == false && RANDOM_LONG(1, 1000) > pBot->trait.fairplay) {
                // add one to what BotPickFavoredTeam_TFC() returns, because
                // it returns team values from 0 to 3
                pBot->bot_team = BotPickFavoredTeam_TFC(pBot->trait.faveClass) + 1;
@@ -144,7 +144,7 @@ void BotStartGame(bot_t *pBot) {
          if (pBot->bot_class < 1 || pBot->bot_class > 9)
             pBot->bot_class = -1;
          if (pBot->bot_class == -1)
-            pBot->bot_class = RANDOM_LONG(1l, 9l);
+            pBot->bot_class = RANDOM_LONG(1, 9);
          const int team = UTIL_GetTeam(pEdict);
 
          if (team_class_limits[team] == -1) // civilian only?
@@ -160,7 +160,7 @@ void BotStartGame(bot_t *pBot) {
                class_not_allowed = team_class_limits[team] & 1 << pBot->bot_class;
 
             while (class_not_allowed) {
-               pBot->bot_class = RANDOM_LONG(1l, 9l);
+               pBot->bot_class = RANDOM_LONG(1, 9);
 
                if (pBot->bot_class == 10)
                   class_not_allowed = team_class_limits[team] & 1 << 7;
@@ -396,5 +396,5 @@ static int BotPickFavoredTeam_TFC(const int faveClass) {
       return -1;
 
    // pick a suitable team at random
-   return activeTeamList[random_long(0l, activeTeamTotal - 1l)];
+   return activeTeamList[random_long(0, activeTeamTotal - 1)];
 }
