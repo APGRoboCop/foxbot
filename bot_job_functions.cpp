@@ -551,7 +551,7 @@ int JobPushButton(bot_t *pBot) {
          BotNavigateWaypointless(pBot);
       else {
          job_ptr->phase = 3;
-         job_ptr->phase_timer = pBot->f_think_time + random_float(0.3, 0.6);
+         job_ptr->phase_timer = pBot->f_think_time + random_float(0.3f, 0.6f);
       }
    }
 
@@ -1504,7 +1504,7 @@ int JobCallMedic(bot_t *pBot) {
    if (job_ptr->phase == 2) {
       // give up if the bots waited too long without being healed
       // also give up if the medic the bot saw has disappeared again
-      if (job_ptr->phase_timer < pBot->f_think_time || pBot->f_alliedMedicSeenTime + 2.0 < pBot->f_think_time) {
+      if (job_ptr->phase_timer < pBot->f_think_time || pBot->f_alliedMedicSeenTime + 2.0f < pBot->f_think_time) {
          // give up on Medics for a while so the bot can get on with it's life
          BlacklistJob(pBot, JOB_CALL_MEDIC, random_float(20.0, 30.0));
          return JOB_TERMINATED;

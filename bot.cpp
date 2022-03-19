@@ -536,7 +536,7 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
 
    // count the number of players present
    int count = 0;
-   for (i = 1; i <= 32; i++) //<32
+   for (i = 1; i <= 32; i++) ///<
    {
       char cl_name[128];
       cl_name[0] = '\0';

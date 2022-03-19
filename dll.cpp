@@ -2593,7 +2593,7 @@ void StartFrame() { // v7 last frame timing
                }
             }
          }
-         if (bot_cfg_pause_time >= 1.0 && bot_cfg_pause_time <= gpGlobals->time) {
+         if (bot_cfg_pause_time >= 1.0f && bot_cfg_pause_time <= gpGlobals->time) {
             // process bot.cfg file options...
             ProcessBotCfgFile();
             display_start_time = 0;

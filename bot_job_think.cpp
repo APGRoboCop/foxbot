@@ -575,7 +575,7 @@ void BotJobThink(bot_t *pBot) {
    case TFC_CLASS_CIVILIAN:
       break;
    case TFC_CLASS_SCOUT:
-      // FakeClientCommand(pBot->pEdict, "slot3", nullptr, nullptr);
+      //FakeClientCommand(pBot->pEdict, "slot3", "+attack; wait; wait", "-attack");
       break;
    case TFC_CLASS_SNIPER:
       // go snipe
@@ -606,10 +606,10 @@ void BotJobThink(bot_t *pBot) {
    case TFC_CLASS_PYRO:
       break;
    case TFC_CLASS_MEDIC:
-      // FakeClientCommand(pBot->pEdict, "slot3", nullptr, nullptr);
+       //FakeClientCommand(pBot->pEdict, "slot3", "+attack; wait; wait", "-attack");
       break;
    case TFC_CLASS_SPY:
-      // FakeClientCommand(pBot->pEdict, "slot1", nullptr, nullptr);
+       //FakeClientCommand(pBot->pEdict, "slot3", "+attack; wait; wait", "-attack");
       // time for a disguise?
       if (pBot->enemy.f_lastSeen + 2.0f < pBot->f_think_time) {
          if (pBot->current_team == UTIL_GetTeamColor(pBot->pEdict)) {
@@ -641,7 +641,7 @@ void BotJobThink(bot_t *pBot) {
       break;
    case TFC_CLASS_ENGINEER:
       BotEngineerThink(pBot);
-      // FakeClientCommand(pBot->pEdict, "slot1", nullptr, nullptr);
+      // FakeClientCommand(pBot->pEdict, "slot3", "+attack; wait; wait", "-attack");
       break;
    default:
       break;

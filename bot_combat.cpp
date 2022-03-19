@@ -1238,7 +1238,7 @@ static Vector BotBodyTarget(const edict_t *pBotEnemy, bot_t *pBot) {
    // aim at the enemies feet if the bot is using a rocket launcher
    // and the enemy is not much higher up than the bot
    if ((pBot->current_weapon.iId == TF_WEAPON_RPG || pBot->current_weapon.iId == TF_WEAPON_IC) // pyro RPG
-       && pBot->enemy.ptr->v.origin.z < pBot->pEdict->v.origin.z + 35.0) {
+       && pBot->enemy.ptr->v.origin.z < pBot->pEdict->v.origin.z + 35.0f) {
       target.x = pBotEnemy->v.origin.x;
       target.y = pBotEnemy->v.origin.y;
       target.z = pBotEnemy->v.absmin.z;
