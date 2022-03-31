@@ -476,7 +476,7 @@ bool BotCanSeeOrigin(const bot_t *pBot, const Vector &r_dest) {
    UTIL_TraceLine(pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs, r_dest, ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
    // check if line of sight to the object is not blocked
-   if (tr.flFraction >= 1.0)
+   if (tr.flFraction >= 1.0f)
       return true;
 
    return false;
@@ -527,7 +527,7 @@ bool FVisible(const Vector &r_vecOrigin, edict_t *pEdict) {
    // was ignore glass
    UTIL_TraceLine(vecLookerOrigin, r_vecOrigin, ignore_monsters, dont_ignore_glass, pEdict, &tr);
 
-   if (tr.flFraction < 1.0)
+   if (tr.flFraction < 1.0f)
       return false; // Line of sight is not established
    else
       return true; // line of sight is valid.

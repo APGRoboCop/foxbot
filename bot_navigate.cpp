@@ -152,7 +152,7 @@ void BotFindCurrentWaypoint(bot_t *pBot) {
             UTIL_TraceLine(pBot->pEdict->v.origin, waypoints[index].origin, dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
             // it is visible, so store it
-            if (tr.flFraction >= 1.0)
+            if (tr.flFraction >= 1.0f)
                runnerUp = index;
          }
 
@@ -165,7 +165,7 @@ void BotFindCurrentWaypoint(bot_t *pBot) {
          UTIL_TraceLine(pBot->pEdict->v.origin, waypoints[index].origin, dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
          // it is visible, so store it
-         if (tr.flFraction >= 1.0) {
+         if (tr.flFraction >= 1.0f) {
             min_index = index;
             min_distance_squared = distance_squared;
          }
@@ -449,7 +449,7 @@ bool BotNavigateWaypoints(bot_t *pBot, bool navByStrafe) {
    }
 
    pBot->f_move_speed = pBot->f_max_speed;
-   pBot->f_side_speed = 0.0;
+   pBot->f_side_speed = 0.0f;
 
    // is it time to consider taking some kind of route shortcut?
    if (pBot->f_shortcutCheckTime < pBot->f_think_time || pBot->f_shortcutCheckTime - 60.0f > pBot->f_think_time) // sanity check
@@ -492,7 +492,7 @@ bool BotNavigateWaypoints(bot_t *pBot, bool navByStrafe) {
          pBot->f_progressToWaypoint = waypointDistance;
 
          // no problem - so reset this
-         pBot->f_navProblemStartTime = 0.0;
+         pBot->f_navProblemStartTime = 0.0f;
       } else // uh-oh - looks liek troubble!
       {
          // remember when the poor bots troubles began(tell us about your mother)
@@ -757,7 +757,7 @@ bool BotHeadTowardWaypoint(bot_t *pBot, bool &r_navByStrafe) {
          else if (vang.y > 95.0f && vang.y < 265.0f)
             pBot->f_move_speed = -pBot->f_move_speed;
          else
-            pBot->f_move_speed = 0.0; // waypoint is not ahead or behind
+            pBot->f_move_speed = 0.0f; // waypoint is not ahead or behind
 
          // if the waypoint is on the left, sidestep left
          if (vang.y > 185.0f && vang.y < 355.0f) {
@@ -769,7 +769,7 @@ bool BotHeadTowardWaypoint(bot_t *pBot, bool &r_navByStrafe) {
             pBot->side_direction = SIDE_DIRECTION_RIGHT;
             pBot->f_side_speed = pBot->f_max_speed;
          } else
-            pBot->f_side_speed = 0.0; // not on left or right, don't strafe sideways
+            pBot->f_side_speed = 0.0f; // not on left or right, don't strafe sideways
 
          // now to handle vertical movement when swimming(or bobbing on the surface of water)
          if (pBot->pEdict->v.waterlevel == WL_HEAD_IN_WATER || (pBot->pEdict->v.waterlevel == WL_WAIST_IN_WATER // on the surface
@@ -944,7 +944,7 @@ static void BotHandleLadderTraffic(bot_t *pBot) {
    UTIL_TraceLine(pBot->pEdict->v.origin, pBot->pEdict->v.origin - Vector(0, 0, 120.0), dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
    // see if we detected a player below
-   if (tr.flFraction < 1.0 && tr.pHit != nullptr) {
+   if (tr.flFraction < 1.0f && tr.pHit != nullptr) {
       // search the world for players...
       for (int i = 1; i <= gpGlobals->maxClients; i++) {
          edict_t *pPlayer = INDEXENT(i);
@@ -1107,7 +1107,7 @@ static int BotShouldJumpOver(const bot_t *pBot) {
       UTIL_TraceLine(v_source, v_dest, dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
       // obstructed by something?
-      if (tr.flFraction < 1.0) {
+      if (tr.flFraction < 1.0f) {
          // show where the traceline hit
          //	WaypointDrawBeam(INDEXENT(1), v_source, v_dest, 10, 2, 250, 250, 250, 200, 10);
 
@@ -1128,7 +1128,7 @@ static int BotShouldJumpOver(const bot_t *pBot) {
          //	WaypointDrawBeam(INDEXENT(1), v_source, v_dest, 10, 2, 250, 250, 250, 200, 10);
 
          // if there is line of sight report that the bot can try jumping here
-         if (tr.flFraction >= 1.0)
+         if (tr.flFraction >= 1.0f)
             return 2;
          // did the traceline go further then it did when traced from lower down the body?
          // if so then there appears to be some kind of ledge here
@@ -1155,7 +1155,7 @@ static int BotShouldJumpOver(const bot_t *pBot) {
       UTIL_TraceLine(v_source, v_dest, dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
       // obstructed by something?
-      if (tr.flFraction < 1.0) {
+      if (tr.flFraction < 1.0f) {
          // show where the traceline hit
          //	WaypointDrawBeam(INDEXENT(1), v_source, v_dest, 10, 2, 250, 250, 250, 200, 10);
 
@@ -1176,7 +1176,7 @@ static int BotShouldJumpOver(const bot_t *pBot) {
          //	WaypointDrawBeam(INDEXENT(1), v_source, v_dest, 10, 2, 250, 250, 250, 200, 10);
 
          // if there is line of sight report that the bot can try jumping here
-         if (tr.flFraction >= 1.0)
+         if (tr.flFraction >= 1.0f)
             return 2;
          // did the traceline go further then it did when traced from lower down the body?
          // if so then there appears to be some kind of ledge here
@@ -1223,7 +1223,7 @@ static int BotShouldDuckUnder(const bot_t *pBot) {
       //	WaypointDrawBeam(INDEXENT(1), v_source, v_dest, 10, 2, 50, 50, 250, 200, 10);
 
       // obstructed by something?
-      if (tr.flFraction < 1.0) {
+      if (tr.flFraction < 1.0f) {
          // get the distance of the obstacle from the bots head
          const float headObstacleDistance = (v_source - tr.vecEndPos).Length();
 
@@ -1237,7 +1237,7 @@ static int BotShouldDuckUnder(const bot_t *pBot) {
          //	WaypointDrawBeam(INDEXENT(1), v_source, v_dest, 10, 2, 50, 50, 250, 200, 10);
 
          // if there is line of sight report that the bot can try ducking here
-         if (tr.flFraction >= 1.0)
+         if (tr.flFraction >= 1.0f)
             return 2;
          // did the traceline go further then it did when traced from the head?
          // if so then ducking may help
@@ -1263,7 +1263,7 @@ static int BotShouldDuckUnder(const bot_t *pBot) {
       //	WaypointDrawBeam(INDEXENT(1), v_source, v_dest, 10, 2, 50, 50, 250, 200, 10);
 
       // obstructed by something?
-      if (tr.flFraction < 1.0) {
+      if (tr.flFraction < 1.0f) {
          // get the distance of the obstacle from the bots head
          const float headObstacleDistance = (v_source - tr.vecEndPos).Length();
 
@@ -1277,7 +1277,7 @@ static int BotShouldDuckUnder(const bot_t *pBot) {
          //	WaypointDrawBeam(INDEXENT(1), v_source, v_dest, 10, 2, 50, 50, 250, 200, 10);
 
          // if there is line of sight report that the bot can try ducking here
-         if (tr.flFraction >= 1.0)
+         if (tr.flFraction >= 1.0f)
             return 2;
          // did the traceline go further then it did when traced from the head?
          // if so then ducking may help
@@ -1381,7 +1381,7 @@ bool BotCheckWallOnLeft(const bot_t *pBot) {
    UTIL_TraceLine(pBot->pEdict->v.origin, v_left, dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
    // check if the trace hit something...
-   if (tr.flFraction < 1.0) {
+   if (tr.flFraction < 1.0f) {
       //	WaypointDrawBeam(INDEXENT(1), pBot->pEdict->v.origin,
       //		v_left, 10, 2, 250, 50, 50, 200, 10);
 
@@ -1406,7 +1406,7 @@ bool BotCheckWallOnRight(const bot_t *pBot) {
    UTIL_TraceLine(pBot->pEdict->v.origin, v_right, dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
    // check if the trace hit something...
-   if (tr.flFraction < 1.0) {
+   if (tr.flFraction < 1.0f) {
       //	WaypointDrawBeam(INDEXENT(1), pBot->pEdict->v.origin,
       //		v_right, 10, 2, 250, 50, 50, 200, 10);
 
@@ -1645,7 +1645,7 @@ bool BotPathCheck(const int sourceWP, const int destWP) {
    UTIL_TraceLine(waypoints[sourceWP].origin, waypoints[destWP].origin, ignore_monsters, nullptr, &tr);
 
    // if line of sight is not blocked
-   if (tr.flFraction >= 1.0)
+   if (tr.flFraction >= 1.0f)
       return true;
 
    return false;
@@ -1903,7 +1903,7 @@ int BotFindRetreatPoint(bot_t *const pBot, const int min_dist, const Vector &r_t
 
             // is this waypoint hidden by scenery?
             // if so immediately accept this waypoint as the best candidate
-            if (tr.flFraction < 1.0)
+            if (tr.flFraction < 1.0f)
                break;
          }
       }
@@ -2278,7 +2278,7 @@ static void BotCheckForRocketJump(bot_t *pBot) {
    float zDiff;
 
    // random to simulate how high the bot thinks the jump will go this time
-   const float maxJumpHeight = random_float(340.0, 440.0);
+   const float maxJumpHeight = random_float(340.0f, 440.0f);
 
    // find the closest rocket jump point
    for (int i = 0; i < MAXRJWAYPOINTS; i++) {
@@ -2327,16 +2327,16 @@ static void BotCheckForRocketJump(bot_t *pBot) {
    // Check visibility from where the bot's head is to a point in the air above
    // i.e. check for a low ceiling
    zDiff = waypoints[closestRJ].origin.z - pBot->pEdict->v.origin.z;
-   UTIL_TraceLine(pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs, pBot->pEdict->v.origin + Vector(0.0, 0.0, zDiff), ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
+   UTIL_TraceLine(pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs, pBot->pEdict->v.origin + Vector(0.0f, 0.0f, zDiff), ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
 
-   if (result.flFraction < 1.0)
+   if (result.flFraction < 1.0f)
       return; // can't see it
 
    // Check visibility from a point in the air above the bot to the RJ waypoint
    // this improves the bots ability to properly detect RJ waypoints
-   UTIL_TraceLine(pBot->pEdict->v.origin + Vector(0.0, 0.0, zDiff), waypoints[closestRJ].origin, ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
+   UTIL_TraceLine(pBot->pEdict->v.origin + Vector(0.0f, 0.0f, zDiff), waypoints[closestRJ].origin, ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
 
-   if (result.flFraction < 1.0)
+   if (result.flFraction < 1.0f)
       return; // can't see it
    else {
       // debug stuff
@@ -2425,7 +2425,7 @@ static void BotCheckForConcJump(bot_t *pBot) {
    }
 
    int closestJumpWP = -1;
-   float closest2D = random_float(400.0, 700.0); // random to cover different situations
+   float closest2D = random_float(400.0f, 700.0f); // random to cover different situations
    float zDiff;
 
    // Find the closest RJ point from the bots predicted waypoint location
@@ -2471,16 +2471,16 @@ static void BotCheckForConcJump(bot_t *pBot) {
    // Check visibility from where the bot's head will be to a point in the air above
    // i.e. check for a low ceiling
    zDiff = waypoints[closestJumpWP].origin.z - waypoints[endWP].origin.z;
-   UTIL_TraceLine(waypoints[endWP].origin + pBot->pEdict->v.view_ofs, waypoints[endWP].origin + Vector(0.0, 0.0, zDiff), ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
+   UTIL_TraceLine(waypoints[endWP].origin + pBot->pEdict->v.view_ofs, waypoints[endWP].origin + Vector(0.0f, 0.0f, zDiff), ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
 
-   if (result.flFraction < 1.0)
+   if (result.flFraction < 1.0f)
       return; // can't see it
 
    // Check visibility from a point in the air above the bot to the RJ waypoint
    // this improves the bots ability to properly detect RJ waypoints
-   UTIL_TraceLine(waypoints[endWP].origin + Vector(0.0, 0.0, zDiff), waypoints[closestJumpWP].origin, ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
+   UTIL_TraceLine(waypoints[endWP].origin + Vector(0.0f, 0.0f, zDiff), waypoints[closestJumpWP].origin, ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
 
-   if (result.flFraction < 1.0)
+   if (result.flFraction < 1.0f)
       return; // can't see it
    else       // success - it's time to set up a concussion jump job
    {

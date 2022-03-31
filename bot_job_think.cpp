@@ -183,7 +183,7 @@ void BotResetJobBuffer(bot_t *pBot) {
    // reset the job blacklist
    for (i = 0; i < JOB_BLACKLIST_MAX; i++) {
       pBot->jobBlacklist[i].type = JOB_NONE;
-      pBot->jobBlacklist[i].f_timeOut = 0.0;
+      pBot->jobBlacklist[i].f_timeOut = 0.0f;
    }
 }
 
@@ -191,10 +191,10 @@ void BotResetJobBuffer(bot_t *pBot) {
 // index, and is the preferred method of terminating any job.
 static void DropJobFromBuffer(bot_t *pBot, const int buffer_index) {
    pBot->jobType[buffer_index] = JOB_NONE;
-   pBot->job[buffer_index].f_bufferedTime = 0.0;
+   pBot->job[buffer_index].f_bufferedTime = 0.0f;
    pBot->job[buffer_index].priority = PRIORITY_NONE;
    pBot->job[buffer_index].phase = 0;
-   pBot->job[buffer_index].phase_timer = 0.0;
+   pBot->job[buffer_index].phase_timer = 0.0f;
    pBot->job[buffer_index].waypoint = -1;
    pBot->job[buffer_index].waypointTwo = -1;
    pBot->job[buffer_index].player = nullptr;
@@ -552,7 +552,7 @@ void BotJobThink(bot_t *pBot) {
 
    // time for the bot to let off some steam with a bit of messing about?
    if (bot_allow_humour && pBot->f_humour_time < pBot->f_think_time) {
-      pBot->f_humour_time = pBot->f_think_time + random_float(60.0, 180.0);
+      pBot->f_humour_time = pBot->f_think_time + random_float(60.0f, 180.0f);
 
       // no mucking about if enemies were recently seen or the bot spawned recently
       if (pBot->enemy.f_lastSeen + 40.0f < pBot->f_think_time && pBot->f_killed_time + 40.0f < pBot->f_think_time && BufferedJobIndex(pBot, JOB_MELEE_WARRIOR) == -1 && BufferedJobIndex(pBot, JOB_GRAFFITI_ARTIST) == -1 &&
@@ -625,7 +625,7 @@ void BotJobThink(bot_t *pBot) {
       // if the ambush check timer has run down see if the bot could start an ambush
       if (pBot->f_spyFeignAmbushTime < pBot->f_think_time) {
          // reset the ambush timer
-         pBot->f_spyFeignAmbushTime = pBot->f_think_time + random_float(12.0, 24.0);
+         pBot->f_spyFeignAmbushTime = pBot->f_think_time + random_float(12.0f, 24.0f);
 
          newJob = InitialiseNewJob(pBot, JOB_FEIGN_AMBUSH);
          if (newJob != nullptr && pBot->enemy.f_lastSeen + 3.0f < pBot->f_think_time && pBot->current_wp > -1 && spawnAreaWP[pBot->current_team] > -1 && spawnAreaWP[pBot->current_team] < num_waypoints) {

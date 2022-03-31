@@ -99,7 +99,7 @@ bool g_path_connect = true;
 bool g_path_oneway = false;
 bool g_path_twoway = false;
 static Vector last_waypoint;
-static float f_path_time = 0.0;
+static float f_path_time = 0.0f;
 
 static float a_display_time[MAX_WAYPOINTS];
 bool g_area_def;
@@ -420,7 +420,7 @@ int WaypointFindPath(PATH **pPath, int *path_index, const int waypoint_index, co
 // This function also checks that the waypoint is visible to the specified entity.
 int WaypointFindNearest_E(const edict_t *pEntity, const float range, const int team) {
    int min_index = -1;
-   double min_distance_squared = range * range + 0.1f;
+   double min_distance_squared = range * range + 0.1;
    TraceResult tr;
 
    // bit field of waypoint types to ignore
@@ -444,7 +444,7 @@ int WaypointFindNearest_E(const edict_t *pEntity, const float range, const int t
          // (even behind head)...
          UTIL_TraceLine(pEntity->v.origin + pEntity->v.view_ofs, waypoints[i].origin, ignore_monsters, pEntity->v.pContainingEntity, &tr);
 
-         if (tr.flFraction >= 1.0) {
+         if (tr.flFraction >= 1.0f) {
             min_index = i;
             min_distance_squared = distance_squared;
          }
@@ -492,7 +492,7 @@ int WaypointFindNearest_V(const Vector &v_src, const float range, const int team
 // Also, you can specify waypoint flags that you wish to exclude from the search.
 int WaypointFindNearest_S(const Vector &v_src, edict_t *pEntity, const float range, const int team, const WPT_INT32 ignore_flags) {
    int min_index = -1;
-   double min_distance_squared = range * range + 0.1f;
+   double min_distance_squared = range * range + 0.1;
    TraceResult tr;
 
    // find the nearest waypoint...
@@ -523,7 +523,7 @@ int WaypointFindNearest_S(const Vector &v_src, edict_t *pEntity, const float ran
             UTIL_TraceLine(waypoints[index].origin, v_src, ignore_monsters, nullptr, &tr);
 
          // it is visible, so store it
-         if (tr.flFraction >= 1.0) {
+         if (tr.flFraction >= 1.0f) {
             min_index = index;
             min_distance_squared = distance_squared;
          }
@@ -573,7 +573,7 @@ int WaypointFindInRange(const Vector &v_src, const float min_range, const float 
          UTIL_TraceLine(waypoints[i].origin, v_src, ignore_monsters, nullptr, &tr);
 
          // if the source is visible from this waypoint
-         if (tr.flFraction >= 1.0) {
+         if (tr.flFraction >= 1.0f) {
             // a cool laser effect (for debugging purposes)
             // 	WaypointDrawBeam(INDEXENT(1), waypoints[i].origin,
             // 		v_src, 10, 2, 50, 250, 50, 200, 10);
@@ -836,7 +836,7 @@ int WaypointFindRandomGoal_R(const Vector &v_src, const bool checkVisibility, co
          if (checkVisibility)
             UTIL_TraceLine(v_src, waypoints[index].origin, ignore_monsters, nullptr, &tr);
 
-         if (!checkVisibility || tr.flFraction >= 1.0) {
+         if (!checkVisibility || tr.flFraction >= 1.0f) {
             indexes[count] = index;
             ++count;
 
@@ -925,7 +925,7 @@ bool DetpackClearIsBlocked(const int index) {
             ++path_total;
             UTIL_TraceLine(waypoints[index].origin, waypoints[p->index[i]].origin, ignore_monsters, nullptr, &tr);
 
-            if (tr.flFraction < 1.0)
+            if (tr.flFraction < 1.0f)
                return true; // a path is blocked by something
          }
       }
@@ -956,7 +956,7 @@ bool DetpackSealIsClear(const int index) {
          if (p->index[i] != -1) {
             UTIL_TraceLine(waypoints[index].origin, waypoints[p->index[i]].origin, ignore_monsters, nullptr, &tr);
 
-            if (tr.flFraction < 1.0)
+            if (tr.flFraction < 1.0f)
                return false; // a path is blocked by something
          }
       }
@@ -1321,7 +1321,7 @@ static bool WaypointDeleteAimArtifact(const edict_t *pEntity) {
 
          // if there is line of sight from this waypoint to the
          // aim waypoint
-         if (tr.flFraction >= 1.0) {
+         if (tr.flFraction >= 1.0f) {
             waypoint_is_artifact = false;
 
             // draw a beam to the nearest waypoint found to show
@@ -1873,7 +1873,7 @@ bool WaypointReachable(Vector v_src, Vector v_dest, const edict_t *pEntity) {
 
       // if waypoint is visible from current position
       // (even behind head)...
-      if (tr.flFraction >= 1.0) {
+      if (tr.flFraction >= 1.0f) {
          // check for special case of both waypoints being underwater...
          if (POINT_CONTENTS(v_src) == CONTENTS_WATER && POINT_CONTENTS(v_dest) == CONTENTS_WATER)
             return true;
@@ -1891,7 +1891,7 @@ bool WaypointReachable(Vector v_src, Vector v_dest, const edict_t *pEntity) {
 
             // check if we didn't hit anything,
             // if not then it's in mid-air
-            if (tr.flFraction >= 1.0) {
+            if (tr.flFraction >= 1.0f) {
                return false; // can't reach this one
             }
          }
@@ -2760,7 +2760,7 @@ void WaypointThink(edict_t *pEntity) {
          edict_t *pPlayer = INDEXENT(1);
 
          // try to find out the route distance to the waypoint
-         int nearWP = WaypointFindNearest_E(pEntity, 50.0, -1);
+         int nearWP = WaypointFindNearest_E(pEntity, 50.0f, -1);
          int routeDistance = WaypointDistanceFromTo(nearWP, g_find_wp, -1);
 
          char msg[128];

@@ -187,7 +187,7 @@ int assess_JobPushButton(const bot_t *pBot, const job_struct &r_job) {
    UTIL_TraceLine(vecStart, buttonOrigin, dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
    // make sure the button is visible
-   if (!(tr.flFraction >= 1.0 || tr.pHit == r_job.object))
+   if (!(tr.flFraction >= 1.0f || tr.pHit == r_job.object))
       return PRIORITY_NONE;
 
    return jl[JOB_PUSH_BUTTON].basePriority;

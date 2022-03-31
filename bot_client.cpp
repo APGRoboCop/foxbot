@@ -753,7 +753,7 @@ void BotClient_FLF_TempEntity(void *p, int bot_index)
                                                 {
                                                                 // if bot is currently capturing, keep timer alive...
                                                                 if(bots[bot_index].b_use_capture)
-                                                                                bots[bot_index].f_use_capture_time = gpGlobals->time + 2.0;
+                                                                                bots[bot_index].f_use_capture_time = gpGlobals->time + 2.0f;
                                                 }
                                 }
 

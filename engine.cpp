@@ -116,7 +116,7 @@ char sz_error_check[255];
 edict_t *pfnFindEntityInSphere(edict_t *pEdictStartSearchAfter, const float *org, const float rad) {
    if (debug_engine) {
       fp = UTIL_OpenFoxbotLog();
-      fprintf(fp, "pfnFindEntityInSphere:%p (%f %f %f) %f %d\n", static_cast<void *>(pEdictStartSearchAfter), (*(Vector *)org).x, (*(Vector *)org).y, (*(Vector *)org).z, rad, spawn_check_crash_count);
+      fprintf(fp, "pfnFindEntityInSphere:%p (%f %f %f) %f %d\n", static_cast<void*>(pEdictStartSearchAfter), (*(Vector*)org).x, (*(Vector*)org).y, (*(Vector*)org).z, rad, spawn_check_crash_count);
 
       if (pEdictStartSearchAfter != nullptr)
          if (pEdictStartSearchAfter->v.classname != 0)
@@ -188,15 +188,15 @@ void pfnSetOrigin(edict_t *e, const float *rgflOrigin) {
          // only consider existing bots that haven't died very recently
          if (bots[bot_index].pEdict == e && bots[bot_index].is_used && bots[bot_index].f_killed_time + 3.0f < gpGlobals->time) {
             // see if a teleporter pad moved the bot
-            const edict_t *teleExit = BotEntityAtPoint("building_teleporter", bots[bot_index].pEdict->v.origin, 90.0);
+            const edict_t *teleExit = BotEntityAtPoint("building_teleporter", bots[bot_index].pEdict->v.origin, 90.0f);
 
             if (teleExit == nullptr) {
                //	UTIL_BotLogPrintf("%s Non-teleport translocation, time %f\n",
                //		bots[bot_index].name, gpGlobals->time);
 
                bots[bot_index].current_wp = -1;
-               bots[bot_index].f_snipe_time = 0;
-               bots[bot_index].f_primary_charging = 0;
+               bots[bot_index].f_snipe_time = 0.0f;
+               bots[bot_index].f_primary_charging = 0.0f;
             }
             /*	else
                             {
@@ -214,12 +214,12 @@ void pfnSetOrigin(edict_t *e, const float *rgflOrigin) {
       for (int bot_index = 0; bot_index < 32; bot_index++) {
          if (bots[bot_index].sentry_edict != nullptr && bots[bot_index].has_sentry) {
             edict_t *pent = e;
-            int l = static_cast<int>(bots[bot_index].sentry_edict->v.origin.z - (*(Vector *)rgflOrigin).z);
+            int l = static_cast<int>(bots[bot_index].sentry_edict->v.origin.z - (*(Vector*)rgflOrigin).z);
             if (l < 0)
                l = -l;
 
-            const int xa = static_cast<int>((*(Vector *)rgflOrigin).x);
-            const int ya = static_cast<int>((*(Vector *)rgflOrigin).y);
+            const int xa = static_cast<int>((*(Vector*)rgflOrigin).x);
+            const int ya = static_cast<int>((*(Vector*)rgflOrigin).y);
             const int xb = static_cast<int>(bots[bot_index].sentry_edict->v.origin.x);
             const int yb = static_cast<int>(bots[bot_index].sentry_edict->v.origin.y);
             // FILE *fp;
@@ -258,7 +258,7 @@ void pfnSetOrigin(edict_t *e, const float *rgflOrigin) {
 
    if (debug_engine) {
       fp = UTIL_OpenFoxbotLog();
-      fprintf(fp, "pfnSetOrigin: %p (%f %f %f)\n", static_cast<void *>(e), (*(Vector *)rgflOrigin).x, (*(Vector *)rgflOrigin).y, (*(Vector *)rgflOrigin).z);
+      fprintf(fp, "pfnSetOrigin: %p (%f %f %f)\n", static_cast<void*>(e), (*(Vector*)rgflOrigin).x, (*(Vector*)rgflOrigin).y, (*(Vector*)rgflOrigin).z);
 
       if (e->v.classname != 0)
          fprintf(fp, " name=%s\n", STRING(e->v.classname));

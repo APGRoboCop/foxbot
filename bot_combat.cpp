@@ -120,26 +120,26 @@ char *ntfTargetChecks[] = {
 
 // weapons are stored in priority order, most desired weapon should be at
 // the start of the array and least desired should be at the end
-static bot_weapon_select_t tfc_weapon_select[] = {{TF_WEAPON_KNIFE, "tf_weapon_knife", 5, 0.0, 80.0, 0.0, 0.0, 100, true, 100, 0, 0, false, false, false, false, 0.0, 0.0},
-                                                  {TF_WEAPON_SPANNER, "tf_weapon_spanner", 5, 0.0, 60.0, 0.0, 0.0, 100, true, 100, 0, 0, false, false, false, false, 0.0, 0.0},
-                                                  {TF_WEAPON_MEDIKIT, "tf_weapon_medikit", 5, 0.0, 60.0, 0.0, 0.0, 100, true, 100, 0, 0, false, false, false, false, 0.0, 0.0},
-                                                  {TF_WEAPON_SNIPERRIFLE, "tf_weapon_sniperrifle", 5, 300.0, 4000.0, 0.0, 0.0, 100, true, 100, 1, 0, false, false, true, false, 2.5, 0.0},
-                                                  {TF_WEAPON_FLAMETHROWER, "tf_weapon_flamethrower", 5, 0.0, 400.0, 0.0, 0.0, 100, false, 100, 1, 0, true, false, false, false, 0.0, 0.0},
-                                                  {TF_WEAPON_AC, "tf_weapon_ac", 5, 0.0, 2000.0, 0.0, 0.0, 100, true, 100, 1, 0, true, false, false, false, 0.0, 0.0},
-                                                  {TF_WEAPON_RPG, "tf_weapon_rpg", 5, 150.0, 3000.0, 0.0, 0.0, 100, true, 100, 1, 0, false, false, false, false, 0.0, 0.0},
-                                                  {TF_WEAPON_IC, "tf_weapon_ic", 5, 150.0, 2000.0, 0.0, 0.0, 100, true, 100, 1, 0, false, false, false, false, 0.0, 0.0},
-                                                  {TF_WEAPON_SUPERSHOTGUN, "tf_weapon_supershotgun", 5, 0.0, 2000.0, 0.0, 0.0, 100, true, 100, 2, 0, false, false, false, false, 0.0, 0.0},
-                                                  {TF_WEAPON_SUPERNAILGUN, "tf_weapon_superng", 5, 40.0, 2000.0, 0.0, 0.0, 20, true, 100, 1, 0, true, false, false, false, 0.0, 0.0},
-                                                  {TF_WEAPON_TRANQ, "tf_weapon_tranq", 5, 0.0, 100.0, 0.0, 0.0, 20, true, 20, 1, 0, false, false, false, false, 0.0, 0.0},
-                                                  {TF_WEAPON_AUTORIFLE, "tf_weapon_autorifle", 5, 0.0, 1000.0, 0.0, 0.0, 100, true, 100, 1, 0, true, false, false, false, 0.0, 0.0},
-                                                  {TF_WEAPON_AXE, "tf_weapon_axe", 5, 0.0, 60.0, 0.0, 0.0, 100, true, 100, 0, 0, false, false, false, false, 0.0, 0.0},
-                                                  {TF_WEAPON_PL, "tf_weapon_pl", 5, 150.0, 600.0, 0.0, 0.0, 100, true, 100, 1, 0, false, false, false, false, 0.0, 0.0},
-                                                  {TF_WEAPON_GL, "tf_weapon_gl", 5, 150.0, 600.0, 0.0, 0.0, 100, true, 100, 1, 0, false, false, false, false, 0.0, 0.0},
-                                                  {TF_WEAPON_SHOTGUN, "tf_weapon_shotgun", 5, 0.0, 2000.0, 0.0, 0.0, 50, true, 100, 1, 0, false, false, false, false, 0.0, 0.0},
-                                                  {TF_WEAPON_NAILGUN, "tf_weapon_ng", 5, 40.0, 2000.0, 0.0, 0.0, 20, true, 20, 1, 0, false, false, false, false, 0.0, 0.0},
-                                                  {TF_WEAPON_RAILGUN, "tf_weapon_railgun", 5, 80.0, 2000.0, 0.0, 0.0, 20, true, 20, 1, 0, false, false, false, false, 0.0, 0.0},
+static bot_weapon_select_t tfc_weapon_select[] = {{TF_WEAPON_KNIFE, "tf_weapon_knife", 5, 0.0f, 80.0f, 0.0f, 0.0f, 100, true, 100, 0, 0, false, false, false, false, 0.0f, 0.0f},
+                                                  {TF_WEAPON_SPANNER, "tf_weapon_spanner", 5, 0.0f, 60.0f, 0.0f, 0.0f, 100, true, 100, 0, 0, false, false, false, false, 0.0f, 0.0f},
+                                                  {TF_WEAPON_MEDIKIT, "tf_weapon_medikit", 5, 0.0f, 60.0f, 0.0f, 0.0f, 100, true, 100, 0, 0, false, false, false, false, 0.0f, 0.0f},
+                                                  {TF_WEAPON_SNIPERRIFLE, "tf_weapon_sniperrifle", 5, 300.0f, 4000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, true, false, 2.5, 0.0f},
+                                                  {TF_WEAPON_FLAMETHROWER, "tf_weapon_flamethrower", 5, 0.0f, 400.0f, 0.0f, 0.0f, 100, false, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
+                                                  {TF_WEAPON_AC, "tf_weapon_ac", 5, 0.0f, 2000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
+                                                  {TF_WEAPON_RPG, "tf_weapon_rpg", 5, 150.0f, 3000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
+                                                  {TF_WEAPON_IC, "tf_weapon_ic", 5, 150.0f, 2000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
+                                                  {TF_WEAPON_SUPERSHOTGUN, "tf_weapon_supershotgun", 5, 0.0f, 2000.0f, 0.0f, 0.0f, 100, true, 100, 2, 0, false, false, false, false, 0.0f, 0.0f},
+                                                  {TF_WEAPON_SUPERNAILGUN, "tf_weapon_superng", 5, 40.0f, 2000.0f, 0.0f, 0.0f, 20, true, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
+                                                  {TF_WEAPON_TRANQ, "tf_weapon_tranq", 5, 0.0f, 100.0f, 0.0f, 0.0f, 20, true, 20, 1, 0, false, false, false, false, 0.0f, 0.0f},
+                                                  {TF_WEAPON_AUTORIFLE, "tf_weapon_autorifle", 5, 0.0f, 1000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
+                                                  {TF_WEAPON_AXE, "tf_weapon_axe", 5, 0.0f, 60.0f, 0.0f, 0.0f, 100, true, 100, 0, 0, false, false, false, false, 0.0f, 0.0f},
+                                                  {TF_WEAPON_PL, "tf_weapon_pl", 5, 150.0f, 600.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
+                                                  {TF_WEAPON_GL, "tf_weapon_gl", 5, 150.0f, 600.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
+                                                  {TF_WEAPON_SHOTGUN, "tf_weapon_shotgun", 5, 0.0f, 2000.0f, 0.0f, 0.0f, 50, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
+                                                  {TF_WEAPON_NAILGUN, "tf_weapon_ng", 5, 40.0f, 2000.0f, 0.0f, 0.0f, 20, true, 20, 1, 0, false, false, false, false, 0.0f, 0.0f},
+                                                  {TF_WEAPON_RAILGUN, "tf_weapon_railgun", 5, 80.0f, 2000.0f, 0.0f, 0.0f, 20, true, 20, 1, 0, false, false, false, false, 0.0f, 0.0f},
                                                   /* terminator */
-                                                  {0, "", 0, 0.0, 0.0, 0.0, 0.0, 0, true, 0, 1, 1, false, false, false, false, 0.0, 0.0}};
+                                                  {0, "", 0, 0.0f, 0.0f, 0.0f, 0.0f, 0, true, 0, 1, 1, false, false, false, false, 0.0f, 0.0f}};
 
 static bot_fire_delay_t tfc_fire_delay[] = { {TF_WEAPON_KNIFE, 0.3f, {0.0f, 0.2f, 0.3f, 0.4f, 0.6f}, {0.1f, 0.3f, 0.5f, 0.7f, 1.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
                                             {TF_WEAPON_SPANNER, 0.3f, {0.0f, 0.2f, 0.3f, 0.4f, 0.6f}, {0.1f, 0.3f, 0.5, 0.7f, 1.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
@@ -736,7 +736,7 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
             player_is_ally = false;
 
             // is team play enabled?
-            if (is_team_play > 0.0) {
+            if (is_team_play > 0.0f) {
                player_team = UTIL_GetTeam(pPlayer);
 
                // don't target your teammates...
@@ -880,7 +880,7 @@ static bool BotSpyDetectCheck(bot_t *pBot, edict_t *pNewEnemy) {
       // if the enemy is not disguised/feigning forget the last Spy
       if (pBot->current_team != UTIL_GetTeamColor(pNewEnemy) && pNewEnemy->v.deadflag != 5) {
          pBot->suspectedSpy = nullptr;
-         pBot->f_suspectSpyTime = 0;
+         pBot->f_suspectSpyTime = 0.0f;
          return true;
       }
 
@@ -1077,7 +1077,7 @@ int BotFindGrenadePoint(const bot_t *const pBot, const Vector &r_vecOrigin) {
          //		waypoints[index].origin, 10, 2, 250, 50, 50, 200, 10);
 
          // is this waypoint visible to the enemy?
-         if (tr.flFraction >= 1.0) {
+         if (tr.flFraction >= 1.0f) {
             UTIL_TraceLine(pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs, waypoints[index].origin, ignore_monsters, nullptr, &tr);
 
             // debug stuff
@@ -1086,7 +1086,7 @@ int BotFindGrenadePoint(const bot_t *const pBot, const Vector &r_vecOrigin) {
 
             // is this waypoint visible to the bot also?
             // if so we've found a suitable waypoint for throwing at
-            if (tr.flFraction >= 1.0) {
+            if (tr.flFraction >= 1.0f) {
                //	UTIL_BotLogPrintf("BotFindGrenadePoint success\n");
                return index;
             }
@@ -1125,7 +1125,7 @@ static bool BotClearShotCheck(bot_t *pBot) {
 
    // report false if the trace has hit something, and remember when
    // it happened
-   if (tr.flFraction < 1.0) {
+   if (tr.flFraction < 1.0f) {
       // don't swap back to this weapon for a short period of time
       pBot->f_safeWeaponTime = pBot->f_think_time + 2.0f;
       return false;
@@ -1194,7 +1194,7 @@ void BotShootAtEnemy(bot_t *pBot) {
 
    // if on the same team(follow) don't shoot!
    // is team play enabled?
-   if (is_team_play > 0.0) {
+   if (is_team_play > 0.0f) {
       if (pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC || pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER) {
          // try to get medic to heal only.
          // is it time to shoot yet?
@@ -1260,7 +1260,7 @@ static Vector BotBodyTarget(const edict_t *pBotEnemy, bot_t *pBot) {
 
          // Make the bot less accurate if the enemy was just seen
          if (pBot->enemy.f_firstSeen + 2.0f > pBot->f_think_time)
-            aim_error += (pBot->bot_skill + 1) * random_float(5.0, 20.0);
+            aim_error += (pBot->bot_skill + 1) * random_float(5.0f, 20.0f);
 
          const float aim_offset = bot_snipe_max_inaccuracy[pBot->bot_skill] + aim_error;
          switch (pBot->bot_skill) {
@@ -1481,7 +1481,7 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
          if (mod_id == TFC_DLL) {
             // don't move while using sniper rifle
             if (iId == TF_WEAPON_SNIPERRIFLE)
-               pBot->f_move_speed = 0;
+               pBot->f_move_speed = 0.0f;
          }
 
          // is it time to fire the charged weapon?
@@ -1633,7 +1633,7 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
          if (mod_id == TFC_DLL) {
             if (iId == TF_WEAPON_SNIPERRIFLE) {
                // don't move while using a sniper rifle
-               pBot->f_move_speed = 0;
+               pBot->f_move_speed = 0.0f;
 
                // don't press attack key until velocity is < 50
                if (pBot->pEdict->v.velocity.Length() > 50)

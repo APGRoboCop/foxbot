@@ -260,11 +260,11 @@ void BotSpawnInit(bot_t *pBot) {
    // so not actually needed
 
    pBot->curr_wp_diff = -1;
-   pBot->f_progressToWaypoint = 4000.0;
-   pBot->f_navProblemStartTime = 0.0;
+   pBot->f_progressToWaypoint = 4000.0f;
+   pBot->f_navProblemStartTime = 0.0f;
    pBot->routeFailureTally = 0;
 
-   pBot->f_current_wp_deadline = 0.0;
+   pBot->f_current_wp_deadline = 0.0f;
    pBot->current_wp = -1;
 
    // Fix by Cheeseh (RCBot)
@@ -278,14 +278,14 @@ void BotSpawnInit(bot_t *pBot) {
    pBot->bot_real_health = 0;
    pBot->bot_armor = 0;
    pBot->bot_weapons = 0;
-   pBot->f_blinded_time = 0.0;
+   pBot->f_blinded_time = 0.0f;
 
    pBot->f_max_speed = CVAR_GET_FLOAT("sv_maxspeed");
-   pBot->prev_speed = 0.0; // fake "paused" since bot is NOT stuck
+   pBot->prev_speed = 0.0f; // fake "paused" since bot is NOT stuck
 
    pBot->job[pBot->currentJob].phase = 0;
 
-   pBot->f_find_item_time = 0.0;
+   pBot->f_find_item_time = 0.0f;
 
    pBot->strafe_mod = STRAFE_MOD_NORMAL;
 
@@ -300,10 +300,10 @@ void BotSpawnInit(bot_t *pBot) {
    pBot->visEnemyCount = 0;
    pBot->visAllyCount = 1; // 1 = the bot itself
    pBot->lastAllyVector = Vector(0.0, 0.0, 0.0);
-   pBot->f_lastAllySeenTime = 0.0;
-   pBot->f_alliedMedicSeenTime = 0.0;
+   pBot->f_lastAllySeenTime = 0.0f;
+   pBot->f_alliedMedicSeenTime = 0.0f;
 
-   pBot->f_view_change_time = 0.0;
+   pBot->f_view_change_time = 0.0f;
 
    pBot->f_shoot_time = gpGlobals->time;
    pBot->f_primary_charging = -1.0f;
@@ -312,24 +312,24 @@ void BotSpawnInit(bot_t *pBot) {
    pBot->tossNade = 0;
    pBot->aimDrift = Vector(0.0, 0.0, 0.0);
 
-   pBot->f_pause_time = 0.0;
-   pBot->f_duck_time = 0.0;
+   pBot->f_pause_time = 0.0f;
+   pBot->f_duck_time = 0.0f;
 
    pBot->bot_has_flag = false;
 
    pBot->scoreAtSpawn = static_cast<int>(pBot->pEdict->v.frags);
 
    pBot->b_use_health_station = false;
-   pBot->f_use_health_time = 0.0;
+   pBot->f_use_health_time = 0.0f;
    pBot->b_use_HEV_station = false;
-   pBot->f_use_HEV_time = 0.0;
+   pBot->f_use_HEV_time = 0.0f;
 
-   pBot->f_use_button_time = 0.0;
+   pBot->f_use_button_time = 0.0f;
 
-   pBot->f_waypoint_drift = 0;
+   pBot->f_waypoint_drift = 0.0f;
    pBot->goto_wp = -1;
    pBot->lastgoto_wp = -1;
-   pBot->f_dontEvadeTime = 0.0;
+   pBot->f_dontEvadeTime = 0.0f;
 
    pBot->f_enemy_check_time = gpGlobals->time;
    pBot->flag_impulse = -1;
@@ -337,20 +337,20 @@ void BotSpawnInit(bot_t *pBot) {
 
    pBot->disturbedViewAmount = 0;
    pBot->f_disturbedViewTime = gpGlobals->time;
-   pBot->f_disturbedViewYaw = 0.0;
-   pBot->f_disturbedViewPitch = 0.0;
+   pBot->f_disturbedViewYaw = 0.0f;
+   pBot->f_disturbedViewPitch = 0.0f;
 
    pBot->f_periodicAlertFifth = gpGlobals->time + 0.2f;
    pBot->f_periodicAlert1 = gpGlobals->time + 1.0f;
    pBot->f_periodicAlert3 = gpGlobals->time + 3.0f;
 
-   pBot->f_snipe_time = 0.0;
+   pBot->f_snipe_time = 0.0f;
    pBot->f_disguise_time = gpGlobals->time;
-   pBot->f_feigningTime = 0.0;
+   pBot->f_feigningTime = 0.0f;
    pBot->disguise_state = DISGUISE_NONE;
    pBot->f_spyFeignAmbushTime = gpGlobals->time + static_cast<float>(random_long(20, 30));
 
-   pBot->f_side_route_time = gpGlobals->time + RANDOM_FLOAT(0.0, 60.0);
+   pBot->f_side_route_time = gpGlobals->time + RANDOM_FLOAT(0.0f, 60.0f);
 
    // the bots true ammo status can be checked upon later
    pBot->ammoStatus = AMMO_WANTED;
@@ -838,7 +838,7 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
       pBot->sentry_ammo = 0;
       pBot->has_dispenser = false;
       pBot->dispenser_edict = nullptr;
-      pBot->f_dispenserDetTime = 0.0;
+      pBot->f_dispenserDetTime = 0.0f;
       pBot->killer_edict = nullptr;
       pBot->killed_edict = nullptr;
       pBot->lastEnemySentryGun = nullptr;
@@ -864,7 +864,7 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
       else
          pBot->lockClass = false;
 
-      pBot->f_suspectSpyTime = 0.0;
+      pBot->f_suspectSpyTime = 0.0f;
       pBot->suspectedSpy = nullptr;
 
       pBot->lastFrameHealth = 70;
@@ -893,7 +893,7 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
          pBot->trait.camper = true;
       }
 
-      pBot->f_humour_time = pBot->f_think_time + random_float(60.0, 180.0);
+      pBot->f_humour_time = pBot->f_think_time + random_float(60.0f, 180.0f);
 
       pBot->sideRouteTolerance = 400; // not willing to branch far initially
 
@@ -932,8 +932,8 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
       BotEnt->v.pitch_speed = BOT_PITCH_SPEED;
       BotEnt->v.yaw_speed = BOT_YAW_SPEED;
 
-      pBot->idle_angle = 0.0;
-      pBot->idle_angle_time = 0.0;
+      pBot->idle_angle = 0.0f;
+      pBot->idle_angle_time = 0.0f;
 
       //	pBot->lastLiftOrigin = Vector(0.0, 0.0, 0.0);
 
@@ -1010,7 +1010,7 @@ void BotFindItem(bot_t *pBot) {
          UTIL_TraceLine(vecStart, vecEnd, dont_ignore_monsters, pEdict->v.pContainingEntity, &tr);
 
          // can we see the item?  if not skip it
-         if (tr.flFraction < 1.0 && tr.pHit != pent)
+         if (tr.flFraction < 1.0f && tr.pHit != pent)
             continue;
 
          // check if the entity is a button...
@@ -1018,7 +1018,7 @@ void BotFindItem(bot_t *pBot) {
             newJob = InitialiseNewJob(pBot, JOB_PUSH_BUTTON);
             if (newJob != nullptr && pent->v.target != 0 && VectorsNearerThan(pBot->pEdict->v.origin, entity_origin, 250.0)) {
                // ignore this button if the nearest waypoint to it is unavailable
-               const int nearestWP = WaypointFindNearest_V(entity_origin, 80.0, -1);
+               const int nearestWP = WaypointFindNearest_V(entity_origin, 80.0f, -1);
                if (nearestWP != -1 && !WaypointAvailable(nearestWP, pBot->current_team))
                   continue;
 
@@ -1186,7 +1186,7 @@ void BotFindItem(bot_t *pBot) {
                   continue;
 
                // ignore this item if it's on an unavailable waypoint
-               const int nearestWP = WaypointFindNearest_V(pent->v.origin, 80.0, -1);
+               const int nearestWP = WaypointFindNearest_V(pent->v.origin, 80.0f, -1);
                if (nearestWP != -1 && !WaypointAvailable(nearestWP, pBot->current_team))
                   continue;
 
@@ -1217,7 +1217,7 @@ void BotFindItem(bot_t *pBot) {
                }
 
                // ignore this item if it's on an unavailable waypoint
-               const int nearestWP = WaypointFindNearest_V(pent->v.origin, 80.0, -1);
+               const int nearestWP = WaypointFindNearest_V(pent->v.origin, 80.0f, -1);
                if (nearestWP != -1 && !WaypointAvailable(nearestWP, pBot->current_team))
                   continue;
 
@@ -1273,7 +1273,7 @@ void BotFindItem(bot_t *pBot) {
                      newJob = InitialiseNewJob(pBot, JOB_USE_TELEPORT);
                      if (newJob != nullptr) {
                         newJob->object = pent;
-                        newJob->waypoint = WaypointFindNearest_E(pent, 500.0, pBot->current_team);
+                        newJob->waypoint = WaypointFindNearest_E(pent, 500.0f, pBot->current_team);
                         newJob->waypointTwo = -1; // remember that destination is unknown
                         if (SubmitNewJob(pBot, JOB_USE_TELEPORT, newJob) == true)
                            return;
@@ -1301,7 +1301,7 @@ void BotFindItem(bot_t *pBot) {
                   continue;
 
                // ignore this item if it's on an unavailable waypoint
-               const int nearestWP = WaypointFindNearest_V(pent->v.origin, 80.0, -1);
+               const int nearestWP = WaypointFindNearest_V(pent->v.origin, 80.0f, -1);
                if (nearestWP != -1 && !WaypointAvailable(nearestWP, pBot->current_team))
                   continue;
 
@@ -1342,7 +1342,7 @@ void BotFindItem(bot_t *pBot) {
                   continue;
 
                // ignore this item if it's on an unavailable waypoint
-               const int nearestWP = WaypointFindNearest_V(pent->v.origin, 80.0, -1);
+               const int nearestWP = WaypointFindNearest_V(pent->v.origin, 80.0f, -1);
                if (nearestWP != -1 && !WaypointAvailable(nearestWP, pBot->current_team))
                   continue;
 
@@ -1359,7 +1359,7 @@ void BotFindItem(bot_t *pBot) {
                   continue;
 
                // ignore this item if it's on an unavailable waypoint
-               const int nearestWP = WaypointFindNearest_V(pent->v.origin, 80.0, -1);
+               const int nearestWP = WaypointFindNearest_V(pent->v.origin, 80.0f, -1);
 
                if (nearestWP != -1 && !WaypointAvailable(nearestWP, pBot->current_team))
                   continue;
@@ -1432,7 +1432,7 @@ void BotFindItem(bot_t *pBot) {
       if (newJob != nullptr) {
          newJob->object = pPickupEntity;
          newJob->origin = pPickupEntity->v.origin; // remember it's exact location too
-         newJob->waypoint = WaypointFindNearest_E(pPickupEntity, 500.0, pBot->current_team);
+         newJob->waypoint = WaypointFindNearest_E(pPickupEntity, 500.0f, pBot->current_team);
          SubmitNewJob(pBot, JOB_PICKUP_ITEM, newJob);
       }
 
@@ -1456,7 +1456,7 @@ static void BotFlagSpottedCheck(bot_t *pBot) {
       // if the bot can see the flag
       if (pent->v.owner == nullptr && !(pent->v.effects & EF_NODRAW) && VectorsNearerThan(pBot->pEdict->v.origin, pent->v.origin, 1500.0) && FInViewCone(pent->v.origin, pBot->pEdict) && BotCanSeeOrigin(pBot, pent->v.origin)) {
          // ignore this flag if it's on an unavailable waypoint
-         int nearestWP = WaypointFindNearest_V(pent->v.origin, 80.0, -1);
+         int nearestWP = WaypointFindNearest_V(pent->v.origin, 80.0f, -1);
          if (nearestWP != -1 && !WaypointAvailable(nearestWP, pBot->current_team))
             continue;
 
@@ -1964,7 +1964,7 @@ void BotSprayLogo(edict_t *pEntity, const bool sprayDownwards) {
    if (sprayDownwards)
       v_dest = pEntity->v.origin - Vector(0, 0, 80.0);
    else
-      v_dest = v_src + gpGlobals->v_forward * 80.0;
+      v_dest = v_src + gpGlobals->v_forward * 80.0f;
 
    int count = 0;
    while (index < 0 && count < 10) {
@@ -2036,7 +2036,7 @@ void BotSprayLogo(edict_t *pEntity, const bool sprayDownwards) {
    TraceResult pTrace;
    UTIL_TraceLine(v_src, v_dest, ignore_monsters, pEntity->v.pContainingEntity, &pTrace);
 
-   if (pTrace.pHit && pTrace.flFraction < 1.0) {
+   if (pTrace.pHit && pTrace.flFraction < 1.0f) {
       if (pTrace.pHit->v.solid != SOLID_BSP)
          return;
 
@@ -2055,7 +2055,7 @@ void BotSprayLogo(edict_t *pEntity, const bool sprayDownwards) {
 
       MESSAGE_END();
 
-      EMIT_SOUND_DYN2(pEntity, CHAN_VOICE, "player/sprayer.wav", 1.0, ATTN_NORM, 0, 100);
+      EMIT_SOUND_DYN2(pEntity, CHAN_VOICE, "player/sprayer.wav", 1.0f, ATTN_NORM, 0, 100);
    }
 }
 
@@ -2153,7 +2153,7 @@ static void BotAttackerCheck(bot_t *pBot) {
    if (mysteryPlayer != nullptr) {
       job_struct *newJob = InitialiseNewJob(pBot, JOB_INVESTIGATE_AREA);
       if (newJob != nullptr) {
-         newJob->waypoint = WaypointFindNearest_V(mysteryPlayer->v.origin, 500.0, pBot->current_team);
+         newJob->waypoint = WaypointFindNearest_V(mysteryPlayer->v.origin, 500.0f, pBot->current_team);
 
          if (newJob->waypoint != -1) {
             SubmitNewJob(pBot, JOB_INVESTIGATE_AREA, newJob);
@@ -2217,7 +2217,7 @@ void BotSoundSense(edict_t *pEdict, const char *pszSample, const float fVolume) 
                // This bot can hear it. Try going to it
                if (random_long(1, 100) < 100 - bots[i].bot_skill * 10) {
                   if (closestWPToThreat == -1)
-                     closestWPToThreat = WaypointFindNearest_V(pEdict->v.origin, 500.0, bots[i].current_team);
+                     closestWPToThreat = WaypointFindNearest_V(pEdict->v.origin, 500.0f, bots[i].current_team);
 
                   const int respondDist = static_cast<int>(defendMaxRespondDist[bots[i].pEdict->v.playerclass]);
 
@@ -2292,7 +2292,7 @@ void BotSoundSense(edict_t *pEdict, const char *pszSample, const float fVolume) 
          {
             newJob = InitialiseNewJob(&bots[nearestMedic], JOB_INVESTIGATE_AREA);
             if (newJob != nullptr) {
-               const int closestWPToSound = WaypointFindNearest_V(pEdict->v.origin, 500.0, bots[nearestMedic].current_team);
+               const int closestWPToSound = WaypointFindNearest_V(pEdict->v.origin, 500.0f, bots[nearestMedic].current_team);
 
                if (closestWPToSound != -1) {
                   // un-comment this WaypointDrawBeam to see this function in action
@@ -2859,11 +2859,11 @@ static void BotComms(bot_t *pBot) {
             WRITE_BYTE(random_long(20, 60));
             MESSAGE_END();
             if (random_long(0, 100) <= 50) {
-               EMIT_SOUND_DYN2(pBot->pEdict, CHAN_VOICE, "misc/b2.wav", 1.0, ATTN_NORM, 0, 100);
+               EMIT_SOUND_DYN2(pBot->pEdict, CHAN_VOICE, "misc/b2.wav", 1.0f, ATTN_NORM, 0, 100);
             } else if (random_long(0, 100) <= 50) {
-               EMIT_SOUND_DYN2(pBot->pEdict, CHAN_VOICE, "misc/party2.wav", 1.0, ATTN_NORM, 0, 100);
+               EMIT_SOUND_DYN2(pBot->pEdict, CHAN_VOICE, "misc/party2.wav", 1.0f, ATTN_NORM, 0, 100);
             } else if (random_long(0, 100) <= 50) {
-               EMIT_SOUND_DYN2(pBot->pEdict, CHAN_VOICE, "misc/party1.wav", 1.0, ATTN_NORM, 0, 100);
+               EMIT_SOUND_DYN2(pBot->pEdict, CHAN_VOICE, "misc/party1.wav", 1.0f, ATTN_NORM, 0, 100);
             }
          }
       }
@@ -3425,7 +3425,7 @@ bool SpyAmbushAreaCheck(const bot_t *pBot, Vector &r_wallVector) {
    UTIL_TraceLine(v_src, endpoint, dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
    // report a failure if the trace didn't hit anything
-   if (tr.flFraction >= 1.0)
+   if (tr.flFraction >= 1.0f)
       return false;
 
    if (!rememberLeftWall)
@@ -3436,7 +3436,7 @@ bool SpyAmbushAreaCheck(const bot_t *pBot, Vector &r_wallVector) {
    UTIL_TraceLine(v_src, endpoint, dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
    // report a failure if the trace didn't hit anything
-   if (tr.flFraction >= 1.0)
+   if (tr.flFraction >= 1.0f)
       return false;
 
    if (rememberLeftWall)
@@ -3489,7 +3489,7 @@ static void BotReportMyFlagDrop(bot_t *pBot) {
    // set up a job to retrieve the flag
    job_struct *newJob = InitialiseNewJob(pBot, JOB_PICKUP_FLAG);
    if (newJob != nullptr) {
-      newJob->waypoint = WaypointFindNearest_E(pent, 600.0, pBot->current_team);
+      newJob->waypoint = WaypointFindNearest_E(pent, 600.0f, pBot->current_team);
       newJob->object = pent;
       newJob->origin = pent->v.origin;
       SubmitNewJob(pBot, JOB_PICKUP_FLAG, newJob);
@@ -3604,7 +3604,7 @@ void BotThink(bot_t *pBot) {
    pBot->f_think_time = gpGlobals->time;
 
    pBot->pEdict->v.button = 0;
-   pBot->f_vertical_speed = 0.0; // not swimming up or down initially
+   pBot->f_vertical_speed = 0.0f; // not swimming up or down initially
 
    // if the bot hasn't selected stuff to start the game yet, go do that...
    if (pBot->not_started == true) {
@@ -3614,7 +3614,7 @@ void BotThink(bot_t *pBot) {
       pBot->sentry_edict = nullptr;
       pBot->SGRotated = false;
       BotStartGame(pBot);
-      g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, 0.0, 0, 0, pBot->pEdict->v.button, static_cast<byte>(0), static_cast<byte>(msecval));
+      g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, 0.0f, 0, 0, pBot->pEdict->v.button, static_cast<byte>(0), static_cast<byte>(msecval));
       return;
    }
 
@@ -3695,9 +3695,9 @@ void BotThink(bot_t *pBot) {
       is_idle = true;
    if (is_idle) {
       if (pBot->idle_angle_time <= pBot->f_think_time) {
-         pBot->idle_angle_time = pBot->f_think_time + RANDOM_FLOAT(0.5, 2.0);
+         pBot->idle_angle_time = pBot->f_think_time + RANDOM_FLOAT(0.5f, 2.0f);
 
-         pBot->pEdict->v.ideal_yaw = pBot->idle_angle + RANDOM_FLOAT(0.0, 40.0) - 20.0f;
+         pBot->pEdict->v.ideal_yaw = pBot->idle_angle + RANDOM_FLOAT(0.0f, 40.0f) - 20.0f;
 
          BotFixIdealYaw(pBot->pEdict);
       }
@@ -3738,9 +3738,9 @@ void BotThink(bot_t *pBot) {
 
    // don't move while pausing
    if (pBot->f_pause_time >= pBot->f_think_time) {
-      pBot->f_move_speed = 0;
-      pBot->f_side_speed = 0;
-      pBot->f_vertical_speed = 0;
+      pBot->f_move_speed = 0.0f;
+      pBot->f_side_speed = 0.0f;
+      pBot->f_vertical_speed = 0.0f;
    }
 
    // crouch if the bots current waypoint is a crouch waypoint...
@@ -3859,9 +3859,9 @@ static void BotSenseEnvironment(bot_t *pBot) {
    BotAmmoCheck(pBot);
 
    if (botdontmove == 1) { // Stationary bots for TFC minigolf maps [APG]RoboCop[CL]
-      pBot->f_move_speed = 0;
-      pBot->f_side_speed = 0;
-      pBot->f_vertical_speed = 0;
+      pBot->f_move_speed = 0.0f;
+      pBot->f_side_speed = 0.0f;
+      pBot->f_vertical_speed = 0.0f;
    }
 
    if (pBot->enemy.ptr == nullptr)
@@ -3915,7 +3915,7 @@ static void BotFight(bot_t *pBot) {
    if (pBot->f_dispenserDetTime > 0.5f // i.e. a valid time
        && pBot->f_dispenserDetTime < pBot->f_think_time && !FNullEnt(pBot->dispenser_edict)) {
       FakeClientCommand(pBot->pEdict, "detdispenser", nullptr, nullptr);
-      pBot->f_dispenserDetTime = 0.0;
+      pBot->f_dispenserDetTime = 0.0f;
       pBot->has_dispenser = false;
       pBot->dispenser_edict = nullptr;
    }
@@ -4175,7 +4175,7 @@ void BotLookAbout(bot_t *pBot) {
    // use a timer to minimise CPU usage
    if (pBot->f_view_change_time <= pBot->f_think_time) {
       // if the bot saw an enemy recently behave differently
-      if (pBot->enemy.f_lastSeen + random_float(4.0, 6.0) >= pBot->f_think_time) {
+      if (pBot->enemy.f_lastSeen + random_float(4.0f, 6.0f) >= pBot->f_think_time) {
          // set the timer again to a shorter, more alert level
          pBot->f_view_change_time = pBot->f_think_time + random_float(0.7f, 1.2f);
 
@@ -4189,8 +4189,8 @@ void BotLookAbout(bot_t *pBot) {
       // just check out the environment, see what's up
 
       Vector newAngle = pBot->pEdict->v.v_angle;
-      newAngle.x = 0.0; // level this out in case the bot is staring at the ground
-      newAngle.y = random_float(-180.0, 180.0);
+      newAngle.x = 0.0f; // level this out in case the bot is staring at the ground
+      newAngle.y = random_float(-180.0f, 180.0f);
 
       UTIL_MakeVectors(newAngle);
 
@@ -4201,10 +4201,10 @@ void BotLookAbout(bot_t *pBot) {
       UTIL_TraceLine(pBot->pEdict->v.origin, v_forwards, dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
       // if the new view angle is relatively unblocked make the bot turn to match it
-      if (tr.flFraction >= 1.0) {
+      if (tr.flFraction >= 1.0f) {
          pBot->pEdict->v.ideal_yaw = newAngle.y;
          BotFixIdealYaw(pBot->pEdict);
-         pBot->pEdict->v.idealpitch = random_float(-15.0, 15.0);
+         pBot->pEdict->v.idealpitch = random_float(-15.0f, 15.0f);
 
          // set the timer again
          pBot->f_view_change_time = pBot->f_think_time + RANDOM_FLOAT(1.0f, 3.0f);
@@ -4291,7 +4291,7 @@ static void BotSpectatorDebug(bot_t *pBot) {
       WRITE_BYTE(2 & 0xFF);
 
       // top of the screen
-      WRITE_SHORT(FixedSigned16(1, -1 << 13)); // coordinates X
+      WRITE_SHORT(FixedSigned16(1, (-1) << 13)); // coordinates X
       WRITE_SHORT(FixedSigned16(1, 0 << 13));  // coordinates Y
 
       WRITE_BYTE(1); // effect

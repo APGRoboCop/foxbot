@@ -307,7 +307,7 @@ void KewlHUDNotify(edict_t *pEntity, const char *msg_name) {
    WRITE_BYTE(0);
    WRITE_BYTE(255);
    WRITE_BYTE(255);
-   WRITE_SHORT(FixedUnsigned16(0.03, 1 << 8));
+   WRITE_SHORT(FixedUnsigned16(0.03f, 1 << 8));
    WRITE_SHORT(FixedUnsigned16(1, 1 << 8));
    WRITE_SHORT(FixedUnsigned16(6, 1 << 8));
    WRITE_SHORT(FixedUnsigned16(4, 1 << 8));
@@ -322,7 +322,7 @@ static void varyBotTotal() {
       return; // just in case
 
    // this governs when the number of bots wanting to play will next change
-   static float f_interested_bots_change = 0;
+   static float f_interested_bots_change = 0.0f;
 
    if (f_interested_bots_change < gpGlobals->time) {
       if (bot_total_varies == 3) // busy server(players coming/going often)
@@ -987,7 +987,7 @@ void DispatchThink(edict_t *pent) {
             tr.pHit = nullptr;
             UTIL_TraceLine(pent->v.euser1->v.origin + pent->v.euser1->v.view_ofs, pBot->enemy.ptr->v.origin + Vector(xx, yy, zz), dont_ignore_monsters, dont_ignore_glass, pent->v.euser1, &tr);
 
-            if (tr.pHit == pBot->enemy.ptr || tr.flFraction == 1.0)
+            if (tr.pHit == pBot->enemy.ptr || tr.flFraction == 1.0f)
                player_vis[scanpos] = true;
             else
                player_vis[scanpos] = false;
@@ -1077,8 +1077,8 @@ void DispatchThink(edict_t *pent) {
             MESSAGE_BEGIN(MSG_ONE, SVC_TEMPENTITY, nullptr, pent->v.owner);
             WRITE_BYTE(TE_TEXTMESSAGE);
             WRITE_BYTE(4 & 0xFF);
-            WRITE_SHORT(FixedSigned16(0.3, 1 << 13));
-            WRITE_SHORT(FixedSigned16(0.3, 1 << 13));
+            WRITE_SHORT(FixedSigned16(0.3f, 1 << 13));
+            WRITE_SHORT(FixedSigned16(0.3f, 1 << 13));
             WRITE_BYTE(1); // effect
             WRITE_BYTE(255);
             WRITE_BYTE(255);
@@ -1681,7 +1681,7 @@ void ClientCommand(edict_t *pEntity) {
                h.fadeoutTime = 1;
                h.holdTime = 7;
                h.x = -1;
-               h.y = 0.8;
+               h.y = 0.8f;
                sprintf(message, "-- Waypoint author: %s --", waypoint_author);
                FOX_HudMessage(INDEXENT(1), h, message);
             }
@@ -2389,7 +2389,7 @@ void StartFrame() { // v7 last frame timing
       check_server_cmd = gpGlobals->time;
       static int i, index, player_index, bot_index;
       static float previous_time = -1.0f;
-      static float client_update_time = 0.0;
+      static float client_update_time = 0.0f;
       clientdata_s cd;
       int count;
       // if a new map has started then (MUST BE FIRST IN StartFrame)...
@@ -2415,7 +2415,7 @@ void StartFrame() { // v7 last frame timing
                for (index = 0; index < 32; index++) {
                   bots[index].is_used = false;
                   bots[index].respawn_state = 0;
-                  bots[index].f_kick_time = 0.0;
+                  bots[index].f_kick_time = 0.0f;
                }
                fclose(bot_cfg_fp);
                bot_cfg_fp = nullptr;
@@ -2425,7 +2425,7 @@ void StartFrame() { // v7 last frame timing
                   if (count >= prev_num_bots) {
                      bots[index].is_used = false;
                      bots[index].respawn_state = 0;
-                     bots[index].f_kick_time = 0.0;
+                     bots[index].f_kick_time = 0.0f;
                   }
                   if (bots[index].is_used) // is this slot used?
                   {
@@ -2436,7 +2436,7 @@ void StartFrame() { // v7 last frame timing
                      bots[index].respawn_state = RESPAWN_NEED_TO_RESPAWN;
                      count++;
                   } else
-                     bots[index].f_kick_time = 0.0; // reset to prevent false spawns later
+                     bots[index].f_kick_time = 0.0f; // reset to prevent false spawns later
                }                                    // set the respawn time
                if (IS_DEDICATED_SERVER())
                   respawn_time = gpGlobals->time + 10.0f;
@@ -5614,7 +5614,7 @@ static void DisplayBotInfo() {
          h.fadeoutTime = 1;
          h.holdTime = 7;
          h.x = -1;
-         h.y = 0.8;
+         h.y = 0.8f;
          sprintf(msg2, "-- Waypoint author: %s --", waypoint_author);
          FOX_HudMessage(INDEXENT(1), h, msg);
       }
