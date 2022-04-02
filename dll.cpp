@@ -45,7 +45,7 @@
 
 #define VER_MAJOR 0
 #define VER_MINOR 801
-#define VER_BUILD 0
+//#define VER_BUILD 0
 
 #define MENU_NONE 0
 #define MENU_1 1
@@ -1717,7 +1717,7 @@ void ClientCommand(edict_t *pEntity) {
             if (WaypointLoad(pEntity))
                ClientPrint(pEntity, HUD_PRINTNOTIFY, "waypoints loaded\n");
          } else if (FStrEq(arg1, "menu") && g_waypoint_on) {
-            int index = WaypointFindNearest_E(pEntity, 50.0, -1);
+            int index = WaypointFindNearest_E(pEntity, 50.0f, -1);
             if (num_waypoints > 0 && index != -1) {
                g_menu_waypoint = index;
                g_menu_state = MENU_1;
