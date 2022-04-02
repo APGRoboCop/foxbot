@@ -162,7 +162,7 @@ static int welcome_index = -1;
 static int g_menu_waypoint;
 static int g_menu_state = 0;
 
-float is_team_play = 0.0;
+float is_team_play = 0.0f;
 bool checked_teamplay = false;
 // char team_names[MAX_TEAMS][MAX_TEAMNAME_LENGTH];
 int num_teams = 0;
@@ -191,8 +191,8 @@ static bool script_parsed = false;
 static short scanpos;
 static bool player_vis[8];
 
-static float bot_cfg_pause_time = 0.0;
-static float respawn_time = 0.0;
+static float bot_cfg_pause_time = 0.0f;
+static float respawn_time = 0.0f;
 static bool spawn_time_reset = false;
 bool botcamEnabled = false;
 
@@ -892,12 +892,12 @@ int DispatchSpawn(edict_t *pent) {
 
          g_GameRules = true;
 
-         is_team_play = 0.0;
+         is_team_play = 0.0f;
          //	memset(team_names, 0, sizeof(team_names));
          num_teams = 0;
          checked_teamplay = false;
 
-         respawn_time = 0.0;
+         respawn_time = 0.0f;
          spawn_time_reset = false;
 
          prev_num_bots = num_bots;

@@ -190,11 +190,11 @@ void WaypointInit() {
       waypoints[i].script_flags = 0;
       waypoints[i].origin = Vector(0, 0, 0);
 
-      wp_display_time[i] = 0.0;
+      wp_display_time[i] = 0.0f;
 
       paths[i] = nullptr; // no paths allocated yet
 
-      a_display_time[i] = 0.0;
+      a_display_time[i] = 0.0f;
       areas[i].flags = 0;
       areas[i].a = Vector(0, 0, 0);
       areas[i].b = Vector(0, 0, 0);
@@ -208,7 +208,7 @@ void WaypointInit() {
       is_junction[i] = false;
    }
 
-   f_path_time = 0.0; // reset waypoint path display time
+   f_path_time = 0.0f; // reset waypoint path display time
 
    num_waypoints = 0;
    num_areas = 0;
@@ -1231,7 +1231,7 @@ void WaypointDelete(edict_t *pEntity) {
 
          waypoints[min_index].origin = Vector(0, 0, 0);
 
-         wp_display_time[min_index] = 0.0;
+         wp_display_time[min_index] = 0.0f;
       }
    }
 
@@ -1268,7 +1268,7 @@ void WaypointDelete(edict_t *pEntity) {
    waypoints[index].script_flags = 0;
    waypoints[index].origin = Vector(0, 0, 0);
 
-   wp_display_time[index] = 0.0;
+   wp_display_time[index] = 0.0f;
 
    EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "weapons/mine_activate.wav", 1.0, ATTN_NORM, 0, 100);
 }
@@ -1339,7 +1339,7 @@ static bool WaypointDeleteAimArtifact(const edict_t *pEntity) {
       waypoints[min_index].script_flags = 0;
       waypoints[min_index].origin = Vector(0, 0, 0);
 
-      wp_display_time[min_index] = 0.0;
+      wp_display_time[min_index] = 0.0f;
       return true;
    }
 

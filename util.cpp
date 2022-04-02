@@ -748,7 +748,7 @@ static void UTIL_FindFoxbotPath() {
 // in the file.
 // It also makes sure that the string is null terminated on success.
 // It returns false if fgets() returned NULL.
-bool UTIL_ReadFileLine(char *string, const unsigned int max_length, FILE *file_ptr) {
+bool UTIL_ReadFileLine(char* string, const unsigned int max_length, FILE* file_ptr) {
    bool line_end_found = false;
 
    if (fgets(string, max_length, file_ptr) == nullptr)

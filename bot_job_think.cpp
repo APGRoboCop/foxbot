@@ -276,7 +276,7 @@ job_struct *InitialiseNewJob(const bot_t *pBot, const int newJobType) {
    newJob.f_bufferedTime = pBot->f_think_time;
    newJob.priority = PRIORITY_NONE;
    newJob.phase = 0;
-   newJob.phase_timer = 0.0;
+   newJob.phase_timer = 0.0f;
    newJob.waypoint = -1;
    newJob.waypointTwo = -1;
    newJob.player = nullptr;
@@ -309,7 +309,7 @@ bool SubmitNewJob(bot_t *pBot, const int newJobType, job_struct *newJob) {
    // set some defaults for the new job
    newJob->f_bufferedTime = pBot->f_think_time;
    newJob->phase = 0;
-   newJob->phase_timer = 0.0;
+   newJob->phase_timer = 0.0f;
 
    // assess the proposed new jobs validity and priority
    newJob->priority = jf[newJobType].assessFuncPtr(pBot, *newJob);
@@ -360,7 +360,7 @@ bool SubmitNewJob(bot_t *pBot, const int newJobType, job_struct *newJob) {
 
       pBot->job[worstJobFound].f_bufferedTime = pBot->f_think_time;
       pBot->job[worstJobFound].phase = 0;
-      pBot->job[worstJobFound].phase_timer = 0.0;
+      pBot->job[worstJobFound].phase_timer = 0.0f;
       return true;
    }
 
@@ -407,7 +407,7 @@ static void RefreshJobBuffer(bot_t *pBot) {
    for (i = 0; i < JOB_BUFFER_MAX; i++) {
       if (i != pBot->currentJob) {
          pBot->job[i].phase = 0;
-         pBot->job[i].phase_timer = 0.0;
+         pBot->job[i].phase_timer = 0.0f;
       }
    }
 }

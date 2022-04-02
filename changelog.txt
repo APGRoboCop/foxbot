@@ -37,6 +37,8 @@ TODO List:-
 
 >> Train spies to not flag hold and aim properly to destroy SG Turrets
 
+>> Train snipers to not flag hold as certain classes need to blacklist any proirities for capping
+
 >> To allow bots to use Nail Guns for destroying SG Turrets, when out of nades or from a distance
 
 >> Allow bots to toss grenades at a higher angle and low range as their target aim is too short

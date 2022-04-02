@@ -58,8 +58,8 @@ extern int bot_skill_1_aim;   // accuracy for skill 1 bots
 extern int bot_aim_per_skill; // accuracy modifier for bots from skill 1 downwards
 
 // accuracy levels for each bot skill level
-static float bot_max_inaccuracy[5] = {20.0, 30.0, 40.0, 50.0, 60.0};
-static float bot_snipe_max_inaccuracy[5] = {18.0, 27.0, 36.0, 45.0, 54.0};
+static float bot_max_inaccuracy[5] = {20.0f, 30.0f, 40.0f, 50.0f, 60.0f};
+static float bot_snipe_max_inaccuracy[5] = {18.0f, 27.0f, 36.0f, 45.0f, 54.0f};
 
 extern bool is_team[4];
 extern int team_allies[4];
@@ -471,7 +471,7 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
          // check for closer enemy, or enemy with flag here!
          // and sentry guns!!!!!!
          pent = nullptr;
-         nearestDistance = 2000.0;
+         nearestDistance = 2000.0f;
          while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "building_sentrygun")) != nullptr && !FNullEnt(pent)) {
             int sentry_team = BotTeamColorCheck(pent);
 
@@ -546,12 +546,12 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
       }
    }
    pNewEnemy = nullptr;
-   nearestDistance = 1000.0;
+   nearestDistance = 1000.0f;
 
    if (mod_id == TFC_DLL) {
       // get medics and engineers to heal/repair teammates
       if (pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC || (pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER && pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > 80)) {
-         nearestDistance = 1000.0;
+         nearestDistance = 1000.0f;
          edict_t *pPlayer;
          int player_team;
 
@@ -1256,7 +1256,7 @@ static Vector BotBodyTarget(const edict_t *pBotEnemy, bot_t *pBot) {
          // Make the bot less accurate based on it's targets speed.
          // ignore the bots own speed - it's sniping!
          const float enemy_velocity = pBot->enemy.ptr->v.velocity.Length();
-         float aim_error = random_float(0.0, enemy_velocity) * 0.05f;
+         float aim_error = random_float(0.0f, enemy_velocity) * 0.05f;
 
          // Make the bot less accurate if the enemy was just seen
          if (pBot->enemy.f_firstSeen + 2.0f > pBot->f_think_time)
@@ -1294,15 +1294,15 @@ static Vector BotBodyTarget(const edict_t *pBotEnemy, bot_t *pBot) {
       {
          // Make the bot less accurate based on it's own speed.
          const float my_velocity = pBot->pEdict->v.velocity.Length();
-         float aim_error = random_float(0.0, my_velocity) * 0.05f;
+         float aim_error = random_float(0.0f, my_velocity) * 0.05f;
 
          // Make the bot less accurate based on it's targets speed.
          const float enemy_velocity = pBot->enemy.ptr->v.velocity.Length();
-         aim_error += random_float(0.0, enemy_velocity) * 0.05f;
+         aim_error += random_float(0.0f, enemy_velocity) * 0.05f;
 
          // Make the bot less accurate if the enemy was just seen
          if (pBot->enemy.f_firstSeen + 2.0f > pBot->f_think_time)
-            aim_error += (pBot->bot_skill + 1) * random_float(5.0, 20.0);
+            aim_error += (pBot->bot_skill + 1) * random_float(5.0f, 20.0f);
 
          const float aim_offset = bot_max_inaccuracy[pBot->bot_skill] + aim_error;
          switch (pBot->bot_skill) {

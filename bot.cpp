@@ -873,11 +873,11 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
 
       // time to set up the bots personality stuff
       if (bot_allow_moods) {
-         pBot->trait.aggression = random_long(1, 100);
-         pBot->trait.fairplay = random_long(1, 1000);
+         pBot->trait.aggression = static_cast<short>(random_long(1, 1000));
+         pBot->trait.fairplay = static_cast<short>(random_long(1, 1000));
          pBot->trait.faveClass = random_long(1, 9);
-         pBot->trait.health = random_long(0, 3) * 20 + 20;
-         pBot->trait.humour = random_long(0, 100);
+         pBot->trait.health = static_cast<short>(random_long(0, 3) * 20 + 20);
+         pBot->trait.humour = static_cast<short>(random_long(0, 100));
 
          if (random_long(1, 30) > 10)
             pBot->trait.camper = true;
