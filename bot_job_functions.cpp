@@ -2200,6 +2200,9 @@ int JobGetFlag(bot_t *pBot) {
 
 // This function handles bot behaviour for the JOB_CAPTURE_FLAG job.
 // i.e. if the bot has a flag then bring it to a capture point.
+//
+// TODO: spies, snipers and engineers to not flag hold as certain classes
+// need to blacklist any proirities for capping - [APG]RoboCop[CL]
 int JobCaptureFlag(bot_t *pBot) {
    job_struct *job_ptr = &pBot->job[pBot->currentJob];
 
@@ -2209,7 +2212,7 @@ int JobCaptureFlag(bot_t *pBot) {
          job_ptr->waypoint = BotFindFlagGoal(pBot);
          if (job_ptr->waypoint == -1) {
             //	UTIL_HostSay(pBot->pEdict, 0, "JOB_CAPTURE_FLAG no goal"); //DebugMessageOfDoom!
-            BlacklistJob(pBot, JOB_CAPTURE_FLAG, 8.0);
+            BlacklistJob(pBot, JOB_CAPTURE_FLAG, 8.0f);
             return JOB_TERMINATED;
          }
       }
@@ -2225,7 +2228,7 @@ int JobCaptureFlag(bot_t *pBot) {
       } else {
          pBot->goto_wp = job_ptr->waypoint;
          if (!BotNavigateWaypoints(pBot, false) && !BotSetAlternativeGoalWaypoint(pBot, job_ptr->waypoint, W_FL_TFC_FLAG_GOAL)) {
-            BlacklistJob(pBot, JOB_CAPTURE_FLAG, random_float(5.0, 15.0));
+            BlacklistJob(pBot, JOB_CAPTURE_FLAG, random_float(5.0f, 15.0f));
             return JOB_TERMINATED;
          }
       }
@@ -3285,6 +3288,8 @@ int JobInfectedAttack(bot_t *pBot) {
 
 // This function handles bot behaviour for the JOB_BIN_GRENADE job.
 // i.e. throw a primed grenade away to avoid suicide.
+//
+// TODO: to adjust the angle and distance to toss nades - [APG]RoboCop[CL]
 int JobBinGrenade(bot_t *pBot) {
    job_struct *job_ptr = &pBot->job[pBot->currentJob];
 

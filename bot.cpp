@@ -2875,7 +2875,7 @@ static void BotComms(bot_t *pBot) {
    if (newJob == nullptr || pBot->current_wp < 0)
       return;
 
-   // greetings from the bots
+   // greetings from the bots //TODO: convert "greeting" as bool? [APG]RoboCop[CL]
    if (pBot->greeting == false && pBot->create_time + 3.0f > pBot->f_think_time) {
       pBot->greeting = true;
       if (random_long(1, 1000) < static_cast<long>(bot_chat)) {

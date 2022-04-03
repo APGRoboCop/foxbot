@@ -958,6 +958,10 @@ static bool BotSpyDetectCheck(bot_t *pBot, edict_t *pNewEnemy) {
 // to the team using area names if available.
 // Either way, the location is transferred to other bots memory if
 // a) They dont have a sg in memory b) They are better than skill 5
+//
+// TODO: to allow bots to attack using nailguns (if available) to destroy SGs
+// but not interfere with their tossing nade aim - [APG]RoboCop[CL]
+
 static void BotSGSpotted(bot_t *pBot, edict_t *sg) {
    // Double check this isn't our own teams SG.
    if (BotTeamColorCheck(sg) == pBot->current_team)
