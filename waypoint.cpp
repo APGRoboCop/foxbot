@@ -25,6 +25,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
+#include <cstring>
+
 #ifndef __linux__
 #include <io.h>
 #else
@@ -32,10 +34,9 @@
 #endif
 
 #ifndef __linux__
-#include <sys\stat.h>
-#else
-#include <cstring>
 #include <sys/stat.h>
+#else
+#include <sys\stat.h>
 #endif
 
 #include "extdll.h"
