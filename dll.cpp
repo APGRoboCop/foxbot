@@ -5785,7 +5785,7 @@ static void ClearKickedBotsData(const int botIndex, const bool eraseBotsName) {
 // This function scans a maps waypoints for flag waypoints that belong to
 // one team or another.  It then tries to find out which teams are trying
 // to carry which teams flags.
-static void flag_team_check()
+static void FlagTeamCheck()
 {
 	if (num_waypoints < 1)
 		return;

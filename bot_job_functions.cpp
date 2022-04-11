@@ -2853,7 +2853,7 @@ int JobSpotStimulus(bot_t *pBot) {
 
       if (moveNlook == true) {
          job_ptr->phase = 2;
-         job_ptr->phase_timer = pBot->f_think_time + 0.5f + pBot->bot_skill * 0.5f + random_float(0.5, 1.5);
+         job_ptr->phase_timer = pBot->f_think_time + 0.5f + pBot->bot_skill * 0.5f + random_float(0.5f, 1.5f);
       } else {
          job_ptr->phase = 1;
          job_ptr->phase_timer = pBot->f_think_time + random_float(0.7f, 1.4f);
@@ -2891,7 +2891,7 @@ int JobSpotStimulus(bot_t *pBot) {
 
       if (pBot->current_wp != job_ptr->waypoint && job_ptr->waypoint > -1 && job_ptr->waypoint < num_waypoints) {
          if (!BotNavigateWaypoints(pBot, true)) {
-            BlacklistJob(pBot, JOB_SPOT_STIMULUS, 5.0);
+            BlacklistJob(pBot, JOB_SPOT_STIMULUS, 5.0f);
             return JOB_TERMINATED;
          }
       } else // just in case
@@ -2920,7 +2920,7 @@ int JobAttackBreakable(bot_t *pBot) {
    if (job_ptr->phase == 1) {
       // give up if the bots been trying(and failing) for too long
       if (job_ptr->phase_timer < pBot->f_think_time) {
-         BlacklistJob(pBot, JOB_ATTACK_BREAKABLE, random_float(3.0, 6.0));
+         BlacklistJob(pBot, JOB_ATTACK_BREAKABLE, random_float(3.0f, 6.0f));
          return JOB_TERMINATED;
       }
 
@@ -3043,7 +3043,7 @@ int JobSeekBackup(bot_t *pBot) {
    // phase zero - set a waypoint near the last seen allies last known location
    if (job_ptr->phase == 0) {
       //	UTIL_HostSay(pBot->pEdict, 0, "JOB_SEEK_BACKUP started");
-      job_ptr->waypoint = WaypointFindNearest_S(pBot->lastAllyVector, nullptr, 700.0, pBot->current_team, W_FL_DELETED);
+      job_ptr->waypoint = WaypointFindNearest_S(pBot->lastAllyVector, nullptr, 700.0f, pBot->current_team, W_FL_DELETED);
 
       job_ptr->phase = 1;
       return JOB_UNDERWAY;
@@ -3083,7 +3083,7 @@ int JobSeekBackup(bot_t *pBot) {
 
          pBot->goto_wp = job_ptr->waypoint;
          if (!BotNavigateWaypoints(pBot, false)) {
-            BlacklistJob(pBot, JOB_SEEK_BACKUP, random_float(5.0, 10.0));
+            BlacklistJob(pBot, JOB_SEEK_BACKUP, random_float(5.0f, 10.0f));
             return JOB_TERMINATED;
          }
       }
@@ -3367,7 +3367,7 @@ int JobDrownRecover(bot_t *pBot) {
       } else {
          pBot->goto_wp = job_ptr->waypoint;
          if (!BotNavigateWaypoints(pBot, false)) {
-            BlacklistJob(pBot, JOB_DROWN_RECOVER, random_float(5.0, 10.0));
+            BlacklistJob(pBot, JOB_DROWN_RECOVER, random_float(5.0f, 10.0f));
             return JOB_TERMINATED;
          }
       }

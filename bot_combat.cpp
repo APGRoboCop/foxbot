@@ -650,9 +650,9 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
 
                   // discard uneeded ammo when near friendly SG's
                   FakeClientCommand(pEdict, "discard", nullptr, nullptr);
-                  BlacklistJob(pBot, JOB_SPOT_STIMULUS, 2.0); // ignore the pack as it drops
+                  BlacklistJob(pBot, JOB_SPOT_STIMULUS, 2.0f); // ignore the pack as it drops
                   if (pBot->ammoStatus != AMMO_UNNEEDED)
-                     BlacklistJob(pBot, JOB_PICKUP_ITEM, 2.0); // don't pick up your pack
+                     BlacklistJob(pBot, JOB_PICKUP_ITEM, 2.0f); // don't pick up your pack
                }
                continue;
             }
@@ -1725,9 +1725,9 @@ int BotNadeHandler(bot_t *pBot, bool timed, const char newNadeType) {
    // Lets try putting discard code in here. (dont let the engineer discard)
    if (pBot->f_discard_time < pBot->f_think_time && pBot->pEdict->v.playerclass != TFC_CLASS_ENGINEER) {
       FakeClientCommand(pBot->pEdict, "discard", nullptr, nullptr);
-      BlacklistJob(pBot, JOB_SPOT_STIMULUS, 2.0); // ignore the pack as it drops
+      BlacklistJob(pBot, JOB_SPOT_STIMULUS, 2.0f); // ignore the pack as it drops
       if (pBot->ammoStatus != AMMO_UNNEEDED)
-         BlacklistJob(pBot, JOB_PICKUP_ITEM, 2.0); // don't pick up your own pack
+         BlacklistJob(pBot, JOB_PICKUP_ITEM, 2.0f); // don't pick up your own pack
 
       if (pBot->mission == ROLE_ATTACKER)
          pBot->f_discard_time = pBot->f_think_time + 10.0f;
