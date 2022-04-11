@@ -781,7 +781,7 @@ void WriteString(const char *sz) {
    MM_func = false;
 }
 
-void pfnWriteString(char *sz) {
+void pfnWriteString(const char *sz) {
    if (gpGlobals->deathmatch) {
       // if(debug_engine || dont_send_packet) { fp=UTIL_OpenFoxbotLog(); fprintf(fp,"pfnWriteString: %s\n",sz);
       // fclose(fp); }
@@ -793,7 +793,7 @@ void pfnWriteString(char *sz) {
 
       // if this message is for a bot, call the client message function...
       if (botMsgFunction)
-         (*botMsgFunction)(static_cast<void *>(sz), botMsgIndex); 
+         (*botMsgFunction)((void*)sz, botMsgIndex);
    }
    script(sz);
 
