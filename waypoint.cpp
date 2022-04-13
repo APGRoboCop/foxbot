@@ -4080,7 +4080,7 @@ void AreaAutoBuild1() {
    int lc, rc, r, l;
    bool ru, lu, rd, ld;
    int lr, ll;
-   for (i = 0; i <= num_waypoints; i++) {
+   for (i = 1; i <= num_waypoints; i++) {
       if (!(waypoints[i].flags & W_FL_DELETED)) {
          if (num_areas >= MAX_WAYPOINTS)
             return;
@@ -4347,7 +4347,7 @@ void AreaAutoBuild1() {
    }
    // now all areas have been created (from all the wpts)
    // their will be lots of parallel areas that can be merged...
-   for (i = 0; i <= num_areas; i++) {
+   for (i = 1; i <= num_areas; i++) {
       if (!(areas[i].flags & W_FL_DELETED)) {
          if ((areas[i].flags & A_FL_1) == A_FL_1 && (areas[i].flags & A_FL_2) == A_FL_2 && (areas[i].flags & A_FL_3) == A_FL_3 && (areas[i].flags & A_FL_4) == A_FL_4) {
             lc = 0;
@@ -4545,7 +4545,7 @@ void AreaAutoMerge() {
    int stk[stk_sz];
    int stk_cnt;
 
-   for (i = 0; i <= num_areas; i++) {
+   for (i = 1; i <= num_areas; i++) {
       if (!(areas[i].flags & W_FL_DELETED)) {
          if ((areas[i].flags & A_FL_1) == A_FL_1 && (areas[i].flags & A_FL_2) == A_FL_2 && (areas[i].flags & A_FL_3) == A_FL_3 && (areas[i].flags & A_FL_4) == A_FL_4) {
             a = false;
@@ -4744,7 +4744,7 @@ void AreaAutoMerge() {
    }
 
    // clear the remaining shit up!!
-   for (i = 0; i <= num_areas; i++) {
+   for (i = 1; i <= num_areas; i++) {
       if (!(areas[i].flags & W_FL_DELETED)) {
          if ((areas[i].flags & A_FL_1) == A_FL_1 && (areas[i].flags & A_FL_2) == A_FL_2 && (areas[i].flags & A_FL_3) == A_FL_3 && (areas[i].flags & A_FL_4) == A_FL_4) {
             a = false;
@@ -4942,7 +4942,7 @@ void AreaAutoMerge() {
       }
    }
    // and the final lot?
-   for (i = 0; i <= num_areas; i++) {
+   for (i = 1; i <= num_areas; i++) {
       if (!(areas[i].flags & W_FL_DELETED)) {
          if ((areas[i].flags & A_FL_1) == A_FL_1 && (areas[i].flags & A_FL_2) == A_FL_2 && (areas[i].flags & A_FL_3) == A_FL_3 && (areas[i].flags & A_FL_4) == A_FL_4) {
             a = false;
@@ -5128,7 +5128,7 @@ void AreaAutoMerge() {
    // a)size of adjacent area matches
    // b)step is the same (more than 2 areas)
    // c)same direction as first ones found
-   for (i = 0; i <= num_areas; i++) {
+   for (i = 1; i <= num_areas; i++) {
       if (!(areas[i].flags & W_FL_DELETED)) {
          if ((areas[i].flags & A_FL_1) == A_FL_1 && (areas[i].flags & A_FL_2) == A_FL_2 && (areas[i].flags & A_FL_3) == A_FL_3 && (areas[i].flags & A_FL_4) == A_FL_4) {
             float sx, sy;

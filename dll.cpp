@@ -665,7 +665,7 @@ void GameDLLInit() {
       clients[i] = nullptr;
 
    // initialize the bots array of structures...
-   memset(bots, 0, sizeof bots);
+   memset(bots, 0.0f, sizeof bots);
 
    // read the bot names from the bot name file
    BotNameInit();
@@ -2453,7 +2453,7 @@ void StartFrame() { // v7 last frame timing
             if (bots[i].is_used) {
                bzero(&cd, sizeof cd);
                MDLL_UpdateClientData(bots[i].pEdict, 1, &cd); // see if a weapon was dropped...
-               if (bots[i].bot_weapons != cd.weapons)
+               if (bots[i].bot_weapons != cd.weapons) //duplicate expression? [APG]RoboCop[CL]
                   bots[i].bot_weapons = cd.weapons;
             }
          }
@@ -2469,7 +2469,7 @@ void StartFrame() { // v7 last frame timing
       }
       if (count > num_bots)
          num_bots = count;
-      for (player_index = 1; player_index <= gpGlobals->maxClients; player_index++) {
+      for (player_index = 0; player_index <= gpGlobals->maxClients; player_index++) {
          pPlayer = INDEXENT(player_index);
 
          if (pPlayer && !pPlayer->free) {

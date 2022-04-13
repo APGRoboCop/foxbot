@@ -556,7 +556,7 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
          int player_team;
 
          // search the world for players...
-         for (i = 1; i <= gpGlobals->maxClients; i++) {
+         for (i = 0; i <= gpGlobals->maxClients; i++) {
             pPlayer = INDEXENT(i);
 
             // skip invalid players and skip self (i.e. this bot)
@@ -719,7 +719,7 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
          canEscort = true;
 
       // search the world for players...
-      for (i = 1; i <= gpGlobals->maxClients; i++) {
+      for (i = 0; i <= gpGlobals->maxClients; i++) {
          pPlayer = INDEXENT(i);
 
          // skip invalid players and skip self (i.e. this bot)
@@ -1022,7 +1022,7 @@ int BotGuessPlayerPosition(const bot_t *const pBot, const Vector &r_playerOrigin
       return -1;
 
    // get the waypoint nearest to the player
-   const int playerWP = WaypointFindNearest_S(r_playerOrigin, nullptr, 700.0, pBot->current_team, W_FL_DELETED);
+   const int playerWP = WaypointFindNearest_S(r_playerOrigin, nullptr, 700.0f, pBot->current_team, W_FL_DELETED);
    if (playerWP == -1)
       return -1;
 

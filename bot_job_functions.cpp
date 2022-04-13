@@ -51,7 +51,7 @@ extern bot_t bots[32];
 
 extern bot_weapon_t weapon_defs[MAX_WEAPONS];
 
-// bot settings //////////////////
+// bot settings ////////////////// //TODO: convert bot_allow_humour to bool? [APG]RoboCop[CL]
 extern int bot_allow_humour;
 extern bool offensive_chatter;
 extern bool defensive_chatter;

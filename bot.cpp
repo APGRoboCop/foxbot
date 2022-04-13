@@ -98,7 +98,7 @@ extern bool spawn_check_crash;
 extern int spawn_check_crash_count;
 extern edict_t *spawn_check_crash_edict;
 
-// bot settings //////////////////  Fixed the unwanted 'const' and replaced 'bool' for 'int' on bot_allow_moods - Arkshine
+// bot settings //////////////////  //TODO: convert bot_allow_humour to bool? [APG]RoboCop[CL]
 extern int bot_allow_moods;
 extern int botskill_lower;
 extern int botskill_upper;
@@ -457,7 +457,7 @@ void BotPickName(char *name_buffer) {
       used = false;
 
       // is there a player with this name?
-      for (index = 1; index <= gpGlobals->maxClients; index++) {
+      for (index = 0; index <= gpGlobals->maxClients; index++) {
          edict_t *pPlayer = INDEXENT(index);
 
          if (pPlayer && !FNullEnt(pPlayer) && !pPlayer->free && strcmp(bot_names[name_index], STRING(pPlayer->v.netname)) == 0) {
