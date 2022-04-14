@@ -1002,7 +1002,7 @@ void DispatchThink(edict_t *pent) {
 
             char text[511];
             int amb = 0;
-            int vidsize = 2;
+            float vidsize = 2.0f;
             float sz = pBot->enemy.ptr->v.maxs.z * (vidsize / distance) * 100;
             int d = GETENTITYILLUM(pBot->enemy.ptr);
             if (amb == 0) {
@@ -1034,32 +1034,32 @@ void DispatchThink(edict_t *pent) {
             }
 
             Vector v = pBot->pEdict->v.v_angle;
-            v.y = v.y + 180;
-            if (v.y > 180)
-               v.y -= 360;
-            if (v.y < -180)
-               v.y += 360;
+            v.y = v.y + 180.0f;
+            if (v.y > 180.0f)
+               v.y -= 360.0f;
+            if (v.y < -180.0f)
+               v.y += 360.0f;
 
-            double dgrad = v.y;
-            dgrad = dgrad + 180;
-            if (dgrad > 180)
-               dgrad -= 360;
-            if (dgrad < -180)
-               dgrad += 360;
+            auto dgrad = v.y;
+            dgrad = dgrad + 180.0f;
+            if (dgrad > 180.0f)
+               dgrad -= 360.0f;
+            if (dgrad < -180.0f)
+               dgrad += 360.0f;
             dgrad = dgrad * M_PI;
-            dgrad = dgrad / 180;
+            dgrad = dgrad / 180.0f;
 
             Vector vel = pBot->enemy.ptr->v.velocity;
             vel.x = vel.x * sin(dgrad);
             vel.y = vel.y * cos(dgrad);
-            dgrad = static_cast<double>(v.x);
-            dgrad = dgrad + 180;
-            if (dgrad > 180)
-               dgrad -= 360;
-            if (dgrad < -180)
-               dgrad += 360;
+            dgrad = v.x;
+            dgrad = dgrad + 180.0f;
+            if (dgrad > 180.0f)
+               dgrad -= 360.0f;
+            if (dgrad < -180.0f)
+               dgrad += 360.0f;
             dgrad = dgrad * M_PI;
-            dgrad = dgrad / 180;
+            dgrad = dgrad / 180.0f;
             vel.z = vel.z * cos(dgrad);
 
             if (vel.x < 0)
@@ -2321,7 +2321,8 @@ void ClientCommand(edict_t *pEntity) {
          ClientPrint(pEntity, HUD_PRINTCONSOLE, "searching...\n");
          while ((pent = FIND_ENTITY_IN_SPHERE(pent, pEntity->v.origin, 200.0f)) != nullptr && !FNullEnt(pent)) {
             char str[80];
-            sprintf(str, "Found %s at %5.2f %5.2f %5.2f modelindex- %d t %s tn %s\n", STRING(pent->v.classname), pent->v.origin.x, pent->v.origin.y, pent->v.origin.z, pent->v.modelindex, STRING(pent->v.target), STRING(pent->v.targetname));
+            sprintf(str, "Found %s at %5.2f %5.2f %5.2f modelindex- %d t %s tn %s\n", STRING(pent->v.classname), static_cast<double>(pent->v.origin.x), static_cast<double>(pent->v.origin.y), static_cast<double>(pent->v.origin.z),
+                    pent->v.modelindex, STRING(pent->v.target), STRING(pent->v.targetname));
             ClientPrint(pEntity, HUD_PRINTCONSOLE, str);
 
             FILE *fp = UTIL_OpenFoxbotLog();

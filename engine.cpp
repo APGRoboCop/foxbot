@@ -116,7 +116,7 @@ char sz_error_check[255];
 edict_t *pfnFindEntityInSphere(edict_t *pEdictStartSearchAfter, const float *org, const float rad) {
    if (debug_engine) {
       fp = UTIL_OpenFoxbotLog();
-      fprintf(fp, "pfnFindEntityInSphere:%p (%f %f %f) %f %d\n", static_cast<void*>(pEdictStartSearchAfter), (*(Vector*)org).x, (*(Vector*)org).y, (*(Vector*)org).z, rad, spawn_check_crash_count);
+      fprintf(fp, "pfnFindEntityInSphere:%p (%f %f %f) %f %d\n", static_cast<void*>(pEdictStartSearchAfter), float((*(Vector*)org).x), float((*(Vector*)org).y), float((*(Vector*)org).z), static_cast<double>(rad), spawn_check_crash_count);
 
       if (pEdictStartSearchAfter != nullptr)
          if (pEdictStartSearchAfter->v.classname != 0)
@@ -214,7 +214,7 @@ void pfnSetOrigin(edict_t *e, const float *rgflOrigin) {
       for (int bot_index = 0; bot_index < 32; bot_index++) {
          if (bots[bot_index].sentry_edict != nullptr && bots[bot_index].has_sentry) {
             edict_t *pent = e;
-            int l = static_cast<int>(bots[bot_index].sentry_edict->v.origin.z - (*(Vector*)rgflOrigin).z);
+            int l = static_cast<int>(bots[bot_index].sentry_edict->v.origin.z - float((*(Vector*)rgflOrigin).z));
             if (l < 0)
                l = -l;
 
@@ -239,7 +239,7 @@ void pfnSetOrigin(edict_t *e, const float *rgflOrigin) {
          // TYPEDESCRIPTION		*pField;
          // pField = &gEntvarsDescription[36];
          //(*(float *)((char *)pev + pField->fieldOffset))
-         sprintf(msg, "target %s, toggle %.0f", STRING(e->v.target), e->v.frame);
+         sprintf(msg, "target %s, toggle %.0f", STRING(e->v.target), static_cast<double>(e->v.frame));
          script(msg);
       }
    }
@@ -258,7 +258,7 @@ void pfnSetOrigin(edict_t *e, const float *rgflOrigin) {
 
    if (debug_engine) {
       fp = UTIL_OpenFoxbotLog();
-      fprintf(fp, "pfnSetOrigin: %p (%f %f %f)\n", static_cast<void*>(e), (*(Vector*)rgflOrigin).x, (*(Vector*)rgflOrigin).y, (*(Vector*)rgflOrigin).z);
+      fprintf(fp, "pfnSetOrigin: %p (%f %f %f)\n", static_cast<void*>(e), float((*(Vector*)rgflOrigin).x), float((*(Vector*)rgflOrigin).y), float((*(Vector*)rgflOrigin).z));
 
       if (e->v.classname != 0)
          fprintf(fp, " name=%s\n", STRING(e->v.classname));
@@ -269,7 +269,7 @@ void pfnSetOrigin(edict_t *e, const float *rgflOrigin) {
       else
          fprintf(fp, " 0\n");
 
-      fprintf(fp, " t %f %f\n", e->v.ltime, e->v.nextthink);
+      fprintf(fp, " t %f %f\n", double(e->v.ltime), double(e->v.nextthink));
       fprintf(fp, " button=%d\n", e->v.button);
       fclose(fp);
    }
@@ -721,7 +721,7 @@ void pfnWriteAngle(float flValue) {
       // fclose(fp); }
       if (debug_engine) {
          fp = UTIL_OpenFoxbotLog();
-         fprintf(fp, "pfnWriteAngle: %f\n", flValue);
+         fprintf(fp, "pfnWriteAngle: %f\n", double(flValue));
          fclose(fp);
       }
 
@@ -754,7 +754,7 @@ void pfnWriteCoord(float flValue) {
       // fclose(fp); }
       if (debug_engine) {
          fp = UTIL_OpenFoxbotLog();
-         fprintf(fp, "pfnWriteCoord: %f\n", flValue);
+         fprintf(fp, "pfnWriteCoord: %f\n", double(flValue));
          fclose(fp);
       }
 

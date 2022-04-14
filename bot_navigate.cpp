@@ -141,7 +141,7 @@ void BotFindCurrentWaypoint(bot_t *pBot) {
 
       // square the Manhattan distance, this way we can avoid using sqrt()
       const Vector distance = waypoints[index].origin - pBot->pEdict->v.origin;
-      const double distance_squared = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
+      const double distance_squared = static_cast<double>(distance.x * distance.x) + static_cast<double>(distance.y * distance.y) + static_cast<double>(distance.z * distance.z);
 
       // if the waypoint is above the bot only remember it in case no
       // other waypoint could be found(higher waypoints may be unreachable)
@@ -1345,7 +1345,7 @@ static bool BotFallenOffCheck(bot_t *const pBot) {
 
             const float distanceToCurr = (pBot->pEdict->v.origin - waypoints[pBot->current_wp].origin).Length();
 
-            if (VectorsNearerThan(pBot->pEdict->v.origin, waypoints[index].origin, distanceToCurr) && BotCanSeeOrigin(pBot, waypoints[index].origin))
+            if (VectorsNearerThan(pBot->pEdict->v.origin, waypoints[index].origin, double(distanceToCurr)) && BotCanSeeOrigin(pBot, waypoints[index].origin))
                return false;
          }
       }
@@ -1893,9 +1893,9 @@ int BotFindRetreatPoint(bot_t *const pBot, const int min_dist, const Vector &r_t
 
       // check for the ideal waypoint
       // is the next waypoint on the route further from the threat?
-      if (!VectorsNearerThan(waypoints[nextWP].origin, r_threatOrigin, botThreatDistance)) {
+      if (!VectorsNearerThan(waypoints[nextWP].origin, r_threatOrigin, double(botThreatDistance))) {
          // is the end waypoint also further from the threat?
-         if (!VectorsNearerThan(waypoints[index].origin, r_threatOrigin, botThreatDistance)) {
+         if (!VectorsNearerThan(waypoints[index].origin, r_threatOrigin, double(botThreatDistance))) {
             bestIndex = index;
 
             // check for non-visibility
@@ -1910,7 +1910,7 @@ int BotFindRetreatPoint(bot_t *const pBot, const int min_dist, const Vector &r_t
       // in case the search isn't having much luck remember any waypoint
       // that will at least send the bot away from the threat
       else {
-         if (bestIndex == -1 && !VectorsNearerThan(waypoints[index].origin, r_threatOrigin, botThreatDistance))
+         if (bestIndex == -1 && !VectorsNearerThan(waypoints[index].origin, r_threatOrigin, double(botThreatDistance)))
             bestIndex = index;
       }
    }
@@ -1972,7 +1972,7 @@ int BotFindThreatAvoidPoint(bot_t *const pBot, const int min_dist, const edict_t
 
       // we've found the right waypoint if the next waypoint on the route is further
       // from the threat than the bot is, and the end waypoint is far enough from the threat
-      if (nextWP != -1 && !VectorsNearerThan(waypoints[nextWP].origin, pent->v.origin, botThreatDistance) && !VectorsNearerThan(waypoints[index].origin, pent->v.origin, min_dist)) {
+      if (nextWP != -1 && !VectorsNearerThan(waypoints[nextWP].origin, pent->v.origin, double(botThreatDistance)) && !VectorsNearerThan(waypoints[index].origin, pent->v.origin, min_dist)) {
          // show where the bot should be going (for debugging purposes)
          //	WaypointDrawBeam(INDEXENT(1), pBot->pEdict->v.origin,
          //		waypoints[index].origin, 10, 2, 250, 50, 50, 200, 10);
@@ -2455,7 +2455,7 @@ static void BotCheckForConcJump(bot_t *pBot) {
    if (closestJumpWP == -1)
       return;
 
-   const float distanceSaved = WaypointDistanceFromTo(endWP, pBot->goto_wp, pBot->current_team) - WaypointDistanceFromTo(closestJumpWP, pBot->goto_wp, pBot->current_team);
+   const float distanceSaved = WaypointDistanceFromTo(endWP, pBot->goto_wp, pBot->current_team) - static_cast<float>(WaypointDistanceFromTo(closestJumpWP, pBot->goto_wp, pBot->current_team));
 
    // Don't bother if the distance it saves us is less than this.
    if (distanceSaved < 1000.0f)

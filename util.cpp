@@ -109,14 +109,14 @@ bool VectorsNearerThan(const Vector &r_vOne, const Vector &r_vTwo, double value)
    value = value * value;
 
    const Vector distance = r_vOne - r_vTwo;
-   double temp = distance.x * distance.x + distance.y * distance.y;
+   double temp = static_cast<double>(distance.x * distance.x) + static_cast<double>(distance.y * distance.y);
 
    // perform an early 2 dimensional check, because most maps
    // are wider/longer than they are tall
    if (temp > value)
       return false;
    else
-      temp += distance.z * distance.z;
+      temp += static_cast<double>(distance.z * distance.z);
 
    // final check(3 dimensional)
    if (temp < value)

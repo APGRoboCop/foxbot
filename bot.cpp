@@ -2443,7 +2443,7 @@ edict_t *BotAllyAtVector(const bot_t *pBot, const Vector &r_vecOrigin, const flo
       edict_t *pPlayer = INDEXENT(i);
 
       if (pPlayer != nullptr && !pPlayer->free && pPlayer != pBot->pEdict // ignore this bot
-          && UTIL_GetTeam(pPlayer) == pBot->current_team && VectorsNearerThan(pPlayer->v.origin, r_vecOrigin, range)) {
+          && UTIL_GetTeam(pPlayer) == pBot->current_team && VectorsNearerThan(pPlayer->v.origin, r_vecOrigin, double(range))) {
          if (stationaryOnly) {
             if (pPlayer->v.velocity.Length() < 1.0f)
                return pPlayer;
@@ -2474,7 +2474,7 @@ short BotTeammatesNearWaypoint(const bot_t *pBot, const int waypoint) {
       if (bots[i].is_used && &bots[i] != pBot // make sure the player isn't THIS bot
           && bots[i].current_wp == waypoint && bots[i].current_team == pBot->current_team) {
          // if this player is nearer than the bot add them to the total
-         if (VectorsNearerThan(bots[i].pEdict->v.origin, waypoints[waypoint].origin, my_distance))
+         if (VectorsNearerThan(bots[i].pEdict->v.origin, waypoints[waypoint].origin, double(my_distance)))
             ++total_present;
       }
    }
@@ -2498,7 +2498,7 @@ bot_t *BotDefenderAtWaypoint(const bot_t *pBot, const int waypoint, const float 
           && &bots[i] != pBot // make sure the player isn't THIS bot
           && bots[i].goto_wp == waypoint && bots[i].mission == ROLE_DEFENDER && bots[i].current_team == pBot->current_team) {
          // if this player is near enough return who they are
-         if (VectorsNearerThan(bots[i].pEdict->v.origin, waypoints[waypoint].origin, range))
+         if (VectorsNearerThan(bots[i].pEdict->v.origin, waypoints[waypoint].origin, double(range)))
             return &bots[i];
       }
    }
@@ -3614,7 +3614,7 @@ void BotThink(bot_t *pBot) {
       pBot->sentry_edict = nullptr;
       pBot->SGRotated = false;
       BotStartGame(pBot);
-      g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, 0.0f, 0, 0, pBot->pEdict->v.button, static_cast<byte>(0), static_cast<byte>(msecval));
+      g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, 0.0f, 0, 0, static_cast<unsigned short>(pBot->pEdict->v.button), static_cast<byte>(0), static_cast<byte>(msecval));
       return;
    }
 
@@ -3669,7 +3669,7 @@ void BotThink(bot_t *pBot) {
          pBot->pEdict->v.button = IN_ATTACK;
          pBot->f_killed_time = pBot->f_think_time;
       }
-      g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, pBot->f_move_speed, 0, 0, pBot->pEdict->v.button, static_cast<byte>(0), static_cast<byte>(msecval));
+      g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, pBot->f_move_speed, 0, 0, static_cast<unsigned short>(pBot->pEdict->v.button), static_cast<byte>(0), static_cast<byte>(msecval));
 
       return;
    }
@@ -3707,7 +3707,7 @@ void BotThink(bot_t *pBot) {
       BotChangeYaw(pBot->pEdict, pBot->pEdict->v.yaw_speed / 2);
       // UTIL_HostSay(pBot->pEdict,0,"a");
 
-      g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, pBot->f_move_speed, 0, 0, pBot->pEdict->v.button, static_cast<byte>(0), static_cast<byte>(msecval));
+      g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, pBot->f_move_speed, 0, 0, static_cast<unsigned short>(pBot->pEdict->v.button), static_cast<byte>(0), static_cast<byte>(msecval));
       return;
    }
 
@@ -3826,7 +3826,7 @@ void BotThink(bot_t *pBot) {
    /////////////////////////////////////////////////
    // THIS FUNCTION ACTUALLY MOVES THE BOT INGAME //
    /////////////////////////////////////////////////
-   g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, pBot->f_move_speed, pBot->f_side_speed, pBot->f_vertical_speed, pBot->pEdict->v.button, static_cast<byte>(0), static_cast<byte>(msecval));
+   g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, pBot->f_move_speed, pBot->f_side_speed, pBot->f_vertical_speed, static_cast<unsigned short>(pBot->pEdict->v.button), static_cast<byte>(0), static_cast<byte>(msecval));
    //////////////////////////////////////////////////
 
    // check if bots aim should still be affected by concussion and fire etc.
@@ -4248,7 +4248,7 @@ static void BotSpectatorDebug(bot_t *pBot) {
                // indicate the current job and how long it's been running
                if (pBot->currentJob == i) {
                   char msgBuffer[128] = "";
-                  snprintf(msgBuffer, 128, " [phase %d, buffered %f]\n", pBot->job[pBot->currentJob].phase, pBot->f_think_time - pBot->job[pBot->currentJob].f_bufferedTime);
+                  snprintf(msgBuffer, 128, " [phase %d, buffered %f]\n", pBot->job[pBot->currentJob].phase, static_cast<double>(pBot->f_think_time - pBot->job[pBot->currentJob].f_bufferedTime));
                   strncat(msg, msgBuffer, 255 - strlen(msg));
                } else
                   strncat(msg, "\n", 255 - strlen(msg)); // add a newline on the end
@@ -4275,11 +4275,11 @@ static void BotSpectatorDebug(bot_t *pBot) {
       } else // some other spectate_debug mode - show navigation info
       {
          char msgBuffer[128] = "";
-         snprintf(msgBuffer, 128, "waypoint deadline %f\nnavDistance %f\nf_navProblemStartTime %f\n", pBot->f_current_wp_deadline - pBot->f_think_time, (waypoints[pBot->current_wp].origin - pBot->pEdict->v.origin).Length(),
-                  pBot->f_think_time - pBot->f_navProblemStartTime);
+         snprintf(msgBuffer, 128, "waypoint deadline %f\nnavDistance %f\nf_navProblemStartTime %f\n", static_cast<double>(pBot->f_current_wp_deadline - pBot->f_think_time), static_cast<double>((waypoints[pBot->current_wp].origin - pBot->pEdict->v.origin).Length()),
+                 static_cast<double>(pBot->f_think_time - pBot->f_navProblemStartTime));
          strncat(msg, msgBuffer, 255 - strlen(msg));
 
-         snprintf(msgBuffer, 128, "velocity length 2D %f\n velocity Z %f\n", pBot->pEdict->v.velocity.Length2D(), pBot->pEdict->v.velocity.z);
+         snprintf(msgBuffer, 128, "velocity length 2D %f\n velocity Z %f\n", static_cast<double>(pBot->pEdict->v.velocity.Length2D()), static_cast<double>(pBot->pEdict->v.velocity.z));
          strncat(msg, msgBuffer, 255 - strlen(msg));
       }
 
@@ -4291,7 +4291,7 @@ static void BotSpectatorDebug(bot_t *pBot) {
       WRITE_BYTE(2 & 0xFF);
 
       // top of the screen
-      WRITE_SHORT(FixedSigned16(1, (-1) << 13)); // coordinates X
+      WRITE_SHORT(FixedSigned16(1, 1 << 13));  // coordinates X
       WRITE_SHORT(FixedSigned16(1, 0 << 13));  // coordinates Y
 
       WRITE_BYTE(1); // effect

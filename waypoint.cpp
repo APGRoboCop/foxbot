@@ -416,7 +416,7 @@ int WaypointFindPath(PATH **pPath, int *path_index, const int waypoint_index, co
 // This function also checks that the waypoint is visible to the specified entity.
 int WaypointFindNearest_E(const edict_t *pEntity, const float range, const int team) {
    int min_index = -1;
-   double min_distance_squared = range * range + 0.1;
+   double min_distance_squared = static_cast<double>(range * range) + 0.1;
    TraceResult tr;
 
    // bit field of waypoint types to ignore
@@ -433,7 +433,7 @@ int WaypointFindNearest_E(const edict_t *pEntity, const float range, const int t
          continue;
 
       const Vector distance = waypoints[i].origin - pEntity->v.origin;
-      const double distance_squared = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
+      const double distance_squared = static_cast<double>(distance.x * distance.x) + static_cast<double>(distance.y * distance.y) + static_cast<double>(distance.z * distance.z);
 
       if (distance_squared < min_distance_squared) {
          // if waypoint is visible from current position
@@ -488,7 +488,7 @@ int WaypointFindNearest_V(const Vector &v_src, const float range, const int team
 // Also, you can specify waypoint flags that you wish to exclude from the search.
 int WaypointFindNearest_S(const Vector &v_src, edict_t *pEntity, const float range, const int team, const WPT_INT32 ignore_flags) {
    int min_index = -1;
-   double min_distance_squared = range * range + 0.1;
+   double min_distance_squared = static_cast<double>(range * range) + 0.1;
    TraceResult tr;
 
    // find the nearest waypoint...
@@ -507,7 +507,7 @@ int WaypointFindNearest_S(const Vector &v_src, edict_t *pEntity, const float ran
 
       // square the Manhattan distance
       const Vector distance = waypoints[index].origin - v_src;
-      const double distance_squared = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
+      const double distance_squared = static_cast<double>(distance.x * distance.x) + static_cast<double>(distance.y * distance.y) + static_cast<double>(distance.z * distance.z);
 
       // if it's the nearest found so far
       if (distance_squared < min_distance_squared) {
@@ -828,7 +828,7 @@ int WaypointFindRandomGoal_R(const Vector &v_src, const bool checkVisibility, co
       if (!WaypointAvailable(index, team))
          continue;
 
-      if (VectorsNearerThan(waypoints[index].origin, v_src, range)) {
+      if (VectorsNearerThan(waypoints[index].origin, v_src, double(range))) {
          if (checkVisibility)
             UTIL_TraceLine(v_src, waypoints[index].origin, ignore_monsters, nullptr, &tr);
 
@@ -3718,7 +3718,7 @@ int AreaDefPointFindNearest(const edict_t *pEntity, const float range, const int
       if (areas[i].flags & W_FL_DELETED)
          continue; // skip any deleted area points
 
-      float distance = 9999;
+      float distance = 9999.0f;
 
       if (flags == A_FL_1) {
          distance = (areas[i].a - pEntity->v.origin).Length();
@@ -3737,7 +3737,7 @@ int AreaDefPointFindNearest(const edict_t *pEntity, const float range, const int
          o = areas[i].d;
       }
 
-      if (distance == 9999)
+      if (distance == 9999.0f)
          continue;
 
       if (distance < min_distance && distance < range) {

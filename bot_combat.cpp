@@ -406,12 +406,12 @@ void BotEnemyCheck(bot_t *pBot) {
 
          // this code segment sets up a snipers sniper rifle firing delay
          if (pBot->pEdict->v.playerclass == TFC_CLASS_SNIPER && pBot->current_weapon.iId == TF_WEAPON_SNIPERRIFLE) {
-            const float timeVal = (pBot->bot_skill + 1) * 0.4f;
+            const float timeVal = static_cast<float>(pBot->bot_skill + 1) * 0.4f;
 
             // if f_snipe_time is too high or too low reset it
             if (pBot->f_snipe_time + 0.3f < pBot->f_think_time || pBot->f_snipe_time > pBot->f_think_time + timeVal) {
                // set pBot->f_snipe_time for a short delay
-               pBot->f_snipe_time = pBot->f_think_time + random_float(0.0, timeVal);
+               pBot->f_snipe_time = pBot->f_think_time + random_float(0.0f, timeVal);
 
                pBot->pEdict->v.button |= IN_ATTACK;
                pBot->f_pause_time = pBot->f_snipe_time;
@@ -897,7 +897,7 @@ static bool BotSpyDetectCheck(bot_t *pBot, edict_t *pNewEnemy) {
 
          // moderate the bots suspicion based on what role it's filling
          if (pBot->mission == ROLE_DEFENDER) {
-            pBot->f_suspectSpyTime = pBot->f_think_time + random_float(2.0f, 5.0f) + pBot->bot_skill * 0.5f;
+            pBot->f_suspectSpyTime = pBot->f_think_time + random_float(2.0f, 5.0f) + static_cast<float>(pBot->bot_skill) * 0.5f;
 
             // maybe track the spy about for a bit whilst suspicious
             if (pBot->bot_class != TFC_CLASS_CIVILIAN && random_long(0, 1000) < 250) {
@@ -912,7 +912,7 @@ static bool BotSpyDetectCheck(bot_t *pBot, edict_t *pNewEnemy) {
             }
          } else // attackers
          {
-            pBot->f_suspectSpyTime = pBot->f_think_time + random_float(2.0f, 5.0f) + pBot->bot_skill * 0.5f;
+            pBot->f_suspectSpyTime = pBot->f_think_time + random_float(2.0f, 5.0f) + static_cast<float>(pBot->bot_skill) * 0.5f;
 
             // maybe track the spy about for a bit whilst suspicious
             if (pBot->bot_class != TFC_CLASS_CIVILIAN && random_long(0, 1000) < 100) {
@@ -1264,7 +1264,7 @@ static Vector BotBodyTarget(const edict_t *pBotEnemy, bot_t *pBot) {
 
          // Make the bot less accurate if the enemy was just seen
          if (pBot->enemy.f_firstSeen + 2.0f > pBot->f_think_time)
-            aim_error += (pBot->bot_skill + 1) * random_float(5.0f, 20.0f);
+            aim_error += static_cast<float>(pBot->bot_skill + 1) * random_float(5.0f, 20.0f);
 
          const float aim_offset = bot_snipe_max_inaccuracy[pBot->bot_skill] + aim_error;
          switch (pBot->bot_skill) {
@@ -1306,7 +1306,7 @@ static Vector BotBodyTarget(const edict_t *pBotEnemy, bot_t *pBot) {
 
          // Make the bot less accurate if the enemy was just seen
          if (pBot->enemy.f_firstSeen + 2.0f > pBot->f_think_time)
-            aim_error += (pBot->bot_skill + 1) * random_float(5.0f, 20.0f);
+            aim_error += static_cast<float>(pBot->bot_skill + 1) * random_float(5.0f, 20.0f);
 
          const float aim_offset = bot_max_inaccuracy[pBot->bot_skill] + aim_error;
          switch (pBot->bot_skill) {
@@ -1421,22 +1421,22 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
 
    // nobody documented this bit of code ;-(
    if (pBot->current_weapon.iId == TF_WEAPON_RPG || pBot->current_weapon.iId == TF_WEAPON_IC || pBot->current_weapon.iId == TF_WEAPON_GL) {
-      double diff = pEdict->v.v_angle.y; //-pEdict->v.ideal_yaw;
+      auto diff = pEdict->v.v_angle.y; //-pEdict->v.ideal_yaw;
 
-      if (diff < -180)
-         diff += 360;
-      if (diff > 180)
-         diff -= 360;
-
+      if (diff < -180.0f)
+         diff += 360.0f;
+      if (diff > 180.0f)
+         diff -= 360.0f;
+      
       diff -= pEdict->v.ideal_yaw;
-      if (diff < -180)
-         diff += 360;
-      if (diff > 180)
-         diff -= 360;
+      if (diff < -180.0f)
+         diff += 360.0f;
+      if (diff > 180.0f)
+         diff -= 360.0f;
 
-      double ang = (32 * pBot->bot_skill + 16) / f_distance;
+      double ang = (32 * static_cast<double>(pBot->bot_skill + 16)) / static_cast<double>(f_distance);
       ang = tan(ang);
-      ang = ang * 180;
+      ang = ang * 180.0;
 
       if (diff < 0)
          diff = -diff;
@@ -1444,7 +1444,7 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
       /*char msg[512];
          sprintf(msg,"%f  %f", ang, diff);
          UTIL_HostSay(pEdict,0,msg);*/
-      if (ang < diff) //|| (FInViewCone( v_enemy, pEdict ) && FVisible( v_enemy, pEdict )))
+      if (ang < static_cast<double>(diff)) //|| (FInViewCone( v_enemy, pEdict ) && FVisible( v_enemy, pEdict )))
          return false;
    }
 
