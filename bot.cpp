@@ -885,7 +885,7 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
             pBot->trait.camper = false;
       } else // make each bot have the same personality traits
       {
-         pBot->trait.aggression = 50;
+         pBot->trait.aggression = 75;
          pBot->trait.fairplay = 600;
          pBot->trait.faveClass = 3;
          pBot->trait.health = 50;
