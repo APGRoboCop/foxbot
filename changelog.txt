@@ -21,7 +21,7 @@ Updated by RoboCop
 
 - Reduced infinite loops for enhanced stability and less CPU consumption
 
-- Increased the bot's flexibility to steer quickly when turning corners and aim faster
+- Increased the bot's flexibility to steer quickly when turn corners and aim faster
 
 - Optimised pathway for 2fort, shutdown2, rock2, well and dustbowl
 
@@ -37,17 +37,17 @@ TODO List:-
 
 >> Fix bot_chat cvars
 
->> Train spies to not flag hold and aim properly to destroy SG Turrets
+>> Train spies to not flag hold and aim properly to destroy SG turrets
 
 >> Train snipers to not flag hold as certain classes need to blacklist any proirities for capping
 
->> To allow bots to use Nail Guns for destroying SG Turrets, when out of nades or from a distance
+>> To allow bots to use Nail Guns for destroying SG turrets, when out of nades or from a distance
 
 >> Allow bots to toss grenades at a higher angle and low range as their target aim is too short
 
 >> Find a way to allow bot_job_think.cpp task priorities work properly (45 jobs in total too much?)
 
->> BONUS: Maybe add a feature for bots to have experience and wisdom in order to be more human
+>> BONUS: Maybe add a feature for bots to have experience and wisdom or learned data in order to be more human
 
 --------------------------------------------------------------------------------
 Version 0.800
