@@ -294,8 +294,8 @@ void KewlHUDNotify(edict_t *pEntity, const char *msg_name) {
    MESSAGE_BEGIN(MSG_ONE, SVC_TEMPENTITY, nullptr, pEntity);
    WRITE_BYTE(TE_TEXTMESSAGE);
    WRITE_BYTE(3 & 0xFF);
-   WRITE_SHORT(FixedSigned16(1, -1 << 13));
-   WRITE_SHORT(FixedSigned16(1, -1 << 13));
+   WRITE_SHORT(FixedSigned16(1, 1 << 13));
+   WRITE_SHORT(FixedSigned16(1, 1 << 13));
    WRITE_BYTE(2); // effect
 
    WRITE_BYTE(205);
@@ -925,7 +925,7 @@ void DispatchThink(edict_t *pent) {
          MESSAGE_BEGIN(MSG_ONE, SVC_TEMPENTITY, nullptr, pent->v.owner);
          WRITE_BYTE(TE_TEXTMESSAGE);
          WRITE_BYTE(2 & 0xFF);
-         WRITE_SHORT(FixedSigned16(1, -1 << 13));
+         WRITE_SHORT(FixedSigned16(1, 1 << 13));
          WRITE_SHORT(FixedSigned16(1, 0 << 13));
          WRITE_BYTE(1); // effect
 
@@ -4893,7 +4893,7 @@ static void ProcessBotCfgFile() {
          need_to_open_cfg2 = true;
       if (cfg_file == 2) {
          cfg_file = 0;
-         bot_cfg_pause_time = 0.0; // stop it checking the file again :)
+         bot_cfg_pause_time = 0.0f; // stop it checking the file again :)
       }
       return;
    }
@@ -4938,14 +4938,14 @@ static void ProcessBotCfgFile() {
                       {fp=UTIL_OpenFoxbotLog(); fprintf(fp,"close cfg\n"); fclose(fp);}*/
 
       // dam reset
-      // bot_cfg_pause_time = 0.0;
+      // bot_cfg_pause_time = 0.0f;
 
       // sort new cfg shiznit out
       if (cfg_file == 1)
          need_to_open_cfg2 = true;
       if (cfg_file == 2) {
          cfg_file = 3; // 0 is for if it was null when we passed in
-         bot_cfg_pause_time = 0.0;
+         bot_cfg_pause_time = 0.0f;
       }
    }
 

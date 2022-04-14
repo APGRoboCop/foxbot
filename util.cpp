@@ -552,7 +552,7 @@ bool UTIL_FootstepsHeard(const edict_t *pEdict, edict_t *pPlayer) {
    if (check_footstep_sounds == true) {
       check_footstep_sounds = false;
 
-      if (CVAR_GET_FLOAT("mp_footsteps") > 0.0)
+      if (CVAR_GET_FLOAT("mp_footsteps") > 0.0f)
          footstep_sounds_on = true;
    }
 

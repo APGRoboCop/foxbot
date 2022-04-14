@@ -850,7 +850,7 @@ static bool BotUpdateRoute(bot_t *pBot) {
 
       // figure out how near to the bot's current waypoint the bot has to be
       // before it will move on the next waypoint
-      float needed_distance = 50.0; // standard distance for most waypoint types
+      float needed_distance = 50.0f; // standard distance for most waypoint types
       bool heightCheck = true;      // used only when climbing ladders
       if (pBot->pEdict->v.movetype == MOVETYPE_FLY) {
          // if the bot is on a ladder make sure it is just above the waypoint
@@ -861,11 +861,11 @@ static bool BotUpdateRoute(bot_t *pBot) {
          // gotta be similar height or higher than jump waypoint
          if (pBot->pEdict->v.origin.z < waypoints[new_current_wp].origin.z - 15.0f || pBot->pEdict->v.flags & FL_ONGROUND)
             heightCheck = false;
-         needed_distance = 80.0;
+         needed_distance = 80.0f;
       } else if (waypoints[new_current_wp].flags & W_FL_LIFT)
-         needed_distance = 25.0; // some lifts are small(e.g. rock2's lifts)
+         needed_distance = 25.0f; // some lifts are small(e.g. rock2's lifts)
       else if (waypoints[new_current_wp].flags & W_FL_WALK)
-         needed_distance = 20.0;
+         needed_distance = 20.0f;
 
       bool waypointTouched = false;
 
@@ -1546,7 +1546,7 @@ void BotFindSideRoute(bot_t *pBot) {
 
    // has the bot changed it's mind on how far it's willing to branch?
    if (pBot->f_side_route_time < pBot->f_think_time) {
-      pBot->f_side_route_time = pBot->f_think_time + random_float(15.0, 60.0);
+      pBot->f_side_route_time = pBot->f_think_time + random_float(15.0f, 60.0f);
 
       const int randomatic = random_long(1, 1000);
       if (randomatic < 401)

@@ -33,12 +33,7 @@
 #include <unistd.h>
 #endif
 
-#ifndef __linux__
 #include <sys/stat.h>
-#else
-#include <sys\stat.h>
-#endif
-
 #include "extdll.h"
 #include "util.h"
 #include <enginecallback.h>
@@ -1354,7 +1349,7 @@ void WaypointCreatePath(edict_t *pEntity, const int cmd) {
 
    if (cmd == 1) // assign source of path
    {
-      waypoint1 = WaypointFindNearest_E(pEntity, 50.0, -1);
+      waypoint1 = WaypointFindNearest_E(pEntity, 50.0f, -1);
 
       if (waypoint1 == -1) {
          // play "cancelled" sound...
@@ -1370,7 +1365,7 @@ void WaypointCreatePath(edict_t *pEntity, const int cmd) {
 
    if (cmd == 2) // assign dest of path and make path
    {
-      waypoint2 = WaypointFindNearest_E(pEntity, 50.0, -1);
+      waypoint2 = WaypointFindNearest_E(pEntity, 50.0f, -1);
 
       if (waypoint1 == -1 || waypoint2 == -1) {
          // play "error" sound...
@@ -1393,7 +1388,7 @@ void WaypointRemovePath(edict_t *pEntity, const int cmd) {
 
    if (cmd == 1) // assign source of path
    {
-      waypoint1 = WaypointFindNearest_E(pEntity, 50.0, -1);
+      waypoint1 = WaypointFindNearest_E(pEntity, 50.0f, -1);
 
       if (waypoint1 == -1) {
          // play "cancelled" sound...
@@ -1410,7 +1405,7 @@ void WaypointRemovePath(edict_t *pEntity, const int cmd) {
 
    if (cmd == 2) // assign dest of path and make path
    {
-      waypoint2 = WaypointFindNearest_E(pEntity, 50.0, -1);
+      waypoint2 = WaypointFindNearest_E(pEntity, 50.0f, -1);
 
       if (waypoint1 == -1 || waypoint2 == -1) {
          // play "error" sound...
@@ -2008,7 +2003,7 @@ bool WaypointDirectPathCheck(const int srcWP, const int destWP) {
                                                                 waypoints[i].origin,	ignore_monsters,
                                                                 pEntity->v.pContainingEntity, &tr );
 
-                                                if(tr.flFraction >= 1.0)
+                                                if(tr.flFraction >= 1.0f)
                                                 {
                                                                 if(WaypointReachable(pEntity->v.origin, waypoints[i].origin, pEntity))
                                                                 {
@@ -2794,7 +2789,7 @@ void WaypointThink(edict_t *pEntity) {
    }
 
    // area def draw
-   //	min_distance = 9999.0;
+   //	min_distance = 9999.0f;
    if (g_area_def && g_waypoint_cache && !(pEntity->v.flags & FL_FAKECLIENT)) {
       bool timr;
       for (i = 0; i < num_areas; i++) {
@@ -3409,7 +3404,7 @@ bool WaypointAvailable(const int index, const int team) {
 }
 
 void WaypointRunOneWay(edict_t *pEntity) {
-   const int temp = WaypointFindNearest_E(pEntity, 50.0, -1);
+   const int temp = WaypointFindNearest_E(pEntity, 50.0f, -1);
 
    if (temp != -1) {
       if (wpt1 == -1) {
@@ -3433,7 +3428,7 @@ void WaypointRunOneWay(edict_t *pEntity) {
 }
 
 void WaypointRunTwoWay(edict_t *pEntity) {
-   const int temp = WaypointFindNearest_E(pEntity, 50.0, -1);
+   const int temp = WaypointFindNearest_E(pEntity, 50.0f, -1);
 
    if (temp != -1) {
       if (wpt1 == -1) {
@@ -3713,7 +3708,7 @@ int AreaDefPointFindNearest(const edict_t *pEntity, const float range, const int
       return -1;
 
    int min_index = -1;
-   float min_distance = 9999.0;
+   float min_distance = 9999.0f;
    TraceResult tr;
    Vector o;
 
@@ -3766,7 +3761,7 @@ void AreaDefDelete(edict_t *pEntity) {
 
    // int count = 0;
 
-   int index = AreaDefPointFindNearest(pEntity, 50.0, A_FL_1);
+   int index = AreaDefPointFindNearest(pEntity, 50.0f, A_FL_1);
    if (index != -1) {
       areas[index].flags &= ~A_FL_1;
       areas[index].a = Vector(0, 0, 0);
@@ -3774,7 +3769,7 @@ void AreaDefDelete(edict_t *pEntity) {
       EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "weapons/mine_activate.wav", 1.0, ATTN_NORM, 0, 100);
       return;
    }
-   index = AreaDefPointFindNearest(pEntity, 50.0, A_FL_2);
+   index = AreaDefPointFindNearest(pEntity, 50.0f, A_FL_2);
    if (index != -1) {
       areas[index].flags &= ~A_FL_2;
       areas[index].b = Vector(0, 0, 0);
@@ -3782,7 +3777,7 @@ void AreaDefDelete(edict_t *pEntity) {
       EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "weapons/mine_activate.wav", 1.0, ATTN_NORM, 0, 100);
       return;
    }
-   index = AreaDefPointFindNearest(pEntity, 50.0, A_FL_3);
+   index = AreaDefPointFindNearest(pEntity, 50.0f, A_FL_3);
    if (index != -1) {
       areas[index].flags &= ~A_FL_3;
       areas[index].c = Vector(0, 0, 0);
@@ -3790,7 +3785,7 @@ void AreaDefDelete(edict_t *pEntity) {
       EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "weapons/mine_activate.wav", 1.0, ATTN_NORM, 0, 100);
       return;
    }
-   index = AreaDefPointFindNearest(pEntity, 50.0, A_FL_4);
+   index = AreaDefPointFindNearest(pEntity, 50.0f, A_FL_4);
    if (index != -1) {
       areas[index].flags &= ~A_FL_4;
       areas[index].d = Vector(0, 0, 0);
@@ -3873,7 +3868,7 @@ bool AreaDefLoad(edict_t *pEntity) {
 
             int i;
             for (i = 0; i < MAX_WAYPOINTS; i++) {
-               a_display_time[i] = 0.0;
+               a_display_time[i] = 0.0f;
                areas[i].flags = 0;
                areas[i].a = Vector(0, 0, 0);
                areas[i].b = Vector(0, 0, 0);
@@ -3936,7 +3931,7 @@ void AreaDefPrintInfo(edict_t *pEntity) {
       ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
    }
 
-   int index = AreaDefPointFindNearest(pEntity, 50.0, A_FL_1);
+   int index = AreaDefPointFindNearest(pEntity, 50.0f, A_FL_1);
 
    if (index != -1) {
       sprintf(msg, "Area %d of %d total\n", index, num_areas);
@@ -3945,7 +3940,7 @@ void AreaDefPrintInfo(edict_t *pEntity) {
       return;
    }
 
-   index = AreaDefPointFindNearest(pEntity, 50.0, A_FL_2);
+   index = AreaDefPointFindNearest(pEntity, 50.0f, A_FL_2);
 
    if (index != -1) {
       sprintf(msg, "Area %d of %d total\n", index, num_areas);
@@ -3954,7 +3949,7 @@ void AreaDefPrintInfo(edict_t *pEntity) {
       return;
    }
 
-   index = AreaDefPointFindNearest(pEntity, 50.0, A_FL_3);
+   index = AreaDefPointFindNearest(pEntity, 50.0f, A_FL_3);
 
    if (index != -1) {
       sprintf(msg, "Area %d of %d total\n", index, num_areas);
@@ -3963,7 +3958,7 @@ void AreaDefPrintInfo(edict_t *pEntity) {
       return;
    }
 
-   index = AreaDefPointFindNearest(pEntity, 50.0, A_FL_4);
+   index = AreaDefPointFindNearest(pEntity, 50.0f, A_FL_4);
 
    if (index != -1) {
       sprintf(msg, "Area %d of %d total\n", index, num_areas);

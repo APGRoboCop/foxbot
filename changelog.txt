@@ -19,6 +19,8 @@ Updated by RoboCop
 
 - Improved floating point precision
 
+- Reduced infinite loops for enhanced stability and less CPU consumption
+
 - Increased the bot's flexibility to steer quickly when turning corners and aim faster
 
 - Optimised pathway for 2fort, shutdown2, rock2, well and dustbowl

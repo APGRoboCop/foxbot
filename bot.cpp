@@ -1317,7 +1317,7 @@ void BotFindItem(bot_t *pBot) {
                   continue;
 
                // ignore this item if it's on an unavailable waypoint
-               const int nearestWP = WaypointFindNearest_V(pent->v.origin, 80.0, -1);
+               const int nearestWP = WaypointFindNearest_V(pent->v.origin, 80.0f, -1);
                if (nearestWP != -1 && !WaypointAvailable(nearestWP, pBot->current_team))
                   continue;
 

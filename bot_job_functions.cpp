@@ -115,7 +115,7 @@ int JobSeekWaypoint(bot_t *pBot) {
       if (!FInViewCone(v_forwards, pBot->pEdict)) {
          job_ptr->origin = v_forwards;
          job_ptr->phase = 2;
-         job_ptr->phase_timer = pBot->f_think_time + random_float(1.5, 4.0);
+         job_ptr->phase_timer = pBot->f_think_time + random_float(1.5f, 4.0f);
       } else
          pBot->f_move_speed = pBot->f_max_speed / 2; // slow down silver!
    }
@@ -162,7 +162,7 @@ int JobGetUnstuck(bot_t *pBot) {
 
       // try a few random directions, looking for an open area
       for (int i = 0; i < 8; i++) {
-         Vector newAngle = Vector(0.0, random_float(-180.0, 180.0), 0.0);
+         Vector newAngle = Vector(0.0, random_float(-180.0f, 180.0f), 0.0);
          UTIL_MakeVectors(newAngle);
 
          // do a trace 300 units ahead of the new view angle to check for sight barriers
@@ -175,7 +175,7 @@ int JobGetUnstuck(bot_t *pBot) {
          if (tr.flFraction >= 1.0f || !VectorsNearerThan(pBot->pEdict->v.origin, tr.vecEndPos, 80.0)) {
             job_ptr->origin = tr.vecEndPos; // remember where to go
             job_ptr->phase = 1;
-            job_ptr->phase_timer = pBot->f_think_time + random_float(1.0, 3.0);
+            job_ptr->phase_timer = pBot->f_think_time + random_float(1.0f, 3.0f);
 
             //	WaypointDrawBeam(INDEXENT(1), pBot->pEdict->v.origin,
             //		job_ptr->origin, 10, 2, 250, 250, 250, 200, 10);
@@ -203,7 +203,7 @@ int JobGetUnstuck(bot_t *pBot) {
 
       // wandered long enough?
       if (job_ptr->phase_timer < pBot->f_think_time || (pBot->pEdict->v.origin - job_ptr->origin).Length2D() < 20.0f) {
-         BlacklistJob(pBot, JOB_GET_UNSTUCK, 1.0); // don't get caught in a loop
+         BlacklistJob(pBot, JOB_GET_UNSTUCK, 1.0f); // don't get caught in a loop
          return JOB_TERMINATED;
       }
    }
@@ -268,7 +268,7 @@ int JobChat(bot_t *pBot) {
          job_ptr->phase = 1;
 
          // create a delay so the bot can "type"
-         job_ptr->phase_timer = pBot->f_think_time + random_float(2.0, 5.0);
+         job_ptr->phase_timer = pBot->f_think_time + random_float(2.0f, 5.0f);
       }
    }
 
@@ -338,7 +338,7 @@ int JobPickUpItem(bot_t *pBot) {
    if (job_ptr->phase == 0) {
       pBot->goto_wp = job_ptr->waypoint;
       if (!BotNavigateWaypoints(pBot, false)) {
-         BlacklistJob(pBot, JOB_PICKUP_ITEM, random_float(5.0, 15.0));
+         BlacklistJob(pBot, JOB_PICKUP_ITEM, random_float(5.0f, 15.0f));
          return JOB_TERMINATED;
       }
 
@@ -357,7 +357,7 @@ int JobPickUpItem(bot_t *pBot) {
    if (job_ptr->phase == 1) {
       // took too long reaching it from the nearest waypoint?
       if (job_ptr->phase_timer < pBot->f_think_time) {
-         BlacklistJob(pBot, JOB_PICKUP_FLAG, random_float(1.0, 4.0));
+         BlacklistJob(pBot, JOB_PICKUP_FLAG, random_float(1.0f, 4.0f));
          return JOB_TERMINATED;
       }
 
@@ -374,7 +374,7 @@ int JobPickUpItem(bot_t *pBot) {
          if ((job_ptr->object->v.origin - pBot->pEdict->v.origin).Length2D() < 25.0f) {
             // blacklist the job very briefly in case the item can't be picked up
             // don't want the bot obssessing about it constantly
-            BlacklistJob(pBot, JOB_PICKUP_ITEM, 1.0);
+            BlacklistJob(pBot, JOB_PICKUP_ITEM, 1.0f);
 
             return JOB_TERMINATED; // success
          }
@@ -394,7 +394,7 @@ int JobPickUpFlag(bot_t *pBot) {
    if (job_ptr->phase == 0) {
       pBot->goto_wp = job_ptr->waypoint;
       if (!BotNavigateWaypoints(pBot, false)) {
-         BlacklistJob(pBot, JOB_PICKUP_FLAG, random_float(5.0, 10.0));
+         BlacklistJob(pBot, JOB_PICKUP_FLAG, random_float(5.0f, 10.0f));
          return JOB_TERMINATED;
       }
 
@@ -409,7 +409,7 @@ int JobPickUpFlag(bot_t *pBot) {
    if (job_ptr->phase == 1) {
       // took too long reaching it from the nearest waypoint?
       if (job_ptr->phase_timer < pBot->f_think_time) {
-         BlacklistJob(pBot, JOB_PICKUP_FLAG, random_float(3.0, 10.0));
+         BlacklistJob(pBot, JOB_PICKUP_FLAG, random_float(3.0f, 10.0f));
          return JOB_TERMINATED;
       }
 
@@ -476,7 +476,7 @@ int JobPickUpFlag(bot_t *pBot) {
          }
       }
 
-      BlacklistJob(pBot, JOB_PICKUP_FLAG, 6.0);
+      BlacklistJob(pBot, JOB_PICKUP_FLAG, 6.0f);
       return JOB_TERMINATED; // job done
    }
 
@@ -509,7 +509,7 @@ int JobPushButton(bot_t *pBot) {
    if (job_ptr->phase == 1) {
       // taken too long getting to the button?
       if (job_ptr->phase_timer < pBot->f_think_time) {
-         BlacklistJob(pBot, JOB_PUSH_BUTTON, 3.0);
+         BlacklistJob(pBot, JOB_PUSH_BUTTON, 3.0f);
          return JOB_TERMINATED;
       }
 
@@ -539,7 +539,7 @@ int JobPushButton(bot_t *pBot) {
    if (job_ptr->phase == 2) {
       // taken too long getting to the button?
       if (job_ptr->phase_timer < pBot->f_think_time) {
-         BlacklistJob(pBot, JOB_PUSH_BUTTON, 3.0);
+         BlacklistJob(pBot, JOB_PUSH_BUTTON, 3.0f);
          return JOB_TERMINATED;
       }
 
@@ -588,7 +588,7 @@ int JobUseTeleport(bot_t *pBot) {
       } else {
          pBot->goto_wp = job_ptr->waypoint;
          if (!BotNavigateWaypoints(pBot, false)) {
-            BlacklistJob(pBot, JOB_USE_TELEPORT, random_float(5.0, 20.0));
+            BlacklistJob(pBot, JOB_USE_TELEPORT, random_float(5.0f, 20.0f));
             return JOB_TERMINATED;
          }
       }
@@ -667,7 +667,7 @@ int JobUseTeleport(bot_t *pBot) {
          //	UTIL_BotLogPrintf("%s, teleporter at %d is idle, time %f\n",
          //		pBot->name, job_ptr->waypoint, pBot->f_think_time);
 
-         BlacklistJob(pBot, JOB_USE_TELEPORT, random_float(25.0, 40.0));
+         BlacklistJob(pBot, JOB_USE_TELEPORT, random_float(25.0f, 40.0f));
          return JOB_TERMINATED;
       }
 
@@ -1100,7 +1100,7 @@ int JobBuildTeleport(bot_t *pBot) {
             // abort the job if there's a teleport here already
             if (BotEntityAtPoint("building_teleporter", waypoints[pBot->current_wp].origin, 120.0)) {
                //	UTIL_HostSay(pBot->pEdict, 0, "Teleport here already"); //DebugMessageOfDoom!
-               BlacklistJob(pBot, JOB_BUILD_TELEPORT, random_float(30.0, 60.0));
+               BlacklistJob(pBot, JOB_BUILD_TELEPORT, random_float(30.0f, 60.0f));
                return JOB_TERMINATED;
             }
          } else {
@@ -1333,7 +1333,7 @@ int JobBuffAlly(bot_t *pBot) {
    if (job_ptr->phase == 3) {
       // spent too long trying to get to the patient(e.g. blocked by scenery)
       if (job_ptr->phase_timer < pBot->f_think_time) {
-         BlacklistJob(pBot, JOB_BUFF_ALLY, 5.0);
+         BlacklistJob(pBot, JOB_BUFF_ALLY, 5.0f);
          return JOB_TERMINATED;
       }
 
@@ -1425,7 +1425,7 @@ int JobEscortAlly(bot_t *pBot) {
       } else {
          pBot->goto_wp = job_ptr->waypoint;
          if (!BotNavigateWaypoints(pBot, false)) {
-            BlacklistJob(pBot, JOB_ESCORT_ALLY, random_float(5.0, 15.0));
+            BlacklistJob(pBot, JOB_ESCORT_ALLY, random_float(5.0f, 15.0f));
             return JOB_TERMINATED;
          }
       }
@@ -2772,7 +2772,7 @@ int JobPursueEnemy(bot_t *pBot) {
       else {
          pBot->goto_wp = job_ptr->waypoint;
          if (!BotNavigateWaypoints(pBot, false)) {
-            BlacklistJob(pBot, JOB_PURSUE_ENEMY, random_float(5.0, 20.0));
+            BlacklistJob(pBot, JOB_PURSUE_ENEMY, random_float(5.0f, 20.0f));
             return JOB_TERMINATED;
          }
       }
@@ -2800,7 +2800,7 @@ int JobPatrolHome(bot_t *pBot) {
       // abort and blacklist the job for a while if no waypoint was found
       if (job_ptr->waypoint == -1) {
          //	UTIL_HostSay(pBot->pEdict, 0, "no patrol goal found"); //DebugMessageOfDoom!
-         BlacklistJob(pBot, JOB_PATROL_HOME, random_float(30.0, 60.0));
+         BlacklistJob(pBot, JOB_PATROL_HOME, random_float(30.0f, 60.0f));
          return JOB_TERMINATED;
       }
 
@@ -2998,7 +2998,7 @@ int JobAttackTeleport(bot_t *pBot) {
    if (job_ptr->phase == 2) {
       // time out if this is taking too long or the bot can't see the teleporter
       if (job_ptr->phase_timer < pBot->f_think_time || !BotCanSeeOrigin(pBot, job_ptr->object->v.origin)) {
-         BlacklistJob(pBot, JOB_ATTACK_TELEPORT, 5.0);
+         BlacklistJob(pBot, JOB_ATTACK_TELEPORT, 5.0f);
          return JOB_TERMINATED;
       }
 
