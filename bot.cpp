@@ -457,7 +457,7 @@ void BotPickName(char *name_buffer) {
       used = false;
 
       // is there a player with this name?
-      for (index = 0; index <= gpGlobals->maxClients; index++) {
+      for (index = 1; index <= gpGlobals->maxClients; index++) {
          edict_t *pPlayer = INDEXENT(index);
 
          if (pPlayer && !FNullEnt(pPlayer) && !pPlayer->free && strcmp(bot_names[name_index], STRING(pPlayer->v.netname)) == 0) {

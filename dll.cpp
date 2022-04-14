@@ -2470,7 +2470,7 @@ void StartFrame() { // v7 last frame timing
       }
       if (count > num_bots)
          num_bots = count;
-      for (player_index = 0; player_index <= gpGlobals->maxClients; player_index++) {
+      for (player_index = 1; player_index <= gpGlobals->maxClients; player_index++) {
          pPlayer = INDEXENT(player_index);
 
          if (pPlayer && !pPlayer->free) {
