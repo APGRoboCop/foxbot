@@ -149,9 +149,9 @@ jobList_struct jl[JOB_TYPE_TOTAL] = {   //Only handles 32 not 45? [APG]RoboCop[C
     {510, {JOB_DISGUISE}},
     {500, {JOB_ESCORT_ALLY}},
     {490, {JOB_GET_ARMOR}},
-    {480, {JOB_INVESTIGATE_AREA}},
+    {480, {JOB_PURSUE_ENEMY}},
     {470, {JOB_SEEK_BACKUP}},
-    {460, {JOB_PURSUE_ENEMY}},
+    {460, {JOB_INVESTIGATE_AREA}},
     {450, {JOB_CALL_MEDIC}}, // this should be a higher priority than JOB_GET_HEALTH
     {440, {JOB_GET_HEALTH}},
     {430, {JOB_PICKUP_ITEM}}, // Bots appear to maybe not go beyond this line as the max is 32 tasks and could be out of range? [APG]RoboCop[CL]

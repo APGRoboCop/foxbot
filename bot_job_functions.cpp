@@ -92,7 +92,7 @@ int JobSeekWaypoint(bot_t *pBot) {
       // if there is space above the bots head climb upwards
       if (tr.flFraction >= 1.0f) {
          pBot->pEdict->v.idealpitch = 90;
-         BotChangePitch(pBot->pEdict, 99999);
+         BotChangePitch(pBot->pEdict, 99999.0f);
       }
    }
 
@@ -109,7 +109,7 @@ int JobSeekWaypoint(bot_t *pBot) {
       const Vector newAngle = Vector(0.0f, random_float(-180.0f, 180.0f), 0.0f);
       UTIL_MakeVectors(newAngle);
 
-      const Vector v_forwards = pBot->pEdict->v.origin + gpGlobals->v_forward * 1000.0;
+      const Vector v_forwards = pBot->pEdict->v.origin + gpGlobals->v_forward * 1000.0f;
 
       // not the same direction the bot is facing already
       if (!FInViewCone(v_forwards, pBot->pEdict)) {
@@ -162,11 +162,11 @@ int JobGetUnstuck(bot_t *pBot) {
 
       // try a few random directions, looking for an open area
       for (int i = 0; i < 8; i++) {
-         Vector newAngle = Vector(0.0, random_float(-180.0f, 180.0f), 0.0);
+         Vector newAngle = Vector(0.0, random_float(-180.0f, 180.0f), 0.0f);
          UTIL_MakeVectors(newAngle);
 
          // do a trace 300 units ahead of the new view angle to check for sight barriers
-         const Vector v_forwards = pBot->pEdict->v.origin + gpGlobals->v_forward * 300.0;
+         const Vector v_forwards = pBot->pEdict->v.origin + gpGlobals->v_forward * 300.0f;
 
          TraceResult tr;
          UTIL_TraceLine(pBot->pEdict->v.origin, v_forwards, dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
@@ -302,7 +302,7 @@ int JobReport(bot_t *pBot) {
          job_ptr->phase = 1;
 
          // create a delay so the bot can "type"
-         job_ptr->phase_timer = pBot->f_think_time + random_float(5.0f, 10.0f);
+         job_ptr->phase_timer = pBot->f_think_time + 2.0f;
       }
    }
 
@@ -312,6 +312,7 @@ int JobReport(bot_t *pBot) {
       job_ptr->message[MAX_CHAT_LENGTH - 1] = '\0';
 
       UTIL_HostSay(pBot->pEdict, 1, job_ptr->message);
+      BlacklistJob(pBot, JOB_REPORT, 8.0f); // don't report the same thing too often
       return JOB_TERMINATED; // job done
    }
 
@@ -394,7 +395,7 @@ int JobPickUpFlag(bot_t *pBot) {
    if (job_ptr->phase == 0) {
       pBot->goto_wp = job_ptr->waypoint;
       if (!BotNavigateWaypoints(pBot, false)) {
-         BlacklistJob(pBot, JOB_PICKUP_FLAG, random_float(5.0f, 10.0f));
+         BlacklistJob(pBot, JOB_PICKUP_FLAG, random_float(8.0f, 12.0f));
          return JOB_TERMINATED;
       }
 
@@ -409,7 +410,7 @@ int JobPickUpFlag(bot_t *pBot) {
    if (job_ptr->phase == 1) {
       // took too long reaching it from the nearest waypoint?
       if (job_ptr->phase_timer < pBot->f_think_time) {
-         BlacklistJob(pBot, JOB_PICKUP_FLAG, random_float(3.0f, 10.0f));
+         BlacklistJob(pBot, JOB_PICKUP_FLAG, random_float(5.0f, 10.0f));
          return JOB_TERMINATED;
       }
 
@@ -834,9 +835,9 @@ int JobBuildSentry(bot_t *pBot) {
       if (pBot->current_wp == job_ptr->waypoint) {
          if (!VectorsNearerThan(pBot->pEdict->v.origin, waypoints[job_ptr->waypoint].origin, 20.0)) {
             // abort the job if there's a sentry gun here already
-            if (BotEntityAtPoint("building_sentrygun", waypoints[pBot->current_wp].origin, 300)) {
+            if (BotEntityAtPoint("building_sentrygun", waypoints[pBot->current_wp].origin, 300.0)) {
                //	UTIL_HostSay(pBot->pEdict, 0, "sentry gun here already"); //DebugMessageOfDoom!
-               BlacklistJob(pBot, JOB_BUILD_SENTRY, random_float(30.0f, 60.0f));
+               BlacklistJob(pBot, JOB_BUILD_SENTRY, random_float(10.0f, 20.0f));
                return JOB_TERMINATED;
             }
          } else // the bot has arrived at the waypoint
@@ -862,7 +863,7 @@ int JobBuildSentry(bot_t *pBot) {
                return JOB_UNDERWAY;
             } else // no waypoint aim indicator found
             {
-               BlacklistJob(pBot, JOB_BUILD_SENTRY, random_float(20.0f, 30.0f));
+               BlacklistJob(pBot, JOB_BUILD_SENTRY, random_float(10.0f, 20.0f));
                return JOB_TERMINATED;
             }
          }
@@ -2098,7 +2099,7 @@ int JobGuardWaypoint(bot_t *pBot) {
    } else if (pBot->enemy.ptr == nullptr) {
       pBot->goto_wp = job_ptr->waypoint;
       if (!BotNavigateWaypoints(pBot, false)) {
-         BlacklistJob(pBot, JOB_GUARD_WAYPOINT, random_float(5.0f, 20.0f));
+         BlacklistJob(pBot, JOB_GUARD_WAYPOINT, random_float(5.0f, 15.0f));
          return JOB_TERMINATED;
       }
    }
@@ -2212,7 +2213,9 @@ int JobCaptureFlag(bot_t *pBot) {
          job_ptr->waypoint = BotFindFlagGoal(pBot);
          if (job_ptr->waypoint == -1) {
             //	UTIL_HostSay(pBot->pEdict, 0, "JOB_CAPTURE_FLAG no goal"); //DebugMessageOfDoom!
-            BlacklistJob(pBot, JOB_CAPTURE_FLAG, 8.0f);
+            BlacklistJob(pBot, JOB_CAPTURE_FLAG, random_float(6.0f, 8.0f));
+            BlacklistJob(pBot, JOB_PURSUE_ENEMY, random_float(20.0f, 25.0f));
+            BlacklistJob(pBot, JOB_DISGUISE, random_float(15.0f, 20.0f));
             return JOB_TERMINATED;
          }
       }

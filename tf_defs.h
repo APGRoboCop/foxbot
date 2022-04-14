@@ -9,7 +9,7 @@
  ****/
 
 #ifndef __TF_DEFS_H
-#define __TF_DEFS_H
+#define TF_DEFS_H
 
 // instant damage
 

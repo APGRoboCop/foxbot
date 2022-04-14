@@ -29,6 +29,8 @@ Updated by RoboCop
 
 - Reduced the likelihood for blue bots to go the wrong way after capping CP2 in dustbowl
 
+- Reduced the likelihood for bots to go into the 2fort water to prevent long tasks for capping flags
+
 - Improved bot's visual on locating stray ammo bags
 
 - Reverted waypoint max Reachable Range

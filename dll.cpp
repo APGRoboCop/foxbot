@@ -979,7 +979,7 @@ void DispatchThink(edict_t *pent) {
             vang.y = vang.y + 45;
             if (vang.y < 0)
                vang.y += 360;
-            vang.y = vang.y * M_PI;
+            vang.y = vang.y * static_cast<float>(M_PI);
             vang.y = vang.y / 180;
             xx = xo * cos(vang.y);
             float yy = xo * sin(vang.y);
@@ -1046,7 +1046,7 @@ void DispatchThink(edict_t *pent) {
                dgrad -= 360.0f;
             if (dgrad < -180.0f)
                dgrad += 360.0f;
-            dgrad = dgrad * M_PI;
+            dgrad = dgrad * static_cast<float>(M_PI);
             dgrad = dgrad / 180.0f;
 
             Vector vel = pBot->enemy.ptr->v.velocity;
@@ -1058,7 +1058,7 @@ void DispatchThink(edict_t *pent) {
                dgrad -= 360.0f;
             if (dgrad < -180.0f)
                dgrad += 360.0f;
-            dgrad = dgrad * M_PI;
+            dgrad = dgrad * static_cast<float>(M_PI);
             dgrad = dgrad / 180.0f;
             vel.z = vel.z * cos(dgrad);
 
@@ -2829,8 +2829,8 @@ void StartFrame() { // v7 last frame timing
    if (strcmp(STRING(gpGlobals->mapname), prevmapname) != 0) {
       edict_t *pent = nullptr;
       while ((pent = FIND_ENTITY_IN_SPHERE(pent, Vector(0, 0, 0), 8000)) != nullptr && !FNullEnt(pent)) {
-         if (pent->v.absmin.x == -1 && pent->v.absmin.y == -1 && pent->v.absmin.z == -1) {
-            if (pent->v.absmax.x == 1 && pent->v.absmax.y == 1 && pent->v.absmax.z == 1) {
+         if (static_cast<int>(pent->v.absmin.x) == -1 && static_cast<int>(pent->v.absmin.y) == -1 && static_cast<int>(pent->v.absmin.z) == -1) {
+            if (static_cast<int>(pent->v.absmin.x) == 1 && static_cast<int>(pent->v.absmin.y) == 1 && static_cast<int>(pent->v.absmin.z) == 1) {
                global::fp = UTIL_OpenFoxbotLog();
                if (global::fp != nullptr) {
                   fprintf(global::fp, "Fixing entity current map %s last map %s\n", STRING(gpGlobals->mapname), prevmapname);
@@ -2885,7 +2885,7 @@ void StartFrame() { // v7 last frame timing
                }
             }
          }
-         if (strcmp(STRING(pent->v.classname), "func_door") == 0 && pent->v.nextthink != -1)
+         if (strcmp(STRING(pent->v.classname), "func_door") == 0 && static_cast<int>(pent->v.nextthink) != -1)
             pent->v.nextthink = -1;
       }
       script_loaded = false;

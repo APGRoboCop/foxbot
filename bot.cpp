@@ -367,7 +367,7 @@ void BotSpawnInit(bot_t *pBot) {
    pBot->f_shortcutCheckTime = gpGlobals->time + 2.0f;
 
    pBot->f_roleSayDelay = gpGlobals->time + 10.0f;
-   pBot->f_discard_time = gpGlobals->time + RANDOM_FLOAT(10.0f, 20.0f);
+   pBot->f_discard_time = gpGlobals->time + RANDOM_FLOAT(15.0f, 20.0f);
 
    pBot->f_grenadeScanTime = gpGlobals->time + 0.7f;
 
@@ -1040,7 +1040,7 @@ void BotFindItem(bot_t *pBot) {
                if (strcmp("func_healthcharger", item_name) == 0) {
                   // check if the bot can use this item and
                   // check if the recharger is ready to use (has power left)...
-                  if (pEdict->v.health < 100 && pent->v.frame == 0) {
+                  if (static_cast<int>(pEdict->v.health) < 100 && static_cast<int>(pent->v.frame) == 0) {
                      // check if flag not set...
                      if (!pBot->b_use_health_station) {
                         // check if close enough and facing it directly...
@@ -1061,7 +1061,7 @@ void BotFindItem(bot_t *pBot) {
                else if (strcmp("func_recharge", item_name) == 0) {
                   // check if the bot can use this item and
                   // check if the recharger is ready to use (has power left)...
-                  if (pEdict->v.armorvalue < VALVE_MAX_NORMAL_BATTERY && pent->v.frame == 0) {
+                  if (static_cast<int>(pEdict->v.armorvalue) < VALVE_MAX_NORMAL_BATTERY && static_cast<int>(pent->v.frame)== 0) {
                      // check if flag not set and facing it...
                      if (!pBot->b_use_HEV_station) {
                         // check if close enough and facing it directly...
@@ -1152,7 +1152,7 @@ void BotFindItem(bot_t *pBot) {
                   continue;
 
                // ignore this item if it's on an unavailable waypoint
-               const int nearestWP = WaypointFindNearest_V(pent->v.origin, 80.0, -1);
+               const int nearestWP = WaypointFindNearest_V(pent->v.origin, 80.0f, -1);
                if (nearestWP != -1 && !WaypointAvailable(nearestWP, pBot->current_team))
                   continue;
 
@@ -3629,10 +3629,10 @@ void BotThink(bot_t *pBot) {
    // if the bot is dead, randomly press fire to respawn...
    if (pBot->pEdict->v.health < 1 || (pBot->pEdict->v.deadflag != DEAD_NO && pBot->pEdict->v.deadflag != 5) // not a spy feigning death
        || pBot->pEdict->v.playerclass == 0) {
-      if (pBot->bot_start2 > 0 && pBot->bot_start3 == 0)
+      if (pBot->bot_start2 > 0 && static_cast<int>(pBot->bot_start3) == 0)
          pBot->bot_start3 = pBot->f_think_time;
 
-      if (pBot->bot_start3 < pBot->f_think_time - 6 && pBot->bot_start3 != 0) {
+      if (pBot->bot_start3 < pBot->f_think_time - 6 && static_cast<int>(pBot->bot_start3) != 0) {
          if (pBot->bot_start2 > 1) {
             pBot->bot_team = 5;
             pBot->bot_class = -1;

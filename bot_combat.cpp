@@ -212,7 +212,7 @@ int FriendlyClassTotal(edict_t *pEdict, const int specifiedClass, const bool ign
 // are changed, because it updates the bot inaccuracy levels based on those two
 // config settings.
 void BotUpdateSkillInaccuracy() {
-   const float f_aim_per_skill = static_cast<float>(bot_aim_per_skill);
+   const auto f_aim_per_skill = static_cast<float>(bot_aim_per_skill);
 
    bot_max_inaccuracy[0] = static_cast<float>(bot_skill_1_aim);
    bot_max_inaccuracy[1] = bot_max_inaccuracy[0] + f_aim_per_skill;
@@ -650,9 +650,9 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
 
                   // discard uneeded ammo when near friendly SG's
                   FakeClientCommand(pEdict, "discard", nullptr, nullptr);
-                  BlacklistJob(pBot, JOB_SPOT_STIMULUS, 2.0f); // ignore the pack as it drops
+                  BlacklistJob(pBot, JOB_SPOT_STIMULUS, 5.0f); // ignore the pack as it drops
                   if (pBot->ammoStatus != AMMO_UNNEEDED)
-                     BlacklistJob(pBot, JOB_PICKUP_ITEM, 2.0f); // don't pick up your pack
+                     BlacklistJob(pBot, JOB_PICKUP_ITEM, 5.0f); // don't pick up your pack
                }
                continue;
             }
@@ -1725,9 +1725,9 @@ int BotNadeHandler(bot_t *pBot, bool timed, const char newNadeType) {
    // Lets try putting discard code in here. (dont let the engineer discard)
    if (pBot->f_discard_time < pBot->f_think_time && pBot->pEdict->v.playerclass != TFC_CLASS_ENGINEER) {
       FakeClientCommand(pBot->pEdict, "discard", nullptr, nullptr);
-      BlacklistJob(pBot, JOB_SPOT_STIMULUS, 2.0f); // ignore the pack as it drops
+      BlacklistJob(pBot, JOB_SPOT_STIMULUS, 5.0f); // ignore the pack as it drops
       if (pBot->ammoStatus != AMMO_UNNEEDED)
-         BlacklistJob(pBot, JOB_PICKUP_ITEM, 2.0f); // don't pick up your own pack
+         BlacklistJob(pBot, JOB_PICKUP_ITEM, 5.0f); // don't pick up your own pack
 
       if (pBot->mission == ROLE_ATTACKER)
          pBot->f_discard_time = pBot->f_think_time + 10.0f;
