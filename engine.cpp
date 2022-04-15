@@ -219,8 +219,8 @@ void pfnSetOrigin(edict_t *e, const float *rgflOrigin) {
             if (l < 0)
                l = -l;
 
-            const int xa = static_cast<double>((*(Vector*)rgflOrigin).x);
-            const int ya = static_cast<double>((*(Vector*)rgflOrigin).y);
+            const int xa = static_cast<int>((*(Vector*)rgflOrigin).x);
+            const int ya = static_cast<int>((*(Vector*)rgflOrigin).y);
             const int xb = static_cast<int>(bots[bot_index].sentry_edict->v.origin.x);
             const int yb = static_cast<int>(bots[bot_index].sentry_edict->v.origin.y);
             // FILE *fp;
