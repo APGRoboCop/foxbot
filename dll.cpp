@@ -94,7 +94,7 @@ bool offensive_chatter = true;
 bool observer_mode = false;
 bool botdontshoot = false;
 bool botdontmove = false;
-int bot_chat = 500;
+int bot_chat = 500; //TODO: Investigate why bot_chat is no longer operational [APG]RoboCop[CL]
 int bot_allow_moods = 1;  // whether bots can have different personality traits or not
 int bot_allow_humour = 1; // whether bots can choose to do daft things or not
 bool bot_can_use_teleporter = true;
@@ -1609,7 +1609,7 @@ void ClientCommand(edict_t *pEntity) {
                if (strchr(arg1, '\"') == nullptr)
                   strcpy(botname, arg1);
                else
-                  sscanf(arg1, "\"%s\"", &botname[0]);
+                  sscanf(arg1, R"("%s")", &botname[0]);
 
                index = 0;
 
@@ -2470,7 +2470,7 @@ void StartFrame() { // v7 last frame timing
       }
       if (count > num_bots)
          num_bots = count;
-      for (player_index = 1; player_index <= gpGlobals->maxClients; player_index++) {
+      for (player_index = 1; player_index <= gpGlobals->maxClients; player_index++) { //TODO: Refactor Loop [APG]RoboCop[CL]
          pPlayer = INDEXENT(player_index);
 
          if (pPlayer && !pPlayer->free) {
@@ -2769,7 +2769,7 @@ void StartFrame() { // v7 last frame timing
          int count1 = 0;   // Not wanted? [APG]RoboCop[CL]
          {
             char cl_name[128];
-            for (i = 1; i <= gpGlobals->maxClients; i++) {
+            for (i = 1; i <= gpGlobals->maxClients; i++) { //TODO: Refactor Loop [APG]RoboCop[CL]
                if (INDEXENT(i) == nullptr)
                   continue;
                cl_name[0] = '\0';
@@ -4736,7 +4736,7 @@ const char *GetArg(const char *command, int arg_number) {
          fieldstop = index - 1; // save field stop position
       }
       // is this argument we just processed the wanted one ?
-      if (arg_count == arg_number) {
+      if (arg_count == arg_number) { //TODO: Refactor Loop [APG]RoboCop[CL]
          for (i = fieldstart; i <= fieldstop; i++)
             arg[i - fieldstart] = command[i]; // store the field value in a string
          arg[i - fieldstart] = 0;             // terminate the string
