@@ -1409,7 +1409,7 @@ int JobEscortAlly(bot_t *pBot) {
          job_ptr->origin = job_ptr->player->v.origin; // remember where we saw them
 
       // make sure the waypoint the bot is using is near enough to the escortee
-      if (pBot->f_periodicAlertFifth < pBot->f_think_time && !VectorsNearerThan(waypoints[job_ptr->waypoint].origin, job_ptr->player->v.origin, double(maxEscortRange)))
+      if (pBot->f_periodicAlertFifth < pBot->f_think_time && !VectorsNearerThan(waypoints[job_ptr->waypoint].origin, job_ptr->player->v.origin, maxEscortRange))
          job_ptr->phase = SET_WAYPOINT_VISIBLE_ALLY;
 
       // pause if the bot arrived at the chosen waypoint
@@ -3064,7 +3064,7 @@ int JobSeekBackup(bot_t *pBot) {
          const int nextWP = WaypointRouteFromTo(pBot->current_wp, job_ptr->waypoint, pBot->current_team);
 
          // is the waypoint the bot is going to nearer to the enemy?
-         if (nextWP == -1 || VectorsNearerThan(waypoints[nextWP].origin, pBot->enemy.ptr->v.origin, double(pBot->enemy.f_seenDistance))) {
+         if (nextWP == -1 || VectorsNearerThan(waypoints[nextWP].origin, pBot->enemy.ptr->v.origin, pBot->enemy.f_seenDistance)) {
             BlacklistJob(pBot, JOB_SEEK_BACKUP, 5.0f);
             return JOB_TERMINATED;
          }
@@ -3116,7 +3116,7 @@ int JobAvoidEnemy(bot_t *pBot) {
          const int nextWP = WaypointRouteFromTo(pBot->current_wp, job_ptr->waypoint, pBot->current_team);
 
          // is the waypoint the bot is going to nearer to the enemy?
-         if (nextWP == -1 || VectorsNearerThan(waypoints[nextWP].origin, pBot->enemy.ptr->v.origin, double(pBot->enemy.f_seenDistance))) {
+         if (nextWP == -1 || VectorsNearerThan(waypoints[nextWP].origin, pBot->enemy.ptr->v.origin, pBot->enemy.f_seenDistance)) {
             return JOB_TERMINATED;
          }
       }
@@ -3291,8 +3291,6 @@ int JobInfectedAttack(bot_t *pBot) {
 
 // This function handles bot behaviour for the JOB_BIN_GRENADE job.
 // i.e. throw a primed grenade away to avoid suicide.
-//
-// TODO: to adjust the angle and distance to toss nades - [APG]RoboCop[CL]
 int JobBinGrenade(bot_t *pBot) {
    job_struct *job_ptr = &pBot->job[pBot->currentJob];
 

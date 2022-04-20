@@ -311,7 +311,7 @@ void BotEnemyCheck(bot_t *pBot) {
       if ((strcmp(STRING(pBot->lastEnemySentryGun->v.classname), "building_sentrygun") == 0 || strncmp(STRING(pBot->lastEnemySentryGun->v.classname), "ntf_", 4) == 0) && BotTeamColorCheck(pBot->lastEnemySentryGun) != pBot->current_team) {
          // get the bots to notice the destruction of this sentry gun
          if (!IsAlive(pBot->lastEnemySentryGun) && pBot->lastEnemySentryGun->v.origin != Vector(0, 0, 0)) {
-            edict_t *deadSG = pBot->lastEnemySentryGun;
+            const edict_t *deadSG = pBot->lastEnemySentryGun;
 
             const int area = AreaInsideClosest(deadSG);
             if (area != -1) {
@@ -959,9 +959,6 @@ static bool BotSpyDetectCheck(bot_t *pBot, edict_t *pNewEnemy) {
 // Either way, the location is transferred to other bots memory if
 // a) They dont have a sg in memory b) They are better than skill 5
 //
-// TODO: to allow bots to attack using nailguns (if available) to destroy SGs
-// but not interfere with their tossing nade aim - [APG]RoboCop[CL]
-
 static void BotSGSpotted(bot_t *pBot, edict_t *sg) {
    // Double check this isn't our own teams SG.
    if (BotTeamColorCheck(sg) == pBot->current_team)
@@ -1449,8 +1446,8 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
    }
 
    //////////////////
-   int distance = static_cast<int>(f_distance);
-
+   float distance = f_distance;
+   
    if (pEdict->v.playerclass == TFC_CLASS_SNIPER && mod_id == TFC_DLL && (pEdict->v.waterlevel >= WL_WAIST_IN_WATER || pEdict->v.movetype == MOVETYPE_FLY) &&
        (!((pEdict->v.button & IN_ATTACK) == IN_ATTACK && pBot->current_weapon.iId == TF_WEAPON_SNIPERRIFLE) || pEdict->v.waterlevel >= WL_WAIST_IN_WATER)) {
       distance = 100; // use autorifle when running
@@ -1462,9 +1459,9 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
    // demoman grenade launcher height restriction :D
    if (pEdict->v.playerclass == TFC_CLASS_DEMOMAN && mod_id == TFC_DLL && distance < 900) {
       if (pBot->enemy.ptr != nullptr) {
-         const int z = static_cast<int>(pBot->enemy.ptr->v.origin.z - pEdict->v.origin.z);
+         const int z = pBot->enemy.ptr->v.origin.z - pEdict->v.origin.z;
          if (z > 0 && z < 300 && distance < 901)
-            distance = static_cast<int>((pBot->enemy.ptr->v.origin - pEdict->v.origin).Length2D()) + z * 3;
+            distance = (pBot->enemy.ptr->v.origin - pEdict->v.origin).Length2D() + static_cast<float>(z * 3);
          else if (z > 300 && distance < 901)
             distance = 901;
       }
@@ -1721,6 +1718,8 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
 // checking whether or not the sentry they have in memory is viewable
 // from there. If so they will anticipate contact and prime a grenade,
 // and acquire the target early just before contact.
+//
+// TODO: to adjust the angle and distance to toss nades - [APG]RoboCop[CL]
 int BotNadeHandler(bot_t *pBot, bool timed, const char newNadeType) {
    // Lets try putting discard code in here. (dont let the engineer discard)
    if (pBot->f_discard_time < pBot->f_think_time && pBot->pEdict->v.playerclass != TFC_CLASS_ENGINEER) {
@@ -2231,8 +2230,8 @@ static int BotLeadTarget(const edict_t *pBotEnemy, const bot_t *pBot, const int 
    if (f_distance > 1000.0f)
       f_distance = 1000.0f;
 
-   d_x += pBot->enemy.ptr->v.velocity.x * (f_distance / projSpeed);
-   d_y += pBot->enemy.ptr->v.velocity.y * (f_distance / projSpeed);
+   d_x += pBot->enemy.ptr->v.velocity.x * (f_distance / static_cast<float>(projSpeed));
+   d_y += pBot->enemy.ptr->v.velocity.y * (f_distance / static_cast<float>(projSpeed));
 
    if (pBot->enemy.ptr->v.velocity.z < -30) // falling
       d_z += pBot->enemy.ptr->v.velocity.z * (f_distance / 2000.0f);

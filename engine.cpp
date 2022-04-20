@@ -270,7 +270,7 @@ void pfnSetOrigin(edict_t *e, const float *rgflOrigin) {
       else
          fprintf(fp, " 0\n");
 
-      fprintf(fp, " t %f %f\n", double(e->v.ltime), double(e->v.nextthink));
+      fprintf(fp, " t %f %f\n", static_cast<double>(e->v.ltime), static_cast<double>(e->v.nextthink));
       fprintf(fp, " button=%d\n", e->v.button);
       fclose(fp);
    }
@@ -722,7 +722,7 @@ void pfnWriteAngle(float flValue) {
       // fclose(fp); }
       if (debug_engine) {
          fp = UTIL_OpenFoxbotLog();
-         fprintf(fp, "pfnWriteAngle: %f\n", double(flValue));
+         fprintf(fp, "pfnWriteAngle: %f\n", static_cast<double>(flValue));
          fclose(fp);
       }
 
@@ -755,7 +755,7 @@ void pfnWriteCoord(float flValue) {
       // fclose(fp); }
       if (debug_engine) {
          fp = UTIL_OpenFoxbotLog();
-         fprintf(fp, "pfnWriteCoord: %f\n", double(flValue));
+         fprintf(fp, "pfnWriteCoord: %f\n", static_cast<double>(flValue));
          fclose(fp);
       }
 

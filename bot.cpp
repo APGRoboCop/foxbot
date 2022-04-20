@@ -458,14 +458,14 @@ void BotPickName(char *name_buffer) {
 
       // is there a player with this name?
       for (index = 1; index <= gpGlobals->maxClients; index++) {
-         edict_t *pPlayer = INDEXENT(index);
+         const edict_t *pPlayer = INDEXENT(index);
 
          if (pPlayer && !FNullEnt(pPlayer) && !pPlayer->free && strcmp(bot_names[name_index], STRING(pPlayer->v.netname)) == 0) {
             used = true;
             break;
          }
       }
-
+      
       if (used) {
          ++name_index;
 
@@ -2077,7 +2077,7 @@ static void BotAttackerCheck(bot_t *pBot) {
    //	pBot->pEdict->v.origin + Vector(0, 0, 50),
    //	10, 2, 250, 250, 250, 200, 10);
 
-   edict_t *mysteryPlayer = nullptr; // unseen enemies
+   const edict_t *mysteryPlayer = nullptr; // unseen enemies
    bool readyDefender = false;
    if (pBot->mission == ROLE_DEFENDER && pBot->visAllyCount < 4 // too many allies nearby = white noise
        && pBot->bot_skill < 4 && PlayerHealthPercent(pBot->pEdict) >= pBot->trait.health && pBot->enemy.f_lastSeen + 5.0f < pBot->f_think_time)
@@ -2443,7 +2443,7 @@ edict_t *BotAllyAtVector(const bot_t *pBot, const Vector &r_vecOrigin, const flo
       edict_t *pPlayer = INDEXENT(i);
 
       if (pPlayer != nullptr && !pPlayer->free && pPlayer != pBot->pEdict // ignore this bot
-          && UTIL_GetTeam(pPlayer) == pBot->current_team && VectorsNearerThan(pPlayer->v.origin, r_vecOrigin, double(range))) {
+          && UTIL_GetTeam(pPlayer) == pBot->current_team && VectorsNearerThan(pPlayer->v.origin, r_vecOrigin, range)) {
          if (stationaryOnly) {
             if (pPlayer->v.velocity.Length() < 1.0f)
                return pPlayer;
@@ -2474,7 +2474,7 @@ short BotTeammatesNearWaypoint(const bot_t *pBot, const int waypoint) {
       if (bots[i].is_used && &bots[i] != pBot // make sure the player isn't THIS bot
           && bots[i].current_wp == waypoint && bots[i].current_team == pBot->current_team) {
          // if this player is nearer than the bot add them to the total
-         if (VectorsNearerThan(bots[i].pEdict->v.origin, waypoints[waypoint].origin, double(my_distance)))
+         if (VectorsNearerThan(bots[i].pEdict->v.origin, waypoints[waypoint].origin, my_distance))
             ++total_present;
       }
    }
@@ -2498,7 +2498,7 @@ bot_t *BotDefenderAtWaypoint(const bot_t *pBot, const int waypoint, const float 
           && &bots[i] != pBot // make sure the player isn't THIS bot
           && bots[i].goto_wp == waypoint && bots[i].mission == ROLE_DEFENDER && bots[i].current_team == pBot->current_team) {
          // if this player is near enough return who they are
-         if (VectorsNearerThan(bots[i].pEdict->v.origin, waypoints[waypoint].origin, double(range)))
+         if (VectorsNearerThan(bots[i].pEdict->v.origin, waypoints[waypoint].origin, range))
             return &bots[i];
       }
    }
@@ -2690,7 +2690,7 @@ static void BotRoleCheck(bot_t *pBot) {
       const float errorMargin = playerPercentage / 2.0f;
 
       const int totalAttackers = teams.attackers[team].size() + teams.humanAttackers[team].size();
-      const float percentOffense = playerPercentage * totalAttackers;
+      const float percentOffense = playerPercentage * static_cast<float>(totalAttackers);
 
       unsigned char needed_mission;
 
@@ -3900,8 +3900,10 @@ static void BotSenseEnvironment(bot_t *pBot) {
 }
 
 // This function handles basic combat actions, such as pointing the active
-// waeapon at the bots enemy(if it has one) and pulling the trigger and/or
+// weapon at the bots enemy(if it has one) and pulling the trigger and/or
 // throwing grenades.  It does not handle combat movement.
+// TODO: to allow bots to attack using nailguns (if available) to destroy SGs
+// but not interfere with their tossing nade aim - [APG]RoboCop[CL]
 static void BotFight(bot_t *pBot) {
    // DrEvils Nade update, or toss a nade if threatlevel high enuff.
    if (pBot->lastEnemySentryGun && pBot->enemy.ptr == pBot->lastEnemySentryGun && !FNullEnt(pBot->lastEnemySentryGun))

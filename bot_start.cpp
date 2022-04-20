@@ -361,7 +361,7 @@ static int BotPickFavoredTeam_TFC(const int faveClass) {
    short activeTeamTotal = 0;
 
    // count the number of suitable teams
-   for (int i = 0; i < 4; i++) {
+   for (short i = 0; i < 4; i++) {
       //	UTIL_BotLogPrintf("team:%d, is_team:%d, maxplayers:%d, total players %d\n",
       //		i, is_team[i], max_team_players[i], playersPerTeam[i]);
 

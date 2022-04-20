@@ -828,7 +828,7 @@ int WaypointFindRandomGoal_R(const Vector &v_src, const bool checkVisibility, co
       if (!WaypointAvailable(index, team))
          continue;
 
-      if (VectorsNearerThan(waypoints[index].origin, v_src, double(range))) {
+      if (VectorsNearerThan(waypoints[index].origin, v_src, range)) {
          if (checkVisibility)
             UTIL_TraceLine(v_src, waypoints[index].origin, ignore_monsters, nullptr, &tr);
 
@@ -912,7 +912,7 @@ bool DetpackClearIsBlocked(const int index) {
    TraceResult tr;
 
    // start checking
-   PATH *p = paths[index];
+   const PATH *p = paths[index];
    int path_total = 0;
    while (p != nullptr) {
       for (int i = 0; i < MAX_PATH_INDEX; i++) {
@@ -945,7 +945,7 @@ bool DetpackSealIsClear(const int index) {
    TraceResult tr;
 
    // start checking
-   PATH *p = paths[index];
+   const PATH *p = paths[index];
    while (p != nullptr) {
       for (int i = 0; i < MAX_PATH_INDEX; i++) {
          // test for an obstruction
@@ -1811,7 +1811,7 @@ void WaypointSave() {
    for (index = 0; index < num_waypoints; index++) {
       // count the number of paths from this node...
 
-      PATH *p = paths[index];
+      const PATH *p = paths[index];
       num = 0;
 
       while (p != nullptr) {
@@ -1948,7 +1948,7 @@ bool WaypointDirectPathCheck(const int srcWP, const int destWP) {
    if (srcWP == destWP)
       return true;
 
-   PATH *p = paths[srcWP];
+   const PATH *p = paths[srcWP];
 
    while (p != nullptr) {
       for (int i = 0; i < MAX_PATH_INDEX; i++) {
@@ -3040,7 +3040,7 @@ static void WaypointRouteInit() {
 
             for (unsigned int row = 0; row < route_num_waypoints; row++) {
                if (paths[row] != nullptr) {
-                  PATH *p = paths[row];
+                  const PATH *p = paths[row];
 
                   while (p) {
                      i = 0;

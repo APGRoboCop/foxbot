@@ -947,7 +947,7 @@ static void BotHandleLadderTraffic(bot_t *pBot) {
    if (tr.flFraction < 1.0f && tr.pHit != nullptr) {
       // search the world for players...
       for (int i = 1; i <= gpGlobals->maxClients; i++) {
-         edict_t *pPlayer = INDEXENT(i);
+         const edict_t *pPlayer = INDEXENT(i);
 
          // skip invalid players
          if (pPlayer && !pPlayer->free && pPlayer == tr.pHit) {
@@ -1324,7 +1324,7 @@ static bool BotFallenOffCheck(bot_t *const pBot) {
             continue;
 
          // does this waypoint have a direct path to the bots current waypoint?
-         PATH *p = paths[index];
+         const PATH *p = paths[index];
          bool waypointIsConnected = false;
          while (p != nullptr && !waypointIsConnected) {
             for (int i = 0; i < MAX_PATH_INDEX; i++) {
@@ -1345,7 +1345,7 @@ static bool BotFallenOffCheck(bot_t *const pBot) {
 
             const float distanceToCurr = (pBot->pEdict->v.origin - waypoints[pBot->current_wp].origin).Length();
 
-            if (VectorsNearerThan(pBot->pEdict->v.origin, waypoints[index].origin, double(distanceToCurr)) && BotCanSeeOrigin(pBot, waypoints[index].origin))
+            if (VectorsNearerThan(pBot->pEdict->v.origin, waypoints[index].origin, distanceToCurr) && BotCanSeeOrigin(pBot, waypoints[index].origin))
                return false;
          }
       }
@@ -1517,7 +1517,7 @@ void BotFindSideRoute(bot_t *pBot) {
 
    // find out if the bot is at a junction waypoint by counting
    // the number of paths connected from it
-   PATH *p = paths[pBot->current_wp];
+   const PATH *p = paths[pBot->current_wp];
    int i;
    int paths_total = 0; // number of paths from the bots current waypoint
    while (p != nullptr && paths_total < 3) {
@@ -1893,9 +1893,9 @@ int BotFindRetreatPoint(bot_t *const pBot, const int min_dist, const Vector &r_t
 
       // check for the ideal waypoint
       // is the next waypoint on the route further from the threat?
-      if (!VectorsNearerThan(waypoints[nextWP].origin, r_threatOrigin, double(botThreatDistance))) {
+      if (!VectorsNearerThan(waypoints[nextWP].origin, r_threatOrigin, botThreatDistance)) {
          // is the end waypoint also further from the threat?
-         if (!VectorsNearerThan(waypoints[index].origin, r_threatOrigin, double(botThreatDistance))) {
+         if (!VectorsNearerThan(waypoints[index].origin, r_threatOrigin, botThreatDistance)) {
             bestIndex = index;
 
             // check for non-visibility
@@ -1910,7 +1910,7 @@ int BotFindRetreatPoint(bot_t *const pBot, const int min_dist, const Vector &r_t
       // in case the search isn't having much luck remember any waypoint
       // that will at least send the bot away from the threat
       else {
-         if (bestIndex == -1 && !VectorsNearerThan(waypoints[index].origin, r_threatOrigin, double(botThreatDistance)))
+         if (bestIndex == -1 && !VectorsNearerThan(waypoints[index].origin, r_threatOrigin, botThreatDistance))
             bestIndex = index;
       }
    }
@@ -1972,7 +1972,7 @@ int BotFindThreatAvoidPoint(bot_t *const pBot, const int min_dist, const edict_t
 
       // we've found the right waypoint if the next waypoint on the route is further
       // from the threat than the bot is, and the end waypoint is far enough from the threat
-      if (nextWP != -1 && !VectorsNearerThan(waypoints[nextWP].origin, pent->v.origin, double(botThreatDistance)) && !VectorsNearerThan(waypoints[index].origin, pent->v.origin, min_dist)) {
+      if (nextWP != -1 && !VectorsNearerThan(waypoints[nextWP].origin, pent->v.origin, botThreatDistance) && !VectorsNearerThan(waypoints[index].origin, pent->v.origin, min_dist)) {
          // show where the bot should be going (for debugging purposes)
          //	WaypointDrawBeam(INDEXENT(1), pBot->pEdict->v.origin,
          //		waypoints[index].origin, 10, 2, 250, 50, 50, 200, 10);
@@ -2410,7 +2410,7 @@ static void BotCheckForConcJump(bot_t *pBot) {
          return;
 
       // Add the distance
-      distAhead += WaypointDistanceFromTo(currentWP, endWP, pBot->current_team);
+      distAhead += static_cast<float>(WaypointDistanceFromTo(currentWP, endWP, pBot->current_team));
 
       // Set current wp to the next one.
       // This should keep checking ahead with each loop iteration.
@@ -2455,7 +2455,7 @@ static void BotCheckForConcJump(bot_t *pBot) {
    if (closestJumpWP == -1)
       return;
 
-   const float distanceSaved = WaypointDistanceFromTo(endWP, pBot->goto_wp, pBot->current_team) - static_cast<float>(WaypointDistanceFromTo(closestJumpWP, pBot->goto_wp, pBot->current_team));
+   const auto distanceSaved = WaypointDistanceFromTo(endWP, pBot->goto_wp, pBot->current_team) - WaypointDistanceFromTo(closestJumpWP, pBot->goto_wp, pBot->current_team);
 
    // Don't bother if the distance it saves us is less than this.
    if (distanceSaved < 1000.0f)
