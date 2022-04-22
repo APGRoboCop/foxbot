@@ -1719,7 +1719,8 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
 // from there. If so they will anticipate contact and prime a grenade,
 // and acquire the target early just before contact.
 //
-// TODO: to adjust the angle and distance to toss nades - [APG]RoboCop[CL]
+// TODO: to adjust the angle and distance to toss nades
+// at a higher angle and low range as their target aim is too short - [APG]RoboCop[CL]
 int BotNadeHandler(bot_t *pBot, bool timed, const char newNadeType) {
    // Lets try putting discard code in here. (dont let the engineer discard)
    if (pBot->f_discard_time < pBot->f_think_time && pBot->pEdict->v.playerclass != TFC_CLASS_ENGINEER) {
