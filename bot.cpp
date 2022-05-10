@@ -3843,6 +3843,12 @@ void BotThink(bot_t *pBot) {
       pBot->f_periodicAlert1 = pBot->f_think_time + 1.0f;
    if (pBot->f_periodicAlert3 < pBot->f_think_time)
       pBot->f_periodicAlert3 = pBot->f_think_time + 3.0f;
+
+   if (botdontmove == 1) { // Stationary bots for TFC minigolf maps [APG]RoboCop[CL]
+       pBot->f_move_speed = 0.0f;
+       pBot->f_side_speed = 0.0f;
+       pBot->f_vertical_speed = 0.0f;
+   }
 }
 
 // This function is home to most of the sensory functions
@@ -3858,15 +3864,9 @@ static void BotSenseEnvironment(bot_t *pBot) {
 
    BotAmmoCheck(pBot);
 
-   if (botdontmove == 1) { // Stationary bots for TFC minigolf maps [APG]RoboCop[CL]
-      pBot->f_move_speed = 0.0f;
-      pBot->f_side_speed = 0.0f;
-      pBot->f_vertical_speed = 0.0f;
-   }
-
    if (pBot->enemy.ptr == nullptr)
       BotAttackerCheck(pBot);
-
+   
    // check if bot should look for items now or not...
    if (pBot->f_find_item_time < pBot->f_think_time) {
       BotFindItem(pBot); // see if there are any visible items

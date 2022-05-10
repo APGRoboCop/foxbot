@@ -5008,8 +5008,8 @@ static void ProcessBotCfgFile() {
 
       // have to delay here or engine gives "Tried to write to
       // uninitialized sizebuf_t" error and crashes...
-      bot_cfg_pause_time = gpGlobals->time + 2.0f;
-      bot_check_time = gpGlobals->time + 5.0f;
+      bot_cfg_pause_time = gpGlobals->time + 6.0f;
+      bot_check_time = gpGlobals->time + 6.0f;
 
       return;
    }
