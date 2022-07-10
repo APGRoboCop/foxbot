@@ -39,15 +39,13 @@ TODO List:-
 
 >> Fix bot_chat cvars
 
->> Fix bots navigation when shot by enemies
+>> Fix bots navigation when shot by enemies as they cannot seem to detect where damage is coming from
 
 >> To prevent engineers to go around SG turrets when repairing/upgrading
 
->> Train spies to not flag hold and aim properly to destroy SG turrets
+>> Train spies and snipers to not flag hold as certain classes need to blacklist any proirities for capping
 
->> Train snipers to not flag hold as certain classes need to blacklist any proirities for capping
-
->> To allow bots to use Nail Guns for destroying SG turrets, when out of nades or from a distance
+>> To allow bots to use Nail Guns for destroying SG turrets, when out of nades or from a long distance
 
 >> Allow bots to toss grenades at a higher angle and low range as their target aim is too short
 
