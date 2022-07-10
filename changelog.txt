@@ -39,6 +39,8 @@ TODO List:-
 
 >> Fix bot_chat cvars
 
+>> Fix bots navigation when shot by enemies
+
 >> To prevent engineers to go around SG turrets when repairing/upgrading
 
 >> Train spies to not flag hold and aim properly to destroy SG turrets
