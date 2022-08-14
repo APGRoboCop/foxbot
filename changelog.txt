@@ -13,6 +13,8 @@ Updated by RoboCop
 
 - Added area for bots to report Sentry Built in dustbowl hut entry in CP1
 
+- Fixed typo bot team report for avanti area file
+
 - Added more delay for bots to Team Report to prevent annoying chat flooding
 
 - Increased priority for bots to steal flags
