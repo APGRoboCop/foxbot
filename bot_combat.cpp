@@ -1672,7 +1672,7 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
 
                                   pBot->f_shoot_time = pBot->f_think_time + base_delay +
                                      random_float(min_delay, max_delay);*/
-                  pBot->f_shoot_time = pBot->f_think_time + 0.30f;
+                  pBot->f_shoot_time = pBot->f_think_time + 0.3f;
                }
             }
          } else // MUST be use_secondary...

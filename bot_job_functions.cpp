@@ -268,7 +268,7 @@ int JobChat(bot_t *pBot) {
          job_ptr->phase = 1;
 
          // create a delay so the bot can "type"
-         job_ptr->phase_timer = pBot->f_think_time + random_float(2.0f, 5.0f);
+         job_ptr->phase_timer = pBot->f_think_time + random_float(5.0f, 10.0f);
       }
    }
 
@@ -302,7 +302,7 @@ int JobReport(bot_t *pBot) {
          job_ptr->phase = 1;
 
          // create a delay so the bot can "type"
-         job_ptr->phase_timer = pBot->f_think_time + 2.0f;
+         job_ptr->phase_timer = pBot->f_think_time + random_float(5.0f, 10.0f);
       }
    }
 
@@ -1775,10 +1775,10 @@ int JobDisguise(bot_t *pBot) {
    // is it time to pick a new disguise?
    if (pBot->disguise_state == DISGUISE_NONE) {
       static const int disguiseList[] = {
-          2, 3, 4, 7, 8,
+          2, 3, 4, 7, 8
       };
       const int new_disguise = disguiseList[random_long(0, 6)];
-
+      
       char choice[32];
       sprintf(choice, "%d", new_disguise);
 
