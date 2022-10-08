@@ -47,13 +47,9 @@ TODO List:-
 
 >> To prevent engineers to go around SG turrets when repairing/upgrading
 
->> Train spies and snipers to not flag hold as certain classes need to blacklist any proirities for capping
-
 >> To allow bots to use Nail Guns for destroying SG turrets, when out of nades or from a long distance
 
 >> Allow bots to toss grenades at a higher angle and from a lower range as their target aim is too far
-
->> Find a way to allow bot_job_think.cpp task priorities work properly (45 jobs in total too much?)
 
 >> BONUS: Maybe add a feature for bots to have experience and wisdom or learned data in order to be more human
 
