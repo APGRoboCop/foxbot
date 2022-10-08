@@ -268,7 +268,7 @@ int JobChat(bot_t *pBot) {
          job_ptr->phase = 1;
 
          // create a delay so the bot can "type"
-         job_ptr->phase_timer = pBot->f_think_time + random_float(5.0f, 10.0f);
+         job_ptr->phase_timer = pBot->f_think_time + 2.0;
       }
    }
 
@@ -302,7 +302,7 @@ int JobReport(bot_t *pBot) {
          job_ptr->phase = 1;
 
          // create a delay so the bot can "type"
-         job_ptr->phase_timer = pBot->f_think_time + random_float(5.0f, 10.0f);
+         job_ptr->phase_timer = pBot->f_think_time + 2.0;
       }
    }
 
@@ -312,7 +312,7 @@ int JobReport(bot_t *pBot) {
       job_ptr->message[MAX_CHAT_LENGTH - 1] = '\0';
 
       UTIL_HostSay(pBot->pEdict, 1, job_ptr->message);
-      BlacklistJob(pBot, JOB_REPORT, 8.0f); // don't report the same thing too often
+      BlacklistJob(pBot, JOB_REPORT, 5.0f); // don't report the same thing too often
       return JOB_TERMINATED; // job done
    }
 

@@ -72,7 +72,7 @@ typedef struct {
 
 // probably best to keep these function pointers private to this file
 // these must be in the right order for each job to run properly
-static const jobFunctions_struct jf[JOB_TYPE_TOTAL] = {
+static jobFunctions_struct jf[JOB_TYPE_TOTAL] = {
     {assess_JobSeekWaypoint, JobSeekWaypoint},
     {assess_JobGetUnstuck, JobGetUnstuck},
     {assess_JobRoam, JobRoam},
@@ -122,7 +122,7 @@ static const jobFunctions_struct jf[JOB_TYPE_TOTAL] = {
 
 // list of essential data for all known job types
 // these must be in the right order for each job to run properly
-const jobList_struct jl[JOB_TYPE_TOTAL] = {   //Only handles 32 not 45? [APG]RoboCop[CL]
+jobList_struct jl[JOB_TYPE_TOTAL] = {   //Only handles 32 not 45? [APG]RoboCop[CL]
 	{ PRIORITY_MAXIMUM, "JOB_GET_UNSTUCK" },
     { 800, "JOB_PUSH_BUTTON" },
     { 790, "JOB_DROWN_RECOVER" },
@@ -189,7 +189,7 @@ void BotResetJobBuffer(bot_t *pBot) {
 
 // This function eliminates whatever job is in the specified buffer
 // index, and is the preferred method of terminating any job.
-static void DropJobFromBuffer(bot_t *pBot, const int buffer_index) {
+static void DropJobFromBuffer(bot_t *pBot, int buffer_index) {
    pBot->jobType[buffer_index] = JOB_NONE;
    pBot->job[buffer_index].f_bufferedTime = 0.0f;
    pBot->job[buffer_index].priority = PRIORITY_NONE;

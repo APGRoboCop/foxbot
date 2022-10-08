@@ -1962,7 +1962,7 @@ void BotSprayLogo(edict_t *pEntity, const bool sprayDownwards) {
    Vector v_dest;
 
    if (sprayDownwards)
-      v_dest = pEntity->v.origin - Vector(0, 0, 80.0);
+      v_dest = pEntity->v.origin - Vector(0, 0, 80.0f);
    else
       v_dest = v_src + gpGlobals->v_forward * 80.0f;
 
@@ -3779,7 +3779,7 @@ void BotThink(bot_t *pBot) {
    else if (diff > -110 && diff < 110)
       speed = 10;
    if (!pBot->enemy.ptr)
-      speed = static_cast<int>(speed * 1.5);
+      speed = static_cast<int>(speed * 1.5f);
    speed = speed * (5 - pBot->bot_skill + pBot->bot_skill / 5);
    if (speed != 0)
       BotChangePitch(pBot->pEdict, speed);
@@ -3808,7 +3808,7 @@ void BotThink(bot_t *pBot) {
    else if (diff > -110 && diff < 110)
       speed = 10;
    if (pBot->enemy.ptr == nullptr)
-      speed = static_cast<int>(speed * 2.5);
+      speed = static_cast<int>(speed * 2.5f);
    speed *= 5 - pBot->bot_skill + pBot->bot_skill / 5;
    if (speed != 0)
       BotChangeYaw(pBot->pEdict, speed);
