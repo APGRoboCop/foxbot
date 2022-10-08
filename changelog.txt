@@ -37,7 +37,7 @@ Updated by RoboCop
 
 - Improved bot's visual on locating stray ammo bags
 
-- Reverted waypoint max Reachable Range
+- Reverted waypoint max Reachable Range, jobList and jobFunction structure
 
 TODO List:-
 
