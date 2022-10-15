@@ -2201,43 +2201,39 @@ int JobGetFlag(bot_t *pBot) {
 
 // This function handles bot behaviour for the JOB_CAPTURE_FLAG job.
 // i.e. if the bot has a flag then bring it to a capture point.
-//
-// TODO: spies, snipers and engineers to not flag hold as certain classes
-// need to blacklist any proirities for capping - [APG]RoboCop[CL]
-int JobCaptureFlag(bot_t *pBot) {
-   job_struct *job_ptr = &pBot->job[pBot->currentJob];
+int JobCaptureFlag(bot_t* pBot) {
+    job_struct* job_ptr = &pBot->job[pBot->currentJob];
 
-   // phase zero - make sure the bot has a capture waypoint destination
-   if (job_ptr->phase == 0) {
-      if (job_ptr->waypoint == -1) {
-         job_ptr->waypoint = BotFindFlagGoal(pBot);
-         if (job_ptr->waypoint == -1) {
-            //	UTIL_HostSay(pBot->pEdict, 0, "JOB_CAPTURE_FLAG no goal"); //DebugMessageOfDoom!
-            BlacklistJob(pBot, JOB_CAPTURE_FLAG, random_float(6.0f, 8.0f));
-            BlacklistJob(pBot, JOB_PURSUE_ENEMY, random_float(20.0f, 25.0f));
-            BlacklistJob(pBot, JOB_DISGUISE, random_float(15.0f, 20.0f));
-            return JOB_TERMINATED;
-         }
-      }
+    // phase zero - make sure the bot has a capture waypoint destination
+    if (job_ptr->phase == 0) {
+        if (job_ptr->waypoint == -1) {
+            job_ptr->waypoint = BotFindFlagGoal(pBot);
+            if (job_ptr->waypoint == -1) {
+                //	UTIL_HostSay(pBot->pEdict, 0, "JOB_CAPTURE_FLAG no goal"); //DebugMessageOfDoom!
+                BlacklistJob(pBot, JOB_CAPTURE_FLAG, 8.0f);
+                return JOB_TERMINATED;
+            }
+        }
 
-      job_ptr->phase = 1;
-      return JOB_UNDERWAY;
-   }
+        job_ptr->phase = 1;
+        return JOB_UNDERWAY;
+    }
 
-   // phase 1 - check if the bot has arrived at the flag capture point
-   if (job_ptr->phase == 1) {
-      if (pBot->current_wp == job_ptr->waypoint && VectorsNearerThan(waypoints[job_ptr->waypoint].origin, pBot->pEdict->v.origin, 30.0)) {
-         return JOB_TERMINATED; // job done
-      } else {
-         pBot->goto_wp = job_ptr->waypoint;
-         if (!BotNavigateWaypoints(pBot, false) && !BotSetAlternativeGoalWaypoint(pBot, job_ptr->waypoint, W_FL_TFC_FLAG_GOAL)) {
-            BlacklistJob(pBot, JOB_CAPTURE_FLAG, random_float(5.0f, 15.0f));
-            return JOB_TERMINATED;
-         }
-      }
-   }
+    // phase 1 - check if the bot has arrived at the flag capture point
+    if (job_ptr->phase == 1) {
+        if (pBot->current_wp == job_ptr->waypoint && VectorsNearerThan(waypoints[job_ptr->waypoint].origin, pBot->pEdict->v.origin, 30.0)) {
+            return JOB_TERMINATED; // job done
+        }
+        else {
+            pBot->goto_wp = job_ptr->waypoint;
+            if (!BotNavigateWaypoints(pBot, false) && !BotSetAlternativeGoalWaypoint(pBot, job_ptr->waypoint, W_FL_TFC_FLAG_GOAL)) {
+                BlacklistJob(pBot, JOB_CAPTURE_FLAG, random_float(5.0f, 15.0f));
+                return JOB_TERMINATED;
+            }
+        }
+    }
 
-   return JOB_UNDERWAY;
+    return JOB_UNDERWAY;
 }
 
 // This function handles bot behaviour for the JOB_HARRASS_DEFENSE job.

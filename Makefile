@@ -22,7 +22,7 @@ TARGET = foxbot
 BASEFLAGS = -Wall -Wno-write-strings -Wno-attributes -std=gnu++14 \
 			-static-libstdc++ -shared-libgcc
 
-ARCHFLAG += -march=i686 -mtune=generic -msse -msse2 -mmmx
+ARCHFLAG += -march=i686 -mtune=generic -msse -msse2 -mmmx -mfpmath=sse
 
 ifeq ($(DBG_FLGS),1)
 	OPTFLAGS = -O0 -g3 -ggdb3 -D_DEBUG
