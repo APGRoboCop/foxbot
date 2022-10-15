@@ -1871,7 +1871,7 @@ int JobFeignAmbush(bot_t *pBot) {
       // had enough of camping out?
       if (job_ptr->phase_timer < pBot->f_think_time) {
          // reset the ambush timer
-         pBot->f_spyFeignAmbushTime = pBot->f_think_time + random_float(12.0f, 24.0f);
+         pBot->f_spyFeignAmbushTime = pBot->f_think_time + random_float(8.0f, 16.0f);
 
          return JOB_TERMINATED;
       }
