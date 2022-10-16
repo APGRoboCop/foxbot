@@ -21,6 +21,8 @@ Updated by RoboCop
 
 - Improved floating point precision
 
+- Reduced spy feigning time to prevent idling for too long
+
 - Added a longer bot load config delay when changing maps or using `addbot` too rapidly to reduce crashes
 
 - Reduced infinite loops for enhanced stability and less CPU consumption
