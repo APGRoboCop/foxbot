@@ -1416,7 +1416,7 @@ void ClientCommand(edict_t *pEntity) {
             strcpy(c, "-1");
             BotCreate(pEntity, arg1, c, arg3, arg4);
          }
-         bot_check_time = gpGlobals->time + 5.0f;
+         bot_check_time = gpGlobals->time + 8.0f;
          if (mr_meta)
             RETURN_META(MRES_SUPERCEDE);
          return;
@@ -2505,7 +2505,7 @@ void StartFrame() { // v7 last frame timing
                   BotCreate(nullptr, c_team, c_class, bots[index1].name, c_skill);
             }
             respawn_time = gpGlobals->time + 3.0f; // set next respawn time
-            bot_check_time = gpGlobals->time + 5.0f;
+            bot_check_time = gpGlobals->time + 8.0f;
          } else
             respawn_time = 2.0f;
       }
@@ -2538,13 +2538,13 @@ void StartFrame() { // v7 last frame timing
                   ALERT(at_console, msg);
             }
             if (IS_DEDICATED_SERVER())
-               bot_cfg_pause_time = gpGlobals->time + 2.0f;
+               bot_cfg_pause_time = gpGlobals->time + 5.0f;
             else //Required for Listenservers to exec .cfg [APG]RoboCop[CL]
                bot_cfg_pause_time = gpGlobals->time + 10.0f; // was 20
          }
          if (need_to_open_cfg2) // have we opened foxbot.cfg file yet?
          {
-            bot_cfg_pause_time = gpGlobals->time + 1.0f;
+            bot_cfg_pause_time = gpGlobals->time + 5.0f;
             char filename[256];
             char mapname[64];
             need_to_open_cfg2 = false; // only do this once!!!
@@ -2639,7 +2639,7 @@ void StartFrame() { // v7 last frame timing
             }
             if (strcmp(cmd, "addbot") == 0) {
                BotCreate(nullptr, arg1, arg2, arg3, arg4);
-               bot_check_time = gpGlobals->time + 5.0f;
+               bot_check_time = gpGlobals->time + 8.0f;
             } else if (strcmp(cmd, "min_bots") == 0) {
                changeBotSetting("min_bots", &min_bots, arg1, -1, 31, SETTING_SOURCE_SERVER_COMMAND);
             } else if (strcmp(cmd, "max_bots") == 0) {
@@ -5008,8 +5008,8 @@ static void ProcessBotCfgFile() {
 
       // have to delay here or engine gives "Tried to write to
       // uninitialized sizebuf_t" error and crashes...
-      bot_cfg_pause_time = gpGlobals->time + 6.0f;
-      bot_check_time = gpGlobals->time + 6.0f;
+      bot_cfg_pause_time = gpGlobals->time + 8.0f;
+      bot_check_time = gpGlobals->time + 8.0f;
 
       return;
    }
