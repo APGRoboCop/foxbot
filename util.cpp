@@ -629,7 +629,7 @@ FILE *UTIL_OpenFoxbotLog() {
 
 // This function is a variant of UTIL_LogPrintf() as used in the SDK.
 // It lets you print messages straight to the Foxbot log file.
-void UTIL_BotLogPrintf(char *fmt, ...) {
+void UTIL_BotLogPrintf(char* fmt, ...) {
    FILE *lfp = UTIL_OpenFoxbotLog();
    if (lfp == nullptr)
       return;

@@ -302,7 +302,7 @@ int JobReport(bot_t *pBot) {
          job_ptr->phase = 1;
 
          // create a delay so the bot can "type"
-         job_ptr->phase_timer = pBot->f_think_time + 2.0;
+         job_ptr->phase_timer = pBot->f_think_time + 2.0f;
       }
    }
 
@@ -312,7 +312,7 @@ int JobReport(bot_t *pBot) {
       job_ptr->message[MAX_CHAT_LENGTH - 1] = '\0';
 
       UTIL_HostSay(pBot->pEdict, 1, job_ptr->message);
-      //BlacklistJob(pBot, JOB_REPORT, 3.0f); // don't report the same thing too often
+      //BlacklistJob(pBot, JOB_REPORT, 3.0f); // don't report the same thing too often [APG]RoboCop[CL]
       return JOB_TERMINATED; // job done
    }
 
