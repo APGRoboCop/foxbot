@@ -100,7 +100,7 @@ static jobFunctions_struct jf[JOB_TYPE_TOTAL] = {
 // these must be in the right order for each job to run properly
 jobList_struct jl[JOB_TYPE_TOTAL] = {   //Only handles 32 not 45? [APG]RoboCop[CL]
     { 490, "JOB_SEEK_WAYPOINT" }, { PRIORITY_MAXIMUM, "JOB_GET_UNSTUCK" }, { 0, "JOB_ROAM" }, { 380, "JOB_CHAT" },
-    { 590, "JOB_REPORT" }, { 480, "JOB_PICKUP_ITEM" }, { 530, "JOB_PICKUP_FLAG" },
+    { 700, "JOB_REPORT" }, { 480, "JOB_PICKUP_ITEM" }, { 530, "JOB_PICKUP_FLAG" },
     { 800, "JOB_PUSH_BUTTON" }, { 650, "JOB_USE_TELEPORT" }, { 750, "JOB_MAINTAIN_OBJECT" },
     { 760, "JOB_BUILD_SENTRY" }, { 510, "JOB_BUILD_DISPENSER" }, { 690, "JOB_BUILD_TELEPORT" },
     { 400, "JOB_BUFF_ALLY" }, { 550, "JOB_ESCORT_ALLY" },
@@ -108,7 +108,7 @@ jobList_struct jl[JOB_TYPE_TOTAL] = {   //Only handles 32 not 45? [APG]RoboCop[C
     { 450, "JOB_GET_HEALTH" }, { 440, "JOB_GET_ARMOR" }, { 500, "JOB_GET_AMMO" }, { 670, "JOB_DISGUISE" },
     { 190, "JOB_FEIGN_AMBUSH" }, { 560, "JOB_SNIPE" }, { 250, "JOB_GUARD_WAYPOINT" }, { 610, "JOB_DEFEND_FLAG" },
     { 660, "JOB_GET_FLAG" }, { 780, "JOB_CAPTURE_FLAG" }, { 340, "JOB_HARRASS_DEFENSE" },
-    { 700, "JOB_ROCKET_JUMP" }, { 730, "JOB_CONCUSSION_JUMP" },
+    { 590, "JOB_ROCKET_JUMP" }, { 730, "JOB_CONCUSSION_JUMP" },
     { 390, "JOB_DETPACK_WAYPOINT" }, { 540, "JOB_PIPETRAP" }, { 600, "JOB_INVESTIGATE_AREA" },
     { 630, "JOB_PURSUE_ENEMY" }, { 200, "JOB_PATROL_HOME" }, { 710, "JOB_SPOT_STIMULUS" },
     { 640, "JOB_ATTACK_BREAKABLE" }, { 430, "JOB_ATTACK_TELEPORT" }, { 620, "JOB_SEEK_BACKUP" },
