@@ -4,7 +4,7 @@
 
 --------------------------------------------------------------------------------
 Version 0.801
-??-??-2022
+November-05-2022
 Updated by RoboCop
 --------------------------------------------------------------------------------
 
@@ -45,7 +45,7 @@ TODO List:-
 
 >> Fix bot_chat cvars
 
->> Fix bots navigation when shot by enemies as they cannot seem to detect where damage is coming from
+>> Fix bots navigation when shot by enemies as they sometimes cannot seem to detect where damage is coming from
 
 >> To prevent engineers to go around SG turrets when repairing/upgrading
 
