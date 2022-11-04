@@ -854,7 +854,7 @@ static bool BotUpdateRoute(bot_t *pBot) {
       bool heightCheck = true;      // used only when climbing ladders
       if (pBot->pEdict->v.movetype == MOVETYPE_FLY) {
          // if the bot is on a ladder make sure it is just above the waypoint
-         needed_distance = 20.0; // got to be near when on a ladder
+         needed_distance = 20.0f; // got to be near when on a ladder
          if (pBot->pEdict->v.origin.z < waypoints[new_current_wp].origin.z || pBot->pEdict->v.origin.z > waypoints[new_current_wp].origin.z + 10.0f)
             heightCheck = false;
       } else if (waypoints[new_current_wp].flags & W_FL_JUMP) {
