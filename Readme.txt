@@ -33,62 +33,59 @@ Most of the guide is Operating System independant but there is also
 a section specifically about compiling the Linux version of Foxbot.
 
 --------------------------------------------------------------------------------
-Version 0.800
-September-10-2021
+Version 0.801
+November-05-2022
 Updated by RoboCop
 --------------------------------------------------------------------------------
 
 - Added new waypoints:-
-	+ axlfly
-	+ botspree
-	+ dustbowl_old
-	+ dustbowl2_v2
-	+ gen_complex
-	+ insideout
-	+ lbdustbowl
-	+ madcanyon
-	+ mulch_dm2b1
-	+ murderball1_3
-	+ osaka_l
-	+ osaka_r2
-	+ rats2v2
-	+ rock2_2way_r
-	+ rock2_open_r
-	+ sandbowl_r
-	+ turbine
-	+ warpath_r2
+	+ congestus_lg
 
-- Reinstated the 'foxbot_commander' feature
+- Added area for bots to report Sentry Built in dustbowl hut entry in CP1
 
-- Reduced fire delay for Sniper's Auto-Rifle
+- Fixed typo bot team report for avanti area file
 
-- Reduced further more redundant codes and added more C++14 support
-	
-- Reduced overflow issues and instability crashes
+- Added more delay for bots to Team Report to prevent annoying chat flooding
 
-- Reduced Reachable Range to prevent waypoints creation from adding too many junctions
+- Increased priority for bots to steal flags
 
-- Fixed Listenserver foxbot.cfg and other .cfg load failures
+- Improved floating point precision
 
-- Added some support for murderball, murderball1_3 and murderball-2002
+- Reduced spy feigning time to prevent idling for too long
 
-- Fixed the unreachable waypoint in warpath as well as enhanced its other waypoints
+- Added a longer bot load config delay when changing maps or using `addbot` too rapidly to reduce crashes
 
-- Reduced StartFrame stack by reducing some unwanted features and lines that exceed it
-	
-- Added more reaction time delay for bots to attack enemies as they were too quick to respond
+- Reduced infinite loops for enhanced stability and less CPU consumption
 
-- Improved dustbowl waypoint by removing rogue pathways in the Jump Point for Capture Point 1, 2 and 3
-	
-- bot_job_think.cpp adjusted for the Medic and Engineer bots to heal their team mates more often
+- Increased the bot's flexibility to steer quickly when turn corners and aim faster
 
-- botdontmove, bot_chat, min_bots, max_bots, bot_bot_balance and bot_team_balance cvars should now operate properly
+- Optimised pathway for 2fort, shutdown2, rock2, well and dustbowl
 
-Known bugs:-
+- Repaired rock2 waypoints and the rock2 variants by allowing bots to cap properly
 
->> Soldier bots tend to struggle for rocket jumping in awkward areas that can block its way
+- Reduced the likelihood for blue bots to go the wrong way after capping CP2 in dustbowl
 
->> Sniper bots tend to TK when Friendly Fire is on, when interacting with their team's sentries and teleports
+- Reduced the likelihood for bots to go into the 2fort water to prevent long tasks for capping flags
+
+- Improved bot's visual on locating stray ammo bags
+
+- Reverted waypoint max Reachable Range, jobList and jobFunction structure
+
+TODO List:-
+
+>> Fix bot_chat cvars
+
+>> Fix bots navigation when shot by enemies as they sometimes cannot seem to detect where damage is coming from
+
+>> To prevent engineers to go around SG turrets when repairing/upgrading
+
+>> To allow bots to use Nail Guns for destroying SG turrets, when out of nades or from a long distance
+
+>> To prevent bots from shooting at spy corpses too long as, they aren't aware that a player switched teams as enemy spy
+
+>> Allow bots to toss grenades at a higher angle and from a lower range as their target aim is too far
+
+>> BONUS: Maybe add a feature for bots to have experience and wisdom or learned data in order to be more human
 
 ____________________________________________________________
 
