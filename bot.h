@@ -61,7 +61,7 @@ void ClientPutInServer(edict_t *pEntity);
 void ClientCommand(edict_t *pEntity);
 void ClientKill(edict_t *pEntity);
 
-void FakeClientCommand(edict_t *pBot, char *arg1, char *arg2, char *arg3);
+void FakeClientCommand(edict_t *pBot, const char* arg1, const char* arg2, const char* arg3);
 // void FakeClientCommand (edict_t *pFakeClient, const char *fmt, ...);
 
 void BotFile_Write(char *string);
@@ -568,7 +568,7 @@ void ClientPrint(edict_t *pEdict, int msg_dest, const char *msg_name);
 
 void UTIL_SayText(const char *pText, edict_t *pEdict);
 
-void UTIL_HostSay(edict_t *pEntity, int teamonly, char *message);
+void UTIL_HostSay(edict_t *pEntity, int teamonly, const char* message);
 
 bool VectorsNearerThan(const Vector &r_vOne, const Vector &r_vTwo, double value);
 
@@ -594,7 +594,7 @@ Vector Center(edict_t *pEdict);
 
 Vector GetGunPosition(const edict_t *pEdict);
 
-void UTIL_SelectItem(edict_t *pEdict, char *item_name);
+void UTIL_SelectItem(edict_t *pEdict, const char *item_name);
 
 Vector VecBModelOrigin(const edict_t *pEdict);
 
@@ -604,9 +604,9 @@ void UTIL_ShowMenu(edict_t *pEdict, int slots, int displaytime, bool needmore, c
 
 FILE *UTIL_OpenFoxbotLog();
 
-void UTIL_BotLogPrintf(char *fmt, ...);
+void UTIL_BotLogPrintf(const char* fmt, ...);
 
-void UTIL_BuildFileName(char *filename, int max_fn_length, char *arg1, char *arg2);
+void UTIL_BuildFileName(char *filename, int max_fn_length, const char *arg1, const char *arg2);
 
 bool UTIL_ReadFileLine(char *string, unsigned int max_length, FILE *file_ptr);
 

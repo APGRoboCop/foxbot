@@ -788,18 +788,17 @@ int JobMaintainObject(bot_t *pBot) {
       if (job_ptr->phase_timer < pBot->f_think_time || !BotCanSeeOrigin(pBot, job_ptr->object->v.origin)) {
          BlacklistJob(pBot, JOB_MAINTAIN_OBJECT, random_float(12.0f, 24.0f));
          return JOB_TERMINATED;
-      } else {
-         BotSetFacing(pBot, job_ptr->object->v.origin);
-         BotNavigateWaypointless(pBot);
-         pBot->f_current_wp_deadline = pBot->f_think_time + BOT_WP_DEADLINE;
+      }
+      BotSetFacing(pBot, job_ptr->object->v.origin);
+      BotNavigateWaypointless(pBot);
+      pBot->f_current_wp_deadline = pBot->f_think_time + BOT_WP_DEADLINE;
 
-         if (pBot->enemy.ptr == nullptr && pBot->current_weapon.iId != TF_WEAPON_SPANNER)
-            UTIL_SelectItem(pBot->pEdict, "tf_weapon_spanner");
+      if (pBot->enemy.ptr == nullptr && pBot->current_weapon.iId != TF_WEAPON_SPANNER)
+         UTIL_SelectItem(pBot->pEdict, "tf_weapon_spanner");
 
-         if (VectorsNearerThan(pBot->pEdict->v.origin, job_ptr->object->v.origin, 60.0)) {
-            job_ptr->phase = 4;
-            job_ptr->phase_timer = pBot->f_think_time + random_float(2.0f, 3.0f);
-         }
+      if (VectorsNearerThan(pBot->pEdict->v.origin, job_ptr->object->v.origin, 60.0)) {
+         job_ptr->phase = 4;
+         job_ptr->phase_timer = pBot->f_think_time + random_float(2.0f, 3.0f);
       }
    }
 

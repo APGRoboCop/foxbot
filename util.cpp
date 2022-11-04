@@ -215,8 +215,8 @@ void UTIL_SayText(const char *pText, edict_t *pEdict) {
    MESSAGE_END();
 }
 
-void UTIL_HostSay(edict_t *pEntity, const int teamonly, char *message) {
-   char *pc;
+void UTIL_HostSay(edict_t *pEntity, const int teamonly, const char* message) {
+   const char* pc;
 
    // make sure the text has content
    for (pc = message; pc != nullptr && *pc != 0; pc++) {
@@ -535,7 +535,7 @@ bool FVisible(const Vector &r_vecOrigin, edict_t *pEdict) {
 
 Vector GetGunPosition(const edict_t *pEdict) { return pEdict->v.origin + pEdict->v.view_ofs; }
 
-void UTIL_SelectItem(edict_t *pEdict, char *item_name) {
+void UTIL_SelectItem(edict_t *pEdict, const char* item_name) {
    // UTIL_HostSay(pEdict, 0, item_name);
    FakeClientCommand(pEdict, item_name, nullptr, nullptr);
 }
@@ -629,7 +629,7 @@ FILE *UTIL_OpenFoxbotLog() {
 
 // This function is a variant of UTIL_LogPrintf() as used in the SDK.
 // It lets you print messages straight to the Foxbot log file.
-void UTIL_BotLogPrintf(char* fmt, ...) {
+void UTIL_BotLogPrintf(const char* fmt, ...) {
    FILE *lfp = UTIL_OpenFoxbotLog();
    if (lfp == nullptr)
       return;
@@ -646,7 +646,7 @@ void UTIL_BotLogPrintf(char* fmt, ...) {
 // This function tries to find out where the Foxbot directory is and
 // attempts to piece together the path and name of the specified file
 // and/or directory.
-void UTIL_BuildFileName(char *filename, const int max_fn_length, char *arg1, char *arg2) {
+void UTIL_BuildFileName(char* filename, const int max_fn_length, const char* arg1, const char* arg2) {
    filename[0] = '\0';
 
    UTIL_FindFoxbotPath();

@@ -114,7 +114,7 @@ typedef struct {
 
 // This holds the multigun names we will check using a repeat loop
 #define NumNTFGuns 8
-char *ntfTargetChecks[] = {
+const char *ntfTargetChecks[] = {
     "ntf_teslacoil", "ntf_grenlauncher", "ntf_rocklauncher", "ntf_lrlauncher", "ntf_flamegun", "ntf_crowbar", "ntf_displacer", "ntf_biocannon",
 };
 

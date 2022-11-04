@@ -553,10 +553,10 @@ void BotJobThink(bot_t *pBot) {
    case TFC_CLASS_PYRO:
       break;
    case TFC_CLASS_MEDIC:
-       //FakeClientCommand(pBot->pEdict, "slot3", "+attack; wait; wait", "-attack");
+      // FakeClientCommand(pBot->pEdict, "slot3", "+attack; wait; wait", "-attack");
       break;
    case TFC_CLASS_SPY:
-       //FakeClientCommand(pBot->pEdict, "slot3", "+attack; wait; wait", "-attack");
+      // FakeClientCommand(pBot->pEdict, "slot3", "+attack; wait; wait", "-attack");
       // time for a disguise?
       if (pBot->enemy.f_lastSeen + 2.0f < pBot->f_think_time) {
          if (pBot->current_team == UTIL_GetTeamColor(pBot->pEdict)) {

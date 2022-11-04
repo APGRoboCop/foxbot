@@ -199,16 +199,16 @@ bool botcamEnabled = false;
 chatClass chat; // bot chat stuff
 
 // waypoint menu entries
-char *show_menu_1 = {"Waypoint Tags\n\n1. Team Specific\n2. Locations\n3. Items\n4. Actions p1\n5. Actions p2\n6. "
+const char* show_menu_1 = {"Waypoint Tags\n\n1. Team Specific\n2. Locations\n3. Items\n4. Actions p1\n5. Actions p2\n6. "
                      "Control Points\n7. Exit"};
-char *show_menu_2 = {"Team Specific Tags\n\n1. Team 1\n2. Team 2\n3. Team 3\n4. Team 4\n5. Exit"};
-char *show_menu_3 = {"Location Tags\n\n1. Flag Location\n2. Flag Goal Location\n3. Exit"};
-char *show_menu_4 = {"Item Tags\n\n1. Health\n2. Armour\n3. Ammo\n4. Exit"};
-char *show_menu_5 = {"Action Tags p1\n\n1. Defend (Soldier/HW/Demo)\n2. Defend(Demoman Only)\n3. Sniper\n4. Build "
+const char* show_menu_2 = {"Team Specific Tags\n\n1. Team 1\n2. Team 2\n3. Team 3\n4. Team 4\n5. Exit"};
+const char* show_menu_3 = {"Location Tags\n\n1. Flag Location\n2. Flag Goal Location\n3. Exit"};
+const char* show_menu_4 = {"Item Tags\n\n1. Health\n2. Armour\n3. Ammo\n4. Exit"};
+const char* show_menu_5 = {"Action Tags p1\n\n1. Defend (Soldier/HW/Demo)\n2. Defend(Demoman Only)\n3. Sniper\n4. Build "
                      "Sentry\n5. Rotate SG 180\n6. Build TP Entrance\n7. Build TP Exit\n8. Exit"};
-char *show_menu_6 = {"Action Tags p2\n\n1. RJ/CJ\n2. Jump\n3. Wait For Lift\n4. Walk\n5. Detpack(Clear "
+const char* show_menu_6 = {"Action Tags p2\n\n1. RJ/CJ\n2. Jump\n3. Wait For Lift\n4. Walk\n5. Detpack(Clear "
                      "passageway)\n6. Detpack(Seal passageway)\n7. Path Check\n8. Exit"};
-char *show_menu_7 = {"Waypoint Tags\n\n1. Point1\n2. Point2\n3. Point3\n4. Point4\n5. Point5\n6. Point6\n7. Point7\n8. Point8\n9 Exit"};
+const char* show_menu_7 = {"Waypoint Tags\n\n1. Point1\n2. Point2\n3. Point3\n4. Point4\n5. Point5\n6. Point6\n7. Point7\n8. Point8\n9 Exit"};
 
 // meta mod shiznit
 extern bool mr_meta;
@@ -1416,7 +1416,7 @@ void ClientCommand(edict_t *pEntity) {
             strcpy(c, "-1");
             BotCreate(pEntity, arg1, c, arg3, arg4);
          }
-         bot_check_time = gpGlobals->time + 8.0f;
+         bot_check_time = gpGlobals->time + 6.0f;
          if (mr_meta)
             RETURN_META(MRES_SUPERCEDE);
          return;
@@ -2505,7 +2505,7 @@ void StartFrame() { // v7 last frame timing
                   BotCreate(nullptr, c_team, c_class, bots[index1].name, c_skill);
             }
             respawn_time = gpGlobals->time + 3.0f; // set next respawn time
-            bot_check_time = gpGlobals->time + 8.0f;
+            bot_check_time = gpGlobals->time + 6.0f;
          } else
             respawn_time = 2.0f;
       }
@@ -2639,7 +2639,7 @@ void StartFrame() { // v7 last frame timing
             }
             if (strcmp(cmd, "addbot") == 0) {
                BotCreate(nullptr, arg1, arg2, arg3, arg4);
-               bot_check_time = gpGlobals->time + 8.0f;
+               bot_check_time = gpGlobals->time + 6.0f;
             } else if (strcmp(cmd, "min_bots") == 0) {
                changeBotSetting("min_bots", &min_bots, arg1, -1, 31, SETTING_SOURCE_SERVER_COMMAND);
             } else if (strcmp(cmd, "max_bots") == 0) {
@@ -4617,7 +4617,7 @@ C_DLLEXPORT int GetNewDLLFunctions(NEW_DLL_FUNCTIONS *pFunctionTable, int *inter
    return true;
 }
 
-void FakeClientCommand(edict_t *pBot, char *arg1, char *arg2, char *arg3) {
+void FakeClientCommand(edict_t *pBot, const char* arg1, const char* arg2, const char* arg3) {
    int length;
    int i = 0;
    while (i < 256) {
