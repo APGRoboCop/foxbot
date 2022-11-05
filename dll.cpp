@@ -1416,7 +1416,7 @@ void ClientCommand(edict_t *pEntity) {
             strcpy(c, "-1");
             BotCreate(pEntity, arg1, c, arg3, arg4);
          }
-         bot_check_time = gpGlobals->time + 6.0f;
+         bot_check_time = gpGlobals->time + 5.0f;
          if (mr_meta)
             RETURN_META(MRES_SUPERCEDE);
          return;
@@ -2639,7 +2639,7 @@ void StartFrame() { // v7 last frame timing
             }
             if (strcmp(cmd, "addbot") == 0) {
                BotCreate(nullptr, arg1, arg2, arg3, arg4);
-               bot_check_time = gpGlobals->time + 6.0f;
+               bot_check_time = gpGlobals->time + 5.0f;
             } else if (strcmp(cmd, "min_bots") == 0) {
                changeBotSetting("min_bots", &min_bots, arg1, -1, 31, SETTING_SOURCE_SERVER_COMMAND);
             } else if (strcmp(cmd, "max_bots") == 0) {
