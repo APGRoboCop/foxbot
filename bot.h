@@ -574,17 +574,17 @@ bool VectorsNearerThan(const Vector &r_vOne, const Vector &r_vTwo, double value)
 
 int UTIL_GetTeamColor(edict_t *pEntity);
 
-int UTIL_GetTeam(edict_t *pEntity);
+int UTIL_GetTeam(const edict_t *pEntity);
 
 int UTIL_GetFlagsTeam(const edict_t *flag_edict);
 
 int UTIL_GetClass(edict_t *pEntity);
 
-int UTIL_GetBotIndex(edict_t *pEdict);
+int UTIL_GetBotIndex(const edict_t *pEdict);
 
-bot_t *UTIL_GetBotPointer(edict_t *pEdict);
+bot_t *UTIL_GetBotPointer(const edict_t *pEdict);
 
-bool IsAlive(edict_t *pEdict);
+bool IsAlive(const edict_t *pEdict);
 
 bool FInViewCone(const Vector &r_pOrigin, const edict_t *pEdict);
 
@@ -598,7 +598,7 @@ void UTIL_SelectItem(edict_t *pEdict, const char *item_name);
 
 Vector VecBModelOrigin(const edict_t *pEdict);
 
-bool UTIL_FootstepsHeard(const edict_t *pEdict, edict_t *pPlayer);
+bool UTIL_FootstepsHeard(const edict_t *pEdict, const edict_t *pPlayer);
 
 void UTIL_ShowMenu(edict_t *pEdict, int slots, int displaytime, bool needmore, const char *pText);
 
@@ -628,7 +628,7 @@ void BotSprayLogo(edict_t *pEntity, bool sprayDownwards);
 
 void BotForgetTeleportPair(bot_t *pBot, int index);
 
-int BotRecallTeleportEntranceIndex(const bot_t *pBot, edict_t *teleportEntrance);
+int BotRecallTeleportEntranceIndex(const bot_t *pBot, const edict_t *teleportEntrance);
 
 int BotGetFreeTeleportIndex(const bot_t *pBot);
 

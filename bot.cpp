@@ -2093,7 +2093,7 @@ static void BotAttackerCheck(bot_t *pBot) {
       if (i > gpGlobals->maxClients)
          i = 1;
 
-      edict_t *pPlayer = INDEXENT(i);
+      const edict_t *pPlayer = INDEXENT(i);
 
       // skip invalid players and skip self (i.e. this bot)
       if (pPlayer && !pPlayer->free && pPlayer != pBot->pEdict && IsAlive(pPlayer)) {
@@ -2395,7 +2395,7 @@ void BotForgetTeleportPair(bot_t *pBot, const int index) {
 // If the bot knows about a particular Teleporter entrance this function will return
 // the index of the bot's Teleporter memory where this Teleporter entrance is stored.
 // Or -1 if the bot hasn't encountered the Teleporter entrance before.
-int BotRecallTeleportEntranceIndex(const bot_t *pBot, edict_t *const teleportEntrance) {
+int BotRecallTeleportEntranceIndex(const bot_t *pBot, const edict_t *const teleportEntrance) {
    // just checking!
    if (teleportEntrance == nullptr)
       return -1;
@@ -3384,7 +3384,7 @@ bool SpyAmbushAreaCheck(const bot_t *pBot, Vector &r_wallVector) {
 
    bool enemies_too_far = true;
    for (int i = 1; i <= gpGlobals->maxClients; i++) {
-      edict_t *pPlayer = INDEXENT(i);
+      const edict_t *pPlayer = INDEXENT(i);
 
       // skip invalid players and skip self (i.e. this bot)
       if (pPlayer && !pPlayer->free && pPlayer != pBot->pEdict && IsAlive(pPlayer)) {

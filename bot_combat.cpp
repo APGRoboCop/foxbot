@@ -187,7 +187,7 @@ int FriendlyClassTotal(edict_t *pEdict, const int specifiedClass, const bool ign
 
    // search the world for players...
    for (int i = 1; i <= gpGlobals->maxClients; i++) {
-      edict_t *pPlayer = INDEXENT(i);
+      const edict_t *pPlayer = INDEXENT(i);
 
       // skip invalid players
       if (pPlayer && !pPlayer->free) {
@@ -1403,7 +1403,7 @@ static Vector BotBodyTarget(const edict_t *pBotEnemy, bot_t *pBot) {
 // will use (assuming enough ammo exists for that weapon)
 // BotFireWeapon will return true if weapon was fired, false otherwise
 bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) {
-   bot_weapon_select_t *pSelect = nullptr;
+   const bot_weapon_select_t *pSelect = nullptr;
    const bot_fire_delay_t *pDelay = nullptr;
 
    edict_t *pEdict = pBot->pEdict;
@@ -2295,7 +2295,7 @@ void UpdateFlagCarrierList() {
    while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "item_tfgoal")) != nullptr && !FNullEnt(pent)) {
       // search the world for players...
       for (int i = 1; i <= gpGlobals->maxClients; i++) {
-         edict_t *pPlayer = INDEXENT(i);
+         const edict_t *pPlayer = INDEXENT(i);
 
          // remember if this player index owns(carries) this flag
          if (pPlayer && !pPlayer->free && pent->v.owner == pPlayer && IsAlive(pPlayer)) {
@@ -2315,7 +2315,7 @@ void UpdateFlagCarrierList() {
 
 // This function will return true if the specified player is carrying a flag,
 // false otherwise.
-bool PlayerHasFlag(edict_t *Player) {
+bool PlayerHasFlag(const edict_t *Player) {
    // search the world for players to find the one with the matching index
    for (int i = 1; i <= gpGlobals->maxClients; i++) {
       if (INDEXENT(i) == Player && playerHasFlag[i - 1])

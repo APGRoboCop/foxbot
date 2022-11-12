@@ -79,7 +79,7 @@ int FriendlyClassTotal(edict_t *pEdict, int specifiedClass, bool ignoreSelf);
 
 void UpdateFlagCarrierList();
 
-bool PlayerHasFlag(edict_t *Player);
+bool PlayerHasFlag(const edict_t *Player);
 
 bool PlayerIsInfected(const edict_t *pEntity);
 

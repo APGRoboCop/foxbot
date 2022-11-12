@@ -55,7 +55,7 @@ void CreateCamera(edict_t *pPlayer, edict_t *pEntity) {
    }
 }
 
-void KillCamera(edict_t *pPlayer) {
+void KillCamera(const edict_t *pPlayer) {
    if (pPlayer != nullptr) {
       edict_t *pCCamera = nullptr;
       while ((pCCamera = FIND_ENTITY_BY_CLASSNAME(pCCamera, "entity_botcam")) != nullptr && !FNullEnt(pCCamera)) {

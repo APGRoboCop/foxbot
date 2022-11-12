@@ -321,7 +321,7 @@ int UTIL_GetTeamColor(edict_t *pEntity) {
 // This function returns team number 0s through 3 based on what the MOD
 // uses for team numbers.
 // You can call this function to find the team of players and Sentry Guns.
-int UTIL_GetTeam(edict_t *pEntity) {
+int UTIL_GetTeam(const edict_t *pEntity) {
    // crash check
    if (!pEntity)
       return -1;
@@ -419,7 +419,7 @@ int UTIL_GetClass(edict_t *pEntity) {
    return 0;
 }
 
-int UTIL_GetBotIndex(edict_t *pEdict) {
+int UTIL_GetBotIndex(const edict_t *pEdict) {
    for (int index = 0; index < 32; index++) {
       if (bots[index].pEdict == pEdict)
          return index;
@@ -429,7 +429,7 @@ int UTIL_GetBotIndex(edict_t *pEdict) {
    return -1;
 }
 
-bot_t *UTIL_GetBotPointer(edict_t *pEdict) {
+bot_t *UTIL_GetBotPointer(const edict_t *pEdict) {
    for (int index = 0; index < 32; index++) {
       if (bots[index].pEdict == pEdict)
          return &bots[index];
@@ -438,7 +438,7 @@ bot_t *UTIL_GetBotPointer(edict_t *pEdict) {
    return nullptr; // return NULL if edict is not a bot
 }
 
-bool IsAlive(edict_t *pEdict) { return pEdict->v.deadflag == DEAD_NO && pEdict->v.health > 0 && !(pEdict->v.flags & FL_NOTARGET) && pEdict->v.movetype != MOVETYPE_NOCLIP; }
+bool IsAlive(const edict_t *pEdict) { return pEdict->v.deadflag == DEAD_NO && pEdict->v.health > 0 && !(pEdict->v.flags & FL_NOTARGET) && pEdict->v.movetype != MOVETYPE_NOCLIP; }
 
 // Returns true if the specified entity can see the specified vector in
 // its field of view.
@@ -545,7 +545,7 @@ Vector VecBModelOrigin(const edict_t *pEdict) { return pEdict->v.absmin + pEdict
 
 // This function checks if footstep sounds are on and if the indicated player
 // is moving fast enough to make footstep sounds.
-bool UTIL_FootstepsHeard(const edict_t *pEdict, edict_t *pPlayer) {
+bool UTIL_FootstepsHeard(const edict_t *pEdict, const edict_t *pPlayer) {
    static bool check_footstep_sounds = true;
    static bool footstep_sounds_on = false;
 

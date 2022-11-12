@@ -29,6 +29,6 @@
 #define BOTCAM_H
 
 void CreateCamera(edict_t *pPlayer, edict_t *pEntity);
-void KillCamera(edict_t *pPlayer);
+void KillCamera(const edict_t *pPlayer);
 
 #endif
