@@ -31,6 +31,8 @@
 #include "osdep.h"
 #include <cstring>
 
+#include <string>
+
 // stuff for Win32 vs. Linux builds
 
 #ifndef __linux__
@@ -147,6 +149,9 @@ template <typename U> void bzero(U *ptr, size_t len) noexcept {
 #define CHAT_TYPE_KILLED_LOW 4
 #define CHAT_TYPE_SUICIDE 5
 
+//Fix for GCC 8 - [APG]RoboCop[CL]
+#ifdef _WIN32
+
 #ifndef max
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 #endif
@@ -155,20 +160,26 @@ template <typename U> void bzero(U *ptr, size_t len) noexcept {
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 #endif
 
+#undef max
+#undef min
+
+#define itoa(a,b,c) sprintf(b, "%d", a)
+#endif
+
 // a class for handling the bot chat messages
 class chatClass {
  private:
    // section header names for each chat type, as used in the chat file
-   char sectionNames[TOTAL_CHAT_TYPES][64];
+   std::string section_names_[TOTAL_CHAT_TYPES];
 
    // chat strings, organised by groups of chat types
-   char strings[TOTAL_CHAT_TYPES][MAX_CHAT_STRINGS][512];
+   std::string strings_[TOTAL_CHAT_TYPES][MAX_CHAT_STRINGS];
 
    // counts the number of strings read from the chat file
-   int stringCount[TOTAL_CHAT_TYPES];
+   int string_count_[TOTAL_CHAT_TYPES];
 
    // used to avoid repeating the same message twice in a row
-   int recentStrings[TOTAL_CHAT_TYPES][5];
+   int recent_strings_[TOTAL_CHAT_TYPES][5];
 
  public:
    chatClass(); // constructor, sets up the names of the chat section headers

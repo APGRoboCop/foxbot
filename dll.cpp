@@ -682,26 +682,26 @@ void GameDLLInit() {
 // Constructor for the chatClass class
 // sets up the names of the chat section headers
 chatClass::chatClass() {
-   strcpy(this->sectionNames[CHAT_TYPE_GREETING], "[GREETINGS]");
-   strcpy(this->sectionNames[CHAT_TYPE_KILL_HI], "[KILL WINNING]");
-   strcpy(this->sectionNames[CHAT_TYPE_KILL_LOW], "[KILL LOSING]");
-   strcpy(this->sectionNames[CHAT_TYPE_KILLED_HI], "[KILLED WINNING]");
-   strcpy(this->sectionNames[CHAT_TYPE_KILLED_LOW], "[KILLED LOSING]");
-   strcpy(this->sectionNames[CHAT_TYPE_SUICIDE], "[SUICIDE]");
+    this->section_names_[CHAT_TYPE_GREETING] = "[GREETINGS]";
+    this->section_names_[CHAT_TYPE_KILL_HI] = "[KILL WINNING]";
+    this->section_names_[CHAT_TYPE_KILL_LOW] = "[KILL LOSING]";
+    this->section_names_[CHAT_TYPE_KILLED_HI] = "[KILLED WINNING]";
+    this->section_names_[CHAT_TYPE_KILLED_LOW] = "[KILLED LOSING]";
+    this->section_names_[CHAT_TYPE_SUICIDE] = "[SUICIDE]";
 
-   int j;
+    int i, j;
 
-   // explicitly clear all the chat strings
-   for (int i = 0; i < TOTAL_CHAT_TYPES; i++) {
-      this->stringCount[i] = 0;
-      for (j = 0; j < MAX_CHAT_STRINGS; j++) {
-         this->strings[i][j][0] = 0x0;
-      }
+    // explicitly clear all the chat strings
+    for (i = 0; i < TOTAL_CHAT_TYPES; i++) {
+        this->string_count_[i] = 0;
+        for (j = 0; j < MAX_CHAT_STRINGS; j++) {
+            this->strings_[i][j] = "";
+        }
 
-      for (j = 0; j < 5; j++) {
-         this->recentStrings[i][j] = -1;
-      }
-   }
+        for (j = 0; j < 5; j++) {
+            this->recent_strings_[i][j] = -1;
+        }
+    }
 }
 
 // This function is responsible for reading in the chat from the bot chat file.
@@ -742,7 +742,7 @@ void chatClass::readChatFile() {
       if (buffer[0] == '[') {
          bool newSectionFound = false;
          for (int i = 0; i < TOTAL_CHAT_TYPES; i++) {
-            if (buffer == this->sectionNames[i]) {
+            if (buffer == this->section_names_[i]) {
                chat_section = i;
                newSectionFound = true;
             }
@@ -753,11 +753,11 @@ void chatClass::readChatFile() {
 
       // this line is not a comment, empty, or a section header
       // so treat it as a chat string and load it up
-      if (chat_section != -1 && this->stringCount[chat_section] < MAX_CHAT_STRINGS && length > 0) {
+      if (chat_section != -1 && this->string_count_[chat_section] < MAX_CHAT_STRINGS && length > 0) {
          // UTIL_BotLogPrintf("buffer %s %d\n", buffer, this->stringCount[chat_section]);
 
-         strcpy(this->strings[chat_section][this->stringCount[chat_section]], buffer);
-         ++this->stringCount[chat_section];
+          this->strings_[chat_section][this->string_count_[chat_section]] = buffer;
+          ++this->string_count_[chat_section];
       }
    }
 
@@ -772,7 +772,7 @@ void chatClass::pickRandomChatString(char *msg, size_t maxLength, const int chat
    msg[0] = '\0'; // just in case
 
    // make sure this chat section contains at least one chat string
-   if (this->stringCount[chatSection] < 1)
+   if (this->string_count_[chatSection] < 1)
       return;
 
    int i, recentCount = 0;
@@ -780,10 +780,10 @@ void chatClass::pickRandomChatString(char *msg, size_t maxLength, const int chat
 
    // try to pick a string that hasn't been used recently
    while (recentCount < 5) {
-      randomIndex = random_long(0, this->stringCount[chatSection] - 1);
+      randomIndex = random_long(0, this->string_count_[chatSection] - 1);
       bool used = false;
       for (i = 0; i < 5; i++) {
-         if (this->recentStrings[chatSection][i] == randomIndex)
+         if (this->recent_strings_[chatSection][i] == randomIndex)
             used = true;
       }
 
@@ -795,16 +795,17 @@ void chatClass::pickRandomChatString(char *msg, size_t maxLength, const int chat
 
    // push the selected string on to the list of recently used strings
    for (i = 4; i > 0; i--) {
-      this->recentStrings[chatSection][i] = this->recentStrings[chatSection][i - 1];
+      this->recent_strings_[chatSection][i] = this->recent_strings_[chatSection][i - 1];
    }
-   this->recentStrings[chatSection][0] = randomIndex;
+   this->recent_strings_[chatSection][0] = randomIndex;
 
    // set up the message string
    // is "%s" in the text?
-   if (playerName != nullptr && strstr(this->strings[chatSection][randomIndex], "%s") != nullptr) {
-      snprintf(msg, maxLength, this->strings[chatSection][randomIndex], playerName);
-   } else
-      printf("%s", msg);
+   if (playerName != nullptr && strstr(this->strings_[chatSection][randomIndex].c_str(), "%s") != nullptr) {
+       snprintf(msg, maxLength, this->strings_[chatSection][randomIndex].c_str(), playerName);
+   }
+   else
+       snprintf(msg, maxLength, this->strings_[chatSection][randomIndex].c_str());
 
    msg[maxLength - 1] = '\0';
 }
@@ -2588,9 +2589,9 @@ void StartFrame() { // v7 last frame timing
                if (IsAlive(first_player)) {
                   spawn_time_reset = true;
                   if (respawn_time >= 1.0f)
-                     respawn_time = min(respawn_time, gpGlobals->time + 1.0f);
+                     respawn_time = std::min(respawn_time, gpGlobals->time + 1.0f);
                   if (bot_cfg_pause_time >= 1.0f)
-                     bot_cfg_pause_time = min(bot_cfg_pause_time, gpGlobals->time + 1.0f);
+                     bot_cfg_pause_time = std::min(bot_cfg_pause_time, gpGlobals->time + 1.0f);
                }
             }
          }
