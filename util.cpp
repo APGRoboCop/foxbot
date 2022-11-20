@@ -86,7 +86,7 @@ long random_long(const long lowval, const long highval) {
 
    lseed = (lseed * 1103515245 + 12345) % 2147483647;
 
-   return lseed / 3 % spread + lowval;
+   return static_cast<long>(lseed) / 3 % spread + lowval;
 }
 
 //	This is a float version of rand().

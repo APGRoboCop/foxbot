@@ -65,7 +65,7 @@ extern WAYPOINT waypoints[MAX_WAYPOINTS];
 extern int num_waypoints; // number of waypoints currently in use
 extern edict_t *pent_info_ctfdetect;
 
-static float roleCheckTimer = 30; // set fairly high so players can join first
+static float roleCheckTimer = 30.0f; // set fairly high so players can join first
 
 struct TeamLayout {
    List<bot_t *> attackers[4];
@@ -141,7 +141,7 @@ msg_com_struct msg_com[MSG_MAX];
 char msg_msg[64][MSG_MAX];
 
 #define PLAYER_SEARCH_RADIUS 50.0f
-//#define FLF_PLAYER_SEARCH_RADIUS 60.0
+//#define FLF_PLAYER_SEARCH_RADIUS 60.0f
 
 #define GETPLAYERAUTHID (*g_engfuncs.pfnGetPlayerAuthId)
 

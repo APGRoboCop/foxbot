@@ -689,10 +689,10 @@ chatClass::chatClass() {
     this->section_names_[CHAT_TYPE_KILLED_LOW] = "[KILLED LOSING]";
     this->section_names_[CHAT_TYPE_SUICIDE] = "[SUICIDE]";
 
-    int i, j;
+    int j;
 
     // explicitly clear all the chat strings
-    for (i = 0; i < TOTAL_CHAT_TYPES; i++) {
+    for (int i = 0; i < TOTAL_CHAT_TYPES; i++) {
         this->string_count_[i] = 0;
         for (j = 0; j < MAX_CHAT_STRINGS; j++) {
             this->strings_[i][j] = "";

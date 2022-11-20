@@ -1120,7 +1120,7 @@ void WaypointAdd(edict_t *pEntity) {
          WaypointDebug();
 #endif
    }
-
+   //TODO: to reduce the pathwaypoint_connect from automatically joining too many nodes from a distance [APG]RoboCop[CL]
    if (g_path_connect) {
       // calculate all the paths to this new waypoint
       for (i = 0; i < num_waypoints; i++) {
@@ -1194,7 +1194,7 @@ void WaypointDelete(edict_t *pEntity) {
    if (WaypointDeleteAimArtifact(pEntity))
       return;
 
-   const int index = WaypointFindNearest_E(pEntity, 50.0, -1);
+   const int index = WaypointFindNearest_E(pEntity, 50.0f, -1);
 
    if (index == -1)
       return;
