@@ -1389,7 +1389,7 @@ int JobEscortAlly(bot_t *pBot) {
    pBot->sideRouteTolerance = 200; // very short route changes
 
    // don't want the bot to trail further than this from it's escortee
-   const float maxEscortRange = 500.0f;
+   const auto maxEscortRange = 500;
 
    // phase zero - we assume the ally is visible and must find a waypoint near them
    if (job_ptr->phase == SET_WAYPOINT_VISIBLE_ALLY) {

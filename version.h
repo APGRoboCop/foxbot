@@ -1,5 +1,5 @@
 #ifndef _VERSION_H_
-#define VERSION_H_
+#define _VERSION_H_
 /*
  *
  * File: version.h
@@ -37,7 +37,7 @@
  * If not, we provide it here.
  */
 #ifndef VERSION
-#define VERSION 0.801
+#define VERSION 0.82
 #endif
 
 /*
@@ -58,15 +58,15 @@
  * This info gets updated on every link, indicating the
  * latest time and date the dll was compiled and linked.
  */
-extern char *COMPILE_DTTM;
-extern char *COMPILE_DATE;
+extern const char *COMPILE_DTTM;
+extern const char *COMPILE_DATE;
 
 /*
  * We can also provide the timezone. It gets set in the
  * Makefile. If not, we can provide it here.
  */
 #ifndef TZONE
-#define TZONE ""
+#define TZONE "GMT"
 #endif
 
 /*

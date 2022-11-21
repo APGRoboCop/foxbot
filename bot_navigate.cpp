@@ -1422,18 +1422,18 @@ int BotGetDispenserBuildWaypoint(const bot_t *pBot) {
    // if the bot has a sentry build the dispenser near it
    if (pBot->has_sentry == true && !FNullEnt(pBot->sentry_edict)){
       return WaypointFindRandomGoal_R(pBot->sentry_edict->v.origin, false, 800.0f, -1, 0);
-   } else // build near a random sentry waypoint
-   {
-      if (pBot->current_wp < 0)
-         return -1;
-
-      const int sentryWP = WaypointFindRandomGoal(pBot->current_wp, pBot->current_team, W_FL_TFC_SENTRY);
-
-      if (sentryWP == -1)
-         return -1;
-
-      return WaypointFindRandomGoal_R(waypoints[sentryWP].origin, false, 800.0f, -1, 0);
    }
+
+   // build near a random sentry waypoint
+   if (pBot->current_wp < 0)
+      return -1;
+
+   const int sentryWP = WaypointFindRandomGoal(pBot->current_wp, pBot->current_team, W_FL_TFC_SENTRY);
+
+   if (sentryWP == -1)
+      return -1;
+
+   return WaypointFindRandomGoal_R(waypoints[sentryWP].origin, false, 800.0f, -1, 0);
 }
 
 // This function returns the index of a waypoint suitable for building a
@@ -2446,12 +2446,12 @@ static void BotCheckForConcJump(bot_t *pBot) {
          }
       }
    }
-
+   
    // Abort if theres no RJ waypoint near enough.
    if (closestJumpWP == -1)
       return;
 
-   const float distanceSaved = WaypointDistanceFromTo(endWP, pBot->goto_wp, pBot->current_team) - WaypointDistanceFromTo(closestJumpWP, pBot->goto_wp, pBot->current_team);
+   const int distanceSaved = WaypointDistanceFromTo(endWP, pBot->goto_wp, pBot->current_team) - WaypointDistanceFromTo(closestJumpWP, pBot->goto_wp, pBot->current_team);
 
    // Don't bother if the distance it saves us is less than this.
    if (distanceSaved < 1000)
