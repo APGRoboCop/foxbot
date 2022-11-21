@@ -3757,61 +3757,41 @@ void BotThink(bot_t *pBot) {
    float diff = -pBot->pEdict->v.v_angle.x;
    // up down
    BotFixIdealPitch(pBot->pEdict);
-   if (diff < -180)
-      diff = diff + 360;
-   if (diff > 180)
-      diff = diff - 360;
+   if (diff < -180) diff = diff + 360;
+   if (diff > 180) diff = diff - 360;
    diff = diff - pBot->pEdict->v.idealpitch;
-   if (diff < -180)
-      diff = diff + 360;
-   if (diff > 180)
-      diff = diff - 360;
-   if (diff > -10 && diff < 10)
-      speed = 2;
-   else if (diff > -20 && diff < 20)
-      speed = 3;
-   else if (diff > -40 && diff < 40)
-      speed = 4;
-   else if (diff > -60 && diff < 60)
-      speed = 5;
-   else if (diff > -90 && diff < 90)
-      speed = 7;
-   else if (diff > -110 && diff < 110)
-      speed = 10;
+   if (diff < -180) diff = diff + 360;
+   if (diff > 180) diff = diff - 360;
+   if (diff > -10 && diff < 10) speed = 2;
+   else if (diff > -20 && diff < 20) speed = 3;
+   else if (diff > -40 && diff < 40) speed = 4;
+   else if (diff > -60 && diff < 60) speed = 5;
+   else if (diff > -90 && diff < 90) speed = 7;
+   else if (diff > -110 && diff < 110) speed = 10;
    if (!pBot->enemy.ptr)
-      speed = static_cast<int>(speed * 1.5f);
+       speed = static_cast<int>(speed * 1.5);
    speed = speed * (5 - pBot->bot_skill + pBot->bot_skill / 5);
    if (speed != 0)
-      BotChangePitch(pBot->pEdict, speed);
+       BotChangePitch(pBot->pEdict, static_cast<float>(speed));
    BotFixIdealYaw(pBot->pEdict);
    speed = 12;
    diff = pBot->pEdict->v.v_angle.y;
-   if (diff < -180)
-      diff = diff + 360;
-   if (diff > 180)
-      diff = diff - 360;
+   if (diff < -180) diff = diff + 360;
+   if (diff > 180) diff = diff - 360;
    diff = diff - pBot->pEdict->v.ideal_yaw;
-   if (diff < -180)
-      diff = diff + 360;
-   if (diff > 180)
-      diff = diff - 360;
-   if (diff > -10 && diff < 10)
-      speed = 2;
-   else if (diff > -20 && diff < 20)
-      speed = 3;
-   else if (diff > -40 && diff < 40)
-      speed = 4;
-   else if (diff > -60 && diff < 60)
-      speed = 5;
-   else if (diff > -90 && diff < 90)
-      speed = 7;
-   else if (diff > -110 && diff < 110)
-      speed = 10;
+   if (diff < -180) diff = diff + 360;
+   if (diff > 180) diff = diff - 360;
+   if (diff > -10 && diff < 10) speed = 3;
+   else if (diff > -20 && diff < 20) speed = 4;
+   else if (diff > -40 && diff < 40) speed = 4;
+   else if (diff > -60 && diff < 60) speed = 5;
+   else if (diff > -90 && diff < 90) speed = 7;
+   else if (diff > -110 && diff < 110) speed = 10;
    if (pBot->enemy.ptr == nullptr)
-      speed = static_cast<int>(speed * 2.5f);
-   speed *= 5 - pBot->bot_skill + pBot->bot_skill / 5;
+       speed = static_cast<int>(speed * 2.5);
+   speed *= (5 - pBot->bot_skill + pBot->bot_skill / 5);
    if (speed != 0)
-      BotChangeYaw(pBot->pEdict, speed);
+       BotChangeYaw(pBot->pEdict, static_cast<float>(speed));
 
    // make the body face the same way the bot is looking
    pBot->pEdict->v.angles.y = pBot->pEdict->v.v_angle.y;

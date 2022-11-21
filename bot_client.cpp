@@ -780,7 +780,7 @@ void BotClient_Valve_ScreenFade(void *p, const int bot_index) {
       state = 0;
 
       const int length = (duration + hold_time) / 4096;
-      bots[bot_index].f_blinded_time = gpGlobals->time + length - 2.0f;
+      bots[bot_index].f_blinded_time = gpGlobals->time + static_cast<float>(length - 2);
    } else {
       state++;
    }

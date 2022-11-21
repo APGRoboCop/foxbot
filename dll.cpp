@@ -1035,32 +1035,32 @@ void DispatchThink(edict_t *pent) {
             }
 
             Vector v = pBot->pEdict->v.v_angle;
-            v.y = v.y + 180.0f;
-            if (v.y > 180.0f)
-               v.y -= 360.0f;
-            if (v.y < -180.0f)
-               v.y += 360.0f;
+            v.y = v.y + 180;
+            if (v.y > 180)
+               v.y -= 360;
+            if (v.y < -180)
+               v.y += 360;
 
-            auto dgrad = v.y;
-            dgrad = dgrad + 180.0f;
-            if (dgrad > 180.0f)
-               dgrad -= 360.0f;
-            if (dgrad < -180.0f)
-               dgrad += 360.0f;
-            dgrad = dgrad * static_cast<float>(M_PI);
-            dgrad = dgrad / 180.0f;
+            double dgrad = v.y;
+            dgrad = dgrad + 180;
+            if (dgrad > 180)
+               dgrad -= 360;
+            if (dgrad < -180)
+               dgrad += 360;
+            dgrad = dgrad * M_PI;
+            dgrad = dgrad / 180;
 
             Vector vel = pBot->enemy.ptr->v.velocity;
             vel.x = vel.x * sin(dgrad);
             vel.y = vel.y * cos(dgrad);
             dgrad = v.x;
-            dgrad = dgrad + 180.0f;
-            if (dgrad > 180.0f)
-               dgrad -= 360.0f;
-            if (dgrad < -180.0f)
-               dgrad += 360.0f;
-            dgrad = dgrad * static_cast<float>(M_PI);
-            dgrad = dgrad / 180.0f;
+            dgrad = dgrad + 180;
+            if (dgrad > 180)
+               dgrad -= 360;
+            if (dgrad < -180)
+               dgrad += 360;
+            dgrad = dgrad * M_PI;
+            dgrad = dgrad / 180;
             vel.z = vel.z * cos(dgrad);
 
             if (vel.x < 0)
