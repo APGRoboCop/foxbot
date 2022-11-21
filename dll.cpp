@@ -2398,7 +2398,7 @@ void StartFrame() { // v7 last frame timing
       if (strcmp(STRING(gpGlobals->mapname), prevmapname) != 0) {
          first_player = nullptr;
          display_bot_vars = true;
-         display_start_time = gpGlobals->time + 10;
+         display_start_time = gpGlobals->time + 10.0f;
          need_to_open_cfg = true;
          // check if mapname_bot.cfg file exists...
          if (gpGlobals->time + 0.1f < previous_time) {

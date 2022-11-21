@@ -268,7 +268,7 @@ int JobChat(bot_t *pBot) {
          job_ptr->phase = 1;
 
          // create a delay so the bot can "type"
-         job_ptr->phase_timer = pBot->f_think_time + 2.0;
+         job_ptr->phase_timer = pBot->f_think_time + 2.0f;
       }
    }
 
@@ -718,6 +718,7 @@ int JobUseTeleport(bot_t *pBot) {
 // This function handles bot behaviour for the JOB_MAINTAIN_OBJECT job.
 // Navigate to a known damaged sentry/dispensor or un-upgraded sentry and give it
 // a few whacks with a wrench.
+//TODO: prevent engineer bots from circulating around SG Turrets [APG]RoboCop[CL]
 int JobMaintainObject(bot_t *pBot) {
    job_struct *job_ptr = &pBot->job[pBot->currentJob];
 

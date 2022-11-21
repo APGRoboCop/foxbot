@@ -164,7 +164,7 @@ static bot_fire_delay_t tfc_fire_delay[] = { {TF_WEAPON_KNIFE, 0.3f, {0.0f, 0.2f
 void BotCheckTeamplay() {
    // is this TFC?
    if (mod_id == TFC_DLL)
-      is_team_play = 1.0;
+      is_team_play = 1.0f;
    else
       is_team_play = CVAR_GET_FLOAT("mp_teamplay"); // teamplay enabled?
 
@@ -1417,31 +1417,32 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
       pBot->FreezeDelay = pBot->f_think_time + 0.5f;
 
    // nobody documented this bit of code ;-(
+   // diff and ang should be as floats to prevent aimbot? [APG]RoboCop[CL]
    if (pBot->current_weapon.iId == TF_WEAPON_RPG || pBot->current_weapon.iId == TF_WEAPON_IC || pBot->current_weapon.iId == TF_WEAPON_GL) {
-      auto diff = pEdict->v.v_angle.y; //-pEdict->v.ideal_yaw;
+       double diff = pEdict->v.v_angle.y; //-pEdict->v.ideal_yaw;
 
-      if (diff < -180.0f)
-         diff += 360.0f;
-      if (diff > 180.0f)
-         diff -= 360.0f;
-      
-      diff -= pEdict->v.ideal_yaw;
-      if (diff < -180.0f)
-         diff += 360.0f;
-      if (diff > 180.0f)
-         diff -= 360.0f;
+       if (diff < -180.0)
+           diff += 360.0;
+       if (diff > 180.0)
+           diff -= 360.0;
 
-      double ang = (32 * static_cast<double>(pBot->bot_skill + 16)) / static_cast<double>(f_distance);
-      ang = tan(ang);
-      ang = ang * 180.0;
+       diff -= pEdict->v.ideal_yaw;
+       if (diff < -180.0)
+           diff += 360.0;
+       if (diff > 180.0)
+           diff -= 360.0;
 
-      if (diff < 0)
-         diff = -diff;
+       double ang = (32 * static_cast<double>(pBot->bot_skill + 16)) / static_cast<double>(f_distance);
+       ang = tan(ang); // Better to use std::tan? [APG]RoboCop[CL]
+       ang = ang * 180;
+
+       if (diff < 0)
+           diff = -diff;
 
       /*char msg[512];
          sprintf(msg,"%f  %f", ang, diff);
          UTIL_HostSay(pEdict,0,msg);*/
-      if (ang < static_cast<double>(diff)) //|| (FInViewCone( v_enemy, pEdict ) && FVisible( v_enemy, pEdict )))
+      if (ang < diff) //|| (FInViewCone( v_enemy, pEdict ) && FVisible( v_enemy, pEdict )))
          return false;
    }
 
@@ -1459,9 +1460,10 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
    // demoman grenade launcher height restriction :D
    if (pEdict->v.playerclass == TFC_CLASS_DEMOMAN && mod_id == TFC_DLL && distance < 900) {
       if (pBot->enemy.ptr != nullptr) {
-         const int z = pBot->enemy.ptr->v.origin.z - pEdict->v.origin.z;
+         // z should be used as float not int? [APG]RoboCop[CL]
+         const float z = pBot->enemy.ptr->v.origin.z - pEdict->v.origin.z;
          if (z > 0 && z < 300 && distance < 901)
-            distance = (pBot->enemy.ptr->v.origin - pEdict->v.origin).Length2D() + static_cast<float>(z * 3);
+            distance = (pBot->enemy.ptr->v.origin - pEdict->v.origin).Length2D() + z * 3;
          else if (z > 300 && distance < 901)
             distance = 901;
       }

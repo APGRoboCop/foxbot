@@ -1268,7 +1268,7 @@ static int BotShouldDuckUnder(const bot_t *pBot) {
          const float headObstacleDistance = (v_source - tr.vecEndPos).Length();
 
          // trace a short line forward and right just above ducking height
-         v_source = botBottom + Vector(0.0f 0.0f, 37.0f);
+         v_source = botBottom + Vector(0.0f, 0.0f, 37.0f);
          v_dest = v_source + gpGlobals->v_forward * 24.0f; // forwards a bit
          v_dest = v_dest + gpGlobals->v_right * 10.0f;     // right a bit
          UTIL_TraceLine(v_source, v_dest, dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
@@ -1614,10 +1614,6 @@ void BotFindSideRoute(bot_t *pBot) {
                //	sprintf(msg, "path %d - %d blocked", nextWP, endWP);
                //	UTIL_HostSay(pBot->pEdict, 0, msg); //DebugMessageOfDoom!
                return;
-            } else {
-               //	char msg[96];
-               //	sprintf(msg, "path %d - %d clear", nextWP, endWP);
-               //	UTIL_HostSay(pBot->pEdict, 0, msg); //DebugMessageOfDoom!
             }
          }
 
