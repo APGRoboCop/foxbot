@@ -805,14 +805,14 @@ void chatClass::pickRandomChatString(char *msg, size_t maxLength, const int chat
        snprintf(msg, maxLength, this->strings_[chatSection][randomIndex].c_str(), playerName);
    }
    else
-       snprintf(msg, maxLength, this->strings_[chatSection][randomIndex].c_str());
+       snprintf(msg, maxLength, this->strings_[chatSection][randomIndex].c_str(), "%s");
 
    msg[maxLength - 1] = '\0';
 }
 
 int DispatchSpawn(edict_t *pent) {
    if (gpGlobals->deathmatch) {
-      const auto pClassname = const_cast<char *>(STRING(pent->v.classname));
+      const char* pClassname = STRING(pent->v.classname);
 
       if (debug_engine) {
          global::fp = UTIL_OpenFoxbotLog();

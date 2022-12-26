@@ -3378,7 +3378,7 @@ static bool BotDemomanNeededCheck(bot_t *pBot) {
 bool SpyAmbushAreaCheck(const bot_t *pBot, Vector &r_wallVector) {
    // perform some basic checks first
    // e.g. don't feign near a lift
-   if (pBot->pEdict->v.waterlevel != WL_NOT_IN_WATER || pBot->nadePrimed == TRUE || pBot->bot_has_flag || PlayerIsInfected(pBot->pEdict) || (pBot->current_wp > -1 && waypoints[pBot->current_wp].flags & W_FL_LIFT)) {
+   if (pBot->pEdict->v.waterlevel != WL_NOT_IN_WATER || pBot->nadePrimed == true || pBot->bot_has_flag || PlayerIsInfected(pBot->pEdict) || (pBot->current_wp > -1 && waypoints[pBot->current_wp].flags & W_FL_LIFT)) {
       return false;
    }
 

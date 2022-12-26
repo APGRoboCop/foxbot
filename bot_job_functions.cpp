@@ -2243,7 +2243,7 @@ int JobHarrassDefense(bot_t *pBot) {
             job_struct *newJob = InitialiseNewJob(pBot, JOB_GET_FLAG);
             if (newJob != nullptr) {
                newJob->waypoint = flagWP;
-               if (SubmitNewJob(pBot, JOB_GET_FLAG, newJob) == TRUE)
+               if (SubmitNewJob(pBot, JOB_GET_FLAG, newJob) == true)
                   return JOB_TERMINATED; // end this job so the bot can go for the flag instead
             }
          }
