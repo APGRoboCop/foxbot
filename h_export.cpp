@@ -87,7 +87,7 @@ C_DLLEXPORT void WINAPI GiveFnptrsToDll(enginefuncs_t *pengfuncsFromEngine, glob
    // find the directory name of the currently running MOD...
    (*g_engfuncs.pfnGetGameDir)(game_dir);
 
-   int pos = 0;
+   unsigned int pos = 0;
    if (strchr(game_dir, '/') != nullptr) {
       pos = strlen(game_dir) - 1;
       // scan backwards till first directory separator...

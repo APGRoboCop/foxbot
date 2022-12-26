@@ -394,7 +394,7 @@ void BotNameInit() {
    if (bot_name_fp != nullptr) {
       char name_buffer[80];
       while (number_names < MAX_BOT_NAMES && fgets(name_buffer, 80, bot_name_fp) != nullptr) {
-         int length = strlen(name_buffer);
+         unsigned int length = strlen(name_buffer);
 
          // remove '\n'
          if (name_buffer[length - 1] == '\n') {
@@ -402,10 +402,10 @@ void BotNameInit() {
             length--;
          }
 
-         int str_index = 0;
+         unsigned int str_index = 0;
          while (str_index < length) {
             if (name_buffer[str_index] < ' ' || name_buffer[str_index] > '~' || name_buffer[str_index] == '"') {
-               for (int index = str_index; index < length; index++)
+               for (unsigned int index = str_index; index < length; index++)
                   name_buffer[index] = name_buffer[index + 1];
             }
 
@@ -734,7 +734,7 @@ void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char 
          skill = BotAssignDefaultSkill();
    }
 
-   int length = strlen(c_name);
+   int length = static_cast<int>(strlen(c_name));
 
    // remove any illegal characters from the name
    for (i = 0; i < length; i++) {

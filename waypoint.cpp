@@ -3062,7 +3062,7 @@ static void WaypointRouteInit() {
                                  ALERT(at_console, msg);
                                  WaypointDeletePath(row, index);
                               } else {
-                                 const int offset = row * route_num_waypoints + index;
+                                 const unsigned int offset = row * route_num_waypoints + index;
 
                                  pShortestPath[offset] = static_cast<unsigned int>(distance);
                               }
@@ -5137,7 +5137,7 @@ void AreaAutoMerge() {
 
                      z = areas[j].a.z - areas[i].d.z;
                      if (areas[j].b.z - areas[i].c.z != z)
-                        z = 0;
+                        z = 0.0f;
                      if (areas[j].a.x == areas[i].d.x && areas[j].a.y == areas[i].d.y && areas[j].b.x == areas[i].c.x &&
                          areas[j].b.y == areas[i].c.y
                          /* && areas[j].a.z==areas[j].d.z
@@ -5159,7 +5159,7 @@ void AreaAutoMerge() {
                                     float zz;
                                     zz = areas[k].a.z - areas[i].d.z;
                                     if (areas[k].b.z - areas[i].c.z != zz)
-                                       zz = 0;
+                                       zz = 0.0f;
                                     if (areas[k].a.x == areas[i].d.x && areas[k].a.y == areas[i].d.y && areas[k].b.x == areas[i].c.x &&
                                         areas[k].b.y == areas[i].c.y
                                         /* && areas[k].a.z==areas[k].d.z
@@ -5167,7 +5167,7 @@ void AreaAutoMerge() {
                                         && areas[k].a.z == areas[k].b.z &&
                                         areas[k].d.z == areas[k].c.z
                                         // && zz!=0 && (z==zz || z==-zz || -z==zz))
-                                        && (zz != 0 && (zz >= -32 && zz <= 32))) {
+                                        && (zz != 0.0f && (zz >= -32 && zz <= 32))) {
                                        // now check the size
                                        // if it matches, merge
                                        if (sx == areas[k].d.x - areas[k].a.x && sy == areas[k].b.y - areas[k].a.y) {
@@ -5179,7 +5179,7 @@ void AreaAutoMerge() {
                                     }
                                     zz = areas[k].d.z - areas[i].a.z;
                                     if (areas[k].c.z - areas[i].b.z != zz)
-                                       zz = 0;
+                                       zz = 0.0f;
                                     if (areas[k].d.x == areas[i].a.x && areas[k].d.y == areas[i].a.y && areas[k].c.x == areas[i].b.x &&
                                         areas[k].c.y == areas[i].b.y
                                         /* && areas[k].a.z==areas[k].d.z
@@ -5187,7 +5187,7 @@ void AreaAutoMerge() {
                                         && areas[k].a.z == areas[k].b.z &&
                                         areas[k].d.z == areas[k].c.z
                                         // && zz!=0 && (z==zz || z==-zz || -z==zz))
-                                        && (zz != 0 && (zz >= -32 && zz <= 32))) {
+                                        && (zz != 0.0f && (zz >= -32 && zz <= 32))) {
                                        // now check the size
                                        // if it matches, merge
                                        if (sx == areas[k].d.x - areas[k].a.x && sy == areas[k].b.y - areas[k].a.y) {
@@ -5205,12 +5205,12 @@ void AreaAutoMerge() {
                      // other way round
                      z = areas[j].a.z - areas[i].b.z;
                      if (areas[j].d.z - areas[i].c.z != z)
-                        z = 0;
+                        z = 0.0f;
                      if (areas[j].a.x == areas[i].b.x && areas[j].a.y == areas[i].b.y && areas[j].d.x == areas[i].c.x &&
                          areas[j].d.y == areas[i].c.y
                          /* && areas[j].a.z==areas[j].d.z
                          && areas[j].b.z==areas[j].c.z*/
-                         && areas[j].a.z == areas[j].b.z && areas[j].d.z == areas[j].c.z && (z != 0 && (z >= -32 && z <= 32))) {
+                         && areas[j].a.z == areas[j].b.z && areas[j].d.z == areas[j].c.z && (z != 0.0f && (z >= -32 && z <= 32))) {
                         // now check the size
                         // if it matches, merge
                         if (sx == areas[j].d.x - areas[j].a.x && sy == areas[j].b.y - areas[j].a.y) {
@@ -5227,7 +5227,7 @@ void AreaAutoMerge() {
                                     float zz;
                                     zz = areas[k].a.z - areas[i].d.z;
                                     if (areas[k].b.z - areas[i].c.z != zz)
-                                       zz = 0;
+                                       zz = 0.0f;
                                     if (areas[k].a.x == areas[i].b.x && areas[k].a.y == areas[i].b.y && areas[k].d.x == areas[i].c.x &&
                                         areas[k].d.y == areas[i].c.y
                                         /* && areas[k].a.z==areas[k].d.z
@@ -5236,7 +5236,7 @@ void AreaAutoMerge() {
                                         areas[k].d.z == areas[k].c.z
                                         /* && zz!=0
                                         && (z==zz || z==-zz || -z==zz))*/
-                                        && (zz != 0 && (zz >= -32 && zz <= 32))) {
+                                        && (zz != 0.0f && (zz >= -32 && zz <= 32))) {
                                        // now check the size
                                        // if it matches, merge
                                        if (sx == areas[k].d.x - areas[k].a.x && sy == areas[k].b.y - areas[k].a.y) {
@@ -5248,7 +5248,7 @@ void AreaAutoMerge() {
                                     }
                                     zz = areas[k].d.z - areas[i].a.z;
                                     if (areas[k].c.z - areas[i].b.z != zz)
-                                       zz = 0;
+                                       zz = 0.0f;
                                     if (areas[k].b.x == areas[i].a.x && areas[k].b.y == areas[i].a.y && areas[k].c.x == areas[i].d.x &&
                                         areas[k].c.y == areas[i].d.y
                                         /*&& areas[k].a.z==areas[k].d.z
@@ -5256,7 +5256,7 @@ void AreaAutoMerge() {
                                         && areas[k].a.z == areas[k].b.z &&
                                         areas[k].d.z == areas[k].c.z
                                         //&& zz!=0 && (z==zz || z==-zz || -z==zz))
-                                        && (zz != 0 && (zz >= -32 && zz <= 32))) {
+                                        && (zz != 0.0f && (zz >= -32 && zz <= 32))) {
                                        // now check the size
                                        // if it matches, merge
                                        if (sx == areas[k].d.x - areas[k].a.x && sy == areas[k].b.y - areas[k].a.y) {

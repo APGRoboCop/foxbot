@@ -4706,7 +4706,7 @@ const char *Cmd_Args() {
    RETURN_META_VALUE(MRES_IGNORED, NULL);
 }
 
-const char *GetArg(const char *command, int arg_number) {
+const char *GetArg(const char *command, unsigned int arg_number) {
    // the purpose of this function is to provide fakeclients (bots) with
    // the same Cmd_Argv convenience the engine provides to real clients.
    // This way the handling of real client commands and bot client
@@ -4715,9 +4715,9 @@ const char *GetArg(const char *command, int arg_number) {
    // redirects the call either to the actual engine functions
    // (when the caller is a real client), either on our function here,
    // which does the same thing, when the caller is a bot.
-   int i, index = 0, arg_count = 0, fieldstart, fieldstop;
+   unsigned int i, index = 0, arg_count = 0, fieldstart, fieldstop;
    arg[0] = 0;                         // reset arg
-   const int length = strlen(command); // get length of command
+   const unsigned int length = strlen(command); // get length of command
    // while we have not reached end of line
    while (index < length && arg_count <= arg_number) {
       while (index < length && command[index] == ' ')
@@ -4737,7 +4737,7 @@ const char *GetArg(const char *command, int arg_number) {
          fieldstop = index - 1; // save field stop position
       }
       // is this argument we just processed the wanted one ?
-      if (arg_count == arg_number) { //TODO: Refactor Loop [APG]RoboCop[CL]
+      if (arg_count == arg_number) {
          for (i = fieldstart; i <= fieldstop; i++)
             arg[i - fieldstart] = command[i]; // store the field value in a string
          arg[i - fieldstart] = 0;             // terminate the string

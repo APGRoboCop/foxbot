@@ -619,7 +619,7 @@ void UTIL_BotLogPrintf(const char* fmt, ...);
 
 void UTIL_BuildFileName(char *filename, int max_fn_length, const char *arg1, const char *arg2);
 
-bool UTIL_ReadFileLine(char *string, unsigned int max_length, FILE *file_ptr);
+bool UTIL_ReadFileLine(char *string, int max_length, FILE *file_ptr);
 
 // my functions
 
