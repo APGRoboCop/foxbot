@@ -1936,7 +1936,7 @@ int PlayerArmorPercent(const edict_t *pEdict) {
    const static int tfc_max_armor[10] = {0, 50, 50, 200, 120, 100, 300, 150, 100, 50};
 
    if (mod_id == TFC_DLL && pEdict->v.playerclass >= 0 && pEdict->v.playerclass <= 9)
-      return static_cast<int>(pEdict->v.armorvalue / tfc_max_armor[pEdict->v.playerclass] * 100);
+      return static_cast<int>(pEdict->v.armorvalue) / tfc_max_armor[pEdict->v.playerclass] * 100;
 
    // Unknown mod, return 100%
    return 100;

@@ -64,3 +64,4 @@ addons/*
 build/*
 Rules.depend
 obj-windows/*
+apg-load

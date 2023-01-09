@@ -99,21 +99,21 @@ static jobFunctions_struct jf[JOB_TYPE_TOTAL] = {
 // list of essential data for all known job types
 // these must be in the right order for each job to run properly
 jobList_struct jl[JOB_TYPE_TOTAL] = {   //Only handles 32 not 45? [APG]RoboCop[CL]
-    { 490, "JOB_SEEK_WAYPOINT" }, { PRIORITY_MAXIMUM, "JOB_GET_UNSTUCK" }, { 0, "JOB_ROAM" }, { 400, "JOB_CHAT" },
-    { 690, "JOB_REPORT" }, { 480, "JOB_PICKUP_ITEM" }, { 530, "JOB_PICKUP_FLAG" },
+    { 490, "JOB_SEEK_WAYPOINT" }, { PRIORITY_MAXIMUM, "JOB_GET_UNSTUCK" }, { 0, "JOB_ROAM" }, { 380, "JOB_CHAT" },
+    { 700, "JOB_REPORT" }, { 480, "JOB_PICKUP_ITEM" }, { 530, "JOB_PICKUP_FLAG" },
     { 800, "JOB_PUSH_BUTTON" }, { 650, "JOB_USE_TELEPORT" }, { 750, "JOB_MAINTAIN_OBJECT" },
     { 760, "JOB_BUILD_SENTRY" }, { 510, "JOB_BUILD_DISPENSER" }, { 680, "JOB_BUILD_TELEPORT" },
-    { 420, "JOB_BUFF_ALLY" }, { 550, "JOB_ESCORT_ALLY" },
-    { 460, "JOB_CALL_MEDIC" }, // this should be a higher priority than JOB_GET_HEALTH
-    { 450, "JOB_GET_HEALTH" }, { 440, "JOB_GET_ARMOR" }, { 500, "JOB_GET_AMMO" }, { 670, "JOB_DISGUISE" },
+    { 450, "JOB_BUFF_ALLY" }, { 550, "JOB_ESCORT_ALLY" },
+    { 470, "JOB_CALL_MEDIC" }, // this should be a higher priority than JOB_GET_HEALTH
+    { 460, "JOB_GET_HEALTH" }, { 430, "JOB_GET_ARMOR" }, { 500, "JOB_GET_AMMO" }, { 670, "JOB_DISGUISE" },
     { 190, "JOB_FEIGN_AMBUSH" }, { 560, "JOB_SNIPE" }, { 250, "JOB_GUARD_WAYPOINT" }, { 610, "JOB_DEFEND_FLAG" },
-    { 700, "JOB_GET_FLAG" }, { 780, "JOB_CAPTURE_FLAG" }, { 340, "JOB_HARRASS_DEFENSE" },
+    { 720, "JOB_GET_FLAG" }, { 780, "JOB_CAPTURE_FLAG" }, { 340, "JOB_HARRASS_DEFENSE" },
     { 630, "JOB_ROCKET_JUMP" }, { 730, "JOB_CONCUSSION_JUMP" },
-    { 410, "JOB_DETPACK_WAYPOINT" }, { 540, "JOB_PIPETRAP" }, { 590, "JOB_INVESTIGATE_AREA" },
+    { 400, "JOB_DETPACK_WAYPOINT" }, { 540, "JOB_PIPETRAP" }, { 590, "JOB_INVESTIGATE_AREA" },
     { 640, "JOB_PURSUE_ENEMY" }, { 200, "JOB_PATROL_HOME" }, { 710, "JOB_SPOT_STIMULUS" },
-    { 620, "JOB_ATTACK_BREAKABLE" }, { 430, "JOB_ATTACK_TELEPORT" }, { 600, "JOB_SEEK_BACKUP" },
+    { 620, "JOB_ATTACK_BREAKABLE" }, { 440, "JOB_ATTACK_TELEPORT" }, { 600, "JOB_SEEK_BACKUP" },
     { 300, "JOB_AVOID_ENEMY" }, { 770, "JOB_AVOID_AREA_DAMAGE" },
-    { 720, "JOB_INFECTED_ATTACK" }, { 740, "JOB_BIN_GRENADE" },
+    { 690, "JOB_INFECTED_ATTACK" }, { 740, "JOB_BIN_GRENADE" },
     { 790, "JOB_DROWN_RECOVER" }, { 240, "JOB_MELEE_WARRIOR" }, { 210, "JOB_GRAFFITI_ARTIST" },
 };
 

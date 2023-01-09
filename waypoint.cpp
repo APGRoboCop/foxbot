@@ -5319,7 +5319,7 @@ void ProcessCommanderList() {
    // Read the file, line by line.
    while (UTIL_ReadFileLine(buffer, 80, inFile)) {
       // Skip lines that begin with comments
-      if (static_cast<int>(strlen(buffer)) > 2) {
+      if (strlen(buffer) > 2) {
          if (buffer[0] == '/' && buffer[1] == '/')
             continue;
       }
@@ -5327,8 +5327,8 @@ void ProcessCommanderList() {
 
       // Search for invalid characters in the read string.
       // strlen is being called too many times in the for loop - [APG]RoboCop[CL]
-      for (int i = 0; i < static_cast<int>(strlen(buffer)); i++) {
-          for (int j = 0; j < static_cast<int>(strlen(invalidChars)); j++) {
+      for (unsigned int i = 0; i < strlen(buffer); i++) {
+          for (unsigned int j = 0; j < strlen(invalidChars); j++) {
               const char ch = invalidChars[j];
 
               if (strchr(buffer, ch)) {

@@ -413,7 +413,7 @@ static void TeamBalanceCheck() {
       if (!done)
          done = BotBalanceTeams(4, 2);
       if (!done)
-         BotBalanceTeams(4, 3);
+         done = BotBalanceTeams(4, 3);
    }
    if (bot_bot_balance) {
       // team 1 has more than team 2?
@@ -695,7 +695,8 @@ chatClass::chatClass() {
     for (int i = 0; i < TOTAL_CHAT_TYPES; i++) {
         this->string_count_[i] = 0;
         for (j = 0; j < MAX_CHAT_STRINGS; j++) {
-            this->strings_[i][j] = "";
+            this->strings_[i][j][0] = 0x0;
+            //this->strings_[i][j] = "";
         }
 
         for (j = 0; j < 5; j++) {
@@ -921,7 +922,7 @@ void DispatchThink(edict_t *pent) {
       if (pent->v.euser1 != nullptr && !FNullEnt(pent->v.euser1) && pent->v.owner != nullptr && !FNullEnt(pent->v.owner)) {
          bot_t *pBot = UTIL_GetBotPointer(pent->v.euser1);
 
-         UTIL_TraceLine(pent->v.euser1->v.origin + pent->v.euser1->v.view_ofs + gpGlobals->v_forward * off_f, pent->v.euser1->v.origin + pent->v.euser1->v.view_ofs + gpGlobals->v_forward * 4000, ignore_monsters, pent->v.euser1, &tr);
+         UTIL_TraceLine(pent->v.euser1->v.origin + pent->v.euser1->v.view_ofs + gpGlobals->v_forward * static_cast<float>(off_f), pent->v.euser1->v.origin + pent->v.euser1->v.view_ofs + gpGlobals->v_forward * 4000, ignore_monsters, pent->v.euser1, &tr);
 
          MESSAGE_BEGIN(MSG_ONE, SVC_TEMPENTITY, nullptr, pent->v.owner);
          WRITE_BYTE(TE_TEXTMESSAGE);
