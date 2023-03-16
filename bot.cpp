@@ -1570,7 +1570,7 @@ edict_t *BotContactThink(bot_t *pBot) {
 
       // skip invalid players and skip self (i.e. this bot)
       if (pPlayer != nullptr && !pPlayer->free && pPlayer != pBot->pEdict && IsAlive(pPlayer)) {
-         if (observer_mode && !((pPlayer->v.flags & FL_FAKECLIENT) == FL_FAKECLIENT))
+         if (observer_mode && (pPlayer->v.flags & FL_FAKECLIENT) != FL_FAKECLIENT)
             continue;
 
          // don't avoid if going for player with one of these weapons

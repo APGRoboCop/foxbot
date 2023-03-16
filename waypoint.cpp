@@ -3638,7 +3638,7 @@ void AreaDefCreate(edict_t *pEntity) {
       num_areas++;
    // areas[index].flags = 0;
 
-   if (!((areas[index].flags & A_FL_1) == A_FL_1)) {
+   if ((areas[index].flags & A_FL_1) != A_FL_1) {
       areas[index].a = pEntity->v.origin;
       areas[index].flags |= A_FL_1;
       // set the time that this waypoint was originally displayed...
@@ -3654,7 +3654,7 @@ void AreaDefCreate(edict_t *pEntity) {
       return;
    }
 
-   if (!((areas[index].flags & A_FL_2) == A_FL_2)) {
+   if ((areas[index].flags & A_FL_2) != A_FL_2) {
       areas[index].b = pEntity->v.origin;
       areas[index].flags |= A_FL_2;
       // set the time that this waypoint was originally displayed...
@@ -3670,7 +3670,7 @@ void AreaDefCreate(edict_t *pEntity) {
       return;
    }
 
-   if (!((areas[index].flags & A_FL_3) == A_FL_3)) {
+   if ((areas[index].flags & A_FL_3) != A_FL_3) {
       areas[index].c = pEntity->v.origin;
       areas[index].flags |= A_FL_3;
       // set the time that this waypoint was originally displayed...
@@ -3686,7 +3686,7 @@ void AreaDefCreate(edict_t *pEntity) {
       return;
    }
 
-   if (!((areas[index].flags & A_FL_4) == A_FL_4)) {
+   if ((areas[index].flags & A_FL_4) != A_FL_4) {
       areas[index].d = pEntity->v.origin;
       areas[index].flags |= A_FL_4;
       // set the time that this waypoint was originally displayed...

@@ -331,7 +331,7 @@ void pfnClientCommand(edict_t *pEdict, char *szFmt, ...) {
    if (pEdict != nullptr) {
       // if(!((pEdict->v.flags & FL_FAKECLIENT)==FL_FAKECLIENT))
       bool b = false;
-      if (!((pEdict->v.flags & FL_FAKECLIENT) == FL_FAKECLIENT)) {
+      if ((pEdict->v.flags & FL_FAKECLIENT) != FL_FAKECLIENT) {
          for (int i = 0; i < 32; i++) {
             // if(!((pEdict->v.flags & FL_FAKECLIENT)==FL_FAKECLIENT))
             // bots[i].is_used &&
@@ -388,7 +388,7 @@ void pfnClCom(edict_t *pEdict, char *szFmt, ...) {
    if (pEdict != nullptr) {
       bool b = false;
 
-      if (!((pEdict->v.flags & FL_FAKECLIENT) == FL_FAKECLIENT)) {
+      if ((pEdict->v.flags & FL_FAKECLIENT) != FL_FAKECLIENT) {
          for (int i = 0; i < 32; i++) {
             // if(!((pEdict->v.flags & FL_FAKECLIENT)==FL_FAKECLIENT))
             // bots[i].is_used &&
@@ -991,7 +991,7 @@ void pfnClPrintf(edict_t *pEdict, PRINT_TYPE ptype, const char *szMsg) {
    // only send message if its not a bot...
    if (pEdict != nullptr) {
       bool b = false;
-      if (!((pEdict->v.flags & FL_FAKECLIENT) == FL_FAKECLIENT)) {
+      if ((pEdict->v.flags & FL_FAKECLIENT) != FL_FAKECLIENT) {
          for (int i = 0; i < 32; i++) {
             // if(!((pEdict->v.flags & FL_FAKECLIENT)==FL_FAKECLIENT))
             // bots[i].is_used &&
