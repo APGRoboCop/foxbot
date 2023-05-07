@@ -14,9 +14,9 @@ Updated by RoboCop
 
 - Enhanced the waypoint area data for dustbowl
 
-TODO List:-
+- Removed lame SG Turret nodes for 2fort and well in non recommended areas 
 
->> Remove lame SG Turret nodes for 2fort and well in non recommended areas 
+TODO List:-
 
 >> Complete 'botdontmove' in order for "GolfBots" to stay stationary
 
