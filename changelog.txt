@@ -8,11 +8,15 @@ Version 0.85
 Updated by RoboCop
 --------------------------------------------------------------------------------
 
+- Added C++17 support for Win32 and Linux
+
 - Fixed the bot_chat cvar and the 'WRITE_BYTE` implicit conversion for waypoint coding
 
 - Enhanced the waypoint area data for dustbowl
 
 TODO List:-
+
+>> Remove lame SG Turret nodes for 2fort and well in non recommended areas 
 
 >> Complete 'botdontmove' in order for "GolfBots" to stay stationary
 
