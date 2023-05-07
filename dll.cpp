@@ -44,7 +44,7 @@
 #include "botcam.h"
 
 #define VER_MAJOR 0
-#define VER_MINOR 801
+#define VER_MINOR 85
 //#define VER_BUILD 0
 
 #define MENU_NONE 0
@@ -56,7 +56,7 @@
 #define MENU_6 6
 #define MENU_7 7
 
-cvar_t foxbot = {"foxbot", "0.801", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr};
+cvar_t foxbot = {"foxbot", "0.85-beta1", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr};
 cvar_t enable_foxbot = {"enable_foxbot", "1", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr};
 cvar_t sv_bot = {"bot", "", 0, 0, nullptr};
 

@@ -62,6 +62,7 @@ msvc/Debug/*
 msvc/Release/*
 addons/*
 build/*
+build_linux/*
 Rules.depend
 obj-windows/*
 apg-load

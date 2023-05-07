@@ -1,5 +1,6 @@
-# vim: set sts=2 ts=8 sw=2 tw=99 et:
-API_VERSION = '2.2'
+# AMBuild Configuration Script for EvoBot, written by Anonymous Player
+# vim: set sts=4 ts=8 sw=4 tw=99 et:
+API_VERSION = '2.2.3'
 
 import sys
 try:
@@ -11,16 +12,22 @@ except:
     sys.stderr.write('http://www.alliedmods.net/ambuild\n')
     sys.exit(1)
 
+def make_objdir_name(p):
+    return 'obj-' + util.Platform() + '-' + p.target_arch
 
-prep = run.PrepareBuild(sourcePath=sys.path[0])
-prep.default_build_folder = 'obj-' + prep.target_platform
-prep.options.add_option('--enable-debug', action='store_const', const='1', dest='debug',
-                       help='Enable debugging symbols')
-prep.options.add_option('--enable-optimize', action='store_const', const='1', dest='opt',
+builder = run.BuildParser(sourcePath = sys.path[0], api=API_VERSION)
+builder.default_arch = 'x86'
+builder.default_build_folder = make_objdir_name
+# builder.options.add_argument('--hl1sdk', type=str, dest='hl1sdk_path', default=None,
+                       # help='Half-Life 1 SDK source tree folder')
+# builder.options.add_argument('--mm-path', type=str, dest='mm_path', default=None,
+                       # help='Metamod source tree folder')
+builder.options.add_argument('--enable-optimize', action='store_const', const='1', dest='optimize',
                        help='Enable optimization')
-prep.options.add_option('--metamod', type='string', dest='metamod_path', default='',
-                       help='Path to Metamod source code')
-prep.options.add_option('--hlsdk', type='string', dest='hlsdk_path', default='',
-                       help='Path to the HLSDK')
-
-prep.Configure()
+builder.options.add_argument('--enable-debug', action='store_const', const='1', dest='debug',
+                       help='Enable debug')
+builder.options.add_argument('--enable-static-lib', action='store_const', const='1', dest='staticlib',
+                       help='Enable statically link the sanitizer runtime')
+builder.options.add_argument('--enable-shared-lib', action='store_const', const='1', dest='sharedlib',
+                       help='Enable dynamically link the sanitizer runtime')
+builder.Configure()

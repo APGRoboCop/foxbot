@@ -140,7 +140,7 @@ C_DLLEXPORT void WINAPI GiveFnptrsToDll(enginefuncs_t *pengfuncsFromEngine, glob
    other_GiveFnptrsToDll(pengfuncsFromEngine, pGlobals);
 }
 
-#if defined(__GNUC__)
+/*#if defined(__GNUC__)
 
 void *operator new(size_t size) {
    if (size == 0)
@@ -169,4 +169,4 @@ void operator delete[](void *ptr) {
       free(ptr);
 }
 
-#endif
+#endif*/

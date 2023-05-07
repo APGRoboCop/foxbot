@@ -8,7 +8,7 @@ Version 0.85
 Updated by RoboCop
 --------------------------------------------------------------------------------
 
-- Fixed the bot_chat cvar
+- Fixed the bot_chat cvar and the 'WRITE_BYTE` implicit conversion for waypoint coding
 
 - Enhanced the waypoint area data for dustbowl
 

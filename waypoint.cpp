@@ -2250,7 +2250,7 @@ void WaypointThink(edict_t *pEntity) {
                      WRITE_COORD(waypoints[i].origin.y);
                      WRITE_COORD(waypoints[i].origin.z);
                      WRITE_SHORT(model);
-                     WRITE_BYTE(0.1);
+                     WRITE_BYTE(2);
                      WRITE_BYTE(64);
                      MESSAGE_END();
                   }
@@ -2262,7 +2262,7 @@ void WaypointThink(edict_t *pEntity) {
                      WRITE_COORD(waypoints[i].origin.y);
                      WRITE_COORD(waypoints[i].origin.z);
                      WRITE_SHORT(model);
-                     WRITE_BYTE(0.1);
+                     WRITE_BYTE(3);
                      WRITE_BYTE(128);
                      MESSAGE_END();
                   }
@@ -2274,7 +2274,7 @@ void WaypointThink(edict_t *pEntity) {
                      WRITE_COORD(waypoints[i].origin.y);
                      WRITE_COORD(waypoints[i].origin.z);
                      WRITE_SHORT(model);
-                     WRITE_BYTE(0.1);
+                     WRITE_BYTE(3);
                      WRITE_BYTE(128);
                      MESSAGE_END();
                   }
@@ -2286,7 +2286,7 @@ void WaypointThink(edict_t *pEntity) {
                      WRITE_COORD(waypoints[i].origin.y);
                      WRITE_COORD(waypoints[i].origin.z);
                      WRITE_SHORT(model);
-                     WRITE_BYTE(0.1);
+                     WRITE_BYTE(3);
                      WRITE_BYTE(128);
                      MESSAGE_END();
                   }
@@ -2298,7 +2298,7 @@ void WaypointThink(edict_t *pEntity) {
                      WRITE_COORD(waypoints[i].origin.y);
                      WRITE_COORD(waypoints[i].origin.z);
                      WRITE_SHORT(model);
-                     WRITE_BYTE(0.1);
+                     WRITE_BYTE(3);
                      WRITE_BYTE(128);
                      MESSAGE_END();
                   }
@@ -2310,7 +2310,7 @@ void WaypointThink(edict_t *pEntity) {
                      WRITE_COORD(waypoints[i].origin.y);
                      WRITE_COORD(waypoints[i].origin.z);
                      WRITE_SHORT(model);
-                     WRITE_BYTE(0.1);
+                     WRITE_BYTE(2);
                      WRITE_BYTE(64);
                      MESSAGE_END();
                   }
@@ -2322,7 +2322,7 @@ void WaypointThink(edict_t *pEntity) {
                      WRITE_COORD(waypoints[i].origin.y);
                      WRITE_COORD(waypoints[i].origin.z);
                      WRITE_SHORT(model);
-                     WRITE_BYTE(0.1);
+                     WRITE_BYTE(3);
                      WRITE_BYTE(128);
                      MESSAGE_END();
                   }
@@ -2334,7 +2334,7 @@ void WaypointThink(edict_t *pEntity) {
                      WRITE_COORD(waypoints[i].origin.y);
                      WRITE_COORD(waypoints[i].origin.z);
                      WRITE_SHORT(model);
-                     WRITE_BYTE(0.1);
+                     WRITE_BYTE(3);
                      WRITE_BYTE(128);
                      MESSAGE_END();
                   }
@@ -2346,7 +2346,7 @@ void WaypointThink(edict_t *pEntity) {
                      WRITE_COORD(waypoints[i].origin.y);
                      WRITE_COORD(waypoints[i].origin.z);
                      WRITE_SHORT(model);
-                     WRITE_BYTE(0.1);
+                     WRITE_BYTE(3);
                      WRITE_BYTE(128);
                      MESSAGE_END();
                   }
@@ -2358,7 +2358,7 @@ void WaypointThink(edict_t *pEntity) {
                      WRITE_COORD(waypoints[i].origin.y);
                      WRITE_COORD(waypoints[i].origin.z);
                      WRITE_SHORT(model);
-                     WRITE_BYTE(0.1);
+                     WRITE_BYTE(3);
                      WRITE_BYTE(128);
                      MESSAGE_END();
                   }
@@ -2370,7 +2370,7 @@ void WaypointThink(edict_t *pEntity) {
                      WRITE_COORD(waypoints[i].origin.y);
                      WRITE_COORD(waypoints[i].origin.z);
                      WRITE_SHORT(model);
-                     WRITE_BYTE(0.1);
+                     WRITE_BYTE(3);
                      WRITE_BYTE(128);
                      MESSAGE_END();
                   }
@@ -2382,7 +2382,7 @@ void WaypointThink(edict_t *pEntity) {
                      WRITE_COORD(waypoints[i].origin.y);
                      WRITE_COORD(waypoints[i].origin.z);
                      WRITE_SHORT(model);
-                     WRITE_BYTE(0.1);
+                     WRITE_BYTE(3);
                      WRITE_BYTE(128);
                      MESSAGE_END();
                   }
@@ -2394,7 +2394,7 @@ void WaypointThink(edict_t *pEntity) {
                      WRITE_COORD(waypoints[i].origin.y);
                      WRITE_COORD(waypoints[i].origin.z + 25); // higher than normal
                      WRITE_SHORT(model);
-                     WRITE_BYTE(0.1);
+                     WRITE_BYTE(3);
                      WRITE_BYTE(128);
                      MESSAGE_END();
 
@@ -2417,7 +2417,7 @@ void WaypointThink(edict_t *pEntity) {
                      WRITE_COORD(waypoints[i].origin.y);
                      WRITE_COORD(waypoints[i].origin.z);
                      WRITE_SHORT(model);
-                     WRITE_BYTE(0.1);
+                     WRITE_BYTE(3);
                      WRITE_BYTE(128);
                      MESSAGE_END();
                   }
@@ -2429,7 +2429,7 @@ void WaypointThink(edict_t *pEntity) {
                      WRITE_COORD(waypoints[i].origin.y);
                      WRITE_COORD(waypoints[i].origin.z);
                      WRITE_SHORT(model);
-                     WRITE_BYTE(0.1);
+                     WRITE_BYTE(3);
                      WRITE_BYTE(128);
                      MESSAGE_END();
                   }

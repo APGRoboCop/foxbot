@@ -1,118 +1,80 @@
-import os
+# AMBuildScript for EvoBot, written by Anonymous Player
+# vim: set sts=4 ts=8 sw=4 tw=99 et ft=python:
+import os, sys
 
-#
-# Detect Metamod and HLSDK
-#
+builder.cxx = builder.DetectCxx(target_arch = 'x86')
 
-def detectMetamod():
-  metamod_path = builder.options.metamod_path
-  if not len(metamod_path):
-    metamod_path = os.getenv('METAMOD', '')
+# Include search paths
+include_paths = [
+  os.path.join(builder.currentSourcePath, 'hlsdk', 'common'),
+  os.path.join(builder.currentSourcePath, 'hlsdk', 'dlls'),
+  os.path.join(builder.currentSourcePath, 'hlsdk', 'engine'),
+  os.path.join(builder.currentSourcePath, 'hlsdk', 'pm_shared'),
+  os.path.join(builder.currentSourcePath, 'metamod'),
+]
 
-  if len(metamod_path):
-    metamod_path = os.path.join(builder.originalCwd, metamod_path)
-    if not os.path.exists(os.path.join(metamod_path, 'metamod')):
-      raise Exception('Metamod path does not exist: {0}'.format(metamod_path))
-  else:
-    try_paths = [
-      os.path.join(builder.sourcePath, '..', 'metamod'),
-    ]
-    for try_path in try_paths:
-      if os.path.exists(os.path.join(try_path, 'metamod')):
-        metamod_path = os.path.normpath(try_path)
-        break
-    if not metamod_path:
-      raise Exception('Could not find the source code to Metamod! Try passing --metamod to configure.py.')
-
-  return metamod_path
-
-def detectHlsdk():
-  hlsdk_path = builder.options.hlsdk_path
-  if not len(hlsdk_path):
-    hlsdk_path = os.getenv('HLSDK', '')
-
-  if len(hlsdk_path):
-    hlsdk_path = os.path.join(builder.originalCwd, hlsdk_path)
-    if not os.path.exists(hlsdk_path):
-      raise Exception('Metamod path does not exist: {0}'.format(hlsdk_path))
-  else:
-    try_paths = [
-      os.path.join(builder.sourcePath, '..', 'hlsdk'),
-    ]
-    for try_path in try_paths:
-      if os.path.exists(try_path):
-        hlsdk_path = os.path.normpath(try_path)
-        break
-    if not hlsdk_path:
-      raise Exception('Could not find the HLSDK! Try passing --hlsdk to configure.py.')
-
-  return hlsdk_path
-
-
-metamod_path = detectMetamod()
-hlsdk_path = detectHlsdk()
-
-#
-# Compiler settings
-#
-cxx = builder.DetectCompilers()
-
-cxx.defines += [
+# Compiler setup
+builder.cxx.defines += [
     'HAVE_STDINT_H'
   ]
 
-if cxx.like('gcc'):
-  cxx.cflags += [
-    '-Wall',
-    #'-Werror',
-	'-Wno-attributes',
-	'-Wno-write-strings',
-    '-Wno-error=unused-result',
-    '-Wno-error=unused-variable',
-    '-Wno-unused-value',
-    '-fno-strict-aliasing',
-    '-fPIC',
-	'-msse2',
-    '-m32'
+if builder.cxx.like('gcc'):
+  builder.cxx.defines += [
+	'stricmp=strcasecmp',
+	'strcmpi=strcasecmp'
   ]
   
-  cxx.c_only_flags += ['-std=gnu99']
+  builder.cxx.c_only_flags += ['-std=gnu99']
 
-  cxx.cxxflags += [
-    '-std=gnu++14',
-    '-fno-exceptions',
-    '-fno-rtti'
-  ]
-
-  cxx.linkflags += [
+if builder.cxx.target.platform == 'linux':
+  # Linux defines
+  builder.cxx.defines += ['_LINUX', 'POSIX', 'LINUX', 'linux']
+  # Linux compiler C flags
+  builder.cxx.cflags += [
+    '-pipe',
+	'-fPIC',
+	'-msse2',
+    '-fno-strict-aliasing',
+    '-Wall',
+    '-Werror',
+    '-Wno-uninitialized',
+    '-Wno-unused',
+    '-Wno-switch',
+    '-Wno-format',
+    '-Wno-format-security',
+    '-Wno-unknown-attributes',
+    '-Wno-logical-op-parentheses',
+    '-Wno-return-stack-address',
     '-m32',
-	'-static-libstdc++'
   ]
-
-  if builder.options.opt == '1':
-    cxx.cflags += ['-O2','-s']
-	
-  if builder.options.debug == '1':
-    cxx.cflags += ['-g','-ggdb3']
-
-elif cxx.like('msvc'):
-  cxx.defines += [
-	'_CRT_SECURE_NO_WARNINGS'
+  # Linux compiler C++ flags
+  builder.cxx.cxxflags += [
+    '-Wno-invalid-offsetof',
+    '-Wno-write-strings',
+    '-std=c++17',
   ]
-
-  cxx.cflags += [
-    '/W3'
+  # Linux linker flags
+  builder.cxx.linkflags += ['-m32', '-ldl', '-lm']
+elif builder.cxx.target.platform == 'windows':
+  # Windows defines
+  builder.cxx.defines += [
+    '_CRT_SECURE_NO_DEPRECATE',
+    '_CRT_SECURE_NO_WARNINGS',
+    '_CRT_NONSTDC_NO_DEPRECATE',
+    'NOMINMAX',
+    'WIN32',
+    '_WINDOWS'
   ]
-
-  cxx.cxxflags += [
-  	'/std:c++14',
-  	'/arch:SSE2',
-    '/EHsc'
+  # Windows compiler C flags
+  builder.cxx.cflags += []
+  # Windows compiler C++ flags
+  builder.cxx.cxxflags += [
+    '/std:c++17',
+	'/arch:SSE2',
+    '/fp:precise'
   ]
-
-  cxx.linkflags += [
-    '/MACHINE:X86',
-    '/SUBSYSTEM:WINDOWS',
+  # Windows linker flags
+  builder.cxx.linkflags += [
     '/EXPORT:GiveFnptrsToDll=_GiveFnptrsToDll@8,@1',
     'kernel32.lib',
     'user32.lib',
@@ -126,43 +88,54 @@ elif cxx.like('msvc'):
     'uuid.lib',
     'odbc32.lib',
     'odbccp32.lib',
+    '/SECTION:.data,RW',
+    '/MACHINE:X86'
   ]
 
-  if builder.options.opt == '1':
-    cxx.cflags += ['/O2']
-    cxx.linkflags += ['/OPT:ICF', '/OPT:REF']
+# Compiler options for optimization ( --enable-optimize )
+if builder.options.optimize == '1':
+  # Shared optimization definitions
+  builder.cxx.defines += ['NDEBUG']
+  if builder.cxx.target.platform == 'linux':
+    # Linux optimization flags
+    builder.cxx.cflags += ['-O2']
+  elif builder.cxx.target.platform == 'windows':
+    # Windows optimization flags
+    builder.cxx.cflags += ['/O2', '/Zo']
+    # Windows optimization link flags
+    builder.cxx.linkflags += ['/OPT:ICF', '/OPT:REF']
 
-  if builder.options.debug == '1':
-    cxx.cflags += ['/MTd', '/Od', '/RTC1']
-    cxx.linkflags += ['/NODEFAULTLIB:libcmt']
-  else:
-    cxx.cflags += ['/MT']
-
-
-# Optimization
-if builder.options.opt == '1':
-  cxx.defines += ['NDEBUG']
-
-# Debugging
+# Compiler options for debugging ( --enable-debug )
 if builder.options.debug == '1':
-  cxx.defines += ['DEBUG', '_DEBUG']
+  # Shared debug definitions
+  builder.cxx.defines += ['DEBUG', '_DEBUG']
+  if builder.cxx.target.platform == 'linux':
+    # Linux debug flags
+    builder.cxx.cflags += ['-g3', '-O0']
+  elif builder.cxx.target.platform == 'windows':
+    # Windows debug flags
+    builder.cxx.cflags += ['/Od', '/RTC1', '/MTd']
+    # Windows debug link flags
+    builder.cxx.linkflags += ['/NODEFAULTLIB:libcmt']
+
+# Handle --enable-static-lib and --enable-shared-lib
+if builder.cxx.target.platform == 'linux':
+  if builder.options.staticlib == '1':
+    builder.cxx.linkflags += [
+      '-static-libgcc',
+      '-static-libstdc++'
+    ]
+  elif builder.options.sharedlib == '1':
+    builder.cxx.linkflags += [
+      '-shared-libgcc',
+    ]
 
 
-cxx.includes += [
-  os.path.join(metamod_path, 'metamod'),
-  os.path.join(hlsdk_path, 'common'),
-  os.path.join(hlsdk_path, 'engine'),
-  os.path.join(hlsdk_path, 'dlls'),
-  os.path.join(hlsdk_path, 'pm_shared'),
-]
+library = builder.cxx.Library('foxbot')
 
+library.compiler.includes += include_paths
 
-name = 'foxbot'
-if builder.target_platform == 'linux':
-  name += ''
-
-binary = cxx.Library(name)
-binary.sources += [
+library.sources += [
   'bot.cpp',
   'bot_client.cpp',
   'bot_combat.cpp',
@@ -183,10 +156,8 @@ binary.sources += [
   'waypoint.cpp',
 ]
 
-
 #
 # Run scripts, add binaries
 #
 
-builder.Add(binary)
-
+builder.Add(library)
