@@ -16,7 +16,7 @@ Updated by RoboCop
 
 - Enhanced the waypoint area data for dustbowl
 
-- Removed lame SG Turret nodes for 2fort and well in non recommended areas 
+- Removed lame SG Turret nodes for 2fort, avanti, crossover2, epicenter, rock2 and well in non recommended areas 
 
 TODO List:-
 

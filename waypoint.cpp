@@ -5327,8 +5327,8 @@ void ProcessCommanderList() {
 
       // Search for invalid characters in the read string.
       // strlen is being called too many times in the for loop - [APG]RoboCop[CL]
-      for (int i = 0; i < static_cast<int>(strlen(buffer)); i++) {
-          for (int j = 0; j < static_cast<int>(strlen(invalidChars)); j++) {
+      for (unsigned int i = 0; i < static_cast<int>(strlen(buffer)); i++) {
+          for (unsigned int j = 0; j < static_cast<int>(strlen(invalidChars)); j++) {
               char ch = invalidChars[j];
 
               if (strchr(buffer, ch)) {
