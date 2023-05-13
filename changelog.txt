@@ -10,9 +10,13 @@ Updated by RoboCop
 
 - Added C++17 support for Win32 and Linux
 
+- Both Win32 and Linux builds now compiled using AMBuild
+
 - Reverted the `ProcessCommanderList` coding from version 0.791
 
-- Fixed the bot_chat cvar and the `WRITE_BYTE` implicit conversion for waypoint coding
+- Fixed the bot_chat cvar from not allowing bots to talk freely
+
+- Fixed the `WRITE_BYTE` implicit conversion for waypoint coding
 
 - Enhanced the waypoint area data for dustbowl
 
@@ -34,9 +38,9 @@ TODO List:-
 
 >> To prevent bots from shooting at spy corpses too long as, they aren't aware that a player switched teams as enemy spy
 
->> Allow bots to toss grenades at a higher angle and from a lower range as their target aim is too far
+>> Allow bots to toss grenades at a higher elevation angle and from a lower distance as their target aim is too far
 
->> BONUS: Maybe add a feature for bots to have experience and wisdom or learned data in order to be more human
+>> BONUS: Maybe add a feature for bots to have experience and wisdom or learned data in order to be a bit more human
 
 --------------------------------------------------------------------------------
 Version 0.801
