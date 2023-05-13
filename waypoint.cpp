@@ -5294,7 +5294,7 @@ void ProcessCommanderList() {
    //{
    //}
    commanders.clear();
-   const char invalidChars[] = " abcdefghijklmnopqrstuvwxyz,./<>?;'\"[]{}-=+!@#$%^&*()";
+   char invalidChars[] = " abcdefghijklmnopqrstuvwxyz,./<>?;'\"[]{}-=+!@#$%^&*()";
 
    UTIL_BuildFileName(filename, 255, "foxbot_commanders.txt", nullptr);
    FILE *inFile = fopen(filename, "r");
@@ -5319,7 +5319,7 @@ void ProcessCommanderList() {
    // Read the file, line by line.
    while (UTIL_ReadFileLine(buffer, 80, inFile)) {
       // Skip lines that begin with comments
-      if (strlen(buffer) > 2) {
+      if (static_cast<int>(strlen(buffer)) > 2) {
          if (buffer[0] == '/' && buffer[1] == '/')
             continue;
       }
@@ -5327,9 +5327,9 @@ void ProcessCommanderList() {
 
       // Search for invalid characters in the read string.
       // strlen is being called too many times in the for loop - [APG]RoboCop[CL]
-      for (unsigned int i = 0; i < strlen(buffer); i++) {
-          for (unsigned int j = 0; j < strlen(invalidChars); j++) {
-              const char ch = invalidChars[j];
+      for (int i = 0; i < static_cast<int>(strlen(buffer)); i++) {
+          for (int j = 0; j < static_cast<int>(strlen(invalidChars)); j++) {
+              char ch = invalidChars[j];
 
               if (strchr(buffer, ch)) {
                   valid = false;
@@ -5349,7 +5349,9 @@ void ProcessCommanderList() {
          strcpy(uId, buffer);
 
          // Get rid of line feeds
-         if (uId[strlen(uId) - 1] == '\n')
+         if (uId[strlen(uId) - 1] == '\n' || uId[strlen(uId) - 1] == '\r' || uId[strlen(uId) - 1] == EOF) {
+             uId[strlen(uId) - 1] = '\0';
+         }
             fp = UTIL_OpenFoxbotLog();
 
          if (fp != nullptr) {

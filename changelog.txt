@@ -10,7 +10,9 @@ Updated by RoboCop
 
 - Added C++17 support for Win32 and Linux
 
-- Fixed the bot_chat cvar and the 'WRITE_BYTE` implicit conversion for waypoint coding
+- Reverted the `ProcessCommanderList` coding from version 0.791
+
+- Fixed the bot_chat cvar and the `WRITE_BYTE` implicit conversion for waypoint coding
 
 - Enhanced the waypoint area data for dustbowl
 
