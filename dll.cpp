@@ -1466,8 +1466,9 @@ void ClientCommand(edict_t* pEntity) {
 		if (FStrEq(pcmd, "bot_team_balance")) {
 			if (arg1 != nullptr) {
 				if (*arg1 != 0) {
-					int temp = atoi(arg1);
-					if (temp)
+					int temp;
+               temp = atoi(arg1);
+               if (temp)
 						bot_team_balance = true;
 					else
 						bot_team_balance = false;
@@ -1484,8 +1485,9 @@ void ClientCommand(edict_t* pEntity) {
 		if (FStrEq(pcmd, "bot_bot_balance")) {
 			if (arg1 != nullptr) {
 				if (*arg1 != 0) {
-					int temp = atoi(arg1);
-					if (temp)
+					int temp;
+               temp = atoi(arg1);
+               if (temp)
 						bot_bot_balance = true;
 					else
 						bot_bot_balance = false;
@@ -1513,8 +1515,9 @@ void ClientCommand(edict_t* pEntity) {
 		}
 		else if (FStrEq(pcmd, "observer")) {
 			if (arg1 != nullptr && *arg1 != 0) {
-				int temp = atoi(arg1);
-				if (temp)
+				int temp;
+            temp = atoi(arg1);
+            if (temp)
 					observer_mode = true;
 				else
 					observer_mode = false;
@@ -1569,8 +1572,9 @@ void ClientCommand(edict_t* pEntity) {
 		else if (FStrEq(pcmd, "botdontshoot")) {
 			if (arg1 != nullptr) {
 				if (*arg1 != 0) {
-					int temp = atoi(arg1);
-					if (temp)
+					int temp;
+               temp = atoi(arg1);
+               if (temp)
 						botdontshoot = true;
 					else
 						botdontshoot = false;
@@ -1589,8 +1593,9 @@ void ClientCommand(edict_t* pEntity) {
 		else if (FStrEq(pcmd, "botdontmove")) {
 			if (arg1 != nullptr) {
 				if (*arg1 != 0) {
-					int temp = atoi(arg1);
-					if (temp)
+					int temp;
+               temp = atoi(arg1);
+               if (temp)
 						botdontmove = true;
 					else
 						botdontmove = false;
