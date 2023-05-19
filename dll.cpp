@@ -2792,8 +2792,9 @@ void StartFrame() { // v7 last frame timing
 				else if (strcmp(cmd, "bot_team_balance") == 0) {
 					if (arg1 != nullptr) {
 						if (*arg1 != 0) {
-							int temp = atoi(arg1);
-							if (temp)
+							int temp;
+                     temp = atoi(arg1);
+                     if (temp)
 								bot_team_balance = true;
 							else
 								bot_team_balance = false;
@@ -2807,8 +2808,9 @@ void StartFrame() { // v7 last frame timing
 				else if (strcmp(cmd, "bot_bot_balance") == 0) {
 					if (arg1 != nullptr) {
 						if (*arg1 != 0) {
-							int temp = atoi(arg1);
-							if (temp)
+							int temp;
+                     temp = atoi(arg1);
+                     if (temp)
 								bot_bot_balance = true;
 							else
 								bot_bot_balance = false;
@@ -5270,9 +5272,10 @@ static void ProcessBotCfgFile() {
 	}
 
 	if (strcmp(cmd, "observer") == 0) {
-		const int temp = atoi(arg1);
+		int temp;
+      temp = atoi(arg1);
 
-		if (temp)
+      if (temp)
 			observer_mode = true;
 		else
 			observer_mode = false;
@@ -5312,8 +5315,9 @@ static void ProcessBotCfgFile() {
 
 	if (strcmp(cmd, "bot_team_balance") == 0) {
 		if (arg1 != nullptr) {
-			const int temp = atoi(arg1);
-			if (temp)
+			int temp;
+         temp = atoi(arg1);
+         if (temp)
 				bot_team_balance = true;
 			else
 				bot_team_balance = false;
@@ -5335,8 +5339,9 @@ static void ProcessBotCfgFile() {
 	}
 	if (strcmp(cmd, "bot_bot_balance") == 0) {
 		if (arg1 != nullptr) {
-			const int temp = atoi(arg1);
-			if (temp)
+			int temp;
+         temp = atoi(arg1);
+         if (temp)
 				bot_bot_balance = true;
 			else
 				bot_bot_balance = false;
@@ -5358,8 +5363,9 @@ static void ProcessBotCfgFile() {
 	}
 
 	if (strcmp(cmd, "bot_xmas") == 0) {
-		const int temp = atoi(arg1);
-		bot_xmas = true;
+		int temp;
+      temp = atoi(arg1);
+      bot_xmas = true;
 		if (temp == 0) {
 			bot_xmas = false;
 			if (IS_DEDICATED_SERVER())
@@ -5374,6 +5380,54 @@ static void ProcessBotCfgFile() {
 				printf("[Config] bot xmas (1) on\n");
 			else {
 				sprintf(msg, "[Config] bot xmas (1) on\n");
+				ALERT(at_console, msg);
+			}
+		}
+		return;
+	}
+
+	if (strcmp(cmd, "botdontshoot") == 0) {
+		int temp;
+		temp = atoi(arg1);
+		botdontshoot = true;
+		if (temp == 0) {
+			botdontshoot = false;
+			if (IS_DEDICATED_SERVER())
+				printf("[Config] botdontshoot (0) off\n");
+			else {
+				sprintf(msg, "[Config] botdontshoot (0) off\n");
+				ALERT(at_console, msg);
+			}
+		}
+		else {
+			if (IS_DEDICATED_SERVER())
+				printf("[Config] botdontshoot (1) on\n");
+			else {
+				sprintf(msg, "[Config] botdontshoot (1) on\n");
+				ALERT(at_console, msg);
+			}
+		}
+		return;
+	}
+
+	if (strcmp(cmd, "botdontmove") == 0) {
+		int temp;
+		temp = atoi(arg1);
+		botdontmove = true;
+		if (temp == 0) {
+			botdontmove = false;
+			if (IS_DEDICATED_SERVER())
+				printf("[Config] botdontmove (0) off\n");
+			else {
+				sprintf(msg, "[Config] botdontmove (0) off\n");
+				ALERT(at_console, msg);
+			}
+		}
+		else {
+			if (IS_DEDICATED_SERVER())
+				printf("[Config] botdontmove (1) on\n");
+			else {
+				sprintf(msg, "[Config] botdontmove (1) on\n");
 				ALERT(at_console, msg);
 			}
 		}
