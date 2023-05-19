@@ -11,7 +11,7 @@
 #ifndef __TF_DEFS_H
 #define __TF_DEFS_H
 
-// instant damage
+ // instant damage
 
 #define DMG_GENERIC 0            // generic damage was done
 #define DMG_CRUSH (1 << 0)       // crushed by falling or moving object
@@ -66,13 +66,13 @@
 
 #define TEAM_HELP_RATE                                                                                                                                                                                                                         \
    60 // used only if teamplay bit 64 (help team with lower score) is set.
-      // 60 is a mild setting, and won't make too much difference
-      // increasing it _decreases_ the amount of help the losing team gets
-      // Minimum setting is 1, which would really help the losing team
+	  // 60 is a mild setting, and won't make too much difference
+	  // increasing it _decreases_ the amount of help the losing team gets
+	  // Minimum setting is 1, which would really help the losing team
 
 #define DISPLAY_CLASS_HELP                                                                                                                                                                                                                     \
    true                              // Change this to #OFF if you don't want the class help to
-                                     // appear whenever a player connects
+									 // appear whenever a player connects
 #define NEVER_TEAMFRAGS false        // teamfrags options always off
 #define ALWAYS_TEAMFRAGS false       // teamfrags options always on
 #define CHECK_SPEEDS true            // makes sure players aren't moving too fast
@@ -212,10 +212,10 @@
 #define PC_RANDOM 10 // Random playerclass
 #define PC_CIVILIAN                                                                                                                                                                                                                            \
    11 // Civilians are a special class. They cannot
-      // be chosen by players, only enforced by maps
+	  // be chosen by players, only enforced by maps
 #define PC_LASTCLASS                                                                                                                                                                                                                           \
    12 // Use this as the high-boundary for any loops
-      // through the playerclass.
+	  // through the playerclass.
 
 #define SENTRY_COLOR 10 // will be in the PC_RANDOM slot for team colors
 
@@ -460,9 +460,9 @@ enum { CAREA_CLEAR, CAREA_BLOCKED, CAREA_NOBUILD };
 /*==================================================*/
 #define TM_MAX_NO                                                                                                                                                                                                                              \
    4 // Max number of teams. Simply changing this value isn't enough.
-     // A new global to hold new team colors is needed, and more flags
-     // in the spawnpoint spawnflags may need to be used.
-     // Basically, don't change this unless you know what you're doing :)
+	 // A new global to hold new team colors is needed, and more flags
+	 // in the spawnpoint spawnflags may need to be used.
+	 // Basically, don't change this unless you know what you're doing :)
 
 /*==================================================*/
 /* New Weapon Defines		                        */
@@ -608,11 +608,11 @@ enum { CAREA_CLEAR, CAREA_BLOCKED, CAREA_NOBUILD };
 /*==================================================*/
 #define NIT_SCANNER_POWER                                                                                                                                                                                                                      \
    25 // The amount of power spent on a scan with the scanner
-      // is multiplied by this to get the scanrange.
+	  // is multiplied by this to get the scanrange.
 #define NIT_SCANNER_MAXCELL 50 // The maximum number of cells than can be used in one scan
 #define NIT_SCANNER_MIN_MOVEMENT                                                                                                                                                                                                               \
    50 // The minimum velocity an entity must have to be detected
-      // by scanners that only detect movement
+	  // by scanners that only detect movement
 
 /*==================================================*/
 /* Variables used for New Weapons and Reloading     */
@@ -1051,7 +1051,7 @@ float already_chosen_map;
 .entity	hook;
 .float	on_hook;
 .float  fire_held_down;// flag - true if player is still holding down the
-                                                          // fire button after throwing a hook.
+														  // fire button after throwing a hook.
 */
 /*==================================================*/
 /* Server Settings								    */
@@ -1121,7 +1121,7 @@ float already_chosen_map;
 #define TFLAG_TEAMFRAGS (1 << 7) // Individual Frags, or Frags = TeamScore
 #define TFLAG_FIRSTENTRY                                                                                                                                                                                                                       \
    (1 << 8) // Used to determine the first time toggleflags is set
-            // In a map. Cannot be toggled by players.
+			// In a map. Cannot be toggled by players.
 #define TFLAG_SPYINVIS (1 << 9) // Spy invisible only
 #define TFLAG_GRAPPLE (1 << 10) // Grapple on/off
 //#define TFLAG_FULLTEAMSCORE		(1 << 11)  	// Each Team's score is TeamScore + Frags

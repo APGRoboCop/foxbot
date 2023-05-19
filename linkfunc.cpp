@@ -35,18 +35,18 @@
 #ifdef _WIN32
 extern HINSTANCE h_Library;
 #else
-extern void *h_Library;
+extern void* h_Library;
 #endif
 
-void helper_LinkEntity(LINK_ENTITY_FUNC &addr, const char *name, entvars_t *pev) {
-   if (addr == nullptr) {
-      addr = reinterpret_cast<LINK_ENTITY_FUNC>(GetProcAddress(h_Library, name));
-   }
+void helper_LinkEntity(LINK_ENTITY_FUNC& addr, const char* name, entvars_t* pev) {
+	if (addr == nullptr) {
+		addr = reinterpret_cast<LINK_ENTITY_FUNC>(GetProcAddress(h_Library, name));
+	}
 
-   if (addr == nullptr) { //duplicate condition? [APG]RoboCop[CL]
-      return;
-   }
-   addr(pev);
+	if (addr == nullptr) { //duplicate condition? [APG]RoboCop[CL]
+		return;
+	}
+	addr(pev);
 }
 
 #define LINK_ENTITY_TO_FUNC(entityName)                                                                                                                                                                                                        \

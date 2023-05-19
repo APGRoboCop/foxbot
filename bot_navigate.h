@@ -31,60 +31,60 @@
 // standard amount of time to reach the bots current waypoint
 #define BOT_WP_DEADLINE 7.0f
 
-void BotUpdateHomeInfo(const bot_t *pBot);
+void BotUpdateHomeInfo(const bot_t* pBot);
 
-void BotFindCurrentWaypoint(bot_t *pBot);
+void BotFindCurrentWaypoint(bot_t* pBot);
 
-void BotSetFacing(const bot_t *pBot, Vector v_focus);
+void BotSetFacing(const bot_t* pBot, Vector v_focus);
 
-void BotFixIdealPitch(edict_t *pEdict);
+void BotFixIdealPitch(edict_t* pEdict);
 
-float BotChangePitch(edict_t *pEdict, float speed);
+float BotChangePitch(edict_t* pEdict, float speed);
 
-void BotFixIdealYaw(edict_t *pEdict);
+void BotFixIdealYaw(edict_t* pEdict);
 
-float BotChangeYaw(edict_t *pEdict, float speed);
+float BotChangeYaw(edict_t* pEdict, float speed);
 
-void BotNavigateWaypointless(bot_t *pBot);
+void BotNavigateWaypointless(bot_t* pBot);
 
-bool BotNavigateWaypoints(bot_t *pBot, bool navByStrafe);
+bool BotNavigateWaypoints(bot_t* pBot, bool navByStrafe);
 
-bool BotHeadTowardWaypoint(bot_t *pBot, bool &r_navByStrafe);
+bool BotHeadTowardWaypoint(bot_t* pBot, bool& r_navByStrafe);
 
-void BotUseLift(bot_t *pBot);
+void BotUseLift(bot_t* pBot);
 
-bool BotCheckWallOnLeft(const bot_t *pBot);
+bool BotCheckWallOnLeft(const bot_t* pBot);
 
-bool BotCheckWallOnRight(const bot_t *pBot);
+bool BotCheckWallOnRight(const bot_t* pBot);
 
-int BotFindFlagWaypoint(const bot_t *pBot);
+int BotFindFlagWaypoint(const bot_t* pBot);
 
-int BotFindFlagGoal(const bot_t *pBot);
+int BotFindFlagGoal(const bot_t* pBot);
 
-int BotGoForSniperSpot(const bot_t *pBot);
+int BotGoForSniperSpot(const bot_t* pBot);
 
-int BotTargetDefenderWaypoint(const bot_t *pBot);
+int BotTargetDefenderWaypoint(const bot_t* pBot);
 
-int BotGetDispenserBuildWaypoint(const bot_t *pBot);
+int BotGetDispenserBuildWaypoint(const bot_t* pBot);
 
-int BotGetTeleporterBuildWaypoint(const bot_t *pBot, bool buildEntrance);
+int BotGetTeleporterBuildWaypoint(const bot_t* pBot, bool buildEntrance);
 
-void BotFindSideRoute(bot_t *pBot);
+void BotFindSideRoute(bot_t* pBot);
 
 bool BotPathCheck(int sourceWP, int destWP);
 
-bool BotChangeRoute(bot_t *pBot);
+bool BotChangeRoute(bot_t* pBot);
 
-bool BotSetAlternativeGoalWaypoint(bot_t *pBot, int &r_goalWP, WPT_INT32 flags);
+bool BotSetAlternativeGoalWaypoint(bot_t* pBot, int& r_goalWP, WPT_INT32 flags);
 
-int BotFindSuicideGoal(const bot_t *pBot);
+int BotFindSuicideGoal(const bot_t* pBot);
 
-int BotFindRetreatPoint(bot_t *pBot, int min_dist, const Vector &r_threatOrigin);
+int BotFindRetreatPoint(bot_t* pBot, int min_dist, const Vector& r_threatOrigin);
 
-int BotFindThreatAvoidPoint(bot_t *pBot, int min_dist, const edict_t *pent);
+int BotFindThreatAvoidPoint(bot_t* pBot, int min_dist, const edict_t* pent);
 
-int BotDrowningWaypointSearch(const bot_t *pBot);
+int BotDrowningWaypointSearch(const bot_t* pBot);
 
-bool BotFindTeleportShortCut(bot_t *pBot);
+bool BotFindTeleportShortCut(bot_t* pBot);
 
 #endif // BOT_NAVIGATE_H

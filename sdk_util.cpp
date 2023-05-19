@@ -19,71 +19,71 @@
  *   without written permission from Valve LLC.
  *
  ****/
-/*
+ /*
 
-===== util.cpp ========================================================
+ ===== util.cpp ========================================================
 
-  Utility code.  Really not optional after all.
+   Utility code.  Really not optional after all.
 
-*/
+ */
 
 #include <extdll.h>
 
 #include "sdk_util.h"
 
-char *UTIL_VarArgs(char *format, ...) {
-   va_list argptr;
-   static char string[1024];
+char* UTIL_VarArgs(char* format, ...) {
+	va_list argptr;
+	static char string[1024];
 
-   va_start(argptr, format);
+	va_start(argptr, format);
 #ifdef WIN32
-   _vsnprintf(string, 1024, format, argptr);
+	_vsnprintf(string, 1024, format, argptr);
 #else
-   _vsnprintf(string, 1024, format, argptr);
+	_vsnprintf(string, 1024, format, argptr);
 #endif
-   va_end(argptr);
+	va_end(argptr);
 
-   return string;
+	return string;
 }
 
 //=========================================================
 // UTIL_LogPrintf - Prints a logged message to console.
 // Preceded by LOG: ( timestamp ) < message >
 //=========================================================
-void UTIL_LogPrintf(char *format, ...) {
-   va_list argptr;
-   static char string[1024];
+void UTIL_LogPrintf(char* format, ...) {
+	va_list argptr;
+	static char string[1024];
 
-   va_start(argptr, format);
+	va_start(argptr, format);
 #ifdef WIN32
-   _vsnprintf(string, 1024, format, argptr);
+	_vsnprintf(string, 1024, format, argptr);
 #else
-   _vsnprintf(string, 1024, format, argptr);
+	_vsnprintf(string, 1024, format, argptr);
 #endif
-   va_end(argptr);
+	va_end(argptr);
 
-   // Print to server console
-   ALERT(at_logged, "%s", string);
+	// Print to server console
+	ALERT(at_logged, "%s", string);
 }
 
 short FixedSigned16(const float value, const float scale) {
-   int output = static_cast<int>(value * scale);
+	int output = static_cast<int>(value * scale);
 
-   if (output > 32767)
-      output = 32767;
+	if (output > 32767)
+		output = 32767;
 
-   if (output < -32768)
-      output = -32768;
+	if (output < -32768)
+		output = -32768;
 
-   return static_cast<short>(output);
+	return static_cast<short>(output);
 }
 
 unsigned short FixedUnsigned16(const float value, const float scale) {
-   int output = static_cast<int>(value * scale);
-   if (output < 0)
-      output = 0;
-   if (output > 0xFFFF)
-      output = 0xFFFF;
+	int output = static_cast<int>(value * scale);
+	if (output < 0)
+		output = 0;
+	if (output > 0xFFFF)
+		output = 0xFFFF;
 
-   return static_cast<unsigned short>(output);
+	return static_cast<unsigned short>(output);
 }

@@ -30,57 +30,57 @@
 
 // prototypes of bot functions...
 
-void BotSpawnInit(bot_t *pBot);
+void BotSpawnInit(bot_t* pBot);
 
-void BotCreate(edict_t *pPlayer, const char *arg1, const char *arg2, const char *arg3, const char *arg4);
+void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char* arg3, const char* arg4);
 
-void BotStartGame(bot_t *pBot);
+void BotStartGame(bot_t* pBot);
 
-int BotInFieldOfView(const bot_t *pBot, const Vector &dest);
+int BotInFieldOfView(const bot_t* pBot, const Vector& dest);
 
-bool BotCanSeeOrigin(const bot_t *pBot, const Vector &r_dest);
+bool BotCanSeeOrigin(const bot_t* pBot, const Vector& r_dest);
 
-float BotViewAngleDiff(const Vector &r_pOrigin, const edict_t *pEdict);
+float BotViewAngleDiff(const Vector& r_pOrigin, const edict_t* pEdict);
 
 long random_long(long lowval, long highval);
 
 float random_float(float lowval, float highval);
 
-void BotFindItem(bot_t *pBot);
+void BotFindItem(bot_t* pBot);
 
-void BotThink(bot_t *pBot);
+void BotThink(bot_t* pBot);
 
 void BotUpdateSkillInaccuracy();
 
-void BotEnemyCheck(bot_t *pBot);
+void BotEnemyCheck(bot_t* pBot);
 
-bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, int weapon_choice);
+bool BotFireWeapon(const Vector& v_enemy, bot_t* pBot, int weapon_choice);
 
-void BotShootAtEnemy(bot_t *pBot);
+void BotShootAtEnemy(bot_t* pBot);
 
 // DrEvils functions.
-int BotNadeHandler(bot_t *pBot, bool timed, char nadeTyp);
+int BotNadeHandler(bot_t* pBot, bool timed, char nadeTyp);
 
-int BotAssessThreatLevel(const bot_t *pBot);
+int BotAssessThreatLevel(const bot_t* pBot);
 
-int BotTeamColorCheck(const edict_t *pent);
+int BotTeamColorCheck(const edict_t* pent);
 
 int PickRandomEnemyTeam(int my_team);
 
-int BotGuessPlayerPosition(const bot_t *pBot, const Vector &r_playerOrigin);
+int BotGuessPlayerPosition(const bot_t* pBot, const Vector& r_playerOrigin);
 
-int BotFindGrenadePoint(const bot_t *pBot, const Vector &r_vecOrigin);
+int BotFindGrenadePoint(const bot_t* pBot, const Vector& r_vecOrigin);
 
-void BotCheckForMultiguns(bot_t *pBot, float nearestdistance, edict_t *pNewEnemy, bool &rtn);
+void BotCheckForMultiguns(bot_t* pBot, float nearestdistance, edict_t* pNewEnemy, bool& rtn);
 
-void BotSoundSense(edict_t *pEdict, const char *pszSample, float fVolume);
+void BotSoundSense(edict_t* pEdict, const char* pszSample, float fVolume);
 
-int FriendlyClassTotal(edict_t *pEdict, int specifiedClass, bool ignoreSelf);
+int FriendlyClassTotal(edict_t* pEdict, int specifiedClass, bool ignoreSelf);
 
 void UpdateFlagCarrierList();
 
-bool PlayerHasFlag(const edict_t *Player);
+bool PlayerHasFlag(const edict_t* Player);
 
-bool PlayerIsInfected(const edict_t *pEntity);
+bool PlayerIsInfected(const edict_t* pEntity);
 
 #endif // BOT_FUNC_H

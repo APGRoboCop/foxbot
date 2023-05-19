@@ -28,7 +28,7 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
-void pfnMessageBegin(int msg_dest, int msg_type, const float *pOrigin, edict_t *ed);
+void pfnMessageBegin(int msg_dest, int msg_type, const float* pOrigin, edict_t* ed);
 void pfnMessageEnd();
 void pfnWriteByte(int iValue);
 void pfnWriteChar(int iValue);
@@ -36,7 +36,7 @@ void pfnWriteShort(int iValue);
 void pfnWriteLong(int iValue);
 void pfnWriteAngle(float flValue);
 void pfnWriteCoord(float flValue);
-void pfnWriteString(const char *sz);
+void pfnWriteString(const char* sz);
 void pfnWriteEntity(int iValue);
 
 #endif // ENGINE_H
