@@ -75,7 +75,7 @@ void BotCheckForMultiguns(bot_t* pBot, float nearestdistance, edict_t* pNewEnemy
 
 void BotSoundSense(edict_t* pEdict, const char* pszSample, float fVolume);
 
-int FriendlyClassTotal(edict_t* pEdict, int specifiedClass, bool ignoreSelf);
+int FriendlyClassTotal(const edict_t* pEdict, int specifiedClass, bool ignoreSelf);
 
 void UpdateFlagCarrierList();
 

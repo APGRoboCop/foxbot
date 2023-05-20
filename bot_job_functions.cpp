@@ -1081,7 +1081,7 @@ int JobBuildDispenser(bot_t* pBot) {
 			}
 
 			// abort if the bot has been waiting for the dispenser and it isn't there
-			if (!success) { // don't repeat the job for a while
+			if constexpr (!success) { // don't repeat the job for a while
 				BlacklistJob(pBot, JOB_BUILD_DISPENSER, random_float(30.0f, 60.0f));
 				return JOB_TERMINATED;
 			}
@@ -1239,7 +1239,7 @@ int JobBuildTeleport(bot_t* pBot) {
 			}
 
 			// abort if the bot has been waiting for the teleport and it isn't there
-			if (!success) { // don't repeat the job for a while
+			if constexpr (!success) { // don't repeat the job for a while
 				BlacklistJob(pBot, JOB_BUILD_TELEPORT, random_float(30.0f, 60.0f));
 				return JOB_TERMINATED;
 			}

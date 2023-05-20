@@ -216,7 +216,7 @@ void pfnSetOrigin(edict_t* e, const float* rgflOrigin) {
 		for (int bot_index = 0; bot_index < 32; bot_index++) {
 			if (bots[bot_index].sentry_edict != nullptr && bots[bot_index].has_sentry) {
 				edict_t* pent = e;
-				int l = static_cast<int>(bots[bot_index].sentry_edict->v.origin.z - static_cast<double>((*(Vector*)rgflOrigin).z));
+				int l = static_cast<int>(bots[bot_index].sentry_edict->v.origin.z - (*(Vector*)rgflOrigin).z);
 				if (l < 0)
 					l = -l;
 

@@ -174,7 +174,7 @@ void BotCheckTeamplay() {
 // This function can be used to report the number of players using the specified class
 // on the specified players team, or a team allied to them.
 // You'll be cheating if you use this function on an enemy team.  >:-O
-int FriendlyClassTotal(edict_t* pEdict, const int specifiedClass, const bool ignoreSelf) {
+int FriendlyClassTotal(const edict_t* pEdict, const int specifiedClass, const bool ignoreSelf) {
 	if (!checked_teamplay) // check for team play...
 		BotCheckTeamplay();
 
@@ -716,7 +716,7 @@ static edict_t* BotFindEnemy(bot_t* pBot) {
 		pBot->visEnemyCount = 0; // reset this, so that it can be recalculated
 		pBot->visAllyCount = 1;  // reset this, so that it can be recalculated
 
-		nearestDistance = 3000;
+		nearestDistance = 3000.0f;
 
 		if (!checked_teamplay) // check for team play...
 			BotCheckTeamplay();

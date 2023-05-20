@@ -158,7 +158,7 @@ int WaypointFindNearest_E(const edict_t* pEntity, float range, int team);
 
 int WaypointFindNearest_V(const Vector& v_src, float range, int team);
 
-int WaypointFindNearest_S(const Vector& v_src, edict_t* pEntity, float range, int team, WPT_INT32 ignore_flags);
+int WaypointFindNearest_S(const Vector& v_src, const edict_t* pEntity, float range, int team, WPT_INT32 ignore_flags);
 
 int WaypointFindInRange(const Vector& v_src, float min_range, float max_range, int team, bool chooseRandom);
 

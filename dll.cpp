@@ -418,7 +418,7 @@ static void TeamBalanceCheck() {
 		if (!done)
 			done = BotBalanceTeams(4, 2);
 		if (!done)
-			done = BotBalanceTeams(4, 3);
+			BotBalanceTeams(4, 3);
 	}
 	if (bot_bot_balance) {
 		// team 1 has more than team 2?

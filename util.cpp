@@ -691,10 +691,9 @@ static void UTIL_FindFoxbotPath() {
 	static bool dir_path_checked = false;
 	if (dir_path_checked)
 		return;
-	else
-		dir_path_checked = true;
+   dir_path_checked = true;
 
-	// find out where the foxbot directory is, by trying to open and
+   // find out where the foxbot directory is, by trying to open and
 	// close the foxbot.cfg file just once
 #ifndef __linux__ // must be a Windows machine
 	if (strcmp(foxbot_path, "") == 0) {

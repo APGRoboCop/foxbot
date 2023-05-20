@@ -486,7 +486,7 @@ int WaypointFindNearest_V(const Vector& v_src, const float range, const int team
 // that waypoint.
 // If pEntity is not NULL then the waypoint found must be visible to that entity.
 // Also, you can specify waypoint flags that you wish to exclude from the search.
-int WaypointFindNearest_S(const Vector& v_src, edict_t* pEntity, const float range, const int team, const WPT_INT32 ignore_flags) {
+int WaypointFindNearest_S(const Vector& v_src, const edict_t* pEntity, const float range, const int team, const WPT_INT32 ignore_flags) {
 	int min_index = -1;
 	double min_distance_squared = static_cast<double>(range * range) + 0.1;
 	TraceResult tr;
@@ -5363,7 +5363,7 @@ void ProcessCommanderList() {
 	//{
 	//}
 	commanders.clear();
-	char invalidChars[] = " abcdefghijklmnopqrstuvwxyz,./<>?;'\"[]{}-=+!@#$%^&*()";
+   const char invalidChars[] = " abcdefghijklmnopqrstuvwxyz,./<>?;'\"[]{}-=+!@#$%^&*()";
 
 	UTIL_BuildFileName(filename, 255, "foxbot_commanders.txt", nullptr);
 	FILE* inFile = fopen(filename, "r");
@@ -5398,10 +5398,9 @@ void ProcessCommanderList() {
 		// Search for invalid characters in the read string.
 		// strlen is being called too many times in the for loop - [APG]RoboCop[CL]
 		for (unsigned int i = 0; i < static_cast<int>(strlen(buffer)); i++) {
-			for (unsigned int j = 0; j < static_cast<int>(strlen(invalidChars)); j++) {
-				char ch = invalidChars[j];
-
-				if (strchr(buffer, ch)) {
+			for (unsigned int j = 0; j < static_cast<int>(strlen(invalidChars)); j++)
+			{
+            if (const char ch = invalidChars[j]; strchr(buffer, ch)) {
 					valid = false;
 					if (IS_DEDICATED_SERVER())
 						printf("[Config] foxbot_commanders.txt : Invalid Character %c\n", ch);
