@@ -8,6 +8,9 @@ Version 0.85
 Updated by RoboCop
 --------------------------------------------------------------------------------
 
+- Added new waypoints:-
+	+ 2kfort5
+
 - Added C++17 support for Win32 and Linux
 
 - Both Win32 and Linux builds now compiled using AMBuild
