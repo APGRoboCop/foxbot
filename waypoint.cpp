@@ -1521,24 +1521,22 @@ bool WaypointLoad(edict_t* pEntity) {
 				fclose(bfp);
 				return true;
 			}
-			else {
-				fclose(bfp);
-				return false;
-			}
-		}
+         fclose(bfp);
+         return false;
+      }
 		// make sure the waypoint version is compatible
-		else if (header.waypoint_file_version != WAYPOINT_VERSION) {
-			if (pEntity)
-				ClientPrint(pEntity, HUD_PRINTNOTIFY, "Incompatible FoXBot waypoint file version!\nWaypoints not loaded!\n");
+      if (header.waypoint_file_version != WAYPOINT_VERSION) {
+         if (pEntity)
+            ClientPrint(pEntity, HUD_PRINTNOTIFY, "Incompatible FoXBot waypoint file version!\nWaypoints not loaded!\n");
 
-			if (IS_DEDICATED_SERVER())
-				printf("Incompatible FoXBot waypoint file version!\nWaypoints not loaded!\n");
+         if (IS_DEDICATED_SERVER())
+            printf("Incompatible FoXBot waypoint file version!\nWaypoints not loaded!\n");
 
-			fclose(bfp);
-			return false;
-		}
+         fclose(bfp);
+         return false;
+      }
 
-		WaypointInit(); // remove any existing waypoints
+      WaypointInit(); // remove any existing waypoints
 
 		// read the waypoint data from the file
 		for (i = 0; i < header.number_of_waypoints; i++) {
@@ -1589,17 +1587,15 @@ bool WaypointLoad(edict_t* pEntity) {
 		WaypointRouteInit();
 		return true;
 	}
-	else {
-		if (pEntity) {
-			sprintf(msg, "Waypoint file %s doesn't exist!\nLooking for HPB file instead\n", filename);
-			ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
-		}
+   if (pEntity) {
+      sprintf(msg, "Waypoint file %s doesn't exist!\nLooking for HPB file instead\n", filename);
+      ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
+   }
 
-		if (IS_DEDICATED_SERVER())
-			printf("waypoint file %s not found!\nLooking for HPB file instead\n", filename);
-	}
+   if (IS_DEDICATED_SERVER())
+      printf("waypoint file %s not found!\nLooking for HPB file instead\n", filename);
 
-	// try for hpb_bot file instead
+   // try for hpb_bot file instead
 
 	strcpy(mapname, STRING(gpGlobals->mapname));
 	strcat(mapname, ".wpt");
@@ -3439,18 +3435,16 @@ void WaypointRunOneWay(edict_t* pEntity) {
 			wpt1 = temp;
 			return;
 		}
-		else {
-			wpt2 = wpt1;
-			wpt1 = temp;
-			if (wpt1 != -1 && wpt2 != -1 && wpt1 != wpt2) {
-				// play "error" sound...
-				EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "common/wpn_select.wav", 1.0, ATTN_NORM, 0, 100);
+      wpt2 = wpt1;
+      wpt1 = temp;
+      if (wpt1 != -1 && wpt2 != -1 && wpt1 != wpt2) {
+         // play "error" sound...
+         EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "common/wpn_select.wav", 1.0, ATTN_NORM, 0, 100);
 
-				WaypointAddPath(wpt2, wpt1);
-			}
-			return;
-		}
-	}
+         WaypointAddPath(wpt2, wpt1);
+      }
+      return;
+   }
 	return;
 }
 
@@ -3464,19 +3458,17 @@ void WaypointRunTwoWay(edict_t* pEntity) {
 			wpt1 = temp;
 			return;
 		}
-		else {
-			wpt2 = wpt1;
-			wpt1 = temp;
-			if (wpt1 != -1 && wpt2 != -1 && wpt1 != wpt2) {
-				// play "error" sound...
-				EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "common/wpn_select.wav", 1.0, ATTN_NORM, 0, 100);
+      wpt2 = wpt1;
+      wpt1 = temp;
+      if (wpt1 != -1 && wpt2 != -1 && wpt1 != wpt2) {
+         // play "error" sound...
+         EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "common/wpn_select.wav", 1.0, ATTN_NORM, 0, 100);
 
-				WaypointAddPath(wpt1, wpt2);
-				WaypointAddPath(wpt2, wpt1);
-			}
-			return;
-		}
-	}
+         WaypointAddPath(wpt1, wpt2);
+         WaypointAddPath(wpt2, wpt1);
+      }
+      return;
+   }
 	return;
 }
 

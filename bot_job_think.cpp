@@ -248,8 +248,8 @@ bool SubmitNewJob(bot_t* pBot, const int newJobType, job_struct* newJob) {
 		if (newJobType == pBot->jobBlacklist[i].type) {
 			if (pBot->jobBlacklist[i].f_timeOut >= pBot->f_think_time)
 				return false;
-			else
-				pBot->jobBlacklist[i].type = JOB_NONE; // job has timed out de-blacklist it
+         pBot->jobBlacklist[i].type = JOB_NONE;
+         // job has timed out de-blacklist it
 		}
 	}
 

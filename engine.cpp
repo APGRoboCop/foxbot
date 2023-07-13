@@ -369,12 +369,10 @@ void pfnClientCommand(edict_t* pEdict, char* szFmt, ...) {
 			va_end(argp);
 			return;
 		}
-		else {
-			strncat(sz_error_check, " !b\n", 250 - strlen(sz_error_check));
-			return;
-			//{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"!b\n"); fclose(fp); }
-		}
-	}
+      strncat(sz_error_check, " !b\n", 250 - strlen(sz_error_check));
+      return;
+      //{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"!b\n"); fclose(fp); }
+   }
 	(*g_engfuncs.pfnClientCommand)(pEdict, tempFmt);
 	va_end(argp);
 	// if(mr_meta) RETURN_META(MRES_HANDLED);
@@ -425,16 +423,13 @@ void pfnClCom(edict_t* pEdict, char* szFmt, ...) {
 				RETURN_META(MRES_SUPERCEDE);
 			return;
 		}
-		else
-			//	snprintf(sz_error_check,250,"%s b = %d %d\n",sz_error_check,GETPLAYERWONID(pEdict),ENTINDEX(pEdict));
-			return;
-	}
-	else {
-		if (mr_meta)
-			RETURN_META(MRES_SUPERCEDE);
-		return;
-	}
-	//	if(mr_meta) RETURN_META(MRES_HANDLED);  // unreachable code
+      //	snprintf(sz_error_check,250,"%s b = %d %d\n",sz_error_check,GETPLAYERWONID(pEdict),ENTINDEX(pEdict));
+      return;
+   }
+   if (mr_meta)
+      RETURN_META(MRES_SUPERCEDE);
+   return;
+   //	if(mr_meta) RETURN_META(MRES_HANDLED);  // unreachable code
 	//	return;
 }
 
@@ -539,13 +534,11 @@ void pfnMessageBegin(const int msg_dest, const int msg_type, const float* pOrigi
 	if (mr_meta && MM_func) {
 		if (dont_send_packet)
 			RETURN_META(MRES_SUPERCEDE);
-		else
-			RETURN_META(MRES_HANDLED);
-	}
+      RETURN_META(MRES_HANDLED);
+   }
 	if (dont_send_packet)
 		return;
-	else
-		(*g_engfuncs.pfnMessageBegin)(msg_dest, msg_type, pOrigin, ed);
+   (*g_engfuncs.pfnMessageBegin)(msg_dest, msg_type, pOrigin, ed);
 }
 
 void MessageEnd() {
@@ -576,15 +569,13 @@ void pfnMessageEnd() {
 			dont_send_packet = false;
 			RETURN_META(MRES_SUPERCEDE);
 		}
-		else
-			RETURN_META(MRES_HANDLED);
-	}
+      RETURN_META(MRES_HANDLED);
+   }
 	if (dont_send_packet) {
 		dont_send_packet = false;
 		return;
 	}
-	else
-		(*g_engfuncs.pfnMessageEnd)();
+   (*g_engfuncs.pfnMessageEnd)();
 }
 
 void WriteByte(const int iValue) {
@@ -611,13 +602,11 @@ void pfnWriteByte(int iValue) {
 	if (mr_meta && MM_func) {
 		if (dont_send_packet)
 			RETURN_META(MRES_SUPERCEDE);
-		else
-			RETURN_META(MRES_HANDLED);
-	}
+      RETURN_META(MRES_HANDLED);
+   }
 	if (dont_send_packet)
 		return;
-	else
-		(*g_engfuncs.pfnWriteByte)(iValue);
+   (*g_engfuncs.pfnWriteByte)(iValue);
 }
 
 void WriteChar(const int iValue) {
@@ -644,13 +633,11 @@ void pfnWriteChar(int iValue) {
 	if (mr_meta && MM_func) {
 		if (dont_send_packet)
 			RETURN_META(MRES_SUPERCEDE);
-		else
-			RETURN_META(MRES_HANDLED);
-	}
+      RETURN_META(MRES_HANDLED);
+   }
 	if (dont_send_packet)
 		return;
-	else
-		(*g_engfuncs.pfnWriteChar)(iValue);
+   (*g_engfuncs.pfnWriteChar)(iValue);
 }
 
 void WriteShort(const int iValue) {
@@ -677,13 +664,11 @@ void pfnWriteShort(int iValue) {
 	if (mr_meta && MM_func) {
 		if (dont_send_packet)
 			RETURN_META(MRES_SUPERCEDE);
-		else
-			RETURN_META(MRES_HANDLED);
-	}
+      RETURN_META(MRES_HANDLED);
+   }
 	if (dont_send_packet)
 		return;
-	else
-		(*g_engfuncs.pfnWriteShort)(iValue);
+   (*g_engfuncs.pfnWriteShort)(iValue);
 }
 
 void WriteLong(const int iValue) {
@@ -710,13 +695,11 @@ void pfnWriteLong(int iValue) {
 	if (mr_meta && MM_func) {
 		if (dont_send_packet)
 			RETURN_META(MRES_SUPERCEDE);
-		else
-			RETURN_META(MRES_HANDLED);
-	}
+      RETURN_META(MRES_HANDLED);
+   }
 	if (dont_send_packet)
 		return;
-	else
-		(*g_engfuncs.pfnWriteLong)(iValue);
+   (*g_engfuncs.pfnWriteLong)(iValue);
 }
 
 void WriteAngle(const float flValue) {
@@ -743,13 +726,11 @@ void pfnWriteAngle(float flValue) {
 	if (mr_meta && MM_func) {
 		if (dont_send_packet)
 			RETURN_META(MRES_SUPERCEDE);
-		else
-			RETURN_META(MRES_HANDLED);
-	}
+      RETURN_META(MRES_HANDLED);
+   }
 	if (dont_send_packet)
 		return;
-	else
-		(*g_engfuncs.pfnWriteAngle)(flValue);
+   (*g_engfuncs.pfnWriteAngle)(flValue);
 }
 
 void WriteCoord(const float flValue) {
@@ -776,13 +757,11 @@ void pfnWriteCoord(float flValue) {
 	if (mr_meta && MM_func) {
 		if (dont_send_packet)
 			RETURN_META(MRES_SUPERCEDE);
-		else
-			RETURN_META(MRES_HANDLED);
-	}
+      RETURN_META(MRES_HANDLED);
+   }
 	if (dont_send_packet)
 		return;
-	else
-		(*g_engfuncs.pfnWriteCoord)(flValue);
+   (*g_engfuncs.pfnWriteCoord)(flValue);
 }
 
 void WriteString(const char* sz) {
@@ -810,13 +789,11 @@ void pfnWriteString(const char* sz) {
 	if (mr_meta && MM_func) {
 		if (dont_send_packet)
 			RETURN_META(MRES_SUPERCEDE);
-		else
-			RETURN_META(MRES_HANDLED);
-	}
+      RETURN_META(MRES_HANDLED);
+   }
 	if (dont_send_packet)
 		return;
-	else
-		(*g_engfuncs.pfnWriteString)(sz);
+   (*g_engfuncs.pfnWriteString)(sz);
 }
 
 void WriteEntity(const int iValue) {
@@ -843,13 +820,11 @@ void pfnWriteEntity(int iValue) {
 	if (mr_meta && MM_func) {
 		if (dont_send_packet)
 			RETURN_META(MRES_SUPERCEDE);
-		else
-			RETURN_META(MRES_HANDLED);
-	}
+      RETURN_META(MRES_HANDLED);
+   }
 	if (dont_send_packet)
 		return;
-	else
-		(*g_engfuncs.pfnWriteEntity)(iValue);
+   (*g_engfuncs.pfnWriteEntity)(iValue);
 }
 
 void pfnRegUserMsg_common(const char* pszName, int msg) {
@@ -969,26 +944,22 @@ void pfnClientPrintf(edict_t* pEdict, const PRINT_TYPE ptype, const char* szMsg)
 			//(*g_engfuncs.pfnClientPrintf)(pEdict, ptype, szMsg);
 			return;
 		}
-		else {
-			strncat(sz_error_check, " !b\n", 250 - strlen(sz_error_check));
-			return;
-			// else
-			//{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"!!b\n"); fclose(fp); }
-		}
-		/*else
+      strncat(sz_error_check, " !b\n", 250 - strlen(sz_error_check));
+      return;
+      // else
+      //{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"!!b\n"); fclose(fp); }
+      /*else
 		   {
 		   if(mr_meta) RETURN_META(MRES_SUPERCEDE);
 		   }*/
 	}
-	else {
-		strncat(sz_error_check, " NULL\n", 250 - strlen(sz_error_check));
-		//{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"fook\n"); fclose(fp); }
-		// if(mr_meta) RETURN_META(MRES_SUPERCEDE);
-		// if(!mr_meta) (*g_engfuncs.pfnClientPrintf)(pEdict, ptype, szMsg);
-		// else RETURN_META(MRES_HANDLED);
-		//(*g_engfuncs.pfnClientPrintf)(pEdict, ptype, szMsg);
-	}
-	(*g_engfuncs.pfnClientPrintf)(pEdict, ptype, szMsg);
+   strncat(sz_error_check, " NULL\n", 250 - strlen(sz_error_check));
+   //{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"fook\n"); fclose(fp); }
+   // if(mr_meta) RETURN_META(MRES_SUPERCEDE);
+   // if(!mr_meta) (*g_engfuncs.pfnClientPrintf)(pEdict, ptype, szMsg);
+   // else RETURN_META(MRES_HANDLED);
+   //(*g_engfuncs.pfnClientPrintf)(pEdict, ptype, szMsg);
+   (*g_engfuncs.pfnClientPrintf)(pEdict, ptype, szMsg);
 }
 
 void pfnClPrintf(edict_t* pEdict, PRINT_TYPE ptype, const char* szMsg) {
@@ -1031,14 +1002,10 @@ void pfnClPrintf(edict_t* pEdict, PRINT_TYPE ptype, const char* szMsg) {
 		if (b) {
 			RETURN_META(MRES_HANDLED);
 		}
-		else {
-			RETURN_META(MRES_SUPERCEDE);
-		}
-	}
-	else {
-		RETURN_META(MRES_SUPERCEDE);
-	}
-	//	RETURN_META(MRES_HANDLED);
+      RETURN_META(MRES_SUPERCEDE);
+   }
+   RETURN_META(MRES_SUPERCEDE);
+   //	RETURN_META(MRES_HANDLED);
 }
 
 void pfnServerPrint(const char* szMsg) {

@@ -816,15 +816,14 @@ bool BotHeadTowardWaypoint(bot_t* pBot, bool& r_navByStrafe) {
 
 	if (BotUpdateRoute(pBot))
 		return true;
-	else
-		return false;
+   return false;
 }
 
 // BotUpdateRoute()
 // Selects the next waypoint along the bot's route.
 static bool BotUpdateRoute(bot_t* pBot) {
 	int new_current_wp; // what pBot->current_wp might be set to
-	edict_t* pEdict = pBot->pEdict;
+   const edict_t* pEdict = pBot->pEdict;
 
 	// If the bot doesn't have a current waypoint, then lets
 	// try sending the bot to the closest waypoint.
@@ -840,100 +839,99 @@ static bool BotUpdateRoute(bot_t* pBot) {
 
 			return true;
 		}
-		else
-			return false; // couldn't find a current waypoint for the bot
+      return false;
+      // couldn't find a current waypoint for the bot
 	}
-	else              // the bot already has a current waypoint
-	{
-		new_current_wp = pBot->current_wp;
+   // the bot already has a current waypoint
+   new_current_wp = pBot->current_wp;
 
-		// if the bot has a new goal waypoint, dump/reset the current branching waypoint
-		if (pBot->goto_wp != pBot->lastgoto_wp)
-			pBot->branch_waypoint = -1;
+   // if the bot has a new goal waypoint, dump/reset the current branching waypoint
+   if (pBot->goto_wp != pBot->lastgoto_wp)
+      pBot->branch_waypoint = -1;
 
-		// if the bot took a branching route and has arrived at the branching waypoint
-		// then continue onwards to the goal waypoint
-		if (pBot->current_wp == pBot->branch_waypoint) {
-			//	UTIL_HostSay(pBot->pEdict, 0, "resuming from sideroute"); //DebugMessageOfDoom!
-			pBot->branch_waypoint = -1;
-		}
+   // if the bot took a branching route and has arrived at the branching waypoint
+   // then continue onwards to the goal waypoint
+   if (pBot->current_wp == pBot->branch_waypoint) {
+      //	UTIL_HostSay(pBot->pEdict, 0, "resuming from sideroute"); //DebugMessageOfDoom!
+      pBot->branch_waypoint = -1;
+   }
 
-		pBot->lastgoto_wp = pBot->goto_wp; // allows us to monitor for changed goal waypoints
+   pBot->lastgoto_wp = pBot->goto_wp; // allows us to monitor for changed goal waypoints
 
-		const float dist = (waypoints[new_current_wp].origin - pBot->pEdict->v.origin).Length();
+   const float dist = (waypoints[new_current_wp].origin - pBot->pEdict->v.origin).Length();
 
-		// try to find the next waypoint on the route to the bots goal
-		int nextWP;
-		if (pBot->branch_waypoint == -1)
-			nextWP = WaypointRouteFromTo(pBot->current_wp, pBot->goto_wp, pBot->current_team);
-		else // bots current goal is a branching waypoint
-			nextWP = WaypointRouteFromTo(pBot->current_wp, pBot->branch_waypoint, pBot->current_team);
+   // try to find the next waypoint on the route to the bots goal
+   int nextWP;
+   if (pBot->branch_waypoint == -1)
+      nextWP = WaypointRouteFromTo(pBot->current_wp, pBot->goto_wp, pBot->current_team);
+   else // bots current goal is a branching waypoint
+      nextWP = WaypointRouteFromTo(pBot->current_wp, pBot->branch_waypoint, pBot->current_team);
 
-		// figure out how near to the bot's current waypoint the bot has to be
-		// before it will move on the next waypoint
-		float needed_distance = 50.0f; // standard distance for most waypoint types
-		bool heightCheck = true;      // used only when climbing ladders
-		if (pBot->pEdict->v.movetype == MOVETYPE_FLY) {
-			// if the bot is on a ladder make sure it is just above the waypoint
-			needed_distance = 20.0f; // got to be near when on a ladder
-			if (pBot->pEdict->v.origin.z < waypoints[new_current_wp].origin.z || pBot->pEdict->v.origin.z > waypoints[new_current_wp].origin.z + 10.0f)
-				heightCheck = false;
-		}
-		else if (waypoints[new_current_wp].flags & W_FL_JUMP) {
-			// gotta be similar height or higher than jump waypoint
-			if (pBot->pEdict->v.origin.z < waypoints[new_current_wp].origin.z - 15.0f || pBot->pEdict->v.flags & FL_ONGROUND)
-				heightCheck = false;
-			needed_distance = 80.0f;
-		}
-		else if (waypoints[new_current_wp].flags & W_FL_LIFT)
-			needed_distance = 25.0f; // some lifts are small(e.g. rock2's lifts)
-		else if (waypoints[new_current_wp].flags & W_FL_WALK)
-			needed_distance = 20.0f;
+   // figure out how near to the bot's current waypoint the bot has to be
+   // before it will move on the next waypoint
+   float needed_distance = 50.0f; // standard distance for most waypoint types
+   bool heightCheck = true;       // used only when climbing ladders
+   if (pBot->pEdict->v.movetype == MOVETYPE_FLY) {
+      // if the bot is on a ladder make sure it is just above the waypoint
+      needed_distance = 20.0f; // got to be near when on a ladder
+      if (pBot->pEdict->v.origin.z < waypoints[new_current_wp].origin.z || pBot->pEdict->v.origin.z > waypoints[new_current_wp].origin.z + 10.0f)
+         heightCheck = false;
+   }
+   else if (waypoints[new_current_wp].flags & W_FL_JUMP) {
+      // gotta be similar height or higher than jump waypoint
+      if (pBot->pEdict->v.origin.z < waypoints[new_current_wp].origin.z - 15.0f || pBot->pEdict->v.flags & FL_ONGROUND)
+         heightCheck = false;
+      needed_distance = 80.0f;
+   }
+   else if (waypoints[new_current_wp].flags & W_FL_LIFT)
+      needed_distance = 25.0f; // some lifts are small(e.g. rock2's lifts)
+   else if (waypoints[new_current_wp].flags & W_FL_WALK)
+      needed_distance = 20.0f;
 
-		bool waypointTouched = false;
+   bool waypointTouched = false;
 
-		// if the bot's near enough to it's current waypoint, and it hasn't
-		// reached it's destination then pick the next waypoint on the route
-		if (new_current_wp != pBot->goto_wp && dist < needed_distance && heightCheck == true) {
-			waypointTouched = true;
-		}
-		// this check can solve waypoint circling problems
-		else if (dist < 100.0f && pBot->f_navProblemStartTime > 0.1f && pBot->f_navProblemStartTime + 0.5f < pBot->f_think_time) {
-			if (nextWP != -1 && nextWP != pBot->goto_wp) {
-				const auto pathDistance = static_cast<float>(WaypointDistanceFromTo(new_current_wp, nextWP, pBot->current_team));
-				const float distToNext = (waypoints[nextWP].origin - pBot->pEdict->v.origin).Length();
+   // if the bot's near enough to it's current waypoint, and it hasn't
+   // reached it's destination then pick the next waypoint on the route
+   if (new_current_wp != pBot->goto_wp && dist < needed_distance && heightCheck == true) {
+      waypointTouched = true;
+   }
+   // this check can solve waypoint circling problems
+   else if (dist < 100.0f && pBot->f_navProblemStartTime > 0.1f && pBot->f_navProblemStartTime + 0.5f < pBot->f_think_time) {
+      if (nextWP != -1 && nextWP != pBot->goto_wp) {
+         const auto pathDistance = static_cast<float>(WaypointDistanceFromTo(new_current_wp, nextWP, pBot->current_team));
+         const float distToNext = (waypoints[nextWP].origin - pBot->pEdict->v.origin).Length();
 
-				// see if the bot is near enough to the next waypoint despite
-				// not touching the current waypoint
-				if (distToNext < pathDistance && dist + distToNext < pathDistance + 50.0f) {
-					//	WaypointDrawBeam(INDEXENT(1), pBot->pEdict->v.origin,
-					//		pBot->pEdict->v.origin + Vector(0, 0, 100.0),
-					//		10, 2, 250, 250, 250, 200, 10);
+         // see if the bot is near enough to the next waypoint despite
+         // not touching the current waypoint
+         if (distToNext < pathDistance && dist + distToNext < pathDistance + 50.0f) {
+            //	WaypointDrawBeam(INDEXENT(1), pBot->pEdict->v.origin,
+            //		pBot->pEdict->v.origin + Vector(0, 0, 100.0),
+            //		10, 2, 250, 250, 250, 200, 10);
 
-					waypointTouched = true;
-				}
-			}
-		}
+            waypointTouched = true;
+         }
+      }
+   }
 
-		if (waypointTouched) {
-			if (nextWP != -1 && nextWP < num_waypoints) {
-				new_current_wp = nextWP;
-				pBot->routeFailureTally = 0; // all is well, reset this
-			}
-			else                          // bot has no route to it's goal
-			{
-				++pBot->routeFailureTally; // chalk up another route failure
-				new_current_wp = pBot->current_wp;
-			}
+   if (waypointTouched) {
+      if (nextWP != -1 && nextWP < num_waypoints) {
+         new_current_wp = nextWP;
+         pBot->routeFailureTally = 0; // all is well, reset this
+      }
+      else // bot has no route to it's goal
+      {
+         ++pBot->routeFailureTally; // chalk up another route failure
+         new_current_wp = pBot->current_wp;
+      }
 
-			// set the amount of time to get to the new current waypoint
-			if (new_current_wp != pBot->current_wp)
-				pBot->f_current_wp_deadline = pBot->f_think_time + BOT_WP_DEADLINE;
+      // set the amount of time to get to the new current waypoint
+      if (new_current_wp != pBot->current_wp)
+         pBot->f_current_wp_deadline = pBot->f_think_time + BOT_WP_DEADLINE;
 
-			pBot->current_wp = new_current_wp;
+      pBot->current_wp = new_current_wp;
 
-			// lemming check! try to stop the bot running off a cliff
-			/*	if(nextWP != -1
+      // lemming check! try to stop the bot running off a cliff
+      /*	if(nextWP != -1
 											&& nextWP != pBot->goto_wp
 											&& static_cast<int>(pBot->pEdict->v.health) < 91
 											&& !(waypoints[nextWP].flags & W_FL_LADDER)
@@ -946,13 +944,12 @@ static bool BotUpdateRoute(bot_t* pBot) {
 															BotChangeRoute(pBot);
 											}*/
 
-											// now that the bot has picked the next waypoint on the route
-											// to its goal, consider trying an alternate route
-			BotFindSideRoute(pBot);
-		}
+      // now that the bot has picked the next waypoint on the route
+      // to its goal, consider trying an alternate route
+      BotFindSideRoute(pBot);
+   }
 
-		return true;
-	}
+   return true;
 }
 
 // This is a fairly simple function.
@@ -1015,80 +1012,78 @@ void BotUseLift(bot_t* pBot) {
 			pBot->f_pause_time = pBot->f_think_time + 0.2f;
 		return;
 	}
-	else // current waypoint is a lift waypoint, as is the next waypoint on the route
-	{
-		// is the lift waypoint roughly the same altitude as the bot?
-		if (waypoints[pBot->current_wp].origin.z < pBot->pEdict->v.origin.z + 36.0f && waypoints[pBot->current_wp].origin.z > pBot->pEdict->v.origin.z - 36.0f) {
-			bool liftReady = false;
+   // current waypoint is a lift waypoint, as is the next waypoint on the route
+   // is the lift waypoint roughly the same altitude as the bot?
+   if (waypoints[pBot->current_wp].origin.z < pBot->pEdict->v.origin.z + 36.0f && waypoints[pBot->current_wp].origin.z > pBot->pEdict->v.origin.z - 36.0f) {
+      bool liftReady = false;
 
-			// traceline a short distance up from the waypoint to make sure
-			// the lift isn't there
-			TraceResult tr;
-			UTIL_TraceLine(waypoints[pBot->current_wp].origin, waypoints[pBot->current_wp].origin + Vector(0.0f, 0.0f, 36.0), dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
+      // traceline a short distance up from the waypoint to make sure
+      // the lift isn't there
+      TraceResult tr;
+      UTIL_TraceLine(waypoints[pBot->current_wp].origin, waypoints[pBot->current_wp].origin + Vector(0.0f, 0.0f, 36.0), dont_ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
-			if (tr.pHit != nullptr) {
-				char className[10];
-				strncpy(className, STRING(tr.pHit->v.classname), 10);
-				className[9] = '\0';
+      if (tr.pHit != nullptr) {
+         char className[10];
+         strncpy(className, STRING(tr.pHit->v.classname), 10);
+         className[9] = '\0';
 
-				//	UTIL_HostSay(pBot->pEdict, 0, className); //DebugMessageOfDoom!
+         //	UTIL_HostSay(pBot->pEdict, 0, className); //DebugMessageOfDoom!
 
-				if (strncmp(STRING(tr.pHit->v.classname), "func_door", 9) != 0 && strncmp(STRING(tr.pHit->v.classname), "func_plat", 9) != 0) {
-					// the space at the lift waypoint appears to be empty
-					// is the lift unoccupied by bot teammates?
-					if (BotTeammatesNearWaypoint(pBot, pBot->current_wp) < 1) {
-						// do a traceline straight down, to see if the lift is there
-						UTIL_TraceLine(waypoints[pBot->current_wp].origin, waypoints[pBot->current_wp].origin - Vector(0.0f, 0.0f, 50.0f), ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
+         if (strncmp(STRING(tr.pHit->v.classname), "func_door", 9) != 0 && strncmp(STRING(tr.pHit->v.classname), "func_plat", 9) != 0) {
+            // the space at the lift waypoint appears to be empty
+            // is the lift unoccupied by bot teammates?
+            if (BotTeammatesNearWaypoint(pBot, pBot->current_wp) < 1) {
+               // do a traceline straight down, to see if the lift is there
+               UTIL_TraceLine(waypoints[pBot->current_wp].origin, waypoints[pBot->current_wp].origin - Vector(0.0f, 0.0f, 50.0f), ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
-						if (tr.pHit != nullptr) {
-							strncpy(className, STRING(tr.pHit->v.classname), 10);
-							className[9] = '\0';
-							if (strncmp(STRING(tr.pHit->v.classname), "func_door", 9) == 0 || strncmp(STRING(tr.pHit->v.classname), "func_plat", 9) == 0) {
-								//	WaypointDrawBeam(INDEXENT(1), tr.pHit->v.absmin,
-								//		VecBModelOrigin(tr.pHit), 10, 2, 50, 50, 250, 200, 10);
+               if (tr.pHit != nullptr) {
+                  strncpy(className, STRING(tr.pHit->v.classname), 10);
+                  className[9] = '\0';
+                  if (strncmp(STRING(tr.pHit->v.classname), "func_door", 9) == 0 || strncmp(STRING(tr.pHit->v.classname), "func_plat", 9) == 0) {
+                     //	WaypointDrawBeam(INDEXENT(1), tr.pHit->v.absmin,
+                     //		VecBModelOrigin(tr.pHit), 10, 2, 50, 50, 250, 200, 10);
 
-								//	WaypointDrawBeam(INDEXENT(1), tr.pHit->v.absmin,
-								//		tr.pHit->v.absmin + tr.pHit->v.size, 10, 2, 50, 250, 50, 200, 10);
+                     //	WaypointDrawBeam(INDEXENT(1), tr.pHit->v.absmin,
+                     //		tr.pHit->v.absmin + tr.pHit->v.size, 10, 2, 50, 250, 50, 200, 10);
 
-								liftReady = true;
-							}
-						}
-					}
-				}
-			}
+                     liftReady = true;
+                  }
+               }
+            }
+         }
+      }
 
-			if (liftReady) {
-				// walk into the lift
-				pBot->f_move_speed = pBot->f_max_speed / 2;
-				//	UTIL_HostSay(pBot->pEdict, 0, "approaching lift"); //DebugMessageOfDoom!
-			}
-			else {
-				//	UTIL_HostSay(pBot->pEdict, 0, "awaiting lift's return"); //DebugMessageOfDoom!
+      if (liftReady) {
+         // walk into the lift
+         pBot->f_move_speed = pBot->f_max_speed / 2;
+         //	UTIL_HostSay(pBot->pEdict, 0, "approaching lift"); //DebugMessageOfDoom!
+      }
+      else {
+         //	UTIL_HostSay(pBot->pEdict, 0, "awaiting lift's return"); //DebugMessageOfDoom!
 
-				if (distanceWP2D < 300.0f)
-					pBot->f_move_speed = -(pBot->f_max_speed / 3);
-				else
-					pBot->f_pause_time = pBot->f_think_time + 0.2f;
-			}
-		}
-		else // lift waypoint is too far above or below the bot to walk into
-		{
-			// do a traceline straight down, to see if the bot is on a lift
-			TraceResult tr;
-			UTIL_TraceLine(pBot->pEdict->v.origin, pBot->pEdict->v.origin - Vector(0.0f, 0.0f, 50.0f), ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
+         if (distanceWP2D < 300.0f)
+            pBot->f_move_speed = -(pBot->f_max_speed / 3);
+         else
+            pBot->f_pause_time = pBot->f_think_time + 0.2f;
+      }
+   }
+   else // lift waypoint is too far above or below the bot to walk into
+   {
+      // do a traceline straight down, to see if the bot is on a lift
+      TraceResult tr;
+      UTIL_TraceLine(pBot->pEdict->v.origin, pBot->pEdict->v.origin - Vector(0.0f, 0.0f, 50.0f), ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
-			if (tr.pHit != nullptr) {
-				char className[10];
-				strncpy(className, STRING(tr.pHit->v.classname), 10);
-				className[9] = '\0';
-				if (strncmp(STRING(tr.pHit->v.classname), "func_door", 9) == 0 || strncmp(STRING(tr.pHit->v.classname), "func_plat", 9) == 0) {
-					pBot->current_wp = nextWP;
-				}
-				// bot is not on a lift, danger Will Robinson!
-				//	else UTIL_HostSay(pBot->pEdict, 0, className); //DebugMessageOfDoom!
-			}
-		}
-	}
+      if (tr.pHit != nullptr) {
+         char className[10];
+         strncpy(className, STRING(tr.pHit->v.classname), 10);
+         className[9] = '\0';
+         if (strncmp(STRING(tr.pHit->v.classname), "func_door", 9) == 0 || strncmp(STRING(tr.pHit->v.classname), "func_plat", 9) == 0) {
+            pBot->current_wp = nextWP;
+         }
+         // bot is not on a lift, danger Will Robinson!
+         //	else UTIL_HostSay(pBot->pEdict, 0, className); //DebugMessageOfDoom!
+      }
+   }
 }
 
 // This function returns 1 if the bot has detected an obstacle at ankle height.
@@ -1159,11 +1154,10 @@ static int BotShouldJumpOver(const bot_t* pBot) {
 				return 2;
 			// did the traceline go further then it did when traced from lower down the body?
 			// if so then there appears to be some kind of ledge here
-			else if ((v_source - tr.vecEndPos).Length2D() > shinObstacleDistance + 1.0f)
-				return 2;
-			else
-				obstacleFound = true;
-		}
+         if ((v_source - tr.vecEndPos).Length2D() > shinObstacleDistance + 1.0f)
+            return 2;
+         obstacleFound = true;
+      }
 	}
 
 	// checking the left side didn't find a jumpable object
@@ -1207,17 +1201,16 @@ static int BotShouldJumpOver(const bot_t* pBot) {
 				return 2;
 			// did the traceline go further then it did when traced from lower down the body?
 			// if so then there appears to be some kind of ledge here
-			else if ((v_source - tr.vecEndPos).Length2D() > shinObstacleDistance + 1.0f)
-				return 2;
-			else
-				obstacleFound = true;
-		}
+         if ((v_source - tr.vecEndPos).Length2D() > shinObstacleDistance + 1.0f)
+            return 2;
+         obstacleFound = true;
+      }
 	}
 
 	if (obstacleFound)
 		return 1;
-	else
-		return 0; // all clear!
+   return 0;
+   // all clear!
 }
 
 // This function returns 1 if the bot has detected an obstacle at head height.
@@ -1268,11 +1261,10 @@ static int BotShouldDuckUnder(const bot_t* pBot) {
 				return 2;
 			// did the traceline go further then it did when traced from the head?
 			// if so then ducking may help
-			else if ((v_source - tr.vecEndPos).Length() > headObstacleDistance + 1.0f)
-				return 2;
-			else
-				obstacleFound = true;
-		}
+         if ((v_source - tr.vecEndPos).Length() > headObstacleDistance + 1.0f)
+            return 2;
+         obstacleFound = true;
+      }
 	}
 
 	// checking the left side didn't find a duckable object
@@ -1308,17 +1300,16 @@ static int BotShouldDuckUnder(const bot_t* pBot) {
 				return 2;
 			// did the traceline go further then it did when traced from the head?
 			// if so then ducking may help
-			else if ((v_source - tr.vecEndPos).Length() > headObstacleDistance + 1.0f)
-				return 2;
-			else
-				obstacleFound = true;
-		}
+         if ((v_source - tr.vecEndPos).Length() > headObstacleDistance + 1.0f)
+            return 2;
+         obstacleFound = true;
+      }
 	}
 
 	if (obstacleFound)
 		return 1;
-	else
-		return 0; // all clear!
+   return 0;
+   // all clear!
 }
 
 // This function attempts to detect whether or not the bot has fallen off
@@ -1522,8 +1513,7 @@ int BotGetTeleporterBuildWaypoint(const bot_t* pBot, const bool buildEntrance) {
 
 	if (count > 0)
 		return indices[random_long(0, count - 1)];
-	else
-		return -1;
+   return -1;
 }
 
 // This function allows bots to pick a new goal waypoint that will lead
@@ -1737,21 +1727,19 @@ bool BotChangeRoute(bot_t* pBot) {
 			newBranchWP = index;
 			break;
 		}
-		else {
-			// distance from this waypoint to the bots goal
-			const int newGoalDistance = WaypointDistanceFromTo(index, goalWP, pBot->current_team);
+      // distance from this waypoint to the bots goal
+      const int newGoalDistance = WaypointDistanceFromTo(index, goalWP, pBot->current_team);
 
-			// distance from waypoint to bot + bots current distance from goal
-			const int maxRouteDistance = interimDist + currentGoalDistance;
+      // distance from waypoint to bot + bots current distance from goal
+      const int maxRouteDistance = interimDist + currentGoalDistance;
 
-			// look for a waypoint that will take the bot nearer to it's goal
-			// without coming back through the bots current waypoint
-			if (newGoalDistance < maxRouteDistance) {
-				newBranchWP = index;
-				break;
-			}
-		}
-	}
+      // look for a waypoint that will take the bot nearer to it's goal
+      // without coming back through the bots current waypoint
+      if (newGoalDistance < maxRouteDistance) {
+         newBranchWP = index;
+         break;
+      }
+   }
 
 	// found a suitable waypoint?
 	if (newBranchWP != -1) {
@@ -2368,27 +2356,25 @@ static void BotCheckForRocketJump(bot_t* pBot) {
 
 	if (result.flFraction < 1.0f)
 		return; // can't see it
-	else {
-		// debug stuff
-		//	WaypointDrawBeam(INDEXENT(1), pBot->pEdict->v.origin,
-		//		waypoints[closestRJ].origin, 10, 2, 250, 250, 50, 200, 10);
+   // debug stuff
+   //	WaypointDrawBeam(INDEXENT(1), pBot->pEdict->v.origin,
+   //		waypoints[closestRJ].origin, 10, 2, 250, 250, 50, 200, 10);
 
-		//	UTIL_HostSay(pBot->pEdict, 0, "RJ waypoint seen");
+   //	UTIL_HostSay(pBot->pEdict, 0, "RJ waypoint seen");
 
-		// set up a job to handle the jump
-		job_struct* newJob = InitialiseNewJob(pBot, JOB_ROCKET_JUMP);
-		if (newJob != nullptr) {
-			newJob->waypoint = closestRJ;
-			SubmitNewJob(pBot, JOB_ROCKET_JUMP, newJob);
-		}
+   // set up a job to handle the jump
+   job_struct* newJob = InitialiseNewJob(pBot, JOB_ROCKET_JUMP);
+   if (newJob != nullptr) {
+      newJob->waypoint = closestRJ;
+      SubmitNewJob(pBot, JOB_ROCKET_JUMP, newJob);
+   }
 
-		//	UTIL_BotLogPrintf("%s: RJ waypoint %d\n", pBot->name, newJob.waypoint);
+   //	UTIL_BotLogPrintf("%s: RJ waypoint %d\n", pBot->name, newJob.waypoint);
 
-		/*char msg[80];
+   /*char msg[80];
 		sprintf(msg, "CloseDist: %f Distance: %f zDiff %f ",
 						pBot->RJClosingDistance, distance2D, zDiff);
 		UTIL_HostSay(pBot->pEdict, 0, msg);*/
-	}
 }
 
 // BotCheckForConcJump - Here, we look through the list of RJ/CJ
@@ -2512,14 +2498,12 @@ static void BotCheckForConcJump(bot_t* pBot) {
 
 	if (result.flFraction < 1.0f)
 		return; // can't see it
-	else       // success - it's time to set up a concussion jump job
-	{
-		job_struct* newJob = InitialiseNewJob(pBot, JOB_CONCUSSION_JUMP);
-		if (newJob != nullptr) {
-			newJob->waypoint = endWP;
-			newJob->waypointTwo = closestJumpWP;
+   // success - it's time to set up a concussion jump job
+   job_struct* newJob = InitialiseNewJob(pBot, JOB_CONCUSSION_JUMP);
+   if (newJob != nullptr) {
+      newJob->waypoint = endWP;
+      newJob->waypointTwo = closestJumpWP;
 
-			SubmitNewJob(pBot, JOB_CONCUSSION_JUMP, newJob);
-		}
-	}
+      SubmitNewJob(pBot, JOB_CONCUSSION_JUMP, newJob);
+   }
 }

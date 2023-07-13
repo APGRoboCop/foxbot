@@ -433,10 +433,9 @@ void BotEnemyCheck(bot_t* pBot) {
 	// optimization - don't check for new enemies too often
 	if (pBot->f_enemy_check_time > pBot->f_think_time)
 		return;
-	else
-		pBot->f_enemy_check_time = pBot->f_think_time + 0.2f;
+   pBot->f_enemy_check_time = pBot->f_think_time + 0.2f;
 
-	// now scan the visible area around the bot for new enemies
+   // now scan the visible area around the bot for new enemies
 	edict_t* new_enemy = BotFindEnemy(pBot);
 	if (new_enemy != nullptr && new_enemy != pBot->enemy.ptr) {
 		pBot->enemy.ptr = new_enemy;
@@ -950,14 +949,14 @@ static bool BotSpyDetectCheck(bot_t* pBot, edict_t* pNewEnemy) {
 		return true;
 	}
 	// the bot has decided to target it's suspected Spy
-	else if ((pNewEnemy == pBot->suspectedSpy && pBot->f_suspectSpyTime < pBot->f_think_time) || (pBot->current_team != UTIL_GetTeamColor(pNewEnemy) && pNewEnemy->v.deadflag != 5)) {
-		// keep the memory of this experience fresh
-		pBot->f_suspectSpyTime = pBot->f_think_time - 0.5f;
+   if ((pNewEnemy == pBot->suspectedSpy && pBot->f_suspectSpyTime < pBot->f_think_time) || (pBot->current_team != UTIL_GetTeamColor(pNewEnemy) && pNewEnemy->v.deadflag != 5)) {
+      // keep the memory of this experience fresh
+      pBot->f_suspectSpyTime = pBot->f_think_time - 0.5f;
 
-		return true;
-	}
+      return true;
+   }
 
-	return false;
+   return false;
 }
 
 // BotSGSpotted - This function handles the storing, and communicating
@@ -1520,12 +1519,10 @@ bool BotFireWeapon(const Vector& v_enemy, bot_t* pBot, const int weapon_choice) 
 				pBot->f_shoot_time = pBot->f_think_time + base_delay + random_float(min_delay, max_delay);
 				return true;
 			}
-			else {
-				pEdict->v.button |= IN_ATTACK;           // charge the weapon
-				pBot->f_shoot_time = pBot->f_think_time; // keep charging
-				return true;
-			}
-		}
+         pEdict->v.button |= IN_ATTACK;           // charge the weapon
+         pBot->f_shoot_time = pBot->f_think_time; // keep charging
+         return true;
+      }
 
 		// are we charging the secondary fire?
 		if (pBot->f_secondary_charging > 0) {
@@ -1548,12 +1545,10 @@ bool BotFireWeapon(const Vector& v_enemy, bot_t* pBot, const int weapon_choice) 
 				*/
 				return true;
 			}
-			else {
-				pEdict->v.button |= IN_ATTACK2;          // charge the weapon
-				pBot->f_shoot_time = pBot->f_think_time; // keep charging
-				return true;
-			}
-		}
+         pEdict->v.button |= IN_ATTACK2;          // charge the weapon
+         pBot->f_shoot_time = pBot->f_think_time; // keep charging
+         return true;
+      }
 
 		select_index = 0;
 		bool use_primary = false;
@@ -2111,7 +2106,7 @@ int BotAssessThreatLevel(const bot_t* pBot) {
 		Threat = 20;
 		break;
 	case TFC_CLASS_SCOUT:
-		Threat = 20;
+		Threat = 19;
 		break;
 	case TFC_CLASS_SNIPER:
 		Threat = 17;
@@ -2123,13 +2118,13 @@ int BotAssessThreatLevel(const bot_t* pBot) {
 		Threat = 12;
 		break;
 	case TFC_CLASS_MEDIC:
-		Threat = 12;
+		Threat = 13;
 		break;
 	case TFC_CLASS_HWGUY:
 		Threat = 0;
 		break;
 	case TFC_CLASS_PYRO:
-		Threat = 15;
+		Threat = 14;
 		break;
 	case TFC_CLASS_SPY:
 		Threat = 15;
@@ -2240,10 +2235,10 @@ int PickRandomEnemyTeam(const int my_team) {
 
 	if (total == 1) // a common scenario
 		return teamList[0];
-	else if (total > 1) // hello hunted!
-		return teamList[random_long(0, total - 1)];
+   if (total > 1) // hello hunted!
+      return teamList[random_long(0, total - 1)];
 
-	// failure shouldn't happen but let's keep an eye out for it anyway
+   // failure shouldn't happen but let's keep an eye out for it anyway
 	static short failureReported = 0;
 
 	if (failureReported == 0) {

@@ -368,7 +368,7 @@ static void varyBotTotal() {
 				// if min_bots is reached increase the bots
 				if (min_bots > 0 && interested_bots > min_bots)
 					--interested_bots;
-				else if (min_bots < 1 && interested_bots > 0)
+				if (min_bots < 1 && interested_bots > 0)
 					--interested_bots;
 				else if (interested_bots < max_bots)
 					++interested_bots;

@@ -115,10 +115,9 @@ bool VectorsNearerThan(const Vector& r_vOne, const Vector& r_vTwo, double value)
 	// are wider/longer than they are tall
 	if (temp > value)
 		return false;
-	else
-		temp += static_cast<double>(distance.z * distance.z);
+   temp += static_cast<double>(distance.z * distance.z);
 
-	// final check(3 dimensional)
+   // final check(3 dimensional)
 	if (temp < value)
 		return true;
 
@@ -452,8 +451,7 @@ bool FInViewCone(const Vector& r_pOrigin, const edict_t* pEdict) {
 
 	if (flDot > 0.50f) // 60 degree field of view
 		return true;
-	else
-		return false;
+   return false;
 }
 
 // This function is a variant of FInViewCone().  It returns a measure of
@@ -529,8 +527,8 @@ bool FVisible(const Vector& r_vecOrigin, edict_t* pEdict) {
 
 	if (tr.flFraction < 1.0f)
 		return false; // Line of sight is not established
-	else
-		return true; // line of sight is valid.
+   return true;
+   // line of sight is valid.
 }
 
 Vector GetGunPosition(const edict_t* pEdict) { return pEdict->v.origin + pEdict->v.view_ofs; }

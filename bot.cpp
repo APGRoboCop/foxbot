@@ -295,11 +295,11 @@ void BotSpawnInit(bot_t* pBot) {
 	pBot->enemy.f_firstSeen = gpGlobals->time - 1000.0f;
 	pBot->enemy.f_lastSeen = pBot->enemy.f_firstSeen;
 	pBot->enemy.f_seenDistance = 400.0f;
-	pBot->enemy.lastLocation = Vector(0.0, 0.0, 0.0);
+	pBot->enemy.lastLocation = Vector(0.0f, 0.0f, 0.0f);
 
 	pBot->visEnemyCount = 0;
 	pBot->visAllyCount = 1; // 1 = the bot itself
-	pBot->lastAllyVector = Vector(0.0, 0.0, 0.0);
+	pBot->lastAllyVector = Vector(0.0f, 0.0f, 0.0f);
 	pBot->f_lastAllySeenTime = 0.0f;
 	pBot->f_alliedMedicSeenTime = 0.0f;
 
@@ -310,7 +310,7 @@ void BotSpawnInit(bot_t* pBot) {
 	pBot->f_secondary_charging = -1.0f;
 	pBot->charging_weapon_id = 0;
 	pBot->tossNade = 0;
-	pBot->aimDrift = Vector(0.0, 0.0, 0.0);
+	pBot->aimDrift = Vector(0.0f, 0.0f, 0.0f);
 
 	pBot->f_pause_time = 0.0f;
 	pBot->f_duck_time = 0.0f;
@@ -427,8 +427,7 @@ void BotNameInit() {
 static int BotAssignDefaultSkill() {
 	if (botskill_lower <= botskill_upper)
 		return botskill_lower;
-	else
-		return static_cast<int>(random_long(botskill_upper, botskill_lower));
+   return static_cast<int>(random_long(botskill_upper, botskill_lower));
 }
 
 void BotPickName(char* name_buffer) {
@@ -763,166 +762,165 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 
 		return;
 	}
-	else {
-		char ptr[256]; // allocate space for message from ClientConnect
+   char ptr[256]; // allocate space for message from ClientConnect
 
-		index = 0;
-		while ((bots[index].is_used) && index < (MAX_BOTS))
-			++index;
+   index = 0;
+   while ((bots[index].is_used) && index < (MAX_BOTS))
+      ++index;
 
-		if (index >= MAX_BOTS) {
-			ClientPrint(pPlayer, HUD_PRINTNOTIFY, "Can't create bot(maximum bots reached).\n");
-			return;
-		}
+   if (index >= MAX_BOTS) {
+      ClientPrint(pPlayer, HUD_PRINTNOTIFY, "Can't create bot(maximum bots reached).\n");
+      return;
+   }
 
-		if (IS_DEDICATED_SERVER())
-			printf("Creating bot...\n");
-		else if (pPlayer)
-			ClientPrint(pPlayer, HUD_PRINTNOTIFY, "Creating bot...\n");
+   if (IS_DEDICATED_SERVER())
+      printf("Creating bot...\n");
+   else if (pPlayer)
+      ClientPrint(pPlayer, HUD_PRINTNOTIFY, "Creating bot...\n");
 
-		// clear shit up for clientprintf and clientcommand checking
-		// (for Admin Mod)only helps if we've just created a bot
-		// probably never used
-		i = 0;
-		while (i < 32 && clients[i] != BotEnt)
-			i++;
+   // clear shit up for clientprintf and clientcommand checking
+   // (for Admin Mod)only helps if we've just created a bot
+   // probably never used
+   i = 0;
+   while (i < 32 && clients[i] != BotEnt)
+      i++;
 
-		if (i < 32)
-			clients[i] = nullptr;
-		// why put these here?
-		// well admin mod plugin may sneak in as their connecting
-		// and before we can add this shit for checking purposes
-		bot_t* pBot = &bots[index];
-		if (botJustJoined[index])
-			bzero(pBot, sizeof(bot_t)); // wipe out the bots data
-		pBot->pEdict = BotEnt;
+   if (i < 32)
+      clients[i] = nullptr;
+   // why put these here?
+   // well admin mod plugin may sneak in as their connecting
+   // and before we can add this shit for checking purposes
+   bot_t* pBot = &bots[index];
+   if (botJustJoined[index])
+      bzero(pBot, sizeof(bot_t)); // wipe out the bots data
+   pBot->pEdict = BotEnt;
 
-		// clear the player info from the previous player who used this edict
-		// (a fix by Pierre-Marie, found in the HPB forum)
-		if (BotEnt->pvPrivateData != nullptr) {
-			FREE_PRIVATE(pBot->pEdict);
-			pBot->pEdict->pvPrivateData = nullptr;
-		}
-		pBot->pEdict->v.frags = 0;
+   // clear the player info from the previous player who used this edict
+   // (a fix by Pierre-Marie, found in the HPB forum)
+   if (BotEnt->pvPrivateData != nullptr) {
+      FREE_PRIVATE(pBot->pEdict);
+      pBot->pEdict->pvPrivateData = nullptr;
+   }
+   pBot->pEdict->v.frags = 0;
 
-		// create the player entity by calling MOD's player function
-		if (mr_meta)
-			CALL_GAME_ENTITY(PLID, "player", &BotEnt->v);
-		else
-			player(VARS(BotEnt));
+   // create the player entity by calling MOD's player function
+   if (mr_meta)
+      CALL_GAME_ENTITY(PLID, "player", &BotEnt->v);
+   else
+      player(VARS(BotEnt));
 
-		//{fp=UTIL_OpenFoxbotLog(); fprintf(fp, "-bot connect %x\n",BotEnt); fclose(fp); }
-		MDLL_ClientConnect(BotEnt, c_name, "127.0.0.1", ptr);
-		spawn_check_crash = true;
-		spawn_check_crash_count = 0;
-		spawn_check_crash_edict = BotEnt;
-		MDLL_ClientPutInServer(BotEnt);
-		spawn_check_crash = false;
-		spawn_check_crash_edict = nullptr;
-		/*i = 0;
+   //{fp=UTIL_OpenFoxbotLog(); fprintf(fp, "-bot connect %x\n",BotEnt); fclose(fp); }
+   MDLL_ClientConnect(BotEnt, c_name, "127.0.0.1", ptr);
+   spawn_check_crash = true;
+   spawn_check_crash_count = 0;
+   spawn_check_crash_edict = BotEnt;
+   MDLL_ClientPutInServer(BotEnt);
+   spawn_check_crash = false;
+   spawn_check_crash_edict = nullptr;
+   /*i = 0;
 				while((i < 32) && (clients[i] != NULL))
 				i++;
 
 				if(i < 32)
 				clients[i] = BotEnt;*/
 
-				//{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"e\n"); fclose(fp); }
-		BotEnt->v.flags |= FL_FAKECLIENT;
+   //{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"e\n"); fclose(fp); }
+   BotEnt->v.flags |= FL_FAKECLIENT;
 
-		pBot->is_used = true;
-		pBot->respawn_state = RESPAWN_IDLE;
-		pBot->create_time = gpGlobals->time + 1.0f;
-		//{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"a%f %f\n",pBot->create_time,gpGlobals->time); fclose(fp); }
-		pBot->name[0] = 0; // name not set by server yet
-		pBot->f_think_time = gpGlobals->time;
-		strcpy(pBot->skin, c_skin);
-		BotResetJobBuffer(pBot);
+   pBot->is_used = true;
+   pBot->respawn_state = RESPAWN_IDLE;
+   pBot->create_time = gpGlobals->time + 1.0f;
+   //{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"a%f %f\n",pBot->create_time,gpGlobals->time); fclose(fp); }
+   pBot->name[0] = 0; // name not set by server yet
+   pBot->f_think_time = gpGlobals->time;
+   strcpy(pBot->skin, c_skin);
+   BotResetJobBuffer(pBot);
 
-		pBot->has_sentry = false;
-		pBot->sentry_edict = nullptr;
-		pBot->sentryWaypoint = -1;
-		pBot->SGRotated = false;
-		pBot->sentry_ammo = 0;
-		pBot->has_dispenser = false;
-		pBot->dispenser_edict = nullptr;
-		pBot->f_dispenserDetTime = 0.0f;
-		pBot->killer_edict = nullptr;
-		pBot->killed_edict = nullptr;
-		pBot->lastEnemySentryGun = nullptr;
-		pBot->mission = ROLE_ATTACKER;
-		pBot->lockMission = false;
-		pBot->tpEntrance = nullptr;
-		pBot->tpExit = nullptr;
-		pBot->tpEntranceWP = -1;
-		pBot->tpExitWP = -1;
-		pBot->f_safeWeaponTime = gpGlobals->time;
+   pBot->has_sentry = false;
+   pBot->sentry_edict = nullptr;
+   pBot->sentryWaypoint = -1;
+   pBot->SGRotated = false;
+   pBot->sentry_ammo = 0;
+   pBot->has_dispenser = false;
+   pBot->dispenser_edict = nullptr;
+   pBot->f_dispenserDetTime = 0.0f;
+   pBot->killer_edict = nullptr;
+   pBot->killed_edict = nullptr;
+   pBot->lastEnemySentryGun = nullptr;
+   pBot->mission = ROLE_ATTACKER;
+   pBot->lockMission = false;
+   pBot->tpEntrance = nullptr;
+   pBot->tpExit = nullptr;
+   pBot->tpEntranceWP = -1;
+   pBot->tpExitWP = -1;
+   pBot->f_safeWeaponTime = gpGlobals->time;
 
-		// clear the bots knowledge of any teleporters
-		for (int teleIndex = 0; teleIndex < MAX_BOT_TELEPORTER_MEMORY; teleIndex++) {
-			BotForgetTeleportPair(pBot, teleIndex);
-		}
+   // clear the bots knowledge of any teleporters
+   for (int teleIndex = 0; teleIndex < MAX_BOT_TELEPORTER_MEMORY; teleIndex++) {
+      BotForgetTeleportPair(pBot, teleIndex);
+   }
 
-		roleCheckTimer += 4.0f;
+   roleCheckTimer += 4.0f;
 
-		// stop the bot from autonomously changing class if
-		// a class was specified
-		if (arg2 != nullptr && mod_id == TFC_DLL)
-			pBot->lockClass = true;
-		else
-			pBot->lockClass = false;
+   // stop the bot from autonomously changing class if
+   // a class was specified
+   if (arg2 != nullptr && mod_id == TFC_DLL)
+      pBot->lockClass = true;
+   else
+      pBot->lockClass = false;
 
-		pBot->f_suspectSpyTime = 0.0f;
-		pBot->suspectedSpy = nullptr;
+   pBot->f_suspectSpyTime = 0.0f;
+   pBot->suspectedSpy = nullptr;
 
-		pBot->lastFrameHealth = 70;
-		pBot->f_injured_time = 0.0f;
-		pBot->deathsTillClassChange = 4; //(int)random_long(4, 15);
+   pBot->lastFrameHealth = 70;
+   pBot->f_injured_time = 0.0f;
+   pBot->deathsTillClassChange = 4; //(int)random_long(4, 15);
 
-		// time to set up the bots personality stuff
-		if (bot_allow_moods) {
-			pBot->trait.aggression = static_cast<short>(random_long(1, 1000));
-			pBot->trait.fairplay = static_cast<short>(random_long(1, 1000));
-			pBot->trait.faveClass = random_long(1, 9);
-			pBot->trait.health = static_cast<short>(random_long(0, 3) * 20 + 20);
-			pBot->trait.humour = static_cast<short>(random_long(0, 100));
+   // time to set up the bots personality stuff
+   if (bot_allow_moods) {
+      pBot->trait.aggression = static_cast<short>(random_long(1, 1000));
+      pBot->trait.fairplay = static_cast<short>(random_long(1, 1000));
+      pBot->trait.faveClass = random_long(1, 9);
+      pBot->trait.health = static_cast<short>(random_long(0, 3) * 20 + 20);
+      pBot->trait.humour = static_cast<short>(random_long(0, 100));
 
-			if (random_long(1, 30) > 10)
-				pBot->trait.camper = true;
-			else
-				pBot->trait.camper = false;
-		}
-		else // make each bot have the same personality traits
-		{
-			pBot->trait.aggression = 75;
-			pBot->trait.fairplay = 600;
-			pBot->trait.faveClass = 3;
-			pBot->trait.health = 50;
-			pBot->trait.humour = 50;
-			pBot->trait.camper = true;
-		}
+      if (random_long(1, 30) > 10)
+         pBot->trait.camper = true;
+      else
+         pBot->trait.camper = false;
+   }
+   else // make each bot have the same personality traits
+   {
+      pBot->trait.aggression = 75;
+      pBot->trait.fairplay = 600;
+      pBot->trait.faveClass = 3;
+      pBot->trait.health = 50;
+      pBot->trait.humour = 50;
+      pBot->trait.camper = true;
+   }
 
-		pBot->f_humour_time = pBot->f_think_time + random_float(60.0f, 180.0f);
+   pBot->f_humour_time = pBot->f_think_time + random_float(60.0f, 180.0f);
 
-		pBot->sideRouteTolerance = 400; // not willing to branch far initially
+   pBot->sideRouteTolerance = 400; // not willing to branch far initially
 
-		pBot->not_started = true; // hasn't joined game yet
-		pBot->bot_start2 = 1;
-		pBot->bot_start3 = 0;
+   pBot->not_started = true; // hasn't joined game yet
+   pBot->bot_start2 = 1;
+   pBot->bot_start3 = 0;
 
-		pBot->bot_class = -1;   // not decided yet
-		pBot->bot_team = -1;    // not decided yet
-		pBot->current_team = 0; // sane value, will be set properly once bot has spawned
+   pBot->bot_class = -1;   // not decided yet
+   pBot->bot_team = -1;    // not decided yet
+   pBot->current_team = 0; // sane value, will be set properly once bot has spawned
 
-		if (botJustJoined[index]) {
-			pBot->greeting = false; // new bots can always say "hello!"
-			pBot->newmsg = false;
-			pBot->message[0] = '\0';
-			pBot->msgstart[0] = '\0';
-		}
+   if (botJustJoined[index]) {
+      pBot->greeting = false; // new bots can always say "hello!"
+      pBot->newmsg = false;
+      pBot->message[0] = '\0';
+      pBot->msgstart[0] = '\0';
+   }
 
-		if (mod_id == TFC_DLL)
-			pBot->start_action = MSG_TFC_IDLE;
-		/*else if(mod_id == CSTRIKE_DLL)
+   if (mod_id == TFC_DLL)
+      pBot->start_action = MSG_TFC_IDLE;
+   /*else if(mod_id == CSTRIKE_DLL)
 						pBot->start_action = MSG_CS_IDLE;
 		else if((mod_id == GEARBOX_DLL) && (pent_info_ctfdetect != NULL))
 						pBot->start_action = MSG_OPFOR_IDLE;
@@ -930,36 +928,35 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 						pBot->start_action = MSG_FLF_IDLE;
 		else pBot->start_action = 0;  // not needed for non-team MODs
 		*/
-		//{fp=UTIL_OpenFoxbotLog(); fprintf(fp, "-bot d \n",BotEnt); fclose(fp); }
-		BotSpawnInit(pBot);
+   //{fp=UTIL_OpenFoxbotLog(); fprintf(fp, "-bot d \n",BotEnt); fclose(fp); }
+   BotSpawnInit(pBot);
 
-		pBot->need_to_initialize = false; // don't need to initialize yet
+   pBot->need_to_initialize = false; // don't need to initialize yet
 
-		BotEnt->v.idealpitch = BotEnt->v.v_angle.x;
-		BotEnt->v.ideal_yaw = BotEnt->v.v_angle.y;
-		BotEnt->v.pitch_speed = BOT_PITCH_SPEED;
-		BotEnt->v.yaw_speed = BOT_YAW_SPEED;
+   BotEnt->v.idealpitch = BotEnt->v.v_angle.x;
+   BotEnt->v.ideal_yaw = BotEnt->v.v_angle.y;
+   BotEnt->v.pitch_speed = BOT_PITCH_SPEED;
+   BotEnt->v.yaw_speed = BOT_YAW_SPEED;
 
-		pBot->idle_angle = 0.0f;
-		pBot->idle_angle_time = 0.0f;
+   pBot->idle_angle = 0.0f;
+   pBot->idle_angle_time = 0.0f;
 
-		//	pBot->lastLiftOrigin = Vector(0.0, 0.0, 0.0);
+   //	pBot->lastLiftOrigin = Vector(0.0, 0.0, 0.0);
 
-		pBot->bot_skill = skill - 1; // 0 based for array indexes
+   pBot->bot_skill = skill - 1; // 0 based for array indexes
 
-		if (mod_id == TFC_DLL) {
-			if (arg1 != nullptr && arg1[0] != 0) {
-				pBot->bot_team = atoi(arg1);
+   if (mod_id == TFC_DLL) {
+      if (arg1 != nullptr && arg1[0] != 0) {
+         pBot->bot_team = atoi(arg1);
 
-				if (arg2 != nullptr && arg2[0] != 0) {
-					pBot->bot_class = atoi(arg2);
-				}
-			}
-		}
-		memset(&pBot->job, 0, sizeof(job_struct) * JOB_BUFFER_MAX);
+         if (arg2 != nullptr && arg2[0] != 0) {
+            pBot->bot_class = atoi(arg2);
+         }
+      }
+   }
+   memset(&pBot->job, 0, sizeof(job_struct) * JOB_BUFFER_MAX);
 
-		botJustJoined[index] = false; // the inititation ceremony is over!
-	}
+   botJustJoined[index] = false; // the inititation ceremony is over!
 }
 
 // This function is responsible for getting bots to spot nearby objects of
@@ -1216,15 +1213,13 @@ void BotFindItem(bot_t* pBot) {
 						if (pEdict->v.playerclass == TFC_CLASS_ENGINEER) {
 							if (pBot->dispenser_edict != pent)
 								continue;
-							else {
-								UTIL_SelectItem(pEdict, "tf_weapon_spanner");
-								float dis = (pent->v.origin - pEdict->v.origin).Length();
-								if (dis < 140.0f) {
-									pEdict->v.button |= IN_ATTACK; // charge the weapon
-									pBot->f_duck_time = pBot->f_think_time + 1.0f;
-								}
-							}
-						}
+                     UTIL_SelectItem(pEdict, "tf_weapon_spanner");
+                     float dis = (pent->v.origin - pEdict->v.origin).Length();
+                     if (dis < 140.0f) {
+                        pEdict->v.button |= IN_ATTACK; // charge the weapon
+                        pBot->f_duck_time = pBot->f_think_time + 1.0f;
+                     }
+                  }
 						else
 							continue;
 					}
@@ -2536,10 +2531,9 @@ static void BotGrenadeAvoidance(bot_t* pBot) {
 	// don't scan too often (as it'll tax the CPU)
 	if (pBot->f_grenadeScanTime > pBot->f_think_time)
 		return;
-	else
-		pBot->f_grenadeScanTime = pBot->f_think_time + 0.35f;
+   pBot->f_grenadeScanTime = pBot->f_think_time + 0.35f;
 
-	enum avoid_actions { avoid_no_action, avoid_retreat, avoid_strafe };
+   enum avoid_actions { avoid_no_action, avoid_retreat, avoid_strafe };
 	short avoid_action = avoid_no_action;
 
 	UTIL_MakeVectors(pBot->pEdict->v.v_angle);
@@ -3125,8 +3119,7 @@ static bool botVerifyAccess(edict_t* pPlayer) {
 
 	if (found)
 		return true;
-	else
-		return false;
+   return false;
 }
 
 // BotPickNewClass().
