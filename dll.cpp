@@ -1467,8 +1467,8 @@ void ClientCommand(edict_t* pEntity) {
 			if (arg1 != nullptr) {
 				if (*arg1 != 0) {
 					int temp;
-               temp = atoi(arg1);
-               if (temp)
+					temp = atoi(arg1);
+					if (temp)
 						bot_team_balance = true;
 					else
 						bot_team_balance = false;
@@ -1486,8 +1486,8 @@ void ClientCommand(edict_t* pEntity) {
 			if (arg1 != nullptr) {
 				if (*arg1 != 0) {
 					int temp;
-               temp = atoi(arg1);
-               if (temp)
+					temp = atoi(arg1);
+					if (temp)
 						bot_bot_balance = true;
 					else
 						bot_bot_balance = false;
@@ -1516,8 +1516,8 @@ void ClientCommand(edict_t* pEntity) {
 		else if (FStrEq(pcmd, "observer")) {
 			if (arg1 != nullptr && *arg1 != 0) {
 				int temp;
-            temp = atoi(arg1);
-            if (temp)
+				temp = atoi(arg1);
+				if (temp)
 					observer_mode = true;
 				else
 					observer_mode = false;
@@ -1573,8 +1573,8 @@ void ClientCommand(edict_t* pEntity) {
 			if (arg1 != nullptr) {
 				if (*arg1 != 0) {
 					int temp;
-               temp = atoi(arg1);
-               if (temp)
+					temp = atoi(arg1);
+					if (temp)
 						botdontshoot = true;
 					else
 						botdontshoot = false;
@@ -1594,8 +1594,8 @@ void ClientCommand(edict_t* pEntity) {
 			if (arg1 != nullptr) {
 				if (*arg1 != 0) {
 					int temp;
-               temp = atoi(arg1);
-               if (temp)
+					temp = atoi(arg1);
+					if (temp)
 						botdontmove = true;
 					else
 						botdontmove = false;
@@ -2600,7 +2600,8 @@ void StartFrame() { // v7 last frame timing
 		}
 		if (count > num_bots)
 			num_bots = count;
-		for (player_index = 1; player_index <= gpGlobals->maxClients; player_index++) { //TODO: Refactor Loop [APG]RoboCop[CL]
+		for (player_index = 0; player_index <= gpGlobals->maxClients; player_index++)
+		{
 			pPlayer = INDEXENT(player_index);
 
 			if (pPlayer && !pPlayer->free) {
@@ -2793,8 +2794,8 @@ void StartFrame() { // v7 last frame timing
 					if (arg1 != nullptr) {
 						if (*arg1 != 0) {
 							int temp;
-                     temp = atoi(arg1);
-                     if (temp)
+							temp = atoi(arg1);
+							if (temp)
 								bot_team_balance = true;
 							else
 								bot_team_balance = false;
@@ -2809,8 +2810,8 @@ void StartFrame() { // v7 last frame timing
 					if (arg1 != nullptr) {
 						if (*arg1 != 0) {
 							int temp;
-                     temp = atoi(arg1);
-                     if (temp)
+							temp = atoi(arg1);
+							if (temp)
 								bot_bot_balance = true;
 							else
 								bot_bot_balance = false;
@@ -5273,9 +5274,9 @@ static void ProcessBotCfgFile() {
 
 	if (strcmp(cmd, "observer") == 0) {
 		int temp;
-      temp = atoi(arg1);
+		temp = atoi(arg1);
 
-      if (temp)
+		if (temp)
 			observer_mode = true;
 		else
 			observer_mode = false;
@@ -5316,8 +5317,8 @@ static void ProcessBotCfgFile() {
 	if (strcmp(cmd, "bot_team_balance") == 0) {
 		if (arg1 != nullptr) {
 			int temp;
-         temp = atoi(arg1);
-         if (temp)
+			temp = atoi(arg1);
+			if (temp)
 				bot_team_balance = true;
 			else
 				bot_team_balance = false;
@@ -5340,8 +5341,8 @@ static void ProcessBotCfgFile() {
 	if (strcmp(cmd, "bot_bot_balance") == 0) {
 		if (arg1 != nullptr) {
 			int temp;
-         temp = atoi(arg1);
-         if (temp)
+			temp = atoi(arg1);
+			if (temp)
 				bot_bot_balance = true;
 			else
 				bot_bot_balance = false;
@@ -5364,8 +5365,8 @@ static void ProcessBotCfgFile() {
 
 	if (strcmp(cmd, "bot_xmas") == 0) {
 		int temp;
-      temp = atoi(arg1);
-      bot_xmas = true;
+		temp = atoi(arg1);
+		bot_xmas = true;
 		if (temp == 0) {
 			bot_xmas = false;
 			if (IS_DEDICATED_SERVER())

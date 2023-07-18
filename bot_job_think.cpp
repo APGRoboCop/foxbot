@@ -258,7 +258,7 @@ bool SubmitNewJob(bot_t* pBot, const int newJobType, job_struct* newJob) {
 	newJob->phase = 0;
 	newJob->phase_timer = 0.0f;
 
-	// assess the proposed new jobs validity and priority //TODO: Refactor jf [APG]RoboCop[CL]
+	// assess the proposed new jobs validity and priority
 	newJob->priority = jf[newJobType].assessFuncPtr(pBot, *newJob);
 	if (newJob->priority == PRIORITY_NONE)
 		return false;
