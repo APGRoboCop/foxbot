@@ -1143,7 +1143,7 @@ void DispatchThink(edict_t* pent) {
 		}
 		// UTIL_MakeVectors(pent->v.euser1->v.v_angle);
 		UTIL_TraceLine(pent->v.euser1->v.origin + pent->v.euser1->v.view_ofs,
-			pent->v.euser1->v.origin + pent->v.euser1->v.view_ofs + gpGlobals->v_forward * off_f, // + gpGlobals->v_up * 10
+			pent->v.euser1->v.origin + pent->v.euser1->v.view_ofs + gpGlobals->v_forward * static_cast<float>(off_f), // + gpGlobals->v_up * 10
 			ignore_monsters, pent->v.euser1, &tr);
 
 		// UTIL_SetOrigin(pent, tr.vecEndPos);

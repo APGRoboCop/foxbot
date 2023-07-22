@@ -5355,7 +5355,7 @@ void ProcessCommanderList() {
 	//{
 	//}
 	commanders.clear();
-   const char invalidChars[] = " abcdefghijklmnopqrstuvwxyz,./<>?;'\"[]{}-=+!@#$%^&*()";
+   char invalidChars[] = " abcdefghijklmnopqrstuvwxyz,./<>?;'\"[]{}-=+!@#$%^&*()";
 
 	UTIL_BuildFileName(filename, 255, "foxbot_commanders.txt", nullptr);
 	FILE* inFile = fopen(filename, "r");
@@ -5392,7 +5392,7 @@ void ProcessCommanderList() {
 		for (unsigned int i = 0; i < static_cast<int>(strlen(buffer)); i++) {
 			for (unsigned int j = 0; j < static_cast<int>(strlen(invalidChars)); j++)
 			{
-            if (const char ch = invalidChars[j]; strchr(buffer, ch)) {
+            if (char ch = invalidChars[j]; strchr(buffer, ch)) {
 					valid = false;
 					if (IS_DEDICATED_SERVER())
 						printf("[Config] foxbot_commanders.txt : Invalid Character %c\n", ch);

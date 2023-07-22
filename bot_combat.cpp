@@ -37,6 +37,8 @@
 #include "bot_navigate.h"
 #include "bot_weapons.h"
 
+#include <valarray>
+
 extern WAYPOINT waypoints[MAX_WAYPOINTS];
 extern int num_waypoints; // number of waypoints currently in map
 
@@ -1445,7 +1447,7 @@ bool BotFireWeapon(const Vector& v_enemy, bot_t* pBot, const int weapon_choice) 
 			diff -= 360.0;
 
 		double ang = (32 * static_cast<double>(pBot->bot_skill + 16)) / static_cast<double>(f_distance);
-		ang = tan(ang); // Better to use std::tan? [APG]RoboCop[CL]
+		ang = std::tan(ang); // Better to use std::tan? [APG]RoboCop[CL]
 		ang = ang * 180;
 
 		if (diff < 0)
@@ -1737,7 +1739,7 @@ bool BotFireWeapon(const Vector& v_enemy, bot_t* pBot, const int weapon_choice) 
 //
 // TODO: to adjust the angle and distance to toss nades
 // at a higher angle and low range as their target aim is too short - [APG]RoboCop[CL]
-int BotNadeHandler(bot_t* pBot, bool timed, const char newNadeType) {
+int BotNadeHandler(bot_t* pBot, bool timed, char newNadeType) {
 	// Lets try putting discard code in here. (dont let the engineer discard)
 	if (pBot->f_discard_time < pBot->f_think_time && pBot->pEdict->v.playerclass != TFC_CLASS_ENGINEER) {
 		FakeClientCommand(pBot->pEdict, "discard", nullptr, nullptr);

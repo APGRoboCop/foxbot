@@ -3522,7 +3522,7 @@ int JobGraffitiArtist(bot_t* pBot) {
 	if (job_ptr->phase == 2) {
 		// try a few random directions, looking for a nearby wall
 		for (int i = 0; i < 4; i++) {
-			Vector newAngle = Vector(0.0, random_float(-180.0f, 180.0f), 0.0f);
+			Vector newAngle = Vector(0.0f, random_float(-180.0f, 180.0f), 0.0f);
 			UTIL_MakeVectors(newAngle);
 
 			// do a trace 400 units ahead of the new view angle to check for sight barriers

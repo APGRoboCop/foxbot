@@ -1096,7 +1096,7 @@ static int BotShouldJumpOver(const bot_t* pBot) {
 	bool obstacleFound = false;
 
 	// make vectors based upon the bots view yaw angle only
-	UTIL_MakeVectors(Vector(0.0, pBot->pEdict->v.v_angle.y, 0.0f));
+	UTIL_MakeVectors(Vector(0.0f, pBot->pEdict->v.v_angle.y, 0.0f));
 
 	TraceResult tr;
 	const Vector botBottom = Vector(pBot->pEdict->v.origin.x, pBot->pEdict->v.origin.y, pBot->pEdict->v.absmin.z) + gpGlobals->v_forward * 4.0f; // to the front of the bot slightly
