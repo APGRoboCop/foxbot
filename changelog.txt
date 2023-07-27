@@ -9,6 +9,7 @@ Updated by RoboCop
 --------------------------------------------------------------------------------
 
 - Added new waypoints:-
+	+ 2kfort23
 	+ 2kfort5
 
 - Added C++17 support for Win32 and Linux

@@ -243,7 +243,6 @@ int WaypointAddPath(const short int add_index, const short int path_index) {
 
 			if (p->index[i] == -1) {
 				p->index[i] = path_index;
-
 				return true;
 			}
 

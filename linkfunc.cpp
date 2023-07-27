@@ -40,13 +40,12 @@ extern void* h_Library;
 
 void helper_LinkEntity(LINK_ENTITY_FUNC& addr, const char* name, entvars_t* pev) {
 	if (addr == nullptr) {
-		addr = LINK_ENTITY_FUNC(GetProcAddress(h_Library, name));
+		addr = reinterpret_cast<LINK_ENTITY_FUNC>(GetProcAddress(h_Library, name));
 	}
 
-	if (addr == nullptr) { //duplicate condition? [APG]RoboCop[CL]
-		return;
+	if (addr != nullptr) { //fixed condition? [APG]RoboCop[CL]
+	   addr(pev);
 	}
-	addr(pev);
 }
 
 #define LINK_ENTITY_TO_FUNC(entityName)                                                                                                                                                                                                        \

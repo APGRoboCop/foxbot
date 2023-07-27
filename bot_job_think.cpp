@@ -98,7 +98,7 @@ static jobFunctions_struct jf[JOB_TYPE_TOTAL] = {
 
 // list of essential data for all known job types
 // these must be in the right order for each job to run properly
-jobList_struct jl[JOB_TYPE_TOTAL] = {   //Only handles 32 not 45? [APG]RoboCop[CL]
+jobList_struct jl[JOB_TYPE_TOTAL] = {
 	{ 490, "JOB_SEEK_WAYPOINT" }, { PRIORITY_MAXIMUM, "JOB_GET_UNSTUCK" }, { 0, "JOB_ROAM" }, { 380, "JOB_CHAT" },
 	{ 700, "JOB_REPORT" }, { 480, "JOB_PICKUP_ITEM" }, { 530, "JOB_PICKUP_FLAG" },
 	{ 800, "JOB_PUSH_BUTTON" }, { 650, "JOB_USE_TELEPORT" }, { 750, "JOB_MAINTAIN_OBJECT" },

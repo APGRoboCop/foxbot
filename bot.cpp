@@ -3921,12 +3921,15 @@ static void BotSenseEnvironment(bot_t* pBot) {
 // but not interfere with their tossing nade aim - [APG]RoboCop[CL]
 static void BotFight(bot_t* pBot) {
 	// DrEvils Nade update, or toss a nade if threatlevel high enuff.
-	if (pBot->lastEnemySentryGun && pBot->enemy.ptr == pBot->lastEnemySentryGun && !FNullEnt(pBot->lastEnemySentryGun))
+	if (pBot->lastEnemySentryGun && pBot->enemy.ptr == pBot->lastEnemySentryGun && !FNullEnt(pBot->lastEnemySentryGun)) {
 		BotNadeHandler(pBot, false, GRENADE_STATIONARY);
-	else if (pBot->enemy.ptr != nullptr && pBot->enemy.f_firstSeen + 1.0f < pBot->f_think_time && BotAssessThreatLevel(pBot) > 50)
+	}
+	else if (pBot->enemy.ptr != nullptr && pBot->enemy.f_firstSeen + 1.0f < pBot->f_think_time && BotAssessThreatLevel(pBot) > 50) {
 		BotNadeHandler(pBot, true, GRENADE_RANDOM);
-	else
+	}
+	else {
 		BotNadeHandler(pBot, true, 0);
+	}
 
 	// detonate the bots dispenser if enemies are using it
 	if (pBot->f_dispenserDetTime > 0.5f // i.e. a valid time
@@ -3940,7 +3943,7 @@ static void BotFight(bot_t* pBot) {
 	// if the bot has an enemy
 	if (pBot->enemy.ptr != nullptr) {
 		BotShootAtEnemy(pBot);
-
+	   
 		BotCombatThink(pBot);
 	}
 }
