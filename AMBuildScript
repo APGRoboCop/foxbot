@@ -103,7 +103,7 @@ if builder.options.optimize == '1':
     builder.cxx.cflags += ['-O2']
   elif builder.cxx.target.platform == 'windows':
     # Windows optimization flags
-    builder.cxx.cflags += ['/O2', '/Zo']
+    builder.cxx.cflags += ['/Ox', '/Zo']
     # Windows optimization link flags
     builder.cxx.linkflags += ['/OPT:ICF', '/OPT:REF']
 
