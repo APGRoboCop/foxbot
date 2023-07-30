@@ -123,8 +123,8 @@ static bool WaypointDeleteAimArtifact(const edict_t* pEntity);
 void WaypointDebug() {
 	fp = UTIL_OpenFoxbotLog();
 	if (fp != nullptr) {
-		fprintf(fp, "WaypointDebug: LINKED LIST ERROR!!!\n");
-		fclose(fp);
+		std::fprintf(fp, "WaypointDebug: LINKED LIST ERROR!!!\n");
+		std::fclose(fp);
 	}
 
 	// int x = x - 1; // x is zero
@@ -171,10 +171,10 @@ void WaypointInit() {
 
 	for (i = 0; i < 4; i++) {
 		// if (shortest_path[i] != NULL)
-		free(shortest_path[i]);
+		std::free(shortest_path[i]);
 
 		// if (from_to[i] != NULL)
-		free(from_to[i]);
+		std::free(from_to[i]);
 	}
 
 	// erase the name of the waypoint files author
@@ -1071,14 +1071,14 @@ void WaypointAdd(edict_t* pEntity) {
 
 	while ((pent = FIND_ENTITY_IN_SPHERE(pent, pEntity->v.origin, radius)) != nullptr && !FNullEnt(pent)) {
 		char item_name[64];
-		strcpy(item_name, STRING(pent->v.classname));
+		std::strcpy(item_name, STRING(pent->v.classname));
 
-		if (strcmp("item_healthkit", item_name) == 0) {
+		if (std::strcmp("item_healthkit", item_name) == 0) {
 			ClientPrint(pEntity, HUD_PRINTCONSOLE, "found a healthkit!\n");
 			waypoints[index].flags |= W_FL_HEALTH;
 		}
 
-		if (strncmp("item_armor", item_name, 10) == 0) {
+		if (std::strncmp("item_armor", item_name, 10) == 0) {
 			ClientPrint(pEntity, HUD_PRINTCONSOLE, "found some armor!\n");
 			waypoints[index].flags |= W_FL_ARMOR;
 		}
@@ -1468,34 +1468,34 @@ bool WaypointLoad(edict_t* pEntity) {
 
 	ProcessCommanderList();
 
-	strcpy(mapname, STRING(gpGlobals->mapname));
-	strcat(mapname, ".fwp");
+	std::strcpy(mapname, STRING(gpGlobals->mapname));
+	std::strcat(mapname, ".fwp");
 
 	// look for the waypoint file in the /waypoints directory
 	UTIL_BuildFileName(filename, 255, "waypoints", mapname);
-	FILE* bfp = fopen(filename, "rb");
+	FILE* bfp = std::fopen(filename, "rb");
 
 	// if file exists, read the waypoint data from it
 	if (bfp != nullptr) {
 		if (IS_DEDICATED_SERVER())
-			printf("loading waypoint file: %s\n", filename);
+			std::printf("loading waypoint file: %s\n", filename);
 
 		// read in the waypoint header
-		fread(&header, sizeof header, 1, bfp);
+		std::fread(&header, sizeof header, 1, bfp);
 
 		header.filetype[7] = 0; // null terminate the filetype string
 
 		// make sure the waypoint file is Foxbot specific
-		if (strcmp(header.filetype, "FoXBot") != 0) {
+		if (std::strcmp(header.filetype, "FoXBot") != 0) {
 			if (pEntity) {
-				sprintf(msg, "%s isn't a valid FoXBot waypoint file\n", filename);
+				std::sprintf(msg, "%s isn't a valid FoXBot waypoint file\n", filename);
 				ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 			}
 
 			if (IS_DEDICATED_SERVER())
-				printf("%s isn't a valid FoXBot waypoint file\n", filename);
+				std::printf("%s isn't a valid FoXBot waypoint file\n", filename);
 
-			fclose(bfp);
+			std::fclose(bfp);
 			return false;
 		}
 		// make sure the waypoint file was meant for the current map
@@ -1503,24 +1503,24 @@ bool WaypointLoad(edict_t* pEntity) {
 
 		if (strcasecmp(header.mapname, STRING(gpGlobals->mapname)) != 0) {
 			if (pEntity) {
-				sprintf(msg, "%s FoXBot waypoints aren't for this map\n", filename);
+				std::sprintf(msg, "%s FoXBot waypoints aren't for this map\n", filename);
 				ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 			}
 
 			if (IS_DEDICATED_SERVER())
-				printf("%s FoXBot waypoints aren't for this map\n", filename);
+				std::printf("%s FoXBot waypoints aren't for this map\n", filename);
 
-			fclose(bfp);
+			std::fclose(bfp);
 			return false;
 		}
 
 		// load and convert version 4 waypoint files
 		if (header.waypoint_file_version == 4) {
 			if (WaypointLoadVersion4(bfp, header.number_of_waypoints) == true) {
-				fclose(bfp);
+				std::fclose(bfp);
 				return true;
 			}
-         fclose(bfp);
+         std::fclose(bfp);
          return false;
       }
 		// make sure the waypoint version is compatible
@@ -1529,9 +1529,9 @@ bool WaypointLoad(edict_t* pEntity) {
             ClientPrint(pEntity, HUD_PRINTNOTIFY, "Incompatible FoXBot waypoint file version!\nWaypoints not loaded!\n");
 
          if (IS_DEDICATED_SERVER())
-            printf("Incompatible FoXBot waypoint file version!\nWaypoints not loaded!\n");
+           std::printf("Incompatible FoXBot waypoint file version!\nWaypoints not loaded!\n");
 
-         fclose(bfp);
+         std::fclose(bfp);
          return false;
       }
 
@@ -1539,7 +1539,7 @@ bool WaypointLoad(edict_t* pEntity) {
 
 		// read the waypoint data from the file
 		for (i = 0; i < header.number_of_waypoints; i++) {
-			fread(&waypoints[i], sizeof(WAYPOINT), 1, bfp);
+			std::fread(&waypoints[i], sizeof(WAYPOINT), 1, bfp);
 			++num_waypoints;
 
 			// keep track of which waypoint types have been loaded for each team
@@ -1566,10 +1566,10 @@ bool WaypointLoad(edict_t* pEntity) {
 		// read and add waypoint paths...
 		for (index = 0; index < num_waypoints; index++) {
 			// read the number of paths from this node...
-			fread(&num, sizeof num, 1, bfp);
+			std::fread(&num, sizeof num, 1, bfp);
 
 			for (i = 0; i < num; i++) {
-				fread(&path_index, sizeof path_index, 1, bfp);
+				std::fread(&path_index, sizeof path_index, 1, bfp);
 
 				WaypointAddPath(index, path_index);
 			}
@@ -1578,63 +1578,63 @@ bool WaypointLoad(edict_t* pEntity) {
 		g_waypoint_paths = true; // keep track so path can be freed
 
 		// read waypoint authors name..if there is one (could be an old wpt file)
-		fread(&waypoint_author, sizeof(char), 255, bfp);
+		std::fread(&waypoint_author, sizeof(char), 255, bfp);
 		waypoint_author[254] = '\0';
 
-		fclose(bfp);
+		std::fclose(bfp);
 
 		WaypointRouteInit();
 		return true;
 	}
    if (pEntity) {
-      sprintf(msg, "Waypoint file %s doesn't exist!\nLooking for HPB file instead\n", filename);
+      std::sprintf(msg, "Waypoint file %s doesn't exist!\nLooking for HPB file instead\n", filename);
       ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
    }
 
    if (IS_DEDICATED_SERVER())
-      printf("waypoint file %s not found!\nLooking for HPB file instead\n", filename);
+     std::printf("waypoint file %s not found!\nLooking for HPB file instead\n", filename);
 
    // try for hpb_bot file instead
 
-	strcpy(mapname, STRING(gpGlobals->mapname));
-	strcat(mapname, ".wpt");
+	std::strcpy(mapname, STRING(gpGlobals->mapname));
+	std::strcat(mapname, ".wpt");
 
 	UTIL_BuildFileName(filename, 255, "waypoints", mapname);
-	bfp = fopen(filename, "rb");
+	bfp = std::fopen(filename, "rb");
 
 	// if file exists, read the waypoint structure from it
 	if (bfp != nullptr) {
 		if (IS_DEDICATED_SERVER())
-			printf("loading waypoint file: %s\n", filename);
-		fread(&header, sizeof header, 1, bfp);
+			std::printf("loading waypoint file: %s\n", filename);
+		std::fread(&header, sizeof header, 1, bfp);
 
 		header.filetype[7] = 0;
-		if (strcmp(header.filetype, "HPB_bot") == 0) {
+		if (std::strcmp(header.filetype, "HPB_bot") == 0) {
 			if (header.waypoint_file_version != WAYPOINT_VERSION) {
 				if (pEntity)
 					ClientPrint(pEntity, HUD_PRINTNOTIFY, "Incompatible HPB bot waypoint file version!\nWaypoints not loaded\n");
 
-				fclose(bfp);
+				std::fclose(bfp);
 				return false;
 			}
 
 			header.mapname[31] = 0;
 
-			if (strcmp(header.mapname, STRING(gpGlobals->mapname)) == 0) {
+			if (std::strcmp(header.mapname, STRING(gpGlobals->mapname)) == 0) {
 				WaypointInit(); // remove any existing waypoints
 
 				for (i = 0; i < header.number_of_waypoints; i++) {
-					fread(&waypoints[i], sizeof waypoints[0], 1, bfp);
+					std::fread(&waypoints[i], sizeof waypoints[0], 1, bfp);
 					num_waypoints++;
 				}
 
 				// read and add waypoint paths...
 				for (index = 0; index < num_waypoints; index++) {
 					// read the number of paths from this node...
-					fread(&num, sizeof num, 1, bfp);
+					std::fread(&num, sizeof num, 1, bfp);
 
 					for (i = 0; i < num; i++) {
-						fread(&path_index, sizeof path_index, 1, bfp);
+						std::fread(&path_index, sizeof path_index, 1, bfp);
 
 						WaypointAddPath(index, path_index);
 					}
@@ -1644,37 +1644,37 @@ bool WaypointLoad(edict_t* pEntity) {
 			}
 			else {
 				if (pEntity) {
-					sprintf(msg, "%s HPB waypoints aren't for this map\n", filename);
+					std::sprintf(msg, "%s HPB waypoints aren't for this map\n", filename);
 					ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 				}
 
-				fclose(bfp);
+				std::fclose(bfp);
 				return false;
 			}
 		}
 		else {
 			if (pEntity) {
-				sprintf(msg, "%s is not a HPB waypoint file\n", filename);
+				std::sprintf(msg, "%s is not a HPB waypoint file\n", filename);
 				ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 			}
 
-			fclose(bfp);
+			std::fclose(bfp);
 			return false;
 		}
 
-		fclose(bfp);
+		std::fclose(bfp);
 
 		WaypointSave();
 		WaypointRouteInit();
 	}
 	else {
 		if (pEntity) {
-			sprintf(msg, "Waypoint file %s doesn't exist\n", filename);
+			std::sprintf(msg, "Waypoint file %s doesn't exist\n", filename);
 			ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 		}
 
 		if (IS_DEDICATED_SERVER())
-			printf("waypoint file %s not found\n", filename);
+			std::printf("waypoint file %s not found\n", filename);
 
 		return false;
 	}
@@ -1705,7 +1705,7 @@ static bool WaypointLoadVersion4(FILE* bfp, const int number_of_waypoints) {
 
 	// read the waypoint data from the file
 	for (i = 0; i < number_of_waypoints; i++) {
-		fread(&dummy_waypoint, sizeof(WAYPOINT_VERSION4), 1, bfp);
+		std::fread(&dummy_waypoint, sizeof(WAYPOINT_VERSION4), 1, bfp);
 
 		// convert version 4 data to version 5 data
 
@@ -1760,10 +1760,10 @@ static bool WaypointLoadVersion4(FILE* bfp, const int number_of_waypoints) {
 	// read and add waypoint paths...
 	for (int index = 0; index < num_waypoints; index++) {
 		// read the number of paths from this node...
-		fread(&num, sizeof num, 1, bfp);
+		std::fread(&num, sizeof num, 1, bfp);
 
 		for (i = 0; i < num; i++) {
-			fread(&path_index, sizeof path_index, 1, bfp);
+			std::fread(&path_index, sizeof path_index, 1, bfp);
 
 			WaypointAddPath(index, path_index);
 		}
@@ -1772,7 +1772,7 @@ static bool WaypointLoadVersion4(FILE* bfp, const int number_of_waypoints) {
 	g_waypoint_paths = true; // keep track so path can be freed
 
 	// read waypoint authors name...if there is one (could be an old wpt file)
-	fread(&waypoint_author, sizeof(char), 255, bfp);
+	std::fread(&waypoint_author, sizeof(char), 255, bfp);
 	waypoint_author[254] = '\0';
 
 	WaypointRouteInit();
@@ -1785,20 +1785,20 @@ void WaypointSave() {
 	char mapname[64];
 	WAYPOINT_HDR header;
 
-	strcpy(header.filetype, "FoXBot");
+	std::strcpy(header.filetype, "FoXBot");
 	header.waypoint_file_version = WAYPOINT_VERSION;
 	header.waypoint_file_flags = 0; // not currently used
 	header.number_of_waypoints = num_waypoints;
 
-	memset(header.mapname, 0, sizeof header.mapname);
-	strncpy(header.mapname, STRING(gpGlobals->mapname), 31);
+	std::memset(header.mapname, 0, sizeof header.mapname);
+	std::strncpy(header.mapname, STRING(gpGlobals->mapname), 31);
 	header.mapname[31] = 0;
 
-	strcpy(mapname, STRING(gpGlobals->mapname));
-	strcat(mapname, ".fwp");
+	std::strcpy(mapname, STRING(gpGlobals->mapname));
+	std::strcat(mapname, ".fwp");
 
 	UTIL_BuildFileName(filename, 255, "waypoints", mapname);
-	FILE* bfp = fopen(filename, "wb");
+	FILE* bfp = std::fopen(filename, "wb");
 
 	if (bfp == nullptr) {
 		ALERT(at_console, "Couldn't open a waypoint file to save waypoint data into.\n");
@@ -1806,14 +1806,14 @@ void WaypointSave() {
 	}
 
 	// write the waypoint header to the file...
-	fwrite(&header, sizeof header, 1, bfp);
+	std::fwrite(&header, sizeof header, 1, bfp);
 
 	int index, i;
 	short int num;
 
 	// write the waypoint data to the file...
 	for (index = 0; index < num_waypoints; index++) {
-		fwrite(&waypoints[index], sizeof waypoints[0], 1, bfp);
+		std::fwrite(&waypoints[index], sizeof waypoints[0], 1, bfp);
 	}
 
 	// save the waypoint paths...
@@ -1836,7 +1836,7 @@ void WaypointSave() {
 			p = p->next; // go to next node in linked list
 		}
 
-		fwrite(&num, sizeof num, 1, bfp); // write the count
+		std::fwrite(&num, sizeof num, 1, bfp); // write the count
 
 		// now write out each path index...
 
@@ -1847,7 +1847,7 @@ void WaypointSave() {
 
 			while (i < MAX_PATH_INDEX) {
 				if (p->index[i] != -1) // save path node if it's used
-					fwrite(&p->index[i], sizeof p->index[0], 1, bfp);
+					std::fwrite(&p->index[i], sizeof p->index[0], 1, bfp);
 
 				i++;
 			}
@@ -1858,9 +1858,9 @@ void WaypointSave() {
 
 	// write waypoint authors name..if there is one
 	// (could be an old waypoint file)
-	fwrite(&waypoint_author, sizeof(char), 255, bfp);
+	std::fwrite(&waypoint_author, sizeof(char), 255, bfp);
 
-	fclose(bfp);
+	std::fclose(bfp);
 }
 
 // This function can check to see if bots will be able to get from one
@@ -2054,15 +2054,15 @@ void WaypointPrintInfo(edict_t* pEntity) {
 
 	if (flags & W_FL_TEAM_SPECIFIC) {
 		if ((flags & W_FL_TEAM) == 0)
-			strcpy(msg, "Waypoint is for TEAM 1\n");
+			std::strcpy(msg, "Waypoint is for TEAM 1\n");
 		else if ((flags & W_FL_TEAM) == 1)
-			strcpy(msg, "Waypoint is for TEAM 2\n");
+			std::strcpy(msg, "Waypoint is for TEAM 2\n");
 		else if ((flags & W_FL_TEAM) == 2)
-			strcpy(msg, "Waypoint is for TEAM 3\n");
+			std::strcpy(msg, "Waypoint is for TEAM 3\n");
 		else if ((flags & W_FL_TEAM) == 3)
-			strcpy(msg, "Waypoint is for TEAM 4\n");
+			std::strcpy(msg, "Waypoint is for TEAM 4\n");
 		else
-			strcpy(msg, ""); // shouldn't happen
+			std::strcpy(msg, ""); // shouldn't happen
 
 		ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 	}
@@ -2224,7 +2224,7 @@ void WaypointThink(edict_t* pEntity) {
 
 	if ((g_waypoint_on || g_area_def) && !g_waypoint_cache) {
 		char cmd[255];
-		sprintf(cmd, "changelevel %s\n", STRING(gpGlobals->mapname));
+		std::sprintf(cmd, "changelevel %s\n", STRING(gpGlobals->mapname));
 		SERVER_COMMAND(cmd);
 	}
 
@@ -2928,20 +2928,20 @@ void WaypointThink(edict_t* pEntity) {
 				// display coloured lines to represent what labels
 				// have been done
 				if ((areas[i].flags & A_FL_1) == A_FL_1 && (areas[i].flags & A_FL_2) == A_FL_2 && (areas[i].flags & A_FL_3) == A_FL_3 && (areas[i].flags & A_FL_4) == A_FL_4) {
-					//{ fp=UTIL_OpenFoxbotLog(); fprintf(fp, "i: %d\n",i); fclose(fp); }
-					//{ fp=UTIL_OpenFoxbotLog(); fprintf(fp, "a: %s\n",areas[i].namea); fclose(fp); }
+					//{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp, "i: %d\n",i); std::fclose(fp); }
+					//{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp, "a: %s\n",areas[i].namea); std::fclose(fp); }
 					// if(areas[i].namea[0]!=NULL)
 					// WaypointDrawBeam(pEntity, areas[i].a + Vector(0, 0, 40), areas[i].a + Vector(0, 0, 50), 30, 0, 0,
 					// 0, 255, 250, 5);
-					//{ fp=UTIL_OpenFoxbotLog(); fprintf(fp, "b: %s\n",areas[i].nameb); fclose(fp); }
+					//{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp, "b: %s\n",areas[i].nameb); std::fclose(fp); }
 					// if(areas[i].nameb[0]!=NULL)
 					// WaypointDrawBeam(pEntity, areas[i].b + Vector(0, 0, 40), areas[i].b + Vector(0, 0, 50), 30, 0,
 					// 255, 0, 0, 250, 5);
-					//{ fp=UTIL_OpenFoxbotLog(); fprintf(fp, "c: %s\n",areas[i].namec); fclose(fp); }
+					//{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp, "c: %s\n",areas[i].namec); std::fclose(fp); }
 					// if(areas[i].namec[0]!=NULL)
 					// WaypointDrawBeam(pEntity, areas[i].c + Vector(0, 0, 40), areas[i].c + Vector(0, 0, 50), 30, 0,
 					// 255, 255, 0, 250, 5);
-					//{ fp=UTIL_OpenFoxbotLog(); fprintf(fp, "d: %s\n",areas[i].named); fclose(fp); }
+					//{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp, "d: %s\n",areas[i].named); std::fclose(fp); }
 					// if(areas[i].named[0]!=NULL)
 					// WaypointDrawBeam(pEntity, areas[i].d + Vector(0, 0, 40), areas[i].d + Vector(0, 0, 50), 30, 0, 0,
 					// 255, 0, 250, 5);
@@ -3035,7 +3035,7 @@ static void WaypointRouteInit() {
 	for (int matrix = 0; matrix < 4; matrix++) {
 		if (build_matrix[matrix]) {
 			if (shortest_path[matrix] == nullptr) {
-				sprintf(msg, "calculating FoXBot waypoint paths for team %d...\n", matrix + 1);
+				std::sprintf(msg, "calculating FoXBot waypoint paths for team %d...\n", matrix + 1);
 				ALERT(at_console, msg);
 
 				shortest_path[matrix] = static_cast<unsigned int*>(malloc(sizeof(unsigned int) * array_size));
@@ -3077,7 +3077,7 @@ static void WaypointRouteInit() {
 											distance = static_cast<float>(WAYPOINT_MAX_DISTANCE);
 
 										if (distance > REACHABLE_RANGE) {
-											sprintf(msg, "Waypoint path distance > %4.1f at from %d to %d\n", REACHABLE_RANGE, row, index);
+											std::sprintf(msg, "Waypoint path distance > %4.1f at from %d to %d\n", REACHABLE_RANGE, row, index);
 											ALERT(at_console, msg);
 											WaypointDeletePath(row, index);
 										}
@@ -3105,7 +3105,7 @@ static void WaypointRouteInit() {
 						if (pShortestPath[a * route_num_waypoints + b] == WAYPOINT_UNREACHABLE)
 							pFromTo[a * route_num_waypoints + b] = WAYPOINT_UNREACHABLE;
 				}
-				sprintf(msg, "FoXBot waypoint path calculations for team %d complete!\n", matrix + 1);
+				std::sprintf(msg, "FoXBot waypoint path calculations for team %d complete!\n", matrix + 1);
 				ALERT(at_console, msg);
 			}
 		}
@@ -3150,7 +3150,7 @@ static void WaypointRouteInit() {
 				break;
 		}
 	}
-	sprintf(msg, "RJ/Conc Total: %d : Blue: %d : Red: %d : Yellow: %d : Green: %d\n", RJIndex + 1, teamCount[0], teamCount[1], teamCount[2], teamCount[3]);
+	std::sprintf(msg, "RJ/Conc Total: %d : Blue: %d : Red: %d : Yellow: %d : Green: %d\n", RJIndex + 1, teamCount[0], teamCount[1], teamCount[2], teamCount[3]);
 	ALERT(at_console, msg);
 }
 
@@ -3167,9 +3167,9 @@ int WaypointRouteFromTo(const int src, const int dest, int team) {
 	// and crash if src or dest are given dodgy values.
 	if (src < 0 || dest < 0 || src >= num_waypoints || dest >= num_waypoints) {
 		//	fp = UTIL_OpenFoxbotLog();
-		//	fprintf(fp, "WaypointRouteFromTo() src:%d dest:%d num_waypoints:%d\n",
+		//	std::fprintf(fp, "WaypointRouteFromTo() src:%d dest:%d num_waypoints:%d\n",
 		//		src, dest, num_waypoints);
-		//	fclose(fp);
+		//	std::fclose(fp);
 		return -1;
 	}
 
@@ -3201,9 +3201,9 @@ int WaypointDistanceFromTo(const int src, const int dest, int team) {
 	// and crash if src or dest are given dodgy values.
 	if (src < 0 || dest < 0 || src >= num_waypoints || dest >= num_waypoints) {
 		//	fp = UTIL_OpenFoxbotLog();
-		//	fprintf(fp, "WaypointDistanceFromTo() src:%d dest:%d num_waypoints:%d\n",
+		//	std::fprintf(fp, "WaypointDistanceFromTo() src:%d dest:%d num_waypoints:%d\n",
 		//		src, dest, num_waypoints);
-		//	fclose(fp);
+		//	std::fclose(fp);
 		return -1;
 	}
 
@@ -3480,12 +3480,12 @@ void WaypointAutoBuild(edict_t* pEntity) {
 
 	for (int x = -4096 + 32; x <= 4096 - 32; x = x + 32) {
 		/*{ fp=UTIL_OpenFoxbotLog();
-						fprintf(fp,"%d %d\n\n",x,num_waypoints); fclose(fp); }*/
+						std::fprintf(fp,"%d %d\n\n",x,num_waypoints); std::fclose(fp); }*/
 
 		for (int y = -4096 + 32; y <= 4096 - 32; y = y + 32) {
 			for (int z = -4096 + (32 + 32); z <= 4096 - 32; z = z + 32) {
 				/*{ fp=UTIL_OpenFoxbotLog();
-								fprintf(fp,"-%d %d\n",y,num_waypoints); fclose(fp); }*/
+								std::fprintf(fp,"-%d %d\n",y,num_waypoints); std::fclose(fp); }*/
 
 				TraceResult tr;
 				// Vector(x,y,(-4096+32))
@@ -3494,7 +3494,7 @@ void WaypointAutoBuild(edict_t* pEntity) {
 				TRACE_HULL(Vector(x, y, z), Vector(x, y, z - 32), ignore_monsters, head_hull, pEntity, &tr);
 
 				/*{ fp=UTIL_OpenFoxbotLog();
-								fprintf(fp,"%f\n",tr.flFraction); fclose(fp); }*/
+								std::fprintf(fp,"%f\n",tr.flFraction); std::fclose(fp); }*/
 
 								// while(tr.flFraction<1)
 				if (tr.flFraction < 1.0f) {
@@ -3541,15 +3541,15 @@ void WaypointAutoBuild(edict_t* pEntity) {
 						/*while((pent = FIND_ENTITY_IN_SPHERE( pent, tr.vecEndPos, radius )) != NULL
 										&& (!FNullEnt(pent)))
 										{
-										strcpy(item_name, STRING(pent->v.classname));
+										std::strcpy(item_name, STRING(pent->v.classname));
 
-										if(strcmp("item_healthkit", item_name) == 0)
+										if(std::strcmp("item_healthkit", item_name) == 0)
 										{
 										//ClientPrint(pEntity, HUD_PRINTCONSOLE, "found a healthkit!\n");
 										waypoints[index].flags |= W_FL_HEALTH;
 										}
 
-										if(strncmp("item_armor", item_name, 10) == 0)
+										if(std::strncmp("item_armor", item_name, 10) == 0)
 										{
 										//ClientPrint(pEntity, HUD_PRINTCONSOLE, "found some armor!\n");
 										waypoints[index].flags |= W_FL_ARMOR;
@@ -3819,32 +3819,32 @@ void AreaDefSave() {
 	char mapname[64];
 	AREA_HDR header;
 
-	strcpy(header.filetype, "FoXBot");
+	std::strcpy(header.filetype, "FoXBot");
 
 	header.area_file_version = AREA_VERSION;
 
 	header.number_of_areas = num_areas;
 
-	memset(header.mapname, 0, sizeof header.mapname);
-	strncpy(header.mapname, STRING(gpGlobals->mapname), 31);
+	std::memset(header.mapname, 0, sizeof header.mapname);
+	std::strncpy(header.mapname, STRING(gpGlobals->mapname), 31);
 	header.mapname[31] = 0;
 
-	strcpy(mapname, STRING(gpGlobals->mapname));
-	strcat(mapname, ".far");
+	std::strcpy(mapname, STRING(gpGlobals->mapname));
+	std::strcat(mapname, ".far");
 
 	UTIL_BuildFileName(filename, 255, "areas", mapname);
 
-	FILE* bfp = fopen(filename, "wb");
+	FILE* bfp = std::fopen(filename, "wb");
 
 	// write the waypoint header to the file...
-	fwrite(&header, sizeof header, 1, bfp);
+	std::fwrite(&header, sizeof header, 1, bfp);
 
 	// write the waypoint data to the file...
 	for (int index = 0; index < num_areas; index++) {
-		fwrite(&areas[index], sizeof areas[0], 1, bfp);
+		std::fwrite(&areas[index], sizeof areas[0], 1, bfp);
 	}
 
-	fclose(bfp);
+	std::fclose(bfp);
 }
 
 bool AreaDefLoad(edict_t* pEntity) {
@@ -3855,25 +3855,25 @@ bool AreaDefLoad(edict_t* pEntity) {
 	// return false; //test to see if having areas loaded is
 	// fucking up the server (mem crashes)
 
-	strcpy(mapname, STRING(gpGlobals->mapname));
-	strcat(mapname, ".far");
+	std::strcpy(mapname, STRING(gpGlobals->mapname));
+	std::strcat(mapname, ".far");
 
 	UTIL_BuildFileName(filename, 255, "areas", mapname);
-	FILE* bfp = fopen(filename, "rb");
+	FILE* bfp = std::fopen(filename, "rb");
 
 	if (bfp != nullptr) {
 		char msg[256];
 		if (IS_DEDICATED_SERVER())
-			printf("loading area file: %s\n", filename);
-		fread(&header, sizeof header, 1, bfp);
+			std::printf("loading area file: %s\n", filename);
+		std::fread(&header, sizeof header, 1, bfp);
 
 		header.filetype[7] = 0;
-		if (strcmp(header.filetype, "FoXBot") == 0) {
+		if (std::strcmp(header.filetype, "FoXBot") == 0) {
 			if (header.area_file_version != AREA_VERSION) {
 				if (pEntity)
 					ClientPrint(pEntity, HUD_PRINTNOTIFY, "Incompatible FoXBot area file version\nAreas not loaded\n");
 
-				fclose(bfp);
+				std::fclose(bfp);
 				return false;
 			}
 
@@ -3903,32 +3903,32 @@ bool AreaDefLoad(edict_t* pEntity) {
 					ClientPrint(pEntity, HUD_PRINTNOTIFY, "Loading FoXBot area file\n");
 
 				for (i = 0; i < header.number_of_areas; i++) {
-					fread(&areas[i], sizeof areas[0], 1, bfp);
+					std::fread(&areas[i], sizeof areas[0], 1, bfp);
 					num_areas++;
 				}
 			}
 			else {
 				if (pEntity) {
-					sprintf(msg, "%s FoXBot areas aren't for this map\n", filename);
+					std::sprintf(msg, "%s FoXBot areas aren't for this map\n", filename);
 
 					ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 				}
 
-				fclose(bfp);
+				std::fclose(bfp);
 				return false;
 			}
 		}
 		else {
 			if (pEntity) {
-				sprintf(msg, "%s is not a FoXBot area file\n", filename);
+				std::sprintf(msg, "%s is not a FoXBot area file\n", filename);
 				ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 			}
 
-			fclose(bfp);
+			std::fclose(bfp);
 			return false;
 		}
 
-		fclose(bfp);
+		std::fclose(bfp);
 	}
 
 	return true;
@@ -3955,7 +3955,7 @@ void AreaDefPrintInfo(edict_t* pEntity) {
 	int index = AreaDefPointFindNearest(pEntity, 50.0f, A_FL_1);
 
 	if (index != -1) {
-		sprintf(msg, "Area %d of %d total\n", index, num_areas);
+		std::sprintf(msg, "Area %d of %d total\n", index, num_areas);
 		ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 		ClientPrint(pEntity, HUD_PRINTNOTIFY, "Area corner 1\n");
 		return;
@@ -3964,7 +3964,7 @@ void AreaDefPrintInfo(edict_t* pEntity) {
 	index = AreaDefPointFindNearest(pEntity, 50.0f, A_FL_2);
 
 	if (index != -1) {
-		sprintf(msg, "Area %d of %d total\n", index, num_areas);
+		std::sprintf(msg, "Area %d of %d total\n", index, num_areas);
 		ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 		ClientPrint(pEntity, HUD_PRINTNOTIFY, "Area corner 2\n");
 		return;
@@ -3973,7 +3973,7 @@ void AreaDefPrintInfo(edict_t* pEntity) {
 	index = AreaDefPointFindNearest(pEntity, 50.0f, A_FL_3);
 
 	if (index != -1) {
-		sprintf(msg, "Area %d of %d total\n", index, num_areas);
+		std::sprintf(msg, "Area %d of %d total\n", index, num_areas);
 		ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 		ClientPrint(pEntity, HUD_PRINTNOTIFY, "Area corner 3\n");
 		return;
@@ -3982,7 +3982,7 @@ void AreaDefPrintInfo(edict_t* pEntity) {
 	index = AreaDefPointFindNearest(pEntity, 50.0f, A_FL_4);
 
 	if (index != -1) {
-		sprintf(msg, "Area %d of %d total\n", index, num_areas);
+		std::sprintf(msg, "Area %d of %d total\n", index, num_areas);
 		ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 		ClientPrint(pEntity, HUD_PRINTNOTIFY, "Area corner 4\n");
 		return;
@@ -5357,21 +5357,21 @@ void ProcessCommanderList() {
    char invalidChars[] = " abcdefghijklmnopqrstuvwxyz,./<>?;'\"[]{}-=+!@#$%^&*()";
 
 	UTIL_BuildFileName(filename, 255, "foxbot_commanders.txt", nullptr);
-	FILE* inFile = fopen(filename, "r");
+	FILE* inFile = std::fopen(filename, "r");
 
 	if (inFile) {
 		if (IS_DEDICATED_SERVER())
-			printf("[Config] Reading foxbot_commanders.txt\n");
+			std::printf("[Config] Reading foxbot_commanders.txt\n");
 		else {
-			sprintf(msg, "[Config] Reading foxbot_commanders.txt\n");
+			std::sprintf(msg, "[Config] Reading foxbot_commanders.txt\n");
 			ALERT(at_console, msg);
 		}
 	}
 	else {
 		if (IS_DEDICATED_SERVER())
-			printf("[Config] Couldn't open foxbot_commanders.txt\n");
+			std::printf("[Config] Couldn't open foxbot_commanders.txt\n");
 		else {
-			sprintf(msg, "[Config] Couldn't open foxbot_commanders.txt\n");
+			std::sprintf(msg, "[Config] Couldn't open foxbot_commanders.txt\n");
 			ALERT(at_console, msg);
 		}
 		return;
@@ -5380,7 +5380,7 @@ void ProcessCommanderList() {
 	// Read the file, line by line.
 	while (UTIL_ReadFileLine(buffer, 80, inFile)) {
 		// Skip lines that begin with comments
-		if (static_cast<int>(strlen(buffer)) > 2) {
+		if (static_cast<int>(std::strlen(buffer)) > 2) {
 			if (buffer[0] == '/' && buffer[1] == '/')
 				continue;
 		}
@@ -5388,15 +5388,15 @@ void ProcessCommanderList() {
 
 		// Search for invalid characters in the read string.
 		// strlen is being called too many times in the for loop - [APG]RoboCop[CL]
-		for (unsigned int i = 0; i < static_cast<int>(strlen(buffer)); i++) {
-			for (unsigned int j = 0; j < static_cast<int>(strlen(invalidChars)); j++)
+		for (unsigned int i = 0; i < static_cast<int>(std::strlen(buffer)); i++) {
+			for (unsigned int j = 0; j < static_cast<int>(std::strlen(invalidChars)); j++)
 			{
-            if (char ch = invalidChars[j]; strchr(buffer, ch)) {
+            if (char ch = invalidChars[j]; std::strchr(buffer, ch)) {
 					valid = false;
 					if (IS_DEDICATED_SERVER())
-						printf("[Config] foxbot_commanders.txt : Invalid Character %c\n", ch);
+						std::printf("[Config] foxbot_commanders.txt : Invalid Character %c\n", ch);
 					else {
-						sprintf(msg, "[Config] foxbot_commanders.txt : Invalid Character %c\n", ch);
+						std::sprintf(msg, "[Config] foxbot_commanders.txt : Invalid Character %c\n", ch);
 						ALERT(at_console, msg);
 					}
 				}
@@ -5406,34 +5406,34 @@ void ProcessCommanderList() {
 		// The read string is valid enough.
 		if (valid) {
 			char* uId = new char[80];
-			strcpy(uId, buffer);
+			std::strcpy(uId, buffer);
 
 			// Get rid of line feeds
-			if (uId[strlen(uId) - 1] == '\n' || uId[strlen(uId) - 1] == '\r' || uId[strlen(uId) - 1] == EOF) {
-				uId[strlen(uId) - 1] = '\0';
+			if (uId[std::strlen(uId) - 1] == '\n' || uId[std::strlen(uId) - 1] == '\r' || uId[std::strlen(uId) - 1] == EOF) {
+				uId[std::strlen(uId) - 1] = '\0';
 			}
 			fp = UTIL_OpenFoxbotLog();
 
 			if (fp != nullptr) {
-				fprintf(fp, "LOAD USERID: %s\n", uId);
-				fclose(fp);
+				std::fprintf(fp, "LOAD USERID: %s\n", uId);
+				std::fclose(fp);
 			}
 
 			commanders.addTail(uId);
 			if (IS_DEDICATED_SERVER())
-				printf("[Config] foxbot_commanders.txt : Loaded User %s\n", buffer);
+				std::printf("[Config] foxbot_commanders.txt : Loaded User %s\n", buffer);
 			else {
-				sprintf(msg, "[Config] foxbot_commanders.txt : Loaded User %s\n", buffer);
+				std::sprintf(msg, "[Config] foxbot_commanders.txt : Loaded User %s\n", buffer);
 				ALERT(at_console, msg);
 			}
 		}
 	}
 	// Report status
 	if (IS_DEDICATED_SERVER())
-		printf("[Config] foxbot_commanders.txt : Loaded %d users\n", commanders.size());
+		std::printf("[Config] foxbot_commanders.txt : Loaded %d users\n", commanders.size());
 	else {
-		sprintf(msg, "[Config] foxbot_commanders.txt : Loaded %d users\n", commanders.size());
+		std::sprintf(msg, "[Config] foxbot_commanders.txt : Loaded %d users\n", commanders.size());
 		ALERT(at_console, msg);
 	}
-	fclose(inFile);
+	std::fclose(inFile);
 }

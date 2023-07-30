@@ -76,7 +76,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, const DWORD fdwReason, LPVOID lpvReserve
 #endif
 
 C_DLLEXPORT void WINAPI GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, globalvars_t* pGlobals) {
-	memcpy(&g_engfuncs, pengfuncsFromEngine, sizeof(enginefuncs_t));
+	std::memcpy(&g_engfuncs, pengfuncsFromEngine, sizeof(enginefuncs_t));
 	gpGlobals = pGlobals;
 
 	if (mr_meta) {
@@ -89,8 +89,8 @@ C_DLLEXPORT void WINAPI GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, glob
 	(*g_engfuncs.pfnGetGameDir)(game_dir);
 
 	unsigned int pos = 0;
-	if (strchr(game_dir, '/') != nullptr) {
-		pos = strlen(game_dir) - 1;
+	if (std::strchr(game_dir, '/') != nullptr) {
+		pos = std::strlen(game_dir) - 1;
 		// scan backwards till first directory separator...
 
 		while (pos && game_dir[pos] != '/')
@@ -101,7 +101,7 @@ C_DLLEXPORT void WINAPI GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, glob
 		}
 		pos++;
 	}
-	strcpy(mod_name, &game_dir[pos]);
+	std::strcpy(mod_name, &game_dir[pos]);
 
 	if (strcasecmp(mod_name, "tfc") == 0) {
 		mod_id = TFC_DLL;

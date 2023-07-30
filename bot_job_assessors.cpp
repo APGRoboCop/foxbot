@@ -204,9 +204,9 @@ int assess_JobUseTeleport(const bot_t* pBot, const job_struct& r_job) {
 
 	// make sure the teleporter is still a teleporter, just to be reeeaally sure
 	char classname[24];
-	strncpy(classname, STRING(r_job.object->v.classname), 24);
+	std::strncpy(classname, STRING(r_job.object->v.classname), 24);
 	classname[23] = '\0';
-	if (strcmp(classname, "building_teleporter") != 0)
+	if (std::strcmp(classname, "building_teleporter") != 0)
 		return PRIORITY_NONE;
 
 	// check the waypoints validity

@@ -49,10 +49,8 @@
 extern List<char*> commanders;
 
 #ifndef __linux__
-#include <cmath>
 extern HINSTANCE h_Library;
 #else
-#include <math.h>
 extern void* h_Library;
 #endif
 
@@ -193,8 +191,8 @@ inline edict_t* CREATE_FAKE_CLIENT(const char* netname) {
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
 		if (fp != nullptr) {
-			fprintf(fp, "createfakeclient: %s\n", netname);
-			fclose(fp);
+			std::fprintf(fp, "createfakeclient: %s\n", netname);
+			std::fclose(fp);
 		}
 	}
 	return (*g_engfuncs.pfnCreateFakeClient)(netname);
@@ -204,8 +202,8 @@ inline char* GET_INFOBUFFER(edict_t* e) {
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
 		if (fp != nullptr) {
-			fprintf(fp, "getinfobuffer: %p\n", static_cast<void*>(e));
-			fclose(fp);
+			std::fprintf(fp, "getinfobuffer: %p\n", static_cast<void*>(e));
+			std::fclose(fp);
 		}
 	}
 	return (*g_engfuncs.pfnGetInfoKeyBuffer)(e);
@@ -219,8 +217,8 @@ inline char *GET_INFO_KEY_VALUE( char *infobuffer, char *key )
 								fp = UTIL_OpenFoxbotLog();
 								if(fp != NULL)
 								{
-												fprintf(fp, "getinfokeyvalue: %s %s\n",infobuffer,key);
-												fclose(fp);
+												std::fprintf(fp, "getinfokeyvalue: %s %s\n",infobuffer,key);
+												std::fclose(fp);
 								}
 				}
 				return (*g_engfuncs.pfnInfoKeyValue)( infobuffer, key );
@@ -230,8 +228,8 @@ inline void SET_CLIENT_KEY_VALUE(const int clientIndex, char* infobuffer, char* 
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
 		if (fp != nullptr) {
-			fprintf(fp, "pfnSetClientKeyValue: %s %s\n", key, value);
-			fclose(fp);
+			std::fprintf(fp, "pfnSetClientKeyValue: %s %s\n", key, value);
+			std::fclose(fp);
 		}
 	}
 	(*g_engfuncs.pfnSetClientKeyValue)(clientIndex, infobuffer, key, value);
@@ -377,8 +375,8 @@ void BotSpawnInit(bot_t* pBot) {
 	// end DrEvil vars //
 	/////////////////////
 
-	memset(&pBot->current_weapon, 0, sizeof pBot->current_weapon);
-	memset(&pBot->m_rgAmmo, 0, sizeof pBot->m_rgAmmo);
+	std::memset(&pBot->current_weapon, 0, sizeof pBot->current_weapon);
+	std::memset(&pBot->m_rgAmmo, 0, sizeof pBot->m_rgAmmo);
 }
 
 //#ifdef WIN32
@@ -389,12 +387,12 @@ void BotNameInit() {
 	char bot_name_filename[256];
 
 	UTIL_BuildFileName(bot_name_filename, 255, "foxbot_names.txt", nullptr);
-	FILE* bot_name_fp = fopen(bot_name_filename, "r");
+	FILE* bot_name_fp = std::fopen(bot_name_filename, "r");
 
 	if (bot_name_fp != nullptr) {
 		char name_buffer[80];
 		while (number_names < MAX_BOT_NAMES && fgets(name_buffer, 80, bot_name_fp) != nullptr) {
-			unsigned int length = strlen(name_buffer);
+			unsigned int length = std::strlen(name_buffer);
 
 			// remove '\n'
 			if (name_buffer[length - 1] == '\n') {
@@ -413,12 +411,12 @@ void BotNameInit() {
 			}
 
 			if (name_buffer[0] != 0) {
-				strncpy(bot_names[number_names], name_buffer, BOT_NAME_LEN);
+				std::strncpy(bot_names[number_names], name_buffer, BOT_NAME_LEN);
 				number_names++;
 			}
 		}
 
-		fclose(bot_name_fp);
+		std::fclose(bot_name_fp);
 	}
 }
 
@@ -436,7 +434,7 @@ void BotPickName(char* name_buffer) {
 	// see if a name exists from a kicked bot (if so, reuse it)
 	for (index = 0; index < MAX_BOTS; index++) {
 		if (bots[index].is_used == false && bots[index].name[0]) {
-			strcpy(name_buffer, bots[index].name);
+			std::strcpy(name_buffer, bots[index].name);
 
 			// erase the name of the bot whose name we've taken
 			// this fixes the bug where two bots would be created with the same name
@@ -459,7 +457,7 @@ void BotPickName(char* name_buffer) {
 		for (index = 1; index <= gpGlobals->maxClients; index++) {
 			const edict_t* pPlayer = INDEXENT(index);
 
-			if (pPlayer && !FNullEnt(pPlayer) && !pPlayer->free && strcmp(bot_names[name_index], STRING(pPlayer->v.netname)) == 0) {
+			if (pPlayer && !FNullEnt(pPlayer) && !pPlayer->free && std::strcmp(bot_names[name_index], STRING(pPlayer->v.netname)) == 0) {
 				used = true;
 				break;
 			}
@@ -479,14 +477,14 @@ void BotPickName(char* name_buffer) {
 				// Log this event as it normally shouldn't happen
 				fp = UTIL_OpenFoxbotLog();
 				if (fp != nullptr) {
-					fprintf(fp, "Ran out of unique bot names to assign.\n");
-					fclose(fp);
+					std::fprintf(fp, "Ran out of unique bot names to assign.\n");
+					std::fclose(fp);
 				}
 			}
 		}
 	}
 
-	strcpy(name_buffer, bot_names[name_index]);
+	std::strcpy(name_buffer, bot_names[name_index]);
 }
 
 void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char* arg3, const char* arg4) {
@@ -540,7 +538,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 		char cl_name[128];
 		cl_name[0] = '\0';
 		char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(INDEXENT(i));
-		strcpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"));
+		std::strcpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"));
 		if (cl_name[0] != '\0')
 			count++;
 	}
@@ -558,7 +556,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 			ClientPrint(pPlayer, HUD_PRINTNOTIFY, "Max bots reached... Can't create bot!\n");
 
 		if (IS_DEDICATED_SERVER())
-			printf("Max bots reached... Can't create bot!\n");
+			std::printf("Max bots reached... Can't create bot!\n");
 
 		return;
 	}
@@ -611,30 +609,30 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 			}
 
 			if (mod_id == VALVE_DLL)
-				strcpy(c_skin, valve_bot_skins[index]);
+				std::strcpy(c_skin, valve_bot_skins[index]);
 			// else // must be GEARBOX_DLL
-			//	strcpy( c_skin, gearbox_bot_skins[index] );
+			//	std::strcpy( c_skin, gearbox_bot_skins[index] );
 		}
 		else {
-			strncpy(c_skin, arg1, BOT_SKIN_LEN - 1);
+			std::strncpy(c_skin, arg1, BOT_SKIN_LEN - 1);
 			c_skin[BOT_SKIN_LEN] = 0; // make sure c_skin is null terminated
 		}
 
 		for (i = 0; c_skin[i] != 0; i++)
-			c_skin[i] = tolower(c_skin[i]); // convert to all lowercase
+			c_skin[i] = std::tolower(c_skin[i]); // convert to all lowercase
 
 		index = 0;
 
 		while (!found && index < max_skin_index) {
 			if (mod_id == VALVE_DLL) {
-				if (strcmp(c_skin, valve_bot_skins[index]) == 0)
+				if (std::strcmp(c_skin, valve_bot_skins[index]) == 0)
 					found = true;
 				else
 					index++;
 			}
 			/*else // must be GEARBOX_DLL
 			{
-							if(strcmp(c_skin, gearbox_bot_skins[index]) == 0)
+							if(std::strcmp(c_skin, gearbox_bot_skins[index]) == 0)
 											found = true;
 							else index++;
 			}*/
@@ -642,16 +640,16 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 
 		if (found == true) {
 			if (arg2 != nullptr && *arg2 != 0) {
-				strncpy(c_name, arg2, BOT_SKIN_LEN - 1);
+				std::strncpy(c_name, arg2, BOT_SKIN_LEN - 1);
 				c_name[BOT_SKIN_LEN] = 0; // make sure c_name is null terminated
 			}
 			else {
 				if (number_names > 0)
 					BotPickName(c_name);
 				else if (mod_id == VALVE_DLL)
-					strcpy(c_name, valve_bot_names[index]);
+					std::strcpy(c_name, valve_bot_names[index]);
 				// else // must be GEARBOX_DLL
-				//	strcpy( c_name, gearbox_bot_names[index] );
+				//	std::strcpy( c_name, gearbox_bot_names[index] );
 			}
 		}
 		else {
@@ -663,40 +661,40 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 			GET_GAME_DIR(dir_name);
 
 #ifndef __linux__
-			snprintf(filename, 127, "%s\\models\\player\\%s", dir_name, c_skin);
+			std::snprintf(filename, 127, "%s\\models\\player\\%s", dir_name, c_skin);
 #else
-			snprintf(filename, 127, "%s/models/player/%s", dir_name, c_skin);
+			std::snprintf(filename, 127, "%s/models/player/%s", dir_name, c_skin);
 #endif
 
 			if (stat(filename, &stat_str) != 0) {
 #ifndef __linux__
-				snprintf(filename, 127, "valve\\models\\player\\%s", c_skin);
+				std::snprintf(filename, 127, "valve\\models\\player\\%s", c_skin);
 #else
-				snprintf(filename, 127, "valve/models/player/%s", c_skin);
+				std::snprintf(filename, 127, "valve/models/player/%s", c_skin);
 #endif
 				if (stat(filename, &stat_str) != 0) {
 					char err_msg[80];
 
-					snprintf(err_msg, 79, "model \"%s\" is unknown.\n", c_skin);
+					std::snprintf(err_msg, 79, "model \"%s\" is unknown.\n", c_skin);
 					if (pPlayer)
 						ClientPrint(pPlayer, HUD_PRINTNOTIFY, err_msg);
 					if (IS_DEDICATED_SERVER())
-						printf("%s", err_msg);
+						std::printf("%s", err_msg);
 
 					if (pPlayer)
 						ClientPrint(pPlayer, HUD_PRINTNOTIFY, "use barney, gina, gman, gordon, helmet, hgrunt,\n");
 					if (IS_DEDICATED_SERVER())
-						printf("use barney, gina, gman, gordon, helmet, hgrunt,\n");
+						std::printf("use barney, gina, gman, gordon, helmet, hgrunt,\n");
 					if (pPlayer)
 						ClientPrint(pPlayer, HUD_PRINTNOTIFY, "    recon, robo, scientist, or zombie\n");
 					if (IS_DEDICATED_SERVER())
-						printf("    recon, robo, scientist, or zombie\n");
+						std::printf("    recon, robo, scientist, or zombie\n");
 					return;
 				}
 			}
 
 			if (arg2 != nullptr && *arg2 != 0) {
-				strncpy(c_name, arg2, BOT_NAME_LEN - 1);
+				std::strncpy(c_name, arg2, BOT_NAME_LEN - 1);
 				c_name[BOT_NAME_LEN] = 0; // make sure c_name is null terminated
 			}
 			else {
@@ -704,7 +702,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 					BotPickName(c_name);
 				else {
 					// copy the name of the model to the bot's name...
-					strncpy(c_name, arg1, BOT_NAME_LEN - 1);
+					std::strncpy(c_name, arg1, BOT_NAME_LEN - 1);
 					c_name[BOT_NAME_LEN] = '\0'; // make sure c_skin is null terminated
 				}
 			}
@@ -720,14 +718,14 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 	}
 	else {
 		if (arg3 != nullptr && *arg3 != 0) {
-			strncpy(c_name, arg3, BOT_NAME_LEN - 1);
+			std::strncpy(c_name, arg3, BOT_NAME_LEN - 1);
 			c_name[BOT_NAME_LEN] = '\0'; // make sure c_name is null terminated
 		}
 		else {
 			if (number_names > 0)
 				BotPickName(c_name);
 			else
-				strcpy(c_name, "FoxBot");
+				std::strcpy(c_name, "FoxBot");
 		}
 
 		skill = 0;
@@ -739,7 +737,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 			skill = BotAssignDefaultSkill();
 	}
 
-	int length = static_cast<int>(strlen(c_name));
+	int length = static_cast<int>(std::strlen(c_name));
 
 	// remove any illegal characters from the name
 	for (i = 0; i < length; i++) {
@@ -758,7 +756,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 			ClientPrint(pPlayer, HUD_PRINTNOTIFY, "Max. Players reached.  Can't create bot!\n");
 
 		if (IS_DEDICATED_SERVER())
-			printf("Max. Players reached.  Can't create bot!\n");
+			std::printf("Max. Players reached.  Can't create bot!\n");
 
 		return;
 	}
@@ -774,7 +772,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
    }
 
    if (IS_DEDICATED_SERVER())
-      printf("Creating bot...\n");
+     std::printf("Creating bot...\n");
    else if (pPlayer)
       ClientPrint(pPlayer, HUD_PRINTNOTIFY, "Creating bot...\n");
 
@@ -809,7 +807,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
    else
       player(VARS(BotEnt));
 
-   //{fp=UTIL_OpenFoxbotLog(); fprintf(fp, "-bot connect %x\n",BotEnt); fclose(fp); }
+   //{fp=UTIL_OpenFoxbotLog(); std::fprintf(fp, "-bot connect %x\n",BotEnt); std::fclose(fp); }
    MDLL_ClientConnect(BotEnt, c_name, "127.0.0.1", ptr);
    spawn_check_crash = true;
    spawn_check_crash_count = 0;
@@ -824,16 +822,16 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 				if(i < 32)
 				clients[i] = BotEnt;*/
 
-   //{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"e\n"); fclose(fp); }
+   //{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"e\n"); std::fclose(fp); }
    BotEnt->v.flags |= FL_FAKECLIENT;
 
    pBot->is_used = true;
    pBot->respawn_state = RESPAWN_IDLE;
    pBot->create_time = gpGlobals->time + 1.0f;
-   //{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"a%f %f\n",pBot->create_time,gpGlobals->time); fclose(fp); }
+   //{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"a%f %f\n",pBot->create_time,gpGlobals->time); std::fclose(fp); }
    pBot->name[0] = 0; // name not set by server yet
    pBot->f_think_time = gpGlobals->time;
-   strcpy(pBot->skin, c_skin);
+   std::strcpy(pBot->skin, c_skin);
    BotResetJobBuffer(pBot);
 
    pBot->has_sentry = false;
@@ -928,7 +926,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 						pBot->start_action = MSG_FLF_IDLE;
 		else pBot->start_action = 0;  // not needed for non-team MODs
 		*/
-   //{fp=UTIL_OpenFoxbotLog(); fprintf(fp, "-bot d \n",BotEnt); fclose(fp); }
+   //{fp=UTIL_OpenFoxbotLog(); std::fprintf(fp, "-bot d \n",BotEnt); std::fclose(fp); }
    BotSpawnInit(pBot);
 
    pBot->need_to_initialize = false; // don't need to initialize yet
@@ -954,7 +952,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
          }
       }
    }
-   memset(&pBot->job, 0, sizeof(job_struct) * JOB_BUFFER_MAX);
+   std::memset(&pBot->job, 0, sizeof(job_struct) * JOB_BUFFER_MAX);
 
    botJustJoined[index] = false; // the inititation ceremony is over!
 }
@@ -996,10 +994,10 @@ void BotFindItem(bot_t* pBot) {
 		char item_name[40];
 		can_pickup = false; // assume can't use it until known otherwise
 
-		strcpy(item_name, STRING(pent->v.classname));
+		std::strcpy(item_name, STRING(pent->v.classname));
 
 		// see if this is a "func_" type of entity (func_button, etc.)...
-		if (strncmp("func_", item_name, 5) == 0) {
+		if (std::strncmp("func_", item_name, 5) == 0) {
 			// BModels have 0,0,0 for origin so must use VecBModelOrigin...
 			entity_origin = VecBModelOrigin(pent);
 
@@ -1019,7 +1017,7 @@ void BotFindItem(bot_t* pBot) {
 				continue;
 
 			// check if the entity is a button...
-			if (strcmp("func_button", item_name) == 0 || strcmp("func_rot_button", item_name) == 0) {
+			if (std::strcmp("func_button", item_name) == 0 || std::strcmp("func_rot_button", item_name) == 0) {
 				newJob = InitialiseNewJob(pBot, JOB_PUSH_BUTTON);
 				if (newJob != nullptr && pent->v.target != 0 && VectorsNearerThan(pBot->pEdict->v.origin, entity_origin, 250.0)) {
 					// ignore this button if the nearest waypoint to it is unavailable
@@ -1038,12 +1036,12 @@ void BotFindItem(bot_t* pBot) {
 				UTIL_TraceLine(vecStart, vecEnd, dont_ignore_monsters, pEdict->v.pContainingEntity, &tr);
 
 				// check if traced all the way up to the entity (didn't hit wall)
-				if (strcmp(item_name, STRING(tr.pHit->v.classname)) == 0) {
+				if (std::strcmp(item_name, STRING(tr.pHit->v.classname)) == 0) {
 					// find distance to item for later use...
 					float distance = (vecEnd - vecStart).Length();
 
 					// check if entity is wall mounted health charger...
-					if (strcmp("func_healthcharger", item_name) == 0) {
+					if (std::strcmp("func_healthcharger", item_name) == 0) {
 						// check if the bot can use this item and
 						// check if the recharger is ready to use (has power left)...
 						if (static_cast<int>(pEdict->v.health) < 100 && static_cast<int>(pent->v.frame) == 0) {
@@ -1065,7 +1063,7 @@ void BotFindItem(bot_t* pBot) {
 					}
 
 					// check if entity is wall mounted HEV charger...
-					else if (strcmp("func_recharge", item_name) == 0) {
+					else if (std::strcmp("func_recharge", item_name) == 0) {
 						// check if the bot can use this item and
 						// check if the recharger is ready to use (has power left)...
 						if (static_cast<int>(pEdict->v.armorvalue) < VALVE_MAX_NORMAL_BATTERY && static_cast<int>(pent->v.frame) == 0) {
@@ -1086,7 +1084,7 @@ void BotFindItem(bot_t* pBot) {
 						}
 					}
 
-					else if (strcmp("func_breakable", item_name) == 0) {
+					else if (std::strcmp("func_breakable", item_name) == 0) {
 						// make sure it really is breakable
 						if (pent->v.takedamage <= 0)
 							continue;
@@ -1130,12 +1128,12 @@ void BotFindItem(bot_t* pBot) {
 			// check if line of sight to object is not blocked (i.e. visible)
 			if (BotCanSeeOrigin(pBot, vecEnd)) {
 				// check if entity is a back pack dropped by a player
-				if (strcmp("tf_ammobox", item_name) == 0) {
+				if (std::strcmp("tf_ammobox", item_name) == 0) {
 					if (pBot->ammoStatus != AMMO_UNNEEDED && pent->v.owner == nullptr)
 						can_pickup = true;
 				}
 				// check if entity is a back pack
-				else if (strcmp("item_tfgoal", item_name) == 0) {
+				else if (std::strcmp("item_tfgoal", item_name) == 0) {
 					if (pBot->ammoStatus == AMMO_UNNEEDED || pent->v.owner != nullptr || pent->v.model == 0)
 						continue;
 
@@ -1149,15 +1147,15 @@ void BotFindItem(bot_t* pBot) {
 					for (int i = 0; i < 255; i++) {
 						temp[i] = '\0';
 					}
-					strcpy(temp, STRING(pent->v.model));
+					std::strcpy(temp, STRING(pent->v.model));
 
-					if (strlen(temp) >= 8)
-						strncpy(mdlname, temp + (static_cast<int>(strlen(temp)) - 8), 4);
+					if (std::strlen(temp) >= 8)
+						std::strncpy(mdlname, temp + (static_cast<int>(std::strlen(temp)) - 8), 4);
 					else
 						continue;
 
 					// ignore the item if it's not a backpack
-					if (strcmp(mdlname, "pack") != 0)
+					if (std::strcmp(mdlname, "pack") != 0)
 						continue;
 
 					// ignore this item if it's on an unavailable waypoint
@@ -1169,7 +1167,7 @@ void BotFindItem(bot_t* pBot) {
 				}
 
 				// check if entity is a back pack
-				else if (strcmp("info_tfgoal", item_name) == 0) {
+				else if (std::strcmp("info_tfgoal", item_name) == 0) {
 					if (pBot->ammoStatus == AMMO_UNNEEDED || pent->v.owner != nullptr || pent->v.model == 0)
 						continue;
 
@@ -1180,18 +1178,18 @@ void BotFindItem(bot_t* pBot) {
 					char temp[64];
 					char mdlname[64] = "\0";
 
-					strncpy(temp, STRING(pent->v.model), 64);
+					std::strncpy(temp, STRING(pent->v.model), 64);
 					temp[63] = '\0';
 
 					// cut pent->v.model down in size from:
 					// "models/backpack.mdl"
-					if (strlen(temp) >= 8) {
-						strncpy(mdlname, temp + (static_cast<int>(strlen(temp)) - 8), 4);
+					if (std::strlen(temp) >= 8) {
+						std::strncpy(mdlname, temp + (static_cast<int>(std::strlen(temp)) - 8), 4);
 						mdlname[63] = '\0';
 					}
 
 					// ignore the item if it's not a backpack
-					if (strncmp(mdlname, "pack", 4) != 0)
+					if (std::strncmp(mdlname, "pack", 4) != 0)
 						continue;
 
 					// ignore this item if it's on an unavailable waypoint
@@ -1203,7 +1201,7 @@ void BotFindItem(bot_t* pBot) {
 				}
 
 				// check if entity is a dispenser  // Fixed for Foxbot 0.79? [APG]RoboCop[CL]
-				else if (strcmp("building_dispenser", item_name) == 0) {
+				else if (std::strcmp("building_dispenser", item_name) == 0) {
 					// check if the item is not visible (i.e. has not respawned)
 					if (pent->v.effects & EF_NODRAW)
 						continue;
@@ -1231,16 +1229,16 @@ void BotFindItem(bot_t* pBot) {
 
 					//	can_pickup = true;
 				} // [APG]RoboCop[CL]
-				else if (strcmp("building_sentrygun", item_name) == 0) {
+				else if (std::strcmp("building_sentrygun", item_name) == 0) {
 					if (pEdict->v.playerclass != TFC_CLASS_ENGINEER || pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] < 140 || pBot->current_team != UTIL_GetTeam(pent))
 						continue;
 
 					static char modelName[24]; // static for speed reasons
-					strncpy(modelName, STRING(pent->v.model), 24);
+					std::strncpy(modelName, STRING(pent->v.model), 24);
 					modelName[23] = '\0';
 
 					// if the spotted sentry gun is damaged or not at level 3
-					if (strcmp(modelName, "models/sentry3.mdl") != 0 || pent->v.health < 91) {
+					if (std::strcmp(modelName, "models/sentry3.mdl") != 0 || pent->v.health < 91) {
 						// set up a job to help this sentry gun out
 						newJob = InitialiseNewJob(pBot, JOB_MAINTAIN_OBJECT);
 						if (newJob != nullptr) {
@@ -1250,7 +1248,7 @@ void BotFindItem(bot_t* pBot) {
 					}
 				}
 				// teleporter entrances
-				else if (strcmp("building_teleporter", item_name) == 0) {
+				else if (std::strcmp("building_teleporter", item_name) == 0) {
 					// ignore Teleporters whilst in combat
 					if (pBot->enemy.ptr != nullptr)
 						continue;
@@ -1290,7 +1288,7 @@ void BotFindItem(bot_t* pBot) {
 					}
 				}
 				// check if entity is armor...
-				else if (strncmp("item_armor", item_name, 10) == 0) {
+				else if (std::strncmp("item_armor", item_name, 10) == 0) {
 					// see if someone owns this weapon or it hasn't respawned yet
 					if (pent->v.effects & EF_NODRAW)
 						continue;
@@ -1299,7 +1297,7 @@ void BotFindItem(bot_t* pBot) {
 						can_pickup = true;
 				}
 				// check if entity is a healthkit...
-				else if (strcmp("item_healthkit", item_name) == 0) {
+				else if (std::strcmp("item_healthkit", item_name) == 0) {
 					// check if the bot wants to use this item...
 					if (pEdict->v.health >= pEdict->v.max_health)
 						continue;
@@ -1316,7 +1314,7 @@ void BotFindItem(bot_t* pBot) {
 					can_pickup = true;
 				}
 				// check if entity is ammo...
-				else if (strncmp("ammo_", item_name, 5) == 0) {
+				else if (std::strncmp("ammo_", item_name, 5) == 0) {
 					// check if the item is not visible (i.e. has not respawned)
 					if (pent->v.effects & EF_NODRAW)
 						continue;
@@ -1332,7 +1330,7 @@ void BotFindItem(bot_t* pBot) {
 					can_pickup = true;
 				}
 				// check if entity is a weapon...
-				else if (strncmp("weapon_", item_name, 7) == 0) {
+				else if (std::strncmp("weapon_", item_name, 7) == 0) {
 					// see if someone owns this weapon or it hasn't respawned yet
 					if (pent->v.effects & EF_NODRAW)
 						continue;
@@ -1340,7 +1338,7 @@ void BotFindItem(bot_t* pBot) {
 					can_pickup = true;
 				}
 				// check if entity is a battery...
-				else if (strcmp("item_battery", item_name) == 0) {
+				else if (std::strcmp("item_battery", item_name) == 0) {
 					// check if the bot wants to use this item...
 					if (pEdict->v.armorvalue >= VALVE_MAX_NORMAL_BATTERY)
 						continue;
@@ -1357,7 +1355,7 @@ void BotFindItem(bot_t* pBot) {
 					can_pickup = true;
 				}
 				// check if entity is a packed up weapons box...
-				else if (strcmp("weaponbox", item_name) == 0) {
+				else if (std::strcmp("weaponbox", item_name) == 0) {
 					// if mod=tfc
 					// check if the item is not visible (i.e. has not respawned)
 					if (pent->v.effects & EF_NODRAW)
@@ -1376,27 +1374,27 @@ void BotFindItem(bot_t* pBot) {
 				}
 
 				// check if entity is the spot from RPG laser
-				//	else if(strcmp("laser_spot", item_name) == 0)
+				//	else if(std::strcmp("laser_spot", item_name) == 0)
 				//	{
 				//	}
 
 				//	// check if entity is an armed tripmine
-				//	else if(strcmp("monster_tripmine", item_name) == 0)
+				//	else if(std::strcmp("monster_tripmine", item_name) == 0)
 				//	{
 				//	}
 
 				// check if entity is an armed satchel charge
-				//	else if(strcmp("monster_satchel", item_name) == 0)
+				//	else if(std::strcmp("monster_satchel", item_name) == 0)
 				//	{
 				//	}
 				// check if entity is a snark (squeak grenade)
-				//	else if(strcmp("monster_snark", item_name) == 0)
+				//	else if(std::strcmp("monster_snark", item_name) == 0)
 				//	{
 				//	}
 
 				// some neotf stuff here
 				// check if entity is a weapon...
-				else if (strcmp("ntf_multigun", item_name) == 0) {
+				else if (std::strcmp("ntf_multigun", item_name) == 0) {
 					if (pent->v.effects & EF_NODRAW || pent->v.flags & FL_KILLME)
 						continue;
 
@@ -1405,7 +1403,7 @@ void BotFindItem(bot_t* pBot) {
 					else {
 						auto cvar_ntf_capture_mg = const_cast<char*>(CVAR_GET_STRING("ntf_capture_mg"));
 
-						if (strcmp(cvar_ntf_capture_mg, "1") == 0)
+						if (std::strcmp(cvar_ntf_capture_mg, "1") == 0)
 							can_pickup = true;
 					}
 				}
@@ -1698,8 +1696,8 @@ void script(const char* sz) {
 
 		fp = UTIL_OpenFoxbotLog();
 		if (fp != nullptr) {
-			fprintf(fp, "msg (%s)\n", sz);
-			fclose(fp);
+			std::fprintf(fp, "msg (%s)\n", sz);
+			std::fclose(fp);
 		}
 	}
 
@@ -1710,16 +1708,16 @@ void script(const char* sz) {
 			// some messages have line returns, so check
 			char msg2[255];
 			snprintf(msg2, 250, "%s\n", msg_msg[current_msg]);
-			if (strcmp(sz, msg_msg[current_msg]) == 0 || strcmp(sz, msg2) == 0) {
+			if (std::strcmp(sz, msg_msg[current_msg]) == 0 || std::strcmp(sz, msg2) == 0) {
 				/*{ fp=UTIL_OpenFoxbotLog();
-								fprintf(fp,"a %d\n",current_msg); fclose(fp); }*/
+								std::fprintf(fp,"a %d\n",current_msg); std::fclose(fp); }*/
 				if (msg_com[current_msg].ifs[0] == '\0') {
 					if (g_bot_debug) {
 						char msg[255];
 						snprintf(msg, 250, "no if : %s +++ %s %d\n", msg_msg[current_msg], sz, current_msg);
 						ALERT(at_console, msg);
 						/*{ fp=UTIL_OpenFoxbotLog();
-										fprintf(fp,msg,sz); fclose(fp); }*/
+										std::fprintf(fp,msg,sz); std::fclose(fp); }*/
 					}
 					for (i = 0; i < 8; i++) {
 						j = msg_com[current_msg].blue_av[i];
@@ -1750,56 +1748,56 @@ void script(const char* sz) {
 				// now deal with ifs... on message may start with
 				// an if(no default behaviour)
 				/*{ fp=UTIL_OpenFoxbotLog();
-								fprintf(fp,"b %d\n",current_msg); fclose(fp); }*/
+								std::fprintf(fp,"b %d\n",current_msg); std::fclose(fp); }*/
 
 				msg_com_struct* curr = &msg_com[current_msg];
 				while (curr != nullptr && reinterpret_cast<int>(curr) != -1) {
 					/*{ fp=UTIL_OpenFoxbotLog();
-									fprintf(fp,"Started while %s %d\n",sz,current_msg);
-									fclose(fp); }*/
+									std::fprintf(fp,"Started while %s %d\n",sz,current_msg);
+									std::fclose(fp); }*/
 					if (curr->ifs[0] != '\0') {
 						bool execif = false;
 
 						/*{ fp=UTIL_OpenFoxbotLog();
-										fprintf(fp, "%s\n",curr->ifs);
-										fclose(fp); }*/
+										std::fprintf(fp, "%s\n",curr->ifs);
+										std::fclose(fp); }*/
 
 										// problem with 0 being returned by atoi??
-						if (strncmp(curr->ifs, "b_p_", 4) == 0)
+						if (std::strncmp(curr->ifs, "b_p_", 4) == 0)
 							if (atoi(&curr->ifs[4]) > 0 && atoi(&curr->ifs[4]) < 9)
 								if (blue_av[atoi(&curr->ifs[4]) - 1])
 									execif = true;
-						if (strncmp(curr->ifs, "r_p_", 4) == 0)
+						if (std::strncmp(curr->ifs, "r_p_", 4) == 0)
 							if (atoi(&curr->ifs[4]) > 0 && atoi(&curr->ifs[4]) < 9)
 								if (red_av[atoi(&curr->ifs[4]) - 1])
 									execif = true;
-						if (strncmp(curr->ifs, "g_p_", 4) == 0)
+						if (std::strncmp(curr->ifs, "g_p_", 4) == 0)
 							if (atoi(&curr->ifs[4]) > 0 && atoi(&curr->ifs[4]) < 9)
 								if (green_av[atoi(&curr->ifs[4]) - 1])
 									execif = true;
-						if (strncmp(curr->ifs, "y_p_", 4) == 0)
+						if (std::strncmp(curr->ifs, "y_p_", 4) == 0)
 							if (atoi(&curr->ifs[4]) > 0 && atoi(&curr->ifs[4]) < 9)
 								if (yellow_av[atoi(&curr->ifs[4]) - 1])
 									execif = true;
 						// points not available
-						if (strncmp(curr->ifs, "b_pn_", 5) == 0)
+						if (std::strncmp(curr->ifs, "b_pn_", 5) == 0)
 							if (atoi(&curr->ifs[5]) > 0 && atoi(&curr->ifs[5]) < 9)
 								if (!blue_av[atoi(&curr->ifs[5]) - 1])
 									execif = true;
-						if (strncmp(curr->ifs, "r_pn_", 5) == 0)
+						if (std::strncmp(curr->ifs, "r_pn_", 5) == 0)
 							if (atoi(&curr->ifs[5]) > 0 && atoi(&curr->ifs[5]) < 9)
 								if (!red_av[atoi(&curr->ifs[5]) - 1])
 									execif = true;
-						if (strncmp(curr->ifs, "g_pn_", 5) == 0)
+						if (std::strncmp(curr->ifs, "g_pn_", 5) == 0)
 							if (atoi(&curr->ifs[5]) > 0 && atoi(&curr->ifs[5]) < 9)
 								if (!green_av[atoi(&curr->ifs[5]) - 1])
 									execif = true;
-						if (strncmp(curr->ifs, "y_pn_", 5) == 0)
+						if (std::strncmp(curr->ifs, "y_pn_", 5) == 0)
 							if (atoi(&curr->ifs[5]) > 0 && atoi(&curr->ifs[5]) < 9)
 								if (!yellow_av[atoi(&curr->ifs[5]) - 1])
 									execif = true;
 						// multipoint ifs
-						if (strncmp(curr->ifs, "b_mp_", 5) == 0) {
+						if (std::strncmp(curr->ifs, "b_mp_", 5) == 0) {
 							bool con = true;
 							for (int k = 0; k < 8; k++) {
 								if ((curr->ifs[k + 5] == '0' || curr->ifs[k + 5] == '1') && con) {
@@ -1819,7 +1817,7 @@ void script(const char* sz) {
 							if (con)
 								execif = true;
 						}
-						if (strncmp(curr->ifs, "r_mp_", 5) == 0) {
+						if (std::strncmp(curr->ifs, "r_mp_", 5) == 0) {
 							bool con = true;
 							for (int k = 0; k < 8; k++) {
 								if ((curr->ifs[k + 5] == '0' || curr->ifs[k + 5] == '1') && con) {
@@ -1839,7 +1837,7 @@ void script(const char* sz) {
 							if (con)
 								execif = true;
 						}
-						if (strncmp(curr->ifs, "g_mp_", 5) == 0) {
+						if (std::strncmp(curr->ifs, "g_mp_", 5) == 0) {
 							bool con = true;
 							for (int k = 0; k < 8; k++) {
 								if ((curr->ifs[k + 5] == '0' || curr->ifs[k + 5] == '1') && con) {
@@ -1859,7 +1857,7 @@ void script(const char* sz) {
 							if (con)
 								execif = true;
 						}
-						if (strncmp(curr->ifs, "y_mp_", 5) == 0) {
+						if (std::strncmp(curr->ifs, "y_mp_", 5) == 0) {
 							bool con = true;
 							for (int k = 0; k < 8; k++) {
 								if ((curr->ifs[k + 5] == '0' || curr->ifs[k + 5] == '1') && con) {
@@ -1881,13 +1879,13 @@ void script(const char* sz) {
 						}
 
 						/*{ fp=UTIL_OpenFoxbotLog();
-										fprintf(fp, "-pass\n"); fclose(fp);}*/
+										std::fprintf(fp, "-pass\n"); std::fclose(fp);}*/
 						if (g_bot_debug) {
 							char msg[255];
 							snprintf(msg, 250, "if : %s +++ %s %d \nComparing point %s\n", msg_msg[current_msg], sz, current_msg, curr->ifs + 4);
 							ALERT(at_console, msg);
 							/*{ fp=UTIL_OpenFoxbotLog();
-											fprintf(fp,msg,sz); fclose(fp);}*/
+											std::fprintf(fp,msg,sz); std::fclose(fp);}*/
 						}
 						if (execif) {
 							if (g_bot_debug) {
@@ -1895,7 +1893,7 @@ void script(const char* sz) {
 								snprintf(msg, 63, "Executing if\n");
 								ALERT(at_console, msg);
 								/*{ fp=UTIL_OpenFoxbotLog();
-												fprintf(fp,msg,sz); fclose(fp); }*/
+												std::fprintf(fp,msg,sz); std::fclose(fp); }*/
 							}
 							for (i = 0; i < 8; i++) {
 								j = curr->blue_av[i];
@@ -2206,11 +2204,11 @@ void BotSoundSense(edict_t* pEdict, const char* pszSample, const float fVolume) 
 	/*	if(bots[0].pEdict && UTIL_GetTeam(pEdict) != -1)
 					{
 									char msg[80];
-									strcpy(msg, pszSample);
+									std::strcpy(msg, pszSample);
 									UTIL_HostSay(bots[0].pEdict, 0, msg);
 									if(pEdict)
 									{
-													sprintf(msg, "pedict team %d fVolume:%f",
+													std::sprintf(msg, "pedict team %d fVolume:%f",
 																	UTIL_GetTeam(pEdict), fVolume);
 													UTIL_HostSay(bots[0].pEdict, 0, msg);
 									}
@@ -2219,8 +2217,8 @@ void BotSoundSense(edict_t* pEdict, const char* pszSample, const float fVolume) 
 	job_struct* newJob;
 
 	// make defenders respond to combat sounds
-	if (strncmp("weapons/ax1", pszSample, 11) == 0 || strncmp("player/pain", pszSample, 11) == 0 || strncmp("items/armoron_1", pszSample, 15) == 0 || strncmp("items/smallmedkit", pszSample, 17) == 0 ||
-		strncmp("items/ammopickup", pszSample, 16) == 0) {
+	if (std::strncmp("weapons/ax1", pszSample, 11) == 0 || std::strncmp("player/pain", pszSample, 11) == 0 || std::strncmp("items/armoron_1", pszSample, 15) == 0 || std::strncmp("items/smallmedkit", pszSample, 17) == 0 ||
+		std::strncmp("items/ammopickup", pszSample, 16) == 0) {
 		const float hearingDistance = 1500 * fVolume;
 		int closestWPToThreat = -1;
 
@@ -2260,7 +2258,7 @@ void BotSoundSense(edict_t* pEdict, const char* pszSample, const float fVolume) 
 		}
 	}
 	// heard a call for a medic?
-	else if (strncmp("speech/saveme", pszSample, 13) == 0) {
+	else if (std::strncmp("speech/saveme", pszSample, 13) == 0) {
 		const float hearingDistance = 1000 * fVolume;
 		float botDistance;
 		float nearestMedDist = 1200.0f;
@@ -2444,8 +2442,8 @@ int BotGetFreeTeleportIndex(const bot_t* pBot) {
 edict_t* BotEntityAtPoint(const char* entityName, const Vector& location, const float range) {
 	edict_t* pent = nullptr;
 	while ((pent = FIND_ENTITY_IN_SPHERE(pent, location, range)) != nullptr && !FNullEnt(pent)) {
-		// strcpy(item_name, STRING(pent->v.classname));
-		if (strcmp(entityName, STRING(pent->v.classname)) == 0)
+		// std::strcpy(item_name, STRING(pent->v.classname));
+		if (std::strcmp(entityName, STRING(pent->v.classname)) == 0)
 			return pent;
 	}
 
@@ -2563,18 +2561,18 @@ static void BotGrenadeAvoidance(bot_t* pBot) {
 		if (pent->v.classname == 0)
 			continue;
 
-		strncpy(classname, STRING(pent->v.classname), 30);
+		std::strncpy(classname, STRING(pent->v.classname), 30);
 		classname[29] = '\0';
 
 		// beware MIRVIN Marvin!
-		if (strncmp("tf_weapon_mirvgrenade", classname, 29) == 0 || strncmp("tf_weapon_mirvbomblet", classname, 29) == 0) {
+		if (std::strncmp("tf_weapon_mirvgrenade", classname, 29) == 0 || std::strncmp("tf_weapon_mirvbomblet", classname, 29) == 0) {
 			entity_origin = pent->v.origin;
 			if (FInViewCone(entity_origin, pBot->pEdict) && FVisible(entity_origin, pBot->pEdict)) {
 				avoid_action = avoid_retreat;
 				threatEnt = pent;
 			}
 		}
-		else if (strncmp("tf_weapon_gasgrenade", classname, 29) == 0) {
+		else if (std::strncmp("tf_weapon_gasgrenade", classname, 29) == 0) {
 			entity_origin = pent->v.origin;
 			// only need to check viewcone, the gas is visible through scenery
 			if (static_cast<int>(pBot->pEdict->v.health) < 30 && FInViewCone(entity_origin, pBot->pEdict)) {
@@ -2592,14 +2590,14 @@ static void BotGrenadeAvoidance(bot_t* pBot) {
 																							avoid_action = avoid_retreat;
 															}*/
 		}
-		else if (strncmp("tf_weapon_normalgrenade", classname, 29) == 0 || strncmp("tf_weapon_empgrenade", classname, 29) == 0) {
+		else if (std::strncmp("tf_weapon_normalgrenade", classname, 29) == 0 || std::strncmp("tf_weapon_empgrenade", classname, 29) == 0) {
 			entity_origin = pent->v.origin;
 			if (FInViewCone(entity_origin, pBot->pEdict) && FVisible(entity_origin, pBot->pEdict)) {
 				avoid_action = avoid_retreat;
 				threatEnt = pent;
 			}
 		}
-		else if (strncmp("tf_weapon_nailgrenade", classname, 29) == 0 || strncmp("tf_weapon_napalmgrenade", classname, 29) == 0 || (strncmp("tf_gl_grenade", classname, 29) == 0 && pBot->pEdict->v.playerclass != TFC_CLASS_DEMOMAN)) {
+		else if (std::strncmp("tf_weapon_nailgrenade", classname, 29) == 0 || std::strncmp("tf_weapon_napalmgrenade", classname, 29) == 0 || (std::strncmp("tf_gl_grenade", classname, 29) == 0 && pBot->pEdict->v.playerclass != TFC_CLASS_DEMOMAN)) {
 			entity_origin = pent->v.origin;
 			if (FInViewCone(entity_origin, pBot->pEdict) && FVisible(entity_origin, pBot->pEdict)) {
 				if (pBot->trait.aggression < 33 || static_cast<int>(pBot->pEdict->v.health) > 70)
@@ -2611,7 +2609,7 @@ static void BotGrenadeAvoidance(bot_t* pBot) {
 				}
 			}
 		}
-		else if (strncmp("tf_gl_pipebomb", classname, 29) == 0) {
+		else if (std::strncmp("tf_gl_pipebomb", classname, 29) == 0) {
 			const int owner_team = UTIL_GetTeam(pent->v.owner);
 
 			// try to get over or around the pipebomb if an enemy fired it
@@ -2625,7 +2623,7 @@ static void BotGrenadeAvoidance(bot_t* pBot) {
 				}
 			}
 		}
-		else if (strncmp("tf_weapon_caltrop", classname, 29) == 0 && pBot->bot_skill < 3) {
+		else if (std::strncmp("tf_weapon_caltrop", classname, 29) == 0 && pBot->bot_skill < 3) {
 			entity_origin = pent->v.origin;
 			if (FInViewCone(entity_origin, pBot->pEdict) && FVisible(entity_origin, pBot->pEdict))
 				pBot->pEdict->v.button |= IN_JUMP;
@@ -2689,10 +2687,10 @@ static void BotRoleCheck(bot_t* pBot) {
 		}
 	}
 	/*char msg[255];
-					sprintf(msg, "Blue: %d Attack, %d Defend, %d Total",
+					std::sprintf(msg, "Blue: %d Attack, %d Defend, %d Total",
 									teams.attackers[0].size(), teams.defenders[0].size(), teams.total[0]);
 					UTIL_HostSay(pBot->pEdict, 0, msg);
-					sprintf(msg, "Red: %d Attack, %d Defend, %d Total",
+					std::sprintf(msg, "Red: %d Attack, %d Defend, %d Total",
 									teams.attackers[1].size(), teams.defenders[1].size(), teams.total[1]);
 					UTIL_HostSay(pBot->pEdict, 0, msg);*/
 
@@ -2746,7 +2744,7 @@ static void BotRoleCheck(bot_t* pBot) {
 					(bots[i].pEdict->v.playerclass == TFC_CLASS_DEMOMAN && !ignoreDemomen)) {
 					bots[i].mission = needed_mission;
 					/*	char msg[80];//DebugMessageOfDoom!
-									sprintf(msg, "team %d needed_mission %d totalAttackers %d",
+									std::sprintf(msg, "team %d needed_mission %d totalAttackers %d",
 													team + 1, (int)needed_mission, totalAttackers);
 									UTIL_HostSay(bots[i].pEdict, 0, msg);*/
 					break; // found what we're looking for
@@ -2772,7 +2770,7 @@ static void BotComms(bot_t* pBot) {
 		char cmd[255];
 		int k = 1; // loop counters
 
-		strcpy(buffa, pBot->message);
+		std::strcpy(buffa, pBot->message);
 		while (k) {
 			// remove start spaces
 			int j = 0;
@@ -2788,14 +2786,14 @@ static void BotComms(bot_t* pBot) {
 			}
 			cmd[k] = '\0';
 
-			// strcpy(buffb, cmd);
+			// std::strcpy(buffb, cmd);
 			if (strcasecmp("changeclass", cmd) == 0 || strcasecmp("changeclassnow", cmd) == 0) {
 				// Check if this message is from another player on our team.
 				char fromName[255] = { 0 };
 				if (strncasecmp("(TEAM)", pBot->message + 1, 6) == 0)
-					strcpy(fromName, pBot->message + 8);
+					std::strcpy(fromName, pBot->message + 8);
 				else
-					strcpy(fromName, pBot->message);
+					std::strcpy(fromName, pBot->message);
 
 				int counter = 0;
 				// Pull the name out of the message.
@@ -2808,8 +2806,8 @@ static void BotComms(bot_t* pBot) {
 				}
 
 				// Get the class from the command line.
-				char theClass = pBot->message[strlen(pBot->message) - 2];
-				if (theClass != '\0' && strchr("123456789", theClass)) {
+				char theClass = pBot->message[std::strlen(pBot->message) - 2];
+				if (theClass != '\0' && std::strchr("123456789", theClass)) {
 					const int iClass = atoi(&theClass);
 					if (BotChangeClass(pBot, iClass, fromName)) {
 						UTIL_HostSay(pBot->pEdict, 1, "Roger");
@@ -2822,9 +2820,9 @@ static void BotComms(bot_t* pBot) {
 				// Check if this message is from another player on our team.
 				char fromName[255] = { 0 };
 				if (strncasecmp("(TEAM)", pBot->message + 1, 6) == 0)
-					strcpy(fromName, pBot->message + 8);
+					std::strcpy(fromName, pBot->message + 8);
 				else
-					strcpy(fromName, pBot->message);
+					std::strcpy(fromName, pBot->message);
 
 				int counter = 0;
 				// Pull the name out of the message.
@@ -2909,7 +2907,7 @@ static void BotComms(bot_t* pBot) {
 			SubmitNewJob(pBot, JOB_CHAT, newJob);
 		}
 		if (bot_xmas) {
-			strcpy(pBot->message, "xmas");
+			std::strcpy(pBot->message, "xmas");
 			pBot->newmsg = true;
 		}
 		return;
@@ -2929,7 +2927,7 @@ static void BotComms(bot_t* pBot) {
 		SubmitNewJob(pBot, JOB_CHAT, newJob);
 
 		if (bot_xmas && random_long(1, 100) <= 30 && pBot->killer_edict != nullptr) {
-			strcpy(pBot->message, "xmas");
+			std::strcpy(pBot->message, "xmas");
 			pBot->newmsg = true;
 		}
 		pBot->killer_edict = nullptr;
@@ -2950,7 +2948,7 @@ static void BotComms(bot_t* pBot) {
 		SubmitNewJob(pBot, JOB_CHAT, newJob);
 
 		if (bot_xmas && random_long(1, 100) <= 30 && pBot->killed_edict != nullptr) {
-			strcpy(pBot->message, "xmas");
+			std::strcpy(pBot->message, "xmas");
 			pBot->newmsg = true;
 		}
 		pBot->killed_edict = nullptr;
@@ -2986,7 +2984,7 @@ static bool BotChangeClass(bot_t* pBot, const int iClass, const char* from) {
 			continue;
 
 		// Is this the guys name that sent the command?
-		if (strcmp(STRING(pPlayer->v.netname), from) == 0) {
+		if (std::strcmp(STRING(pPlayer->v.netname), from) == 0) {
 			// Make sure he is on our team to accept the message.
 			if (pBot->current_team != UTIL_GetTeam(pPlayer))
 				return false;
@@ -2998,7 +2996,7 @@ static bool BotChangeClass(bot_t* pBot, const int iClass, const char* from) {
 			}
 
 			/*char msg[80];
-			   sprintf(msg, "wonid: %d", wonId);
+			   std::sprintf(msg, "wonid: %d", wonId);
 			   UTIL_HostSay(pBot->pEdict, 0, msg);*/
 
 			   // A-OK Do it.
@@ -3006,34 +3004,34 @@ static bool BotChangeClass(bot_t* pBot, const int iClass, const char* from) {
 			char c_class[128];
 			switch (pBot->bot_class) {
 			case 0:
-				strcpy(c_class, "civilian");
+				std::strcpy(c_class, "civilian");
 				break;
 			case 1:
-				strcpy(c_class, "scout");
+				std::strcpy(c_class, "scout");
 				break;
 			case 2:
-				strcpy(c_class, "sniper");
+				std::strcpy(c_class, "sniper");
 				break;
 			case 3:
-				strcpy(c_class, "soldier");
+				std::strcpy(c_class, "soldier");
 				break;
 			case 4:
-				strcpy(c_class, "demoman");
+				std::strcpy(c_class, "demoman");
 				break;
 			case 5:
-				strcpy(c_class, "medic");
+				std::strcpy(c_class, "medic");
 				break;
 			case 6:
-				strcpy(c_class, "hwguy");
+				std::strcpy(c_class, "hwguy");
 				break;
 			case 7:
-				strcpy(c_class, "pyro");
+				std::strcpy(c_class, "pyro");
 				break;
 			case 8:
-				strcpy(c_class, "spy");
+				std::strcpy(c_class, "spy");
 				break;
 			case 9:
-				strcpy(c_class, "engineer");
+				std::strcpy(c_class, "engineer");
 				break;
 			default:
 				return false;
@@ -3064,7 +3062,7 @@ static bool BotChangeRole(bot_t* pBot, const char* cmdLine, const char* from) {
 			continue;
 
 		// Is this the guys name that sent the command?
-		if (strcmp(STRING(pPlayer->v.netname), from) == 0) {
+		if (std::strcmp(STRING(pPlayer->v.netname), from) == 0) {
 			// Make sure he is on our team to accept the message.
 			if (pBot->current_team != UTIL_GetTeam(pPlayer))
 				return false;
@@ -3077,17 +3075,17 @@ static bool BotChangeRole(bot_t* pBot, const char* cmdLine, const char* from) {
 
 			// Get the role to change to first from the cmdLine line
 			// int changeTo = 0;
-			if (strstr(cmdLine, "attack")) {
+			if (std::strstr(cmdLine, "attack")) {
 				pBot->mission = ROLE_ATTACKER;
 				pBot->lockMission = true;
 				UTIL_HostSay(pBot->pEdict, 1, "Roger, attacking.");
 			}
-			else if (strstr(cmdLine, "defend")) {
+			else if (std::strstr(cmdLine, "defend")) {
 				pBot->mission = ROLE_DEFENDER;
 				pBot->lockMission = true;
 				UTIL_HostSay(pBot->pEdict, 1, "Roger, defending.");
 			}
-			else if (strstr(cmdLine, "roam")) {
+			else if (std::strstr(cmdLine, "roam")) {
 				pBot->lockMission = false;
 				UTIL_HostSay(pBot->pEdict, 1, "Roger, I'm on my own.");
 			}
@@ -3102,7 +3100,7 @@ static bool BotChangeRole(bot_t* pBot, const char* cmdLine, const char* from) {
 // the foxbot_commanders.txt
 static bool botVerifyAccess(edict_t* pPlayer) {
 	char authId[255];
-	strcpy(authId, GETPLAYERAUTHID(pPlayer));
+	std::strcpy(authId, GETPLAYERAUTHID(pPlayer));
 
 	char szBuffer[64];
 	snprintf(szBuffer, 63, "%s Does not have access.", authId);
@@ -3222,31 +3220,31 @@ static void BotPickNewClass(bot_t* pBot) {
 	char c_class[16];
 	switch (new_class) {
 	case 1:
-		strcpy(c_class, "scout");
+		std::strcpy(c_class, "scout");
 		break;
 	case 2:
-		strcpy(c_class, "sniper");
+		std::strcpy(c_class, "sniper");
 		break;
 	case 3:
-		strcpy(c_class, "soldier");
+		std::strcpy(c_class, "soldier");
 		break;
 	case 4:
-		strcpy(c_class, "demoman");
+		std::strcpy(c_class, "demoman");
 		break;
 	case 5:
-		strcpy(c_class, "medic");
+		std::strcpy(c_class, "medic");
 		break;
 	case 6:
-		strcpy(c_class, "hwguy");
+		std::strcpy(c_class, "hwguy");
 		break;
 	case 7:
-		strcpy(c_class, "pyro");
+		std::strcpy(c_class, "pyro");
 		break;
 	case 8:
-		strcpy(c_class, "spy");
+		std::strcpy(c_class, "spy");
 		break;
 	case 9:
-		strcpy(c_class, "engineer");
+		std::strcpy(c_class, "engineer");
 		break;
 	default:
 		break;
@@ -3334,31 +3332,31 @@ static bool BotChooseCounterClass(bot_t* pBot) {
 	char c_class[16];
 	switch (new_class) {
 	case 1:
-		strcpy(c_class, "scout");
+		std::strcpy(c_class, "scout");
 		break;
 	case 2:
-		strcpy(c_class, "sniper");
+		std::strcpy(c_class, "sniper");
 		break;
 	case 3:
-		strcpy(c_class, "soldier");
+		std::strcpy(c_class, "soldier");
 		break;
 	case 4:
-		strcpy(c_class, "demoman");
+		std::strcpy(c_class, "demoman");
 		break;
 	case 5:
-		strcpy(c_class, "medic");
+		std::strcpy(c_class, "medic");
 		break;
 	case 6:
-		strcpy(c_class, "hwguy");
+		std::strcpy(c_class, "hwguy");
 		break;
 	case 7:
-		strcpy(c_class, "pyro");
+		std::strcpy(c_class, "pyro");
 		break;
 	case 8:
-		strcpy(c_class, "spy");
+		std::strcpy(c_class, "spy");
 		break;
 	case 9:
-		strcpy(c_class, "engineer");
+		std::strcpy(c_class, "engineer");
 		break;
 	default:
 		return false;
@@ -3745,7 +3743,7 @@ void BotThink(bot_t* pBot) {
 	}
 
 	if (pBot->name[0] == 0) // name filled in yet?
-		strcpy(pBot->name, STRING(pBot->pEdict->v.netname));
+		std::strcpy(pBot->name, STRING(pBot->pEdict->v.netname));
 
 	BotRoleCheck(pBot);
 	BotComms(pBot);
@@ -3903,7 +3901,7 @@ static void BotSenseEnvironment(bot_t* pBot) {
 
 			if (bot_xmas) {
 				pBot->newmsg = true;
-				strcpy(pBot->message, "xmas");
+				std::strcpy(pBot->message, "xmas");
 			}
 
 			if (random_long(1, 1000) <= 200)
@@ -4266,50 +4264,50 @@ static void BotSpectatorDebug(bot_t* pBot) {
 			for (int i = 0; i < JOB_BUFFER_MAX; i++) {
 				// list one job per line
 				if (pBot->jobType[i] > JOB_NONE && pBot->jobType[i] < JOB_TYPE_TOTAL) {
-					strncat(msg, jl[pBot->jobType[i]].jobNames, 255 - strlen(msg));
+					std::strncat(msg, jl[pBot->jobType[i]].jobNames, 255 - std::strlen(msg));
 
 					// indicate the current job and how long it's been running
 					if (pBot->currentJob == i) {
 						char msgBuffer[128] = "";
 						snprintf(msgBuffer, 128, " [phase %d, buffered %f]\n", pBot->job[pBot->currentJob].phase, static_cast<double>(pBot->f_think_time - pBot->job[pBot->currentJob].f_bufferedTime));
-						strncat(msg, msgBuffer, 255 - strlen(msg));
+						std::strncat(msg, msgBuffer, 255 - std::strlen(msg));
 					}
 					else
-						strncat(msg, "\n", 255 - strlen(msg)); // add a newline on the end
+						std::strncat(msg, "\n", 255 - std::strlen(msg)); // add a newline on the end
 				}
 				else
-					strncat(msg, "\n", 255 - strlen(msg)); // skip empty job indexes
+					std::strncat(msg, "\n", 255 - std::strlen(msg)); // skip empty job indexes
 			}
 		}
 		else if (spectate_debug == 2) // list what jobs are blacklisted
 		{
 			// list any jobs in the blacklist
-			strncat(msg, "Blacklist:\n", 255 - strlen(msg));
+			std::strncat(msg, "Blacklist:\n", 255 - std::strlen(msg));
 			for (int i = 0; i < JOB_BLACKLIST_MAX; i++) {
 				// list one blacklisted job per line
 				if (pBot->jobBlacklist[i].type > JOB_NONE && pBot->jobBlacklist[i].f_timeOut >= pBot->f_think_time && pBot->jobBlacklist[i].type < JOB_TYPE_TOTAL) {
-					strncat(msg, jl[pBot->jobBlacklist[i].type].jobNames, 255 - strlen(msg));
-					strncat(msg, "\n", 255 - strlen(msg)); // add a newline on the end
+					std::strncat(msg, jl[pBot->jobBlacklist[i].type].jobNames, 255 - std::strlen(msg));
+					std::strncat(msg, "\n", 255 - std::strlen(msg)); // add a newline on the end
 				}
 				else
-					strncat(msg, "\n", 255 - strlen(msg)); // skip empty blacklist indexes
+					std::strncat(msg, "\n", 255 - std::strlen(msg)); // skip empty blacklist indexes
 			}
 		}
 		else if (spectate_debug == 3) // show the bots personality traits
 		{
 			char msgBuffer[128] = "";
 			snprintf(msgBuffer, 128, "aggression %d\nhealth threshold%d\ncamper %d", pBot->trait.aggression, pBot->trait.health, pBot->trait.camper);
-			strncat(msg, msgBuffer, 255 - strlen(msg));
+			std::strncat(msg, msgBuffer, 255 - std::strlen(msg));
 		}
 		else // some other spectate_debug mode - show navigation info
 		{
 			char msgBuffer[128] = "";
 			snprintf(msgBuffer, 128, "waypoint deadline %f\nnavDistance %f\nf_navProblemStartTime %f\n", static_cast<double>(pBot->f_current_wp_deadline - pBot->f_think_time), static_cast<double>((waypoints[pBot->current_wp].origin - pBot->pEdict->v.origin).Length()),
 				static_cast<double>(pBot->f_think_time - pBot->f_navProblemStartTime));
-			strncat(msg, msgBuffer, 255 - strlen(msg));
+			std::strncat(msg, msgBuffer, 255 - std::strlen(msg));
 
 			snprintf(msgBuffer, 128, "velocity length 2D %f\n velocity Z %f\n", static_cast<double>(pBot->pEdict->v.velocity.Length2D()), static_cast<double>(pBot->pEdict->v.velocity.z));
-			strncat(msg, msgBuffer, 255 - strlen(msg));
+			std::strncat(msg, msgBuffer, 255 - std::strlen(msg));
 		}
 
 		msg[254] = '\0';

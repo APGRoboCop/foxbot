@@ -278,12 +278,12 @@ void FOX_HudMessage(edict_t* pEntity, const hudtextparms_t& textparms, const cha
 	if (textparms.effect == 2)
 		WRITE_SHORT(FixedUnsigned16(textparms.fxTime, 1 << 8));
 
-	if (strlen(pMessage) < 512) {
+	if (std::strlen(pMessage) < 512) {
 		WRITE_STRING(pMessage);
 	}
 	else {
 		char temp[512];
-		strncpy(temp, pMessage, 511);
+		std::strncpy(temp, pMessage, 511);
 		temp[511] = '\0';
 		WRITE_STRING(temp);
 	}
@@ -610,7 +610,7 @@ static bool BBotBalanceTeams(int a, int b) {
 			char cl_name[128];
 			cl_name[0] = '\0';
 			char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(bots[i].pEdict);
-			strcpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"));
+			std::strcpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"));
 			if (cl_name[0] != '\0') {
 				const int team = bots[i].pEdict->v.team - 1;
 
@@ -670,7 +670,7 @@ void GameDLLInit() {
 		clients[i] = nullptr;
 
 	// initialize the bots array of structures...
-	memset(bots, 0.0f, sizeof bots);
+	std::memset(bots, 0.0f, sizeof bots);
 
 	// read the bot names from the bot name file
 	BotNameInit();
@@ -715,7 +715,7 @@ void chatClass::readChatFile() {
 	char filename[256];
 
 	UTIL_BuildFileName(filename, 255, "foxbot_chat.txt", nullptr);
-	FILE* bfp = fopen(filename, "r");
+	FILE* bfp = std::fopen(filename, "r");
 
 	if (bfp == nullptr) {
 		UTIL_BotLogPrintf("Unable to read from the Foxbot chat file.  The bots will not chat.");
@@ -732,7 +732,7 @@ void chatClass::readChatFile() {
 		if (buffer[0] == '#')
 			continue;
 
-		size_t length = strlen(buffer);
+		size_t length = std::strlen(buffer);
 
 		// turn '\n' into '\0'
 		if (buffer[length - 1] == '\n') {
@@ -741,7 +741,7 @@ void chatClass::readChatFile() {
 		}
 
 		// change %n to %s
-		if ((ptr = strstr(buffer, "%n")) != nullptr)
+		if ((ptr = std::strstr(buffer, "%n")) != nullptr)
 			*(ptr + 1) = 's';
 
 		// watch out for the chat section headers
@@ -767,7 +767,7 @@ void chatClass::readChatFile() {
 		}
 	}
 
-	fclose(bfp);
+	std::fclose(bfp);
 }
 
 // This function will return a C ASCII string pointer to a randomly selected
@@ -807,7 +807,7 @@ void chatClass::pickRandomChatString(char* msg, size_t maxLength, const int chat
 
 	// set up the message string
 	// is "%s" in the text?
-	if (playerName != nullptr && strstr(this->strings_[chatSection][randomIndex].c_str(), "%s") != nullptr) {
+	if (playerName != nullptr && std::strstr(this->strings_[chatSection][randomIndex].c_str(), "%s") != nullptr) {
 		snprintf(msg, maxLength, this->strings_[chatSection][randomIndex].c_str(), playerName);
 	}
 	else
@@ -822,17 +822,17 @@ int DispatchSpawn(edict_t* pent) {
 
 		if (debug_engine) {
 			global::fp = UTIL_OpenFoxbotLog();
-			fprintf(global::fp, "DispatchSpawn: %p %s\n", static_cast<void*>(pent), pClassname);
+			std::fprintf(global::fp, "DispatchSpawn: %p %s\n", static_cast<void*>(pent), pClassname);
 			if (pent->v.model != 0)
-				fprintf(global::fp, " model=%s\n", STRING(pent->v.model));
+				std::fprintf(global::fp, " model=%s\n", STRING(pent->v.model));
 			if (pent->v.target != 0)
-				fprintf(global::fp, " t=%s\n", STRING(pent->v.target));
+				std::fprintf(global::fp, " t=%s\n", STRING(pent->v.target));
 			if (pent->v.targetname != 0)
-				fprintf(global::fp, " tn=%s\n", STRING(pent->v.targetname));
-			fclose(global::fp);
+				std::fprintf(global::fp, " tn=%s\n", STRING(pent->v.targetname));
+			std::fclose(global::fp);
 		}
 
-		if (strcmp(pClassname, "worldspawn") == 0) {
+		if (std::strcmp(pClassname, "worldspawn") == 0) {
 			// do level initialization stuff here...
 
 			WaypointInit();
@@ -840,7 +840,7 @@ int DispatchSpawn(edict_t* pent) {
 			AreaDefLoad(nullptr);
 
 			// my clear var for lev reload..
-			strcpy(prevmapname, "null");
+			std::strcpy(prevmapname, "null");
 
 			pent_info_tfdetect = nullptr;
 			pent_info_ctfdetect = nullptr;
@@ -990,8 +990,8 @@ void DispatchThink(edict_t* pent) {
 					vang.y += 360;
 				vang.y = vang.y * static_cast<float>(M_PI);
 				vang.y = vang.y / 180;
-				xx = xo * cos(vang.y);
-				float yy = xo * sin(vang.y);
+				xx = xo * std::cos(vang.y);
+				float yy = xo * std::sin(vang.y);
 
 				tr.pHit = nullptr;
 				UTIL_TraceLine(pent->v.euser1->v.origin + pent->v.euser1->v.view_ofs, pBot->enemy.ptr->v.origin + Vector(xx, yy, zz), dont_ignore_monsters, dont_ignore_glass, pent->v.euser1, &tr);
@@ -1018,7 +1018,7 @@ void DispatchThink(edict_t* pent) {
 					edict_t* s = nullptr;
 					edict_t* pPoint = nullptr;
 					while ((s = FIND_ENTITY_IN_SPHERE(s, pBot->enemy.ptr->v.origin, 50)) != nullptr && !FNullEnt(s) && amb == 0) {
-						if (strcmp(STRING(s->v.classname), "entity_botlightvalue") == 0)
+						if (std::strcmp(STRING(s->v.classname), "entity_botlightvalue") == 0)
 							pPoint = s;
 					}
 					if (pPoint == nullptr) {
@@ -1060,8 +1060,8 @@ void DispatchThink(edict_t* pent) {
 				dgrad = dgrad / 180;
 
 				Vector vel = pBot->enemy.ptr->v.velocity;
-				vel.x = vel.x * sin(dgrad);
-				vel.y = vel.y * cos(dgrad);
+				vel.x = vel.x * std::sin(dgrad);
+				vel.y = vel.y * std::cos(dgrad);
 				dgrad = v.x;
 				dgrad = dgrad + 180;
 				if (dgrad > 180)
@@ -1070,7 +1070,7 @@ void DispatchThink(edict_t* pent) {
 					dgrad += 360;
 				dgrad = dgrad * M_PI;
 				dgrad = dgrad / 180;
-				vel.z = vel.z * cos(dgrad);
+				vel.z = vel.z * std::cos(dgrad);
 
 				if (vel.x < 0)
 					vel.x = -vel.x;
@@ -1168,50 +1168,50 @@ void DispatchKeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd) {
 		static int flag_index;
 		static edict_t* temp_pent;
 		if (pentKeyvalue == pent_info_tfdetect) {
-			if (strcmp(pkvd->szKeyName, "ammo_medikit") == 0) // max BLUE players
+			if (std::strcmp(pkvd->szKeyName, "ammo_medikit") == 0) // max BLUE players
 				max_team_players[0] = atoi(pkvd->szValue);
-			else if (strcmp(pkvd->szKeyName, "ammo_detpack") == 0) // max RED players
+			else if (std::strcmp(pkvd->szKeyName, "ammo_detpack") == 0) // max RED players
 				max_team_players[1] = atoi(pkvd->szValue);
-			else if (strcmp(pkvd->szKeyName, "maxammo_medikit") == 0) // max YELLOW players
+			else if (std::strcmp(pkvd->szKeyName, "maxammo_medikit") == 0) // max YELLOW players
 				max_team_players[2] = atoi(pkvd->szValue);
-			else if (strcmp(pkvd->szKeyName, "maxammo_detpack") == 0) // max GREEN players
+			else if (std::strcmp(pkvd->szKeyName, "maxammo_detpack") == 0) // max GREEN players
 				max_team_players[3] = atoi(pkvd->szValue);
 
-			else if (strcmp(pkvd->szKeyName, "maxammo_shells") == 0) // BLUE class limits
+			else if (std::strcmp(pkvd->szKeyName, "maxammo_shells") == 0) // BLUE class limits
 				team_class_limits[0] = atoi(pkvd->szValue);
-			else if (strcmp(pkvd->szKeyName, "maxammo_nails") == 0) // RED class limits
+			else if (std::strcmp(pkvd->szKeyName, "maxammo_nails") == 0) // RED class limits
 				team_class_limits[1] = atoi(pkvd->szValue);
-			else if (strcmp(pkvd->szKeyName, "maxammo_rockets") == 0) // YELLOW class limits
+			else if (std::strcmp(pkvd->szKeyName, "maxammo_rockets") == 0) // YELLOW class limits
 				team_class_limits[2] = atoi(pkvd->szValue);
-			else if (strcmp(pkvd->szKeyName, "maxammo_cells") == 0) // GREEN class limits
+			else if (std::strcmp(pkvd->szKeyName, "maxammo_cells") == 0) // GREEN class limits
 				team_class_limits[3] = atoi(pkvd->szValue);
 
-			else if (strcmp(pkvd->szKeyName, "team1_allies") == 0) // BLUE allies
+			else if (std::strcmp(pkvd->szKeyName, "team1_allies") == 0) // BLUE allies
 				team_allies[0] = atoi(pkvd->szValue);
-			else if (strcmp(pkvd->szKeyName, "team2_allies") == 0) // RED allies
+			else if (std::strcmp(pkvd->szKeyName, "team2_allies") == 0) // RED allies
 				team_allies[1] = atoi(pkvd->szValue);
-			else if (strcmp(pkvd->szKeyName, "team3_allies") == 0) // YELLOW allies
+			else if (std::strcmp(pkvd->szKeyName, "team3_allies") == 0) // YELLOW allies
 				team_allies[2] = atoi(pkvd->szValue);
-			else if (strcmp(pkvd->szKeyName, "team4_allies") == 0) // GREEN allies
+			else if (std::strcmp(pkvd->szKeyName, "team4_allies") == 0) // GREEN allies
 				team_allies[3] = atoi(pkvd->szValue);
 		}
 		else if (pent_info_tfdetect == nullptr) {
-			if (strcmp(pkvd->szKeyName, "classname") == 0 && strcmp(pkvd->szValue, "info_tfdetect") == 0) {
+			if (std::strcmp(pkvd->szKeyName, "classname") == 0 && std::strcmp(pkvd->szValue, "info_tfdetect") == 0) {
 				pent_info_tfdetect = pentKeyvalue;
 			}
 		}
 
 		if (pentKeyvalue == pent_item_tfgoal) {
-			if (strcmp(pkvd->szKeyName, "team_no") == 0)
+			if (std::strcmp(pkvd->szKeyName, "team_no") == 0)
 				flags[flag_index].team_no = atoi(pkvd->szValue);
 
-			if (strcmp(pkvd->szKeyName, "mdl") == 0 && (strcmp(pkvd->szValue, "models/flag.mdl") == 0 || strcmp(pkvd->szValue, "models/keycard.mdl") == 0 || strcmp(pkvd->szValue, "models/ball.mdl") == 0)) {
+			if (std::strcmp(pkvd->szKeyName, "mdl") == 0 && (std::strcmp(pkvd->szValue, "models/flag.mdl") == 0 || std::strcmp(pkvd->szValue, "models/keycard.mdl") == 0 || std::strcmp(pkvd->szValue, "models/ball.mdl") == 0)) {
 				flags[flag_index].mdl_match = true;
 				num_flags++;
 			}
 		}
 		else if (pent_item_tfgoal == nullptr) {
-			if (strcmp(pkvd->szKeyName, "classname") == 0 && strcmp(pkvd->szValue, "item_tfgoal") == 0) {
+			if (std::strcmp(pkvd->szKeyName, "classname") == 0 && std::strcmp(pkvd->szValue, "item_tfgoal") == 0) {
 				if (num_flags < MAX_FLAGS) {
 					pent_item_tfgoal = pentKeyvalue;
 
@@ -1226,11 +1226,11 @@ void DispatchKeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd) {
 		else
 			pent_item_tfgoal = nullptr; // reset for non-flag item_tfgoal's
 
-		if (strcmp(pkvd->szKeyName, "classname") == 0 && (strcmp(pkvd->szValue, "info_player_teamspawn") == 0 || strcmp(pkvd->szValue, "info_tf_teamcheck") == 0 || strcmp(pkvd->szValue, "i_p_t") == 0)) {
+		if (std::strcmp(pkvd->szKeyName, "classname") == 0 && (std::strcmp(pkvd->szValue, "info_player_teamspawn") == 0 || std::strcmp(pkvd->szValue, "info_tf_teamcheck") == 0 || std::strcmp(pkvd->szValue, "i_p_t") == 0)) {
 			temp_pent = pentKeyvalue;
 		}
 		else if (pentKeyvalue == temp_pent) {
-			if (strcmp(pkvd->szKeyName, "team_no") == 0) {
+			if (std::strcmp(pkvd->szKeyName, "team_no") == 0) {
 				const int value = atoi(pkvd->szValue);
 
 				is_team[value - 1] = true;
@@ -1252,8 +1252,8 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 		if (debug_engine) {
 			global::fp = UTIL_OpenFoxbotLog();
 			if (global::fp != nullptr) {
-				fprintf(global::fp, "ClientConnect: pent=%p name=%s\n", static_cast<void*>(pEntity), pszName);
-				fclose(global::fp);
+				std::fprintf(global::fp, "ClientConnect: pent=%p name=%s\n", static_cast<void*>(pEntity), pszName);
+				std::fclose(global::fp);
 			}
 		}
 
@@ -1261,16 +1261,16 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 		// VER_BUILD);
 		if (!mr_meta) {
 			char msg[255];
-			// sprintf(msg, "[FOXBOT] This server is running FoxBot (v %d build %d), Get it at foxbot.net!\n",
+			// std::sprintf(msg, "[FOXBOT] This server is running FoxBot (v %d build %d), Get it at foxbot.net!\n",
 			// VER_MINOR, VER_BUILD);
-			// sprintf(msg, "[FOXBOT] This server is running FoxBot (v%d.%d), Get it at foxbot.net!\n", VER_MAJOR,
+			// std::sprintf(msg, "[FOXBOT] This server is running FoxBot (v%d.%d), Get it at foxbot.net!\n", VER_MAJOR,
 			// VER_MINOR);
 			snprintf(msg, 254, "[FOXBOT] This server is running FoxBot (v%d.%d), get it at www.apg-clan.org\n", VER_MAJOR, VER_MINOR);
 			CLIENT_PRINTF(pEntity, print_console, msg);
 		}
 
 		// check if this is NOT a bot joining the server...
-		if (strcmp(pszAddress, "127.0.0.1") != 0) {
+		if (std::strcmp(pszAddress, "127.0.0.1") != 0) {
 			int i = 0;
 			while (i < 32 && (clients[i] != nullptr && clients[i] != pEntity))
 				i++;
@@ -1296,17 +1296,17 @@ BOOL ClientConnect_Post(edict_t* pEntity, const char* pszName, const char* pszAd
 		if (debug_engine) {
 			global::fp = UTIL_OpenFoxbotLog();
 			if (global::fp != nullptr) {
-				fprintf(global::fp, "ClientConnect_Post: pent=%p name=%s\n", static_cast<void*>(pEntity), pszName);
-				fclose(global::fp);
+				std::fprintf(global::fp, "ClientConnect_Post: pent=%p name=%s\n", static_cast<void*>(pEntity), pszName);
+				std::fclose(global::fp);
 			}
 		}
 
 		// ALERT(at_console, "[FOXBOT] This server is running FoxBot (%d build %d), Get it at foxbot.net!\n", VER_MINOR,
 		// VER_BUILD);
 		char msg[255];
-		// sprintf(msg, "[FOXBOT] This server is running FoxBot (v %d build %d), Get it at foxbot.net!\n", VER_MINOR,
+		// std::sprintf(msg, "[FOXBOT] This server is running FoxBot (v %d build %d), Get it at foxbot.net!\n", VER_MINOR,
 		// VER_BUILD);
-		// sprintf(msg, "[FOXBOT] This server is running FoxBot (v%d.%d), Get it at foxbot.net!\n", VER_MAJOR,
+		// std::sprintf(msg, "[FOXBOT] This server is running FoxBot (v%d.%d), Get it at foxbot.net!\n", VER_MAJOR,
 		// VER_MINOR);
 		snprintf(msg, 254, "[FOXBOT] This server is running FoxBot (v%d.%d), get it at www.apg-clan.org\n", VER_MAJOR, VER_MINOR);
 		CLIENT_PRINTF(pEntity, print_console, msg);
@@ -1319,8 +1319,8 @@ void ClientDisconnect(edict_t* pEntity) {
 		if (debug_engine) {
 			global::fp = UTIL_OpenFoxbotLog();
 			if (global::fp != nullptr) {
-				fprintf(global::fp, "ClientDisconnect: %p\n", static_cast<void*>(pEntity));
-				fclose(global::fp);
+				std::fprintf(global::fp, "ClientDisconnect: %p\n", static_cast<void*>(pEntity));
+				std::fclose(global::fp);
 			}
 		}
 
@@ -1370,25 +1370,25 @@ void ClientCommand(edict_t* pEntity) {
 		// char msg[80];
 		if (debug_engine) {
 			global::fp = UTIL_OpenFoxbotLog();
-			fprintf(global::fp, "ClientCommand: %s %p", pcmd, static_cast<void*>(pEntity));
+			std::fprintf(global::fp, "ClientCommand: %s %p", pcmd, static_cast<void*>(pEntity));
 			if (arg1 != nullptr) {
 				if (*arg1 != 0)
-					fprintf(global::fp, " 1:%s", arg1);
+					std::fprintf(global::fp, " 1:%s", arg1);
 			}
 			if (arg2 != nullptr) {
 				if (*arg2 != 0)
-					fprintf(global::fp, " 2:%s", arg2);
+					std::fprintf(global::fp, " 2:%s", arg2);
 			}
 			if (arg3 != nullptr) {
 				if (*arg3 != 0)
-					fprintf(global::fp, " 3:%s", arg3);
+					std::fprintf(global::fp, " 3:%s", arg3);
 			}
 			if (arg4 != nullptr) {
 				if (*arg4 != 0)
-					fprintf(global::fp, " 4:%s", arg4);
+					std::fprintf(global::fp, " 4:%s", arg4);
 			}
-			fprintf(global::fp, "\n");
-			fclose(global::fp);
+			std::fprintf(global::fp, "\n");
+			std::fclose(global::fp);
 		}
 	}
 
@@ -1402,25 +1402,25 @@ void ClientCommand(edict_t* pEntity) {
 
 		if (debug_engine) {
 			global::fp = UTIL_OpenFoxbotLog();
-			fprintf(global::fp, "ClientCommand: %s %p", pcmd, static_cast<void*>(pEntity));
+			std::fprintf(global::fp, "ClientCommand: %s %p", pcmd, static_cast<void*>(pEntity));
 			if (arg1 != nullptr) {
 				if (*arg1 != 0)
-					fprintf(global::fp, " '%s'(1)", arg1);
+					std::fprintf(global::fp, " '%s'(1)", arg1);
 			}
 			if (arg2 != nullptr) {
 				if (*arg2 != 0)
-					fprintf(global::fp, " '%s'(2)", arg2);
+					std::fprintf(global::fp, " '%s'(2)", arg2);
 			}
 			if (arg3 != nullptr) {
 				if (*arg3 != 0)
-					fprintf(global::fp, " '%s'(3)", arg3);
+					std::fprintf(global::fp, " '%s'(3)", arg3);
 			}
 			if (arg4 != nullptr) {
 				if (*arg4 != 0)
-					fprintf(global::fp, " '%s'(4)", arg4);
+					std::fprintf(global::fp, " '%s'(4)", arg4);
 			}
-			fprintf(global::fp, "\n");
-			fclose(global::fp);
+			std::fprintf(global::fp, "\n");
+			std::fclose(global::fp);
 		}
 
 		if (FStrEq(pcmd, "addbot") || FStrEq(pcmd, "foxbot_addbot")) {
@@ -1428,7 +1428,7 @@ void ClientCommand(edict_t* pEntity) {
 				BotCreate(pEntity, arg1, arg2, arg3, arg4);
 			else {
 				char c[8];
-				strcpy(c, "-1");
+				std::strcpy(c, "-1");
 				BotCreate(pEntity, arg1, c, arg3, arg4);
 			}
 			bot_check_time = gpGlobals->time + 5.0f;
@@ -1637,10 +1637,10 @@ void ClientCommand(edict_t* pEntity) {
 
 			if (arg1 != nullptr) {
 				if (*arg1 != 0) {
-					if (strchr(arg1, '\"') == nullptr)
-						strcpy(botname, arg1);
+					if (std::strchr(arg1, '\"') == nullptr)
+						std::strcpy(botname, arg1);
 					else
-						sscanf(arg1, R"("%s")", &botname[0]);
+						std::sscanf(arg1, R"("%s")", &botname[0]);
 
 					index = 0;
 
@@ -1696,9 +1696,9 @@ void ClientCommand(edict_t* pEntity) {
 			if (arg1 != nullptr) {
 				if (*arg1 != 0) {
 					char message[512];
-					sprintf(message, "Waypoint author set to : %s", arg1);
+					std::sprintf(message, "Waypoint author set to : %s", arg1);
 					CLIENT_PRINTF(pEntity, print_console, UTIL_VarArgs(message));
-					strncpy(waypoint_author, arg1, 250);
+					std::strncpy(waypoint_author, arg1, 250);
 					waypoint_author[251] = '\0';
 
 					hudtextparms_t h;
@@ -1717,7 +1717,7 @@ void ClientCommand(edict_t* pEntity) {
 					h.holdTime = 7;
 					h.x = -1;
 					h.y = 0.8f;
-					sprintf(message, "-- Waypoint author: %s --", waypoint_author);
+					std::sprintf(message, "-- Waypoint author: %s --", waypoint_author);
 					FOX_HudMessage(INDEXENT(1), h, message);
 				}
 			}
@@ -1798,9 +1798,9 @@ void ClientCommand(edict_t* pEntity) {
 			}
 
 			if (g_auto_waypoint)
-				sprintf(msg, "autowaypoint is ON\n");
+				std::sprintf(msg, "autowaypoint is ON\n");
 			else
-				sprintf(msg, "autowaypoint is OFF\n");
+				std::sprintf(msg, "autowaypoint is OFF\n");
 
 			ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 
@@ -1953,7 +1953,7 @@ void ClientCommand(edict_t* pEntity) {
 				if (l_waypoint <= num_waypoints) {
 					g_find_wp = l_waypoint;
 					char s[255];
-					sprintf(s, "locate waypoint %d\n", l_waypoint);
+					std::sprintf(s, "locate waypoint %d\n", l_waypoint);
 					ClientPrint(pEntity, HUD_PRINTNOTIFY, s);
 				}
 			}
@@ -2082,39 +2082,39 @@ void ClientCommand(edict_t* pEntity) {
 			}
 			else if (FStrEq(arg1, "name") && g_area_def) {
 				int i = AreaInsideClosest(pEntity);
-				if (i != -1 && strlen(arg2) < 64) {
-					strcpy(areas[i].namea, arg2);
-					strcpy(areas[i].nameb, arg2);
-					strcpy(areas[i].namec, arg2);
-					strcpy(areas[i].named, arg2);
+				if (i != -1 && std::strlen(arg2) < 64) {
+					std::strcpy(areas[i].namea, arg2);
+					std::strcpy(areas[i].nameb, arg2);
+					std::strcpy(areas[i].namec, arg2);
+					std::strcpy(areas[i].named, arg2);
 				}
 				AreaDefPrintInfo(pEntity);
 			}
 			else if (FStrEq(arg1, "name1") && g_area_def) {
 				int i = AreaInsideClosest(pEntity);
-				if (i != -1 && strlen(arg2) < 64) {
-					strcpy(areas[i].namea, arg2);
+				if (i != -1 && std::strlen(arg2) < 64) {
+					std::strcpy(areas[i].namea, arg2);
 				}
 				AreaDefPrintInfo(pEntity);
 			}
 			else if (FStrEq(arg1, "name2") && g_area_def) {
 				int i = AreaInsideClosest(pEntity);
-				if (i != -1 && strlen(arg2) < 64) {
-					strcpy(areas[i].nameb, arg2);
+				if (i != -1 && std::strlen(arg2) < 64) {
+					std::strcpy(areas[i].nameb, arg2);
 				}
 				AreaDefPrintInfo(pEntity);
 			}
 			else if (FStrEq(arg1, "name3") && g_area_def) {
 				int i = AreaInsideClosest(pEntity);
-				if (i != -1 && strlen(arg2) < 64) {
-					strcpy(areas[i].namec, arg2);
+				if (i != -1 && std::strlen(arg2) < 64) {
+					std::strcpy(areas[i].namec, arg2);
 				}
 				AreaDefPrintInfo(pEntity);
 			}
 			else if (FStrEq(arg1, "name4") && g_area_def) {
 				int i = AreaInsideClosest(pEntity);
-				if (i != -1 && strlen(arg2) < 64) {
-					strcpy(areas[i].named, arg2);
+				if (i != -1 && std::strlen(arg2) < 64) {
+					std::strcpy(areas[i].named, arg2);
 				}
 				AreaDefPrintInfo(pEntity);
 			}
@@ -2442,15 +2442,15 @@ void ClientCommand(edict_t* pEntity) {
 			ClientPrint(pEntity, HUD_PRINTCONSOLE, "searching...\n");
 			while ((pent = FIND_ENTITY_IN_SPHERE(pent, pEntity->v.origin, 200.0f)) != nullptr && !FNullEnt(pent)) {
 				char str[80];
-				sprintf(str, "Found %s at %5.2f %5.2f %5.2f modelindex- %d t %s tn %s\n", STRING(pent->v.classname), static_cast<double>(pent->v.origin.x), static_cast<double>(pent->v.origin.y), static_cast<double>(pent->v.origin.z),
+				std::sprintf(str, "Found %s at %5.2f %5.2f %5.2f modelindex- %d t %s tn %s\n", STRING(pent->v.classname), static_cast<double>(pent->v.origin.x), static_cast<double>(pent->v.origin.y), static_cast<double>(pent->v.origin.z),
 					pent->v.modelindex, STRING(pent->v.target), STRING(pent->v.targetname));
 				ClientPrint(pEntity, HUD_PRINTCONSOLE, str);
 
 				FILE* fp = UTIL_OpenFoxbotLog();
 				if (fp != nullptr) {
-					fprintf(fp, "ClientCommmand: search %s\n", str);
-					// fwrite(&pent->v, sizeof(pent->v), 1, fp);
-					fclose(fp);
+					std::fprintf(fp, "ClientCommmand: search %s\n", str);
+					// std::fwrite(&pent->v, sizeof(pent->v), 1, fp);
+					std::fclose(fp);
 				}
 				UTIL_SavePent(pent);
 			}
@@ -2522,7 +2522,7 @@ void StartFrame() { // v7 last frame timing
 		clientdata_s cd;
 		int count;
 		// if a new map has started then (MUST BE FIRST IN StartFrame)...
-		if (strcmp(STRING(gpGlobals->mapname), prevmapname) != 0) {
+		if (std::strcmp(STRING(gpGlobals->mapname), prevmapname) != 0) {
 			first_player = nullptr;
 			display_bot_vars = true;
 			display_start_time = gpGlobals->time + 10.0f;
@@ -2531,14 +2531,14 @@ void StartFrame() { // v7 last frame timing
 			if (gpGlobals->time + 0.1f < previous_time) {
 				char mapname[64];
 				char filename[256];
-				strcpy(mapname, STRING(gpGlobals->mapname));
-				strcat(mapname, "_bot.cfg");
+				std::strcpy(mapname, STRING(gpGlobals->mapname));
+				std::strcat(mapname, "_bot.cfg");
 				bot_cfg_fp = nullptr;
 				UTIL_BuildFileName(filename, 255, "configs", mapname);
-				bot_cfg_fp = fopen(filename, "r");
+				bot_cfg_fp = std::fopen(filename, "r");
 				if (bot_cfg_fp == nullptr) {
 					UTIL_BuildFileName(filename, 255, "default.cfg", nullptr);
-					bot_cfg_fp = fopen(filename, "r");
+					bot_cfg_fp = std::fopen(filename, "r");
 				}
 				if (bot_cfg_fp != nullptr) {
 					for (index = 0; index < 32; index++) {
@@ -2546,7 +2546,7 @@ void StartFrame() { // v7 last frame timing
 						bots[index].respawn_state = 0;
 						bots[index].f_kick_time = 0.0f;
 					}
-					fclose(bot_cfg_fp);
+					std::fclose(bot_cfg_fp);
 					bot_cfg_fp = nullptr;
 				}
 				else {
@@ -2621,16 +2621,16 @@ void StartFrame() { // v7 last frame timing
 				// respawn 1 bot then wait a while(otherwise engine crashes)
 				if (mod_id != TFC_DLL) {
 					char c_skill[2];
-					sprintf(c_skill, "%d", bots[index1].bot_skill);
+					std::sprintf(c_skill, "%d", bots[index1].bot_skill);
 					BotCreate(nullptr, bots[index1].skin, bots[index1].name, c_skill, nullptr);
 				}
 				else {
 					char c_skill[2];
 					char c_team[2];
 					char c_class[3];
-					sprintf(c_skill, "%d", bots[index1].bot_skill);
-					sprintf(c_team, "%d", bots[index1].bot_team);
-					sprintf(c_class, "%d", bots[index1].bot_class);
+					std::sprintf(c_skill, "%d", bots[index1].bot_skill);
+					std::sprintf(c_team, "%d", bots[index1].bot_team);
+					std::sprintf(c_class, "%d", bots[index1].bot_class);
 					if (mod_id == TFC_DLL)
 						BotCreate(nullptr, nullptr, nullptr, bots[index1].name, c_skill);
 					else
@@ -2653,21 +2653,21 @@ void StartFrame() { // v7 last frame timing
 				cfg_file = 1;
 				display_bot_vars = true;
 				display_start_time = gpGlobals->time + 10; // check if mapname_bot.cfg file exists...
-				strcpy(mapname, STRING(gpGlobals->mapname));
-				strcat(mapname, "_bot.cfg");
+				std::strcpy(mapname, STRING(gpGlobals->mapname));
+				std::strcat(mapname, "_bot.cfg");
 				bot_cfg_fp = nullptr;
 				UTIL_BuildFileName(filename, 255, "foxbot.cfg", nullptr);
-				bot_cfg_fp = fopen(filename, "r");
+				bot_cfg_fp = std::fopen(filename, "r");
 				if (bot_cfg_fp == nullptr) {
 					if (IS_DEDICATED_SERVER())
-						printf("foxbot.cfg file not found\n");
+						std::printf("foxbot.cfg file not found\n");
 					else
 						ALERT(at_console, "foxbot.cfg file not found\n");
 				}
 				else {
-					sprintf(msg2, "Executing %s\n", filename);
+					std::sprintf(msg2, "Executing %s\n", filename);
 					if (IS_DEDICATED_SERVER())
-						printf("%s", msg);
+						std::printf("%s", msg);
 					else
 						ALERT(at_console, msg);
 				}
@@ -2683,37 +2683,37 @@ void StartFrame() { // v7 last frame timing
 				char mapname[64];
 				need_to_open_cfg2 = false; // only do this once!!!
 				cfg_file = 2;
-				strcpy(mapname, STRING(gpGlobals->mapname));
-				strcat(mapname, "_bot.cfg");
+				std::strcpy(mapname, STRING(gpGlobals->mapname));
+				std::strcat(mapname, "_bot.cfg");
 				bot_cfg_fp = nullptr;
 				UTIL_BuildFileName(filename, 255, "configs", mapname);
-				bot_cfg_fp = fopen(filename, "r");
+				bot_cfg_fp = std::fopen(filename, "r");
 				if (bot_cfg_fp != nullptr) {
-					sprintf(msg2, "\nExecuting %s\n", filename);
+					std::sprintf(msg2, "\nExecuting %s\n", filename);
 					if (IS_DEDICATED_SERVER())
-						printf("%s", msg);
+						std::printf("%s", msg);
 					else
 						ALERT(at_console, msg);
 				}
 				else { // first say map config not found
-					sprintf(msg2, "\n%s not found\n", filename);
+					std::sprintf(msg2, "\n%s not found\n", filename);
 					if (IS_DEDICATED_SERVER())
-						printf("%s", msg);
+						std::printf("%s", msg);
 					else
 						ALERT(at_console, msg);
 					bot_cfg_fp = nullptr;
 					UTIL_BuildFileName(filename, 255, "default.cfg", nullptr);
-					bot_cfg_fp = fopen(filename, "r");
+					bot_cfg_fp = std::fopen(filename, "r");
 					if (bot_cfg_fp == nullptr) {
 						if (IS_DEDICATED_SERVER())
-							printf("\ndefault.cfg file not found\n");
+							std::printf("\ndefault.cfg file not found\n");
 						else
 							ALERT(at_console, "\ndefault.cfg file not found\n");
 					}
 					else {
-						sprintf(msg2, "\nExecuting %s\n", filename);
+						std::sprintf(msg2, "\nExecuting %s\n", filename);
 						if (IS_DEDICATED_SERVER())
-							printf("%s", msg);
+							std::printf("%s", msg);
 						else
 							ALERT(at_console, msg);
 					}
@@ -2746,7 +2746,7 @@ void StartFrame() { // v7 last frame timing
 			if (cvar_bot && cvar_bot[0]) {
 				char cmd_line[80];
 				char* cmd, * arg1, * arg2, * arg3, * arg4;
-				strcpy(cmd_line, cvar_bot);
+				std::strcpy(cmd_line, cvar_bot);
 				index = 0;
 				cmd = cmd_line;
 				arg1 = arg2 = arg3 = arg4 = nullptr; // skip to blank or end of string...
@@ -2774,23 +2774,23 @@ void StartFrame() { // v7 last frame timing
 						}
 					}
 				}
-				if (strcmp(cmd, "addbot") == 0) {
+				if (std::strcmp(cmd, "addbot") == 0) {
 					BotCreate(nullptr, arg1, arg2, arg3, arg4);
 					bot_check_time = gpGlobals->time + 5.0f;
 				}
-				else if (strcmp(cmd, "min_bots") == 0) {
+				else if (std::strcmp(cmd, "min_bots") == 0) {
 					changeBotSetting("min_bots", &min_bots, arg1, -1, 31, SETTING_SOURCE_SERVER_COMMAND);
 				}
-				else if (strcmp(cmd, "max_bots") == 0) {
+				else if (std::strcmp(cmd, "max_bots") == 0) {
 					changeBotSetting("max_bots", &max_bots, arg1, -1, MAX_BOTS, SETTING_SOURCE_SERVER_COMMAND);
 				}
-				else if (strcmp(cmd, "bot_total_varies") == 0) {
+				else if (std::strcmp(cmd, "bot_total_varies") == 0) {
 					changeBotSetting("bot_total_varies", &bot_total_varies, arg1, 0, 3, SETTING_SOURCE_SERVER_COMMAND);
 				}
-				else if (strcmp(cmd, "bot_info") == 0) {
+				else if (std::strcmp(cmd, "bot_info") == 0) {
 					DisplayBotInfo();
 				}
-				else if (strcmp(cmd, "bot_team_balance") == 0) {
+				else if (std::strcmp(cmd, "bot_team_balance") == 0) {
 					if (arg1 != nullptr) {
 						if (*arg1 != 0) {
 							int temp;
@@ -2802,11 +2802,11 @@ void StartFrame() { // v7 last frame timing
 						}
 					}
 					if (bot_team_balance)
-						printf("bot_team_balance (1) On\n");
+						std::printf("bot_team_balance (1) On\n");
 					else
-						printf("bot_team_balance (0) Off\n");
+						std::printf("bot_team_balance (0) Off\n");
 				}
-				else if (strcmp(cmd, "bot_bot_balance") == 0) {
+				else if (std::strcmp(cmd, "bot_bot_balance") == 0) {
 					if (arg1 != nullptr) {
 						if (*arg1 != 0) {
 							int temp;
@@ -2818,90 +2818,90 @@ void StartFrame() { // v7 last frame timing
 						}
 					}
 					if (bot_bot_balance)
-						printf("bot_bot_balance (1) On\n");
+						std::printf("bot_bot_balance (1) On\n");
 					else
-						printf("bot_bot_balance (0) Off\n");
+						std::printf("bot_bot_balance (0) Off\n");
 				}
-				else if (strcmp(cmd, "kickall") == 0) { // kick all bots off of the server after time/frag limit...
+				else if (std::strcmp(cmd, "kickall") == 0) { // kick all bots off of the server after time/frag limit...
 					kickBots(MAX_BOTS, -1);
 				}
-				else if (strcmp(cmd, "kickteam") == 0 || strcmp(cmd, "foxbot_kickteam") == 0) {
+				else if (std::strcmp(cmd, "kickteam") == 0 || std::strcmp(cmd, "foxbot_kickteam") == 0) {
 					if (!arg1)
-						printf("Proper syntax, e.g. bot \"kickteam 1\"\n");
+						std::printf("Proper syntax, e.g. bot \"kickteam 1\"\n");
 					else {
 						int whichTeam;
-						if (strcmp(arg1, "blue") == 0)
+						if (std::strcmp(arg1, "blue") == 0)
 							whichTeam = 1;
-						else if (strcmp(arg1, "red") == 0)
+						else if (std::strcmp(arg1, "red") == 0)
 							whichTeam = 2;
-						else if (strcmp(arg1, "yellow") == 0)
+						else if (std::strcmp(arg1, "yellow") == 0)
 							whichTeam = 3;
-						else if (strcmp(arg1, "green") == 0)
+						else if (std::strcmp(arg1, "green") == 0)
 							whichTeam = 4;
 						else
 							whichTeam = atoi(arg1);
 						kickBots(MAX_BOTS, whichTeam);
 					}
 				}
-				else if (strcmp(cmd, "bot_chat") == 0 && arg1 != nullptr) {
+				else if (std::strcmp(cmd, "bot_chat") == 0 && arg1 != nullptr) {
 					changeBotSetting("bot_chat", &bot_chat, arg1, 0, 1000, SETTING_SOURCE_SERVER_COMMAND);
 				}
-				else if (strcmp(cmd, "botskill_lower") == 0) {
+				else if (std::strcmp(cmd, "botskill_lower") == 0) {
 					changeBotSetting("botskill_lower", &botskill_lower, arg1, 1, 5, SETTING_SOURCE_SERVER_COMMAND);
 				}
-				else if (strcmp(cmd, "botskill_upper") == 0) {
+				else if (std::strcmp(cmd, "botskill_upper") == 0) {
 					changeBotSetting("botskill_upper", &botskill_upper, arg1, 1, 5, SETTING_SOURCE_SERVER_COMMAND);
 				}
-				else if (strcmp(cmd, "bot_skill_1_aim") == 0) {
+				else if (std::strcmp(cmd, "bot_skill_1_aim") == 0) {
 					changeBotSetting("bot_skill_1_aim", &bot_skill_1_aim, arg1, 0, 200, SETTING_SOURCE_SERVER_COMMAND);
 					BotUpdateSkillInaccuracy();
 					return;
 				}
-				else if (strcmp(cmd, "bot_aim_per_skill") == 0) {
+				else if (std::strcmp(cmd, "bot_aim_per_skill") == 0) {
 					changeBotSetting("bot_aim_per_skill", &bot_aim_per_skill, arg1, 5, 50, SETTING_SOURCE_SERVER_COMMAND);
 					BotUpdateSkillInaccuracy();
 					return;
 				}
-				else if (strcmp(cmd, "bot_can_build_teleporter") == 0 && arg1 != nullptr) {
-					if (strcmp(arg1, "on") == 0) {
+				else if (std::strcmp(cmd, "bot_can_build_teleporter") == 0 && arg1 != nullptr) {
+					if (std::strcmp(arg1, "on") == 0) {
 						bot_can_build_teleporter = true;
-						printf("bot_can_build_teleporter is ON\n");
+						std::printf("bot_can_build_teleporter is ON\n");
 					}
-					else if (strcmp(arg1, "off") == 0) {
+					else if (std::strcmp(arg1, "off") == 0) {
 						bot_can_build_teleporter = false;
-						printf("bot_can_build_teleporter is OFF\n");
+						std::printf("bot_can_build_teleporter is OFF\n");
 					}
 				}
-				else if (strcmp(cmd, "bot_can_use_teleporter") == 0 && arg1 != nullptr) {
-					if (strcmp(arg1, "on") == 0) {
+				else if (std::strcmp(cmd, "bot_can_use_teleporter") == 0 && arg1 != nullptr) {
+					if (std::strcmp(arg1, "on") == 0) {
 						bot_can_use_teleporter = true;
-						printf("bot_can_use_teleporter is ON\n");
+						std::printf("bot_can_use_teleporter is ON\n");
 					}
-					else if (strcmp(arg1, "off") == 0) {
+					else if (std::strcmp(arg1, "off") == 0) {
 						bot_can_use_teleporter = false;
-						printf("bot_can_use_teleporter is OFF\n");
+						std::printf("bot_can_use_teleporter is OFF\n");
 					}
 				}
-				else if (strcmp(cmd, "bot_xmas") == 0 && arg1 != nullptr) {
-					if (strcmp(arg1, "on") == 0) {
+				else if (std::strcmp(cmd, "bot_xmas") == 0 && arg1 != nullptr) {
+					if (std::strcmp(arg1, "on") == 0) {
 						bot_xmas = true;
-						printf("bot xmas is ON\n");
+						std::printf("bot xmas is ON\n");
 					}
-					else if (strcmp(arg1, "off") == 0) {
+					else if (std::strcmp(arg1, "off") == 0) {
 						bot_xmas = false;
-						printf("bot xmas is OFF\n");
+						std::printf("bot xmas is OFF\n");
 					}
 				}
-				else if (strcmp(cmd, "bot_allow_moods") == 0) {
+				else if (std::strcmp(cmd, "bot_allow_moods") == 0) {
 					changeBotSetting("bot_allow_moods", &bot_allow_moods, arg1, 0, 1, SETTING_SOURCE_SERVER_COMMAND);
 				}
-				else if (strcmp(cmd, "bot_allow_humour") == 0) {
+				else if (std::strcmp(cmd, "bot_allow_humour") == 0) {
 					changeBotSetting("bot_allow_humour", &bot_allow_humour, arg1, 0, 1, SETTING_SOURCE_SERVER_COMMAND);
 				}
-				else if (strcmp(cmd, "bot_use_grenades") == 0) {
+				else if (std::strcmp(cmd, "bot_use_grenades") == 0) {
 					changeBotSetting("bot_use_grenades", &bot_use_grenades, arg1, 0, 2, SETTING_SOURCE_SERVER_COMMAND);
 				}
-				else if (strcmp(cmd, "dump") == 0) {
+				else if (std::strcmp(cmd, "dump") == 0) {
 					edict_t* pent = nullptr;
 					while ((pent = FIND_ENTITY_IN_SPHERE(pent, Vector(0, 0, 0), 8192)) != nullptr && !FNullEnt(pent)) {
 						UTIL_SavePent(pent);
@@ -2936,7 +2936,7 @@ void StartFrame() { // v7 last frame timing
 						continue;
 					cl_name[0] = '\0';
 					char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(INDEXENT(i));
-					strcpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"));
+					std::strcpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"));
 					// is this a valid connected player?
 					if (cl_name[0] != '\0') {
 						count1++;
@@ -2989,17 +2989,17 @@ void StartFrame() { // v7 last frame timing
 		}
 		previous_time = gpGlobals->time;
 	} // this is where the behaviour config is interpreted... i.e. new lev, load behaviour, and parse it
-	if (strcmp(STRING(gpGlobals->mapname), prevmapname) != 0) {
+	if (std::strcmp(STRING(gpGlobals->mapname), prevmapname) != 0) {
 		edict_t* pent = nullptr;
 		while ((pent = FIND_ENTITY_IN_SPHERE(pent, Vector(0, 0, 0), 8000)) != nullptr && !FNullEnt(pent)) {
 			if (static_cast<int>(pent->v.absmin.x) == -1 && static_cast<int>(pent->v.absmin.y) == -1 && static_cast<int>(pent->v.absmin.z) == -1) {
 				if (static_cast<int>(pent->v.absmin.x) == 1 && static_cast<int>(pent->v.absmin.y) == 1 && static_cast<int>(pent->v.absmin.z) == 1) {
 					global::fp = UTIL_OpenFoxbotLog();
 					if (global::fp != nullptr) {
-						fprintf(global::fp, "Fixing entity current map %s last map %s\n", STRING(gpGlobals->mapname), prevmapname);
-						fclose(global::fp);
+						std::fprintf(global::fp, "Fixing entity current map %s last map %s\n", STRING(gpGlobals->mapname), prevmapname);
+						std::fclose(global::fp);
 					} // UTIL_SavePent(pent);
-					if (strcmp(STRING(pent->v.classname), "info_tfgoal") != 0) {
+					if (std::strcmp(STRING(pent->v.classname), "info_tfgoal") != 0) {
 						pent->v.absmin = pent->v.absmin + pent->v.mins;
 						pent->v.absmax = pent->v.absmax + pent->v.maxs;
 						if (mr_meta)
@@ -3049,12 +3049,12 @@ void StartFrame() { // v7 last frame timing
 					}
 				}
 			}
-			if (strcmp(STRING(pent->v.classname), "func_door") == 0 && static_cast<int>(pent->v.nextthink) != -1)
+			if (std::strcmp(STRING(pent->v.classname), "func_door") == 0 && static_cast<int>(pent->v.nextthink) != -1)
 				pent->v.nextthink = -1;
 		}
 		script_loaded = false;
 		script_parsed = false;
-		strcpy(prevmapname, STRING(gpGlobals->mapname));
+		std::strcpy(prevmapname, STRING(gpGlobals->mapname));
 		char filename[256];
 		char mapname[64];
 		int i; // reset known team data on map change
@@ -3089,19 +3089,19 @@ void StartFrame() { // v7 last frame timing
 			}
 			msg_com[i].next = nullptr; // make sure it dont crash..gr
 		}                             // check if mapname_bot.cfg file exists...
-		strcpy(mapname, STRING(gpGlobals->mapname));
-		strcat(mapname, "_fb.cfg");
+		std::strcpy(mapname, STRING(gpGlobals->mapname));
+		std::strcat(mapname, "_fb.cfg");
 		UTIL_BuildFileName(filename, 255, "scripts", mapname);
-		FILE* bfp = fopen(filename, "r");
+		FILE* bfp = std::fopen(filename, "r");
 		if (bfp != nullptr && mod_id == TFC_DLL) {
 			script_loaded = true;
 			char msg[293];
-			sprintf(msg, "\nExecuting FoXBot TFC script file:%s\n\n", filename);
+			std::sprintf(msg, "\nExecuting FoXBot TFC script file:%s\n\n", filename);
 			ALERT(at_console, msg);
 			int ch = fgetc(bfp);
 			int i1; // Not wanted? [APG]RoboCop[CL]
 			char buffer[14097];
-			for (i1 = 0; i1 < 14096 && feof(bfp) == 0; i1++) {
+			for (i1 = 0; i1 < 14096 && std::feof(bfp) == 0; i1++) {
 				buffer[i1] = static_cast<char>(ch);
 				if (buffer[i1] == '\t')
 					buffer[i1] = ' ';
@@ -3118,7 +3118,7 @@ void StartFrame() { // v7 last frame timing
 			bool random_shit_error = false;
 			for (i1 = 0; i1 < 14096 && buffer[i1] != '\0' && !random_shit_error; i1++) {
 				// first off... we need to ignore comment lines!
-				if (strncmp(buf, "//", 2) == 0) {
+				if (std::strncmp(buf, "//", 2) == 0) {
 					commentline = true;
 					i1++;
 					buf = buf + 1;
@@ -3127,7 +3127,7 @@ void StartFrame() { // v7 last frame timing
 					commentline = false;
 				if (commentline == false) {
 					// need to check for section definition (on_...)
-					if (strncmp(buf, "on_start", 8) == 0) {
+					if (std::strncmp(buf, "on_start", 8) == 0) {
 						if (start > 0)
 							start = 99; // check for nested start defs
 						else
@@ -3141,7 +3141,7 @@ void StartFrame() { // v7 last frame timing
 							buf = buf + 1;
 						} // try and move to end of on start
 					}
-					if (strncmp(buf, "on_msg", 6) == 0) {
+					if (std::strncmp(buf, "on_msg", 6) == 0) {
 						if (msgsection > 0)
 							msgsection = 99; // check for nested msg defs
 						else
@@ -3166,7 +3166,7 @@ void StartFrame() { // v7 last frame timing
 							}
 						}
 					} // attack
-					else if (strncmp(buf, "blue_attack", 11) == 0) {
+					else if (std::strncmp(buf, "blue_attack", 11) == 0) {
 						// this can only be in a section
 						if (start == 0 && msgsection == 0)
 							random_shit_error = true;
@@ -3176,7 +3176,7 @@ void StartFrame() { // v7 last frame timing
 							RoleStatus[0] = 90;
 						} // move to end
 					}
-					else if (strncmp(buf, "red_attack", 10) == 0) {
+					else if (std::strncmp(buf, "red_attack", 10) == 0) {
 						// this can only be in a section
 						if (start == 0 && msgsection == 0)
 							random_shit_error = true;
@@ -3186,7 +3186,7 @@ void StartFrame() { // v7 last frame timing
 							RoleStatus[1] = 90;
 						} // move to end
 					}
-					else if (strncmp(buf, "yellow_attack", 13) == 0) {
+					else if (std::strncmp(buf, "yellow_attack", 13) == 0) {
 						// this can only be in a section
 						if (start == 0 && msgsection == 0)
 							random_shit_error = true;
@@ -3196,7 +3196,7 @@ void StartFrame() { // v7 last frame timing
 							RoleStatus[3] = 90;
 						} // move to end
 					}
-					else if (strncmp(buf, "green_attack", 12) == 0) {
+					else if (std::strncmp(buf, "green_attack", 12) == 0) {
 						// this can only be in a section
 						if (start == 0 && msgsection == 0)
 							random_shit_error = true;
@@ -3206,7 +3206,7 @@ void StartFrame() { // v7 last frame timing
 							RoleStatus[3] = 90;
 						} // move to end
 					}    // defend
-					else if (strncmp(buf, "blue_defend", 11) == 0) {
+					else if (std::strncmp(buf, "blue_defend", 11) == 0) {
 						// this can only be in a section
 						if (start == 0 && msgsection == 0)
 							random_shit_error = true;
@@ -3216,7 +3216,7 @@ void StartFrame() { // v7 last frame timing
 							RoleStatus[0] = 15;
 						} // move to end
 					}
-					else if (strncmp(buf, "red_defend", 10) == 0) {
+					else if (std::strncmp(buf, "red_defend", 10) == 0) {
 						// this can only be in a section
 						if (start == 0 && msgsection == 0)
 							random_shit_error = true;
@@ -3226,7 +3226,7 @@ void StartFrame() { // v7 last frame timing
 							RoleStatus[1] = 15;
 						} // move to end
 					}
-					else if (strncmp(buf, "yellow_defend", 13) == 0) {
+					else if (std::strncmp(buf, "yellow_defend", 13) == 0) {
 						// this can only be in a section
 						if (start == 0 && msgsection == 0)
 							random_shit_error = true;
@@ -3236,7 +3236,7 @@ void StartFrame() { // v7 last frame timing
 							RoleStatus[2] = 15;
 						} // move to end
 					}
-					else if (strncmp(buf, "green_defend", 12) == 0) {
+					else if (std::strncmp(buf, "green_defend", 12) == 0) {
 						// this can only be in a section
 						if (start == 0 && msgsection == 0)
 							random_shit_error = true;
@@ -3246,7 +3246,7 @@ void StartFrame() { // v7 last frame timing
 							RoleStatus[3] = 15;
 						} // move to end
 					}
-					else if (strncmp(buf, "blue_normal", 11) == 0) {
+					else if (std::strncmp(buf, "blue_normal", 11) == 0) {
 						// this can only be in a section
 						if (start == 0 && msgsection == 0)
 							random_shit_error = true;
@@ -3256,7 +3256,7 @@ void StartFrame() { // v7 last frame timing
 							RoleStatus[0] = 50;
 						} // move to end
 					}
-					else if (strncmp(buf, "red_normal", 10) == 0) {
+					else if (std::strncmp(buf, "red_normal", 10) == 0) {
 						// this can only be in a section
 						if (start == 0 && msgsection == 0)
 							random_shit_error = true;
@@ -3266,7 +3266,7 @@ void StartFrame() { // v7 last frame timing
 							RoleStatus[1] = 50;
 						} // move to end
 					}
-					else if (strncmp(buf, "yellow_normal", 13) == 0) {
+					else if (std::strncmp(buf, "yellow_normal", 13) == 0) {
 						// this can only be in a section
 						if (start == 0 && msgsection == 0)
 							random_shit_error = true;
@@ -3276,7 +3276,7 @@ void StartFrame() { // v7 last frame timing
 							RoleStatus[2] = 50;
 						} // move to end
 					}
-					else if (strncmp(buf, "green_normal", 12) == 0) {
+					else if (std::strncmp(buf, "green_normal", 12) == 0) {
 						// this can only be in a section
 						if (start == 0 && msgsection == 0)
 							random_shit_error = true;
@@ -3286,7 +3286,7 @@ void StartFrame() { // v7 last frame timing
 							RoleStatus[3] = 50;
 						} // move to end
 					}    // point<n> available_only (exclusive)
-					else if (strncmp(buf, "blue_available_only_point", 25) == 0) {
+					else if (std::strncmp(buf, "blue_available_only_point", 25) == 0) {
 						// this can only be in a section
 						if (start == 0 && msgsection == 0)
 							random_shit_error = true;
@@ -3301,7 +3301,7 @@ void StartFrame() { // v7 last frame timing
 							buf = buf + 1;
 						} // move to end
 					}
-					else if (strncmp(buf, "red_available_only_point", 24) == 0) {
+					else if (std::strncmp(buf, "red_available_only_point", 24) == 0) {
 						// this can only be in a section
 						if (start == 0 && msgsection == 0)
 							random_shit_error = true;
@@ -3316,7 +3316,7 @@ void StartFrame() { // v7 last frame timing
 							buf = buf + 1;
 						} // move to end
 					}
-					else if (strncmp(buf, "green_available_only_point", 26) == 0) {
+					else if (std::strncmp(buf, "green_available_only_point", 26) == 0) {
 						// this can only be in a section
 						if (start == 0 && msgsection == 0)
 							random_shit_error = true;
@@ -3331,7 +3331,7 @@ void StartFrame() { // v7 last frame timing
 							buf = buf + 1;
 						} // move to end
 					}
-					else if (strncmp(buf, "yellow_available_only_point", 27) == 0) {
+					else if (std::strncmp(buf, "yellow_available_only_point", 27) == 0) {
 						// this can only be in a section
 						if (start == 0 && msgsection == 0)
 							random_shit_error = true;
@@ -3346,7 +3346,7 @@ void StartFrame() { // v7 last frame timing
 							buf = buf + 1;
 						} // move to end
 					}    // point<n> available (set to true)
-					else if (strncmp(buf, "blue_available_point", 20) == 0) {
+					else if (std::strncmp(buf, "blue_available_point", 20) == 0) {
 						// this can only be in a section
 						if (start == 0 && msgsection == 0)
 							random_shit_error = true;
@@ -3361,7 +3361,7 @@ void StartFrame() { // v7 last frame timing
 							buf = buf + 1;
 						} // move to end
 					}
-					else if (strncmp(buf, "red_available_point", 19) == 0) {
+					else if (std::strncmp(buf, "red_available_point", 19) == 0) {
 						// this can only be in a section
 						if (start == 0 && msgsection == 0)
 							random_shit_error = true;
@@ -3376,7 +3376,7 @@ void StartFrame() { // v7 last frame timing
 							buf = buf + 1;
 						} // move to end
 					}
-					else if (strncmp(buf, "green_available_point", 21) == 0) {
+					else if (std::strncmp(buf, "green_available_point", 21) == 0) {
 						// this can only be in a section
 						if (start == 0 && msgsection == 0)
 							random_shit_error = true;
@@ -3391,7 +3391,7 @@ void StartFrame() { // v7 last frame timing
 							buf = buf + 1;
 						} // move to end
 					}
-					else if (strncmp(buf, "yellow_available_point", 22) == 0) {
+					else if (std::strncmp(buf, "yellow_available_point", 22) == 0) {
 						// this can only be in a section
 						if (start == 0 && msgsection == 0)
 							random_shit_error = true;
@@ -3406,7 +3406,7 @@ void StartFrame() { // v7 last frame timing
 							buf = buf + 1;
 						} // move to end
 					}    // point<n> not_available (set to false)
-					else if (strncmp(buf, "blue_notavailable_point", 23) == 0) {
+					else if (std::strncmp(buf, "blue_notavailable_point", 23) == 0) {
 						// this can only be in a section
 						if (start == 0 && msgsection == 0)
 							random_shit_error = true;
@@ -3421,7 +3421,7 @@ void StartFrame() { // v7 last frame timing
 							buf = buf + 1;
 						} // move to end
 					}
-					else if (strncmp(buf, "red_notavailable_point", 22) == 0) {
+					else if (std::strncmp(buf, "red_notavailable_point", 22) == 0) {
 						// this can only be in a section
 						if (start == 0 && msgsection == 0)
 							random_shit_error = true;
@@ -3436,7 +3436,7 @@ void StartFrame() { // v7 last frame timing
 							buf = buf + 1;
 						} // move to end
 					}
-					else if (strncmp(buf, "green_notavailable_point", 24) == 0) {
+					else if (std::strncmp(buf, "green_notavailable_point", 24) == 0) {
 						// this can only be in a section
 						if (start == 0 && msgsection == 0)
 							random_shit_error = true;
@@ -3451,7 +3451,7 @@ void StartFrame() { // v7 last frame timing
 							buf = buf + 1;
 						} // move to end
 					}
-					else if (strncmp(buf, "yellow_notavailable_point", 25) == 0) {
+					else if (std::strncmp(buf, "yellow_notavailable_point", 25) == 0) {
 						// this can only be in a section
 						if (start == 0 && msgsection == 0)
 							random_shit_error = true;
@@ -3466,7 +3466,7 @@ void StartFrame() { // v7 last frame timing
 							buf = buf + 1;
 						} // move to end
 					}    // is point<n> available?
-					else if (strncmp(buf, "if_blue_point", 13) == 0) {
+					else if (std::strncmp(buf, "if_blue_point", 13) == 0) {
 						// this can only be in a section
 						if (msgsection == 0)
 							random_shit_error = true;
@@ -3485,7 +3485,7 @@ void StartFrame() { // v7 last frame timing
 							buf = buf + 1;
 						} // move to end
 					}
-					else if (strncmp(buf, "if_red_point", 12) == 0) {
+					else if (std::strncmp(buf, "if_red_point", 12) == 0) {
 						// this can only be in a section
 						if (msgsection == 0)
 							random_shit_error = true;
@@ -3504,7 +3504,7 @@ void StartFrame() { // v7 last frame timing
 							buf = buf + 1;
 						} // move to end
 					}
-					else if (strncmp(buf, "if_green_point", 14) == 0) {
+					else if (std::strncmp(buf, "if_green_point", 14) == 0) {
 						// this can only be in a section
 						if (msgsection == 0)
 							random_shit_error = true;
@@ -3523,7 +3523,7 @@ void StartFrame() { // v7 last frame timing
 							buf = buf + 1;
 						} // move to end
 					}
-					else if (strncmp(buf, "if_yellow_point", 15) == 0) {
+					else if (std::strncmp(buf, "if_yellow_point", 15) == 0) {
 						// this can only be in a section
 						if (msgsection == 0)
 							random_shit_error = true;
@@ -3542,7 +3542,7 @@ void StartFrame() { // v7 last frame timing
 							buf = buf + 1;
 						} // move to end
 					}    // is point<n> NOT available?
-					else if (strncmp(buf, "ifn_blue_point", 14) == 0) {
+					else if (std::strncmp(buf, "ifn_blue_point", 14) == 0) {
 						// this can only be in a section
 						if (msgsection == 0)
 							random_shit_error = true;
@@ -3561,7 +3561,7 @@ void StartFrame() { // v7 last frame timing
 							buf = buf + 1;
 						} // move to end
 					}
-					else if (strncmp(buf, "ifn_red_point", 13) == 0) {
+					else if (std::strncmp(buf, "ifn_red_point", 13) == 0) {
 						// this can only be in a section
 						if (msgsection == 0)
 							random_shit_error = true;
@@ -3580,7 +3580,7 @@ void StartFrame() { // v7 last frame timing
 							buf = buf + 1;
 						} // move to end
 					}
-					else if (strncmp(buf, "ifn_green_point", 15) == 0) {
+					else if (std::strncmp(buf, "ifn_green_point", 15) == 0) {
 						// this can only be in a section
 						if (msgsection == 0)
 							random_shit_error = true;
@@ -3599,7 +3599,7 @@ void StartFrame() { // v7 last frame timing
 							buf = buf + 1;
 						} // move to end
 					}
-					else if (strncmp(buf, "ifn_yellow_point", 16) == 0) {
+					else if (std::strncmp(buf, "ifn_yellow_point", 16) == 0) {
 						// this can only be in a section
 						if (msgsection == 0)
 							random_shit_error = true;
@@ -3618,7 +3618,7 @@ void StartFrame() { // v7 last frame timing
 							buf = buf + 1;
 						} // move to end
 					}    // multipoint ifs
-					else if (strncmp(buf, "if_blue_mpoint", 14) == 0) {
+					else if (std::strncmp(buf, "if_blue_mpoint", 14) == 0) {
 						// this can only be in a section
 						if (msgsection == 0)
 							random_shit_error = true;
@@ -3641,7 +3641,7 @@ void StartFrame() { // v7 last frame timing
 							} // move to end
 						}
 					}
-					else if (strncmp(buf, "if_red_mpoint", 13) == 0) {
+					else if (std::strncmp(buf, "if_red_mpoint", 13) == 0) {
 						// this can only be in a section
 						if (msgsection == 0)
 							random_shit_error = true;
@@ -3664,7 +3664,7 @@ void StartFrame() { // v7 last frame timing
 							} // move to end
 						}
 					}
-					else if (strncmp(buf, "if_green_mpoint", 15) == 0) {
+					else if (std::strncmp(buf, "if_green_mpoint", 15) == 0) {
 						// this can only be in a section
 						if (msgsection == 0)
 							random_shit_error = true;
@@ -3687,7 +3687,7 @@ void StartFrame() { // v7 last frame timing
 							} // move to end
 						}
 					}
-					else if (strncmp(buf, "if_yellow_mpoint", 16) == 0) {
+					else if (std::strncmp(buf, "if_yellow_mpoint", 16) == 0) {
 						// this can only be in a section
 						if (msgsection == 0)
 							random_shit_error = true;
@@ -3775,8 +3775,8 @@ void StartFrame() { // v7 last frame timing
 
 				FILE* fp = UTIL_OpenFoxbotLog();
 				if (fp != nullptr) {
-					fprintf(fp, "Syntax error, unrecognised command\n%s\n", buf);
-					fclose(fp);
+					std::fprintf(fp, "Syntax error, unrecognised command\n%s\n", buf);
+					std::fclose(fp);
 				}
 			} // warnings
 			if (havestart == 0)
@@ -3800,7 +3800,7 @@ void StartFrame() { // v7 last frame timing
 				current_msg = -1;
 				for (i1 = 0; i1 < 14096 && buffer[i1] != '\0'; i1++) {
 					// first off.. need to ignore comment lines!
-					if (strncmp(buf, "//", 2) == 0) {
+					if (std::strncmp(buf, "//", 2) == 0) {
 						commentline = true;
 						i1++;
 						buf = buf + 1;
@@ -3809,7 +3809,7 @@ void StartFrame() { // v7 last frame timing
 						commentline = false;
 					if (commentline == false) {
 						// need to check for section definition (on_...)
-						if (strncmp(buf, "on_start", 8) == 0) {
+						if (std::strncmp(buf, "on_start", 8) == 0) {
 							if (start > 0)
 								start = 99; // check for nested start defs
 							else
@@ -3823,7 +3823,7 @@ void StartFrame() { // v7 last frame timing
 								buf = buf + 1;
 							} // try and move to end of on start
 						}
-						if (strncmp(buf, "on_msg", 6) == 0) {
+						if (std::strncmp(buf, "on_msg", 6) == 0) {
 							current_msg++;
 							if (msgsection > 0)
 								msgsection = 99; // check for nested msg defs
@@ -3852,7 +3852,7 @@ void StartFrame() { // v7 last frame timing
 										buf = buf + 1;
 									}
 									msgtext[cnt] = '\0'; // terminate string
-									strcpy(msg_msg[current_msg], msgtext);
+									std::strcpy(msg_msg[current_msg], msgtext);
 									// now we have the message, we should probably clear out, all the available data
 									for (int i2 = 0; i2 < 8; i2++) {
 										msg_com[current_msg].blue_av[i2] = -1;
@@ -3866,7 +3866,7 @@ void StartFrame() { // v7 last frame timing
 								}
 							}
 						} // attack
-						else if (strncmp(buf, "blue_attack", 11) == 0) {
+						else if (std::strncmp(buf, "blue_attack", 11) == 0) {
 							// this can only be in a section
 							if (start == 0 && msgsection == 0)
 								random_shit_error = true;
@@ -3876,7 +3876,7 @@ void StartFrame() { // v7 last frame timing
 							} // move to end
 							attack[0] = true;
 						}
-						else if (strncmp(buf, "red_attack", 10) == 0) {
+						else if (std::strncmp(buf, "red_attack", 10) == 0) {
 							// this can only be in a section
 							if (start == 0 && msgsection == 0)
 								random_shit_error = true;
@@ -3886,7 +3886,7 @@ void StartFrame() { // v7 last frame timing
 							} // move to end
 							attack[1] = true;
 						}
-						else if (strncmp(buf, "green_attack", 12) == 0) {
+						else if (std::strncmp(buf, "green_attack", 12) == 0) {
 							// this can only be in a section
 							if (start == 0 && msgsection == 0)
 								random_shit_error = true;
@@ -3896,7 +3896,7 @@ void StartFrame() { // v7 last frame timing
 							} // move to end
 							attack[2] = true;
 						}
-						else if (strncmp(buf, "yellow_attack", 13) == 0) {
+						else if (std::strncmp(buf, "yellow_attack", 13) == 0) {
 							// this can only be in a section
 							if (start == 0 && msgsection == 0)
 								random_shit_error = true;
@@ -3906,7 +3906,7 @@ void StartFrame() { // v7 last frame timing
 							} // move to end
 							attack[3] = true;
 						} // defend
-						else if (strncmp(buf, "blue_defend", 11) == 0) {
+						else if (std::strncmp(buf, "blue_defend", 11) == 0) {
 							// this can only be in a section
 							if (start == 0 && msgsection == 0)
 								random_shit_error = true;
@@ -3916,7 +3916,7 @@ void StartFrame() { // v7 last frame timing
 							} // move to end
 							defend[0] = true;
 						}
-						else if (strncmp(buf, "red_defend", 10) == 0) {
+						else if (std::strncmp(buf, "red_defend", 10) == 0) {
 							// this can only be in a section
 							if (start == 0 && msgsection == 0)
 								random_shit_error = true;
@@ -3926,7 +3926,7 @@ void StartFrame() { // v7 last frame timing
 							} // move to end
 							defend[1] = true;
 						}
-						else if (strncmp(buf, "green_defend", 12) == 0) {
+						else if (std::strncmp(buf, "green_defend", 12) == 0) {
 							// this can only be in a section
 							if (start == 0 && msgsection == 0)
 								random_shit_error = true;
@@ -3936,7 +3936,7 @@ void StartFrame() { // v7 last frame timing
 							} // move to end
 							defend[2] = true;
 						}
-						else if (strncmp(buf, "yellow_defend", 13) == 0) {
+						else if (std::strncmp(buf, "yellow_defend", 13) == 0) {
 							// this can only be in a section
 							if (start == 0 && msgsection == 0)
 								random_shit_error = true;
@@ -3946,7 +3946,7 @@ void StartFrame() { // v7 last frame timing
 							} // move to end
 							defend[3] = true;
 						} // normal (defend+attack)?? // not used yet..
-						else if (strncmp(buf, "blue_normal", 11) == 0) {
+						else if (std::strncmp(buf, "blue_normal", 11) == 0) {
 							// this can only be in a section
 							if (start == 0 && msgsection == 0)
 								random_shit_error = true;
@@ -3955,7 +3955,7 @@ void StartFrame() { // v7 last frame timing
 								buf = buf + 1;
 							} // move to end
 						}
-						else if (strncmp(buf, "red_normal", 10) == 0) {
+						else if (std::strncmp(buf, "red_normal", 10) == 0) {
 							// this can only be in a section
 							if (start == 0 && msgsection == 0)
 								random_shit_error = true;
@@ -3964,7 +3964,7 @@ void StartFrame() { // v7 last frame timing
 								buf = buf + 1;
 							} // move to end
 						}
-						else if (strncmp(buf, "green_normal", 12) == 0) {
+						else if (std::strncmp(buf, "green_normal", 12) == 0) {
 							// this can only be in a section
 							if (start == 0 && msgsection == 0)
 								random_shit_error = true;
@@ -3973,7 +3973,7 @@ void StartFrame() { // v7 last frame timing
 								buf = buf + 1;
 							} // move to end
 						}
-						else if (strncmp(buf, "yellow_normal", 13) == 0) {
+						else if (std::strncmp(buf, "yellow_normal", 13) == 0) {
 							// this can only be in a section
 							if (start == 0 && msgsection == 0)
 								random_shit_error = true;
@@ -3982,7 +3982,7 @@ void StartFrame() { // v7 last frame timing
 								buf = buf + 1;
 							} // move to end
 						}    // point<n> available_only (exclusive)
-						else if (strncmp(buf, "blue_available_only_point", 25) == 0) {
+						else if (std::strncmp(buf, "blue_available_only_point", 25) == 0) {
 							// this can only be in a section
 							if (start == 0 && msgsection == 0)
 								random_shit_error = true;
@@ -4017,7 +4017,7 @@ void StartFrame() { // v7 last frame timing
 								curr->blue_av[pnt] = 1; // true
 							}
 						}
-						else if (strncmp(buf, "red_available_only_point", 24) == 0) {
+						else if (std::strncmp(buf, "red_available_only_point", 24) == 0) {
 							// this can only be in a section
 							if (start == 0 && msgsection == 0)
 								random_shit_error = true;
@@ -4052,7 +4052,7 @@ void StartFrame() { // v7 last frame timing
 								curr->red_av[pnt] = 1; // true
 							}
 						}
-						else if (strncmp(buf, "green_available_only_point", 26) == 0) {
+						else if (std::strncmp(buf, "green_available_only_point", 26) == 0) {
 							// this can only be in a section
 							if (start == 0 && msgsection == 0)
 								random_shit_error = true;
@@ -4087,7 +4087,7 @@ void StartFrame() { // v7 last frame timing
 								curr->green_av[pnt] = 1; // true
 							}
 						}
-						else if (strncmp(buf, "yellow_available_only_point", 27) == 0) {
+						else if (std::strncmp(buf, "yellow_available_only_point", 27) == 0) {
 							// this can only be in a section
 							if (start == 0 && msgsection == 0)
 								random_shit_error = true;
@@ -4122,7 +4122,7 @@ void StartFrame() { // v7 last frame timing
 								curr->yellow_av[pnt] = 1; // true
 							}
 						} // point<n> available (set to true)
-						else if (strncmp(buf, "blue_available_point", 20) == 0) {
+						else if (std::strncmp(buf, "blue_available_point", 20) == 0) {
 							// this can only be in a section
 							if (start == 0 && msgsection == 0)
 								random_shit_error = true;
@@ -4148,7 +4148,7 @@ void StartFrame() { // v7 last frame timing
 								curr->blue_av[pnt] = 1; // true
 							}
 						}
-						else if (strncmp(buf, "red_available_point", 19) == 0) {
+						else if (std::strncmp(buf, "red_available_point", 19) == 0) {
 							// this can only be in a section
 							if (start == 0 && msgsection == 0)
 								random_shit_error = true;
@@ -4174,7 +4174,7 @@ void StartFrame() { // v7 last frame timing
 								curr->red_av[pnt] = 1; // true
 							}
 						}
-						else if (strncmp(buf, "green_available_point", 21) == 0) {
+						else if (std::strncmp(buf, "green_available_point", 21) == 0) {
 							// this can only be in a section
 							if (start == 0 && msgsection == 0)
 								random_shit_error = true;
@@ -4200,7 +4200,7 @@ void StartFrame() { // v7 last frame timing
 								curr->green_av[pnt] = 1; // true
 							}
 						}
-						else if (strncmp(buf, "yellow_available_point", 22) == 0) {
+						else if (std::strncmp(buf, "yellow_available_point", 22) == 0) {
 							// this can only be in a section
 							if (start == 0 && msgsection == 0)
 								random_shit_error = true;
@@ -4226,7 +4226,7 @@ void StartFrame() { // v7 last frame timing
 								curr->yellow_av[pnt] = 1; // true
 							}
 						} // point<n> not_available (set to false)
-						else if (strncmp(buf, "blue_notavailable_point", 23) == 0) {
+						else if (std::strncmp(buf, "blue_notavailable_point", 23) == 0) {
 							// this can only be in a section
 							if (start == 0 && msgsection == 0)
 								random_shit_error = true;
@@ -4252,7 +4252,7 @@ void StartFrame() { // v7 last frame timing
 								curr->blue_av[pnt] = 0; // false
 							}
 						}
-						else if (strncmp(buf, "red_notavailable_point", 22) == 0) {
+						else if (std::strncmp(buf, "red_notavailable_point", 22) == 0) {
 							// this can only be in a section
 							if (start == 0 && msgsection == 0)
 								random_shit_error = true;
@@ -4278,7 +4278,7 @@ void StartFrame() { // v7 last frame timing
 								curr->red_av[pnt] = 0; // false
 							}
 						}
-						else if (strncmp(buf, "green_notavailable_point", 24) == 0) {
+						else if (std::strncmp(buf, "green_notavailable_point", 24) == 0) {
 							// this can only be in a section
 							if (start == 0 && msgsection == 0)
 								random_shit_error = true;
@@ -4304,7 +4304,7 @@ void StartFrame() { // v7 last frame timing
 								curr->green_av[pnt] = 0; // false
 							}
 						}
-						else if (strncmp(buf, "yellow_notavailable_point", 25) == 0) {
+						else if (std::strncmp(buf, "yellow_notavailable_point", 25) == 0) {
 							// this can only be in a section
 							if (start == 0 && msgsection == 0)
 								random_shit_error = true;
@@ -4330,7 +4330,7 @@ void StartFrame() { // v7 last frame timing
 								curr->yellow_av[pnt] = 0; // false
 							}
 						} // is point<n> availabe?
-						else if (strncmp(buf, "if_blue_point", 13) == 0) {
+						else if (std::strncmp(buf, "if_blue_point", 13) == 0) {
 							// this can only be in a section
 							if (msgsection == 0)
 								random_shit_error = true;
@@ -4360,10 +4360,10 @@ void StartFrame() { // v7 last frame timing
 								curr->yellow_av[i2] = -1;
 								curr->green_av[i2] = -1;
 							}
-							sprintf(msg, "b_p_%d", pnt);
-							strcpy(curr->ifs, msg);
+							std::sprintf(msg, "b_p_%d", pnt);
+							std::strcpy(curr->ifs, msg);
 						}
-						else if (strncmp(buf, "if_red_point", 12) == 0) {
+						else if (std::strncmp(buf, "if_red_point", 12) == 0) {
 							// this can only be in a section
 							if (msgsection == 0)
 								random_shit_error = true;
@@ -4393,10 +4393,10 @@ void StartFrame() { // v7 last frame timing
 								curr->yellow_av[i2] = -1;
 								curr->green_av[i2] = -1;
 							}
-							sprintf(msg, "r_p_%d", pnt);
-							strcpy(curr->ifs, msg);
+							std::sprintf(msg, "r_p_%d", pnt);
+							std::strcpy(curr->ifs, msg);
 						}
-						else if (strncmp(buf, "if_green_point", 14) == 0) {
+						else if (std::strncmp(buf, "if_green_point", 14) == 0) {
 							// this can only be in a section
 							if (msgsection == 0)
 								random_shit_error = true;
@@ -4426,10 +4426,10 @@ void StartFrame() { // v7 last frame timing
 								curr->yellow_av[i2] = -1;
 								curr->green_av[i2] = -1;
 							}
-							sprintf(msg, "g_p_%d", pnt);
-							strcpy(curr->ifs, msg);
+							std::sprintf(msg, "g_p_%d", pnt);
+							std::strcpy(curr->ifs, msg);
 						}
-						else if (strncmp(buf, "if_yellow_point", 15) == 0) {
+						else if (std::strncmp(buf, "if_yellow_point", 15) == 0) {
 							// this can only be in a section
 							if (msgsection == 0)
 								random_shit_error = true;
@@ -4459,10 +4459,10 @@ void StartFrame() { // v7 last frame timing
 								curr->yellow_av[i2] = -1;
 								curr->green_av[i2] = -1;
 							}
-							sprintf(msg, "y_p_%d", pnt);
-							strcpy(curr->ifs, msg);
+							std::sprintf(msg, "y_p_%d", pnt);
+							std::strcpy(curr->ifs, msg);
 						} // is point<n> NOT availabe?
-						else if (strncmp(buf, "ifn_blue_point", 14) == 0) {
+						else if (std::strncmp(buf, "ifn_blue_point", 14) == 0) {
 							// this can only be in a section
 							if (msgsection == 0)
 								random_shit_error = true;
@@ -4493,10 +4493,10 @@ void StartFrame() { // v7 last frame timing
 								curr->yellow_av[i2] = -1;
 								curr->green_av[i2] = -1;
 							}
-							sprintf(msg, "b_pn_%d", pnt);
-							strcpy(curr->ifs, msg);
+							std::sprintf(msg, "b_pn_%d", pnt);
+							std::strcpy(curr->ifs, msg);
 						}
-						else if (strncmp(buf, "ifn_red_point", 13) == 0) {
+						else if (std::strncmp(buf, "ifn_red_point", 13) == 0) {
 							// this can only be in a section
 							if (msgsection == 0)
 								random_shit_error = true;
@@ -4526,10 +4526,10 @@ void StartFrame() { // v7 last frame timing
 								curr->yellow_av[i2] = -1;
 								curr->green_av[i2] = -1;
 							}
-							sprintf(msg, "r_pn_%d", pnt);
-							strcpy(curr->ifs, msg);
+							std::sprintf(msg, "r_pn_%d", pnt);
+							std::strcpy(curr->ifs, msg);
 						}
-						else if (strncmp(buf, "ifn_green_point", 15) == 0) {
+						else if (std::strncmp(buf, "ifn_green_point", 15) == 0) {
 							// this can only be in a section
 							if (msgsection == 0)
 								random_shit_error = true;
@@ -4559,10 +4559,10 @@ void StartFrame() { // v7 last frame timing
 								curr->yellow_av[i2] = -1;
 								curr->green_av[i2] = -1;
 							}
-							sprintf(msg, "g_pn_%d", pnt);
-							strcpy(curr->ifs, msg);
+							std::sprintf(msg, "g_pn_%d", pnt);
+							std::strcpy(curr->ifs, msg);
 						}
-						else if (strncmp(buf, "ifn_yellow_point", 16) == 0) {
+						else if (std::strncmp(buf, "ifn_yellow_point", 16) == 0) {
 							// this can only be in a section
 							if (msgsection == 0)
 								random_shit_error = true;
@@ -4592,11 +4592,11 @@ void StartFrame() { // v7 last frame timing
 								curr->yellow_av[i2] = -1;
 								curr->green_av[i2] = -1;
 							}
-							sprintf(msg, "y_pn_%d", pnt);
-							strcpy(curr->ifs, msg);
+							std::sprintf(msg, "y_pn_%d", pnt);
+							std::strcpy(curr->ifs, msg);
 						}
 						// multipoint ifs
-						else if (strncmp(buf, "if_blue_mpoint", 14) == 0) {
+						else if (std::strncmp(buf, "if_blue_mpoint", 14) == 0) {
 							// this can only be in a section
 							if (msgsection == 0)
 								random_shit_error = true;
@@ -4631,10 +4631,10 @@ void StartFrame() { // v7 last frame timing
 								curr->green_av[i2] = -1;
 							}
 							pnts[8] = '\0';
-							sprintf(msg, "b_mp_%s", pnts);
-							strcpy(curr->ifs, msg);
+							std::sprintf(msg, "b_mp_%s", pnts);
+							std::strcpy(curr->ifs, msg);
 						}
-						else if (strncmp(buf, "if_red_mpoint", 13) == 0) {
+						else if (std::strncmp(buf, "if_red_mpoint", 13) == 0) {
 							// this can only be in a section
 							if (msgsection == 0)
 								random_shit_error = true;
@@ -4669,10 +4669,10 @@ void StartFrame() { // v7 last frame timing
 								curr->green_av[i2] = -1;
 							}
 							pnts[8] = '\0';
-							sprintf(msg, "r_mp_%s", pnts);
-							strcpy(curr->ifs, msg);
+							std::sprintf(msg, "r_mp_%s", pnts);
+							std::strcpy(curr->ifs, msg);
 						}
-						else if (strncmp(buf, "if_green_mpoint", 15) == 0) {
+						else if (std::strncmp(buf, "if_green_mpoint", 15) == 0) {
 							// this can only be in a section
 							if (msgsection == 0)
 								random_shit_error = true;
@@ -4707,10 +4707,10 @@ void StartFrame() { // v7 last frame timing
 								curr->green_av[i2] = -1;
 							}
 							pnts[8] = '\0';
-							sprintf(msg, "g_mp_%s", pnts);
-							strcpy(curr->ifs, msg);
+							std::sprintf(msg, "g_mp_%s", pnts);
+							std::strcpy(curr->ifs, msg);
 						}
-						else if (strncmp(buf, "if_yellow_mpoint", 16) == 0) {
+						else if (std::strncmp(buf, "if_yellow_mpoint", 16) == 0) {
 							// this can only be in a section
 							if (msgsection == 0)
 								random_shit_error = true;
@@ -4745,8 +4745,8 @@ void StartFrame() { // v7 last frame timing
 								curr->green_av[i2] = -1;
 							}
 							pnts[8] = '\0';
-							sprintf(msg, "y_mp_%s", pnts);
-							strcpy(curr->ifs, msg);
+							std::sprintf(msg, "y_mp_%s", pnts);
+							std::strcpy(curr->ifs, msg);
 						} // end of multipoint ifs
 						else if (buffer[i1] != '/' && buffer[i1] != '{' && buffer[i1] != '}' && buffer[i1] != ' ' && buffer[i1] != '\n' && commentline == false && random_shit_error == false) {
 							random_shit_error = true;
@@ -4791,7 +4791,7 @@ void StartFrame() { // v7 last frame timing
 			}
 		}
 		if (bfp != nullptr) {
-			fclose(bfp);
+			std::fclose(bfp);
 			bfp = nullptr;
 		}
 	}
@@ -4804,7 +4804,7 @@ void StartFrame() { // v7 last frame timing
 gamedll_funcs_t gGameDLLFunc;
 C_DLLEXPORT int GetEntityAPI(DLL_FUNCTIONS* pFunctionTable, int interfaceVersion) {
 	// check if engine's pointer is valid and version is correct...
-	memset(pFunctionTable, 0, sizeof(DLL_FUNCTIONS));
+	std::memset(pFunctionTable, 0, sizeof(DLL_FUNCTIONS));
 	if (!mr_meta) {
 		// pass other DLLs engine callbacks to function table...
 		if (!(*other_GetEntityAPI)(&other_gFunctionTable, INTERFACE_VERSION)) {
@@ -4812,7 +4812,7 @@ C_DLLEXPORT int GetEntityAPI(DLL_FUNCTIONS* pFunctionTable, int interfaceVersion
 		}
 		gGameDLLFunc.dllapi_table = &other_gFunctionTable;
 		gpGamedllFuncs = &gGameDLLFunc;
-		memcpy(pFunctionTable, &other_gFunctionTable, sizeof(DLL_FUNCTIONS));
+		std::memcpy(pFunctionTable, &other_gFunctionTable, sizeof(DLL_FUNCTIONS));
 	}
 	pFunctionTable->pfnStartFrame = StartFrame;
 	pFunctionTable->pfnGameInit = GameDLLInit;
@@ -4847,7 +4847,7 @@ void FakeClientCommand(edict_t* pBot, const char* arg1, const char* arg2, const 
 	if (arg1 == nullptr || *arg1 == 0)
 		return;
 
-	if (strncmp(arg1, "kill", 4) == 0) {
+	if (std::strncmp(arg1, "kill", 4) == 0) {
 		MDLL_ClientKill(pBot);
 		return;
 	}
@@ -4869,8 +4869,8 @@ void FakeClientCommand(edict_t* pBot, const char* arg1, const char* arg2, const 
 
 	if (debug_engine) {
 		global::fp = UTIL_OpenFoxbotLog();
-		fprintf(global::fp, "FakeClientCommand=%s %p\n", g_argv, static_cast<void*>(pBot));
-		fclose(global::fp);
+		std::fprintf(global::fp, "FakeClientCommand=%s %p\n", g_argv, static_cast<void*>(pBot));
+		std::fclose(global::fp);
 	}
 
 	// allow the MOD DLL to execute the ClientCommand...
@@ -4888,18 +4888,18 @@ const char* Cmd_Args() {
 		if (isFakeClientCommand) {
 			if (debug_engine) {
 				global::fp = UTIL_OpenFoxbotLog();
-				fprintf(global::fp, "fake cmd_args%s\n", &g_argv[0]);
-				fclose(global::fp);
+				std::fprintf(global::fp, "fake cmd_args%s\n", &g_argv[0]);
+				std::fclose(global::fp);
 			}
 
 			// is it a "say" or "say_team" client command ?
-			if (strncmp("say ", g_argv, 4) == 0)
+			if (std::strncmp("say ", g_argv, 4) == 0)
 				return &g_argv[0] + 4; // skip the "say" bot client command (bug in HL engine)
-			// sprintf(g_argv,"%s",&g_argv[0] + 4);
-			if (strncmp("say_team ", g_argv, 9) == 0)
+			// std::sprintf(g_argv,"%s",&g_argv[0] + 4);
+			if (std::strncmp("say_team ", g_argv, 9) == 0)
 				return &g_argv[0] + 9;
 			// skip the "say_team" bot client command (bug in HL engine)
-			// sprintf(g_argv,"%s",&g_argv[0] + 9);
+			// std::sprintf(g_argv,"%s",&g_argv[0] + 9);
 
 			return &g_argv[0];
 		}
@@ -4908,21 +4908,21 @@ const char* Cmd_Args() {
 	if (isFakeClientCommand) {
 		if (debug_engine) {
 			global::fp = UTIL_OpenFoxbotLog();
-			fprintf(global::fp, "fake cmd_args%s\n", &g_argv[0]);
-			fclose(global::fp);
+			std::fprintf(global::fp, "fake cmd_args%s\n", &g_argv[0]);
+			std::fclose(global::fp);
 		}
 
 		// is it a "say" or "say_team" client command ?
-		if (strncmp("say ", g_argv, 4) == 0)
+		if (std::strncmp("say ", g_argv, 4) == 0)
 			RETURN_META_VALUE(MRES_SUPERCEDE, &g_argv[0] + 4); // skip the "say" bot client command (bug in HL engine)
-		if (strncmp("say_team ", g_argv, 9) == 0)
+		if (std::strncmp("say_team ", g_argv, 9) == 0)
 			RETURN_META_VALUE(MRES_SUPERCEDE, &g_argv[0] + 9); // skip the "say_team" bot client command (bug in HL engine)
 		/*if(strncmp ("say ", g_argv, 4) == 0)
 			  //return (&g_argv[0] + 4); // skip the "say" bot client command (bug in HL engine)
-			  sprintf(g_argv,"%s",&g_argv[0] + 4);
+			  std::sprintf(g_argv,"%s",&g_argv[0] + 4);
 			  else if(strncmp ("say_team ", g_argv, 9) == 0)
 			  //return (&g_argv[0] + 9); // skip the "say_team" bot client command (bug in HL engine)
-			  sprintf(g_argv,"%s",&g_argv[0] + 9);*/
+			  std::sprintf(g_argv,"%s",&g_argv[0] + 9);*/
 		RETURN_META_VALUE(MRES_SUPERCEDE, &g_argv[0]);
 	}
 	RETURN_META_VALUE(MRES_IGNORED, NULL);
@@ -4939,7 +4939,7 @@ const char* GetArg(const char* command, unsigned int arg_number) {
 	// which does the same thing, when the caller is a bot.
 	unsigned int i, index = 0, arg_count = 0, fieldstart, fieldstop;
 	arg[0] = 0;                         // reset arg
-	const unsigned int length = strlen(command); // get length of command
+	const unsigned int length = std::strlen(command); // get length of command
 	// while we have not reached end of line
 	while (index < length && arg_count <= arg_number) {
 		while (index < length && command[index] == ' ')
@@ -5013,57 +5013,57 @@ int Cmd_Argc() {
 // meta mod post functions
 
 void DispatchKeyValue_Post(edict_t* pentKeyvalue, const KeyValueData* pkvd) {
-	// fp=UTIL_OpenFoxbotLog(); fprintf(fp, "DispatchKeyValue: %x %s=%s\n",pentKeyvalue,pkvd->szKeyName,pkvd->szValue);
-	// fclose(fp);
+	// fp=UTIL_OpenFoxbotLog(); std::fprintf(fp, "DispatchKeyValue: %x %s=%s\n",pentKeyvalue,pkvd->szKeyName,pkvd->szValue);
+	// std::fclose(fp);
 
 	if (mod_id == TFC_DLL) {
 		static int flag_index;
 		static edict_t* temp_pent;
 		if (pentKeyvalue == pent_info_tfdetect) {
-			if (strcmp(pkvd->szKeyName, "ammo_medikit") == 0) // max BLUE players
+			if (std::strcmp(pkvd->szKeyName, "ammo_medikit") == 0) // max BLUE players
 				max_team_players[0] = atoi(pkvd->szValue);
-			else if (strcmp(pkvd->szKeyName, "ammo_detpack") == 0) // max RED players
+			else if (std::strcmp(pkvd->szKeyName, "ammo_detpack") == 0) // max RED players
 				max_team_players[1] = atoi(pkvd->szValue);
-			else if (strcmp(pkvd->szKeyName, "maxammo_medikit") == 0) // max YELLOW players
+			else if (std::strcmp(pkvd->szKeyName, "maxammo_medikit") == 0) // max YELLOW players
 				max_team_players[2] = atoi(pkvd->szValue);
-			else if (strcmp(pkvd->szKeyName, "maxammo_detpack") == 0) // max GREEN players
+			else if (std::strcmp(pkvd->szKeyName, "maxammo_detpack") == 0) // max GREEN players
 				max_team_players[3] = atoi(pkvd->szValue);
 
-			else if (strcmp(pkvd->szKeyName, "maxammo_shells") == 0) // BLUE class limits
+			else if (std::strcmp(pkvd->szKeyName, "maxammo_shells") == 0) // BLUE class limits
 				team_class_limits[0] = atoi(pkvd->szValue);
-			else if (strcmp(pkvd->szKeyName, "maxammo_nails") == 0) // RED class limits
+			else if (std::strcmp(pkvd->szKeyName, "maxammo_nails") == 0) // RED class limits
 				team_class_limits[1] = atoi(pkvd->szValue);
-			else if (strcmp(pkvd->szKeyName, "maxammo_rockets") == 0) // YELLOW class limits
+			else if (std::strcmp(pkvd->szKeyName, "maxammo_rockets") == 0) // YELLOW class limits
 				team_class_limits[2] = atoi(pkvd->szValue);
-			else if (strcmp(pkvd->szKeyName, "maxammo_cells") == 0) // GREEN class limits
+			else if (std::strcmp(pkvd->szKeyName, "maxammo_cells") == 0) // GREEN class limits
 				team_class_limits[3] = atoi(pkvd->szValue);
 
-			else if (strcmp(pkvd->szKeyName, "team1_allies") == 0) // BLUE allies
+			else if (std::strcmp(pkvd->szKeyName, "team1_allies") == 0) // BLUE allies
 				team_allies[0] = atoi(pkvd->szValue);
-			else if (strcmp(pkvd->szKeyName, "team2_allies") == 0) // RED allies
+			else if (std::strcmp(pkvd->szKeyName, "team2_allies") == 0) // RED allies
 				team_allies[1] = atoi(pkvd->szValue);
-			else if (strcmp(pkvd->szKeyName, "team3_allies") == 0) // YELLOW allies
+			else if (std::strcmp(pkvd->szKeyName, "team3_allies") == 0) // YELLOW allies
 				team_allies[2] = atoi(pkvd->szValue);
-			else if (strcmp(pkvd->szKeyName, "team4_allies") == 0) // GREEN allies
+			else if (std::strcmp(pkvd->szKeyName, "team4_allies") == 0) // GREEN allies
 				team_allies[3] = atoi(pkvd->szValue);
 		}
 		else if (pent_info_tfdetect == nullptr) {
-			if (strcmp(pkvd->szKeyName, "classname") == 0 && strcmp(pkvd->szValue, "info_tfdetect") == 0) {
+			if (std::strcmp(pkvd->szKeyName, "classname") == 0 && std::strcmp(pkvd->szValue, "info_tfdetect") == 0) {
 				pent_info_tfdetect = pentKeyvalue;
 			}
 		}
 
 		if (pentKeyvalue == pent_item_tfgoal) {
-			if (strcmp(pkvd->szKeyName, "team_no") == 0)
+			if (std::strcmp(pkvd->szKeyName, "team_no") == 0)
 				flags[flag_index].team_no = atoi(pkvd->szValue);
 
-			if (strcmp(pkvd->szKeyName, "mdl") == 0 && (strcmp(pkvd->szValue, "models/flag.mdl") == 0 || strcmp(pkvd->szValue, "models/keycard.mdl") == 0 || strcmp(pkvd->szValue, "models/ball.mdl") == 0)) {
+			if (std::strcmp(pkvd->szKeyName, "mdl") == 0 && (std::strcmp(pkvd->szValue, "models/flag.mdl") == 0 || std::strcmp(pkvd->szValue, "models/keycard.mdl") == 0 || std::strcmp(pkvd->szValue, "models/ball.mdl") == 0)) {
 				flags[flag_index].mdl_match = true;
 				num_flags++;
 			}
 		}
 		else if (pent_item_tfgoal == nullptr) {
-			if (strcmp(pkvd->szKeyName, "classname") == 0 && strcmp(pkvd->szValue, "item_tfgoal") == 0) {
+			if (std::strcmp(pkvd->szKeyName, "classname") == 0 && std::strcmp(pkvd->szValue, "item_tfgoal") == 0) {
 				if (num_flags < MAX_FLAGS) {
 					pent_item_tfgoal = pentKeyvalue;
 
@@ -5080,11 +5080,11 @@ void DispatchKeyValue_Post(edict_t* pentKeyvalue, const KeyValueData* pkvd) {
 			pent_item_tfgoal = nullptr; // reset for non-flag item_tfgoal's
 		}
 
-		if (strcmp(pkvd->szKeyName, "classname") == 0 && (strcmp(pkvd->szValue, "info_player_teamspawn") == 0 || strcmp(pkvd->szValue, "info_tf_teamcheck") == 0 || strcmp(pkvd->szValue, "i_p_t") == 0)) {
+		if (std::strcmp(pkvd->szKeyName, "classname") == 0 && (std::strcmp(pkvd->szValue, "info_player_teamspawn") == 0 || std::strcmp(pkvd->szValue, "info_tf_teamcheck") == 0 || std::strcmp(pkvd->szValue, "i_p_t") == 0)) {
 			temp_pent = pentKeyvalue;
 		}
 		else if (pentKeyvalue == temp_pent) {
-			if (strcmp(pkvd->szKeyName, "team_no") == 0) {
+			if (std::strcmp(pkvd->szKeyName, "team_no") == 0) {
 				// int value = atoi(pkvd->szValue);
 
 				// is_team[value-1]=true;
@@ -5141,7 +5141,7 @@ static void ProcessBotCfgFile() {
 		if (ch == '\t') // convert tabs to spaces
 			ch = ' ';
 
-		//{fp=UTIL_OpenFoxbotLog(); fprintf(fp,"cfg %d %i\n",cmd_index,ch); fclose(fp); }
+		//{fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"cfg %d %i\n",cmd_index,ch); std::fclose(fp); }
 		cmd_line[cmd_index] = static_cast<char>(ch);
 
 		ch = fgetc(bot_cfg_fp);
@@ -5160,11 +5160,11 @@ static void ProcessBotCfgFile() {
 
 	// if reached end of file, then close it
 	if (ch == EOF) {
-		fclose(bot_cfg_fp);
+		std::fclose(bot_cfg_fp);
 
 		bot_cfg_fp = nullptr;
 		/*if(debug_engine)
-						{fp=UTIL_OpenFoxbotLog(); fprintf(fp,"close cfg\n"); fclose(fp);}*/
+						{fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"close cfg\n"); std::fclose(fp);}*/
 
 						// dam reset
 						// bot_cfg_pause_time = 0.0f;
@@ -5184,12 +5184,12 @@ static void ProcessBotCfgFile() {
 		return; // return if comment or blank line
 
 	// DREVIL
-	if (strncmp("echo", cmd_line, 4) == 0)
+	if (std::strncmp("echo", cmd_line, 4) == 0)
 		return;
 
 	// copy the command line to a server command buffer...
-	strcpy(server_cmd, cmd_line);
-	strcat(server_cmd, "\n");
+	std::strcpy(server_cmd, cmd_line);
+	std::strcat(server_cmd, "\n");
 
 	cmd_index = 0;
 	const char* cmd = cmd_line;
@@ -5225,12 +5225,12 @@ static void ProcessBotCfgFile() {
 		}
 	}
 
-	if (strcmp(cmd, "addbot") == 0) {
+	if (std::strcmp(cmd, "addbot") == 0) {
 		if (IS_DEDICATED_SERVER()) {
-			printf("[Config] add bot (%s,%s,%s,%s)\n", arg1, arg2, arg3, arg4);
+			std::printf("[Config] add bot (%s,%s,%s,%s)\n", arg1, arg2, arg3, arg4);
 		}
 		else {
-			sprintf(msg, "[Config] add bot (%s,%s,%s,%s)\n", arg1, arg2, arg3, arg4);
+			std::sprintf(msg, "[Config] add bot (%s,%s,%s,%s)\n", arg1, arg2, arg3, arg4);
 			ALERT(at_console, msg);
 		}
 		BotCreate(nullptr, arg1, arg2, arg3, arg4);
@@ -5243,36 +5243,36 @@ static void ProcessBotCfgFile() {
 		return;
 	}
 
-	if (strcmp(cmd, "bot_chat") == 0) {
+	if (std::strcmp(cmd, "bot_chat") == 0) {
 		changeBotSetting("bot_chat", &bot_chat, arg1, 0, 1000, SETTING_SOURCE_CONFIG_FILE);
 		return;
 	}
 
-	if (strcmp(cmd, "botskill_lower") == 0) {
+	if (std::strcmp(cmd, "botskill_lower") == 0) {
 		changeBotSetting("botskill_lower", &botskill_lower, arg1, 1, 5, SETTING_SOURCE_CONFIG_FILE);
 		return;
 	}
 
-	if (strcmp(cmd, "botskill_upper") == 0) {
+	if (std::strcmp(cmd, "botskill_upper") == 0) {
 		changeBotSetting("botskill_upper", &botskill_upper, arg1, 1, 5, SETTING_SOURCE_CONFIG_FILE);
 		return;
 	}
 
-	if (strcmp(cmd, "bot_skill_1_aim") == 0) {
+	if (std::strcmp(cmd, "bot_skill_1_aim") == 0) {
 		changeBotSetting("bot_skill_1_aim", &bot_skill_1_aim, arg1, 0, 200, SETTING_SOURCE_CONFIG_FILE);
 
 		BotUpdateSkillInaccuracy();
 		return;
 	}
 
-	if (strcmp(cmd, "bot_aim_per_skill") == 0) {
+	if (std::strcmp(cmd, "bot_aim_per_skill") == 0) {
 		changeBotSetting("bot_aim_per_skill", &bot_aim_per_skill, arg1, 5, 50, SETTING_SOURCE_CONFIG_FILE);
 
 		BotUpdateSkillInaccuracy();
 		return;
 	}
 
-	if (strcmp(cmd, "observer") == 0) {
+	if (std::strcmp(cmd, "observer") == 0) {
 		int temp;
 		temp = atoi(arg1);
 
@@ -5284,37 +5284,37 @@ static void ProcessBotCfgFile() {
 		return;
 	}
 
-	if (strcmp(cmd, "bot_allow_moods") == 0) {
+	if (std::strcmp(cmd, "bot_allow_moods") == 0) {
 		changeBotSetting("bot_allow_moods", &bot_allow_moods, arg1, 0, 1, SETTING_SOURCE_CONFIG_FILE);
 		return;
 	}
 
-	if (strcmp(cmd, "bot_allow_humour") == 0) {
+	if (std::strcmp(cmd, "bot_allow_humour") == 0) {
 		changeBotSetting("bot_allow_humour", &bot_allow_humour, arg1, 0, 1, SETTING_SOURCE_CONFIG_FILE);
 		return;
 	}
 
-	if (strcmp(cmd, "bot_use_grenades") == 0) {
+	if (std::strcmp(cmd, "bot_use_grenades") == 0) {
 		changeBotSetting("bot_use_grenades", &bot_use_grenades, arg1, 0, 2, SETTING_SOURCE_CONFIG_FILE);
 		return;
 	}
 
-	if (strcmp(cmd, "min_bots") == 0) {
+	if (std::strcmp(cmd, "min_bots") == 0) {
 		changeBotSetting("min_bots", &min_bots, arg1, -1, 31, SETTING_SOURCE_CONFIG_FILE);
 		return;
 	}
 
-	if (strcmp(cmd, "max_bots") == 0) {
+	if (std::strcmp(cmd, "max_bots") == 0) {
 		changeBotSetting("max_bots", &max_bots, arg1, -1, MAX_BOTS, SETTING_SOURCE_CONFIG_FILE);
 		return;
 	}
 
-	if (strcmp(cmd, "bot_total_varies") == 0) {
+	if (std::strcmp(cmd, "bot_total_varies") == 0) {
 		changeBotSetting("bot_total_varies", &bot_total_varies, arg1, 0, 3, SETTING_SOURCE_CONFIG_FILE);
 		return;
 	}
 
-	if (strcmp(cmd, "bot_team_balance") == 0) {
+	if (std::strcmp(cmd, "bot_team_balance") == 0) {
 		if (arg1 != nullptr) {
 			int temp;
 			temp = atoi(arg1);
@@ -5326,9 +5326,9 @@ static void ProcessBotCfgFile() {
 
 		if (IS_DEDICATED_SERVER()) {
 			if (bot_team_balance)
-				printf("[Config] bot_team_balance (1) On\n");
+				std::printf("[Config] bot_team_balance (1) On\n");
 			else
-				printf("[Config] bot_team_balance (0) Off\n");
+				std::printf("[Config] bot_team_balance (0) Off\n");
 		}
 		else {
 			if (bot_team_balance)
@@ -5338,7 +5338,7 @@ static void ProcessBotCfgFile() {
 		}
 		return;
 	}
-	if (strcmp(cmd, "bot_bot_balance") == 0) {
+	if (std::strcmp(cmd, "bot_bot_balance") == 0) {
 		if (arg1 != nullptr) {
 			int temp;
 			temp = atoi(arg1);
@@ -5350,9 +5350,9 @@ static void ProcessBotCfgFile() {
 
 		if (IS_DEDICATED_SERVER()) {
 			if (bot_bot_balance)
-				printf("[Config] bot_bot_balance (1) On\n");
+				std::printf("[Config] bot_bot_balance (1) On\n");
 			else
-				printf("[Config] bot_bot_balance (0) Off\n");
+				std::printf("[Config] bot_bot_balance (0) Off\n");
 		}
 		else {
 			if (bot_bot_balance)
@@ -5363,149 +5363,149 @@ static void ProcessBotCfgFile() {
 		return;
 	}
 
-	if (strcmp(cmd, "bot_xmas") == 0) {
+	if (std::strcmp(cmd, "bot_xmas") == 0) {
 		int temp;
 		temp = atoi(arg1);
 		bot_xmas = true;
 		if (temp == 0) {
 			bot_xmas = false;
 			if (IS_DEDICATED_SERVER())
-				printf("[Config] bot xmas (0) off\n");
+				std::printf("[Config] bot xmas (0) off\n");
 			else {
-				sprintf(msg, "[Config] bot xmas (0) off\n");
+				std::sprintf(msg, "[Config] bot xmas (0) off\n");
 				ALERT(at_console, msg);
 			}
 		}
 		else {
 			if (IS_DEDICATED_SERVER())
-				printf("[Config] bot xmas (1) on\n");
+				std::printf("[Config] bot xmas (1) on\n");
 			else {
-				sprintf(msg, "[Config] bot xmas (1) on\n");
+				std::sprintf(msg, "[Config] bot xmas (1) on\n");
 				ALERT(at_console, msg);
 			}
 		}
 		return;
 	}
 
-	if (strcmp(cmd, "botdontshoot") == 0) {
+	if (std::strcmp(cmd, "botdontshoot") == 0) {
 		int temp;
 		temp = atoi(arg1);
 		botdontshoot = true;
 		if (temp == 0) {
 			botdontshoot = false;
 			if (IS_DEDICATED_SERVER())
-				printf("[Config] botdontshoot (0) off\n");
+				std::printf("[Config] botdontshoot (0) off\n");
 			else {
-				sprintf(msg, "[Config] botdontshoot (0) off\n");
+				std::sprintf(msg, "[Config] botdontshoot (0) off\n");
 				ALERT(at_console, msg);
 			}
 		}
 		else {
 			if (IS_DEDICATED_SERVER())
-				printf("[Config] botdontshoot (1) on\n");
+				std::printf("[Config] botdontshoot (1) on\n");
 			else {
-				sprintf(msg, "[Config] botdontshoot (1) on\n");
+				std::sprintf(msg, "[Config] botdontshoot (1) on\n");
 				ALERT(at_console, msg);
 			}
 		}
 		return;
 	}
 
-	if (strcmp(cmd, "botdontmove") == 0) {
+	if (std::strcmp(cmd, "botdontmove") == 0) {
 		int temp;
 		temp = atoi(arg1);
 		botdontmove = true;
 		if (temp == 0) {
 			botdontmove = false;
 			if (IS_DEDICATED_SERVER())
-				printf("[Config] botdontmove (0) off\n");
+				std::printf("[Config] botdontmove (0) off\n");
 			else {
-				sprintf(msg, "[Config] botdontmove (0) off\n");
+				std::sprintf(msg, "[Config] botdontmove (0) off\n");
 				ALERT(at_console, msg);
 			}
 		}
 		else {
 			if (IS_DEDICATED_SERVER())
-				printf("[Config] botdontmove (1) on\n");
+				std::printf("[Config] botdontmove (1) on\n");
 			else {
-				sprintf(msg, "[Config] botdontmove (1) on\n");
+				std::sprintf(msg, "[Config] botdontmove (1) on\n");
 				ALERT(at_console, msg);
 			}
 		}
 		return;
 	}
 
-	if (strcmp(cmd, "bot_can_build_teleporter") == 0) {
-		if (strcmp(arg1, "on") == 0) {
+	if (std::strcmp(cmd, "bot_can_build_teleporter") == 0) {
+		if (std::strcmp(arg1, "on") == 0) {
 			bot_can_build_teleporter = true;
 			if (IS_DEDICATED_SERVER())
-				printf("[Config] bot_can_build_teleporter on\n");
+				std::printf("[Config] bot_can_build_teleporter on\n");
 			else {
-				sprintf(msg, "[Config] bot_can_build_teleporter on\n");
+				std::sprintf(msg, "[Config] bot_can_build_teleporter on\n");
 				ALERT(at_console, msg);
 			}
 		}
-		else if (strcmp(arg1, "off") == 0) {
+		else if (std::strcmp(arg1, "off") == 0) {
 			bot_can_build_teleporter = false;
 			if (IS_DEDICATED_SERVER())
-				printf("[Config] bot_can_build_teleporter off\n");
+				std::printf("[Config] bot_can_build_teleporter off\n");
 			else {
-				sprintf(msg, "[Config] bot_can_build_teleporter off\n");
+				std::sprintf(msg, "[Config] bot_can_build_teleporter off\n");
 				ALERT(at_console, msg);
 			}
 		}
 		return;
 	}
 
-	if (strcmp(cmd, "bot_can_use_teleporter") == 0) {
-		if (strcmp(arg1, "on") == 0) {
+	if (std::strcmp(cmd, "bot_can_use_teleporter") == 0) {
+		if (std::strcmp(arg1, "on") == 0) {
 			bot_can_use_teleporter = true;
 			if (IS_DEDICATED_SERVER())
-				printf("[Config] bot_can_use_teleporter on\n");
+				std::printf("[Config] bot_can_use_teleporter on\n");
 			else {
-				sprintf(msg, "[Config] bot_can_use_teleporter on\n");
+				std::sprintf(msg, "[Config] bot_can_use_teleporter on\n");
 				ALERT(at_console, msg);
 			}
 		}
-		else if (strcmp(arg1, "off") == 0) {
+		else if (std::strcmp(arg1, "off") == 0) {
 			bot_can_use_teleporter = false;
 			if (IS_DEDICATED_SERVER())
-				printf("[Config] bot_can_use_teleporter off\n");
+				std::printf("[Config] bot_can_use_teleporter off\n");
 			else {
-				sprintf(msg, "[Config] bot_can_use_teleporter off\n");
+				std::sprintf(msg, "[Config] bot_can_use_teleporter off\n");
 				ALERT(at_console, msg);
 			}
 		}
 		return;
 	}
 
-	if (strcmp(cmd, "pause") == 0) {
+	if (std::strcmp(cmd, "pause") == 0) {
 		bot_cfg_pause_time = gpGlobals->time + atoi(arg1);
 		bot_check_time = bot_cfg_pause_time; // bot_check_time governs bot spawn time too
 		if (IS_DEDICATED_SERVER())
-			printf("[Config] pause has been set to %s\n", arg1);
+			std::printf("[Config] pause has been set to %s\n", arg1);
 		else {
-			sprintf(msg, "[Config] pause has been set to %s\n", arg1);
+			std::sprintf(msg, "[Config] pause has been set to %s\n", arg1);
 			ALERT(at_console, msg);
 		}
 		return;
 	}
 
-	if (strcmp(cmd, "bot_create_interval") == 0) {
+	if (std::strcmp(cmd, "bot_create_interval") == 0) {
 		bot_create_interval = static_cast<float>(atoi(arg1));
 		if (bot_create_interval < 1.0f || bot_create_interval > 8.0f)
 			bot_create_interval = 3.0f;
 
 		if (IS_DEDICATED_SERVER())
-			printf("[Config] bot_create_interval has been set to %s\n", arg1);
+			std::printf("[Config] bot_create_interval has been set to %s\n", arg1);
 		else {
-			sprintf(msg, "[Config] bot_create_interval has been set to %s\n", arg1);
+			std::sprintf(msg, "[Config] bot_create_interval has been set to %s\n", arg1);
 			ALERT(at_console, msg);
 		}
 		return;
 	}
 
-	if (strcmp(cmd, "defensive_chatter") == 0) {
+	if (std::strcmp(cmd, "defensive_chatter") == 0) {
 		const int temp = atoi(arg1);
 		if (temp == 0)
 			defensive_chatter = false;
@@ -5513,15 +5513,15 @@ static void ProcessBotCfgFile() {
 			defensive_chatter = true;
 
 		if (IS_DEDICATED_SERVER()) {
-			printf("[Config] defensive chatter is %s\n", arg1);
+			std::printf("[Config] defensive chatter is %s\n", arg1);
 		}
 		else {
-			sprintf(msg, "[Config] defensive chatter is %s\n", arg1);
+			std::sprintf(msg, "[Config] defensive chatter is %s\n", arg1);
 			ALERT(at_console, msg);
 		}
 		return;
 	}
-	if (strcmp(cmd, "offensive_chatter") == 0) {
+	if (std::strcmp(cmd, "offensive_chatter") == 0) {
 		const int temp = atoi(arg1);
 		if (temp == 0)
 			offensive_chatter = false;
@@ -5529,15 +5529,15 @@ static void ProcessBotCfgFile() {
 			offensive_chatter = true;
 
 		if (IS_DEDICATED_SERVER()) {
-			printf("[Config] offensive chatter is %s\n", arg1);
+			std::printf("[Config] offensive chatter is %s\n", arg1);
 		}
 		else {
-			sprintf(msg, "[Config] offensive chatter is %s\n", arg1);
+			std::sprintf(msg, "[Config] offensive chatter is %s\n", arg1);
 			ALERT(at_console, msg);
 		}
 		return;
 	}
-	/*	if(strcmp(cmd, "frag_commander") == 0)
+	/*	if(std::strcmp(cmd, "frag_commander") == 0)
 					{
 									int temp = atoi( arg1 );
 									if(temp == 0)
@@ -5547,21 +5547,21 @@ static void ProcessBotCfgFile() {
 
 									if(IS_DEDICATED_SERVER())
 									{
-													printf("[Config] Score-based commander is %s\n",arg1);
+													std::printf("[Config] Score-based commander is %s\n",arg1);
 									}
 									else
 									{
-													sprintf(msg,"[Config] Score-based commander is %s\n",arg1);
+													std::sprintf(msg,"[Config] Score-based commander is %s\n",arg1);
 													ALERT( at_console, msg);
 									}
 									return;
 					}*/
 
-	sprintf(msg2, "executing: %s\n", server_cmd);
+	std::sprintf(msg2, "executing: %s\n", server_cmd);
 	ALERT(at_console, msg);
 
 	if (IS_DEDICATED_SERVER())
-		printf("%s", msg);
+		std::printf("%s", msg);
 
 	SERVER_COMMAND(server_cmd);
 }
@@ -5571,122 +5571,122 @@ void UTIL_SavePent(edict_t* pent) {
 	if (fp == nullptr)
 		return;
 
-	fprintf(fp, "*edict_t %p\n", static_cast<void*>(pent));
-	fprintf(fp, "classname %s\n", STRING(pent->v.classname));
-	fprintf(fp, "globalname %s\n", STRING(pent->v.globalname));
-	fprintf(fp, "origin %f %f %f\n", pent->v.origin.x, pent->v.origin.y, pent->v.origin.z);
-	fprintf(fp, "oldorigin %f %f %f\n", pent->v.oldorigin.x, pent->v.oldorigin.y, pent->v.oldorigin.z);
-	fprintf(fp, "velocity %f %f %f\n", pent->v.velocity.x, pent->v.velocity.y, pent->v.velocity.z);
-	fprintf(fp, "basevelocity %f %f %f\n", pent->v.basevelocity.x, pent->v.basevelocity.y, pent->v.basevelocity.z);
-	fprintf(fp, "clbasevelocity %f %f %f\n", pent->v.clbasevelocity.x, pent->v.clbasevelocity.y, pent->v.clbasevelocity.z);
-	fprintf(fp, "movedir %f %f %f\n", pent->v.movedir.x, pent->v.movedir.y, pent->v.movedir.z);
-	fprintf(fp, "angles %f %f %f\n", pent->v.angles.x, pent->v.angles.y, pent->v.angles.z);
-	fprintf(fp, "avelocity %f %f %f\n", pent->v.avelocity.x, pent->v.avelocity.y, pent->v.avelocity.z);
-	fprintf(fp, "punchangle %f %f %f\n", pent->v.punchangle.x, pent->v.punchangle.y, pent->v.punchangle.z);
-	fprintf(fp, "v_angles %f %f %f\n", pent->v.v_angle.x, pent->v.v_angle.y, pent->v.v_angle.z);
-	fprintf(fp, "endpos %f %f %f\n", pent->v.endpos.x, pent->v.endpos.y, pent->v.endpos.z);
-	fprintf(fp, "startpos %f %f %f\n", pent->v.startpos.x, pent->v.startpos.y, pent->v.startpos.z);
-	fprintf(fp, "impacttime %f\n", pent->v.impacttime);
-	fprintf(fp, "starttime %f\n", pent->v.starttime);
-	fprintf(fp, "fixangle %d\n", pent->v.fixangle);
-	fprintf(fp, "idealpitch %f\n", pent->v.idealpitch);
-	fprintf(fp, "pitch_speed %f\n", pent->v.pitch_speed);
-	fprintf(fp, "ideal_yaw %f\n", pent->v.ideal_yaw);
-	fprintf(fp, "yaw_speed %f\n", pent->v.yaw_speed);
-	fprintf(fp, "modelindex %d\n", pent->v.modelindex);
-	fprintf(fp, "model %s\n", STRING(pent->v.model));
-	fprintf(fp, "viewmodel %d\n", pent->v.viewmodel);
-	fprintf(fp, "weaponmodel %d\n", pent->v.weaponmodel);
-	fprintf(fp, "absmin %f %f %f\n", pent->v.absmin.x, pent->v.absmin.y, pent->v.absmin.z);
-	fprintf(fp, "absmax %f %f %f\n", pent->v.absmax.x, pent->v.absmax.y, pent->v.absmax.z);
-	fprintf(fp, "mins %f %f %f\n", pent->v.mins.x, pent->v.mins.y, pent->v.mins.z);
-	fprintf(fp, "maxs %f %f %f\n", pent->v.maxs.x, pent->v.maxs.y, pent->v.maxs.z);
-	fprintf(fp, "size %f %f %f\n", pent->v.size.x, pent->v.size.y, pent->v.size.z);
-	fprintf(fp, "ltime %f\n", pent->v.ltime);
-	fprintf(fp, "nextthink %f\n", pent->v.nextthink);
-	fprintf(fp, "movetype %d\n", pent->v.movetype);
-	fprintf(fp, "solid %d\n", pent->v.solid);
-	fprintf(fp, "skin %d\n", pent->v.skin);
-	fprintf(fp, "body %d\n", pent->v.body);
-	fprintf(fp, "effects %d\n", pent->v.effects);
-	fprintf(fp, "gravity %f\n", pent->v.gravity);
-	fprintf(fp, "friction %f\n", pent->v.friction);
-	fprintf(fp, "light_level %d %d\n", pent->v.light_level, GETENTITYILLUM(pent));
+	std::fprintf(fp, "*edict_t %p\n", static_cast<void*>(pent));
+	std::fprintf(fp, "classname %s\n", STRING(pent->v.classname));
+	std::fprintf(fp, "globalname %s\n", STRING(pent->v.globalname));
+	std::fprintf(fp, "origin %f %f %f\n", pent->v.origin.x, pent->v.origin.y, pent->v.origin.z);
+	std::fprintf(fp, "oldorigin %f %f %f\n", pent->v.oldorigin.x, pent->v.oldorigin.y, pent->v.oldorigin.z);
+	std::fprintf(fp, "velocity %f %f %f\n", pent->v.velocity.x, pent->v.velocity.y, pent->v.velocity.z);
+	std::fprintf(fp, "basevelocity %f %f %f\n", pent->v.basevelocity.x, pent->v.basevelocity.y, pent->v.basevelocity.z);
+	std::fprintf(fp, "clbasevelocity %f %f %f\n", pent->v.clbasevelocity.x, pent->v.clbasevelocity.y, pent->v.clbasevelocity.z);
+	std::fprintf(fp, "movedir %f %f %f\n", pent->v.movedir.x, pent->v.movedir.y, pent->v.movedir.z);
+	std::fprintf(fp, "angles %f %f %f\n", pent->v.angles.x, pent->v.angles.y, pent->v.angles.z);
+	std::fprintf(fp, "avelocity %f %f %f\n", pent->v.avelocity.x, pent->v.avelocity.y, pent->v.avelocity.z);
+	std::fprintf(fp, "punchangle %f %f %f\n", pent->v.punchangle.x, pent->v.punchangle.y, pent->v.punchangle.z);
+	std::fprintf(fp, "v_angles %f %f %f\n", pent->v.v_angle.x, pent->v.v_angle.y, pent->v.v_angle.z);
+	std::fprintf(fp, "endpos %f %f %f\n", pent->v.endpos.x, pent->v.endpos.y, pent->v.endpos.z);
+	std::fprintf(fp, "startpos %f %f %f\n", pent->v.startpos.x, pent->v.startpos.y, pent->v.startpos.z);
+	std::fprintf(fp, "impacttime %f\n", pent->v.impacttime);
+	std::fprintf(fp, "starttime %f\n", pent->v.starttime);
+	std::fprintf(fp, "fixangle %d\n", pent->v.fixangle);
+	std::fprintf(fp, "idealpitch %f\n", pent->v.idealpitch);
+	std::fprintf(fp, "pitch_speed %f\n", pent->v.pitch_speed);
+	std::fprintf(fp, "ideal_yaw %f\n", pent->v.ideal_yaw);
+	std::fprintf(fp, "yaw_speed %f\n", pent->v.yaw_speed);
+	std::fprintf(fp, "modelindex %d\n", pent->v.modelindex);
+	std::fprintf(fp, "model %s\n", STRING(pent->v.model));
+	std::fprintf(fp, "viewmodel %d\n", pent->v.viewmodel);
+	std::fprintf(fp, "weaponmodel %d\n", pent->v.weaponmodel);
+	std::fprintf(fp, "absmin %f %f %f\n", pent->v.absmin.x, pent->v.absmin.y, pent->v.absmin.z);
+	std::fprintf(fp, "absmax %f %f %f\n", pent->v.absmax.x, pent->v.absmax.y, pent->v.absmax.z);
+	std::fprintf(fp, "mins %f %f %f\n", pent->v.mins.x, pent->v.mins.y, pent->v.mins.z);
+	std::fprintf(fp, "maxs %f %f %f\n", pent->v.maxs.x, pent->v.maxs.y, pent->v.maxs.z);
+	std::fprintf(fp, "size %f %f %f\n", pent->v.size.x, pent->v.size.y, pent->v.size.z);
+	std::fprintf(fp, "ltime %f\n", pent->v.ltime);
+	std::fprintf(fp, "nextthink %f\n", pent->v.nextthink);
+	std::fprintf(fp, "movetype %d\n", pent->v.movetype);
+	std::fprintf(fp, "solid %d\n", pent->v.solid);
+	std::fprintf(fp, "skin %d\n", pent->v.skin);
+	std::fprintf(fp, "body %d\n", pent->v.body);
+	std::fprintf(fp, "effects %d\n", pent->v.effects);
+	std::fprintf(fp, "gravity %f\n", pent->v.gravity);
+	std::fprintf(fp, "friction %f\n", pent->v.friction);
+	std::fprintf(fp, "light_level %d %d\n", pent->v.light_level, GETENTITYILLUM(pent));
 	if (pent->v.pContainingEntity != nullptr)
-		fprintf(fp, "cont light_level %d\n", GETENTITYILLUM(pent->v.pContainingEntity));
-	fprintf(fp, "health %f\n", pent->v.health);
-	fprintf(fp, "frags %f\n", pent->v.frags);
-	fprintf(fp, "weapons %d\n", pent->v.weapons);
-	fprintf(fp, "takedamage %f\n", pent->v.takedamage);
-	fprintf(fp, "deadflag %d\n", pent->v.deadflag);
-	fprintf(fp, "view_ofs %f %f %f\n", pent->v.view_ofs.x, pent->v.view_ofs.y, pent->v.view_ofs.z);
-	fprintf(fp, "button %d\n", pent->v.button);
-	fprintf(fp, "impulse %d\n", pent->v.impulse);
-	fprintf(fp, "*chain %p\n", static_cast<void*>(pent->v.chain));
-	fprintf(fp, "*dmg_inflictor %p\n", static_cast<void*>(pent->v.dmg_inflictor));
-	fprintf(fp, "*enemy %p\n", static_cast<void*>(pent->v.enemy));
-	fprintf(fp, "*aiment %p\n", static_cast<void*>(pent->v.aiment));
-	fprintf(fp, "*owner %p\n", static_cast<void*>(pent->v.owner));
-	fprintf(fp, "*grounentity %p\n", static_cast<void*>(pent->v.groundentity));
-	fprintf(fp, "spawnflags %d\n", pent->v.spawnflags);
-	fprintf(fp, "flags %d\n", pent->v.flags);
-	fprintf(fp, "colormap %d\n", pent->v.colormap);
-	fprintf(fp, "team %d\n", pent->v.team);
-	fprintf(fp, "max_health %f\n", pent->v.max_health);
-	fprintf(fp, "teleport_time %f\n", pent->v.teleport_time);
-	fprintf(fp, "armortype %f\n", pent->v.armortype);
-	fprintf(fp, "armorvalue %f\n", pent->v.armorvalue);
-	fprintf(fp, "waterlevel %d\n", pent->v.waterlevel);
-	fprintf(fp, "watertype %d\n", pent->v.watertype);
-	fprintf(fp, "target %s\n", STRING(pent->v.target));
-	fprintf(fp, "targetname %s\n", STRING(pent->v.targetname));
-	fprintf(fp, "netname %s\n", STRING(pent->v.netname));
-	fprintf(fp, "message %s\n", STRING(pent->v.message));
-	fprintf(fp, "dmg_take %f\n", pent->v.dmg_take);
-	fprintf(fp, "dmg_save %f\n", pent->v.dmg_save);
-	fprintf(fp, "dmg %f\n", pent->v.dmg);
-	fprintf(fp, "dmgtime %f\n", pent->v.dmgtime);
-	fprintf(fp, "noise %s\n", STRING(pent->v.noise));
-	fprintf(fp, "noise1 %s\n", STRING(pent->v.noise1));
-	fprintf(fp, "noise2 %s\n", STRING(pent->v.noise2));
-	fprintf(fp, "noise3 %s\n", STRING(pent->v.noise3));
-	fprintf(fp, "speed %f\n", pent->v.speed);
-	fprintf(fp, "air_finished %f\n", pent->v.air_finished);
-	fprintf(fp, "pain_finished %f\n", pent->v.pain_finished);
-	fprintf(fp, "pContainingEntity %p\n", static_cast<void*>(pent->v.pContainingEntity));
-	fprintf(fp, "playerclass %d\n", pent->v.playerclass);
-	fprintf(fp, "maxspeed %f\n", pent->v.maxspeed);
-	fprintf(fp, "fov %f\n", pent->v.fov);
-	fprintf(fp, "weaponanim %d\n", pent->v.weaponanim);
-	fprintf(fp, "pushmsec %d\n", pent->v.pushmsec);
-	fprintf(fp, "bInDuck %d\n", pent->v.bInDuck);
-	fprintf(fp, "flTimeStepSound %d\n", pent->v.flTimeStepSound);
-	fprintf(fp, "flSwimTime %d\n", pent->v.flSwimTime);
-	fprintf(fp, "flDuckTime %d\n", pent->v.flDuckTime);
-	fprintf(fp, "iStepLeft %d\n", pent->v.iStepLeft);
-	fprintf(fp, "flFallVelocity %f\n", pent->v.flFallVelocity);
-	fprintf(fp, "gamestate %d\n", pent->v.gamestate);
-	fprintf(fp, "oldbuttons %d\n", pent->v.oldbuttons);
-	fprintf(fp, "groupinfo %d\n", pent->v.groupinfo);
-	fprintf(fp, "iuser1 %d\n", pent->v.iuser1);
-	fprintf(fp, "iuser2 %d\n", pent->v.iuser2);
-	fprintf(fp, "iuser3 %d\n", pent->v.iuser3);
-	fprintf(fp, "iuser4 %d\n", pent->v.iuser4);
-	fprintf(fp, "fuser1 %f\n", pent->v.fuser1);
-	fprintf(fp, "fuser2 %f\n", pent->v.fuser2);
-	fprintf(fp, "fuser3 %f\n", pent->v.fuser3);
-	fprintf(fp, "fuser4 %f\n", pent->v.fuser4);
-	fprintf(fp, "vuser1 %f %f %f\n", pent->v.vuser1.x, pent->v.vuser1.y, pent->v.vuser1.z);
-	fprintf(fp, "vuser2 %f %f %f\n", pent->v.vuser2.x, pent->v.vuser2.y, pent->v.vuser2.z);
-	fprintf(fp, "vuser3 %f %f %f\n", pent->v.vuser3.x, pent->v.vuser3.y, pent->v.vuser3.z);
-	fprintf(fp, "vuser4 %f %f %f\n", pent->v.vuser4.x, pent->v.vuser4.y, pent->v.vuser4.z);
-	fprintf(fp, "euser1 %p\n", static_cast<void*>(pent->v.euser1));
-	fprintf(fp, "euser2 %p\n", static_cast<void*>(pent->v.euser2));
-	fprintf(fp, "euser3 %p\n", static_cast<void*>(pent->v.euser3));
-	fprintf(fp, "euser4 %p\n", static_cast<void*>(pent->v.euser4));
+		std::fprintf(fp, "cont light_level %d\n", GETENTITYILLUM(pent->v.pContainingEntity));
+	std::fprintf(fp, "health %f\n", pent->v.health);
+	std::fprintf(fp, "frags %f\n", pent->v.frags);
+	std::fprintf(fp, "weapons %d\n", pent->v.weapons);
+	std::fprintf(fp, "takedamage %f\n", pent->v.takedamage);
+	std::fprintf(fp, "deadflag %d\n", pent->v.deadflag);
+	std::fprintf(fp, "view_ofs %f %f %f\n", pent->v.view_ofs.x, pent->v.view_ofs.y, pent->v.view_ofs.z);
+	std::fprintf(fp, "button %d\n", pent->v.button);
+	std::fprintf(fp, "impulse %d\n", pent->v.impulse);
+	std::fprintf(fp, "*chain %p\n", static_cast<void*>(pent->v.chain));
+	std::fprintf(fp, "*dmg_inflictor %p\n", static_cast<void*>(pent->v.dmg_inflictor));
+	std::fprintf(fp, "*enemy %p\n", static_cast<void*>(pent->v.enemy));
+	std::fprintf(fp, "*aiment %p\n", static_cast<void*>(pent->v.aiment));
+	std::fprintf(fp, "*owner %p\n", static_cast<void*>(pent->v.owner));
+	std::fprintf(fp, "*grounentity %p\n", static_cast<void*>(pent->v.groundentity));
+	std::fprintf(fp, "spawnflags %d\n", pent->v.spawnflags);
+	std::fprintf(fp, "flags %d\n", pent->v.flags);
+	std::fprintf(fp, "colormap %d\n", pent->v.colormap);
+	std::fprintf(fp, "team %d\n", pent->v.team);
+	std::fprintf(fp, "max_health %f\n", pent->v.max_health);
+	std::fprintf(fp, "teleport_time %f\n", pent->v.teleport_time);
+	std::fprintf(fp, "armortype %f\n", pent->v.armortype);
+	std::fprintf(fp, "armorvalue %f\n", pent->v.armorvalue);
+	std::fprintf(fp, "waterlevel %d\n", pent->v.waterlevel);
+	std::fprintf(fp, "watertype %d\n", pent->v.watertype);
+	std::fprintf(fp, "target %s\n", STRING(pent->v.target));
+	std::fprintf(fp, "targetname %s\n", STRING(pent->v.targetname));
+	std::fprintf(fp, "netname %s\n", STRING(pent->v.netname));
+	std::fprintf(fp, "message %s\n", STRING(pent->v.message));
+	std::fprintf(fp, "dmg_take %f\n", pent->v.dmg_take);
+	std::fprintf(fp, "dmg_save %f\n", pent->v.dmg_save);
+	std::fprintf(fp, "dmg %f\n", pent->v.dmg);
+	std::fprintf(fp, "dmgtime %f\n", pent->v.dmgtime);
+	std::fprintf(fp, "noise %s\n", STRING(pent->v.noise));
+	std::fprintf(fp, "noise1 %s\n", STRING(pent->v.noise1));
+	std::fprintf(fp, "noise2 %s\n", STRING(pent->v.noise2));
+	std::fprintf(fp, "noise3 %s\n", STRING(pent->v.noise3));
+	std::fprintf(fp, "speed %f\n", pent->v.speed);
+	std::fprintf(fp, "air_finished %f\n", pent->v.air_finished);
+	std::fprintf(fp, "pain_finished %f\n", pent->v.pain_finished);
+	std::fprintf(fp, "pContainingEntity %p\n", static_cast<void*>(pent->v.pContainingEntity));
+	std::fprintf(fp, "playerclass %d\n", pent->v.playerclass);
+	std::fprintf(fp, "maxspeed %f\n", pent->v.maxspeed);
+	std::fprintf(fp, "fov %f\n", pent->v.fov);
+	std::fprintf(fp, "weaponanim %d\n", pent->v.weaponanim);
+	std::fprintf(fp, "pushmsec %d\n", pent->v.pushmsec);
+	std::fprintf(fp, "bInDuck %d\n", pent->v.bInDuck);
+	std::fprintf(fp, "flTimeStepSound %d\n", pent->v.flTimeStepSound);
+	std::fprintf(fp, "flSwimTime %d\n", pent->v.flSwimTime);
+	std::fprintf(fp, "flDuckTime %d\n", pent->v.flDuckTime);
+	std::fprintf(fp, "iStepLeft %d\n", pent->v.iStepLeft);
+	std::fprintf(fp, "flFallVelocity %f\n", pent->v.flFallVelocity);
+	std::fprintf(fp, "gamestate %d\n", pent->v.gamestate);
+	std::fprintf(fp, "oldbuttons %d\n", pent->v.oldbuttons);
+	std::fprintf(fp, "groupinfo %d\n", pent->v.groupinfo);
+	std::fprintf(fp, "iuser1 %d\n", pent->v.iuser1);
+	std::fprintf(fp, "iuser2 %d\n", pent->v.iuser2);
+	std::fprintf(fp, "iuser3 %d\n", pent->v.iuser3);
+	std::fprintf(fp, "iuser4 %d\n", pent->v.iuser4);
+	std::fprintf(fp, "fuser1 %f\n", pent->v.fuser1);
+	std::fprintf(fp, "fuser2 %f\n", pent->v.fuser2);
+	std::fprintf(fp, "fuser3 %f\n", pent->v.fuser3);
+	std::fprintf(fp, "fuser4 %f\n", pent->v.fuser4);
+	std::fprintf(fp, "vuser1 %f %f %f\n", pent->v.vuser1.x, pent->v.vuser1.y, pent->v.vuser1.z);
+	std::fprintf(fp, "vuser2 %f %f %f\n", pent->v.vuser2.x, pent->v.vuser2.y, pent->v.vuser2.z);
+	std::fprintf(fp, "vuser3 %f %f %f\n", pent->v.vuser3.x, pent->v.vuser3.y, pent->v.vuser3.z);
+	std::fprintf(fp, "vuser4 %f %f %f\n", pent->v.vuser4.x, pent->v.vuser4.y, pent->v.vuser4.z);
+	std::fprintf(fp, "euser1 %p\n", static_cast<void*>(pent->v.euser1));
+	std::fprintf(fp, "euser2 %p\n", static_cast<void*>(pent->v.euser2));
+	std::fprintf(fp, "euser3 %p\n", static_cast<void*>(pent->v.euser3));
+	std::fprintf(fp, "euser4 %p\n", static_cast<void*>(pent->v.euser4));
 
-	fprintf(fp, "-info buffer %s\n", g_engfuncs.pfnGetInfoKeyBuffer(pent));
-	fclose(fp);
+	std::fprintf(fp, "-info buffer %s\n", g_engfuncs.pfnGetInfoKeyBuffer(pent));
+	std::fclose(fp);
 }
 
 static void DisplayBotInfo() {
@@ -5696,85 +5696,85 @@ static void DisplayBotInfo() {
 	if (IS_DEDICATED_SERVER()) {
 		// tell the console all the bot vars
 
-		snprintf(msg2, 511, "--FoxBot Loaded--\n--Visit 'www.apg-clan.org' for updates and info--\n");
+		std::snprintf(msg2, 511, "--FoxBot Loaded--\n--Visit 'www.apg-clan.org' for updates and info--\n");
 		msg2[511] = '\0'; // just in case
-		printf("%s", msg2);
+		std::printf("%s", msg2);
 
-		/*	sprintf(msg,"--* foxbot v%d.%d build# %d *--\n",
+		/*	std::sprintf(msg,"--* foxbot v%d.%d build# %d *--\n",
 						VER_MAJOR,VER_MINOR,VER_BUILD);*/
 
-		sprintf(msg, "--* foxbot v%d.%d *--\n", VER_MAJOR, VER_MINOR);
-		printf("%s", msg);
+		std::sprintf(msg, "--* foxbot v%d.%d *--\n", VER_MAJOR, VER_MINOR);
+		std::printf("%s", msg);
 
-		strncat(msg2, msg, 511 - strlen(msg2));
-		sprintf(msg, "\n--FoxBot info--\n");
-		printf("%s", msg);
-		strncat(msg2, msg, 511 - strlen(msg2));
+		std::strncat(msg2, msg, 511 - std::strlen(msg2));
+		std::sprintf(msg, "\n--FoxBot info--\n");
+		std::printf("%s", msg);
+		std::strncat(msg2, msg, 511 - std::strlen(msg2));
 		// waypoints
 		if (num_waypoints > 0)
-			sprintf(msg, "Waypoints loaded\n");
+			std::sprintf(msg, "Waypoints loaded\n");
 		else
-			sprintf(msg, "Waypoints NOT loaded\n--Warning bots will not navigate correctly!--\n");
-		printf("%s", msg);
-		strncat(msg2, msg, 511 - strlen(msg2));
+			std::sprintf(msg, "Waypoints NOT loaded\n--Warning bots will not navigate correctly!--\n");
+		std::printf("%s", msg);
+		std::strncat(msg2, msg, 511 - std::strlen(msg2));
 		// area file
 		if (num_areas > 0)
-			sprintf(msg, "Areas loaded\n");
+			std::sprintf(msg, "Areas loaded\n");
 		else
-			sprintf(msg, "Areas not loaded\n");
-		printf("%s", msg);
-		strncat(msg2, msg, 511 - strlen(msg2));
+			std::sprintf(msg, "Areas not loaded\n");
+		std::printf("%s", msg);
+		std::strncat(msg2, msg, 511 - std::strlen(msg2));
 		// scripts...loaded/passed?
 		if (script_loaded) {
 			if (script_parsed)
-				sprintf(msg, "Script loaded and parsed\n");
+				std::sprintf(msg, "Script loaded and parsed\n");
 			else
-				sprintf(msg, "Script loaded and NOT parsed\n--Warning script file has an error in it, will NOT be used!--\n");
+				std::sprintf(msg, "Script loaded and NOT parsed\n--Warning script file has an error in it, will NOT be used!--\n");
 		}
 		else
-			sprintf(msg, "No script file loaded\n");
-		printf("%s", msg);
-		strncat(msg2, msg, 511 - strlen(msg2));
+			std::sprintf(msg, "No script file loaded\n");
+		std::printf("%s", msg);
+		std::strncat(msg2, msg, 511 - std::strlen(msg2));
 
 		// now bots vars
-		sprintf(msg, "\n--FoxBot vars--\n");
-		printf("%s", msg);
-		strncat(msg2, msg, 511 - strlen(msg2));
+		std::sprintf(msg, "\n--FoxBot vars--\n");
+		std::printf("%s", msg);
+		std::strncat(msg2, msg, 511 - std::strlen(msg2));
 
 		// bot skill levels
-		sprintf(msg, "botskill_lower %d\nbotskill_upper %d\n", botskill_lower, botskill_upper);
-		printf("%s", msg);
-		strncat(msg2, msg, 511 - strlen(msg2));
+		std::sprintf(msg, "botskill_lower %d\nbotskill_upper %d\n", botskill_lower, botskill_upper);
+		std::printf("%s", msg);
+		std::strncat(msg2, msg, 511 - std::strlen(msg2));
 
-		sprintf(msg, "max_bots %d\nmin_bots %d\n", max_bots, min_bots);
-		printf("%s", msg);
-		strncat(msg2, msg, 511 - strlen(msg2));
+		std::sprintf(msg, "max_bots %d\nmin_bots %d\n", max_bots, min_bots);
+		std::printf("%s", msg);
+		std::strncat(msg2, msg, 511 - std::strlen(msg2));
 
 		// bot chat
-		sprintf(msg, "Bot chat %d\n", bot_chat);
-		printf("%s", msg);
-		strncat(msg2, msg, 511 - strlen(msg2));
+		std::sprintf(msg, "Bot chat %d\n", bot_chat);
+		std::printf("%s", msg);
+		std::strncat(msg2, msg, 511 - std::strlen(msg2));
 
 		if (bot_team_balance)
-			sprintf(msg, "Bot auto team balance On\n");
+			std::sprintf(msg, "Bot auto team balance On\n");
 		else
-			sprintf(msg, "Bot auto team balance Off\n");
-		printf("%s", msg);
-		strncat(msg2, msg, 511 - strlen(msg2));
+			std::sprintf(msg, "Bot auto team balance Off\n");
+		std::printf("%s", msg);
+		std::strncat(msg2, msg, 511 - std::strlen(msg2));
 
 		if (bot_bot_balance)
-			sprintf(msg, "Bot per team balance On\n");
+			std::sprintf(msg, "Bot per team balance On\n");
 		else
-			sprintf(msg, "Bot per team balance Off\n");
-		printf("%s", msg);
-		strncat(msg2, msg, 511 - strlen(msg2));
+			std::sprintf(msg, "Bot per team balance Off\n");
+		std::printf("%s", msg);
+		std::strncat(msg2, msg, 511 - std::strlen(msg2));
 
-		sprintf(msg, "\n--All bot commands must be enclosed in quotes--\n");
-		printf("%s", msg);
-		strncat(msg2, msg, 511 - strlen(msg2));
-		sprintf(msg, "e.g. bot \"bot_chat 20\"\n\n");
-		printf("%s", msg);
-		strncat(msg2, msg, 511 - strlen(msg2));
+		std::sprintf(msg, "\n--All bot commands must be enclosed in quotes--\n");
+		std::printf("%s", msg);
+		std::strncat(msg2, msg, 511 - std::strlen(msg2));
+		std::sprintf(msg, "e.g. bot \"bot_chat 20\"\n\n");
+		std::printf("%s", msg);
+		std::strncat(msg2, msg, 511 - std::strlen(msg2));
 		ALERT(at_logged, "[FOXBOT]: %s", msg2);
 		// clear it up if it was 0
 	}
@@ -5782,7 +5782,7 @@ static void DisplayBotInfo() {
 		// have to switch developer 'on' if its not already
 		const char* cvar_dev = const_cast<char*>(CVAR_GET_STRING("developer"));
 		int dev;
-		if (strcmp(cvar_dev, "0") == 0)
+		if (std::strcmp(cvar_dev, "0") == 0)
 			dev = 0;
 		else
 			dev = 1;
@@ -5806,84 +5806,84 @@ static void DisplayBotInfo() {
 		h.holdTime = 5;
 		h.x = 0;
 		h.y = 0;
-		sprintf(msg, "--FoxBot Loaded--\n--Visit 'www.apg-clan.org' for updates and info--\n");
+		std::sprintf(msg, "--FoxBot Loaded--\n--Visit 'www.apg-clan.org' for updates and info--\n");
 		ALERT(at_console, msg);
-		printf("%s", msg2);
+		std::printf("%s", msg2);
 
-		/*	sprintf(msg,"--* foxbot v%d.%d build# %d *--\n",
+		/*	std::sprintf(msg,"--* foxbot v%d.%d build# %d *--\n",
 						VER_MAJOR,VER_MINOR,VER_BUILD);*/
 
-		sprintf(msg, "--* foxbot v%d.%d *--\n", VER_MAJOR, VER_MINOR);
+		std::sprintf(msg, "--* foxbot v%d.%d *--\n", VER_MAJOR, VER_MINOR);
 		ALERT(at_console, msg);
-		strncat(msg2, msg, 511 - strlen(msg2));
-		sprintf(msg, "\n--FoxBot info--\n");
+		std::strncat(msg2, msg, 511 - std::strlen(msg2));
+		std::sprintf(msg, "\n--FoxBot info--\n");
 		ALERT(at_console, msg);
-		strncat(msg2, msg, 511 - strlen(msg2));
+		std::strncat(msg2, msg, 511 - std::strlen(msg2));
 
 		// waypoints
 		if (num_waypoints > 0)
-			sprintf(msg, "Waypoints loaded\n");
+			std::sprintf(msg, "Waypoints loaded\n");
 		else
-			sprintf(msg, "Waypoints NOT loaded\n--Warning, bots will not navigate correctly!--\n");
+			std::sprintf(msg, "Waypoints NOT loaded\n--Warning, bots will not navigate correctly!--\n");
 		ALERT(at_console, msg);
-		strncat(msg2, msg, 511 - strlen(msg2));
+		std::strncat(msg2, msg, 511 - std::strlen(msg2));
 
 		// area file
 		if (num_areas > 0)
-			sprintf(msg, "Areas loaded\n");
+			std::sprintf(msg, "Areas loaded\n");
 		else
-			sprintf(msg, "Areas not loaded\n");
+			std::sprintf(msg, "Areas not loaded\n");
 
 		ALERT(at_console, msg);
-		strncat(msg2, msg, 511 - strlen(msg2));
+		std::strncat(msg2, msg, 511 - std::strlen(msg2));
 
 		// scripts...loaded/passed?
 		if (script_loaded) {
 			if (script_parsed)
-				sprintf(msg, "Script loaded and parsed\n");
+				std::sprintf(msg, "Script loaded and parsed\n");
 			else
-				sprintf(msg, "Script loaded and NOT parsed\n--Warning script file has an error in it and will NOT be used!--\n");
+				std::sprintf(msg, "Script loaded and NOT parsed\n--Warning script file has an error in it and will NOT be used!--\n");
 		}
 		else
-			sprintf(msg, "No script file loaded\n");
+			std::sprintf(msg, "No script file loaded\n");
 		ALERT(at_console, msg);
-		strncat(msg2, msg, 511 - strlen(msg2));
+		std::strncat(msg2, msg, 511 - std::strlen(msg2));
 
 		// now bots vars
-		sprintf(msg, "\n--FoxBot vars--\n");
+		std::sprintf(msg, "\n--FoxBot vars--\n");
 		ALERT(at_console, msg);
-		strncat(msg2, msg, 511 - strlen(msg2));
+		std::strncat(msg2, msg, 511 - std::strlen(msg2));
 
 		// bot skill levels
-		sprintf(msg, "botskill_lower %d\nbotskill_upper %d\n", botskill_lower, botskill_upper);
+		std::sprintf(msg, "botskill_lower %d\nbotskill_upper %d\n", botskill_lower, botskill_upper);
 		ALERT(at_console, msg);
-		strncat(msg2, msg, 511 - strlen(msg2));
+		std::strncat(msg2, msg, 511 - std::strlen(msg2));
 
-		sprintf(msg, "max_bots %d\nmin_bots %d\n", max_bots, min_bots);
+		std::sprintf(msg, "max_bots %d\nmin_bots %d\n", max_bots, min_bots);
 		ALERT(at_console, msg);
-		strncat(msg2, msg, 511 - strlen(msg2));
+		std::strncat(msg2, msg, 511 - std::strlen(msg2));
 
 		// bot chat
-		sprintf(msg, "Bot chat %d\n", bot_chat);
+		std::sprintf(msg, "Bot chat %d\n", bot_chat);
 		ALERT(at_console, msg);
-		strncat(msg2, msg, 511 - strlen(msg2));
+		std::strncat(msg2, msg, 511 - std::strlen(msg2));
 
 		if (bot_team_balance)
-			sprintf(msg, "Bot auto team balance On\n");
+			std::sprintf(msg, "Bot auto team balance On\n");
 		else
-			sprintf(msg, "Bot auto team balance Off\n");
+			std::sprintf(msg, "Bot auto team balance Off\n");
 		ALERT(at_console, msg);
-		strncat(msg2, msg, 511 - strlen(msg2));
+		std::strncat(msg2, msg, 511 - std::strlen(msg2));
 
 		if (bot_bot_balance)
-			sprintf(msg, "Bot per team balance On\n");
+			std::sprintf(msg, "Bot per team balance On\n");
 		else
-			sprintf(msg, "Bot per team balance Off\n");
+			std::sprintf(msg, "Bot per team balance Off\n");
 		ALERT(at_console, msg);
-		strncat(msg2, msg, 511 - strlen(msg2));
-		sprintf(msg, "\n");
+		std::strncat(msg2, msg, 511 - std::strlen(msg2));
+		std::sprintf(msg, "\n");
 		ALERT(at_console, msg);
-		strncat(msg2, msg, 511 - strlen(msg2));
+		std::strncat(msg2, msg, 511 - std::strlen(msg2));
 		ALERT(at_logged, "[FOXBOT]: %s", msg2);
 		ALERT(at_console, "\n\n\n");
 		// clear it up if it was 0
@@ -5907,7 +5907,7 @@ static void DisplayBotInfo() {
 			h.holdTime = 7;
 			h.x = -1;
 			h.y = 0.8f;
-			sprintf(msg2, "-- Waypoint author: %s --", waypoint_author);
+			std::sprintf(msg2, "-- Waypoint author: %s --", waypoint_author);
 			FOX_HudMessage(INDEXENT(1), h, msg);
 		}
 	}
@@ -5943,10 +5943,10 @@ static void changeBotSetting(const char* settingName, int* setting, const char* 
 			if (settingSource == SETTING_SOURCE_CLIENT_COMMAND)
 				ClientPrint(INDEXENT(1), HUD_PRINTNOTIFY, msg);
 			else if (settingSource == SETTING_SOURCE_SERVER_COMMAND)
-				printf("%s", msg);
+				std::printf("%s", msg);
 			else if (settingSource == SETTING_SOURCE_CONFIG_FILE) {
 				if (IS_DEDICATED_SERVER())
-					printf("%s", msg);
+					std::printf("%s", msg);
 				else
 					ALERT(at_console, msg);
 			}
@@ -5966,10 +5966,10 @@ static void changeBotSetting(const char* settingName, int* setting, const char* 
 	if (settingSource == SETTING_SOURCE_CLIENT_COMMAND)
 		ClientPrint(INDEXENT(1), HUD_PRINTNOTIFY, msg);
 	else if (settingSource == SETTING_SOURCE_SERVER_COMMAND)
-		printf("%s", msg);
+		std::printf("%s", msg);
 	else if (settingSource == SETTING_SOURCE_CONFIG_FILE) {
 		if (IS_DEDICATED_SERVER())
-			printf("%s", msg);
+			std::printf("%s", msg);
 		else
 			ALERT(at_console, msg);
 	}

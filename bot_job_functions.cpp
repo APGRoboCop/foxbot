@@ -758,10 +758,10 @@ int JobMaintainObject(bot_t* pBot) {
 	// phase 2 - check if the object still needs maintenance
 	if (job_ptr->phase == 2) {
 		char className[24];
-		strncpy(className, STRING(job_ptr->object->v.classname), 24);
+		std::strncpy(className, STRING(job_ptr->object->v.classname), 24);
 		className[23] = '\0';
 
-		if (strcmp("building_sentrygun", className) == 0) {
+		if (std::strcmp("building_sentrygun", className) == 0) {
 			bool maintenanceNeeded = false;
 
 			if (job_ptr->object->v.health < 100)
@@ -770,17 +770,17 @@ int JobMaintainObject(bot_t* pBot) {
 				maintenanceNeeded = true;
 			else { // sentry needs upgrading?
 				char modelName[24];
-				strncpy(modelName, STRING(job_ptr->object->v.model), 24);
+				std::strncpy(modelName, STRING(job_ptr->object->v.model), 24);
 				modelName[23] = '\0';
 
-				if (strcmp(modelName, "models/sentry3.mdl") != 0)
+				if (std::strcmp(modelName, "models/sentry3.mdl") != 0)
 					maintenanceNeeded = true;
 			}
 
 			if (maintenanceNeeded == false)
 				return JOB_TERMINATED; // maintenance is uneeded
 		}
-		else if (strcmp("building_dispenser", className) == 0) {
+		else if (std::strcmp("building_dispenser", className) == 0) {
 			if (job_ptr->object->v.health > 99)
 				return JOB_TERMINATED; // maintenance is uneeded
 		}
@@ -1251,7 +1251,7 @@ int JobBuildTeleport(bot_t* pBot) {
 				if (newJob != nullptr) {
 					char tpType[24] = "Teleporter Entrance";
 					if (waypoints[job_ptr->waypoint].flags & W_FL_TFC_TELEPORTER_EXIT)
-						strcpy(tpType, "Teleporter Exit");
+						std::strcpy(tpType, "Teleporter Exit");
 
 					switch (pBot->current_team) {
 					case 0:
@@ -1779,7 +1779,7 @@ int JobDisguise(bot_t* pBot) {
 		const int new_disguise = disguiseList[random_long(0, 6)];
 
 		char choice[32];
-		sprintf(choice, "%d", new_disguise);
+		std::sprintf(choice, "%d", new_disguise);
 
 		FakeClientCommand(pBot->pEdict, "disguise_enemy", choice, nullptr);
 		pBot->disguise_state = DISGUISE_UNDERWAY;
@@ -1975,7 +1975,7 @@ int JobSnipe(bot_t* pBot) {
 		if (VectorsNearerThan(pBot->pEdict->v.origin, waypoints[job_ptr->waypoint].origin, 20.0)) {
 			// drop a neoTF grenade pod if possible
 			const char* cvar_ntf_feature_antimissile = const_cast<char*>(CVAR_GET_STRING("ntf_feature_antimissile"));
-			if (strcmp(cvar_ntf_feature_antimissile, "1") == 0)
+			if (std::strcmp(cvar_ntf_feature_antimissile, "1") == 0)
 				FakeClientCommand(pBot->pEdict, "buildspecial", nullptr, nullptr);
 
 			job_ptr->phase = 3;
@@ -3184,7 +3184,7 @@ int JobAvoidAreaDamage(bot_t* pBot) {
 	if (job_ptr->phase == 0) {
 		/*	// debug info
 						char classname[30];
-						strncpy(classname, STRING(job_ptr->object->v.classname), 30);
+						std::strncpy(classname, STRING(job_ptr->object->v.classname), 30);
 						classname[29] = '\0';
 						UTIL_BotLogPrintf("%s: avoiding %s at %f,%f,%f\n", pBot->name, classname,
 										job_ptr->object->v.origin.x, job_ptr->object->v.origin.y,

@@ -163,7 +163,7 @@ template <typename U> void bzero(U* ptr, size_t len) noexcept {
 #undef max
 #undef min
 
-#define itoa(a,b,c) sprintf(b, "%d", a)
+#define itoa(a,b,c) std::sprintf(b, "%d", a)
 #endif
 
 // a class for handling the bot chat messages

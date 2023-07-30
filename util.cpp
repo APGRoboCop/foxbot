@@ -274,7 +274,7 @@ void UTIL_HostSay(edict_t* pEntity, const int teamonly, const char* message) {
 	MESSAGE_END();
 
 	if (IS_DEDICATED_SERVER())
-		printf("%s", text); // print bot message on dedicated server
+		std::printf("%s", text); // print bot message on dedicated server
 }
 
 #ifdef DEBUG
@@ -300,16 +300,16 @@ int UTIL_GetTeamColor(edict_t* pEntity) {
 		char topcolor[32];
 
 		char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
-		strcpy(topcolor, g_engfuncs.pfnInfoKeyValue(infobuffer, "topcolor"));
+		std::strcpy(topcolor, g_engfuncs.pfnInfoKeyValue(infobuffer, "topcolor"));
 
 		// used for spy checking
-		if (strcmp(topcolor, "150") == 0 || strcmp(topcolor, "153") == 0 || strcmp(topcolor, "148") == 0 || strcmp(topcolor, "140") == 0)
+		if (std::strcmp(topcolor, "150") == 0 || std::strcmp(topcolor, "153") == 0 || std::strcmp(topcolor, "148") == 0 || std::strcmp(topcolor, "140") == 0)
 			return 0; // blue
-		if (strcmp(topcolor, "250") == 0 || strcmp(topcolor, "255") == 0 || strcmp(topcolor, "5") == 0)
+		if (std::strcmp(topcolor, "250") == 0 || std::strcmp(topcolor, "255") == 0 || std::strcmp(topcolor, "5") == 0)
 			return 1; // red
-		if (strcmp(topcolor, "45") == 0)
+		if (std::strcmp(topcolor, "45") == 0)
 			return 2; // yellow
-		if (strcmp(topcolor, "100") == 0 || strcmp(topcolor, "80") == 0)
+		if (std::strcmp(topcolor, "100") == 0 || std::strcmp(topcolor, "80") == 0)
 			return 3; // green
 
 		return pEntity->v.team - 1; // TFC teams are 1-4 based
@@ -357,7 +357,7 @@ int UTIL_GetTeam(const edict_t* pEntity) {
 													int i;
 
 													num_teams = 0;
-													strcpy(teamlist, CVAR_GET_STRING("mp_teamlist"));
+													std::strcpy(teamlist, CVAR_GET_STRING("mp_teamlist"));
 													pName = teamlist;
 													pName = strtok(pName, ";");
 
@@ -365,11 +365,11 @@ int UTIL_GetTeam(const edict_t* pEntity) {
 													{
 																	// check that team isn't defined twice
 																	for(i=0; i < num_teams; i++)
-																					if(strcmp(pName, team_names[i]) == 0)
+																					if(std::strcmp(pName, team_names[i]) == 0)
 																									break;
 																	if(i == num_teams)
 																	{
-																					strcpy(team_names[num_teams], pName);
+																					std::strcpy(team_names[num_teams], pName);
 																					num_teams++;
 																	}
 																	pName = strtok(NULL, ";");
@@ -377,11 +377,11 @@ int UTIL_GetTeam(const edict_t* pEntity) {
 									}
 
 									infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)( pEntity );
-									strcpy(model_name, (g_engfuncs.pfnInfoKeyValue(infobuffer, "model")));
+									std::strcpy(model_name, (g_engfuncs.pfnInfoKeyValue(infobuffer, "model")));
 
 									for(int index=0; index < num_teams; index++)
 									{
-													if(strcmp(model_name, team_names[index]) == 0)
+													if(std::strcmp(model_name, team_names[index]) == 0)
 																	return index;
 									}
 					}*/
@@ -413,7 +413,7 @@ int UTIL_GetClass(edict_t* pEntity) {
 	char model_name[32];
 
 	char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
-	strcpy(model_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "model"));
+	std::strcpy(model_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "model"));
 
 	return 0;
 }
@@ -592,30 +592,30 @@ FILE* UTIL_OpenFoxbotLog() {
 	FILE* file_ptr;
 	if (log_creation_attempted) {
 		// append to the existing log file
-		file_ptr = fopen(foxbot_logname, "a");
+		file_ptr = std::fopen(foxbot_logname, "a");
 	}
 	else // it's time to create a new log from scratch
 	{
 		// rename the last log as old if it exists
-		file_ptr = fopen(foxbot_logname, "r");
+		file_ptr = std::fopen(foxbot_logname, "r");
 		if (file_ptr != nullptr) {
-			fclose(file_ptr);
+			std::fclose(file_ptr);
 
 			char old_logname[160];
-			strcpy(old_logname, foxbot_logname);
-			strncat(old_logname, ".old", 159 - strlen(old_logname)); // give it a suffix
+			std::strcpy(old_logname, foxbot_logname);
+			std::strncat(old_logname, ".old", 159 - std::strlen(old_logname)); // give it a suffix
 			old_logname[159] = '\0';
-			remove(old_logname);                 // delete the last old log file
-			rename(foxbot_logname, old_logname); // good ol' ANSI C
+			std::remove(old_logname);                 // delete the last old log file
+			std::rename(foxbot_logname, old_logname); // good ol' ANSI C
 		}
 
 		// create a new log file
-		file_ptr = fopen(foxbot_logname, "w");
+		file_ptr = std::fopen(foxbot_logname, "w");
 
 		// warn the player if the log file couldn't be created
 		if (file_ptr == nullptr) {
 			if (IS_DEDICATED_SERVER())
-				printf("\nWARNING: Couldn't create log file: foxbot.log\n");
+				std::printf("\nWARNING: Couldn't create log file: foxbot.log\n");
 			else
 				ALERT(at_console, "\nWARNING: Couldn't create log file: foxbot.log\n");
 		}
@@ -636,10 +636,10 @@ void UTIL_BotLogPrintf(const char* fmt, ...) {
 	va_list argptr;
 
 	va_start(argptr, fmt);
-	vfprintf(lfp, fmt, argptr);
+	std::vfprintf(lfp, fmt, argptr);
 	va_end(argptr);
 
-	fclose(lfp);
+	std::fclose(lfp);
 }
 
 // This function tries to find out where the Foxbot directory is and
@@ -655,8 +655,8 @@ void UTIL_BuildFileName(char* filename, const int max_fn_length, const char* arg
 		return;
 
 	// add the foxbot directory path, unless it is not valid
-	if (strcmp(foxbot_path, "") != 0 && strlen(foxbot_path) < static_cast<unsigned>(max_fn_length)) {
-		strncpy(filename, foxbot_path, max_fn_length);
+	if (std::strcmp(foxbot_path, "") != 0 && std::strlen(foxbot_path) < static_cast<unsigned>(max_fn_length)) {
+		std::strncpy(filename, foxbot_path, max_fn_length);
 		filename[max_fn_length - 1] = '\0';
 	}
 	else
@@ -664,18 +664,18 @@ void UTIL_BuildFileName(char* filename, const int max_fn_length, const char* arg
 
 	// add on the directory and or filename
 	if (arg1 && *arg1 && arg2 && *arg2) {
-		strcat(filename, arg1);
+		std::strcat(filename, arg1);
 
 #ifndef __linux__
-		strcat(filename, "\\");
+		std::strcat(filename, "\\");
 #else
-		strcat(filename, "/");
+		std::strcat(filename, "/");
 #endif
 
-		strcat(filename, arg2);
+		std::strcat(filename, arg2);
 	}
 	else if (arg1 && *arg1) {
-		strcat(filename, arg1);
+		std::strcat(filename, arg1);
 	}
 
 	filename[max_fn_length - 1] = '\0'; // just to be sure
@@ -694,50 +694,50 @@ static void UTIL_FindFoxbotPath() {
    // find out where the foxbot directory is, by trying to open and
 	// close the foxbot.cfg file just once
 #ifndef __linux__ // must be a Windows machine
-	if (strcmp(foxbot_path, "") == 0) {
+	if (std::strcmp(foxbot_path, "") == 0) {
 		// try the addons directory first(for Foxbot 0.76 and newer)
-		FILE* fptr = fopen("tfc\\addons\\foxbot\\tfc\\foxbot.cfg", "r");
+		FILE* fptr = std::fopen("tfc\\addons\\foxbot\\tfc\\foxbot.cfg", "r");
 		if (fptr != nullptr) {
-			strcpy(foxbot_path, "tfc\\addons\\foxbot\\tfc\\");
-			strcpy(foxbot_logname, "tfc\\addons\\foxbot\\foxbot.log");
-			fclose(fptr);
+			std::strcpy(foxbot_path, "tfc\\addons\\foxbot\\tfc\\");
+			std::strcpy(foxbot_logname, "tfc\\addons\\foxbot\\foxbot.log");
+			std::fclose(fptr);
 		}
 		else // try the older directory location(Foxbot 0.75 and older)
 		{
-			fptr = fopen("foxbot\\tfc\\foxbot.cfg", "r");
+			fptr = std::fopen("foxbot\\tfc\\foxbot.cfg", "r");
 			if (fptr != nullptr) {
-				strcpy(foxbot_path, "foxbot\\tfc\\");
-				strcpy(foxbot_logname, "foxbot\\foxbot.log");
-				fclose(fptr);
+				std::strcpy(foxbot_path, "foxbot\\tfc\\");
+				std::strcpy(foxbot_logname, "foxbot\\foxbot.log");
+				std::fclose(fptr);
 			}
 		}
 	}
 #else // must be a Linux machine
-	if (strcmp(foxbot_path, "") == 0) {
+	if (std::strcmp(foxbot_path, "") == 0) {
 		// try the addons directory first(for Foxbot 0.76 and newer)
-		FILE* fptr = fopen("tfc/addons/foxbot/tfc/foxbot.cfg", "r");
+		FILE* fptr = std::fopen("tfc/addons/foxbot/tfc/foxbot.cfg", "r");
 		if (fptr != nullptr) {
-			strcpy(foxbot_path, "tfc/addons/foxbot/tfc/");
-			strcpy(foxbot_logname, "tfc/addons/foxbot/foxbot.log");
-			fclose(fptr);
+			std::strcpy(foxbot_path, "tfc/addons/foxbot/tfc/");
+			std::strcpy(foxbot_logname, "tfc/addons/foxbot/foxbot.log");
+			std::fclose(fptr);
 		}
 		else // try the older directory location(Foxbot 0.75 and older)
 		{
-			fptr = fopen("foxbot/tfc/foxbot.cfg", "r");
+			fptr = std::fopen("foxbot/tfc/foxbot.cfg", "r");
 			if (fptr != nullptr) {
-				strcpy(foxbot_path, "foxbot/tfc/");
-				strcpy(foxbot_logname, "foxbot/foxbot.log");
-				fclose(fptr);
+				std::strcpy(foxbot_path, "foxbot/tfc/");
+				std::strcpy(foxbot_logname, "foxbot/foxbot.log");
+				std::fclose(fptr);
 			}
 		}
 	}
 #endif
 
 	// report a problem if the Foxbot directory wasn't found
-	if (strcmp(foxbot_path, "") == 0) {
+	if (std::strcmp(foxbot_path, "") == 0) {
 		if (IS_DEDICATED_SERVER()) {
-			printf("\nfoxbot.cfg should be in the \\foxbot\\tfc\\ directory\n");
-			printf("--Check your Foxbot installation is correct--\n\n");
+			std::printf("\nfoxbot.cfg should be in the \\foxbot\\tfc\\ directory\n");
+			std::printf("--Check your Foxbot installation is correct--\n\n");
 		}
 		else {
 			ALERT(at_console, "\nfoxbot.cfg should be in the \\foxbot\\tfc\\ directory\n");
@@ -766,7 +766,7 @@ bool UTIL_ReadFileLine(char* string, const int max_length, FILE* file_ptr) {
 	// if the end of the current line in the file was not found,
 	// go look for it
 	if (!line_end_found) {
-		// printf("finding line end\n");
+		//std::printf("finding line end\n");
 		int c;
 		do {
 			c = fgetc(file_ptr);

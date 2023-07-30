@@ -11,10 +11,10 @@
  * Copyright	(c)	2001, Will Day <willday@hpgx.net>
  */
 
-#include <extdll.h>   // always
+#include "extdll.h"   // always
 #include <meta_api.h> // of course
 
- //#include "bot.h"
+ #include "bot.h"
 
 extern bool mr_meta;
 
@@ -66,7 +66,7 @@ C_DLLEXPORT int Meta_Query(char* ifvers, plugin_info_t** pPlugInfo, mutil_funcs_
 
 	// check for interface version compatibility
 	// this bit of code was adapted from code by Pierre-Marie Baty
-	if (strcmp(ifvers, Plugin_info.ifvers) != 0) {
+	if (std::strcmp(ifvers, Plugin_info.ifvers) != 0) {
 		LOG_CONSOLE(PLID, "%s: meta-interface version mismatch (metamod: %s, %s: %s)", Plugin_info.name, ifvers, Plugin_info.name, Plugin_info.ifvers);
 
 		LOG_MESSAGE(PLID, "%s: meta-interface version mismatch (metamod: %s, %s: %s)", Plugin_info.name, ifvers, Plugin_info.name, Plugin_info.ifvers);
@@ -91,7 +91,7 @@ C_DLLEXPORT int Meta_Attach(const PLUG_LOADTIME now, META_FUNCTIONS* pFunctionTa
 		LOG_ERROR(PLID, "Meta_Attach called	with null pFunctionTable");
 		return false;
 	}
-	memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));
+	std::memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));
 	gpGamedllFuncs = pGamedllFuncs;
 	return true;
 }

@@ -763,7 +763,7 @@ bool BotHeadTowardWaypoint(bot_t* pBot, bool& r_navByStrafe) {
 
 			/*	// debug stuff
 							char msg[96];
-							sprintf(msg, "vang.y %f, v_angle %f",
+							std::sprintf(msg, "vang.y %f, v_angle %f",
 											vang.y, pBot->pEdict->v.v_angle.y);
 							UTIL_HostSay(pBot->pEdict, 0, msg); //DebugMessageOfDoom!*/
 
@@ -938,7 +938,7 @@ static bool BotUpdateRoute(bot_t* pBot) {
 											&& (waypoints[nextWP].origin.z + 300.0) < pBot->pEdict->v.origin.z)
 											{
 															char msg[80];
-															sprintf(msg, "<Avoiding drop of height: %f>",
+															std::sprintf(msg, "<Avoiding drop of height: %f>",
 																			pBot->pEdict->v.origin.z - waypoints[nextWP].origin.z);
 															UTIL_HostSay(pBot->pEdict, 0, msg);//DebugMessageOfDoom!
 															BotChangeRoute(pBot);
@@ -1024,12 +1024,12 @@ void BotUseLift(bot_t* pBot) {
 
       if (tr.pHit != nullptr) {
          char className[10];
-         strncpy(className, STRING(tr.pHit->v.classname), 10);
+         std::strncpy(className, STRING(tr.pHit->v.classname), 10);
          className[9] = '\0';
 
          //	UTIL_HostSay(pBot->pEdict, 0, className); //DebugMessageOfDoom!
 
-         if (strncmp(STRING(tr.pHit->v.classname), "func_door", 9) != 0 && strncmp(STRING(tr.pHit->v.classname), "func_plat", 9) != 0) {
+         if (std::strncmp(STRING(tr.pHit->v.classname), "func_door", 9) != 0 && std::strncmp(STRING(tr.pHit->v.classname), "func_plat", 9) != 0) {
             // the space at the lift waypoint appears to be empty
             // is the lift unoccupied by bot teammates?
             if (BotTeammatesNearWaypoint(pBot, pBot->current_wp) < 1) {
@@ -1037,9 +1037,9 @@ void BotUseLift(bot_t* pBot) {
                UTIL_TraceLine(waypoints[pBot->current_wp].origin, waypoints[pBot->current_wp].origin - Vector(0.0f, 0.0f, 50.0f), ignore_monsters, pBot->pEdict->v.pContainingEntity, &tr);
 
                if (tr.pHit != nullptr) {
-                  strncpy(className, STRING(tr.pHit->v.classname), 10);
+                  std::strncpy(className, STRING(tr.pHit->v.classname), 10);
                   className[9] = '\0';
-                  if (strncmp(STRING(tr.pHit->v.classname), "func_door", 9) == 0 || strncmp(STRING(tr.pHit->v.classname), "func_plat", 9) == 0) {
+                  if (std::strncmp(STRING(tr.pHit->v.classname), "func_door", 9) == 0 || std::strncmp(STRING(tr.pHit->v.classname), "func_plat", 9) == 0) {
                      //	WaypointDrawBeam(INDEXENT(1), tr.pHit->v.absmin,
                      //		VecBModelOrigin(tr.pHit), 10, 2, 50, 50, 250, 200, 10);
 
@@ -1075,9 +1075,9 @@ void BotUseLift(bot_t* pBot) {
 
       if (tr.pHit != nullptr) {
          char className[10];
-         strncpy(className, STRING(tr.pHit->v.classname), 10);
+         std::strncpy(className, STRING(tr.pHit->v.classname), 10);
          className[9] = '\0';
-         if (strncmp(STRING(tr.pHit->v.classname), "func_door", 9) == 0 || strncmp(STRING(tr.pHit->v.classname), "func_plat", 9) == 0) {
+         if (std::strncmp(STRING(tr.pHit->v.classname), "func_door", 9) == 0 || std::strncmp(STRING(tr.pHit->v.classname), "func_plat", 9) == 0) {
             pBot->current_wp = nextWP;
          }
          // bot is not on a lift, danger Will Robinson!
@@ -1631,7 +1631,7 @@ void BotFindSideRoute(bot_t* pBot) {
 				const int endWP = WaypointRouteFromTo(nextWP, i, pBot->current_team);
 				if (BotPathCheck(nextWP, endWP) == false) {
 					//	char msg[96];
-					//	sprintf(msg, "path %d - %d blocked", nextWP, endWP);
+					//	std::sprintf(msg, "path %d - %d blocked", nextWP, endWP);
 					//	UTIL_HostSay(pBot->pEdict, 0, msg); //DebugMessageOfDoom!
 					return;
 				}
@@ -1644,7 +1644,7 @@ void BotFindSideRoute(bot_t* pBot) {
 		pBot->branch_waypoint = i;
 
 		//	char msg[96]; //DebugMessageOfDoom!
-		//	sprintf(msg, "found a side route, tolerance: %d, re-think in %f seconds",
+		//	std::sprintf(msg, "found a side route, tolerance: %d, re-think in %f seconds",
 		//		pBot->sideRouteTolerance, pBot->f_side_route_time - pBot->f_think_time);
 		//	UTIL_HostSay(pBot->pEdict, 0, msg);
 
@@ -1744,7 +1744,7 @@ bool BotChangeRoute(bot_t* pBot) {
 	// found a suitable waypoint?
 	if (newBranchWP != -1) {
 		/*	char msg[80];
-						sprintf(msg, "Got lost at %d going to %d, found another route via: %d",
+						std::sprintf(msg, "Got lost at %d going to %d, found another route via: %d",
 										pBot->current_wp, goalWP, newBranchWP);
 						UTIL_HostSay(pBot->pEdict, 0, msg); //DebugMessageOfDoom!*/
 
@@ -2065,7 +2065,7 @@ int BotTargetDefenderWaypoint(const bot_t* pBot) {
 
 		if (goalWP != -1) {
 			//	char msg[80]; //DebugMessageOfDoom!
-			//	sprintf(msg, "targetting defender waypoints, currentWP %d, newWP %d",
+			//	std::sprintf(msg, "targetting defender waypoints, currentWP %d, newWP %d",
 			//		pBot->current_wp, goalWP);
 			//	UTIL_HostSay(pBot->pEdict, 0, msg);
 
@@ -2267,7 +2267,7 @@ static void BotCheckForRocketJump(bot_t* pBot) {
 	// allow Neotf spies and pyros to jump at RJ points
 	if (pBot->pEdict->v.playerclass == TFC_CLASS_PYRO) {
 		const char* cvar_jetpack = const_cast<char*>(CVAR_GET_STRING("ntf_feature_jetpack"));
-		if (strcmp(cvar_ntf, "1") == 0 && strcmp(cvar_jetpack, "1") == 0) // No neotf or jetpack
+		if (std::strcmp(cvar_ntf, "1") == 0 && std::strcmp(cvar_jetpack, "1") == 0) // No neotf or jetpack
 		{
 			// Jetpack enabled
 		}
@@ -2278,8 +2278,8 @@ static void BotCheckForRocketJump(bot_t* pBot) {
 		return; // TODO : KICK SPIES OUT FOR NOW, UNTIL HOVERBOARD.
 
 		/*	char *cvar_hoverboard = (char *)CVAR_GET_STRING("ntf_feature_hoverboard");
-						if((strcmp(cvar_ntf, "1") == 0)
-										&& (strcmp(cvar_hoverboard, "1") == 0)) // No neotf or jetpack
+						if((std::strcmp(cvar_ntf, "1") == 0)
+										&& (std::strcmp(cvar_hoverboard, "1") == 0)) // No neotf or jetpack
 						{
 										// Hoverboard enabled
 						}
@@ -2323,7 +2323,7 @@ static void BotCheckForRocketJump(bot_t* pBot) {
 	}
 
 	/*char msg[80];
-	   sprintf(msg, "Closest Jump Index: %d Distance2D: %f ",
+	   std::sprintf(msg, "Closest Jump Index: %d Distance2D: %f ",
 									closestRJ, closest2D);
 	   UTIL_HostSay(pBot->pEdict, 0, msg);*/
 
@@ -2372,7 +2372,7 @@ static void BotCheckForRocketJump(bot_t* pBot) {
    //	UTIL_BotLogPrintf("%s: RJ waypoint %d\n", pBot->name, newJob.waypoint);
 
    /*char msg[80];
-		sprintf(msg, "CloseDist: %f Distance: %f zDiff %f ",
+		std::sprintf(msg, "CloseDist: %f Distance: %f zDiff %f ",
 						pBot->RJClosingDistance, distance2D, zDiff);
 		UTIL_HostSay(pBot->pEdict, 0, msg);*/
 }

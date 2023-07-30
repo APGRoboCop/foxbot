@@ -63,7 +63,7 @@ void BotStartGame(bot_t* pBot) {
 				spawn_check_crash_count = 0;
 				spawn_check_crash_edict = pEdict;
 				const char* cvar_specs = const_cast<char*>(CVAR_GET_STRING("allow_spectators"));
-				if (strcmp(cvar_specs, "0") == 0) {
+				if (std::strcmp(cvar_specs, "0") == 0) {
 					CVAR_SET_STRING("allow_spectators", "1");
 					FakeClientCommand(pBot->pEdict, "spectate", nullptr, nullptr);
 					CVAR_SET_STRING("allow_spectators", "0");
@@ -123,15 +123,15 @@ void BotStartGame(bot_t* pBot) {
 
 			// select the team the bot wishes to join...
 			if (pBot->bot_team == 1)
-				strcpy(c_team, "1");
+				std::strcpy(c_team, "1");
 			else if (pBot->bot_team == 2)
-				strcpy(c_team, "2");
+				std::strcpy(c_team, "2");
 			else if (pBot->bot_team == 3)
-				strcpy(c_team, "3");
+				std::strcpy(c_team, "3");
 			else if (pBot->bot_team == 4)
-				strcpy(c_team, "4");
+				std::strcpy(c_team, "4");
 			else
-				strcpy(c_team, "5");
+				std::strcpy(c_team, "5");
 
 			//	UTIL_BotLogPrintf("%p joining team %d\n", pBot, pBot->bot_team);
 
@@ -175,25 +175,25 @@ void BotStartGame(bot_t* pBot) {
 
 			// select the class the bot wishes to use...
 			if (pBot->bot_class == 0)
-				strcpy(c_class, "civilian");
+				std::strcpy(c_class, "civilian");
 			else if (pBot->bot_class == 1)
-				strcpy(c_class, "scout");
+				std::strcpy(c_class, "scout");
 			else if (pBot->bot_class == 2)
-				strcpy(c_class, "sniper");
+				std::strcpy(c_class, "sniper");
 			else if (pBot->bot_class == 3)
-				strcpy(c_class, "soldier");
+				std::strcpy(c_class, "soldier");
 			else if (pBot->bot_class == 4)
-				strcpy(c_class, "demoman");
+				std::strcpy(c_class, "demoman");
 			else if (pBot->bot_class == 5)
-				strcpy(c_class, "medic");
+				std::strcpy(c_class, "medic");
 			else if (pBot->bot_class == 6)
-				strcpy(c_class, "hwguy");
+				std::strcpy(c_class, "hwguy");
 			else if (pBot->bot_class == 7)
-				strcpy(c_class, "pyro");
+				std::strcpy(c_class, "pyro");
 			else if (pBot->bot_class == 8)
-				strcpy(c_class, "spy");
+				std::strcpy(c_class, "spy");
 			else if (pBot->bot_class == 9)
-				strcpy(c_class, "engineer");
+				std::strcpy(c_class, "engineer");
 
 			FakeClientCommand(pEdict, c_class, nullptr, nullptr);
 
@@ -216,11 +216,11 @@ void BotStartGame(bot_t* pBot) {
 
 					// select the team the bot wishes to join...
 					if(pBot->bot_team == 1)
-							strcpy(c_team, "1");
+							std::strcpy(c_team, "1");
 					else if(pBot->bot_team == 2)
-							strcpy(c_team, "2");
+							std::strcpy(c_team, "2");
 					else
-							strcpy(c_team, "5");
+							std::strcpy(c_team, "5");
 
 					FakeClientCommand(pEdict, "menuselect", c_team, NULL);
 
@@ -239,15 +239,15 @@ void BotStartGame(bot_t* pBot) {
 
 					// select the class the bot wishes to use...
 					if(pBot->bot_class == 1)
-							strcpy(c_class, "1");
+							std::strcpy(c_class, "1");
 					else if(pBot->bot_class == 2)
-							strcpy(c_class, "2");
+							std::strcpy(c_class, "2");
 					else if(pBot->bot_class == 3)
-							strcpy(c_class, "3");
+							std::strcpy(c_class, "3");
 					else if(pBot->bot_class == 4)
-							strcpy(c_class, "4");
+							std::strcpy(c_class, "4");
 					else
-							strcpy(c_class, "5"); // random
+							std::strcpy(c_class, "5"); // random
 
 					FakeClientCommand(pEdict, "menuselect", c_class, NULL);
 
@@ -269,15 +269,15 @@ void BotStartGame(bot_t* pBot) {
 
 					// select the class the bot wishes to use...
 					if(pBot->bot_class == 1)
-							strcpy(c_class, "1");
+							std::strcpy(c_class, "1");
 					else if(pBot->bot_class == 2)
-							strcpy(c_class, "2");
+							std::strcpy(c_class, "2");
 					else if(pBot->bot_class == 3)
-							strcpy(c_class, "3");
+							std::strcpy(c_class, "3");
 					else if(pBot->bot_class == 4)
-							strcpy(c_class, "4");
+							std::strcpy(c_class, "4");
 					else
-							strcpy(c_class, "5"); // random
+							std::strcpy(c_class, "5"); // random
 
 					FakeClientCommand(pEdict, "menuselect", c_class, NULL);
 
@@ -300,11 +300,11 @@ void BotStartGame(bot_t* pBot) {
 
 					// select the team the bot wishes to join...
 					if(pBot->bot_team == 1)
-							strcpy(c_team, "1");
+							std::strcpy(c_team, "1");
 					else if(pBot->bot_team == 2)
-							strcpy(c_team, "2");
+							std::strcpy(c_team, "2");
 					else
-							strcpy(c_team, "3");
+							std::strcpy(c_team, "3");
 
 					FakeClientCommand(pEdict, "jointeam", c_team, NULL);
 
@@ -322,19 +322,19 @@ void BotStartGame(bot_t* pBot) {
 
 					// select the class the bot wishes to use...
 					if(pBot->bot_class == 1)
-							strcpy(c_class, "1");
+							std::strcpy(c_class, "1");
 					else if(pBot->bot_class == 2)
-							strcpy(c_class, "2");
+							std::strcpy(c_class, "2");
 					else if(pBot->bot_class == 3)
-							strcpy(c_class, "3");
+							std::strcpy(c_class, "3");
 					else if(pBot->bot_class == 4)
-							strcpy(c_class, "4");
+							std::strcpy(c_class, "4");
 					else if(pBot->bot_class == 5)
-							strcpy(c_class, "5");
+							std::strcpy(c_class, "5");
 					else if(pBot->bot_class == 6)
-							strcpy(c_class, "6");
+							std::strcpy(c_class, "6");
 					else
-							strcpy(c_class, "7");
+							std::strcpy(c_class, "7");
 
 					FakeClientCommand(pEdict, "selectchar", c_class, NULL);
 

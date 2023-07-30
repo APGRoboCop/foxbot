@@ -302,7 +302,7 @@ bool SubmitNewJob(bot_t* pBot, const int newJobType, job_struct* newJob) {
 		pBot->job[worstJobFound].waypoint = newJob->waypoint;
 		pBot->job[worstJobFound].waypointTwo = newJob->waypointTwo;
 
-		strncpy(pBot->job[worstJobFound].message, newJob->message, MAX_CHAT_LENGTH);
+		std::strncpy(pBot->job[worstJobFound].message, newJob->message, MAX_CHAT_LENGTH);
 		pBot->job[worstJobFound].message[MAX_CHAT_LENGTH - 1] = '\0';
 
 		pBot->job[worstJobFound].f_bufferedTime = pBot->f_think_time;
@@ -734,10 +734,10 @@ void BotEngineerThink(bot_t* pBot) {
 	// repair/upgrade the bot's sentry?
 	if (pBot->has_sentry == true && pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > 139 && pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SHOTGUN].iAmmo1] > 10) {
 		char modelName[30];
-		strncpy(modelName, STRING(pBot->sentry_edict->v.model), 30);
+		std::strncpy(modelName, STRING(pBot->sentry_edict->v.model), 30);
 		modelName[29] = '\0';
 
-		if (pBot->sentry_ammo < 100 || pBot->sentry_edict->v.health < 100 || strcmp(modelName, "models/sentry3.mdl") != 0) {
+		if (pBot->sentry_ammo < 100 || pBot->sentry_edict->v.health < 100 || std::strcmp(modelName, "models/sentry3.mdl") != 0) {
 			newJob = InitialiseNewJob(pBot, JOB_MAINTAIN_OBJECT);
 			if (newJob != nullptr) {
 				newJob->object = pBot->sentry_edict;

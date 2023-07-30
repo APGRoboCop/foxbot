@@ -89,13 +89,13 @@ void BotClient_CS_ShowMenu(void* p, int bot_index)
 				return;
 		}
 
-		if(strcmp((char*)p, "#Team_Select") == 0) // team select menu?
+		if(std::strcmp((char*)p, "#Team_Select") == 0) // team select menu?
 		{
 				bots[bot_index].start_action = MSG_CS_TEAM_SELECT;
-		} else if(strcmp((char*)p, "#Terrorist_Select") == 0) // T model select?
+		} else if(std::strcmp((char*)p, "#Terrorist_Select") == 0) // T model select?
 		{
 				bots[bot_index].start_action = MSG_CS_T_SELECT;
-		} else if(strcmp((char*)p, "#CT_Select") == 0) // CT model select menu?
+		} else if(std::strcmp((char*)p, "#CT_Select") == 0) // CT model select menu?
 		{
 				bots[bot_index].start_action = MSG_CS_CT_SELECT;
 		}
@@ -144,7 +144,7 @@ void BotClient_Valve_WeaponList(void* p, int bot_index) {
 
 	if (state == 0) {
 		state++;
-		strcpy(bot_weapon.szClassname, static_cast<char*>(p));
+		std::strcpy(bot_weapon.szClassname, static_cast<char*>(p));
 	}
 	else if (state == 1) {
 		state++;
@@ -406,10 +406,10 @@ void BotClient_TFC_ItemPickup(void* p, const int bot_index) {
 
 	const int index = *static_cast<int*>(p);
 	char msg[255];
-	sprintf(msg, "%d", index);
+	std::sprintf(msg, "%d", index);
 	// UTIL_HostSay(0, 0, msg);
 	// FILE *fp;
-	//{ fp=fopen("route.txt","a"); fprintf(fp,"a %s\n",msg); fclose(fp); }
+	//{ fp=std::fopen("route.txt","a"); std::fprintf(fp,"a %s\n",msg); std::fclose(fp); }
 }
 /* // Not required for TFC - [APG]RoboCop[CL]
 void BotClient_CS_ItemPickup(void* p, int bot_index)
@@ -635,7 +635,7 @@ void BotClient_Valve_DeathMsg(void* p, int bot_index) {
 		// do message return for human client, so bot can do
 		// haha killed ya message
 		// FILE *fp;
-		//{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"kill messages\n"); fclose(fp); }
+		//{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"kill messages\n"); std::fclose(fp); }
 		if (index == -1) {
 			if (killer_index == 0 || killer_index == victim_index) {
 				// bot killed by world (worldspawn) or bot killed self...
@@ -711,11 +711,11 @@ void BotClient_FLF_DeathMsg(void* p, int bot_index)
 				{
 								state = 0;
 
-								if(strcmp((char *)p, "You are Attacking\n") == 0) // attacker msg
+								if(std::strcmp((char *)p, "You are Attacking\n") == 0) // attacker msg
 								{
 												bots[bot_index].defender = 0; // attacker
 								}
-								else if(strcmp((char *)p, "You are Defending\n") == 0) // defender msg
+								else if(std::strcmp((char *)p, "You are Defending\n") == 0) // defender msg
 								{
 												bots[bot_index].defender = 1; // defender
 								}
@@ -772,7 +772,7 @@ void BotClient_FLF_TempEntity(void *p, int bot_index)
 				{
 								if(state == 16)
 								{
-												if(strncmp((char *)p, "Capturing ", 10) == 0)
+												if(std::strncmp((char *)p, "Capturing ", 10) == 0)
 												{
 																// if bot is currently capturing, keep timer alive...
 																if(bots[bot_index].b_use_capture)
@@ -850,7 +850,7 @@ void BotClient_TFC_StatusIcon(void* p, int bot_index) {
 					else if(g_state == 1)
 					{
 									// we could detect caltrop damage here
-									if(strncmp("dmg_", (char *)p, 4) == 0)
+									if(std::strncmp("dmg_", (char *)p, 4) == 0)
 													UTIL_BotLogPrintf("HUD: %s, status %d\n",
 																	(char *)p, icon_status);
 					}*/
@@ -883,7 +883,7 @@ void BotClient_Engineer_BuildStatus(void* p, const int bot_index) {
 	else if (g_state == 1) {
 		//	UTIL_BotLogPrintf("%s, message %s\n", bots[bot_index].name, (char *)p);
 
-		if (strcmp(static_cast<char*>(p), "#Dispenser_used") == 0) // enemy is using bots dispenser
+		if (std::strcmp(static_cast<char*>(p), "#Dispenser_used") == 0) // enemy is using bots dispenser
 		{
 			if (bot_index != -1) {
 				// set up the time when the bot will detonate it's dispenser
@@ -892,11 +892,11 @@ void BotClient_Engineer_BuildStatus(void* p, const int bot_index) {
 			}
 			g_state++;
 		}
-		else if (strcmp(static_cast<char*>(p), "#Teleporter_Entrance_Built") == 0) {
+		else if (std::strcmp(static_cast<char*>(p), "#Teleporter_Entrance_Built") == 0) {
 			teleportType = W_FL_TFC_TELEPORTER_ENTRANCE;
 			g_state++;
 		}
-		else if (strcmp(static_cast<char*>(p), "#Teleporter_Exit_Built") == 0) {
+		else if (std::strcmp(static_cast<char*>(p), "#Teleporter_Exit_Built") == 0) {
 			teleportType = W_FL_TFC_TELEPORTER_EXIT;
 			g_state++;
 		}
@@ -910,19 +910,19 @@ void BotClient_Engineer_BuildStatus(void* p, const int bot_index) {
 		if (bot_index == -1) {
 			// The builders name
 			char builder[128];
-			strncpy(builder, static_cast<char*>(p), 128);
+			std::strncpy(builder, static_cast<char*>(p), 128);
 			builder[127] = '\0';
 
 			// Loop through the humans to look for the builder
 			for (int i = 0; i < 32; i++) {
 				// is this client the builder?
-				if (clients[i] && strcmp(STRING(clients[i]->v.netname), builder) == 0) {
+				if (clients[i] && std::strcmp(STRING(clients[i]->v.netname), builder) == 0) {
 					// Get the teleporter ent
 					edict_t* pent = nullptr;
 					while ((pent = FIND_ENTITY_IN_SPHERE(pent, clients[i]->v.origin, 200)) != nullptr && !FNullEnt(pent)) {
 						const float l = (clients[i]->v.origin - pent->v.origin).Length2D();
 
-						if (strcmp("building_teleporter", STRING(pent->v.classname)) == 0 && l >= 16.0f && l <= 96.0f) {
+						if (std::strcmp("building_teleporter", STRING(pent->v.classname)) == 0 && l >= 16.0f && l <= 96.0f) {
 							// Set the owner on the teleport
 							pent->v.euser1 = clients[i];
 							pent->v.iuser1 = teleportType;
@@ -967,9 +967,9 @@ void BotClient_TFC_DetPack(void* p, const int bot_index) {
 	/*	FILE *fp = UTIL_OpenFoxbotLog();
 					if(fp != NULL)
 					{
-									fprintf(fp,"%s detpack set to %d\n",
+									std::fprintf(fp,"%s detpack set to %d\n",
 													bots[bot_index].name, bots[bot_index].detpack);
-									fclose(fp);
+									std::fclose(fp);
 					}*/
 }
 
@@ -986,7 +986,7 @@ void BotClient_Menu(void* p, int bot_index) {
 		s = i + 1;
 
 		// FILE *fp;
-		//{ fp=UTIL_OpenFoxbotLog(); fprintf(fp,"%d %d\n",*(int *)p,selection); fclose(fp); }
+		//{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"%d %d\n",*(int *)p,selection); std::fclose(fp); }
 	}
 	/*if(g_state==3)
 					{
@@ -1034,8 +1034,8 @@ void BotClient_TFC_Scores(void* p, int bot_index)
 			fp = UTIL_OpenFoxbotLog();
 			if(fp != NULL)
 			{
-				fprintf(fp,"state %d  p %d\n", state, *(int *)p);
-				fclose(fp);
+				std::fprintf(fp,"state %d  p %d\n", state, *(int *)p);
+				std::fclose(fp);
 			}
 		}*/
 
@@ -1043,13 +1043,13 @@ void BotClient_TFC_Scores(void* p, int bot_index)
 
 	if (state == 0)
 	{
-		if (strncmp((char*)p, "Blue", 4) == 0)
+		if (std::strncmp((char*)p, "Blue", 4) == 0)
 			team = 0;
-		else if (strncmp((char*)p, "Red", 3) == 0)
+		else if (std::strncmp((char*)p, "Red", 3) == 0)
 			team = 1;
-		else if (strncmp((char*)p, "Yellow", 6) == 0)
+		else if (std::strncmp((char*)p, "Yellow", 6) == 0)
 			team = 2;
-		else if (strncmp((char*)p, "Green", 5) == 0)
+		else if (std::strncmp((char*)p, "Green", 5) == 0)
 			team = 3;
 		else team = -1;  // just in case
 

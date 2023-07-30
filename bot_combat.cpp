@@ -311,7 +311,7 @@ void BotEnemyCheck(bot_t* pBot) {
 	// a crash could occur if using a pointer to a non-existant SG
 	if (!FNullEnt(pBot->lastEnemySentryGun)) {
 		// Is it a sentry gun or an NTF multigun?
-		if ((strcmp(STRING(pBot->lastEnemySentryGun->v.classname), "building_sentrygun") == 0 || strncmp(STRING(pBot->lastEnemySentryGun->v.classname), "ntf_", 4) == 0) && BotTeamColorCheck(pBot->lastEnemySentryGun) != pBot->current_team) {
+		if ((std::strcmp(STRING(pBot->lastEnemySentryGun->v.classname), "building_sentrygun") == 0 || std::strncmp(STRING(pBot->lastEnemySentryGun->v.classname), "ntf_", 4) == 0) && BotTeamColorCheck(pBot->lastEnemySentryGun) != pBot->current_team) {
 			// get the bots to notice the destruction of this sentry gun
 			if (!IsAlive(pBot->lastEnemySentryGun) && pBot->lastEnemySentryGun->v.origin != Vector(0, 0, 0)) {
 				const edict_t* deadSG = pBot->lastEnemySentryGun;
@@ -338,7 +338,7 @@ void BotEnemyCheck(bot_t* pBot) {
 								FVisible(deadSG->v.origin + deadSG->v.view_ofs, bots[i].pEdict)) {
 								job_struct* newJob = InitialiseNewJob(&bots[i], JOB_REPORT);
 								if (newJob != nullptr) {
-									strncpy(newJob->message, msg, MAX_CHAT_LENGTH);
+									std::strncpy(newJob->message, msg, MAX_CHAT_LENGTH);
 									newJob->message[MAX_CHAT_LENGTH - 1] = '\0';
 									SubmitNewJob(&bots[i], JOB_REPORT, newJob);
 
@@ -513,7 +513,7 @@ static edict_t* BotFindEnemy(bot_t* pBot) {
 				// ntf_capture_mg 1 = ignore, we can cap it
 				char* cvar_ntf_capture_mg = const_cast<char*>(CVAR_GET_STRING("ntf_capture_mg"));
 
-				if (strcmp(cvar_ntf_capture_mg, "1") == 0)
+				if (std::strcmp(cvar_ntf_capture_mg, "1") == 0)
 					continue;
 
 				// is this the closest visible sentry gun?
@@ -653,7 +653,7 @@ static edict_t* BotFindEnemy(bot_t* pBot) {
 					if (VectorsNearerThan(pent->v.origin, pEdict->v.origin, 300.0) && pEdict->v.playerclass != TFC_CLASS_ENGINEER && FInViewCone(vecEnd, pEdict) && FVisible(vecEnd, pEdict)) {
 						// ntf_feature_antigren
 						char* cvar_ntf_feature_antigren = const_cast<char*>(CVAR_GET_STRING("ntf_feature_antigren"));
-						if (pEdict->v.playerclass == TFC_CLASS_MEDIC && strcmp(cvar_ntf_feature_antigren, "1") == 0) {
+						if (pEdict->v.playerclass == TFC_CLASS_MEDIC && std::strcmp(cvar_ntf_feature_antigren, "1") == 0) {
 							FakeClientCommand(pEdict, "_special2", nullptr, nullptr);
 						}
 
@@ -691,7 +691,7 @@ static edict_t* BotFindEnemy(bot_t* pBot) {
 
 				// ntf_capture_mg 1 = ignore, we can cap it
 				char* cvar_ntf_capture_mg = const_cast<char*>(CVAR_GET_STRING("ntf_capture_mg"));
-				if (strcmp(cvar_ntf_capture_mg, "1") == 0)
+				if (std::strcmp(cvar_ntf_capture_mg, "1") == 0)
 					continue;
 
 				// is this the closest visible sentry gun?
@@ -1185,7 +1185,7 @@ void BotShootAtEnemy(bot_t* pBot) {
 		pBot->f_shoot_time = pBot->f_think_time + 3.0f;
 
 		//	char msg[80];
-		//	sprintf(msg, "<Attacking SG, nades left: %d>", (int)pBot->grenades[0]);
+		//	std::sprintf(msg, "<Attacking SG, nades left: %d>", (int)pBot->grenades[0]);
 		//	UTIL_HostSay(pBot->pEdict, 0, msg);  //DebugMessageOfDoom!
 	}
 
@@ -1194,7 +1194,7 @@ void BotShootAtEnemy(bot_t* pBot) {
 		const float aim_diff = BotViewAngleDiff(pBot->enemy.ptr->v.origin, pBot->pEdict);
 		if (aim_diff < 0.95f) {
 			//	char msg[80]; //DebugMessageOfDoom!
-			//	sprintf(msg, "<my aim diff: %f>", aim_diff);
+			//	std::sprintf(msg, "<my aim diff: %f>", aim_diff);
 			//	UTIL_HostSay(pBot->pEdict, 0, msg);
 			pBot->f_shoot_time = pBot->f_think_time + 0.2f;
 		}
@@ -1454,7 +1454,7 @@ bool BotFireWeapon(const Vector& v_enemy, bot_t* pBot, const int weapon_choice) 
 			diff = -diff;
 
 		/*char msg[512];
-		   sprintf(msg,"%f  %f", ang, diff);
+		   std::sprintf(msg,"%f  %f", ang, diff);
 		   UTIL_HostSay(pEdict,0,msg);*/
 		if (ang < diff) //|| (FInViewCone( v_enemy, pEdict ) && FVisible( v_enemy, pEdict )))
 			return false;
@@ -1641,7 +1641,7 @@ bool BotFireWeapon(const Vector& v_enemy, bot_t* pBot, const int weapon_choice) 
 
 			if (pDelay[select_index].iId != iId) {
 				char msg[80];
-				sprintf(msg, "fire_delay mismatch for weapon id=%d\n", iId);
+				std::sprintf(msg, "fire_delay mismatch for weapon id=%d\n", iId);
 				ALERT(at_console, msg);
 				return false;
 			}
@@ -1790,7 +1790,7 @@ int BotNadeHandler(bot_t* pBot, bool timed, char newNadeType) {
 
 		if (timeToDet <= release_time) {
 			//	char msg[96];
-			//	sprintf(msg, "Tossing. release_time:%f  lost_health_percent:%d",
+			//	std::sprintf(msg, "Tossing. release_time:%f  lost_health_percent:%d",
 			//		release_time, lost_health_percent);
 			//	UTIL_HostSay(pBot->pEdict, 0, msg);//DebugMessageOfDoom!
 			toss = true;
@@ -1884,7 +1884,7 @@ int BotNadeHandler(bot_t* pBot, bool timed, char newNadeType) {
 																									FakeClientCommand(pEdict, "_special2", "102", NULL);
 
 																					char buffer[150];
-																									sprintf(buffer, "SG Early Prime P: %d S: %d",
+																									std::sprintf(buffer, "SG Early Prime P: %d S: %d",
 																													pBot->grenades[PrimaryGrenade],
 																													pBot->grenades[SecondaryGrenade]);
 																									UTIL_HostSay(pEdict, 0, buffer);
@@ -2285,7 +2285,7 @@ void BotCheckForMultiguns(bot_t* pBot, float nearestdistance, edict_t* pNewEnemy
 
 	// Skip this shit if neotf isnt present
 	const char* cvar_ntf = const_cast<char*>(CVAR_GET_STRING("neotf"));
-	if (strcmp(cvar_ntf, "1") != 0) // No neotf
+	if (std::strcmp(cvar_ntf, "1") != 0) // No neotf
 		return;
 
 	// Loop through all the multigun types, checking for a closer target
