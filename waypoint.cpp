@@ -112,7 +112,7 @@ static unsigned int route_num_waypoints;
 unsigned int* shortest_path[4] = { nullptr, nullptr, nullptr, nullptr };
 unsigned int* from_to[4] = { nullptr, nullptr, nullptr, nullptr };
 
-static FILE* fp;
+static std::FILE* fp;
 
 // FUNCTION PROTOTYPES
 static void WaypointFloyds(unsigned int* shortest_path, unsigned int* from_to);
@@ -1473,7 +1473,7 @@ bool WaypointLoad(edict_t* pEntity) {
 
 	// look for the waypoint file in the /waypoints directory
 	UTIL_BuildFileName(filename, 255, "waypoints", mapname);
-	FILE* bfp = std::fopen(filename, "rb");
+	std::FILE* bfp = std::fopen(filename, "rb");
 
 	// if file exists, read the waypoint data from it
 	if (bfp != nullptr) {
@@ -1798,7 +1798,7 @@ void WaypointSave() {
 	std::strcat(mapname, ".fwp");
 
 	UTIL_BuildFileName(filename, 255, "waypoints", mapname);
-	FILE* bfp = std::fopen(filename, "wb");
+	std::FILE* bfp = std::fopen(filename, "wb");
 
 	if (bfp == nullptr) {
 		ALERT(at_console, "Couldn't open a waypoint file to save waypoint data into.\n");
@@ -3834,7 +3834,7 @@ void AreaDefSave() {
 
 	UTIL_BuildFileName(filename, 255, "areas", mapname);
 
-	FILE* bfp = std::fopen(filename, "wb");
+	std::FILE* bfp = std::fopen(filename, "wb");
 
 	// write the waypoint header to the file...
 	std::fwrite(&header, sizeof header, 1, bfp);
@@ -3859,7 +3859,7 @@ bool AreaDefLoad(edict_t* pEntity) {
 	std::strcat(mapname, ".far");
 
 	UTIL_BuildFileName(filename, 255, "areas", mapname);
-	FILE* bfp = std::fopen(filename, "rb");
+	std::FILE* bfp = std::fopen(filename, "rb");
 
 	if (bfp != nullptr) {
 		char msg[256];
@@ -5202,7 +5202,7 @@ void AreaAutoMerge() {
 								areas[j].b.y == areas[i].c.y
 								/* && areas[j].a.z==areas[j].d.z
 								&& areas[j].b.z==areas[j].c.z*/
-								&& areas[j].a.z == areas[j].b.z && areas[j].d.z == areas[j].c.z && (z != 0 && (z >= -32 && z <= 32))) {
+								&& areas[j].a.z == areas[j].b.z && areas[j].d.z == areas[j].c.z && (z >= 0 && (z >= -32 && z <= 32))) {
 								// now check the size
 								// if it matches, merge
 								if (sx == areas[j].d.x - areas[j].a.x && sy == areas[j].b.y - areas[j].a.y) {
@@ -5357,7 +5357,7 @@ void ProcessCommanderList() {
    char invalidChars[] = " abcdefghijklmnopqrstuvwxyz,./<>?;'\"[]{}-=+!@#$%^&*()";
 
 	UTIL_BuildFileName(filename, 255, "foxbot_commanders.txt", nullptr);
-	FILE* inFile = std::fopen(filename, "r");
+	std::FILE* inFile = std::fopen(filename, "r");
 
 	if (inFile) {
 		if (IS_DEDICATED_SERVER())
@@ -5388,8 +5388,8 @@ void ProcessCommanderList() {
 
 		// Search for invalid characters in the read string.
 		// strlen is being called too many times in the for loop - [APG]RoboCop[CL]
-		for (unsigned int i = 0; i < static_cast<int>(std::strlen(buffer)); i++) {
-			for (unsigned int j = 0; j < static_cast<int>(std::strlen(invalidChars)); j++)
+		for (unsigned int i = 0; i < std::strlen(buffer); i++) {
+			for (unsigned int j = 0; j < std::strlen(invalidChars); j++)
 			{
             if (char ch = invalidChars[j]; std::strchr(buffer, ch)) {
 					valid = false;

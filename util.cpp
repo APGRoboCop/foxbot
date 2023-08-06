@@ -584,12 +584,12 @@ void UTIL_ShowMenu(edict_t* pEdict, int slots, int displaytime, bool needmore, c
 // directory on it's first call.
 // Then it will open the log file for appending thereafter.
 // NOTE: Writing to a NULL file pointer can crash the server.
-FILE* UTIL_OpenFoxbotLog() {
+std::FILE* UTIL_OpenFoxbotLog() {
 	static bool log_creation_attempted = false;
 
 	UTIL_FindFoxbotPath();
 
-	FILE* file_ptr;
+	std::FILE* file_ptr;
 	if (log_creation_attempted) {
 		// append to the existing log file
 		file_ptr = std::fopen(foxbot_logname, "a");
@@ -629,7 +629,7 @@ FILE* UTIL_OpenFoxbotLog() {
 // This function is a variant of UTIL_LogPrintf() as used in the SDK.
 // It lets you print messages straight to the Foxbot log file.
 void UTIL_BotLogPrintf(const char* fmt, ...) {
-	FILE* lfp = UTIL_OpenFoxbotLog();
+	std::FILE* lfp = UTIL_OpenFoxbotLog();
 	if (lfp == nullptr)
 		return;
 
@@ -696,7 +696,7 @@ static void UTIL_FindFoxbotPath() {
 #ifndef __linux__ // must be a Windows machine
 	if (std::strcmp(foxbot_path, "") == 0) {
 		// try the addons directory first(for Foxbot 0.76 and newer)
-		FILE* fptr = std::fopen("tfc\\addons\\foxbot\\tfc\\foxbot.cfg", "r");
+		std::FILE* fptr = std::fopen("tfc\\addons\\foxbot\\tfc\\foxbot.cfg", "r");
 		if (fptr != nullptr) {
 			std::strcpy(foxbot_path, "tfc\\addons\\foxbot\\tfc\\");
 			std::strcpy(foxbot_logname, "tfc\\addons\\foxbot\\foxbot.log");
@@ -715,7 +715,7 @@ static void UTIL_FindFoxbotPath() {
 #else // must be a Linux machine
 	if (std::strcmp(foxbot_path, "") == 0) {
 		// try the addons directory first(for Foxbot 0.76 and newer)
-		FILE* fptr = std::fopen("tfc/addons/foxbot/tfc/foxbot.cfg", "r");
+		std::FILE* fptr = std::fopen("tfc/addons/foxbot/tfc/foxbot.cfg", "r");
 		if (fptr != nullptr) {
 			std::strcpy(foxbot_path, "tfc/addons/foxbot/tfc/");
 			std::strcpy(foxbot_logname, "tfc/addons/foxbot/foxbot.log");

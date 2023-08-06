@@ -87,7 +87,7 @@ extern bot_weapon_t weapon_defs[MAX_WEAPONS];
 
 extern int CheckTeleporterExitTime;
 
-static FILE* fp;
+static std::FILE* fp;
 
 int pipeCheckFrame = 15;
 extern int debug_engine;
@@ -387,7 +387,7 @@ void BotNameInit() {
 	char bot_name_filename[256];
 
 	UTIL_BuildFileName(bot_name_filename, 255, "foxbot_names.txt", nullptr);
-	FILE* bot_name_fp = std::fopen(bot_name_filename, "r");
+	std::FILE* bot_name_fp = std::fopen(bot_name_filename, "r");
 
 	if (bot_name_fp != nullptr) {
 		char name_buffer[80];
@@ -3856,6 +3856,7 @@ void BotThink(bot_t* pBot) {
 	if (pBot->f_periodicAlert3 < pBot->f_think_time)
 		pBot->f_periodicAlert3 = pBot->f_think_time + 3.0f;
 
+   //TODO: copy `mrfreeze` script from MarineBots and implement it here
 	if (botdontmove == 1) { // Stationary bots for TFC minigolf maps [APG]RoboCop[CL]
 		pBot->f_move_speed = 0.0f;
 		pBot->f_side_speed = 0.0f;

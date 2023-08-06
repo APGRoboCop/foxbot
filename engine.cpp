@@ -107,7 +107,7 @@ int message_Detpack = 0;
 int message_SecAmmoVal = 0;
 
 bool MM_func = false;
-static FILE* fp;
+static std::FILE* fp;
 
 bool dont_send_packet = false;
 
@@ -116,7 +116,7 @@ char sz_error_check[255];
 edict_t* pfnFindEntityInSphere(edict_t* pEdictStartSearchAfter, const float* org, const float rad) {
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
-		std::fprintf(fp, "pfnFindEntityInSphere:%p (%f %f %f) %f %d\n", static_cast<void*>(pEdictStartSearchAfter), static_cast<double>((*(Vector*)org).x), static_cast<double>((*(Vector*)org).y), static_cast<double>((*(Vector*)org).z),
+		std::fprintf(fp, "pfnFindEntityInSphere:%p (%f %f %f) %f %d\n", static_cast<void*>(pEdictStartSearchAfter), ((Vector*)org)->x, ((Vector*)org)->y, ((Vector*)org)->z,
 			static_cast<double>(rad), spawn_check_crash_count);
 
 		if (pEdictStartSearchAfter != nullptr)
@@ -216,12 +216,12 @@ void pfnSetOrigin(edict_t* e, const float* rgflOrigin) {
 		for (int bot_index = 0; bot_index < 32; bot_index++) {
 			if (bots[bot_index].sentry_edict != nullptr && bots[bot_index].has_sentry) {
 				edict_t* pent = e;
-				int l = static_cast<int>(bots[bot_index].sentry_edict->v.origin.z - (*(Vector*)rgflOrigin).z);
+				int l = static_cast<int>(bots[bot_index].sentry_edict->v.origin.z - ((Vector*)rgflOrigin)->z);
 				if (l < 0)
 					l = -l;
 
-				const int xa = static_cast<int>((*(Vector*)rgflOrigin).x);
-				const int ya = static_cast<int>((*(Vector*)rgflOrigin).y);
+				const int xa = static_cast<int>(((Vector*)rgflOrigin)->x);
+				const int ya = static_cast<int>(((Vector*)rgflOrigin)->y);
 				const int xb = static_cast<int>(bots[bot_index].sentry_edict->v.origin.x);
 				const int yb = static_cast<int>(bots[bot_index].sentry_edict->v.origin.y);
 				// FILE *fp;
@@ -261,7 +261,7 @@ void pfnSetOrigin(edict_t* e, const float* rgflOrigin) {
 
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
-		std::fprintf(fp, "pfnSetOrigin: %p (%f %f %f)\n", static_cast<void*>(e), static_cast<double>((*(Vector*)rgflOrigin).x), static_cast<double>((*(Vector*)rgflOrigin).y), static_cast<double>((*(Vector*)rgflOrigin).z));
+		std::fprintf(fp, "pfnSetOrigin: %p (%f %f %f)\n", static_cast<void*>(e), static_cast<double>(((Vector*)rgflOrigin)->x), static_cast<double>(((Vector*)rgflOrigin)->y), static_cast<double>(((Vector*)rgflOrigin)->z));
 
 		if (e->v.classname != 0)
 			std::fprintf(fp, " name=%s\n", STRING(e->v.classname));

@@ -143,7 +143,7 @@ enum {
 }; // command issued by a config file
 
 namespace global {
-	static FILE* fp;
+	static std::FILE* fp;
 }
 DLL_FUNCTIONS other_gFunctionTable;
 DLL_GLOBAL const Vector g_vecZero = Vector(0, 0, 0);
@@ -176,7 +176,7 @@ int max_teams = 0;
 FLAG_S flags[MAX_FLAGS];
 int num_flags = 0;
 
-static FILE* bot_cfg_fp = nullptr;
+static std::FILE* bot_cfg_fp = nullptr;
 // changed..cus we set it else where
 static bool need_to_open_cfg = false;
 static bool need_to_open_cfg2 = false;
@@ -715,7 +715,7 @@ void chatClass::readChatFile() {
 	char filename[256];
 
 	UTIL_BuildFileName(filename, 255, "foxbot_chat.txt", nullptr);
-	FILE* bfp = std::fopen(filename, "r");
+	std::FILE* bfp = std::fopen(filename, "r");
 
 	if (bfp == nullptr) {
 		UTIL_BotLogPrintf("Unable to read from the Foxbot chat file.  The bots will not chat.");
@@ -2442,11 +2442,11 @@ void ClientCommand(edict_t* pEntity) {
 			ClientPrint(pEntity, HUD_PRINTCONSOLE, "searching...\n");
 			while ((pent = FIND_ENTITY_IN_SPHERE(pent, pEntity->v.origin, 200.0f)) != nullptr && !FNullEnt(pent)) {
 				char str[80];
-				std::sprintf(str, "Found %s at %5.2f %5.2f %5.2f modelindex- %d t %s tn %s\n", STRING(pent->v.classname), static_cast<double>(pent->v.origin.x), static_cast<double>(pent->v.origin.y), static_cast<double>(pent->v.origin.z),
+				std::sprintf(str, "Found %s at %5.2f %5.2f %5.2f modelindex- %d t %s tn %s\n", STRING(pent->v.classname), pent->v.origin.x, pent->v.origin.y, pent->v.origin.z,
 					pent->v.modelindex, STRING(pent->v.target), STRING(pent->v.targetname));
 				ClientPrint(pEntity, HUD_PRINTCONSOLE, str);
 
-				FILE* fp = UTIL_OpenFoxbotLog();
+				std::FILE* fp = UTIL_OpenFoxbotLog();
 				if (fp != nullptr) {
 					std::fprintf(fp, "ClientCommmand: search %s\n", str);
 					// std::fwrite(&pent->v, sizeof(pent->v), 1, fp);
@@ -3008,33 +3008,33 @@ void StartFrame() { // v7 last frame timing
 							DispatchSpawn(pent);
 					}
 					else { // is info goal
-						int max = 0;
-						int t = static_cast<int>(pent->v.mins.x);
+						float max = 0.0f;
+						float t = pent->v.mins.x;
 						if (t < 0)
 							t = -t;
 						if (t > max)
 							max = t;
-						t = static_cast<int>(pent->v.mins.y);
+						t = pent->v.mins.y;
 						if (t < 0)
 							t = -t;
 						if (t > max)
 							max = t;
-						t = static_cast<int>(pent->v.mins.z);
+						t = pent->v.mins.z;
 						if (t < 0)
 							t = -t;
 						if (t > max)
 							max = t;
-						t = static_cast<int>(pent->v.maxs.x);
+						t = pent->v.maxs.x;
 						if (t < 0)
 							t = -t;
 						if (t > max)
 							max = t;
-						t = static_cast<int>(pent->v.maxs.y);
+						t = pent->v.maxs.y;
 						if (t < 0)
 							t = -t;
 						if (t > max)
 							max = t;
-						t = static_cast<int>(pent->v.maxs.z);
+						t = pent->v.maxs.z;
 						if (t < 0)
 							t = -t;
 						if (t > max)
@@ -3092,7 +3092,7 @@ void StartFrame() { // v7 last frame timing
 		std::strcpy(mapname, STRING(gpGlobals->mapname));
 		std::strcat(mapname, "_fb.cfg");
 		UTIL_BuildFileName(filename, 255, "scripts", mapname);
-		FILE* bfp = std::fopen(filename, "r");
+		std::FILE* bfp = std::fopen(filename, "r");
 		if (bfp != nullptr && mod_id == TFC_DLL) {
 			script_loaded = true;
 			char msg[293];
@@ -3773,7 +3773,7 @@ void StartFrame() { // v7 last frame timing
 				ALERT(at_console, "Syntax error, unrecognised command\n");
 				syntax_error = true;
 
-				FILE* fp = UTIL_OpenFoxbotLog();
+				std::FILE* fp = UTIL_OpenFoxbotLog();
 				if (fp != nullptr) {
 					std::fprintf(fp, "Syntax error, unrecognised command\n%s\n", buf);
 					std::fclose(fp);
@@ -5567,7 +5567,7 @@ static void ProcessBotCfgFile() {
 }
 
 void UTIL_SavePent(edict_t* pent) {
-	FILE* fp = UTIL_OpenFoxbotLog();
+	std::FILE* fp = UTIL_OpenFoxbotLog();
 	if (fp == nullptr)
 		return;
 
