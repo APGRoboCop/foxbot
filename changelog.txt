@@ -13,7 +13,7 @@ Updated by RoboCop
 	+ 2kfort5
 	+ junob7
 
-- Added C++17 Standard function support for Win32 and Linux
+- Added C++17 Standard library functions support for Win32 and Linux
 
 - Both Win32 and Linux builds now compiled using AMBuild
 
