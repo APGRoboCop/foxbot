@@ -37,7 +37,7 @@
 #ifndef OSDEP_H
 #define OSDEP_H
 
-#include <string.h>			// strerror()
+#include <cstring>			// std::strerror()
 #include <ctype.h>			// isupper, tolower
 #include <errno.h>			// errno
 
@@ -213,6 +213,7 @@ mBOOL DLLINTERNAL os_safe_call(REG_CMD_FN pfn);
 // Various other windows routine differences.
 #ifdef linux
 	#include <unistd.h>	// sleep
+   #define snprintf std::snprintf
 	#ifndef O_BINARY
     	#define O_BINARY 0
 	#endif	

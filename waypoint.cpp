@@ -146,7 +146,7 @@ void WaypointFree() {
 			while (p) // free the linked list
 			{
 				PATH* p_next = p->next; // save the link to next
-				free(p);
+				std::free(p);
 				p = p_next;
 
 #ifdef _DEBUG
@@ -263,7 +263,7 @@ int WaypointAddPath(const short int add_index, const short int path_index) {
 	// nope loop only stops when complete...
 	// ignore this unless future probs arise!
 
-	p = static_cast<PATH*>(malloc(sizeof(PATH)));
+	p = static_cast<PATH*>(std::malloc(sizeof(PATH)));
 
 	if (p == nullptr) {
 		ALERT(at_error, "FoXBot - Error, memory allocation failed for waypoint path!");
@@ -1249,7 +1249,7 @@ void WaypointDelete(edict_t* pEntity) {
 		while (p) // free the linked list
 		{
 			PATH* p_next = p->next; // save the link to next
-			free(p);
+			std::free(p);
 			p = p_next;
 
 #ifdef _DEBUG
@@ -3038,12 +3038,12 @@ static void WaypointRouteInit() {
 				std::sprintf(msg, "calculating FoXBot waypoint paths for team %d...\n", matrix + 1);
 				ALERT(at_console, msg);
 
-				shortest_path[matrix] = static_cast<unsigned int*>(malloc(sizeof(unsigned int) * array_size));
+				shortest_path[matrix] = static_cast<unsigned int*>(std::malloc(sizeof(unsigned int) * array_size));
 
 				if (shortest_path[matrix] == nullptr)
 					ALERT(at_error, "FoXBot - Error allocating memory for shortest path!");
 
-				from_to[matrix] = static_cast<unsigned int*>(malloc(sizeof(unsigned int) * array_size));
+				from_to[matrix] = static_cast<unsigned int*>(std::malloc(sizeof(unsigned int) * array_size));
 
 				if (from_to[matrix] == nullptr)
 					ALERT(at_error, "FoXBot - Error allocating memory for from to matrix!");

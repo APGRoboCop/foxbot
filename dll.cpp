@@ -1169,31 +1169,31 @@ void DispatchKeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd) {
 		static edict_t* temp_pent;
 		if (pentKeyvalue == pent_info_tfdetect) {
 			if (std::strcmp(pkvd->szKeyName, "ammo_medikit") == 0) // max BLUE players
-				max_team_players[0] = atoi(pkvd->szValue);
+				max_team_players[0] = std::atoi(pkvd->szValue);
 			else if (std::strcmp(pkvd->szKeyName, "ammo_detpack") == 0) // max RED players
-				max_team_players[1] = atoi(pkvd->szValue);
+				max_team_players[1] = std::atoi(pkvd->szValue);
 			else if (std::strcmp(pkvd->szKeyName, "maxammo_medikit") == 0) // max YELLOW players
-				max_team_players[2] = atoi(pkvd->szValue);
+				max_team_players[2] = std::atoi(pkvd->szValue);
 			else if (std::strcmp(pkvd->szKeyName, "maxammo_detpack") == 0) // max GREEN players
-				max_team_players[3] = atoi(pkvd->szValue);
+				max_team_players[3] = std::atoi(pkvd->szValue);
 
 			else if (std::strcmp(pkvd->szKeyName, "maxammo_shells") == 0) // BLUE class limits
-				team_class_limits[0] = atoi(pkvd->szValue);
+				team_class_limits[0] = std::atoi(pkvd->szValue);
 			else if (std::strcmp(pkvd->szKeyName, "maxammo_nails") == 0) // RED class limits
-				team_class_limits[1] = atoi(pkvd->szValue);
+				team_class_limits[1] = std::atoi(pkvd->szValue);
 			else if (std::strcmp(pkvd->szKeyName, "maxammo_rockets") == 0) // YELLOW class limits
-				team_class_limits[2] = atoi(pkvd->szValue);
+				team_class_limits[2] = std::atoi(pkvd->szValue);
 			else if (std::strcmp(pkvd->szKeyName, "maxammo_cells") == 0) // GREEN class limits
-				team_class_limits[3] = atoi(pkvd->szValue);
+				team_class_limits[3] = std::atoi(pkvd->szValue);
 
 			else if (std::strcmp(pkvd->szKeyName, "team1_allies") == 0) // BLUE allies
-				team_allies[0] = atoi(pkvd->szValue);
+				team_allies[0] = std::atoi(pkvd->szValue);
 			else if (std::strcmp(pkvd->szKeyName, "team2_allies") == 0) // RED allies
-				team_allies[1] = atoi(pkvd->szValue);
+				team_allies[1] = std::atoi(pkvd->szValue);
 			else if (std::strcmp(pkvd->szKeyName, "team3_allies") == 0) // YELLOW allies
-				team_allies[2] = atoi(pkvd->szValue);
+				team_allies[2] = std::atoi(pkvd->szValue);
 			else if (std::strcmp(pkvd->szKeyName, "team4_allies") == 0) // GREEN allies
-				team_allies[3] = atoi(pkvd->szValue);
+				team_allies[3] = std::atoi(pkvd->szValue);
 		}
 		else if (pent_info_tfdetect == nullptr) {
 			if (std::strcmp(pkvd->szKeyName, "classname") == 0 && std::strcmp(pkvd->szValue, "info_tfdetect") == 0) {
@@ -1203,7 +1203,7 @@ void DispatchKeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd) {
 
 		if (pentKeyvalue == pent_item_tfgoal) {
 			if (std::strcmp(pkvd->szKeyName, "team_no") == 0)
-				flags[flag_index].team_no = atoi(pkvd->szValue);
+				flags[flag_index].team_no = std::atoi(pkvd->szValue);
 
 			if (std::strcmp(pkvd->szKeyName, "mdl") == 0 && (std::strcmp(pkvd->szValue, "models/flag.mdl") == 0 || std::strcmp(pkvd->szValue, "models/keycard.mdl") == 0 || std::strcmp(pkvd->szValue, "models/ball.mdl") == 0)) {
 				flags[flag_index].mdl_match = true;
@@ -1231,7 +1231,7 @@ void DispatchKeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd) {
 		}
 		else if (pentKeyvalue == temp_pent) {
 			if (std::strcmp(pkvd->szKeyName, "team_no") == 0) {
-				const int value = atoi(pkvd->szValue);
+				const int value = std::atoi(pkvd->szValue);
 
 				is_team[value - 1] = true;
 				if (value > max_teams)
@@ -1467,7 +1467,7 @@ void ClientCommand(edict_t* pEntity) {
 			if (arg1 != nullptr) {
 				if (*arg1 != 0) {
 					int temp;
-					temp = atoi(arg1);
+					temp = std::atoi(arg1);
 					if (temp)
 						bot_team_balance = true;
 					else
@@ -1486,7 +1486,7 @@ void ClientCommand(edict_t* pEntity) {
 			if (arg1 != nullptr) {
 				if (*arg1 != 0) {
 					int temp;
-					temp = atoi(arg1);
+					temp = std::atoi(arg1);
 					if (temp)
 						bot_bot_balance = true;
 					else
@@ -1509,14 +1509,14 @@ void ClientCommand(edict_t* pEntity) {
 		}
 		else if (FStrEq(pcmd, "kickteam") || FStrEq(pcmd, "foxbot_kickteam")) {
 			if (arg1 != nullptr && *arg1 != 0) {
-				int whichTeam = atoi(arg1);
+				int whichTeam = std::atoi(arg1);
 				kickBots(MAX_BOTS, whichTeam);
 			}
 		}
 		else if (FStrEq(pcmd, "observer")) {
 			if (arg1 != nullptr && *arg1 != 0) {
 				int temp;
-				temp = atoi(arg1);
+				temp = std::atoi(arg1);
 				if (temp)
 					observer_mode = true;
 				else
@@ -1573,7 +1573,7 @@ void ClientCommand(edict_t* pEntity) {
 			if (arg1 != nullptr) {
 				if (*arg1 != 0) {
 					int temp;
-					temp = atoi(arg1);
+					temp = std::atoi(arg1);
 					if (temp)
 						botdontshoot = true;
 					else
@@ -1594,7 +1594,7 @@ void ClientCommand(edict_t* pEntity) {
 			if (arg1 != nullptr) {
 				if (*arg1 != 0) {
 					int temp;
-					temp = atoi(arg1);
+					temp = std::atoi(arg1);
 					if (temp)
 						botdontmove = true;
 					else
@@ -1949,7 +1949,7 @@ void ClientCommand(edict_t* pEntity) {
 				g_find_waypoint = true;
 				g_waypoint_on = true; // turn this on just in case
 
-				int l_waypoint = atoi(arg1);
+				int l_waypoint = std::atoi(arg1);
 				if (l_waypoint <= num_waypoints) {
 					g_find_wp = l_waypoint;
 					char s[255];
@@ -2194,7 +2194,7 @@ void ClientCommand(edict_t* pEntity) {
 			}
 			else if (g_menu_state == MENU_2) // team specific tags
 			{
-				int team = atoi(arg1);
+				int team = std::atoi(arg1);
 				team--; // make 0 - 3
 				if (waypoints[g_menu_waypoint].flags & W_FL_TEAM_SPECIFIC && (team >= 0 && team <= 3)) {
 					waypoints[g_menu_waypoint].flags &= ~W_FL_TEAM;
@@ -2794,7 +2794,7 @@ void StartFrame() { // v7 last frame timing
 					if (arg1 != nullptr) {
 						if (*arg1 != 0) {
 							int temp;
-							temp = atoi(arg1);
+							temp = std::atoi(arg1);
 							if (temp)
 								bot_team_balance = true;
 							else
@@ -2810,7 +2810,7 @@ void StartFrame() { // v7 last frame timing
 					if (arg1 != nullptr) {
 						if (*arg1 != 0) {
 							int temp;
-							temp = atoi(arg1);
+							temp = std::atoi(arg1);
 							if (temp)
 								bot_bot_balance = true;
 							else
@@ -2839,7 +2839,7 @@ void StartFrame() { // v7 last frame timing
 						else if (std::strcmp(arg1, "green") == 0)
 							whichTeam = 4;
 						else
-							whichTeam = atoi(arg1);
+							whichTeam = std::atoi(arg1);
 						kickBots(MAX_BOTS, whichTeam);
 					}
 				}
@@ -3993,7 +3993,7 @@ void StartFrame() { // v7 last frame timing
 							if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
 								random_shit_error = true;
 							else {
-								pnt = atoi(&buffer[i1]); // get the var
+								pnt = std::atoi(&buffer[i1]); // get the var
 								pnt--;
 								i1++;
 								buf = buf + 1;
@@ -4028,7 +4028,7 @@ void StartFrame() { // v7 last frame timing
 							if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
 								random_shit_error = true;
 							else {
-								pnt = atoi(&buffer[i1]); // get the var
+								pnt = std::atoi(&buffer[i1]); // get the var
 								pnt--;
 								i1++;
 								buf = buf + 1;
@@ -4063,7 +4063,7 @@ void StartFrame() { // v7 last frame timing
 							if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
 								random_shit_error = true;
 							else {
-								pnt = atoi(&buffer[i1]); // get the var
+								pnt = std::atoi(&buffer[i1]); // get the var
 								pnt--;
 								i1++;
 								buf = buf + 1;
@@ -4098,7 +4098,7 @@ void StartFrame() { // v7 last frame timing
 							if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
 								random_shit_error = true;
 							else {
-								pnt = atoi(&buffer[i1]); // get the var
+								pnt = std::atoi(&buffer[i1]); // get the var
 								pnt--;
 								i1++;
 								buf = buf + 1;
@@ -4133,7 +4133,7 @@ void StartFrame() { // v7 last frame timing
 							if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
 								random_shit_error = true;
 							else {
-								pnt = atoi(&buffer[i1]); // get the var
+								pnt = std::atoi(&buffer[i1]); // get the var
 								pnt--;
 								i1++;
 								buf = buf + 1;
@@ -4159,7 +4159,7 @@ void StartFrame() { // v7 last frame timing
 							if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
 								random_shit_error = true;
 							else {
-								pnt = atoi(&buffer[i1]); // get the var
+								pnt = std::atoi(&buffer[i1]); // get the var
 								pnt--;
 								i1++;
 								buf = buf + 1;
@@ -4185,7 +4185,7 @@ void StartFrame() { // v7 last frame timing
 							if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
 								random_shit_error = true;
 							else {
-								pnt = atoi(&buffer[i1]); // get the var
+								pnt = std::atoi(&buffer[i1]); // get the var
 								pnt--;
 								i1++;
 								buf = buf + 1;
@@ -4211,7 +4211,7 @@ void StartFrame() { // v7 last frame timing
 							if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
 								random_shit_error = true;
 							else {
-								pnt = atoi(&buffer[i1]); // get the var
+								pnt = std::atoi(&buffer[i1]); // get the var
 								pnt--;
 								i1++;
 								buf = buf + 1;
@@ -4237,7 +4237,7 @@ void StartFrame() { // v7 last frame timing
 							if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
 								random_shit_error = true;
 							else {
-								pnt = atoi(&buffer[i1]); // get the var
+								pnt = std::atoi(&buffer[i1]); // get the var
 								pnt--;
 								i1++;
 								buf = buf + 1;
@@ -4263,7 +4263,7 @@ void StartFrame() { // v7 last frame timing
 							if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
 								random_shit_error = true;
 							else {
-								pnt = atoi(&buffer[i1]); // get the var
+								pnt = std::atoi(&buffer[i1]); // get the var
 								pnt--;
 								i1++;
 								buf = buf + 1;
@@ -4289,7 +4289,7 @@ void StartFrame() { // v7 last frame timing
 							if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
 								random_shit_error = true;
 							else {
-								pnt = atoi(&buffer[i1]); // get the var
+								pnt = std::atoi(&buffer[i1]); // get the var
 								pnt--;
 								i1++;
 								buf = buf + 1;
@@ -4315,7 +4315,7 @@ void StartFrame() { // v7 last frame timing
 							if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
 								random_shit_error = true;
 							else {
-								pnt = atoi(&buffer[i1]); // get the var
+								pnt = std::atoi(&buffer[i1]); // get the var
 								pnt--;
 								i1++;
 								buf = buf + 1;
@@ -4345,7 +4345,7 @@ void StartFrame() { // v7 last frame timing
 							if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
 								random_shit_error = true;
 							else {
-								pnt = atoi(&buffer[i1]); // get the var
+								pnt = std::atoi(&buffer[i1]); // get the var
 								i1++;
 								buf = buf + 1;
 							} // move to end
@@ -4378,7 +4378,7 @@ void StartFrame() { // v7 last frame timing
 							if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
 								random_shit_error = true;
 							else {
-								pnt = atoi(&buffer[i1]); // get the var
+								pnt = std::atoi(&buffer[i1]); // get the var
 								i1++;
 								buf = buf + 1;
 							} // move to end
@@ -4411,7 +4411,7 @@ void StartFrame() { // v7 last frame timing
 							if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
 								random_shit_error = true;
 							else {
-								pnt = atoi(&buffer[i1]); // get the var
+								pnt = std::atoi(&buffer[i1]); // get the var
 								i1++;
 								buf = buf + 1;
 							} // move to end
@@ -4444,7 +4444,7 @@ void StartFrame() { // v7 last frame timing
 							if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
 								random_shit_error = true;
 							else {
-								pnt = atoi(&buffer[i1]); // get the var
+								pnt = std::atoi(&buffer[i1]); // get the var
 								i1++;
 								buf = buf + 1;
 							} // move to end
@@ -4477,7 +4477,7 @@ void StartFrame() { // v7 last frame timing
 							if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
 								random_shit_error = true;
 							else {
-								pnt = atoi(&buffer[i1]); // get the var
+								pnt = std::atoi(&buffer[i1]); // get the var
 								i1++;
 								buf = buf + 1;
 							} // move to end
@@ -4511,7 +4511,7 @@ void StartFrame() { // v7 last frame timing
 							if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
 								random_shit_error = true;
 							else {
-								pnt = atoi(&buffer[i1]); // get the var
+								pnt = std::atoi(&buffer[i1]); // get the var
 								i1++;
 								buf = buf + 1;
 							} // move to end
@@ -4544,7 +4544,7 @@ void StartFrame() { // v7 last frame timing
 							if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
 								random_shit_error = true;
 							else {
-								pnt = atoi(&buffer[i1]); // get the var
+								pnt = std::atoi(&buffer[i1]); // get the var
 								i1++;
 								buf = buf + 1;
 							} // move to end
@@ -4577,7 +4577,7 @@ void StartFrame() { // v7 last frame timing
 							if (buffer[i1] != '1' && buffer[i1] != '2' && buffer[i1] != '3' && buffer[i1] != '4' && buffer[i1] != '5' && buffer[i1] != '6' && buffer[i1] != '7' && buffer[i1] != '8')
 								random_shit_error = true;
 							else {
-								pnt = atoi(&buffer[i1]); // get the var
+								pnt = std::atoi(&buffer[i1]); // get the var
 								i1++;
 								buf = buf + 1;
 							} // move to end
@@ -5021,31 +5021,31 @@ void DispatchKeyValue_Post(edict_t* pentKeyvalue, const KeyValueData* pkvd) {
 		static edict_t* temp_pent;
 		if (pentKeyvalue == pent_info_tfdetect) {
 			if (std::strcmp(pkvd->szKeyName, "ammo_medikit") == 0) // max BLUE players
-				max_team_players[0] = atoi(pkvd->szValue);
+				max_team_players[0] = std::atoi(pkvd->szValue);
 			else if (std::strcmp(pkvd->szKeyName, "ammo_detpack") == 0) // max RED players
-				max_team_players[1] = atoi(pkvd->szValue);
+				max_team_players[1] = std::atoi(pkvd->szValue);
 			else if (std::strcmp(pkvd->szKeyName, "maxammo_medikit") == 0) // max YELLOW players
-				max_team_players[2] = atoi(pkvd->szValue);
+				max_team_players[2] = std::atoi(pkvd->szValue);
 			else if (std::strcmp(pkvd->szKeyName, "maxammo_detpack") == 0) // max GREEN players
-				max_team_players[3] = atoi(pkvd->szValue);
+				max_team_players[3] = std::atoi(pkvd->szValue);
 
 			else if (std::strcmp(pkvd->szKeyName, "maxammo_shells") == 0) // BLUE class limits
-				team_class_limits[0] = atoi(pkvd->szValue);
+				team_class_limits[0] = std::atoi(pkvd->szValue);
 			else if (std::strcmp(pkvd->szKeyName, "maxammo_nails") == 0) // RED class limits
-				team_class_limits[1] = atoi(pkvd->szValue);
+				team_class_limits[1] = std::atoi(pkvd->szValue);
 			else if (std::strcmp(pkvd->szKeyName, "maxammo_rockets") == 0) // YELLOW class limits
-				team_class_limits[2] = atoi(pkvd->szValue);
+				team_class_limits[2] = std::atoi(pkvd->szValue);
 			else if (std::strcmp(pkvd->szKeyName, "maxammo_cells") == 0) // GREEN class limits
-				team_class_limits[3] = atoi(pkvd->szValue);
+				team_class_limits[3] = std::atoi(pkvd->szValue);
 
 			else if (std::strcmp(pkvd->szKeyName, "team1_allies") == 0) // BLUE allies
-				team_allies[0] = atoi(pkvd->szValue);
+				team_allies[0] = std::atoi(pkvd->szValue);
 			else if (std::strcmp(pkvd->szKeyName, "team2_allies") == 0) // RED allies
-				team_allies[1] = atoi(pkvd->szValue);
+				team_allies[1] = std::atoi(pkvd->szValue);
 			else if (std::strcmp(pkvd->szKeyName, "team3_allies") == 0) // YELLOW allies
-				team_allies[2] = atoi(pkvd->szValue);
+				team_allies[2] = std::atoi(pkvd->szValue);
 			else if (std::strcmp(pkvd->szKeyName, "team4_allies") == 0) // GREEN allies
-				team_allies[3] = atoi(pkvd->szValue);
+				team_allies[3] = std::atoi(pkvd->szValue);
 		}
 		else if (pent_info_tfdetect == nullptr) {
 			if (std::strcmp(pkvd->szKeyName, "classname") == 0 && std::strcmp(pkvd->szValue, "info_tfdetect") == 0) {
@@ -5055,7 +5055,7 @@ void DispatchKeyValue_Post(edict_t* pentKeyvalue, const KeyValueData* pkvd) {
 
 		if (pentKeyvalue == pent_item_tfgoal) {
 			if (std::strcmp(pkvd->szKeyName, "team_no") == 0)
-				flags[flag_index].team_no = atoi(pkvd->szValue);
+				flags[flag_index].team_no = std::atoi(pkvd->szValue);
 
 			if (std::strcmp(pkvd->szKeyName, "mdl") == 0 && (std::strcmp(pkvd->szValue, "models/flag.mdl") == 0 || std::strcmp(pkvd->szValue, "models/keycard.mdl") == 0 || std::strcmp(pkvd->szValue, "models/ball.mdl") == 0)) {
 				flags[flag_index].mdl_match = true;
@@ -5085,7 +5085,7 @@ void DispatchKeyValue_Post(edict_t* pentKeyvalue, const KeyValueData* pkvd) {
 		}
 		else if (pentKeyvalue == temp_pent) {
 			if (std::strcmp(pkvd->szKeyName, "team_no") == 0) {
-				// int value = atoi(pkvd->szValue);
+				// int value = std::atoi(pkvd->szValue);
 
 				// is_team[value-1]=true;
 				// if(value > max_teams)
@@ -5274,7 +5274,7 @@ static void ProcessBotCfgFile() {
 
 	if (std::strcmp(cmd, "observer") == 0) {
 		int temp;
-		temp = atoi(arg1);
+		temp = std::atoi(arg1);
 
 		if (temp)
 			observer_mode = true;
@@ -5317,7 +5317,7 @@ static void ProcessBotCfgFile() {
 	if (std::strcmp(cmd, "bot_team_balance") == 0) {
 		if (arg1 != nullptr) {
 			int temp;
-			temp = atoi(arg1);
+			temp = std::atoi(arg1);
 			if (temp)
 				bot_team_balance = true;
 			else
@@ -5341,7 +5341,7 @@ static void ProcessBotCfgFile() {
 	if (std::strcmp(cmd, "bot_bot_balance") == 0) {
 		if (arg1 != nullptr) {
 			int temp;
-			temp = atoi(arg1);
+			temp = std::atoi(arg1);
 			if (temp)
 				bot_bot_balance = true;
 			else
@@ -5365,7 +5365,7 @@ static void ProcessBotCfgFile() {
 
 	if (std::strcmp(cmd, "bot_xmas") == 0) {
 		int temp;
-		temp = atoi(arg1);
+		temp = std::atoi(arg1);
 		bot_xmas = true;
 		if (temp == 0) {
 			bot_xmas = false;
@@ -5389,7 +5389,7 @@ static void ProcessBotCfgFile() {
 
 	if (std::strcmp(cmd, "botdontshoot") == 0) {
 		int temp;
-		temp = atoi(arg1);
+		temp = std::atoi(arg1);
 		botdontshoot = true;
 		if (temp == 0) {
 			botdontshoot = false;
@@ -5413,7 +5413,7 @@ static void ProcessBotCfgFile() {
 
 	if (std::strcmp(cmd, "botdontmove") == 0) {
 		int temp;
-		temp = atoi(arg1);
+		temp = std::atoi(arg1);
 		botdontmove = true;
 		if (temp == 0) {
 			botdontmove = false;
@@ -5480,7 +5480,7 @@ static void ProcessBotCfgFile() {
 	}
 
 	if (std::strcmp(cmd, "pause") == 0) {
-		bot_cfg_pause_time = gpGlobals->time + atoi(arg1);
+		bot_cfg_pause_time = gpGlobals->time + std::atoi(arg1);
 		bot_check_time = bot_cfg_pause_time; // bot_check_time governs bot spawn time too
 		if (IS_DEDICATED_SERVER())
 			std::printf("[Config] pause has been set to %s\n", arg1);
@@ -5492,7 +5492,7 @@ static void ProcessBotCfgFile() {
 	}
 
 	if (std::strcmp(cmd, "bot_create_interval") == 0) {
-		bot_create_interval = static_cast<float>(atoi(arg1));
+		bot_create_interval = static_cast<float>(std::atoi(arg1));
 		if (bot_create_interval < 1.0f || bot_create_interval > 8.0f)
 			bot_create_interval = 3.0f;
 
@@ -5506,7 +5506,7 @@ static void ProcessBotCfgFile() {
 	}
 
 	if (std::strcmp(cmd, "defensive_chatter") == 0) {
-		const int temp = atoi(arg1);
+		const int temp = std::atoi(arg1);
 		if (temp == 0)
 			defensive_chatter = false;
 		else
@@ -5522,7 +5522,7 @@ static void ProcessBotCfgFile() {
 		return;
 	}
 	if (std::strcmp(cmd, "offensive_chatter") == 0) {
-		const int temp = atoi(arg1);
+		const int temp = std::atoi(arg1);
 		if (temp == 0)
 			offensive_chatter = false;
 		else
@@ -5539,7 +5539,7 @@ static void ProcessBotCfgFile() {
 	}
 	/*	if(std::strcmp(cmd, "frag_commander") == 0)
 					{
-									int temp = atoi( arg1 );
+									int temp = std::atoi( arg1 );
 									if(temp == 0)
 													frag_commander = false;
 									else
@@ -5696,7 +5696,7 @@ static void DisplayBotInfo() {
 	if (IS_DEDICATED_SERVER()) {
 		// tell the console all the bot vars
 
-		std::snprintf(msg2, 511, "--FoxBot Loaded--\n--Visit 'www.apg-clan.org' for updates and info--\n");
+		snprintf(msg2, 511, "--FoxBot Loaded--\n--Visit 'www.apg-clan.org' for updates and info--\n");
 		msg2[511] = '\0'; // just in case
 		std::printf("%s", msg2);
 
@@ -5929,7 +5929,7 @@ static void changeBotSetting(const char* settingName, int* setting, const char* 
 
 	// if an argument was supplied change the setting with it
 	if (arg1 != nullptr && *arg1 != 0) {
-		const int temp = atoi(arg1);
+		const int temp = std::atoi(arg1);
 		if (temp >= minValue && temp <= maxValue) {
 			*setting = temp;
 			settingWasChanged = true;

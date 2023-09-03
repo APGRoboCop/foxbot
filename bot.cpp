@@ -661,21 +661,21 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 			GET_GAME_DIR(dir_name);
 
 #ifndef __linux__
-			std::snprintf(filename, 127, "%s\\models\\player\\%s", dir_name, c_skin);
+			snprintf(filename, 127, "%s\\models\\player\\%s", dir_name, c_skin);
 #else
-			std::snprintf(filename, 127, "%s/models/player/%s", dir_name, c_skin);
+			snprintf(filename, 127, "%s/models/player/%s", dir_name, c_skin);
 #endif
 
 			if (stat(filename, &stat_str) != 0) {
 #ifndef __linux__
-				std::snprintf(filename, 127, "valve\\models\\player\\%s", c_skin);
+				snprintf(filename, 127, "valve\\models\\player\\%s", c_skin);
 #else
-				std::snprintf(filename, 127, "valve/models/player/%s", c_skin);
+				snprintf(filename, 127, "valve/models/player/%s", c_skin);
 #endif
 				if (stat(filename, &stat_str) != 0) {
 					char err_msg[80];
 
-					std::snprintf(err_msg, 79, "model \"%s\" is unknown.\n", c_skin);
+					snprintf(err_msg, 79, "model \"%s\" is unknown.\n", c_skin);
 					if (pPlayer)
 						ClientPrint(pPlayer, HUD_PRINTNOTIFY, err_msg);
 					if (IS_DEDICATED_SERVER())
@@ -711,7 +711,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 		skill = 0;
 
 		if (arg3 != nullptr && *arg3 != 0)
-			skill = atoi(arg3);
+			skill = std::atoi(arg3);
 
 		if (skill < 1 || skill > 5)
 			skill = BotAssignDefaultSkill();
@@ -731,7 +731,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 		skill = 0;
 
 		if (arg4 != nullptr && *arg4 != 0)
-			skill = atoi(arg4);
+			skill = std::atoi(arg4);
 
 		if (skill < 1 || skill > 5)
 			skill = BotAssignDefaultSkill();
@@ -945,10 +945,10 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 
    if (mod_id == TFC_DLL) {
       if (arg1 != nullptr && arg1[0] != 0) {
-         pBot->bot_team = atoi(arg1);
+         pBot->bot_team = std::atoi(arg1);
 
          if (arg2 != nullptr && arg2[0] != 0) {
-            pBot->bot_class = atoi(arg2);
+            pBot->bot_class = std::atoi(arg2);
          }
       }
    }
@@ -1764,37 +1764,37 @@ void script(const char* sz) {
 
 										// problem with 0 being returned by atoi??
 						if (std::strncmp(curr->ifs, "b_p_", 4) == 0)
-							if (atoi(&curr->ifs[4]) > 0 && atoi(&curr->ifs[4]) < 9)
-								if (blue_av[atoi(&curr->ifs[4]) - 1])
+							if (std::atoi(&curr->ifs[4]) > 0 && std::atoi(&curr->ifs[4]) < 9)
+								if (blue_av[std::atoi(&curr->ifs[4]) - 1])
 									execif = true;
 						if (std::strncmp(curr->ifs, "r_p_", 4) == 0)
-							if (atoi(&curr->ifs[4]) > 0 && atoi(&curr->ifs[4]) < 9)
-								if (red_av[atoi(&curr->ifs[4]) - 1])
+							if (std::atoi(&curr->ifs[4]) > 0 && std::atoi(&curr->ifs[4]) < 9)
+								if (red_av[std::atoi(&curr->ifs[4]) - 1])
 									execif = true;
 						if (std::strncmp(curr->ifs, "g_p_", 4) == 0)
-							if (atoi(&curr->ifs[4]) > 0 && atoi(&curr->ifs[4]) < 9)
-								if (green_av[atoi(&curr->ifs[4]) - 1])
+							if (std::atoi(&curr->ifs[4]) > 0 && std::atoi(&curr->ifs[4]) < 9)
+								if (green_av[std::atoi(&curr->ifs[4]) - 1])
 									execif = true;
 						if (std::strncmp(curr->ifs, "y_p_", 4) == 0)
-							if (atoi(&curr->ifs[4]) > 0 && atoi(&curr->ifs[4]) < 9)
-								if (yellow_av[atoi(&curr->ifs[4]) - 1])
+							if (std::atoi(&curr->ifs[4]) > 0 && std::atoi(&curr->ifs[4]) < 9)
+								if (yellow_av[std::atoi(&curr->ifs[4]) - 1])
 									execif = true;
 						// points not available
 						if (std::strncmp(curr->ifs, "b_pn_", 5) == 0)
-							if (atoi(&curr->ifs[5]) > 0 && atoi(&curr->ifs[5]) < 9)
-								if (!blue_av[atoi(&curr->ifs[5]) - 1])
+							if (std::atoi(&curr->ifs[5]) > 0 && std::atoi(&curr->ifs[5]) < 9)
+								if (!blue_av[std::atoi(&curr->ifs[5]) - 1])
 									execif = true;
 						if (std::strncmp(curr->ifs, "r_pn_", 5) == 0)
-							if (atoi(&curr->ifs[5]) > 0 && atoi(&curr->ifs[5]) < 9)
-								if (!red_av[atoi(&curr->ifs[5]) - 1])
+							if (std::atoi(&curr->ifs[5]) > 0 && std::atoi(&curr->ifs[5]) < 9)
+								if (!red_av[std::atoi(&curr->ifs[5]) - 1])
 									execif = true;
 						if (std::strncmp(curr->ifs, "g_pn_", 5) == 0)
-							if (atoi(&curr->ifs[5]) > 0 && atoi(&curr->ifs[5]) < 9)
-								if (!green_av[atoi(&curr->ifs[5]) - 1])
+							if (std::atoi(&curr->ifs[5]) > 0 && std::atoi(&curr->ifs[5]) < 9)
+								if (!green_av[std::atoi(&curr->ifs[5]) - 1])
 									execif = true;
 						if (std::strncmp(curr->ifs, "y_pn_", 5) == 0)
-							if (atoi(&curr->ifs[5]) > 0 && atoi(&curr->ifs[5]) < 9)
-								if (!yellow_av[atoi(&curr->ifs[5]) - 1])
+							if (std::atoi(&curr->ifs[5]) > 0 && std::atoi(&curr->ifs[5]) < 9)
+								if (!yellow_av[std::atoi(&curr->ifs[5]) - 1])
 									execif = true;
 						// multipoint ifs
 						if (std::strncmp(curr->ifs, "b_mp_", 5) == 0) {
@@ -2808,7 +2808,7 @@ static void BotComms(bot_t* pBot) {
 				// Get the class from the command line.
 				char theClass = pBot->message[std::strlen(pBot->message) - 2];
 				if (theClass != '\0' && std::strchr("123456789", theClass)) {
-					const int iClass = atoi(&theClass);
+					const int iClass = std::atoi(&theClass);
 					if (BotChangeClass(pBot, iClass, fromName)) {
 						UTIL_HostSay(pBot->pEdict, 1, "Roger");
 						if (strcasecmp("changeclassnow", cmd) == 0)

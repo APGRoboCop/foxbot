@@ -46,7 +46,7 @@ int gmsgTextMsg = 0;
 int gmsgSayText = 0;
 int gmsgShowMenu = 0;
 
-static unsigned long lseed = static_cast<unsigned long>(time(nullptr));
+static unsigned long lseed = static_cast<unsigned long>(std::time(nullptr));
 
 // FUNCTION PROTOTYPES
 static void UTIL_FindFoxbotPath();
