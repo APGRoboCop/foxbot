@@ -500,12 +500,12 @@ int BotInFieldOfView(const bot_t* pBot, const Vector& dest) {
 		view_angle += 360.0f;
 
 	// rsm - START angle bug fix
-	int angle = std::abs(static_cast<int>(view_angle) - static_cast<int>(entity_angles.y));
+	float angle = std::fabs(std::round(view_angle) - std::round(entity_angles.y));
 
-	if (angle > 180)
-		angle = 360 - angle;
+	if (angle > 180.0f)
+		angle = 360.0f - angle;
 
-	return angle;
+	return static_cast<int>(angle);
 	// rsm - END
 }
 
