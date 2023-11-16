@@ -15,6 +15,8 @@ Updated by RoboCop
 	+ lastresort_b1
 	+++ thecove
 
+- Modernised RSM's angle bug fix
+
 - Added C++17 Standard library functions support for Win32 and Linux
 
 - Both Win32 and Linux builds now compiled using AMBuild
