@@ -14,6 +14,7 @@ Updated by RoboCop
 	+ junob7
 	+ lastresort_b1
 	+++ thecove
+	+++ gauntlet
 
 - Modernised RSM's angle bug fix
 
@@ -38,6 +39,8 @@ TODO List:-
 >> To allow medic bots to heal more often, but not allow `JOB_BUFF_ALLY` to consume to many cells as engineers
 
 >> To allow soldier bots to Rocket Jump easily
+
+>> To add some possible new waypoint flags like `Lift Button` and `Shoot Here`
 
 >> Fix bots navigation when shot by enemies as they sometimes cannot seem to detect where damage is coming from
 
