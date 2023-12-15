@@ -15,6 +15,7 @@ Updated by RoboCop
 	+ lastresort_b1
 	+++ thecove
 	+++ gauntlet
+	+++ tfc_orange
 
 - Modernised RSM's angle bug fix
 
