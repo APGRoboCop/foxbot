@@ -22,6 +22,8 @@ Arkshine
 Globoss
 pizzahut
 jeefo
+RussiaTails
+HeteroChromia
 
    Introduction
    ------------
@@ -31,61 +33,6 @@ This guide should provide you with some basic information on how to
 compile and/or modify the Foxbot source code.
 Most of the guide is Operating System independant but there is also
 a section specifically about compiling the Linux version of Foxbot.
-
---------------------------------------------------------------------------------
-Version 0.801
-November-05-2022
-Updated by RoboCop
---------------------------------------------------------------------------------
-
-- Added new waypoints:-
-	+ congestus_lg
-
-- Added area for bots to report Sentry Built in dustbowl hut entry in CP1
-
-- Fixed typo bot team report for avanti area file
-
-- Added more delay for bots to Team Report to prevent annoying chat flooding
-
-- Increased priority for bots to steal flags
-
-- Improved floating point precision
-
-- Reduced spy feigning time to prevent idling for too long
-
-- Added a longer bot load config delay when changing maps or using `addbot` too rapidly to reduce crashes
-
-- Reduced infinite loops for enhanced stability and less CPU consumption
-
-- Increased the bot's flexibility to steer quickly when turn corners and aim faster
-
-- Optimised pathway for 2fort, shutdown2, rock2, well and dustbowl
-
-- Repaired rock2 waypoints and the rock2 variants by allowing bots to cap properly
-
-- Reduced the likelihood for blue bots to go the wrong way after capping CP2 in dustbowl
-
-- Reduced the likelihood for bots to go into the 2fort water to prevent long tasks for capping flags
-
-- Improved bot's visual on locating stray ammo bags
-
-- Reverted waypoint max Reachable Range, jobList and jobFunction structure
-
-TODO List:-
-
->> Fix bot_chat cvars
-
->> Fix bots navigation when shot by enemies as they sometimes cannot seem to detect where damage is coming from
-
->> To prevent engineers to go around SG turrets when repairing/upgrading
-
->> To allow bots to use Nail Guns for destroying SG turrets, when out of nades or from a long distance
-
->> To prevent bots from shooting at spy corpses too long as, they aren't aware that a player switched teams as enemy spy
-
->> Allow bots to toss grenades at a higher angle and from a lower range as their target aim is too far
-
->> BONUS: Maybe add a feature for bots to have experience and wisdom or learned data in order to be more human
 
 ____________________________________________________________
 
