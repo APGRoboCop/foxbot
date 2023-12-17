@@ -32,6 +32,8 @@ Updated by RoboCop
 
 - Fixed the `WRITE_BYTE` implicit conversion for waypoint coding
 
+- Fixed the waypoint path in avanti that prevented bots from emerging from Defence base after capping CP3
+
 - Enhanced the waypoint area data for dustbowl
 
 - Removed lame SG Turret nodes for 2fort, avanti, crossover2, epicenter, rock2 and well in non recommended areas 
