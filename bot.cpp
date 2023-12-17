@@ -3392,9 +3392,7 @@ static bool BotDemomanNeededCheck(bot_t* pBot) {
 		return false;
 
 	// Check if any more demoman are allowed on this map.
-	const bool class_not_allowed = !(team_class_limits[pBot->current_team] & (1 << TFC_CLASS_DEMOMAN));
-
-	if (class_not_allowed)
+	if (!(team_class_limits[pBot->current_team] & (1 << TFC_CLASS_DEMOMAN)))
 		return false;
 
 	if (WaypointFindDetpackGoal(pBot->current_wp, pBot->current_team) != -1) {

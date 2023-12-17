@@ -20,7 +20,11 @@ Updated by RoboCop
 
 - Added C++17 Standard library functions support for Win32 and Linux
 
+- Bots will now bunnyhop in stock maps and only in appropriate areas like wide spaces
+
 - Both Win32 and Linux builds now compiled using AMBuild
+
+- The waypoint `pathwaypoint_connect` will now auto connect to neighbouring waypoints but at a shorter distance
 
 - Reverted the `ProcessCommanderList` coding from version 0.791
 

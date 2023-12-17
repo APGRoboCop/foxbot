@@ -1866,8 +1866,12 @@ void WaypointSave() {
 // This function can check to see if bots will be able to get from one
 // waypoint to another.
 bool WaypointReachable(Vector v_src, Vector v_dest, const edict_t* pEntity) {
+	// calculate the distance between v_src and v_dest
 	float distance = (v_dest - v_src).Length();
-
+	// if the distance is more than 200 units, return false
+	if (distance > 200.0f)
+		return false;
+   
 	// is the destination close enough?
 	if (distance < REACHABLE_RANGE) {
 		TraceResult tr;
