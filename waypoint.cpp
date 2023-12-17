@@ -1123,7 +1123,6 @@ void WaypointAdd(edict_t* pEntity) {
 			WaypointDebug();
 #endif
 	}
-	//TODO: to reduce the pathwaypoint_connect from automatically joining too many nodes from a distance [APG]RoboCop[CL]
 	if (g_path_connect) {
 		// calculate all the paths to this new waypoint
 		for (i = 0; i < num_waypoints; i++) {
