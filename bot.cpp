@@ -784,13 +784,22 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
       i++;
 
    if (i < 32)
-      clients[i] = nullptr;
-   // why put these here?
-   // well admin mod plugin may sneak in as their connecting
-   // and before we can add this shit for checking purposes
+   {
+	   clients[i] = nullptr;
+   }
+
+   // Why put these here?
+   // Well, admin mod plugin may sneak in as they're connecting
+   // and before we can add this for checking purposes
+
    bot_t* pBot = &bots[index];
+
    if (botJustJoined[index])
-      bzero(pBot, sizeof(bot_t)); // wipe out the bots data
+	   //bzero(pBot, sizeof(bot_t)); // wipe out the bots data
+   {
+	   *pBot = bot_t{}; // Create a new instance and assign it to pBot
+   }
+
    pBot->pEdict = BotEnt;
 
    // clear the player info from the previous player who used this edict

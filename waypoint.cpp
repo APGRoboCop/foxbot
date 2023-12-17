@@ -5354,7 +5354,7 @@ void ProcessCommanderList() {
 	//{
 	//}
 	commanders.clear();
-   char invalidChars[] = " abcdefghijklmnopqrstuvwxyz,./<>?;'\"[]{}-=+!@#$%^&*()";
+   const char invalidChars[] = " abcdefghijklmnopqrstuvwxyz,./<>?;'\"[]{}-=+!@#$%^&*()";
 
 	UTIL_BuildFileName(filename, 255, "foxbot_commanders.txt", nullptr);
 	std::FILE* inFile = std::fopen(filename, "r");
@@ -5391,7 +5391,7 @@ void ProcessCommanderList() {
 		for (unsigned int i = 0; i < std::strlen(buffer); i++) {
 			for (unsigned int j = 0; j < std::strlen(invalidChars); j++)
 			{
-            if (char ch = invalidChars[j]; std::strchr(buffer, ch)) {
+            if (const char ch = invalidChars[j]; std::strchr(buffer, ch)) {
 					valid = false;
 					if (IS_DEDICATED_SERVER())
 						std::printf("[Config] foxbot_commanders.txt : Invalid Character %c\n", ch);

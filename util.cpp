@@ -151,7 +151,7 @@ void UTIL_TraceLine(const Vector& vecStart, const Vector& vecEnd, const IGNORE_M
 	TRACE_LINE(vecStart, vecEnd, (igmon == ignore_monsters ? 1 : 0) | (ignoreGlass ? 0x100 : 0), pentIgnore, ptr);
 }
 
-void UTIL_TraceLine(const Vector& vecStart, const Vector& vecEnd, const IGNORE_MONSTERS igmon, edict_t* pentIgnore, TraceResult* ptr) { TRACE_LINE(vecStart, vecEnd, igmon == ignore_monsters ? true : false, pentIgnore, ptr); }
+void UTIL_TraceLine(const Vector& vecStart, const Vector& vecEnd, const IGNORE_MONSTERS igmon, edict_t* pentIgnore, TraceResult* ptr) { TRACE_LINE(vecStart, vecEnd, igmon == ignore_monsters, pentIgnore, ptr); }
 
 void UTIL_MakeVectors(const Vector& vecAngles) { MAKE_VECTORS(vecAngles); }
 
