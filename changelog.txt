@@ -24,9 +24,11 @@ Updated by RoboCop
 
 - Both Win32 and Linux builds now compiled using AMBuild
 
-- The waypoint `pathwaypoint_connect` will now auto connect to neighbouring waypoints but at a shorter distance
+- The waypoint `pathwaypoint_connect` will now auto connect path to neighbouring waypoints but at a shorter distance
 
 - Reverted the `ProcessCommanderList` coding from version 0.791
+
+- Added Path Check in Hunted Security Garages for bots to replenish ammo and health or escape
 
 - Fixed the bot_chat cvar from not allowing bots to talk freely
 
@@ -35,6 +37,8 @@ Updated by RoboCop
 - Fixed the waypoint path in avanti that prevented bots from emerging from Defence base after capping CP3
 
 - Enhanced the waypoint area data for dustbowl
+
+- Engineers will no longer go around SG turrets when repairing/upgrading
 
 - Removed lame SG Turret nodes for 2fort, avanti, crossover2, epicenter, rock2 and well in non recommended areas 
 
@@ -49,8 +53,6 @@ TODO List:-
 >> To add some possible new waypoint flags like `Lift Button` and `Shoot Here`
 
 >> Fix bots navigation when shot by enemies as they sometimes cannot seem to detect where damage is coming from
-
->> To prevent engineers to go around SG turrets when repairing/upgrading
 
 >> To allow bots to use Nail Guns for destroying SG turrets, when out of nades or from a long distance
 

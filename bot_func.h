@@ -59,7 +59,7 @@ bool BotFireWeapon(const Vector& v_enemy, bot_t* pBot, int weapon_choice);
 void BotShootAtEnemy(bot_t* pBot);
 
 // DrEvils functions.
-int BotNadeHandler(bot_t* pBot, bool timed, char nadeTyp);
+int BotNadeHandler(bot_t* pBot, bool timed, char newNadeType);
 
 int BotAssessThreatLevel(const bot_t* pBot);
 
