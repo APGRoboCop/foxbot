@@ -4239,8 +4239,8 @@ void AreaAutoBuild1() {
 										if (waypoints[j].origin.x - 32 * (l + 1) == waypoints[k].origin.x) {
 											ll = k;
 											k = -1;
-											l++;
-											if (waypoints[j].origin.z <= waypoints[k].origin.z)
+											lc++;
+											if (k >= 0 && waypoints[i].origin.z <= waypoints[k].origin.z)
 												ld = true;
 											else
 												lu = true;
@@ -5412,7 +5412,7 @@ void ProcessCommanderList() {
 			std::strcpy(uId, buffer);
 
 			// Get rid of line feeds
-			if (uId[std::strlen(uId) - 1] == '\n' || uId[std::strlen(uId) - 1] == '\r' || uId[std::strlen(uId) - 1] == EOF) {
+			if (uId[std::strlen(uId) - 1] == '\n' || uId[std::strlen(uId) - 1] == '\r' || uId[std::strlen(uId) - 1] == '\0') {
 				uId[std::strlen(uId) - 1] = '\0';
 			}
 			fp = UTIL_OpenFoxbotLog();

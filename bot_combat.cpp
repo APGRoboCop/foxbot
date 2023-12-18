@@ -132,14 +132,14 @@ static bot_weapon_select_t tfc_weapon_select[] = { {TF_WEAPON_KNIFE, "tf_weapon_
 												  {TF_WEAPON_IC, "tf_weapon_ic", 5, 150.0f, 2000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_SUPERSHOTGUN, "tf_weapon_supershotgun", 5, 0.0f, 2000.0f, 0.0f, 0.0f, 100, true, 100, 2, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_SUPERNAILGUN, "tf_weapon_superng", 5, 40.0f, 2000.0f, 0.0f, 0.0f, 20, true, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
-												  {TF_WEAPON_TRANQ, "tf_weapon_tranq", 5, 0.0f, 100.0f, 0.0f, 0.0f, 20, true, 20, 1, 0, false, false, false, false, 0.0f, 0.0f},
+												  {TF_WEAPON_TRANQ, "tf_weapon_tranq", 5, 0.0f, 100.0f, 0.0f, 0.0f, 10, true, 20, 1, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_AUTORIFLE, "tf_weapon_autorifle", 5, 0.0f, 1000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_AXE, "tf_weapon_axe", 5, 0.0f, 60.0f, 0.0f, 0.0f, 100, true, 100, 0, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_PL, "tf_weapon_pl", 5, 150.0f, 600.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_GL, "tf_weapon_gl", 5, 150.0f, 600.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_SHOTGUN, "tf_weapon_shotgun", 5, 0.0f, 2000.0f, 0.0f, 0.0f, 50, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_NAILGUN, "tf_weapon_ng", 5, 40.0f, 2000.0f, 0.0f, 0.0f, 20, true, 20, 1, 0, false, false, false, false, 0.0f, 0.0f},
-												  {TF_WEAPON_RAILGUN, "tf_weapon_railgun", 5, 80.0f, 2000.0f, 0.0f, 0.0f, 20, true, 20, 1, 0, false, false, false, false, 0.0f, 0.0f},
+												  {TF_WEAPON_RAILGUN, "tf_weapon_railgun", 5, 80.0f, 2000.0f, 0.0f, 0.0f, 10, true, 20, 1, 0, false, false, false, false, 0.0f, 0.0f},
 	/* terminator */
 	{0, "", 0, 0.0f, 0.0f, 0.0f, 0.0f, 0, true, 0, 1, 1, false, false, false, false, 0.0f, 0.0f} };
 

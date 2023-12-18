@@ -1032,11 +1032,12 @@ void pfnServerPrint(const char* szMsg) {
 	// check that the bot that sent a message isn't getting it back
 	std::strncpy(sz, szMsg, 253);
 	// clear up sz, and copy start to buffa
-	while (sz[i] != ' ' && i < 250) {
+	while (i < 250 && sz[i] != ' ') {
 		msgstart[i] = sz[i];
 		sz[i] = ' ';
 		i++;
 	}
+
 	msgstart[i] = '\0'; // finish string off
 	i = 0;
 
@@ -1051,7 +1052,7 @@ void pfnServerPrint(const char* szMsg) {
 		while (k != 0) {
 			// remove start spaces
 			int j = 0;
-			while ((buffa[j] == ' ' || buffa[j] == '\n') && j < 250) {
+			while (j < 250 && (buffa[j] == ' ' || buffa[j] == '\n')) {
 				j++;
 			}
 
@@ -1059,7 +1060,7 @@ void pfnServerPrint(const char* szMsg) {
 							std::fprintf(fp,"pfnServerPrint: %s\n",buffa); std::fclose(fp); }*/
 
 			k = 0;
-			while (buffa[j] != ' ' && buffa[j] != '\0' && buffa[j] != '\n' && j < 250 && k < 250) {
+			while (j < 250 && k < 250 && (buffa[j] != ' ' && buffa[j] != '\0' && buffa[j] != '\n')) {
 				cmd[k] = buffa[j];
 				buffa[j] = ' ';
 				j++;
