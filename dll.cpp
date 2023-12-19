@@ -1658,7 +1658,7 @@ void ClientCommand(edict_t* pEntity) {
 			else {
 				index = 0;
 
-				while (bots[index].is_used == false && index < 32)
+				while (index < 32 && bots[index].is_used == false)
 					index++;
 
 				if (index < 32) {
@@ -5196,28 +5196,28 @@ static void ProcessBotCfgFile() {
 	char* arg1 = arg2 = arg3 = arg4 = nullptr;
 
 	// skip to blank or end of string...
-	while (cmd_line[cmd_index] != ' ' && cmd_line[cmd_index] != 0 && cmd_index < 510)
+	while (cmd_index < 510 && (cmd_line[cmd_index] != ' ' && cmd_line[cmd_index] != 0))
 		cmd_index++;
-	if (cmd_line[cmd_index] == ' ' && cmd_index < 510) {
+	if (cmd_index < 510 && cmd_line[cmd_index] == ' ') {
 		cmd_line[cmd_index++] = 0;
 		arg1 = &cmd_line[cmd_index];
 
 		// skip to blank or end of string...
-		while (cmd_line[cmd_index] != ' ' && cmd_line[cmd_index] != 0 && cmd_index < 510)
+		while (cmd_index < 510 && (cmd_line[cmd_index] != ' ' && cmd_line[cmd_index] != 0))
 			cmd_index++;
-		if (cmd_line[cmd_index] == ' ' && cmd_index < 510) {
+		if (cmd_index < 510 && cmd_line[cmd_index] == ' ') {
 			cmd_line[cmd_index++] = 0;
 			arg2 = &cmd_line[cmd_index];
 
-			while (cmd_line[cmd_index] != ' ' && cmd_line[cmd_index] != 0 && cmd_index < 510)
+			while (cmd_index < 510 && (cmd_line[cmd_index] != ' ' && cmd_line[cmd_index] != 0))
 				cmd_index++;
-			if (cmd_line[cmd_index] == ' ' && cmd_index < 510) {
+			if (cmd_index < 510 && cmd_line[cmd_index] == ' ') {
 				cmd_line[cmd_index++] = 0;
 				arg3 = &cmd_line[cmd_index];
 
-				while (cmd_line[cmd_index] != ' ' && cmd_line[cmd_index] != 0 && cmd_index < 510)
+				while (cmd_index < 510 && (cmd_line[cmd_index] != ' ' && cmd_line[cmd_index] != 0))
 					cmd_index++;
-				if (cmd_line[cmd_index] == ' ' && cmd_index < 510) {
+				if (cmd_index < 510 && cmd_line[cmd_index] == ' ') {
 					cmd_line[cmd_index++] = 0;
 					arg4 = &cmd_line[cmd_index];
 				}

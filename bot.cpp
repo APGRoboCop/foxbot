@@ -763,8 +763,8 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
    char ptr[256]; // allocate space for message from ClientConnect
 
    index = 0;
-   while ((bots[index].is_used) && index < (MAX_BOTS))
-      ++index;
+   while (index < MAX_BOTS && bots[index].is_used)
+	   ++index;
 
    if (index >= MAX_BOTS) {
       ClientPrint(pPlayer, HUD_PRINTNOTIFY, "Can't create bot(maximum bots reached).\n");
