@@ -56,7 +56,7 @@
 #define MENU_6 6
 #define MENU_7 7
 
-cvar_t foxbot = { "foxbot", "0.85-beta2", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr };
+cvar_t foxbot = { "foxbot", "0.85", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr };
 cvar_t enable_foxbot = { "enable_foxbot", "1", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr };
 cvar_t sv_bot = { "bot", "", 0, 0, nullptr };
 
@@ -2582,7 +2582,7 @@ void StartFrame() { // v7 last frame timing
 			client_update_time = gpGlobals->time + 1.0f;
 			for (i = 0; i < 32; i++) {
 				if (bots[i].is_used) {
-					bzero(&cd, sizeof cd);
+					bzero(&cd, sizeof cd); //TODO: `bzero` is deprecated? [APG]RoboCop[CL]
 					MDLL_UpdateClientData(bots[i].pEdict, 1, &cd); // see if a weapon was dropped...
 					if (bots[i].bot_weapons != cd.weapons) //duplicate expression? [APG]RoboCop[CL]
 						bots[i].bot_weapons = cd.weapons;

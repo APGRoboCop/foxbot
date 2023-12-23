@@ -4,7 +4,7 @@
 
 --------------------------------------------------------------------------------
 Version 0.85
-??-??-202?
+December-23-2023
 Updated by RoboCop
 --------------------------------------------------------------------------------
 
@@ -20,7 +20,7 @@ Updated by RoboCop
 
 - Added C++17 Standard library functions support for Win32 and Linux
 
-- Bots will now bunnyhop in stock maps plus shutdown2 and only in appropriate areas like wide spaces
+- Bots will now bunnyhop in stock maps plus shutdown2 and xpress2k4 but only in appropriate areas like wide spaces
 
 - Both Win32 and Linux builds now compiled using AMBuild
 
@@ -48,7 +48,7 @@ TODO List:-
 
 >> Complete 'botdontmove' in order for "GolfBots" to stay stationary
 
->> To allow medic bots to heal more often, but not allow `JOB_BUFF_ALLY` to consume to many cells as engineers
+>> To allow medic bots to heal more often, but not allow `JOB_BUFF_ALLY` to consume too many cells as engineers
 
 >> To allow soldier bots to Rocket Jump easily
 

@@ -1921,7 +1921,7 @@ bool WaypointReachable(Vector v_src, Vector v_dest, const edict_t* pEntity) {
 
 			while (distance > 10.0f) {
 				// move 10 units closer to the goal...
-				v_check = v_check + v_direction * 10.0;
+				v_check = v_check + v_direction * 10.0f;
 
 				v_down = v_check;
 				v_down.z = v_down.z - 1000.0f; // straight down 1000 units
@@ -2035,7 +2035,7 @@ void WaypointPrintInfo(edict_t* pEntity) {
 	char msg[96];
 
 	// find the nearest waypoint...
-	const int index = WaypointFindNearest_E(pEntity, 50.0, -1);
+	const int index = WaypointFindNearest_E(pEntity, 50.0f, -1);
 
 	if (index == -1)
 		return;
