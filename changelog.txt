@@ -38,6 +38,8 @@ Updated by RoboCop
 
 - Enhanced the waypoint area data for dustbowl
 
+- Repaired the rogue pathways for murderball-2002, rats, rat2 and rats3 plus they can now bunnyhop
+
 - Optimised the waypoints and paths for rock2 in order for bots to focus more on its objectives
 
 - Engineers will no longer go around SG turrets when repairing/upgrading
