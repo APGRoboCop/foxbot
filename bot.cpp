@@ -3927,10 +3927,9 @@ static void BotSenseEnvironment(bot_t* pBot) {
 // This function handles basic combat actions, such as pointing the active
 // weapon at the bots enemy(if it has one) and pulling the trigger and/or
 // throwing grenades.  It does not handle combat movement.
-// TODO: to allow bots to attack using nailguns (if available) to destroy SGs
 // but not interfere with their tossing nade aim - [APG]RoboCop[CL]
 static void BotFight(bot_t* pBot) {
-	//TODO: to allow bots to determine on using nades at a short distance
+
 	const edict_t* pEdict = pBot->pEdict;
 	const edict_t* pent = pBot->enemy.ptr; // assign the enemy entity to pent
 
