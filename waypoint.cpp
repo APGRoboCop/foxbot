@@ -1030,7 +1030,7 @@ void WaypointAdd(edict_t* pEntity) {
 
 	edict_t* pent = nullptr;
 	const float radius = 40.0f;
-	int index = 0;
+	short index = 0;
 
 	// find the next available slot for the new waypoint...
 	while (index < num_waypoints) {
@@ -1102,7 +1102,7 @@ void WaypointAdd(edict_t* pEntity) {
 	// delete from index to other..cus his delete function dont!
 
 	PATH* p = paths[index];
-	int i;
+	short i;
 
 #ifdef _DEBUG
 	int count = 0;
@@ -1150,7 +1150,7 @@ void WaypointAddAiming(edict_t* pEntity) {
 		return;
 
 	// edict_t *pent = NULL;
-	int index = 0;
+	short index = 0;
 
 	// find the next available slot for the new waypoint...
 	while (index < num_waypoints) {
@@ -1196,7 +1196,7 @@ void WaypointDelete(edict_t* pEntity) {
 	if (WaypointDeleteAimArtifact(pEntity))
 		return;
 
-	const int index = WaypointFindNearest_E(pEntity, 50.0f, -1);
+	const short index = WaypointFindNearest_E(pEntity, 50.0f, -1);
 
 	if (index == -1)
 		return;
@@ -1346,8 +1346,8 @@ static bool WaypointDeleteAimArtifact(const edict_t* pEntity) {
 
 // allow player to manually create a path from one waypoint to another
 void WaypointCreatePath(edict_t* pEntity, const int cmd) {
-	static int waypoint1 = -1; // initialized to unassigned
-	static int waypoint2 = -1; // initialized to unassigned
+	static short waypoint1 = -1; // initialized to unassigned
+	static short waypoint2 = -1; // initialized to unassigned
 
 	if (cmd == 1) // assign source of path
 	{
@@ -1385,8 +1385,8 @@ void WaypointCreatePath(edict_t* pEntity, const int cmd) {
 
 // allow player to manually remove a path from one waypoint to another
 void WaypointRemovePath(edict_t* pEntity, const int cmd) {
-	static int waypoint1 = -1; // initialized to unassigned
-	static int waypoint2 = -1; // initialized to unassigned
+	static short waypoint1 = -1; // initialized to unassigned
+	static short waypoint2 = -1; // initialized to unassigned
 
 	if (cmd == 1) // assign source of path
 	{
@@ -1455,9 +1455,12 @@ bool WaypointLoad(edict_t* pEntity) {
 	char filename[256];
 	WAYPOINT_HDR header;
 	char msg[256];
-	int index, i;
-	short int num;
-	short int path_index;
+   
+	int index;
+	int i;
+   
+	short num;
+	short path_index;
 
 	// reset our knowledge of what waypoint types have been loaded
 	wp_type_exists[0] = 0;
@@ -1519,22 +1522,22 @@ bool WaypointLoad(edict_t* pEntity) {
 				std::fclose(bfp);
 				return true;
 			}
-         std::fclose(bfp);
-         return false;
-      }
+			std::fclose(bfp);
+			return false;
+		}
 		// make sure the waypoint version is compatible
-      if (header.waypoint_file_version != WAYPOINT_VERSION) {
-         if (pEntity)
-            ClientPrint(pEntity, HUD_PRINTNOTIFY, "Incompatible FoXBot waypoint file version!\nWaypoints not loaded!\n");
+		if (header.waypoint_file_version != WAYPOINT_VERSION) {
+			if (pEntity)
+				ClientPrint(pEntity, HUD_PRINTNOTIFY, "Incompatible FoXBot waypoint file version!\nWaypoints not loaded!\n");
 
-         if (IS_DEDICATED_SERVER())
-           std::printf("Incompatible FoXBot waypoint file version!\nWaypoints not loaded!\n");
+			if (IS_DEDICATED_SERVER())
+				std::printf("Incompatible FoXBot waypoint file version!\nWaypoints not loaded!\n");
 
-         std::fclose(bfp);
-         return false;
-      }
+			std::fclose(bfp);
+			return false;
+		}
 
-      WaypointInit(); // remove any existing waypoints
+		WaypointInit(); // remove any existing waypoints
 
 		// read the waypoint data from the file
 		for (i = 0; i < header.number_of_waypoints; i++) {
@@ -1585,15 +1588,15 @@ bool WaypointLoad(edict_t* pEntity) {
 		WaypointRouteInit();
 		return true;
 	}
-   if (pEntity) {
-      std::sprintf(msg, "Waypoint file %s doesn't exist!\nLooking for HPB file instead\n", filename);
-      ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
-   }
+	if (pEntity) {
+		std::sprintf(msg, "Waypoint file %s doesn't exist!\nLooking for HPB file instead\n", filename);
+		ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
+	}
 
-   if (IS_DEDICATED_SERVER())
-     std::printf("waypoint file %s not found!\nLooking for HPB file instead\n", filename);
+	if (IS_DEDICATED_SERVER())
+		std::printf("waypoint file %s not found!\nLooking for HPB file instead\n", filename);
 
-   // try for hpb_bot file instead
+	// try for hpb_bot file instead
 
 	std::strcpy(mapname, STRING(gpGlobals->mapname));
 	std::strcat(mapname, ".wpt");
@@ -1696,9 +1699,9 @@ static bool WaypointLoadVersion4(FILE* bfp, const int number_of_waypoints) {
 	// these script flags used to be in the main waypoint flag
 	const int OLD_POINT1 = 1 << 16, OLD_POINT2 = 1 << 17, OLD_POINT3 = 1 << 18, OLD_POINT4 = 1 << 19, OLD_POINT5 = 1 << 20, OLD_POINT6 = 1 << 21, OLD_POINT7 = 1 << 22, OLD_POINT8 = 1 << 23;
 
-	int i;
-	short int num;
-	short int path_index;
+	short i;
+	short num;
+	short path_index;
 
 	WaypointInit(); // remove any existing waypoints
 
@@ -1757,7 +1760,7 @@ static bool WaypointLoadVersion4(FILE* bfp, const int number_of_waypoints) {
 	}
 
 	// read and add waypoint paths...
-	for (int index = 0; index < num_waypoints; index++) {
+	for (short index = 0; index < num_waypoints; index++) {
 		// read the number of paths from this node...
 		std::fread(&num, sizeof num, 1, bfp);
 
@@ -1867,10 +1870,10 @@ void WaypointSave() {
 bool WaypointReachable(Vector v_src, Vector v_dest, const edict_t* pEntity) {
 	// calculate the distance between v_src and v_dest
 	float distance = (v_dest - v_src).Length();
-	// if the distance is more than 200 units, return false
-	if (distance > 200.0f)
+	// if the distance is more than 300 units, return false
+	if (distance > 300.0f)
 		return false;
-   
+
 	// is the destination close enough?
 	if (distance < REACHABLE_RANGE) {
 		TraceResult tr;
@@ -3437,16 +3440,16 @@ void WaypointRunOneWay(edict_t* pEntity) {
 			wpt1 = temp;
 			return;
 		}
-      wpt2 = wpt1;
-      wpt1 = temp;
-      if (wpt1 != -1 && wpt2 != -1 && wpt1 != wpt2) {
-         // play "error" sound...
-         EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "common/wpn_select.wav", 1.0, ATTN_NORM, 0, 100);
+		wpt2 = wpt1;
+		wpt1 = temp;
+		if (wpt1 != -1 && wpt2 != -1 && wpt1 != wpt2) {
+			// play "error" sound...
+			EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "common/wpn_select.wav", 1.0, ATTN_NORM, 0, 100);
 
-         WaypointAddPath(wpt2, wpt1);
-      }
-      return;
-   }
+			WaypointAddPath(wpt2, wpt1);
+		}
+		return;
+	}
 	return;
 }
 
@@ -3460,17 +3463,17 @@ void WaypointRunTwoWay(edict_t* pEntity) {
 			wpt1 = temp;
 			return;
 		}
-      wpt2 = wpt1;
-      wpt1 = temp;
-      if (wpt1 != -1 && wpt2 != -1 && wpt1 != wpt2) {
-         // play "error" sound...
-         EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "common/wpn_select.wav", 1.0, ATTN_NORM, 0, 100);
+		wpt2 = wpt1;
+		wpt1 = temp;
+		if (wpt1 != -1 && wpt2 != -1 && wpt1 != wpt2) {
+			// play "error" sound...
+			EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "common/wpn_select.wav", 1.0, ATTN_NORM, 0, 100);
 
-         WaypointAddPath(wpt1, wpt2);
-         WaypointAddPath(wpt2, wpt1);
-      }
-      return;
-   }
+			WaypointAddPath(wpt1, wpt2);
+			WaypointAddPath(wpt2, wpt1);
+		}
+		return;
+	}
 	return;
 }
 
@@ -3494,7 +3497,9 @@ void WaypointAutoBuild(edict_t* pEntity) {
 				// Vector(x,y,(-4096+32))
 				// UTIL_TraceLine(Vector(x,y,z),Vector(x,y,z-64)
 				//,ignore_monsters,ignore_glass,pEntity,&tr);
-				TRACE_HULL(Vector(x, y, z), Vector(x, y, z - 32), ignore_monsters, head_hull, pEntity, &tr);
+				TRACE_HULL(Vector(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z)),
+					Vector(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z - 32)),
+					ignore_monsters, head_hull, pEntity, &tr);
 
 				/*{ fp=UTIL_OpenFoxbotLog();
 								std::fprintf(fp,"%f\n",tr.flFraction); std::fclose(fp); }*/
@@ -4144,19 +4149,20 @@ void AreaAutoBuild1() {
 			ld = false;
 			ll = 0;
 			lr = 0;
+			double epsilon = 0.0001; // Define your own level of precision
 			while (k <= num_waypoints) {
-				if (waypoints[i].origin.y == waypoints[k].origin.y && waypoints[i].origin.z == waypoints[k].origin.z && i != k) {
-					if (waypoints[i].origin.x - 32 * (lc + 1) == waypoints[k].origin.x) {
+				if (std::abs(waypoints[i].origin.y - waypoints[k].origin.y) < epsilon && std::abs(waypoints[i].origin.z - waypoints[k].origin.z) < epsilon && i != k) {
+					if (std::abs(waypoints[i].origin.x - 32.0 * (lc + 1) - waypoints[k].origin.x) < epsilon) {
 						k = -1;
 						lc++;
 					}
-					if (waypoints[i].origin.x + 32 * (rc + 1) == waypoints[k].origin.x) {
+					if (std::abs(waypoints[i].origin.x + 32.0 * (rc + 1) - waypoints[k].origin.x) < epsilon) {
 						k = -1;
 						rc++;
 					}
 				}
-				else if (waypoints[i].origin.y == waypoints[k].origin.y && waypoints[i].origin.z - 16 <= waypoints[k].origin.z && waypoints[i].origin.z + 16 >= waypoints[k].origin.z && !lu && !ld && i != k) {
-					if (waypoints[i].origin.x - 32 * (lc + 1) == waypoints[k].origin.x) {
+				else if (std::abs(waypoints[i].origin.y - waypoints[k].origin.y) < epsilon && std::abs(waypoints[i].origin.z - 16 - waypoints[k].origin.z) < epsilon && std::abs(waypoints[i].origin.z + 16 - waypoints[k].origin.z) < epsilon && !lu && !ld && i != k) {
+					if (std::abs(waypoints[i].origin.x - 32.0 * (lc + 1) - waypoints[k].origin.x) < epsilon) {
 						ll = k;
 						k = -1;
 						lc++;
@@ -4166,8 +4172,8 @@ void AreaAutoBuild1() {
 							lu = true;
 					}
 				}
-				else if (waypoints[i].origin.y == waypoints[k].origin.y && waypoints[i].origin.z - 16 <= waypoints[k].origin.z && waypoints[i].origin.z + 16 >= waypoints[k].origin.z && !ru && !rd && i != k) {
-					if (waypoints[i].origin.x + 32 * (rc + 1) == waypoints[k].origin.x) {
+				else if (std::abs(waypoints[i].origin.y - waypoints[k].origin.y) < epsilon && std::abs(waypoints[i].origin.z - 16 - waypoints[k].origin.z) < epsilon && std::abs(waypoints[i].origin.z + 16 - waypoints[k].origin.z) < epsilon && !ru && !rd && i != k) {
+					if (std::abs(waypoints[i].origin.x + 32.0 * (rc + 1) - waypoints[k].origin.x) < epsilon) {
 						lr = k;
 						k = -1;
 						rc++;
@@ -4177,9 +4183,9 @@ void AreaAutoBuild1() {
 							ru = true;
 					}
 				}
-				else if ((waypoints[i].origin.y == waypoints[k].origin.y && (waypoints[ll].origin.z - 16 <= waypoints[k].origin.z && waypoints[ll].origin.z + 16 >= waypoints[k].origin.z)) ||
-					(waypoints[lr].origin.z - 16 <= waypoints[k].origin.z && waypoints[lr].origin.z + 16 >= waypoints[k].origin.z && (ru || rd) && (ld || lu) && i != k)) {
-					if (waypoints[i].origin.x - 32 * (lc + 1) == waypoints[k].origin.x) {
+				else if ((std::abs(waypoints[i].origin.y - waypoints[k].origin.y) < epsilon && (std::abs(waypoints[ll].origin.z - 16 - waypoints[k].origin.z) < epsilon && std::abs(waypoints[ll].origin.z + 16 - waypoints[k].origin.z) < epsilon)) ||
+					(std::abs(waypoints[lr].origin.z - 16 - waypoints[k].origin.z) < epsilon && std::abs(waypoints[lr].origin.z + 16 - waypoints[k].origin.z) < epsilon && (ru || rd) && (ld || lu) && i != k)) {
+					if (std::abs(waypoints[i].origin.x - 32.0 * (lc + 1) - waypoints[k].origin.x) < epsilon) {
 						if (waypoints[i].origin.z <= waypoints[k].origin.z && ld) {
 							ll = k;
 							k = -1;
@@ -4191,7 +4197,7 @@ void AreaAutoBuild1() {
 							lc++;
 						}
 					}
-					if (waypoints[i].origin.x + 32 * (rc + 1) == waypoints[k].origin.x) {
+					if (std::abs(waypoints[i].origin.x + 32.0 * (rc + 1) - waypoints[k].origin.x) < epsilon) {
 						if (waypoints[i].origin.z <= waypoints[k].origin.z && rd) {
 							lr = k;
 							k = -1;
@@ -4212,9 +4218,10 @@ void AreaAutoBuild1() {
 					if (!(waypoints[j].flags & W_FL_DELETED)) {
 						// expand via y
 						// and no slopeing in z
-						if (waypoints[i].origin.x == waypoints[j].origin.x && waypoints[i].origin.z == waypoints[j].origin.z && i != j) {
+						if (std::abs(waypoints[i].origin.x - waypoints[j].origin.x) < epsilon &&
+							std::abs(waypoints[i].origin.z - waypoints[j].origin.z) < epsilon && i != j) {
 							// expand one way..
-							if (waypoints[j].origin.y - 16 == areas[index].b.y) {
+							if (std::abs(waypoints[j].origin.y - 16 - areas[index].b.y) < epsilon) {
 								r = 0;
 								l = 0;
 								k = 0;
@@ -4225,18 +4232,22 @@ void AreaAutoBuild1() {
 								ll = 0;
 								lr = 0;
 								while (k <= num_waypoints) {
-									if (waypoints[j].origin.y == waypoints[k].origin.y && waypoints[j].origin.z == waypoints[k].origin.z && j != k) {
-										if (waypoints[j].origin.x - 32 * (l + 1) == waypoints[k].origin.x) {
+									if (std::abs(waypoints[j].origin.y - waypoints[k].origin.y) < epsilon &&
+										std::abs(waypoints[j].origin.z - waypoints[k].origin.z) < epsilon && j != k) {
+										if (std::abs(waypoints[j].origin.x - 32.0 * (l + 1) - waypoints[k].origin.x) < epsilon) {
 											k = -1;
 											l++;
 										}
-										if (waypoints[j].origin.x + 32 * (r + 1) == waypoints[k].origin.x) {
+										if (std::abs(waypoints[j].origin.x + 32.0 * (r + 1) - waypoints[k].origin.x) < epsilon) {
 											k = -1;
 											r++;
 										}
 									}
-									else if (waypoints[j].origin.y == waypoints[k].origin.y && waypoints[j].origin.z - 16 <= waypoints[k].origin.z && waypoints[j].origin.z + 16 >= waypoints[k].origin.z && !lu && !ld && j != k) {
-										if (waypoints[j].origin.x - 32 * (l + 1) == waypoints[k].origin.x) {
+									else if (std::abs(waypoints[j].origin.y - waypoints[k].origin.y) < epsilon &&
+										waypoints[j].origin.z - 16 <= waypoints[k].origin.z &&
+										waypoints[j].origin.z + 16 >= waypoints[k].origin.z &&
+										!lu && !ld && j != k) {
+										if (std::abs(waypoints[j].origin.x - 32.0 * (l + 1) - waypoints[k].origin.x) < epsilon) {
 											ll = k;
 											k = -1;
 											lc++;
@@ -4246,8 +4257,11 @@ void AreaAutoBuild1() {
 												lu = true;
 										}
 									}
-									else if (waypoints[j].origin.y == waypoints[k].origin.y && waypoints[j].origin.z - 16 <= waypoints[k].origin.z && waypoints[j].origin.z + 16 >= waypoints[k].origin.z && !ru && !rd && j != k) {
-										if (waypoints[j].origin.x + 32 * (r + 1) == waypoints[k].origin.x) {
+									else if (std::abs(waypoints[j].origin.y - waypoints[k].origin.y) < epsilon &&
+										waypoints[j].origin.z - 16 <= waypoints[k].origin.z &&
+										waypoints[j].origin.z + 16 >= waypoints[k].origin.z &&
+										!ru && !rd && j != k) {
+										if (std::abs(waypoints[j].origin.x + 32.0 * (r + 1) - waypoints[k].origin.x) < epsilon) {
 											lr = k;
 											k = -1;
 											r++;
@@ -4257,9 +4271,11 @@ void AreaAutoBuild1() {
 												ru = true;
 										}
 									}
-									else if ((waypoints[j].origin.y == waypoints[k].origin.y && (waypoints[ll].origin.z - 16 <= waypoints[k].origin.z && waypoints[ll].origin.z + 16 >= waypoints[k].origin.z)) ||
-										(waypoints[lr].origin.z - 16 <= waypoints[k].origin.z && waypoints[lr].origin.z + 16 >= waypoints[k].origin.z && (ru || rd) && (ld || lu) && j != k)) {
-										if (waypoints[j].origin.x - 32 * (l + 1) == waypoints[k].origin.x) {
+									else if ((std::abs(waypoints[j].origin.y - waypoints[k].origin.y) < epsilon &&
+										(waypoints[ll].origin.z - 16 <= waypoints[k].origin.z && waypoints[ll].origin.z + 16 >= waypoints[k].origin.z)) ||
+										(waypoints[lr].origin.z - 16 <= waypoints[k].origin.z && waypoints[lr].origin.z + 16 >= waypoints[k].origin.z &&
+											(ru || rd) && (ld || lu) && j != k)) {
+										if (std::abs(waypoints[j].origin.x - 32.0 * (l + 1) - waypoints[k].origin.x) < epsilon) {
 											if (waypoints[j].origin.z <= waypoints[k].origin.z && ld) {
 												ll = k;
 												k = -1;
@@ -4271,7 +4287,7 @@ void AreaAutoBuild1() {
 												l++;
 											}
 										}
-										if (waypoints[j].origin.x + 32 * (r + 1) == waypoints[k].origin.x) {
+										if (std::abs(waypoints[j].origin.x + 32.0 * (r + 1) - waypoints[k].origin.x) < epsilon) {
 											if (waypoints[j].origin.z <= waypoints[k].origin.z && rd) {
 												lr = k;
 												k = -1;
@@ -4294,7 +4310,7 @@ void AreaAutoBuild1() {
 								}
 							}
 							// expand the other way..
-							else if (waypoints[j].origin.y + 16 == areas[index].a.y) {
+							else if (std::abs(waypoints[j].origin.y + 16 - areas[index].a.y) < epsilon) {
 								r = 0;
 								l = 0;
 								k = 0;
@@ -4305,18 +4321,22 @@ void AreaAutoBuild1() {
 								ll = 0;
 								lr = 0;
 								while (k <= num_waypoints) {
-									if (waypoints[j].origin.y == waypoints[k].origin.y && waypoints[j].origin.z == waypoints[k].origin.z && j != k) {
-										if (waypoints[j].origin.x - 32 * (l + 1) == waypoints[k].origin.x) {
+									if (std::abs(waypoints[j].origin.y - waypoints[k].origin.y) < epsilon &&
+										std::abs(waypoints[j].origin.z - waypoints[k].origin.z) < epsilon && j != k) {
+										if (std::abs(waypoints[j].origin.x - 32.0 * (l + 1) - waypoints[k].origin.x) < epsilon) {
 											k = -1;
 											l++;
 										}
-										if (waypoints[j].origin.x + 32 * (r + 1) == waypoints[k].origin.x) {
+										if (std::abs(waypoints[j].origin.x + 32.0 * (r + 1) - waypoints[k].origin.x) < epsilon) {
 											k = -1;
 											r++;
 										}
 									}
-									else if (waypoints[j].origin.y == waypoints[k].origin.y && waypoints[j].origin.z - 16 <= waypoints[k].origin.z && waypoints[j].origin.z + 16 >= waypoints[k].origin.z && !lu && !ld && j != k) {
-										if (waypoints[j].origin.x - 32 * (l + 1) == waypoints[k].origin.x) {
+									else if (std::abs(waypoints[j].origin.y - waypoints[k].origin.y) < epsilon &&
+										waypoints[j].origin.z - 16 <= waypoints[k].origin.z &&
+										waypoints[j].origin.z + 16 >= waypoints[k].origin.z &&
+										!lu && !ld && j != k) {
+										if (std::abs(waypoints[j].origin.x - 32.0 * (l + 1) - waypoints[k].origin.x) < epsilon) {
 											ll = k;
 											k = -1;
 											l++;
@@ -4326,8 +4346,11 @@ void AreaAutoBuild1() {
 												lu = true;
 										}
 									}
-									else if (waypoints[j].origin.y == waypoints[k].origin.y && waypoints[j].origin.z - 16 <= waypoints[k].origin.z && waypoints[j].origin.z + 16 >= waypoints[k].origin.z && !ru && !rd && j != k) {
-										if (waypoints[j].origin.x + 32 * (r + 1) == waypoints[k].origin.x) {
+									else if (std::abs(waypoints[j].origin.y - waypoints[k].origin.y) < epsilon &&
+										waypoints[j].origin.z - 16 <= waypoints[k].origin.z &&
+										waypoints[j].origin.z + 16 >= waypoints[k].origin.z &&
+										!ru && !rd && j != k) {
+										if (std::abs(waypoints[j].origin.x + 32.0 * (r + 1) - waypoints[k].origin.x) < epsilon) {
 											lr = k;
 											k = -1;
 											r++;
@@ -4337,9 +4360,11 @@ void AreaAutoBuild1() {
 												ru = true;
 										}
 									}
-									else if ((waypoints[j].origin.y == waypoints[k].origin.y && (waypoints[ll].origin.z - 16 <= waypoints[k].origin.z && waypoints[ll].origin.z + 16 >= waypoints[k].origin.z)) ||
-										(waypoints[lr].origin.z - 16 <= waypoints[k].origin.z && waypoints[lr].origin.z + 16 >= waypoints[k].origin.z && (ru || rd) && (ld || lu) && j != k)) {
-										if (waypoints[j].origin.x - 32 * (l + 1) == waypoints[k].origin.x) {
+									else if ((std::abs(waypoints[j].origin.y - waypoints[k].origin.y) < epsilon &&
+										(waypoints[ll].origin.z - 16 <= waypoints[k].origin.z && waypoints[ll].origin.z + 16 >= waypoints[k].origin.z)) ||
+										(waypoints[lr].origin.z - 16 <= waypoints[k].origin.z && waypoints[lr].origin.z + 16 >= waypoints[k].origin.z &&
+											(ru || rd) && (ld || lu) && j != k)) {
+										if (std::abs(waypoints[j].origin.x - 32.0 * (l + 1) - waypoints[k].origin.x) < epsilon) {
 											if (waypoints[j].origin.z <= waypoints[k].origin.z && ld) {
 												ll = k;
 												k = -1;
@@ -4351,7 +4376,7 @@ void AreaAutoBuild1() {
 												l++;
 											}
 										}
-										if (waypoints[j].origin.x + 32 * (r + 1) == waypoints[k].origin.x) {
+										if (std::abs(waypoints[j].origin.x + 32.0 * (r + 1) - waypoints[k].origin.x) < epsilon) {
 											if (waypoints[j].origin.z <= waypoints[k].origin.z && rd) {
 												lr = k;
 												k = -1;
@@ -4386,7 +4411,7 @@ void AreaAutoBuild1() {
 			if ((areas[i].flags & A_FL_1) == A_FL_1 && (areas[i].flags & A_FL_2) == A_FL_2 && (areas[i].flags & A_FL_3) == A_FL_3 && (areas[i].flags & A_FL_4) == A_FL_4) {
 				lc = 0;
 				rc = 0;
-
+				double epsilon = 0.0001; // or some other small number
 				//	r = 0;
 				//	l = 0;
 				k = 0;
@@ -4405,20 +4430,24 @@ void AreaAutoBuild1() {
 					k++;
 				}
 				k = 0;
-
+			   
 				while (k <= num_waypoints) {
-					if (waypoints[h].origin.x == waypoints[k].origin.x && waypoints[h].origin.z == waypoints[k].origin.z && h != k) {
-						if (waypoints[h].origin.y - 32 * (lc + 1) == waypoints[k].origin.y) {
+					if (std::abs(waypoints[h].origin.x - waypoints[k].origin.x) < epsilon &&
+						std::abs(waypoints[h].origin.z - waypoints[k].origin.z) < epsilon && h != k) {
+						if (std::abs(waypoints[h].origin.y - 32.0 * (lc + 1) - waypoints[k].origin.y) < epsilon) {
 							k = -1;
 							lc++;
 						}
-						if (waypoints[h].origin.y + 32 * (rc + 1) == waypoints[k].origin.y) {
+						if (std::abs(waypoints[h].origin.y + 32.0 * (rc + 1) - waypoints[k].origin.y) < epsilon) {
 							k = -1;
 							rc++;
 						}
 					}
-					else if (waypoints[h].origin.x == waypoints[k].origin.x && waypoints[h].origin.z - 16 <= waypoints[k].origin.z && waypoints[h].origin.z + 16 >= waypoints[k].origin.z && !lu && !ld && i != k) {
-						if (waypoints[h].origin.y - 32 * (lc + 1) == waypoints[k].origin.y) {
+					else if (std::abs(waypoints[h].origin.x - waypoints[k].origin.x) < epsilon &&
+						waypoints[h].origin.z - 16 <= waypoints[k].origin.z &&
+						waypoints[h].origin.z + 16 >= waypoints[k].origin.z &&
+						!lu && !ld && i != k) {
+						if (std::abs(waypoints[h].origin.y - 32.0 * (lc + 1) - waypoints[k].origin.y) < epsilon) {
 							ll = k;
 							k = -1;
 							lc++;
@@ -4428,8 +4457,11 @@ void AreaAutoBuild1() {
 								lu = true;
 						}
 					}
-					else if (waypoints[h].origin.x == waypoints[k].origin.x && waypoints[h].origin.z - 16 <= waypoints[k].origin.z && waypoints[h].origin.z + 16 >= waypoints[k].origin.z && !ru && !rd && i != k) {
-						if (waypoints[h].origin.y + 32 * (rc + 1) == waypoints[k].origin.y) {
+					else if (std::abs(waypoints[h].origin.x - waypoints[k].origin.x) < epsilon &&
+						waypoints[h].origin.z - 16 <= waypoints[k].origin.z &&
+						waypoints[h].origin.z + 16 >= waypoints[k].origin.z &&
+						!ru && !rd && i != k) {
+						if (std::abs(waypoints[h].origin.y + 32.0 * (rc + 1) - waypoints[k].origin.y) < epsilon) {
 							lr = k;
 							k = -1;
 							rc++;
@@ -4439,9 +4471,9 @@ void AreaAutoBuild1() {
 								ru = true;
 						}
 					}
-					else if ((waypoints[h].origin.x == waypoints[k].origin.x && (waypoints[ll].origin.z - 16 <= waypoints[k].origin.z && waypoints[ll].origin.z + 16 >= waypoints[k].origin.z)) ||
+					else if ((std::abs(waypoints[h].origin.x - waypoints[k].origin.x) < epsilon && (waypoints[ll].origin.z - 16 <= waypoints[k].origin.z && waypoints[ll].origin.z + 16 >= waypoints[k].origin.z)) ||
 						(waypoints[lr].origin.z - 16 <= waypoints[k].origin.z && waypoints[lr].origin.z + 16 >= waypoints[k].origin.z && (ru || rd) && (ld || lu) && i != k)) {
-						if (waypoints[h].origin.y - 32 * (lc + 1) == waypoints[k].origin.y) {
+						if (std::abs(waypoints[h].origin.y - 32.0 * (lc + 1) - waypoints[k].origin.y) < epsilon) {
 							if (waypoints[h].origin.z <= waypoints[k].origin.z && ld) {
 								ll = k;
 								k = -1;
@@ -4453,7 +4485,7 @@ void AreaAutoBuild1() {
 								lc++;
 							}
 						}
-						if (waypoints[h].origin.y + 32 * (rc + 1) == waypoints[k].origin.y) {
+						if (std::abs(waypoints[h].origin.y + 32.0 * (rc + 1) - waypoints[k].origin.y) < epsilon) {
 							if (waypoints[h].origin.z <= waypoints[k].origin.z && rd) {
 								lr = k;
 								k = -1;
@@ -4494,18 +4526,18 @@ void AreaAutoBuild1() {
 										}
 										k = 0;
 										while (k <= num_waypoints) {
-											if (waypoints[h].origin.x == waypoints[k].origin.x && waypoints[h].origin.z == waypoints[k].origin.z && h != k) {
-												if (waypoints[h].origin.y - 32 * (l + 1) == waypoints[k].origin.y) {
+											if (std::abs(waypoints[h].origin.x - waypoints[k].origin.x) < epsilon && std::abs(waypoints[h].origin.z - waypoints[k].origin.z) < epsilon && h != k) {
+												if (std::abs(waypoints[h].origin.y - 32.0 * (l + 1) - waypoints[k].origin.y) < epsilon) {
 													k = -1;
 													l++;
 												}
-												if (waypoints[h].origin.y + 32 * (r + 1) == waypoints[k].origin.y) {
+												if (std::abs(waypoints[h].origin.y + 32.0 * (r + 1) - waypoints[k].origin.y) < epsilon) {
 													k = -1;
 													r++;
 												}
 											}
-											else if (waypoints[h].origin.x == waypoints[k].origin.x && waypoints[h].origin.z - 16 <= waypoints[k].origin.z && waypoints[h].origin.z + 16 >= waypoints[k].origin.z && !lu && !ld && i != k) {
-												if (waypoints[h].origin.y - 32 * (l + 1) == waypoints[k].origin.y) {
+											else if (std::abs(waypoints[h].origin.x - waypoints[k].origin.x) < epsilon && waypoints[h].origin.z - 16 <= waypoints[k].origin.z && waypoints[h].origin.z + 16 >= waypoints[k].origin.z && !lu && !ld && i != k) {
+												if (std::abs(waypoints[h].origin.y - 32.0 * (l + 1) - waypoints[k].origin.y) < epsilon) {
 													ll = k;
 													k = -1;
 													l++;
@@ -4515,8 +4547,8 @@ void AreaAutoBuild1() {
 														lu = true;
 												}
 											}
-											else if (waypoints[h].origin.x == waypoints[k].origin.x && waypoints[h].origin.z - 16 <= waypoints[k].origin.z && waypoints[h].origin.z + 16 >= waypoints[k].origin.z && !ru && !rd && i != k) {
-												if (waypoints[h].origin.y + 32 * (r + 1) == waypoints[k].origin.y) {
+											else if (std::abs(waypoints[h].origin.x - waypoints[k].origin.x) < epsilon && waypoints[h].origin.z - 16 <= waypoints[k].origin.z && waypoints[h].origin.z + 16 >= waypoints[k].origin.z && !ru && !rd && i != k) {
+												if (std::abs(waypoints[h].origin.y + 32.0 * (r + 1) - waypoints[k].origin.y) < epsilon) {
 													lr = k;
 													k = -1;
 													r++;
@@ -4526,9 +4558,9 @@ void AreaAutoBuild1() {
 														ru = true;
 												}
 											}
-											else if ((waypoints[h].origin.x == waypoints[k].origin.x && (waypoints[ll].origin.z - 16 <= waypoints[k].origin.z && waypoints[ll].origin.z + 16 >= waypoints[k].origin.z)) ||
+											else if ((std::abs(waypoints[h].origin.x - waypoints[k].origin.x) < epsilon && (waypoints[ll].origin.z - 16 <= waypoints[k].origin.z && waypoints[ll].origin.z + 16 >= waypoints[k].origin.z)) ||
 												(waypoints[lr].origin.z - 16 <= waypoints[k].origin.z && waypoints[lr].origin.z + 16 >= waypoints[k].origin.z && (ru || rd) && (ld || lu) && i != k)) {
-												if (waypoints[h].origin.y - 32 * (l + 1) == waypoints[k].origin.y) {
+												if (std::abs(waypoints[h].origin.y - 32.0 * (l + 1) - waypoints[k].origin.y) < epsilon) {
 													if (waypoints[h].origin.z <= waypoints[k].origin.z && ld) {
 														ll = k;
 														k = -1;
@@ -4540,7 +4572,7 @@ void AreaAutoBuild1() {
 														l++;
 													}
 												}
-												if (waypoints[h].origin.y + 32 * (r + 1) == waypoints[k].origin.y) {
+												if (std::abs(waypoints[h].origin.y + 32.0 * (r + 1) - waypoints[k].origin.y) < epsilon) {
 													if (waypoints[h].origin.z <= waypoints[k].origin.z && rd) {
 														lr = k;
 														k = -1;
@@ -5357,7 +5389,7 @@ void ProcessCommanderList() {
 	//{
 	//}
 	commanders.clear();
-   const char invalidChars[] = " abcdefghijklmnopqrstuvwxyz,./<>?;'\"[]{}-=+!@#$%^&*()";
+	const char invalidChars[] = " abcdefghijklmnopqrstuvwxyz,./<>?;'\"[]{}-=+!@#$%^&*()";
 
 	UTIL_BuildFileName(filename, 255, "foxbot_commanders.txt", nullptr);
 	std::FILE* inFile = std::fopen(filename, "r");
@@ -5390,21 +5422,31 @@ void ProcessCommanderList() {
 		bool valid = true;
 
 		// Search for invalid characters in the read string.
-		// strlen is being called too many times in the for loop - [APG]RoboCop[CL]
-		for (unsigned int i = 0; i < std::strlen(buffer); i++) {
-			for (unsigned int j = 0; j < std::strlen(invalidChars); j++)
-			{
-            if (const char ch = invalidChars[j]; std::strchr(buffer, ch)) {
-					valid = false;
-					if (IS_DEDICATED_SERVER())
-						std::printf("[Config] foxbot_commanders.txt : Invalid Character %c\n", ch);
-					else {
-						std::sprintf(msg, "[Config] foxbot_commanders.txt : Invalid Character %c\n", ch);
-						ALERT(at_console, msg);
-					}
-				}
-			}
-		}
+      const unsigned int bufferLength = std::strlen(buffer);
+      const unsigned int invalidCharsLength = std::strlen(invalidChars);
+	   
+	  for (unsigned int i = 0; i < bufferLength; i++) {
+	     for (unsigned int j = 0; j < invalidCharsLength; j++) {
+	        const char ch = invalidChars[j];
+	        bool found = false;
+	        for (unsigned int k = 0; k < bufferLength; k++)
+	        {
+	           if (buffer[k] == ch) {
+	              found = true;
+	              break;
+	           }
+	        }
+	        if (found) {
+	           valid = false;
+	           if (IS_DEDICATED_SERVER())
+	              std::printf("[Config] foxbot_commanders.txt : Invalid Character %c\n", ch);
+	           else {
+	              std::sprintf(msg, "[Config] foxbot_commanders.txt : Invalid Character %c\n", ch);
+	              ALERT(at_console, msg);
+	           }
+	        }
+	     }
+	  }
 
 		// The read string is valid enough.
 		if (valid) {

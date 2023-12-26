@@ -44,7 +44,7 @@
 #include "botcam.h"
 
 #define VER_MAJOR 0
-#define VER_MINOR 85
+#define VER_MINOR 87
 //#define VER_BUILD 0
 
 #define MENU_NONE 0
@@ -56,7 +56,7 @@
 #define MENU_6 6
 #define MENU_7 7
 
-cvar_t foxbot = { "foxbot", "0.85", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr };
+cvar_t foxbot = { "foxbot", "0.87-APG", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr };
 cvar_t enable_foxbot = { "enable_foxbot", "1", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr };
 cvar_t sv_bot = { "bot", "", 0, 0, nullptr };
 
@@ -735,7 +735,7 @@ void chatClass::readChatFile() {
 		size_t length = std::strlen(buffer);
 
 		// turn '\n' into '\0'
-		if (buffer[length - 1] == '\n') {
+		if (length > 0 && buffer[length - 1] == '\n') {
 			buffer[length - 1] = 0;
 			length--;
 		}
@@ -1060,8 +1060,8 @@ void DispatchThink(edict_t* pent) {
 				dgrad = dgrad / 180;
 
 				Vector vel = pBot->enemy.ptr->v.velocity;
-				vel.x = vel.x * std::sin(dgrad);
-				vel.y = vel.y * std::cos(dgrad);
+				vel.x = static_cast<vec_t>(vel.x * std::sin(dgrad));
+				vel.y = static_cast<vec_t>(vel.y * std::cos(dgrad));
 				dgrad = v.x;
 				dgrad = dgrad + 180;
 				if (dgrad > 180)
@@ -1070,7 +1070,7 @@ void DispatchThink(edict_t* pent) {
 					dgrad += 360;
 				dgrad = dgrad * M_PI;
 				dgrad = dgrad / 180;
-				vel.z = vel.z * std::cos(dgrad);
+				vel.z = static_cast<vec_t>(vel.z * std::cos(dgrad));
 
 				if (vel.x < 0)
 					vel.x = -vel.x;
@@ -1640,7 +1640,7 @@ void ClientCommand(edict_t* pEntity) {
 					if (std::strchr(arg1, '\"') == nullptr)
 						std::strcpy(botname, arg1);
 					else
-						std::sscanf(arg1, R"("%s")", &botname[0]);
+						std::sscanf(arg1, R"("%31s")", &botname[0]);
 
 					index = 0;
 
@@ -2582,7 +2582,7 @@ void StartFrame() { // v7 last frame timing
 			client_update_time = gpGlobals->time + 1.0f;
 			for (i = 0; i < 32; i++) {
 				if (bots[i].is_used) {
-					bzero(&cd, sizeof cd); //TODO: `bzero` is deprecated? [APG]RoboCop[CL]
+					std::memset(&cd, 0, sizeof cd); // replaced bzero with memset
 					MDLL_UpdateClientData(bots[i].pEdict, 1, &cd); // see if a weapon was dropped...
 					if (bots[i].bot_weapons != cd.weapons) //duplicate expression? [APG]RoboCop[CL]
 						bots[i].bot_weapons = cd.weapons;
@@ -5480,7 +5480,7 @@ static void ProcessBotCfgFile() {
 	}
 
 	if (std::strcmp(cmd, "pause") == 0) {
-		bot_cfg_pause_time = gpGlobals->time + std::atoi(arg1);
+		bot_cfg_pause_time = gpGlobals->time + static_cast<float>(std::atoi(arg1));
 		bot_check_time = bot_cfg_pause_time; // bot_check_time governs bot spawn time too
 		if (IS_DEDICATED_SERVER())
 			std::printf("[Config] pause has been set to %s\n", arg1);

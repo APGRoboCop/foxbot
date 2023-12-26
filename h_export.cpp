@@ -62,12 +62,11 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, const DWORD fdwReason, LPVOID lpvReserve
 	if (fdwReason == DLL_PROCESS_ATTACH) {
 	}
 	else if (fdwReason == DLL_PROCESS_DETACH) {
-		if (h_Library)
-			FreeLibrary(h_Library);
+		// Do not call FreeLibrary here
 	}
-
 	return true;
 }
+
 #endif
 
 #if defined(_WIN32) && !defined(__GNUC__) && defined(_MSC_VER)

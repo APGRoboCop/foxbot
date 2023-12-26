@@ -1012,9 +1012,9 @@ void BotClient_TFC_Grens(void* p, const int bot_index) {
 	}
 	else if (g_state == 1) {
 		if (gren == 0)
-			bots[bot_index].grenades[0] = *static_cast<int*>(p);
+			bots[bot_index].grenades[0] = static_cast<char>(*static_cast<int*>(p));
 		else if (gren == 1)
-			bots[bot_index].grenades[1] = *static_cast<int*>(p);
+			bots[bot_index].grenades[1] = static_cast<char>(*static_cast<int*>(p));
 	}
 }
 

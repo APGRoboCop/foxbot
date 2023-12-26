@@ -115,10 +115,11 @@ char sz_error_check[255];
 
 edict_t* pfnFindEntityInSphere(edict_t* pEdictStartSearchAfter, const float* org, const float rad) {
 	if (debug_engine) {
+		const Vector orgVector(org[0], org[1], org[2]); // Create a new Vector from the float array
 		fp = UTIL_OpenFoxbotLog();
-		std::fprintf(fp, "pfnFindEntityInSphere:%p (%f %f %f) %f %d\n", static_cast<void*>(pEdictStartSearchAfter), ((Vector*)org)->x, ((Vector*)org)->y, ((Vector*)org)->z,
+		std::fprintf(fp, "pfnFindEntityInSphere:%p (%f %f %f) %f %d\n", static_cast<void*>(pEdictStartSearchAfter), orgVector.x, orgVector.y, orgVector.z,
 			static_cast<double>(rad), spawn_check_crash_count);
-
+	   
 		if (pEdictStartSearchAfter != nullptr)
 			if (pEdictStartSearchAfter->v.classname != 0)
 				std::fprintf(fp, "classname %s\n", STRING(pEdictStartSearchAfter->v.classname));
@@ -216,12 +217,12 @@ void pfnSetOrigin(edict_t* e, const float* rgflOrigin) {
 		for (int bot_index = 0; bot_index < 32; bot_index++) {
 			if (bots[bot_index].sentry_edict != nullptr && bots[bot_index].has_sentry) {
 				edict_t* pent = e;
-				int l = static_cast<int>(bots[bot_index].sentry_edict->v.origin.z - ((Vector*)rgflOrigin)->z);
+				const Vector rgflOriginVector(rgflOrigin[0], rgflOrigin[1], rgflOrigin[2]); // Create a new Vector from the float array
+				int l = static_cast<int>(bots[bot_index].sentry_edict->v.origin.z - rgflOriginVector.z);
 				if (l < 0)
 					l = -l;
-
-				const int xa = static_cast<int>(((Vector*)rgflOrigin)->x);
-				const int ya = static_cast<int>(((Vector*)rgflOrigin)->y);
+				const int xa = static_cast<int>(rgflOriginVector.x);
+				const int ya = static_cast<int>(rgflOriginVector.y);
 				const int xb = static_cast<int>(bots[bot_index].sentry_edict->v.origin.x);
 				const int yb = static_cast<int>(bots[bot_index].sentry_edict->v.origin.y);
 				// FILE *fp;
@@ -260,8 +261,9 @@ void pfnSetOrigin(edict_t* e, const float* rgflOrigin) {
 	   }*/
 
 	if (debug_engine) {
+		const Vector rgflOriginVector(rgflOrigin[0], rgflOrigin[1], rgflOrigin[2]); // Create a new Vector from the float array
 		fp = UTIL_OpenFoxbotLog();
-		std::fprintf(fp, "pfnSetOrigin: %p (%f %f %f)\n", static_cast<void*>(e), static_cast<double>(((Vector*)rgflOrigin)->x), static_cast<double>(((Vector*)rgflOrigin)->y), static_cast<double>(((Vector*)rgflOrigin)->z));
+		std::fprintf(fp, "pfnSetOrigin: %p (%f %f %f)\n", static_cast<void*>(e), static_cast<double>(rgflOriginVector.x), static_cast<double>(rgflOriginVector.y), static_cast<double>(rgflOriginVector.z));
 
 		if (e->v.classname != 0)
 			std::fprintf(fp, " name=%s\n", STRING(e->v.classname));
@@ -369,10 +371,10 @@ void pfnClientCommand(edict_t* pEdict, char* szFmt, ...) {
 			va_end(argp);
 			return;
 		}
-      std::strncat(sz_error_check, " !b\n", 250 - std::strlen(sz_error_check));
-      return;
-      //{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"!b\n"); std::fclose(fp); }
-   }
+		std::strncat(sz_error_check, " !b\n", 250 - std::strlen(sz_error_check) - 1);
+		return;
+		//{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"!b\n"); std::fclose(fp); }
+	}
 	(*g_engfuncs.pfnClientCommand)(pEdict, tempFmt);
 	va_end(argp);
 	// if(mr_meta) RETURN_META(MRES_HANDLED);
@@ -423,14 +425,14 @@ void pfnClCom(edict_t* pEdict, char* szFmt, ...) {
 				RETURN_META(MRES_SUPERCEDE);
 			return;
 		}
-      //	snprintf(sz_error_check,250,"%s b = %d %d\n",sz_error_check,GETPLAYERWONID(pEdict),ENTINDEX(pEdict));
-      return;
-   }
-   if (mr_meta)
-      RETURN_META(MRES_SUPERCEDE);
-   return;
-   //	if(mr_meta) RETURN_META(MRES_HANDLED);  // unreachable code
-	//	return;
+		//	snprintf(sz_error_check,250,"%s b = %d %d\n",sz_error_check,GETPLAYERWONID(pEdict),ENTINDEX(pEdict));
+		return;
+	}
+	if (mr_meta)
+		RETURN_META(MRES_SUPERCEDE);
+	return;
+	//	if(mr_meta) RETURN_META(MRES_HANDLED);  // unreachable code
+	 //	return;
 }
 
 void MessageBegin(const int msg_dest, const int msg_type, const float* pOrigin, edict_t* ed) {
@@ -534,11 +536,11 @@ void pfnMessageBegin(const int msg_dest, const int msg_type, const float* pOrigi
 	if (mr_meta && MM_func) {
 		if (dont_send_packet)
 			RETURN_META(MRES_SUPERCEDE);
-      RETURN_META(MRES_HANDLED);
-   }
+		RETURN_META(MRES_HANDLED);
+	}
 	if (dont_send_packet)
 		return;
-   (*g_engfuncs.pfnMessageBegin)(msg_dest, msg_type, pOrigin, ed);
+	(*g_engfuncs.pfnMessageBegin)(msg_dest, msg_type, pOrigin, ed);
 }
 
 void MessageEnd() {
@@ -569,13 +571,13 @@ void pfnMessageEnd() {
 			dont_send_packet = false;
 			RETURN_META(MRES_SUPERCEDE);
 		}
-      RETURN_META(MRES_HANDLED);
-   }
+		RETURN_META(MRES_HANDLED);
+	}
 	if (dont_send_packet) {
 		dont_send_packet = false;
 		return;
 	}
-   (*g_engfuncs.pfnMessageEnd)();
+	(*g_engfuncs.pfnMessageEnd)();
 }
 
 void WriteByte(const int iValue) {
@@ -602,11 +604,11 @@ void pfnWriteByte(int iValue) {
 	if (mr_meta && MM_func) {
 		if (dont_send_packet)
 			RETURN_META(MRES_SUPERCEDE);
-      RETURN_META(MRES_HANDLED);
-   }
+		RETURN_META(MRES_HANDLED);
+	}
 	if (dont_send_packet)
 		return;
-   (*g_engfuncs.pfnWriteByte)(iValue);
+	(*g_engfuncs.pfnWriteByte)(iValue);
 }
 
 void WriteChar(const int iValue) {
@@ -633,11 +635,11 @@ void pfnWriteChar(int iValue) {
 	if (mr_meta && MM_func) {
 		if (dont_send_packet)
 			RETURN_META(MRES_SUPERCEDE);
-      RETURN_META(MRES_HANDLED);
-   }
+		RETURN_META(MRES_HANDLED);
+	}
 	if (dont_send_packet)
 		return;
-   (*g_engfuncs.pfnWriteChar)(iValue);
+	(*g_engfuncs.pfnWriteChar)(iValue);
 }
 
 void WriteShort(const int iValue) {
@@ -664,11 +666,11 @@ void pfnWriteShort(int iValue) {
 	if (mr_meta && MM_func) {
 		if (dont_send_packet)
 			RETURN_META(MRES_SUPERCEDE);
-      RETURN_META(MRES_HANDLED);
-   }
+		RETURN_META(MRES_HANDLED);
+	}
 	if (dont_send_packet)
 		return;
-   (*g_engfuncs.pfnWriteShort)(iValue);
+	(*g_engfuncs.pfnWriteShort)(iValue);
 }
 
 void WriteLong(const int iValue) {
@@ -695,11 +697,11 @@ void pfnWriteLong(int iValue) {
 	if (mr_meta && MM_func) {
 		if (dont_send_packet)
 			RETURN_META(MRES_SUPERCEDE);
-      RETURN_META(MRES_HANDLED);
-   }
+		RETURN_META(MRES_HANDLED);
+	}
 	if (dont_send_packet)
 		return;
-   (*g_engfuncs.pfnWriteLong)(iValue);
+	(*g_engfuncs.pfnWriteLong)(iValue);
 }
 
 void WriteAngle(const float flValue) {
@@ -726,11 +728,11 @@ void pfnWriteAngle(float flValue) {
 	if (mr_meta && MM_func) {
 		if (dont_send_packet)
 			RETURN_META(MRES_SUPERCEDE);
-      RETURN_META(MRES_HANDLED);
-   }
+		RETURN_META(MRES_HANDLED);
+	}
 	if (dont_send_packet)
 		return;
-   (*g_engfuncs.pfnWriteAngle)(flValue);
+	(*g_engfuncs.pfnWriteAngle)(flValue);
 }
 
 void WriteCoord(const float flValue) {
@@ -757,11 +759,11 @@ void pfnWriteCoord(float flValue) {
 	if (mr_meta && MM_func) {
 		if (dont_send_packet)
 			RETURN_META(MRES_SUPERCEDE);
-      RETURN_META(MRES_HANDLED);
-   }
+		RETURN_META(MRES_HANDLED);
+	}
 	if (dont_send_packet)
 		return;
-   (*g_engfuncs.pfnWriteCoord)(flValue);
+	(*g_engfuncs.pfnWriteCoord)(flValue);
 }
 
 void WriteString(const char* sz) {
@@ -789,11 +791,11 @@ void pfnWriteString(const char* sz) {
 	if (mr_meta && MM_func) {
 		if (dont_send_packet)
 			RETURN_META(MRES_SUPERCEDE);
-      RETURN_META(MRES_HANDLED);
-   }
+		RETURN_META(MRES_HANDLED);
+	}
 	if (dont_send_packet)
 		return;
-   (*g_engfuncs.pfnWriteString)(sz);
+	(*g_engfuncs.pfnWriteString)(sz);
 }
 
 void WriteEntity(const int iValue) {
@@ -820,11 +822,11 @@ void pfnWriteEntity(int iValue) {
 	if (mr_meta && MM_func) {
 		if (dont_send_packet)
 			RETURN_META(MRES_SUPERCEDE);
-      RETURN_META(MRES_HANDLED);
-   }
+		RETURN_META(MRES_HANDLED);
+	}
 	if (dont_send_packet)
 		return;
-   (*g_engfuncs.pfnWriteEntity)(iValue);
+	(*g_engfuncs.pfnWriteEntity)(iValue);
 }
 
 void pfnRegUserMsg_common(const char* pszName, int msg) {
@@ -944,22 +946,22 @@ void pfnClientPrintf(edict_t* pEdict, const PRINT_TYPE ptype, const char* szMsg)
 			//(*g_engfuncs.pfnClientPrintf)(pEdict, ptype, szMsg);
 			return;
 		}
-      std::strncat(sz_error_check, " !b\n", 250 - std::strlen(sz_error_check));
-      return;
-      // else
-      //{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"!!b\n"); std::fclose(fp); }
-      /*else
-		   {
-		   if(mr_meta) RETURN_META(MRES_SUPERCEDE);
-		   }*/
+		std::strncat(sz_error_check, " !b\n", 250 - std::strlen(sz_error_check));
+		return;
+		// else
+		//{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"!!b\n"); std::fclose(fp); }
+		/*else
+			 {
+			 if(mr_meta) RETURN_META(MRES_SUPERCEDE);
+			 }*/
 	}
-   std::strncat(sz_error_check, " NULL\n", 250 - std::strlen(sz_error_check));
-   //{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"fook\n"); std::fclose(fp); }
-   // if(mr_meta) RETURN_META(MRES_SUPERCEDE);
-   // if(!mr_meta) (*g_engfuncs.pfnClientPrintf)(pEdict, ptype, szMsg);
-   // else RETURN_META(MRES_HANDLED);
-   //(*g_engfuncs.pfnClientPrintf)(pEdict, ptype, szMsg);
-   (*g_engfuncs.pfnClientPrintf)(pEdict, ptype, szMsg);
+	std::strncat(sz_error_check, " NULL\n", 250 - std::strlen(sz_error_check));
+	//{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"fook\n"); std::fclose(fp); }
+	// if(mr_meta) RETURN_META(MRES_SUPERCEDE);
+	// if(!mr_meta) (*g_engfuncs.pfnClientPrintf)(pEdict, ptype, szMsg);
+	// else RETURN_META(MRES_HANDLED);
+	//(*g_engfuncs.pfnClientPrintf)(pEdict, ptype, szMsg);
+	(*g_engfuncs.pfnClientPrintf)(pEdict, ptype, szMsg);
 }
 
 void pfnClPrintf(edict_t* pEdict, PRINT_TYPE ptype, const char* szMsg) {
@@ -1002,10 +1004,10 @@ void pfnClPrintf(edict_t* pEdict, PRINT_TYPE ptype, const char* szMsg) {
 		if (b) {
 			RETURN_META(MRES_HANDLED);
 		}
-      RETURN_META(MRES_SUPERCEDE);
-   }
-   RETURN_META(MRES_SUPERCEDE);
-   //	RETURN_META(MRES_HANDLED);
+		RETURN_META(MRES_SUPERCEDE);
+	}
+	RETURN_META(MRES_SUPERCEDE);
+	//	RETURN_META(MRES_HANDLED);
 }
 
 void pfnServerPrint(const char* szMsg) {

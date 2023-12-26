@@ -126,20 +126,20 @@ static bot_weapon_select_t tfc_weapon_select[] = { {TF_WEAPON_KNIFE, "tf_weapon_
 												  {TF_WEAPON_SPANNER, "tf_weapon_spanner", 5, 0.0f, 60.0f, 0.0f, 0.0f, 100, true, 100, 0, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_MEDIKIT, "tf_weapon_medikit", 5, 0.0f, 60.0f, 0.0f, 0.0f, 100, true, 100, 0, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_SNIPERRIFLE, "tf_weapon_sniperrifle", 5, 300.0f, 4000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, true, false, 2.5, 0.0f},
-												  {TF_WEAPON_FLAMETHROWER, "tf_weapon_flamethrower", 5, 0.0f, 400.0f, 0.0f, 0.0f, 100, false, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
-												  {TF_WEAPON_AC, "tf_weapon_ac", 5, 0.0f, 2000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
+												  {TF_WEAPON_FLAMETHROWER, "tf_weapon_flamethrower", 5, 0.0f, 200.0f, 0.0f, 0.0f, 100, false, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
+												  {TF_WEAPON_AC, "tf_weapon_ac", 5, 0.0f, 800.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_RPG, "tf_weapon_rpg", 5, 150.0f, 3000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_IC, "tf_weapon_ic", 5, 150.0f, 2000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
-												  {TF_WEAPON_SUPERSHOTGUN, "tf_weapon_supershotgun", 5, 0.0f, 2000.0f, 0.0f, 0.0f, 100, true, 100, 2, 0, false, false, false, false, 0.0f, 0.0f},
-												  {TF_WEAPON_SUPERNAILGUN, "tf_weapon_superng", 5, 40.0f, 2000.0f, 0.0f, 0.0f, 20, true, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
+												  {TF_WEAPON_SUPERSHOTGUN, "tf_weapon_supershotgun", 5, 0.0f, 800.0f, 0.0f, 0.0f, 100, true, 100, 2, 0, false, false, false, false, 0.0f, 0.0f},
+												  {TF_WEAPON_SUPERNAILGUN, "tf_weapon_superng", 5, 40.0f, 2000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_TRANQ, "tf_weapon_tranq", 5, 0.0f, 100.0f, 0.0f, 0.0f, 10, true, 20, 1, 0, false, false, false, false, 0.0f, 0.0f},
-												  {TF_WEAPON_AUTORIFLE, "tf_weapon_autorifle", 5, 0.0f, 1000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
+												  {TF_WEAPON_AUTORIFLE, "tf_weapon_autorifle", 5, 0.0f, 300.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_AXE, "tf_weapon_axe", 5, 0.0f, 60.0f, 0.0f, 0.0f, 100, true, 100, 0, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_PL, "tf_weapon_pl", 5, 150.0f, 600.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_GL, "tf_weapon_gl", 5, 150.0f, 600.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
-												  {TF_WEAPON_SHOTGUN, "tf_weapon_shotgun", 5, 0.0f, 2000.0f, 0.0f, 0.0f, 50, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
-												  {TF_WEAPON_NAILGUN, "tf_weapon_ng", 5, 40.0f, 2000.0f, 0.0f, 0.0f, 20, true, 20, 1, 0, false, false, false, false, 0.0f, 0.0f},
-												  {TF_WEAPON_RAILGUN, "tf_weapon_railgun", 5, 80.0f, 2000.0f, 0.0f, 0.0f, 10, true, 20, 1, 0, false, false, false, false, 0.0f, 0.0f},
+												  {TF_WEAPON_SHOTGUN, "tf_weapon_shotgun", 5, 0.0f, 800.0f, 0.0f, 0.0f, 50, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
+												  {TF_WEAPON_NAILGUN, "tf_weapon_ng", 5, 40.0f, 2000.0f, 0.0f, 0.0f, 100, true, 20, 1, 0, true, false, false, false, 0.0f, 0.0f},
+												  {TF_WEAPON_RAILGUN, "tf_weapon_railgun", 5, 80.0f, 2000.0f, 0.0f, 0.0f, 10, true, 20, 1, 0, true, false, false, false, 0.0f, 0.0f},
 	/* terminator */
 	{0, "", 0, 0.0f, 0.0f, 0.0f, 0.0f, 0, true, 0, 1, 1, false, false, false, false, 0.0f, 0.0f} };
 
@@ -150,17 +150,17 @@ static bot_fire_delay_t tfc_fire_delay[] = { {TF_WEAPON_KNIFE, 0.3f, {0.0f, 0.2f
 											{TF_WEAPON_FLAMETHROWER, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
 											{TF_WEAPON_AC, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
 											{TF_WEAPON_RPG, 0.6f, {0.0f, 0.1f, 0.3f, 0.6f, 1.0f}, {0.1f, 0.2f, 0.7f, 1.0f, 2.0}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
-											{TF_WEAPON_IC, 0.6f, {1.0f, 2.0, 3.0, 4.0, 5.0}, {3.0, 4.0, 5.0, 6.0, 7.0}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+											{TF_WEAPON_IC, 0.6f, {1.0f, 2.0f, 3.0f, 4.0f, 5.0f}, {3.0, 4.0, 5.0, 6.0, 7.0}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
 											{TF_WEAPON_SUPERSHOTGUN, 0.6f, {0.0f, 0.2f, 0.5f, 0.8f, 1.0f}, {0.25f, 0.4f, 0.7f, 1.0f, 1.3f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
 											{TF_WEAPON_SUPERNAILGUN, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
-											{TF_WEAPON_TRANQ, 1.5f, {1.0f, 2.0, 3.0, 4.0, 5.0}, {3.0, 4.0, 5.0, 6.0, 7.0}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
-											{TF_WEAPON_AUTORIFLE, 0.1f, {0.0f, 0.1f, 0.2f, 0.4f, 0.6f}, {0.1f, 0.2f, 0.5f, 0.7f, 1.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+											{TF_WEAPON_TRANQ, 1.5f, {0.0f, 0.2f, 0.4f, 0.6f, 0.8f}, {3.0, 4.0, 5.0, 6.0, 7.0}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+											{TF_WEAPON_AUTORIFLE, 0.1f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.1f, 0.2f, 0.5f, 0.7f, 1.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
 											{TF_WEAPON_AXE, 0.3f, {0.0f, 0.2f, 0.3f, 0.4f, 0.6f}, {0.1f, 0.3f, 0.5f, 0.7f, 1.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
 											{TF_WEAPON_PL, 0.6f, {0.0f, 0.2f, 0.5f, 0.8f, 1.0f}, {0.25f, 0.4f, 0.7f, 1.0f, 1.3f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
 											{TF_WEAPON_GL, 0.6f, {0.0f, 0.2f, 0.5f, 0.8f, 1.0f}, {0.25f, 0.4f, 0.7f, 1.0f, 1.3f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
 											{TF_WEAPON_SHOTGUN, 0.5f, {0.0f, 0.2f, 0.4f, 0.6f, 0.8f}, {0.25f, 0.5f, 0.8f, 1.2f, 2.0}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
-											{TF_WEAPON_NAILGUN, 0.1f, {0.0f, 0.1f, 0.2f, 0.4f, 0.6f}, {0.1f, 0.2f, 0.5f, 0.7f, 1.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
-											{TF_WEAPON_RAILGUN, 0.4f, {0.0f, 0.1f, 0.2f, 0.3f, 0.4f}, {0.1f, 0.2f, 0.3f, 0.4f, 0.5f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+											{TF_WEAPON_NAILGUN, 0.1f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.1f, 0.2f, 0.5f, 0.7f, 1.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+											{TF_WEAPON_RAILGUN, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.1f, 0.2f, 0.3f, 0.4f, 0.5f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
 	/* terminator */
 	{0, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}} };
 void BotCheckTeamplay() {
@@ -435,9 +435,9 @@ void BotEnemyCheck(bot_t* pBot) {
 	// optimization - don't check for new enemies too often
 	if (pBot->f_enemy_check_time > pBot->f_think_time)
 		return;
-   pBot->f_enemy_check_time = pBot->f_think_time + 0.2f;
+	pBot->f_enemy_check_time = pBot->f_think_time + 0.2f;
 
-   // now scan the visible area around the bot for new enemies
+	// now scan the visible area around the bot for new enemies
 	edict_t* new_enemy = BotFindEnemy(pBot);
 	if (new_enemy != nullptr && new_enemy != pBot->enemy.ptr) {
 		pBot->enemy.ptr = new_enemy;
@@ -951,14 +951,14 @@ static bool BotSpyDetectCheck(bot_t* pBot, edict_t* pNewEnemy) {
 		return true;
 	}
 	// the bot has decided to target it's suspected Spy
-   if ((pNewEnemy == pBot->suspectedSpy && pBot->f_suspectSpyTime < pBot->f_think_time) || (pBot->current_team != UTIL_GetTeamColor(pNewEnemy) && pNewEnemy->v.deadflag != 5)) {
-      // keep the memory of this experience fresh
-      pBot->f_suspectSpyTime = pBot->f_think_time - 0.5f;
+	if ((pNewEnemy == pBot->suspectedSpy && pBot->f_suspectSpyTime < pBot->f_think_time) || (pBot->current_team != UTIL_GetTeamColor(pNewEnemy) && pNewEnemy->v.deadflag != 5)) {
+		// keep the memory of this experience fresh
+		pBot->f_suspectSpyTime = pBot->f_think_time - 0.5f;
 
-      return true;
-   }
+		return true;
+	}
 
-   return false;
+	return false;
 }
 
 // BotSGSpotted - This function handles the storing, and communicating
@@ -1521,10 +1521,10 @@ bool BotFireWeapon(const Vector& v_enemy, bot_t* pBot, const int weapon_choice) 
 				pBot->f_shoot_time = pBot->f_think_time + base_delay + random_float(min_delay, max_delay);
 				return true;
 			}
-         pEdict->v.button |= IN_ATTACK;           // charge the weapon
-         pBot->f_shoot_time = pBot->f_think_time; // keep charging
-         return true;
-      }
+			pEdict->v.button |= IN_ATTACK;           // charge the weapon
+			pBot->f_shoot_time = pBot->f_think_time; // keep charging
+			return true;
+		}
 
 		// are we charging the secondary fire?
 		if (pBot->f_secondary_charging > 0) {
@@ -1547,10 +1547,10 @@ bool BotFireWeapon(const Vector& v_enemy, bot_t* pBot, const int weapon_choice) 
 				*/
 				return true;
 			}
-         pEdict->v.button |= IN_ATTACK2;          // charge the weapon
-         pBot->f_shoot_time = pBot->f_think_time; // keep charging
-         return true;
-      }
+			pEdict->v.button |= IN_ATTACK2;          // charge the weapon
+			pBot->f_shoot_time = pBot->f_think_time; // keep charging
+			return true;
+		}
 
 		select_index = 0;
 		bool use_primary = false;
@@ -1779,7 +1779,7 @@ int BotNadeHandler(bot_t* pBot, bool timed, char newNadeType) {
 	// Go ahead and throw if its about to explode.
 	if (pBot->nadePrimed) {
 		const int lost_health_percent = 100 - PlayerHealthPercent(pEdict);
-		float release_time = 0.8f;
+		float release_time = 2.8f;
 
 		if (pBot->nadeType == GRENADE_MIRV)
 			release_time = 1.0f;
@@ -2237,10 +2237,10 @@ int PickRandomEnemyTeam(const int my_team) {
 
 	if (total == 1) // a common scenario
 		return teamList[0];
-   if (total > 1) // hello hunted!
-      return teamList[random_long(0, total - 1)];
+	if (total > 1) // hello hunted!
+		return teamList[random_long(0, total - 1)];
 
-   // failure shouldn't happen but let's keep an eye out for it anyway
+	// failure shouldn't happen but let's keep an eye out for it anyway
 	static short failureReported = 0;
 
 	if (failureReported == 0) {

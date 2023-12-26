@@ -99,22 +99,22 @@ static jobFunctions_struct jf[JOB_TYPE_TOTAL] = {
 // list of essential data for all known job types
 // these must be in the right order for each job to run properly
 jobList_struct jl[JOB_TYPE_TOTAL] = {
-	{ 490, "JOB_SEEK_WAYPOINT" }, { PRIORITY_MAXIMUM, "JOB_GET_UNSTUCK" }, { 0, "JOB_ROAM" }, { 380, "JOB_CHAT" },
-	{ 700, "JOB_REPORT" }, { 480, "JOB_PICKUP_ITEM" }, { 530, "JOB_PICKUP_FLAG" },
-	{ 800, "JOB_PUSH_BUTTON" }, { 650, "JOB_USE_TELEPORT" }, { 760, "JOB_MAINTAIN_OBJECT" },
-	{ 770, "JOB_BUILD_SENTRY" }, { 500, "JOB_BUILD_DISPENSER" }, { 680, "JOB_BUILD_TELEPORT" },
+	{ 500, "JOB_SEEK_WAYPOINT" }, { PRIORITY_MAXIMUM, "JOB_GET_UNSTUCK" }, { 0, "JOB_ROAM" }, { 380, "JOB_CHAT" },
+	{ 680, "JOB_REPORT" }, { 490, "JOB_PICKUP_ITEM" }, { 540, "JOB_PICKUP_FLAG" },
+	{ 800, "JOB_PUSH_BUTTON" }, { 640, "JOB_USE_TELEPORT" }, { 760, "JOB_MAINTAIN_OBJECT" },
+	{ 770, "JOB_BUILD_SENTRY" }, { 510, "JOB_BUILD_DISPENSER" }, { 670, "JOB_BUILD_TELEPORT" },
 	{ 450, "JOB_BUFF_ALLY" }, { 550, "JOB_ESCORT_ALLY" },
-	{ 470, "JOB_CALL_MEDIC" }, // this should be a higher priority than JOB_GET_HEALTH
-	{ 460, "JOB_GET_HEALTH" }, { 440, "JOB_GET_ARMOR" }, { 520, "JOB_GET_AMMO" }, { 670, "JOB_DISGUISE" },
-	{ 190, "JOB_FEIGN_AMBUSH" }, { 560, "JOB_SNIPE" }, { 250, "JOB_GUARD_WAYPOINT" }, { 610, "JOB_DEFEND_FLAG" },
-	{ 720, "JOB_GET_FLAG" }, { 780, "JOB_CAPTURE_FLAG" }, { 340, "JOB_HARRASS_DEFENSE" },
-	{ 725, "JOB_ROCKET_JUMP" }, { 730, "JOB_CONCUSSION_JUMP" },
-	{ 400, "JOB_DETPACK_WAYPOINT" }, { 540, "JOB_PIPETRAP" }, { 510, "JOB_INVESTIGATE_AREA" },
-	{ 600, "JOB_PURSUE_ENEMY" }, { 200, "JOB_PATROL_HOME" }, { 710, "JOB_SPOT_STIMULUS" },
+	{ 480, "JOB_CALL_MEDIC" }, // this should be a higher priority than JOB_GET_HEALTH
+	{ 460, "JOB_GET_HEALTH" }, { 440, "JOB_GET_ARMOR" }, { 600, "JOB_GET_AMMO" }, { 660, "JOB_DISGUISE" },
+	{ 190, "JOB_FEIGN_AMBUSH" }, { 560, "JOB_SNIPE" }, { 250, "JOB_GUARD_WAYPOINT" }, { 590, "JOB_DEFEND_FLAG" },
+	{ 710, "JOB_GET_FLAG" }, { 790, "JOB_CAPTURE_FLAG" }, { 340, "JOB_HARRASS_DEFENSE" },
+	{ 720, "JOB_ROCKET_JUMP" }, { 730, "JOB_CONCUSSION_JUMP" },
+	{ 400, "JOB_DETPACK_WAYPOINT" }, { 530, "JOB_PIPETRAP" }, { 520, "JOB_INVESTIGATE_AREA" },
+	{ 580, "JOB_PURSUE_ENEMY" }, { 200, "JOB_PATROL_HOME" }, { 700, "JOB_SPOT_STIMULUS" },
 	{ 620, "JOB_ATTACK_BREAKABLE" }, { 430, "JOB_ATTACK_TELEPORT" }, { 600, "JOB_SEEK_BACKUP" },
 	{ 300, "JOB_AVOID_ENEMY" }, { 750, "JOB_AVOID_AREA_DAMAGE" },
 	{ 690, "JOB_INFECTED_ATTACK" }, { 740, "JOB_BIN_GRENADE" },
-	{ 790, "JOB_DROWN_RECOVER" }, { 240, "JOB_MELEE_WARRIOR" }, { 210, "JOB_GRAFFITI_ARTIST" },
+	{ 780, "JOB_DROWN_RECOVER" }, { 240, "JOB_MELEE_WARRIOR" }, { 210, "JOB_GRAFFITI_ARTIST" },
 };
 
 // This function clears the specified bots job buffer, and thus should
@@ -248,8 +248,8 @@ bool SubmitNewJob(bot_t* pBot, const int newJobType, job_struct* newJob) {
 		if (newJobType == pBot->jobBlacklist[i].type) {
 			if (pBot->jobBlacklist[i].f_timeOut >= pBot->f_think_time)
 				return false;
-         pBot->jobBlacklist[i].type = JOB_NONE;
-         // job has timed out de-blacklist it
+			pBot->jobBlacklist[i].type = JOB_NONE;
+			// job has timed out de-blacklist it
 		}
 	}
 
@@ -523,6 +523,7 @@ void BotJobThink(bot_t* pBot) {
 	case TFC_CLASS_CIVILIAN:
 		break;
 	case TFC_CLASS_SCOUT:
+		UTIL_SelectItem(pBot->pEdict, "tf_weapon_shotgun");
 		//FakeClientCommand(pBot->pEdict, "slot3", "+attack; wait; wait", "-attack");
 		break;
 	case TFC_CLASS_SNIPER:
@@ -554,9 +555,11 @@ void BotJobThink(bot_t* pBot) {
 	case TFC_CLASS_PYRO:
 		break;
 	case TFC_CLASS_MEDIC:
+		UTIL_SelectItem(pBot->pEdict, "tf_weapon_supershotgun");
 		// FakeClientCommand(pBot->pEdict, "slot3", "+attack; wait; wait", "-attack");
 		break;
 	case TFC_CLASS_SPY:
+		UTIL_SelectItem(pBot->pEdict, "tf_weapon_supershotgun");
 		// FakeClientCommand(pBot->pEdict, "slot3", "+attack; wait; wait", "-attack");
 		// time for a disguise?
 		if (pBot->enemy.f_lastSeen + 2.0f < pBot->f_think_time) {
@@ -589,6 +592,7 @@ void BotJobThink(bot_t* pBot) {
 		break;
 	case TFC_CLASS_ENGINEER:
 		BotEngineerThink(pBot);
+		UTIL_SelectItem(pBot->pEdict, "tf_weapon_supershotgun");
 		// FakeClientCommand(pBot->pEdict, "slot3", "+attack; wait; wait", "-attack");
 		break;
 	default:

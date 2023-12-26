@@ -3,6 +3,32 @@
 ==============================
 
 --------------------------------------------------------------------------------
+Version 0.87
+??-??-2024
+Updated by RoboCop
+--------------------------------------------------------------------------------
+
+- Scouts, Spies, Medics and Engineer bots will not use their lame default weapons when been spawned
+
+- Bots will use Nail Guns for destroying SG turrets from a long distance
+
+TODO List:-
+
+>> Complete 'botdontmove' in order for "GolfBots" to stay stationary
+
+>> To allow medic bots to heal more often, but not allow `JOB_BUFF_ALLY` to consume too many cells as engineers
+
+>> To allow soldier bots to Rocket Jump easily
+
+>> Fix bots navigation when shot by enemies as they sometimes cannot seem to detect where damage is coming from
+
+>> To prevent bots from shooting at spy corpses too long as, they aren't aware that a player switched teams as enemy spy
+
+>> Allow bots to toss grenades at a higher elevation angle and from a lower distance as their target aim is too far
+
+>> BONUS: Maybe add a feature for bots to have experience and wisdom or learned data in order to be a bit more human
+
+--------------------------------------------------------------------------------
 Version 0.85
 December-23-2023
 Updated by RoboCop

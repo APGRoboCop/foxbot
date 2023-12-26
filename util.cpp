@@ -115,9 +115,9 @@ bool VectorsNearerThan(const Vector& r_vOne, const Vector& r_vTwo, double value)
 	// are wider/longer than they are tall
 	if (temp > value)
 		return false;
-   temp += static_cast<double>(distance.z * distance.z);
+	temp += static_cast<double>(distance.z * distance.z);
 
-   // final check(3 dimensional)
+	// final check(3 dimensional)
 	if (temp < value)
 		return true;
 
@@ -451,7 +451,7 @@ bool FInViewCone(const Vector& r_pOrigin, const edict_t* pEdict) {
 
 	if (flDot > 0.50f) // 60 degree field of view
 		return true;
-   return false;
+	return false;
 }
 
 // This function is a variant of FInViewCone().  It returns a measure of
@@ -527,8 +527,8 @@ bool FVisible(const Vector& r_vecOrigin, edict_t* pEdict) {
 
 	if (tr.flFraction < 1.0f)
 		return false; // Line of sight is not established
-   return true;
-   // line of sight is valid.
+	return true;
+	// line of sight is valid.
 }
 
 Vector GetGunPosition(const edict_t* pEdict) { return pEdict->v.origin + pEdict->v.view_ofs; }
@@ -689,10 +689,10 @@ static void UTIL_FindFoxbotPath() {
 	static bool dir_path_checked = false;
 	if (dir_path_checked)
 		return;
-   dir_path_checked = true;
+	dir_path_checked = true;
 
-   // find out where the foxbot directory is, by trying to open and
-	// close the foxbot.cfg file just once
+	// find out where the foxbot directory is, by trying to open and
+	 // close the foxbot.cfg file just once
 #ifndef __linux__ // must be a Windows machine
 	if (std::strcmp(foxbot_path, "") == 0) {
 		// try the addons directory first(for Foxbot 0.76 and newer)
