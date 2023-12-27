@@ -143,7 +143,7 @@ int UTIL_SentryLevel(edict_t* pEntity)
 Vector UTIL_VecToAngles(const Vector& vec) {
 	float rgflVecOut[3];
 	VEC_TO_ANGLES(vec, rgflVecOut);
-	return Vector(rgflVecOut);
+	return {rgflVecOut};
 }
 
 // Overloaded to add IGNORE_GLASS

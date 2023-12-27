@@ -2616,7 +2616,7 @@ int JobPipetrap(bot_t* pBot) {
 				++pipeBombTally;
 		}
 
-		if (pipeBombTally < 4)
+		if (pipeBombTally < 8)
 			pBot->pEdict->v.button |= IN_ATTACK;
 		else {
 			pBot->pEdict->v.button |= IN_RELOAD;
@@ -2639,7 +2639,7 @@ int JobPipetrap(bot_t* pBot) {
 				++pipeBombTally;
 		}
 
-		if (pipeBombTally < 4) {
+		if (pipeBombTally < 8) {
 			job_ptr->phase = 0;
 			return JOB_UNDERWAY;
 		}

@@ -25,7 +25,9 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
-#define NADEVELOCITY 650 // DrEvil #define
+enum {
+   NADEVELOCITY = 650 // DrEvil #define
+};
 
 #include "extdll.h"
 #include "util.h"
@@ -61,7 +63,7 @@ extern int bot_aim_per_skill; // accuracy modifier for bots from skill 1 downwar
 
 // accuracy levels for each bot skill level
 static float bot_max_inaccuracy[5] = { 20.0f, 30.0f, 40.0f, 50.0f, 60.0f };
-static float bot_snipe_max_inaccuracy[5] = { 18.0f, 27.0f, 36.0f, 45.0f, 54.0f };
+static float bot_snipe_max_inaccuracy[5] = { 19.0f, 28.0f, 37.0f, 46.0f, 55.0f };
 
 extern bool is_team[4];
 extern int team_allies[4];
@@ -127,7 +129,7 @@ static bot_weapon_select_t tfc_weapon_select[] = { {TF_WEAPON_KNIFE, "tf_weapon_
 												  {TF_WEAPON_MEDIKIT, "tf_weapon_medikit", 5, 0.0f, 60.0f, 0.0f, 0.0f, 100, true, 100, 0, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_SNIPERRIFLE, "tf_weapon_sniperrifle", 5, 300.0f, 4000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, true, false, 2.5, 0.0f},
 												  {TF_WEAPON_FLAMETHROWER, "tf_weapon_flamethrower", 5, 0.0f, 200.0f, 0.0f, 0.0f, 100, false, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
-												  {TF_WEAPON_AC, "tf_weapon_ac", 5, 0.0f, 800.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
+												  {TF_WEAPON_AC, "tf_weapon_ac", 5, 0.0f, 2000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_RPG, "tf_weapon_rpg", 5, 150.0f, 3000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_IC, "tf_weapon_ic", 5, 150.0f, 2000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_SUPERSHOTGUN, "tf_weapon_supershotgun", 5, 0.0f, 800.0f, 0.0f, 0.0f, 100, true, 100, 2, 0, false, false, false, false, 0.0f, 0.0f},
@@ -225,7 +227,7 @@ void BotUpdateSkillInaccuracy() {
 
 	// sniper rifle inaccuracy starts out a bit lower than with other weapons
 	// but then scales up in the same way
-	bot_snipe_max_inaccuracy[0] = 0.75f * bot_max_inaccuracy[0];
+	bot_snipe_max_inaccuracy[0] = 0.8f * bot_max_inaccuracy[0];
 	bot_snipe_max_inaccuracy[1] = bot_snipe_max_inaccuracy[0] + f_aim_per_skill;
 	bot_snipe_max_inaccuracy[2] = bot_snipe_max_inaccuracy[1] + f_aim_per_skill;
 	bot_snipe_max_inaccuracy[3] = bot_snipe_max_inaccuracy[2] + f_aim_per_skill;

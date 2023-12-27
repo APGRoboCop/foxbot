@@ -12,13 +12,13 @@ Updated by RoboCop
 
 - Bots will use Nail Guns for destroying SG turrets from a long distance
 
+- Soldier bots now Rocket Jump slightly better, and for Medics and Scouts to Conc Jump
+
 TODO List:-
 
 >> Complete 'botdontmove' in order for "GolfBots" to stay stationary
 
 >> To allow medic bots to heal more often, but not allow `JOB_BUFF_ALLY` to consume too many cells as engineers
-
->> To allow soldier bots to Rocket Jump easily
 
 >> Fix bots navigation when shot by enemies as they sometimes cannot seem to detect where damage is coming from
 
