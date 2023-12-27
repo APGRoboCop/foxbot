@@ -3927,7 +3927,6 @@ static void BotSenseEnvironment(bot_t* pBot) {
 // This function handles basic combat actions, such as pointing the active
 // weapon at the bots enemy(if it has one) and pulling the trigger and/or
 // throwing grenades.  It does not handle combat movement.
-// but not interfere with their tossing nade aim - [APG]RoboCop[CL]
 static void BotFight(bot_t* pBot) {
 
 	const edict_t* pEdict = pBot->pEdict;
@@ -3937,18 +3936,19 @@ static void BotFight(bot_t* pBot) {
 		const float distance = (pent->v.origin - pEdict->v.origin).Length();
 		// Calculate the distance between the bot and its enemy
 		//const float distance = (pent->v.origin - pEdict->v.origin).Length();
-		// If the bot is less than 800 units away from its enemy...
-		if (distance <= 800.0f)
+		// If the bot is less than 500 units away from its enemy...
+		if (distance <= 500.0f)
 		{
 			// DrEvils Nade update, or toss a nade if threatlevel high enuff.
-			if (pBot->lastEnemySentryGun && pBot->enemy.ptr == pBot->lastEnemySentryGun && !FNullEnt(pBot->lastEnemySentryGun)) {
+			if (pBot->lastEnemySentryGun && pBot->pEdict->v.playerclass != TFC_CLASS_SCOUT 
+				&& pBot->enemy.ptr == pBot->lastEnemySentryGun && !FNullEnt(pBot->lastEnemySentryGun)) {
 				BotNadeHandler(pBot, false, GRENADE_STATIONARY);
 			}
 			else if (pBot->enemy.ptr != nullptr && pBot->enemy.f_firstSeen + 1.0f < pBot->f_think_time && BotAssessThreatLevel(pBot) > 50) {
 				BotNadeHandler(pBot, true, GRENADE_RANDOM);
 			}
 		}
-		else if (distance > 800.0f) {
+		else if (distance > 500.0f) {
 			if (pBot->pEdict->v.playerclass == TFC_CLASS_SCOUT && pBot->current_weapon.iId == TF_WEAPON_NAILGUN) {
 				// Check if the enemy is a Sentry Gun
 				if (pBot->lastEnemySentryGun && pBot->enemy.ptr == pBot->lastEnemySentryGun && !FNullEnt(pBot->lastEnemySentryGun)) {

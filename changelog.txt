@@ -14,6 +14,10 @@ Updated by RoboCop
 
 - Soldier bots now Rocket Jump slightly better, and for Medics and Scouts to Conc Jump
 
+- HW bots Minigun accuracy reduced to give them more recoil and less aimbot
+
+- Sniper bot's average accuracy reduced to avoid less aimbot shoots and headshots
+
 TODO List:-
 
 >> Complete 'botdontmove' in order for "GolfBots" to stay stationary
@@ -23,6 +27,8 @@ TODO List:-
 >> Fix bots navigation when shot by enemies as they sometimes cannot seem to detect where damage is coming from
 
 >> To prevent bots from shooting at spy corpses too long as, they aren't aware that a player switched teams as enemy spy
+
+>> To improve the pipebomb laying trap pattern and to plant at the flag
 
 >> Allow bots to toss grenades at a higher elevation angle and from a lower distance as their target aim is too far
 

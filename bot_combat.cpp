@@ -137,8 +137,8 @@ static bot_weapon_select_t tfc_weapon_select[] = { {TF_WEAPON_KNIFE, "tf_weapon_
 												  {TF_WEAPON_TRANQ, "tf_weapon_tranq", 5, 0.0f, 100.0f, 0.0f, 0.0f, 10, true, 20, 1, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_AUTORIFLE, "tf_weapon_autorifle", 5, 0.0f, 300.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_AXE, "tf_weapon_axe", 5, 0.0f, 60.0f, 0.0f, 0.0f, 100, true, 100, 0, 0, false, false, false, false, 0.0f, 0.0f},
-												  {TF_WEAPON_PL, "tf_weapon_pl", 5, 150.0f, 600.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
-												  {TF_WEAPON_GL, "tf_weapon_gl", 5, 150.0f, 600.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
+												  {TF_WEAPON_PL, "tf_weapon_pl", 5, 150.0f, 400.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
+												  {TF_WEAPON_GL, "tf_weapon_gl", 5, 150.0f, 400.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_SHOTGUN, "tf_weapon_shotgun", 5, 0.0f, 800.0f, 0.0f, 0.0f, 50, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_NAILGUN, "tf_weapon_ng", 5, 40.0f, 2000.0f, 0.0f, 0.0f, 100, true, 20, 1, 0, true, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_RAILGUN, "tf_weapon_railgun", 5, 80.0f, 2000.0f, 0.0f, 0.0f, 10, true, 20, 1, 0, true, false, false, false, 0.0f, 0.0f},
@@ -156,12 +156,12 @@ static bot_fire_delay_t tfc_fire_delay[] = { {TF_WEAPON_KNIFE, 0.3f, {0.0f, 0.2f
 											{TF_WEAPON_SUPERSHOTGUN, 0.6f, {0.0f, 0.2f, 0.5f, 0.8f, 1.0f}, {0.25f, 0.4f, 0.7f, 1.0f, 1.3f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
 											{TF_WEAPON_SUPERNAILGUN, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
 											{TF_WEAPON_TRANQ, 1.5f, {0.0f, 0.2f, 0.4f, 0.6f, 0.8f}, {3.0, 4.0, 5.0, 6.0, 7.0}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
-											{TF_WEAPON_AUTORIFLE, 0.1f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.1f, 0.2f, 0.5f, 0.7f, 1.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+											{TF_WEAPON_AUTORIFLE, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.1f, 0.2f, 0.5f, 0.7f, 1.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
 											{TF_WEAPON_AXE, 0.3f, {0.0f, 0.2f, 0.3f, 0.4f, 0.6f}, {0.1f, 0.3f, 0.5f, 0.7f, 1.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
 											{TF_WEAPON_PL, 0.6f, {0.0f, 0.2f, 0.5f, 0.8f, 1.0f}, {0.25f, 0.4f, 0.7f, 1.0f, 1.3f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
 											{TF_WEAPON_GL, 0.6f, {0.0f, 0.2f, 0.5f, 0.8f, 1.0f}, {0.25f, 0.4f, 0.7f, 1.0f, 1.3f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
 											{TF_WEAPON_SHOTGUN, 0.5f, {0.0f, 0.2f, 0.4f, 0.6f, 0.8f}, {0.25f, 0.5f, 0.8f, 1.2f, 2.0}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
-											{TF_WEAPON_NAILGUN, 0.1f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.1f, 0.2f, 0.5f, 0.7f, 1.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+											{TF_WEAPON_NAILGUN, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.1f, 0.2f, 0.5f, 0.7f, 1.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
 											{TF_WEAPON_RAILGUN, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.1f, 0.2f, 0.3f, 0.4f, 0.5f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
 	/* terminator */
 	{0, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}} };
@@ -227,7 +227,7 @@ void BotUpdateSkillInaccuracy() {
 
 	// sniper rifle inaccuracy starts out a bit lower than with other weapons
 	// but then scales up in the same way
-	bot_snipe_max_inaccuracy[0] = 0.8f * bot_max_inaccuracy[0];
+	bot_snipe_max_inaccuracy[0] = 0.9f * bot_max_inaccuracy[0];
 	bot_snipe_max_inaccuracy[1] = bot_snipe_max_inaccuracy[0] + f_aim_per_skill;
 	bot_snipe_max_inaccuracy[2] = bot_snipe_max_inaccuracy[1] + f_aim_per_skill;
 	bot_snipe_max_inaccuracy[3] = bot_snipe_max_inaccuracy[2] + f_aim_per_skill;
@@ -1271,12 +1271,12 @@ static Vector BotBodyTarget(const edict_t* pBotEnemy, bot_t* pBot) {
 			// Make the bot less accurate based on it's targets speed.
 			// ignore the bots own speed - it's sniping!
 			const float enemy_velocity = pBot->enemy.ptr->v.velocity.Length();
-			float aim_error = random_float(0.0f, enemy_velocity) * 0.05f;
+			float aim_error = random_float(0.0f, enemy_velocity) * 0.5f;
 
 			// Make the bot less accurate if the enemy was just seen
 			if (pBot->enemy.f_firstSeen + 2.0f > pBot->f_think_time)
 				aim_error += static_cast<float>(pBot->bot_skill + 1) * random_float(5.0f, 20.0f);
-
+		   
 			const float aim_offset = bot_snipe_max_inaccuracy[pBot->bot_skill] + aim_error;
 			switch (pBot->bot_skill) {
 			case 0:
@@ -1310,16 +1310,26 @@ static Vector BotBodyTarget(const edict_t* pBotEnemy, bot_t* pBot) {
 		{
 			// Make the bot less accurate based on it's own speed.
 			const float my_velocity = pBot->pEdict->v.velocity.Length();
-			float aim_error = random_float(0.0f, my_velocity) * 0.05f;
+			float aim_error = random_float(0.0f, my_velocity) * 0.1f;
 
 			// Make the bot less accurate based on it's targets speed.
 			const float enemy_velocity = pBot->enemy.ptr->v.velocity.Length();
-			aim_error += random_float(0.0f, enemy_velocity) * 0.05f;
+			aim_error += random_float(0.0f, enemy_velocity) * 0.1f;
 
 			// Make the bot less accurate if the enemy was just seen
 			if (pBot->enemy.f_firstSeen + 2.0f > pBot->f_think_time)
 				aim_error += static_cast<float>(pBot->bot_skill + 1) * random_float(5.0f, 20.0f);
 
+			// Add condition to check if bot's class is HWGuy [APG]RoboCop[CL]
+			if (mod_id == TFC_DLL && pBot->pEdict->v.playerclass == TFC_CLASS_HWGUY && pBot->current_weapon.iId == TF_WEAPON_AC) {
+				// Increase aim_error value to decrease accuracy
+				aim_error += 20.0f; 
+			}
+			// Make nailguns as accurate as possible
+			else if (mod_id == TFC_DLL && pBot->current_weapon.iId == TF_WEAPON_SUPERNAILGUN || TF_WEAPON_NAILGUN) {
+					aim_error += 0.0f;
+			}
+		   
 			const float aim_offset = bot_max_inaccuracy[pBot->bot_skill] + aim_error;
 			switch (pBot->bot_skill) {
 			case 0:
@@ -1450,9 +1460,9 @@ bool BotFireWeapon(const Vector& v_enemy, bot_t* pBot, const int weapon_choice) 
 
 		double ang = (32 * static_cast<double>(pBot->bot_skill + 16)) / static_cast<double>(f_distance);
 		ang = std::tan(ang); // Better to use std::tan? [APG]RoboCop[CL]
-		ang = ang * 180;
+		ang = ang * 180.0;
 
-		if (diff < 0)
+		if (diff < 0.0)
 			diff = -diff;
 
 		/*char msg[512];
@@ -1467,22 +1477,22 @@ bool BotFireWeapon(const Vector& v_enemy, bot_t* pBot, const int weapon_choice) 
 
 	if (pEdict->v.playerclass == TFC_CLASS_SNIPER && mod_id == TFC_DLL && (pEdict->v.waterlevel >= WL_WAIST_IN_WATER || pEdict->v.movetype == MOVETYPE_FLY) &&
 		(!((pEdict->v.button & IN_ATTACK) == IN_ATTACK && pBot->current_weapon.iId == TF_WEAPON_SNIPERRIFLE) || pEdict->v.waterlevel >= WL_WAIST_IN_WATER)) {
-		distance = 100; // use autorifle when running
+		distance = 100.0f; // use autorifle when running
 	}
 	else {
-		if (pEdict->v.playerclass == TFC_CLASS_SNIPER && pBot->current_weapon.iId == TF_WEAPON_SNIPERRIFLE && pBot->enemy.ptr != nullptr && mod_id == TFC_DLL && distance > 300)
+		if (pEdict->v.playerclass == TFC_CLASS_SNIPER && pBot->current_weapon.iId == TF_WEAPON_SNIPERRIFLE && pBot->enemy.ptr != nullptr && mod_id == TFC_DLL && distance > 300.0f)
 			return true;
 	}
 
 	// demoman grenade launcher height restriction :D
-	if (pEdict->v.playerclass == TFC_CLASS_DEMOMAN && mod_id == TFC_DLL && distance < 900) {
+	if (pEdict->v.playerclass == TFC_CLASS_DEMOMAN && mod_id == TFC_DLL && distance < 900.0f) {
 		if (pBot->enemy.ptr != nullptr) {
 			// z should be used as float not int? [APG]RoboCop[CL]
 			const float z = pBot->enemy.ptr->v.origin.z - pEdict->v.origin.z;
-			if (z > 0 && z < 300 && distance < 901)
+			if (z > 0.0f && z < 300.0f && distance < 901.0f)
 				distance = (pBot->enemy.ptr->v.origin - pEdict->v.origin).Length2D() + z * 3;
-			else if (z > 300 && distance < 901)
-				distance = 901;
+			else if (z > 300.0f && distance < 901.0f)
+				distance = 901.0f;
 		}
 	}
 
@@ -1802,7 +1812,7 @@ int BotNadeHandler(bot_t* pBot, bool timed, char newNadeType) {
 	// Elevation check, try to throw up to ledges better.
 	if (pBot->enemy.ptr) {
 		zDiff = pBot->enemy.ptr->v.origin.z - pEdict->v.origin.z;
-		if (zDiff > 100)
+		if (zDiff > 100.0f)
 			timed = true;
 	}
 
@@ -1821,10 +1831,10 @@ int BotNadeHandler(bot_t* pBot, bool timed, char newNadeType) {
 
 		// If target is rapidly(ish) moving away from me, go ahead and throw.
 		// Uses a timer delay between checks
-		if (pBot->lastDistanceCheck <= pBot->f_think_time && (pBot->lastDistance > pBot->enemy.f_seenDistance + 375 && pBot->enemy.f_seenDistance > 500)) {
+		if (pBot->lastDistanceCheck <= pBot->f_think_time && (pBot->lastDistance > pBot->enemy.f_seenDistance + 375.0f && pBot->enemy.f_seenDistance > 500.0f)) {
 			toss = true;
 			pBot->tossNade = 1;
-			pBot->lastDistanceCheck = pBot->f_think_time + 1;
+			pBot->lastDistanceCheck = pBot->f_think_time + 1.0f;
 			// UTIL_HostSay(pEdict, 0, "Get over here!!");
 		}
 

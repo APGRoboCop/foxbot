@@ -1773,7 +1773,7 @@ int JobDisguise(bot_t* pBot) {
 	// is it time to pick a new disguise?
 	if (pBot->disguise_state == DISGUISE_NONE) {
 		static const int disguiseList[] = {
-			2, 3, 4, 7, 8
+			1, 2, 3, 4, 5, 6, 7, 8
 		};
 		const int new_disguise = disguiseList[random_long(0, 6)];
 
@@ -2556,6 +2556,7 @@ int JobDetpackWaypoint(bot_t* pBot) {
 }
 
 // This function handles bot behaviour for the JOB_PIPETRAP job.
+// TODO: To improve the pipebomb laying trap pattern [APG]RoboCop[CL]
 int JobPipetrap(bot_t* pBot) {
 	job_struct* job_ptr = &pBot->job[pBot->currentJob];
 
@@ -2621,7 +2622,7 @@ int JobPipetrap(bot_t* pBot) {
 		else {
 			pBot->pEdict->v.button |= IN_RELOAD;
 			job_ptr->phase = 3;
-			job_ptr->phase_timer = pBot->f_think_time + random_float(180.0f, 300.0f);
+			job_ptr->phase_timer = pBot->f_think_time + random_float(10.0f, 30.0f);
 		}
 	}
 
