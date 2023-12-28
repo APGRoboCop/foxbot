@@ -682,6 +682,15 @@ int assess_JobPipetrap(const bot_t* pBot, const job_struct& r_job) {
 	if (!WaypointAvailable(r_job.waypoint, pBot->current_team) || WaypointRouteFromTo(pBot->current_wp, r_job.waypoint, pBot->current_team) == -1)
 		return PRIORITY_NONE;
 
+	// find the enemy flag
+	const edict_t* pentFlag = FIND_ENTITY_BY_CLASSNAME(nullptr, "item_tfgoal");
+	if (pentFlag != nullptr && !FNullEnt(pentFlag)) {
+		// calculate the distance between the waypoint and the flag
+		const float distance = (waypoints[r_job.waypoint].origin - pentFlag->v.origin).Length();
+		// increase the priority if the distance is below a certain threshold
+		if (distance < 500.0f)
+			return jl[JOB_PIPETRAP].basePriority * 2;
+	}
 	return jl[JOB_PIPETRAP].basePriority;
 }
 

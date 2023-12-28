@@ -25,9 +25,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
-enum {
-   NADEVELOCITY = 650 // DrEvil #define
-};
+#define NADEVELOCITY 650 // DrEvil #define
 
 #include "extdll.h"
 #include "util.h"
@@ -137,8 +135,8 @@ static bot_weapon_select_t tfc_weapon_select[] = { {TF_WEAPON_KNIFE, "tf_weapon_
 												  {TF_WEAPON_TRANQ, "tf_weapon_tranq", 5, 0.0f, 100.0f, 0.0f, 0.0f, 10, true, 20, 1, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_AUTORIFLE, "tf_weapon_autorifle", 5, 0.0f, 300.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_AXE, "tf_weapon_axe", 5, 0.0f, 60.0f, 0.0f, 0.0f, 100, true, 100, 0, 0, false, false, false, false, 0.0f, 0.0f},
-												  {TF_WEAPON_PL, "tf_weapon_pl", 5, 150.0f, 400.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
-												  {TF_WEAPON_GL, "tf_weapon_gl", 5, 150.0f, 400.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
+												  {TF_WEAPON_PL, "tf_weapon_pl", 5, 150.0f, 500.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
+												  {TF_WEAPON_GL, "tf_weapon_gl", 5, 150.0f, 500.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_SHOTGUN, "tf_weapon_shotgun", 5, 0.0f, 800.0f, 0.0f, 0.0f, 50, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_NAILGUN, "tf_weapon_ng", 5, 40.0f, 2000.0f, 0.0f, 0.0f, 100, true, 20, 1, 0, true, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_RAILGUN, "tf_weapon_railgun", 5, 80.0f, 2000.0f, 0.0f, 0.0f, 10, true, 20, 1, 0, true, false, false, false, 0.0f, 0.0f},
@@ -1271,11 +1269,11 @@ static Vector BotBodyTarget(const edict_t* pBotEnemy, bot_t* pBot) {
 			// Make the bot less accurate based on it's targets speed.
 			// ignore the bots own speed - it's sniping!
 			const float enemy_velocity = pBot->enemy.ptr->v.velocity.Length();
-			float aim_error = random_float(0.0f, enemy_velocity) * 0.5f;
+			float aim_error = random_float(0.0f, enemy_velocity) * 0.15f;
 
 			// Make the bot less accurate if the enemy was just seen
 			if (pBot->enemy.f_firstSeen + 2.0f > pBot->f_think_time)
-				aim_error += static_cast<float>(pBot->bot_skill + 1) * random_float(5.0f, 20.0f);
+				aim_error += static_cast<float>(pBot->bot_skill + 1) * random_float(5.0f, 10.0f);
 		   
 			const float aim_offset = bot_snipe_max_inaccuracy[pBot->bot_skill] + aim_error;
 			switch (pBot->bot_skill) {

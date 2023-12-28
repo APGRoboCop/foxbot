@@ -2562,7 +2562,8 @@ int JobPipetrap(bot_t* pBot) {
 
 	// phase zero - get to the pipetrap waypoint
 	if (job_ptr->phase == 0) {
-		if (pBot->current_wp == job_ptr->waypoint && VectorsNearerThan(waypoints[pBot->current_wp].origin, pBot->pEdict->v.origin, 20.0)) {
+		if (pBot->current_wp == job_ptr->waypoint
+			&& VectorsNearerThan(waypoints[pBot->current_wp].origin, pBot->pEdict->v.origin, 20.0)) {
 			pBot->f_move_speed = 0.0f;
 			pBot->f_side_speed = 0.0f;
 
@@ -2616,7 +2617,16 @@ int JobPipetrap(bot_t* pBot) {
 			if (pBot->pEdict == pent->v.owner)
 				++pipeBombTally;
 		}
+		// find the team's flag
+      const edict_t* pentFlag = FIND_ENTITY_BY_CLASSNAME(nullptr, "item_tfgoal");
+		if (pentFlag != nullptr && !FNullEnt(pentFlag) && pBot->mission == ROLE_DEFENDER) {
+			// calculate a location near the flag to place the pipebomb
+         const Vector v_flag = pentFlag->v.origin;
+         const Vector v_nearFlag = v_flag + Vector(random_float(-100.0f, 100.0f), random_float(-100.0f, 100.0f), 0);
 
+		   // set the bot's aim to the calculated location
+			BotSetFacing(pBot, v_nearFlag);
+		}
 		if (pipeBombTally < 8)
 			pBot->pEdict->v.button |= IN_ATTACK;
 		else {
