@@ -12,11 +12,17 @@ Updated by RoboCop
 
 - Bots will use Nail Guns for destroying SG turrets from a long distance
 
-- Soldier bots now Rocket Jump slightly better, and for Medics and Scouts to Conc Jump
+- Soldier bots should now Rocket Jump slightly better, and for Medics and Scouts to Conc Jump
 
 - HW bots Minigun accuracy reduced to give them more recoil and less aimbot
 
 - Sniper bot's average accuracy reduced to avoid less aimbot shoots and headshots
+
+- Nailguns and Super Nailguns should now be very accurate as those guns are meant for destroying SG Turrets
+
+- Repaired the rogue pathways in phantom, rock2 and schtop
+
+- Added some Rocket/Conc jumps for rock2 and ravelin
 
 TODO List:-
 

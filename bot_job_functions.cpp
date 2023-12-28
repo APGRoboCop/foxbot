@@ -2376,6 +2376,11 @@ int JobRocketJump(bot_t* pBot) {
 
 	// phase 3 - gliding towards the RJ waypoint
 	if (job_ptr->phase == 3) {
+		// Prevent strafing
+		pBot->f_side_speed = 0.0f;
+		// Prevent turning too much
+		pBot->side_direction = true;  // or false, depending on the desired direction
+	   
 		//	UTIL_BotLogPrintf("%s: Gliding, velocity Z %f, time %f\n",
 		//		pBot->name, pBot->pEdict->v.velocity.z, pBot->f_think_time);
 
@@ -2412,9 +2417,9 @@ int JobConcussionJump(bot_t* pBot) {
 	// phase 1 - countdown till the grenade goes off - then jump
 	if (job_ptr->phase == 1) {
 		const float timeToDet = 4.0f - (pBot->f_think_time - pBot->primeTime);
-
+	   
 		// make sure the bot stops hopping about to evade enemies during this job
-		pBot->f_dontEvadeTime = pBot->f_think_time + 1.0f;
+		pBot->f_dontEvadeTime = pBot->f_think_time + 4.0f; // Changed from 1.0f to 4.0f [APG]RoboCop[CL]
 
 		// aim for the RJ waypoint at the last moment
 		if (timeToDet < 0.8f)
@@ -2433,6 +2438,7 @@ int JobConcussionJump(bot_t* pBot) {
 
 			if (timeToDet <= 0.2f) {
 				pBot->pEdict->v.button |= IN_JUMP;
+				// Prevent strafing
 				pBot->f_side_speed = 0.0f;
 
 				job_ptr->phase = 2;
