@@ -4089,7 +4089,7 @@ int AreaInsideClosest(const edict_t* pEntity) {
 			// we want the mid point between hz and lz.. that will be
 			// our distance..
 			// nearly forgot, the distance revolves around the player!
-			const float a = fabsf((hz - lz) / 2 + lz - pEntity->v.origin.z);
+			const float a = std::fabsf((hz - lz) / 2 + lz - pEntity->v.origin.z);
 			if (a < distance) {
 				distance = a;
 				index = i;

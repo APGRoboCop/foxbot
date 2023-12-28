@@ -1677,7 +1677,7 @@ void ClientCommand(edict_t* pEntity) {
 					CLIENT_PRINTF(pEntity, print_console, "Turn waypoints on so proper entities can be cached. Then retry botcam.");
 				else {
 					KillCamera(pEntity);
-					CreateCamera(pEntity, pBot);
+					CreateCamera(pEntity, pBot);//pEntity and pBot should be swapped? [APG]RoboCop[CL]
 					botcamEnabled = true;
 				}
 			}

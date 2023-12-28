@@ -898,7 +898,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 	}
 	else // make each bot have the same personality traits
 	{
-		pBot->trait.aggression = 75;
+		pBot->trait.aggression = 500;
 		pBot->trait.fairplay = 600;
 		pBot->trait.faveClass = 3;
 		pBot->trait.health = 50;
@@ -3928,7 +3928,6 @@ static void BotSenseEnvironment(bot_t* pBot) {
 // weapon at the bots enemy(if it has one) and pulling the trigger and/or
 // throwing grenades.  It does not handle combat movement.
 static void BotFight(bot_t* pBot) {
-
 	const edict_t* pEdict = pBot->pEdict;
 	const edict_t* pent = pBot->enemy.ptr; // assign the enemy entity to pent
 
@@ -3940,7 +3939,7 @@ static void BotFight(bot_t* pBot) {
 		if (distance <= 500.0f)
 		{
 			// DrEvils Nade update, or toss a nade if threatlevel high enuff.
-			if (pBot->lastEnemySentryGun && pBot->pEdict->v.playerclass != TFC_CLASS_SCOUT 
+			if (pBot->lastEnemySentryGun && pBot->pEdict->v.playerclass != TFC_CLASS_SCOUT
 				&& pBot->enemy.ptr == pBot->lastEnemySentryGun && !FNullEnt(pBot->lastEnemySentryGun)) {
 				BotNadeHandler(pBot, false, GRENADE_STATIONARY);
 			}
@@ -3949,21 +3948,6 @@ static void BotFight(bot_t* pBot) {
 			}
 		}
 		else if (distance > 500.0f) {
-			if (pBot->pEdict->v.playerclass == TFC_CLASS_SCOUT && pBot->current_weapon.iId == TF_WEAPON_NAILGUN) {
-				// Check if the enemy is a Sentry Gun
-				if (pBot->lastEnemySentryGun && pBot->enemy.ptr == pBot->lastEnemySentryGun && !FNullEnt(pBot->lastEnemySentryGun)) {
-					// Use the nailgun
-					UTIL_SelectItem(pBot->pEdict, "tf_weapon_nailgun");
-					//FakeClientCommand(pBot->pEdict, "slot4", "+attack; wait; wait", "-attack");
-				}
-			}
-			if (pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC && pBot->current_weapon.iId == TF_WEAPON_SUPERNAILGUN) {
-				if (pBot->lastEnemySentryGun && pBot->enemy.ptr == pBot->lastEnemySentryGun && !FNullEnt(pBot->lastEnemySentryGun)) {
-					// Use the super nailgun
-					UTIL_SelectItem(pBot->pEdict, "tf_weapon_superng");
-					//FakeClientCommand(pBot->pEdict, "slot4", "+attack; wait; wait", "-attack");
-				}
-			}
 			if (pBot->pEdict->v.playerclass == TFC_CLASS_SOLDIER && pBot->current_weapon.iId == TF_WEAPON_RPG) {
 				if (pBot->lastEnemySentryGun && pBot->enemy.ptr == pBot->lastEnemySentryGun && !FNullEnt(pBot->lastEnemySentryGun)) {
 					// Use the RPG
@@ -3979,15 +3963,32 @@ static void BotFight(bot_t* pBot) {
 				}
 			}
 			if (pBot->pEdict->v.playerclass == TFC_CLASS_SPY && pBot->current_weapon.iId == TF_WEAPON_NAILGUN) {
-			   if (pBot->lastEnemySentryGun && pBot->enemy.ptr == pBot->lastEnemySentryGun && !FNullEnt(pBot->lastEnemySentryGun)) {
-			      // Use the nailgun
-			      UTIL_SelectItem(pBot->pEdict, "tf_weapon_nailgun");
-			      //FakeClientCommand(pBot->pEdict, "slot4", "+attack; wait; wait", "-attack");
-			   }
+				if (pBot->lastEnemySentryGun && pBot->enemy.ptr == pBot->lastEnemySentryGun && !FNullEnt(pBot->lastEnemySentryGun)) {
+					// Use the nailgun
+					UTIL_SelectItem(pBot->pEdict, "tf_weapon_nailgun");
+					//FakeClientCommand(pBot->pEdict, "slot4", "+attack; wait; wait", "-attack");
+				}
+			}
+		}
+		else {
+			if (pBot->pEdict->v.playerclass == TFC_CLASS_SCOUT && pBot->current_weapon.iId == TF_WEAPON_NAILGUN) {
+				// Check if the enemy is a Sentry Gun
+				if (pBot->lastEnemySentryGun && pBot->enemy.ptr == pBot->lastEnemySentryGun && !FNullEnt(pBot->lastEnemySentryGun)) {
+					// Use the nailgun
+					UTIL_SelectItem(pBot->pEdict, "tf_weapon_nailgun");
+					//FakeClientCommand(pBot->pEdict, "slot4", "+attack; wait; wait", "-attack");
+				}
+			}
+			if (pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC && pBot->current_weapon.iId == TF_WEAPON_SUPERNAILGUN) {
+				if (pBot->lastEnemySentryGun && pBot->enemy.ptr == pBot->lastEnemySentryGun && !FNullEnt(pBot->lastEnemySentryGun)) {
+					// Use the super nailgun
+					UTIL_SelectItem(pBot->pEdict, "tf_weapon_superng");
+					//FakeClientCommand(pBot->pEdict, "slot4", "+attack; wait; wait", "-attack");
+				}
 			}
 		}
 	}
-   
+
 	// detonate the bots dispenser if enemies are using it
 	if (pBot->f_dispenserDetTime > 0.5f // i.e. a valid time
 		&& pBot->f_dispenserDetTime < pBot->f_think_time && !FNullEnt(pBot->dispenser_edict)) {
@@ -4355,7 +4356,7 @@ static void BotSpectatorDebug(bot_t* pBot) {
 		else if (spectate_debug == 3) // show the bots personality traits
 		{
 			char msgBuffer[128] = "";
-			snprintf(msgBuffer, 128, "aggression %d\nhealth threshold%d\ncamper %d", pBot->trait.aggression, pBot->trait.health, pBot->trait.camper);
+			snprintf(msgBuffer, 128, "aggression %d\nhealth threshold %d\ncamper %d", pBot->trait.aggression, pBot->trait.health, pBot->trait.camper);
 			std::strncat(msg, msgBuffer, 255 - std::strlen(msg));
 		}
 		else // some other spectate_debug mode - show navigation info
@@ -4377,7 +4378,7 @@ static void BotSpectatorDebug(bot_t* pBot) {
 		WRITE_BYTE(2 & 0xFF);
 
 		// top of the screen
-		WRITE_SHORT(FixedSigned16(1, 1 << 13));  // coordinates X
+		WRITE_SHORT(FixedSigned16(0, 1 << 13));  // coordinates X
 		WRITE_SHORT(FixedSigned16(1, 0 << 13));  // coordinates Y
 
 		WRITE_BYTE(1); // effect

@@ -8,6 +8,10 @@ Version 0.87
 Updated by RoboCop
 --------------------------------------------------------------------------------
 
+- Spectate Debug Text realigned to the left for a better visual
+
+- Bot's average aggression increased for improved action and tactics
+
 - Scouts, Spies, Medics and Engineer bots will not use their lame default weapons when been spawned
 
 - Bots will use Nail Guns for destroying SG turrets from a long distance
@@ -35,8 +39,6 @@ TODO List:-
 >> To prevent bots from shooting at spy corpses too long as, they aren't aware that a player switched teams as enemy spy
 
 >> To improve the pipebomb laying trap pattern and to plant at the flag
-
->> Allow bots to toss grenades at a higher elevation angle and from a lower distance as their target aim is too far
 
 >> BONUS: Maybe add a feature for bots to have experience and wisdom or learned data in order to be a bit more human
 
