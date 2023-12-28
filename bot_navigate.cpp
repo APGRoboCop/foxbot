@@ -228,7 +228,7 @@ float BotChangePitch(edict_t* pEdict, float speed) {
 	// turn from the current v_angle pitch to the idealpitch by selecting
 	// the quickest way to turn to face that direction
 	// find the difference in the current and ideal angle
-	const float diff = std::fabsf(current - ideal);
+	const float diff = fabsf(current - ideal);
 
 	// check if the bot is already facing the idealpitch direction...
 	if (diff <= 0.01f)
@@ -305,7 +305,7 @@ float BotChangeYaw(edict_t* pEdict, float speed) {
 	// turn from the current v_angle yaw to the ideal_yaw by selecting
 	// the quickest way to turn to face that direction
 	// find the difference in the current and ideal angle
-	const float diff = std::fabsf(current - ideal);
+	const float diff = fabsf(current - ideal);
 
 	// check if the bot is already facing the ideal_yaw direction...
 	if (diff <= 0.01f)

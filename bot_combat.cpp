@@ -1825,7 +1825,7 @@ int BotNadeHandler(bot_t* pBot, bool timed, char newNadeType) {
 		const float distanceThrown = NADEVELOCITY * timeToDet;
 
 		// Throw it if we got a good chance at landing good splash damage.
-		if (std::fabsf(distanceThrown - pBot->enemy.f_seenDistance) < 20.0f || distanceThrown - pBot->enemy.f_seenDistance < -200.0f) {
+		if (fabsf(distanceThrown - pBot->enemy.f_seenDistance) < 20.0f || distanceThrown - pBot->enemy.f_seenDistance < -200.0f) {
 			toss = true;
 			pBot->tossNade = 1;
 			// UTIL_HostSay(pEdict, 0, "Die Bitch!!");
