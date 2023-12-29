@@ -517,14 +517,13 @@ void BotJobThink(bot_t* pBot) {
 			}
 		}
 	}
-
+	//TODO: To find a method to allow using Nailguns to target SG Turrets [APG]RoboCop[CL]
 	// let's pick a job suitable for the bots current class
 	switch (pBot->bot_class) {
 	case TFC_CLASS_CIVILIAN:
 		break;
 	case TFC_CLASS_SCOUT:
 		UTIL_SelectItem(pBot->pEdict, "tf_weapon_shotgun");
-		//FakeClientCommand(pBot->pEdict, "slot3", "+attack; wait; wait", "-attack");
 		break;
 	case TFC_CLASS_SNIPER:
 		// go snipe
@@ -556,11 +555,9 @@ void BotJobThink(bot_t* pBot) {
 		break;
 	case TFC_CLASS_MEDIC:
 		UTIL_SelectItem(pBot->pEdict, "tf_weapon_supershotgun");
-		// FakeClientCommand(pBot->pEdict, "slot3", "+attack; wait; wait", "-attack");
 		break;
 	case TFC_CLASS_SPY:
 		UTIL_SelectItem(pBot->pEdict, "tf_weapon_supershotgun");
-		// FakeClientCommand(pBot->pEdict, "slot3", "+attack; wait; wait", "-attack");
 		// time for a disguise?
 		if (pBot->enemy.f_lastSeen + 2.0f < pBot->f_think_time) {
 			if (pBot->current_team == UTIL_GetTeamColor(pBot->pEdict)) {
@@ -593,7 +590,6 @@ void BotJobThink(bot_t* pBot) {
 	case TFC_CLASS_ENGINEER:
 		BotEngineerThink(pBot);
 		UTIL_SelectItem(pBot->pEdict, "tf_weapon_supershotgun");
-		// FakeClientCommand(pBot->pEdict, "slot3", "+attack; wait; wait", "-attack");
 		break;
 	default:
 		break;

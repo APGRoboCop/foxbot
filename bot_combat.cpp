@@ -130,14 +130,14 @@ static bot_weapon_select_t tfc_weapon_select[] = { {TF_WEAPON_KNIFE, "tf_weapon_
 												  {TF_WEAPON_AC, "tf_weapon_ac", 5, 0.0f, 2000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_RPG, "tf_weapon_rpg", 5, 150.0f, 3000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_IC, "tf_weapon_ic", 5, 150.0f, 2000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
-												  {TF_WEAPON_SUPERSHOTGUN, "tf_weapon_supershotgun", 5, 0.0f, 1500.0f, 0.0f, 0.0f, 100, true, 100, 2, 0, false, false, false, false, 0.0f, 0.0f},
+												  {TF_WEAPON_SUPERSHOTGUN, "tf_weapon_supershotgun", 5, 0.0f, 500.0f, 0.0f, 0.0f, 100, true, 100, 2, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_SUPERNAILGUN, "tf_weapon_superng", 5, 40.0f, 2000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_TRANQ, "tf_weapon_tranq", 5, 0.0f, 100.0f, 0.0f, 0.0f, 10, true, 20, 1, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_AUTORIFLE, "tf_weapon_autorifle", 5, 0.0f, 300.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_AXE, "tf_weapon_axe", 5, 0.0f, 60.0f, 0.0f, 0.0f, 100, true, 100, 0, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_PL, "tf_weapon_pl", 5, 150.0f, 500.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_GL, "tf_weapon_gl", 5, 150.0f, 500.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
-												  {TF_WEAPON_SHOTGUN, "tf_weapon_shotgun", 5, 0.0f, 1500.0f, 0.0f, 0.0f, 50, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
+												  {TF_WEAPON_SHOTGUN, "tf_weapon_shotgun", 5, 0.0f, 500.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_NAILGUN, "tf_weapon_ng", 5, 40.0f, 2000.0f, 0.0f, 0.0f, 100, true, 20, 1, 0, true, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_RAILGUN, "tf_weapon_railgun", 5, 80.0f, 2000.0f, 0.0f, 0.0f, 10, true, 20, 1, 0, true, false, false, false, 0.0f, 0.0f},
 	/* terminator */
@@ -1319,17 +1319,16 @@ static Vector BotBodyTarget(const edict_t* pBotEnemy, bot_t* pBot) {
 				aim_error += static_cast<float>(pBot->bot_skill + 1) * random_float(5.0f, 10.0f);
 
 			// Add condition to check if bot's class is HWGuy [APG]RoboCop[CL]
-			if (mod_id == TFC_DLL && pBot->pEdict->v.playerclass == TFC_CLASS_HWGUY && pBot->current_weapon.iId == TF_WEAPON_AC) {
+			else if (pBot->pEdict->v.playerclass == TFC_CLASS_HWGUY && pBot->current_weapon.iId == TF_WEAPON_AC) {
 				// Increase aim_error value to decrease accuracy
 				aim_error += 20.0f; 
 			}
 			// Make nailguns as accurate as possible
-			if (mod_id == TFC_DLL && pBot->current_weapon.iId == TF_WEAPON_SUPERNAILGUN || TF_WEAPON_NAILGUN) {
-					aim_error += 0.0f;
+			else if (pBot->current_weapon.iId == TF_WEAPON_SUPERNAILGUN || pBot->current_weapon.iId == TF_WEAPON_NAILGUN) {
+				aim_error = 0.0f;
 			}
-		   
-			if (mod_id == TFC_DLL && pBot->current_weapon.iId == TF_WEAPON_RPG || TF_WEAPON_IC) {
-				aim_error += 5.0f;
+			else if (pBot->current_weapon.iId == TF_WEAPON_RPG || pBot->current_weapon.iId == TF_WEAPON_IC) {
+				aim_error = 5.0f * static_cast<float>(pBot->bot_skill);
 			}
 		   
 			const float aim_offset = bot_max_inaccuracy[pBot->bot_skill] + aim_error;

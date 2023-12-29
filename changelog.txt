@@ -8,31 +8,37 @@ Version 0.87
 Updated by RoboCop
 --------------------------------------------------------------------------------
 
-- Spectate Debug Text realigned to the left for a better visual
+- Spectate Debug text now realigned to the left for a better visual
+
+- Bots will ignore returning to their respawns in flagrun in order to prevent their flags they are carrying returned to midpoint
 
 - Bot's average aggression increased for improved action and tactics
 
-- Scouts, Spies, Medics and Engineer bots will not use their lame default weapons when been spawned
+- Scouts, Spies, Medics and Engineer bots will no longer use their lame default weapons when been spawned
 
-- Bots will use Nail Guns for destroying SG turrets from a long distance
+- Bots will use Nail Guns for destroying SG Turrets from a long distance
 
 - Soldier bots should now Rocket Jump slightly better, and for Medics and Scouts to Conc Jump
 
-- HW bots Minigun accuracy reduced to give them more recoil and less aimbot
+- HW bot's Minigun accuracy reduced to give them more recoil and less aimbot
 
-- Sniper bot's average accuracy reduced to avoid less aimbot shoots and headshots
+- Sniper bot's average accuracy reduced to avoid less aimbot shots and headshots
 
 - Nailguns and Super Nailguns should now be very accurate as those guns are meant for destroying SG Turrets
 
-- Repaired the rogue pathways in phantom, rock2 and schtop
+- Repaired some rogue pathways in phantom, rock2 and schtop
 
-- Added some Rocket/Conc jumps for rock2 and ravelin
+- Added some Rocket/Conc Jumps for rock2 and ravelin
 
 TODO List:-
 
 >> Complete 'botdontmove' in order for "GolfBots" to stay stationary
 
 >> To allow medic bots to heal more often, but not allow `JOB_BUFF_ALLY` to consume too many cells as engineers
+
+>> To find a more suitable method to allow using Nailguns to target SG Turrets
+
+>> To prevent the bots from holding their nades for too long, that can cause them acting as suicide bombers occassionally
 
 >> Fix bots navigation when shot by enemies as they sometimes cannot seem to detect where damage is coming from
 

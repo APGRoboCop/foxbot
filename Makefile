@@ -19,8 +19,8 @@ endif
 
 TARGET = foxbot
 
-BASEFLAGS = -Wall -Wno-write-strings -Wno-attributes -std=gnu++17 \
-			-static-libstdc++ -shared-libgcc
+BASEFLAGS = -Wall -Wno-write-strings -Wno-attributes -Wno-unused-function \
+            -std=gnu++17 -static-libstdc++ -shared-libgcc
 
 ARCHFLAG += -march=i686 -mtune=generic -msse -msse2 -mmmx -mfpmath=sse
 
