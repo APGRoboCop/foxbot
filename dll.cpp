@@ -105,7 +105,7 @@ bool bot_bot_balance = false;
 int min_bots = -1;
 int max_bots = -1;
 int bot_total_varies = 0;
-float bot_create_interval = 3.0f;
+float bot_create_interval = 1.0f;
 int botskill_upper = 1;
 int botskill_lower = 3;
 int bot_skill_1_aim = 20;   // accuracy for skill 1 bots
@@ -5494,7 +5494,7 @@ static void ProcessBotCfgFile() {
 	if (std::strcmp(cmd, "bot_create_interval") == 0) {
 		bot_create_interval = static_cast<float>(std::atoi(arg1));
 		if (bot_create_interval < 1.0f || bot_create_interval > 8.0f)
-			bot_create_interval = 3.0f;
+			bot_create_interval = 1.0f;
 
 		if (IS_DEDICATED_SERVER())
 			std::printf("[Config] bot_create_interval has been set to %s\n", arg1);
