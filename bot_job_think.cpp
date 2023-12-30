@@ -105,13 +105,13 @@ jobList_struct jl[JOB_TYPE_TOTAL] = {
 	{ 770, "JOB_BUILD_SENTRY" }, { 510, "JOB_BUILD_DISPENSER" }, { 670, "JOB_BUILD_TELEPORT" },
 	{ 450, "JOB_BUFF_ALLY" }, { 540, "JOB_ESCORT_ALLY" },
 	{ 490, "JOB_CALL_MEDIC" }, // this should be a higher priority than JOB_GET_HEALTH
-	{ 460, "JOB_GET_HEALTH" }, { 440, "JOB_GET_ARMOR" }, { 580, "JOB_GET_AMMO" }, { 660, "JOB_DISGUISE" },
+	{ 460, "JOB_GET_HEALTH" }, { 440, "JOB_GET_ARMOR" }, { 600, "JOB_GET_AMMO" }, { 660, "JOB_DISGUISE" },
 	{ 190, "JOB_FEIGN_AMBUSH" }, { 570, "JOB_SNIPE" }, { 250, "JOB_GUARD_WAYPOINT" }, { 550, "JOB_DEFEND_FLAG" },
 	{ 710, "JOB_GET_FLAG" }, { 790, "JOB_CAPTURE_FLAG" }, { 340, "JOB_HARRASS_DEFENSE" },
 	{ 730, "JOB_ROCKET_JUMP" }, { 740, "JOB_CONCUSSION_JUMP" },
-	{ 400, "JOB_DETPACK_WAYPOINT" }, { 600, "JOB_PIPETRAP" }, { 480, "JOB_INVESTIGATE_AREA" },
+	{ 400, "JOB_DETPACK_WAYPOINT" }, { 590, "JOB_PIPETRAP" }, { 480, "JOB_INVESTIGATE_AREA" },
 	{ 560, "JOB_PURSUE_ENEMY" }, { 200, "JOB_PATROL_HOME" }, { 700, "JOB_SPOT_STIMULUS" },
-	{ 620, "JOB_ATTACK_BREAKABLE" }, { 430, "JOB_ATTACK_TELEPORT" }, { 590, "JOB_SEEK_BACKUP" },
+	{ 620, "JOB_ATTACK_BREAKABLE" }, { 430, "JOB_ATTACK_TELEPORT" }, { 580, "JOB_SEEK_BACKUP" },
 	{ 300, "JOB_AVOID_ENEMY" }, { 720, "JOB_AVOID_AREA_DAMAGE" },
 	{ 690, "JOB_INFECTED_ATTACK" }, { 750, "JOB_BIN_GRENADE" },
 	{ 780, "JOB_DROWN_RECOVER" }, { 240, "JOB_MELEE_WARRIOR" }, { 210, "JOB_GRAFFITI_ARTIST" },
@@ -517,7 +517,6 @@ void BotJobThink(bot_t* pBot) {
 			}
 		}
 	}
-	//TODO: To find a method to allow using Nailguns to target SG Turrets [APG]RoboCop[CL]
 	// let's pick a job suitable for the bots current class
 	switch (pBot->bot_class) {
 	case TFC_CLASS_CIVILIAN:
@@ -549,12 +548,12 @@ void BotJobThink(bot_t* pBot) {
 			}
 		}
 		break;
+	case TFC_CLASS_MEDIC:
+		UTIL_SelectItem(pBot->pEdict, "tf_weapon_supershotgun");
+		break;
 	case TFC_CLASS_HWGUY:
 		break;
 	case TFC_CLASS_PYRO:
-		break;
-	case TFC_CLASS_MEDIC:
-		UTIL_SelectItem(pBot->pEdict, "tf_weapon_supershotgun");
 		break;
 	case TFC_CLASS_SPY:
 		UTIL_SelectItem(pBot->pEdict, "tf_weapon_supershotgun");

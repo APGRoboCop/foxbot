@@ -10,7 +10,9 @@ Updated by RoboCop
 
 - Spectate Debug text now realigned to the left for a better visual
 
-- Bots will ignore returning to their respawns in flagrun in order to prevent their flags they are carrying returned to midpoint
+- Bots will ignore returning to their respawns in flagrun in order to prevent their flags they are carrying being returned to Neutral Flag Room
+
+- Bots will no longer toss grenades in a far distance nor aim their guns in the skies or ceilings
 
 - Bot's average aggression increased for improved action and tactics
 
@@ -33,10 +35,6 @@ Updated by RoboCop
 TODO List:-
 
 >> Complete 'botdontmove' in order for "GolfBots" to stay stationary
-
->> To allow medic bots to heal more often, but not allow `JOB_BUFF_ALLY` to consume too many cells as engineers
-
->> To find a more suitable method to allow using Nailguns to target SG Turrets - as Super Shotguns won't be used over 500 unit distance
 
 >> To prevent the bots from holding their nades for too long, that can cause them acting as suicide bombers occassionally
 

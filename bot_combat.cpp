@@ -1475,7 +1475,21 @@ bool BotFireWeapon(const Vector& v_enemy, bot_t* pBot, const int weapon_choice) 
 		if (ang < diff) //|| (FInViewCone( v_enemy, pEdict ) && FVisible( v_enemy, pEdict )))
 			return false;
 	}
-
+   
+	// Used for bots to use Nailguns against enemy Sentry Guns [APG]RoboCop[CL]
+	if (pBot->enemy.ptr == pBot->lastEnemySentryGun && !FNullEnt(pBot->lastEnemySentryGun) &&
+		(pBot->pEdict->v.playerclass == TFC_CLASS_SCOUT || pBot->pEdict->v.playerclass == TFC_CLASS_SPY || pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC)) {
+		// Force the bot to select and fire the Nailgun or Super Nailgun
+		if (pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC) {
+			UTIL_SelectItem(pBot->pEdict, "tf_weapon_superng");
+		}
+		else {
+			UTIL_SelectItem(pBot->pEdict, "tf_weapon_ng");
+		}
+		pBot->pEdict->v.button |= IN_ATTACK;
+		return true;
+	}
+   
 	//////////////////
 	float distance = f_distance;
 

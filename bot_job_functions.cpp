@@ -2957,35 +2957,18 @@ int JobAttackBreakable(bot_t* pBot) {
 			BlacklistJob(pBot, JOB_ATTACK_BREAKABLE, random_float(3.0f, 6.0f));
 			return JOB_TERMINATED;
 		}
-	   
-		// Used for bots to use Nailguns against enemy Sentry Guns [APG]RoboCop[CL]
-		if (pBot->enemy.ptr == pBot->lastEnemySentryGun && !FNullEnt(pBot->lastEnemySentryGun)) {
-			if (pBot->pEdict->v.playerclass == TFC_CLASS_SCOUT || pBot->pEdict->v.playerclass == TFC_CLASS_SPY) {
-				if (pBot->current_weapon.iId != TF_WEAPON_NAILGUN)
-					UTIL_SelectItem(pBot->pEdict, "tf_weapon_ng");
-			}
-			else if (pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC) {
-				if (pBot->current_weapon.iId != TF_WEAPON_SUPERNAILGUN)
-					UTIL_SelectItem(pBot->pEdict, "tf_weapon_superng");
-			}
-		}
+
 		// use a suitable weapon, based on the bots class
-		else {
-			if (pBot->pEdict->v.playerclass == TFC_CLASS_SCOUT || pBot->pEdict->v.playerclass == TFC_CLASS_DEMOMAN || pBot->pEdict->v.playerclass == TFC_CLASS_PYRO) {
-			   if (pBot->current_weapon.iId != TF_WEAPON_SHOTGUN)
-			      UTIL_SelectItem(pBot->pEdict, "tf_weapon_shotgun");
-			}
-			else if (pBot->pEdict->v.playerclass == TFC_CLASS_SNIPER) {
-				if (pBot->current_weapon.iId != TF_WEAPON_AUTORIFLE)
-					UTIL_SelectItem(pBot->pEdict, "tf_weapon_autorifle");
-			}
-			else if (pBot->pEdict->v.playerclass == TFC_CLASS_CIVILIAN)
-				;// the umbrella will do
-			else {
-				if (pBot->current_weapon.iId != TF_WEAPON_SUPERSHOTGUN)
-					UTIL_SelectItem(pBot->pEdict, "tf_weapon_supershotgun");
-			}
+		if (pBot->pEdict->v.playerclass == TFC_CLASS_SCOUT || pBot->pEdict->v.playerclass == TFC_CLASS_DEMOMAN || pBot->pEdict->v.playerclass == TFC_CLASS_PYRO) {
+			if (pBot->current_weapon.iId != TF_WEAPON_SHOTGUN)
+				UTIL_SelectItem(pBot->pEdict, "tf_weapon_shotgun");
 		}
+		else if (pBot->pEdict->v.playerclass == TFC_CLASS_SNIPER && pBot->current_weapon.iId != TF_WEAPON_AUTORIFLE)
+			UTIL_SelectItem(pBot->pEdict, "tf_weapon_autorifle");
+		else if (pBot->pEdict->v.playerclass == TFC_CLASS_CIVILIAN)
+			; // the umbrella will do
+		else if (pBot->current_weapon.iId != TF_WEAPON_SUPERSHOTGUN)
+			UTIL_SelectItem(pBot->pEdict, "tf_weapon_supershotgun");
 
 		BotSetFacing(pBot, job_ptr->origin);
 		BotNavigateWaypointless(pBot);

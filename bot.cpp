@@ -3935,7 +3935,7 @@ static void BotFight(bot_t* pBot) {
 		// Calculate the distance between the bot and its enemy
 		const float distance = (pent->v.origin - pEdict->v.origin).Length();
 
-		// If the bot is less than 600 units away from its enemy...
+		// If the bot is less than 600 units away from its enemy [APG]RoboCop[CL]
 		if (distance <= 600.0f)
 		{
 			// DrEvils Nade update, or toss a nade if threatlevel high enuff.
