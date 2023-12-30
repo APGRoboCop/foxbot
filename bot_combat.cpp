@@ -131,17 +131,18 @@ static bot_weapon_select_t tfc_weapon_select[] = { {TF_WEAPON_KNIFE, "tf_weapon_
 												  {TF_WEAPON_RPG, "tf_weapon_rpg", 5, 150.0f, 3000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_IC, "tf_weapon_ic", 5, 150.0f, 2000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_SUPERSHOTGUN, "tf_weapon_supershotgun", 5, 0.0f, 2000.0f, 0.0f, 0.0f, 100, true, 100, 2, 0, false, false, false, false, 0.0f, 0.0f},
-												  {TF_WEAPON_SUPERNAILGUN, "tf_weapon_superng", 5, 40.0f, 2000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
-												  {TF_WEAPON_TRANQ, "tf_weapon_tranq", 5, 0.0f, 100.0f, 0.0f, 0.0f, 10, true, 20, 1, 0, false, false, false, false, 0.0f, 0.0f},
+												  {TF_WEAPON_SUPERNAILGUN, "tf_weapon_superng", 5, 40.0f, 2000.0f, 0.0f, 0.0f, 100, true, 100, 2, 0, true, false, false, false, 0.0f, 0.0f},
+												  {TF_WEAPON_TRANQ, "tf_weapon_tranq", 5, 0.0f, 100.0f, 0.0f, 0.0f, 10, true, 10, 1, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_AUTORIFLE, "tf_weapon_autorifle", 5, 0.0f, 300.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_AXE, "tf_weapon_axe", 5, 0.0f, 60.0f, 0.0f, 0.0f, 100, true, 100, 0, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_PL, "tf_weapon_pl", 5, 150.0f, 500.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
 												  {TF_WEAPON_GL, "tf_weapon_gl", 5, 150.0f, 500.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
-												  {TF_WEAPON_SHOTGUN, "tf_weapon_shotgun", 5, 0.0f, 2000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
-												  {TF_WEAPON_NAILGUN, "tf_weapon_ng", 5, 40.0f, 2000.0f, 0.0f, 0.0f, 100, true, 20, 1, 0, true, false, false, false, 0.0f, 0.0f},
-												  {TF_WEAPON_RAILGUN, "tf_weapon_railgun", 5, 80.0f, 2000.0f, 0.0f, 0.0f, 10, true, 20, 1, 0, true, false, false, false, 0.0f, 0.0f},
+												  {TF_WEAPON_SHOTGUN, "tf_weapon_shotgun", 5, 0.0f, 2000.0f, 0.0f, 0.0f, 80, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
+												  {TF_WEAPON_NAILGUN, "tf_weapon_ng", 5, 40.0f, 2000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
+												  {TF_WEAPON_RAILGUN, "tf_weapon_railgun", 5, 80.0f, 2000.0f, 0.0f, 0.0f, 10, true, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
 	/* terminator */
-	{0, "", 0, 0.0f, 0.0f, 0.0f, 0.0f, 0, true, 0, 1, 1, false, false, false, false, 0.0f, 0.0f} };
+	{0, "", 0, 0.0f, 0.0f, 0.0f, 0.0f, 0, true, 0, 1, 1, false, false, false, false, 0.0f, 0.0f}
+};
 
 static bot_fire_delay_t tfc_fire_delay[] = { {TF_WEAPON_KNIFE, 0.3f, {0.0f, 0.2f, 0.3f, 0.4f, 0.6f}, {0.1f, 0.3f, 0.5f, 0.7f, 1.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
 											{TF_WEAPON_SPANNER, 0.3f, {0.0f, 0.2f, 0.3f, 0.4f, 0.6f}, {0.1f, 0.3f, 0.5, 0.7f, 1.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
@@ -162,7 +163,9 @@ static bot_fire_delay_t tfc_fire_delay[] = { {TF_WEAPON_KNIFE, 0.3f, {0.0f, 0.2f
 											{TF_WEAPON_NAILGUN, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
 											{TF_WEAPON_RAILGUN, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.1f, 0.2f, 0.3f, 0.4f, 0.5f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
 	/* terminator */
-	{0, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}} };
+	{0, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}}
+};
+
 void BotCheckTeamplay() {
 	// is this TFC?
 	if (mod_id == TFC_DLL)
@@ -589,8 +592,8 @@ static edict_t* BotFindEnemy(bot_t* pBot) {
 						continue;                                                                                                                          // health greater than 70% so ignore
 
 					// check if the player needs to be armored...
-					if (pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER && (PlayerIsInfected(pPlayer) || PlayerArmorPercent(pPlayer) > 50))
-						continue; // armor greater than 50% so ignore
+					if (pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER && (PlayerIsInfected(pPlayer) || PlayerArmorPercent(pPlayer) > 60))
+						continue; // armor greater than 60% so ignore - was 50% [APG]RoboCop[CL]
 
 					// see if bot can see the player...
 					float distance = (pPlayer->v.origin - pEdict->v.origin).Length();
@@ -1180,7 +1183,7 @@ void BotShootAtEnemy(bot_t* pBot) {
 	// if the bot is a disguised Spy targetting a Sentry Gun
 	// and is near enough to throw frag grenades at it
 	if (bot_use_grenades && pBot->pEdict->v.playerclass == TFC_CLASS_SPY && pBot->enemy.ptr == pBot->lastEnemySentryGun && pBot->disguise_state == DISGUISE_COMPLETE && !FNullEnt(pBot->lastEnemySentryGun) &&
-		pBot->grenades[PrimaryGrenade] > 0 && f_distance < 800.0f) {
+		pBot->grenades[PrimaryGrenade] > 0 && f_distance < 600.0f) {
 		// don't shoot until the Spy has no frag grenades left
 		pBot->f_shoot_time = pBot->f_think_time + 3.0f;
 
