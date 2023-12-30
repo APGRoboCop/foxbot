@@ -797,8 +797,8 @@ int JobMaintainObject(bot_t* pBot) {
 			return JOB_TERMINATED;
 		}
 		BotSetFacing(pBot, job_ptr->object->v.origin);
-		BotNavigateWaypointless(pBot);
-		pBot->f_current_wp_deadline = pBot->f_think_time + BOT_WP_DEADLINE;
+		//BotNavigateWaypointless(pBot);
+		//pBot->f_current_wp_deadline = pBot->f_think_time + BOT_WP_DEADLINE;
 
 		if (pBot->enemy.ptr == nullptr && pBot->current_weapon.iId != TF_WEAPON_SPANNER)
 			UTIL_SelectItem(pBot->pEdict, "tf_weapon_spanner");

@@ -3934,7 +3934,7 @@ static void BotFight(bot_t* pBot) {
 	if (pEdict != nullptr && pent != nullptr) {
 		// Calculate the distance between the bot and its enemy
 		const float distance = (pent->v.origin - pEdict->v.origin).Length();
-	   
+
 		// If the bot is less than 500 units away from its enemy...
 		if (distance <= 500.0f)
 		{
@@ -3947,28 +3947,57 @@ static void BotFight(bot_t* pBot) {
 				BotNadeHandler(pBot, true, GRENADE_RANDOM);
 			}
 		}
-	   //TODO: To find a method to prevent using Shotguns when their primary_max_distance is > 500.0f [APG]RoboCop[CL]
-		else if (distance > 500.0f) {
-			if (pBot->pEdict->v.playerclass == TFC_CLASS_SCOUT || pBot->pEdict->v.playerclass == TFC_CLASS_SPY) {
-				// Check if the enemy is a Sentry Gun
+		// Check if the enemy is a Sentry Gun
+		if (distance > 200.0f) {
+			if (pBot->pEdict->v.playerclass == TFC_CLASS_SCOUT && pBot->current_weapon.iId != TF_WEAPON_NAILGUN) {
 				if (pBot->lastEnemySentryGun && pBot->enemy.ptr == pBot->lastEnemySentryGun && !FNullEnt(pBot->lastEnemySentryGun)) {
-					// Use the nailgun
-					UTIL_SelectItem(pBot->pEdict, "tf_weapon_nailgun");
+					// Use the Nailgun
+					UTIL_SelectItem(pBot->pEdict, "tf_weapon_ng");
+					// Fire the Nailgun
+					pBot->pEdict->v.button |= IN_ATTACK;
+				}
+				else {
+					// Otherwise, use the Shotgun
+					UTIL_SelectItem(pBot->pEdict, "tf_weapon_shotgun");
+					// Fire the Shotgun
+					pBot->pEdict->v.button |= IN_ATTACK;
 				}
 			}
-			if (pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC) {
+		}
+		if (distance > 500.0f) {
+			if (pBot->pEdict->v.playerclass == TFC_CLASS_SPY && pBot->current_weapon.iId != TF_WEAPON_NAILGUN) {
 				if (pBot->lastEnemySentryGun && pBot->enemy.ptr == pBot->lastEnemySentryGun && !FNullEnt(pBot->lastEnemySentryGun)) {
-					// Use the super nailgun
+					// Use the Nailgun
+					UTIL_SelectItem(pBot->pEdict, "tf_weapon_ng");
+					// Fire the Nailgun
+					pBot->pEdict->v.button |= IN_ATTACK;
+				}
+				else {
+					// Otherwise, use the Super Shotgun
+					UTIL_SelectItem(pBot->pEdict, "tf_weapon_supershotgun");
+				}
+			}
+			else if (pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC && pBot->current_weapon.iId != TF_WEAPON_SUPERNAILGUN) {
+				if (pBot->lastEnemySentryGun && pBot->enemy.ptr == pBot->lastEnemySentryGun && !FNullEnt(pBot->lastEnemySentryGun)) {
+					// Use the Super Nailgun
 					UTIL_SelectItem(pBot->pEdict, "tf_weapon_superng");
+					// Fire the Super Nailgun
+					pBot->pEdict->v.button |= IN_ATTACK;
+				}
+				else {
+					// Otherwise, use the Super Shotgun
+					UTIL_SelectItem(pBot->pEdict, "tf_weapon_supershotgun");
+					// Fire the Super Shotgun
+					pBot->pEdict->v.button |= IN_ATTACK;
 				}
 			}
-			if (pBot->pEdict->v.playerclass == TFC_CLASS_SOLDIER && pBot->current_weapon.iId == TF_WEAPON_RPG) {
+			else if (pBot->pEdict->v.playerclass == TFC_CLASS_SOLDIER && pBot->current_weapon.iId != TF_WEAPON_RPG) {
 				if (pBot->lastEnemySentryGun && pBot->enemy.ptr == pBot->lastEnemySentryGun && !FNullEnt(pBot->lastEnemySentryGun)) {
 					// Use the RPG
 					UTIL_SelectItem(pBot->pEdict, "tf_weapon_rpg");
 				}
 			}
-			if (pBot->pEdict->v.playerclass == TFC_CLASS_PYRO && pBot->current_weapon.iId == TF_WEAPON_IC) {
+			else if (pBot->pEdict->v.playerclass == TFC_CLASS_PYRO && pBot->current_weapon.iId != TF_WEAPON_IC) {
 				if (pBot->lastEnemySentryGun && pBot->enemy.ptr == pBot->lastEnemySentryGun && !FNullEnt(pBot->lastEnemySentryGun)) {
 					// Use the IC
 					UTIL_SelectItem(pBot->pEdict, "tf_weapon_ic");

@@ -36,7 +36,7 @@ TODO List:-
 
 >> To allow medic bots to heal more often, but not allow `JOB_BUFF_ALLY` to consume too many cells as engineers
 
->> To find a more suitable method to allow using Nailguns to target SG Turrets
+>> To find a more suitable method to allow using Nailguns to target SG Turrets - as Super Shotguns won't be used over 500 unit distance
 
 >> To prevent the bots from holding their nades for too long, that can cause them acting as suicide bombers occassionally
 
