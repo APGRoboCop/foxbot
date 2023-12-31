@@ -670,7 +670,7 @@ void GameDLLInit() {
 		clients[i] = nullptr;
 
 	// initialize the bots array of structures...
-	std::memset(bots, 0.0f, sizeof bots);
+	std::memset(bots, 0, sizeof bots);
 
 	// read the bot names from the bot name file
 	BotNameInit();

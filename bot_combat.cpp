@@ -37,8 +37,6 @@
 #include "bot_navigate.h"
 #include "bot_weapons.h"
 
-#include <valarray>
-
 extern WAYPOINT waypoints[MAX_WAYPOINTS];
 extern int num_waypoints; // number of waypoints currently in map
 

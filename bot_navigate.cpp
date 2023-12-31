@@ -2335,7 +2335,7 @@ static void BotCheckForRocketJump(bot_t* pBot) {
 	// Check if its a good time to jump
 	// Resulting waypoint closer to goal than we are now
 	// (> 1000 distance savings for now)
-	const int distanceSaved = WaypointDistanceFromTo(pBot->current_wp, pBot->goto_wp, pBot->current_team) - WaypointDistanceFromTo(closestRJ.value(), pBot->goto_wp, pBot->current_team);
+	const int distanceSaved = WaypointDistanceFromTo(pBot->current_wp, pBot->goto_wp, pBot->current_team) - WaypointDistanceFromTo(*closestRJ, pBot->goto_wp, pBot->current_team);
 
 	// Don't bother if the distance it saves us is less than this.
 	if (distanceSaved < 1000)
@@ -2345,7 +2345,7 @@ static void BotCheckForRocketJump(bot_t* pBot) {
 
 	// Check visibility from where the bot's head is to a point in the air above
 	// i.e. check for a low ceiling
-	zDiff = waypoints[closestRJ.value()].origin.z - pBot->pEdict->v.origin.z;
+	zDiff = waypoints[*closestRJ].origin.z - pBot->pEdict->v.origin.z;
 	UTIL_TraceLine(pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs, pBot->pEdict->v.origin + Vector(0.0f, 0.0f, zDiff), ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
 
 	if (result.flFraction < 1.0f)
@@ -2353,7 +2353,7 @@ static void BotCheckForRocketJump(bot_t* pBot) {
 
 	// Check visibility from a point in the air above the bot to the RJ waypoint
 	// this improves the bots ability to properly detect RJ waypoints
-	UTIL_TraceLine(pBot->pEdict->v.origin + Vector(0.0f, 0.0f, zDiff), waypoints[closestRJ.value()].origin, ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
+	UTIL_TraceLine(pBot->pEdict->v.origin + Vector(0.0f, 0.0f, zDiff), waypoints[*closestRJ].origin, ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
 
 	if (result.flFraction < 1.0f)
 		return; // can't see it
@@ -2366,7 +2366,7 @@ static void BotCheckForRocketJump(bot_t* pBot) {
    // set up a job to handle the jump
    job_struct* newJob = InitialiseNewJob(pBot, JOB_ROCKET_JUMP);
 	if (newJob != nullptr) {
-		newJob->waypoint = closestRJ.value();
+		newJob->waypoint = *closestRJ;
 		SubmitNewJob(pBot, JOB_ROCKET_JUMP, newJob);
 	}
 
@@ -2472,7 +2472,7 @@ static void BotCheckForConcJump(bot_t* pBot) {
 	if (!closestJumpWP)
 		return;
 
-	const int distanceSaved = WaypointDistanceFromTo(endWP.value(), pBot->goto_wp, pBot->current_team) - WaypointDistanceFromTo(closestJumpWP.value(), pBot->goto_wp, pBot->current_team);
+	const int distanceSaved = WaypointDistanceFromTo(endWP.value(), pBot->goto_wp, pBot->current_team) - WaypointDistanceFromTo(*closestJumpWP, pBot->goto_wp, pBot->current_team);
 
 	// Don't bother if the distance it saves us is less than this.
 	if (distanceSaved < 1000)
@@ -2487,7 +2487,7 @@ static void BotCheckForConcJump(bot_t* pBot) {
 
 	// Check visibility from where the bot's head will be to a point in the air above
 	// i.e. check for a low ceiling
-	zDiff = waypoints[closestJumpWP.value()].origin.z - waypoints[endWP.value()].origin.z;
+	zDiff = waypoints[*closestJumpWP].origin.z - waypoints[endWP.value()].origin.z;
 	UTIL_TraceLine(waypoints[endWP.value()].origin + pBot->pEdict->v.view_ofs, waypoints[endWP.value()].origin + Vector(0.0f, 0.0f, zDiff), ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
 
 	if (result.flFraction < 1.0f)
@@ -2495,7 +2495,7 @@ static void BotCheckForConcJump(bot_t* pBot) {
 
 	// Check visibility from a point in the air above the bot to the RJ waypoint
 	// this improves the bots ability to properly detect RJ waypoints
-	UTIL_TraceLine(waypoints[endWP.value()].origin + Vector(0.0f, 0.0f, zDiff), waypoints[closestJumpWP.value()].origin, ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
+	UTIL_TraceLine(waypoints[endWP.value()].origin + Vector(0.0f, 0.0f, zDiff), waypoints[*closestJumpWP].origin, ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
 
 	if (result.flFraction < 1.0f)
 		return; // can't see it
@@ -2503,7 +2503,7 @@ static void BotCheckForConcJump(bot_t* pBot) {
 	job_struct* newJob = InitialiseNewJob(pBot, JOB_CONCUSSION_JUMP);
 	if (newJob != nullptr) {
 		newJob->waypoint = endWP.value();
-		newJob->waypointTwo = closestJumpWP.value();
+		newJob->waypointTwo = *closestJumpWP;
 
 		SubmitNewJob(pBot, JOB_CONCUSSION_JUMP, newJob);
 	}

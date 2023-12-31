@@ -30,7 +30,7 @@ Updated by RoboCop
 
 - Repaired some rogue pathways in phantom, rock2 and schtop
 
-- Added some Rocket/Conc Jumps for rock2 and ravelin
+- Added some more Rocket/Conc Jumps for avanti, palermo, rock2 and ravelin
 
 TODO List:-
 
