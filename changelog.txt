@@ -8,6 +8,9 @@ Version 0.87
 Updated by RoboCop
 --------------------------------------------------------------------------------
 
+- Added new waypoints:-
+	+ piebowl
+
 - Spectate Debug text now realigned to the left for a better visual
 
 - Bots will ignore returning to their respawns in flagrun in order to prevent their flags they are carrying being returned to Neutral Flag Room
@@ -28,9 +31,9 @@ Updated by RoboCop
 
 - Nailguns and Super Nailguns should now be very accurate as those guns are meant for destroying SG Turrets
 
-- Repaired some rogue pathways in phantom, rock2 and schtop
+- Repaired some rogue pathways in baconbowl_r, phantom, rock2, sandbowl_r2 and schtop
 
-- Added some more Rocket/Conc Jumps for avanti, palermo, rock2 and ravelin
+- Added some more Rocket/Conc Jumps for avanti, baconbowl_r, palermo, rock2 and ravelin
 
 TODO List:-
 
