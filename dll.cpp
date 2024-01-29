@@ -5273,8 +5273,7 @@ static void ProcessBotCfgFile() {
 	}
 
 	if (std::strcmp(cmd, "observer") == 0) {
-		int temp;
-		temp = std::atoi(arg1);
+      const int temp = std::atoi(arg1);
 
 		if (temp)
 			observer_mode = true;
@@ -5316,8 +5315,7 @@ static void ProcessBotCfgFile() {
 
 	if (std::strcmp(cmd, "bot_team_balance") == 0) {
 		if (arg1 != nullptr) {
-			int temp;
-			temp = std::atoi(arg1);
+         const int temp = std::atoi(arg1);
 			if (temp)
 				bot_team_balance = true;
 			else
@@ -5340,8 +5338,7 @@ static void ProcessBotCfgFile() {
 	}
 	if (std::strcmp(cmd, "bot_bot_balance") == 0) {
 		if (arg1 != nullptr) {
-			int temp;
-			temp = std::atoi(arg1);
+         const int temp = std::atoi(arg1);
 			if (temp)
 				bot_bot_balance = true;
 			else
@@ -5364,8 +5361,7 @@ static void ProcessBotCfgFile() {
 	}
 
 	if (std::strcmp(cmd, "bot_xmas") == 0) {
-		int temp;
-		temp = std::atoi(arg1);
+      const int temp = std::atoi(arg1);
 		bot_xmas = true;
 		if (temp == 0) {
 			bot_xmas = false;
@@ -5388,8 +5384,7 @@ static void ProcessBotCfgFile() {
 	}
 
 	if (std::strcmp(cmd, "botdontshoot") == 0) {
-		int temp;
-		temp = std::atoi(arg1);
+      const int temp = std::atoi(arg1);
 		botdontshoot = true;
 		if (temp == 0) {
 			botdontshoot = false;
@@ -5412,8 +5407,7 @@ static void ProcessBotCfgFile() {
 	}
 
 	if (std::strcmp(cmd, "botdontmove") == 0) {
-		int temp;
-		temp = std::atoi(arg1);
+      const int temp = std::atoi(arg1);
 		botdontmove = true;
 		if (temp == 0) {
 			botdontmove = false;
