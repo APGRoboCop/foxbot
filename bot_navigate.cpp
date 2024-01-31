@@ -649,7 +649,7 @@ bool BotNavigateWaypoints(bot_t* pBot, bool navByStrafe) {
 			}
 
 			// slow down if the next waypoint is a walk waypoint...
-			if (waypoints[pBot->current_wp].flags & W_FL_WALK && navByStrafe == false)
+			if (waypoints[pBot->current_wp].flags & W_FL_WALK && !navByStrafe)
 				pBot->f_move_speed = pBot->f_max_speed / 3;
 		}
 

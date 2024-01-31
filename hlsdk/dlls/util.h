@@ -20,7 +20,7 @@
 #include <WinDef.h>
 #endif
 
-#include <string.h>
+#include <cstring>
 #ifndef ACTIVITY_H
 #include "activity.h"
 #endif
@@ -78,7 +78,7 @@ static inline edict_t *FIND_ENTITY_BY_TARGET(edict_t *entStart, const char *pszN
 typedef int EOFFSET;
 
 // In case it's not alread defined
-typedef int BOOL;
+//typedef int BOOL;
 
 // In case this ever changes
 #define M_PI			3.14159265358979323846

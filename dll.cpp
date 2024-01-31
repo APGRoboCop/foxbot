@@ -996,7 +996,9 @@ void DispatchThink(edict_t* pent) {
 				tr.pHit = nullptr;
 				UTIL_TraceLine(pent->v.euser1->v.origin + pent->v.euser1->v.view_ofs, pBot->enemy.ptr->v.origin + Vector(xx, yy, zz), dont_ignore_monsters, dont_ignore_glass, pent->v.euser1, &tr);
 
-				if (tr.pHit == pBot->enemy.ptr || tr.flFraction == 1.0f)
+				float tolerance = 0.0001f; // Define your own tolerance
+			   
+				if (tr.pHit == pBot->enemy.ptr || std::fabs(tr.flFraction - 1.0f) < tolerance)
 					player_vis[scanpos] = true;
 				else
 					player_vis[scanpos] = false;
