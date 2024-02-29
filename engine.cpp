@@ -353,8 +353,9 @@ void pfnClientCommand(edict_t* pEdict, char* szFmt, ...) {
 			char cl_name[128];
 			cl_name[0] = '\0';
 
-			char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEdict);
+         const char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEdict);
 			std::strncpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"), 120);
+
 			//{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"cl %d name %s\n",i,cl_name); std::fclose(fp); }
 			if (cl_name[0] == '\0' || infobuffer == nullptr)
 				b = false;
@@ -378,7 +379,7 @@ void pfnClientCommand(edict_t* pEdict, char* szFmt, ...) {
 	(*g_engfuncs.pfnClientCommand)(pEdict, tempFmt);
 	va_end(argp);
 	// if(mr_meta) RETURN_META(MRES_HANDLED);
-	return;
+	//return;
 }
 
 void pfnClCom(edict_t* pEdict, char* szFmt, ...) {
@@ -406,7 +407,7 @@ void pfnClCom(edict_t* pEdict, char* szFmt, ...) {
 			char cl_name[128];
 			cl_name[0] = '\0';
 
-			char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEdict);
+         const char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEdict);
 			std::strncpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"), 120);
 			//{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"cl %d name %s\n",i,cl_name); std::fclose(fp); }
 			if (cl_name[0] == '\0' || infobuffer == nullptr)
@@ -922,7 +923,7 @@ void pfnClientPrintf(edict_t* pEdict, const PRINT_TYPE ptype, const char* szMsg)
 		if (b) {
 			char cl_name[128] = " -";
 
-			char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEdict);
+         const char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEdict);
 
 			std::strncat(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"), 120 - std::strlen(cl_name));
 			std::strncat(cl_name, "-\n", 127 - std::strlen(cl_name));

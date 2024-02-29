@@ -1490,7 +1490,7 @@ bool WaypointLoad(edict_t* pEntity) {
 		// make sure the waypoint file is Foxbot specific
 		if (std::strcmp(header.filetype, "FoXBot") != 0) {
 			if (pEntity) {
-				std::sprintf(msg, "%s isn't a valid FoXBot waypoint file\n", filename);
+				snprintf(msg, sizeof(msg), "%s isn't a valid FoXBot waypoint file\n", filename);
 				ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 			}
 
@@ -1505,7 +1505,7 @@ bool WaypointLoad(edict_t* pEntity) {
 
 		if (strcasecmp(header.mapname, STRING(gpGlobals->mapname)) != 0) {
 			if (pEntity) {
-				std::sprintf(msg, "%s FoXBot waypoints aren't for this map\n", filename);
+				snprintf(msg, sizeof(msg), "%s FoXBot waypoints aren't for this map\n", filename);
 				ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 			}
 

@@ -31,7 +31,7 @@ Updated by RoboCop
 
 - Nailguns and Super Nailguns should now be very accurate as those guns are meant for destroying SG Turrets
 
-- Repaired some rogue pathways in baconbowl_r, phantom, rock2, sandbowl_r2 and schtop
+- Repaired some rogue pathways in baconbowl_r, phantom, mulch_dm2b1, openfire_l, openfire_lowgrens, rock2, sandbowl_r2, schtop, sniperzone, sniperzone_r and warpath_r2
 
 - Added some more Rocket/Conc Jumps for avanti, baconbowl_r, palermo, rock2 and ravelin
 
@@ -39,13 +39,13 @@ TODO List:-
 
 >> Complete 'botdontmove' in order for "GolfBots" to stay stationary
 
->> To prevent the bots from holding their nades for too long, that can cause them acting as suicide bombers occassionally
+>> To prevent the bots from holding their live nades for too long, that can cause them acting as suicide bombers occassionally
 
 >> Fix bots navigation when shot by enemies as they sometimes cannot seem to detect where damage is coming from
 
 >> To prevent bots from shooting at spy corpses too long as, they aren't aware that a player switched teams as enemy spy
 
->> To improve the pipebomb laying trap pattern and to plant at the flag
+>> To improve the pipebomb laying trap pattern and to plant near the flag
 
 >> BONUS: Maybe add a feature for bots to have experience and wisdom or learned data in order to be a bit more human
 

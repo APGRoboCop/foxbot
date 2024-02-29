@@ -198,7 +198,7 @@ typedef struct enginefuncs_s
 	void		(*pfnRunPlayerMove)			(edict_t *fakeclient, const float *viewangles, float forwardmove, float sidemove, float upmove, unsigned short buttons, byte impulse, byte msec );
 	int			(*pfnNumberOfEntities)		(void);
 	char*		(*pfnGetInfoKeyBuffer)		(edict_t *e);	// passing in NULL gets the serverinfo
-	char*		(*pfnInfoKeyValue)			(char *infobuffer, char *key);
+	char*    (*pfnInfoKeyValue)	   (const char* infobuffer, const char* key);
 	void		(*pfnSetKeyValue)			(char *infobuffer, char *key, char *value);
 	void		(*pfnSetClientKeyValue)		(int clientIndex, char *infobuffer, char *key, char *value);
 	int			(*pfnIsMapValid)			(char *filename);

@@ -213,7 +213,6 @@ mBOOL DLLINTERNAL os_safe_call(REG_CMD_FN pfn);
 // Various other windows routine differences.
 #ifdef linux
 	#include <unistd.h>	// sleep
-   #define snprintf std::snprintf
 	#ifndef O_BINARY
     	#define O_BINARY 0
 	#endif	

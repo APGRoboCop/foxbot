@@ -153,7 +153,9 @@ extern chatClass chat; // bot chat stuff
 
 static int number_names = 0;
 
-#define MAX_BOT_NAMES 128
+enum {
+   MAX_BOT_NAMES = 128
+};
 
 #define VALVE_MAX_SKINS 10
 //#define GEARBOX_MAX_SKINS 20
@@ -537,7 +539,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 	{
 		char cl_name[128];
 		cl_name[0] = '\0';
-		char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(INDEXENT(i));
+      const char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(INDEXENT(i));
 		std::strcpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"));
 		if (cl_name[0] != '\0')
 			count++;
