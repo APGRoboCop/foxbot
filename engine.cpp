@@ -992,7 +992,7 @@ void pfnClPrintf(edict_t* pEdict, PRINT_TYPE ptype, const char* szMsg) {
 			char cl_name[128];
 			cl_name[0] = '\0';
 
-			char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEdict);
+         const char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEdict);
 			std::strncpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"), 120);
 			/*{ fp=UTIL_OpenFoxbotLog();
 							std::fprintf(fp,"cl %d name %s\n",i,cl_name); std::fclose(fp);}*/

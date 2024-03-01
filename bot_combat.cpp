@@ -113,7 +113,10 @@ typedef struct {
 } bot_fire_delay_t;
 
 // This holds the multigun names we will check using a repeat loop
-#define NumNTFGuns 8
+enum {
+   NumNTFGuns = 8
+};
+
 const char* ntfTargetChecks[] = {
 	"ntf_teslacoil", "ntf_grenlauncher", "ntf_rocklauncher", "ntf_lrlauncher", "ntf_flamegun", "ntf_crowbar", "ntf_displacer", "ntf_biocannon",
 };
@@ -1612,7 +1615,7 @@ bool BotFireWeapon(const Vector& v_enemy, bot_t* pBot, const int weapon_choice) 
 				continue;
 			}
 
-			const int use_percent = 0;
+         constexpr int use_percent = 0;
 
 			// is use percent greater than weapon use percent?
 			if (use_percent > pSelect[select_index].use_percent) {
@@ -1632,7 +1635,7 @@ bool BotFireWeapon(const Vector& v_enemy, bot_t* pBot, const int weapon_choice) 
 
 			iId = pSelect[select_index].iId;
 			use_primary = use_secondary = false;
-			const int primary_percent = 0;
+         constexpr int primary_percent = 0;
 
 			// check if this weapon uses ammo and is running low
 			if (pBot->m_rgAmmo[weapon_defs[iId].iAmmo1] < pSelect[select_index].min_primary_ammo)

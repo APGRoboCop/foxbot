@@ -81,17 +81,23 @@ template <typename U> void bzero(U* ptr, size_t len) noexcept {
 	}
 }
 
-#define BOT_PITCH_SPEED 30
-#define BOT_YAW_SPEED 30
+enum {
+   BOT_PITCH_SPEED = 30,
+   BOT_YAW_SPEED = 30
+};
 
-#define RESPAWN_IDLE 1
-#define RESPAWN_NEED_TO_RESPAWN 2
-#define RESPAWN_IS_RESPAWNING 3
+enum {
+   RESPAWN_IDLE = 1,
+   RESPAWN_NEED_TO_RESPAWN = 2,
+   RESPAWN_IS_RESPAWNING = 3
+};
 
 // game start messages for TFC...
-#define MSG_TFC_IDLE 1
-#define MSG_TFC_TEAM_SELECT 2
-#define MSG_TFC_CLASS_SELECT 3
+enum {
+   MSG_TFC_IDLE = 1,
+   MSG_TFC_TEAM_SELECT = 2,
+   MSG_TFC_CLASS_SELECT = 3
+};
 
 /*		// Not required for TFC - [APG]RoboCop[CL]
 // game start messages for CS...
@@ -117,37 +123,47 @@ template <typename U> void bzero(U* ptr, size_t len) noexcept {
 #define MSG_FLF_HEAVYWEAPONS_SELECT 9
 */
 
-#define TFC_CLASS_CIVILIAN 11
-#define TFC_CLASS_SCOUT 1
-#define TFC_CLASS_SNIPER 2
-#define TFC_CLASS_SOLDIER 3
-#define TFC_CLASS_DEMOMAN 4
-#define TFC_CLASS_MEDIC 5
-#define TFC_CLASS_HWGUY 6
-#define TFC_CLASS_PYRO 7
-#define TFC_CLASS_SPY 8
-#define TFC_CLASS_ENGINEER 9
+enum {
+   TFC_CLASS_CIVILIAN = 11,
+   TFC_CLASS_SCOUT = 1,
+   TFC_CLASS_SNIPER = 2,
+   TFC_CLASS_SOLDIER = 3,
+   TFC_CLASS_DEMOMAN = 4,
+   TFC_CLASS_MEDIC = 5,
+   TFC_CLASS_HWGUY = 6,
+   TFC_CLASS_PYRO = 7,
+   TFC_CLASS_SPY = 8,
+   TFC_CLASS_ENGINEER = 9
+};
 
-#define BOT_SKIN_LEN 32
-#define BOT_NAME_LEN 32
+enum {
+   BOT_SKIN_LEN = 32,
+   BOT_NAME_LEN = 32
+};
 
 // This is the same spawn flag as SF_BUTTON_TOUCH_ONLY, i.e. used for buttons
 // that activate when a player bumps into them(like the ones on well)
 // Defined here so that there's no need to trawl the HL SDK to find SF_BUTTON_TOUCH_ONLY.
-#define SFLAG_PROXIMITY_BUTTON 256
+enum {
+   SFLAG_PROXIMITY_BUTTON = 256
+};
 
 // bot chat stuff
-#define TOTAL_CHAT_TYPES 6
-#define MAX_CHAT_STRINGS 100 // max strings per type of chat
-#define MAX_CHAT_LENGTH 80
+enum {
+   TOTAL_CHAT_TYPES = 6,
+   MAX_CHAT_STRINGS = 100,   // max strings per type of chat
+   MAX_CHAT_LENGTH = 80
+};
 
 // the indexes for each type of chat
-#define CHAT_TYPE_GREETING 0
-#define CHAT_TYPE_KILL_HI 1
-#define CHAT_TYPE_KILL_LOW 2
-#define CHAT_TYPE_KILLED_HI 3
-#define CHAT_TYPE_KILLED_LOW 4
-#define CHAT_TYPE_SUICIDE 5
+enum {
+   CHAT_TYPE_GREETING = 0,
+   CHAT_TYPE_KILL_HI = 1,
+   CHAT_TYPE_KILL_LOW = 2,
+   CHAT_TYPE_KILLED_HI = 3,
+   CHAT_TYPE_KILLED_LOW = 4,
+   CHAT_TYPE_SUICIDE = 5
+};
 
 //Fix for GCC 8 - [APG]RoboCop[CL]
 #ifdef _WIN32

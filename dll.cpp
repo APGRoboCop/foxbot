@@ -43,18 +43,23 @@
 
 #include "botcam.h"
 
-#define VER_MAJOR 0
-#define VER_MINOR 87
+enum {
+   VER_MAJOR = 0,
+   VER_MINOR = 87
+};
+
 //#define VER_BUILD 0
 
-#define MENU_NONE 0
-#define MENU_1 1
-#define MENU_2 2
-#define MENU_3 3
-#define MENU_4 4
-#define MENU_5 5
-#define MENU_6 6
-#define MENU_7 7
+enum {
+   MENU_NONE = 0,
+   MENU_1 = 1,
+   MENU_2 = 2,
+   MENU_3 = 3,
+   MENU_4 = 4,
+   MENU_5 = 5,
+   MENU_6 = 6,
+   MENU_7 = 7
+};
 
 cvar_t foxbot = { "foxbot", "0.87-APG", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr };
 cvar_t enable_foxbot = { "enable_foxbot", "1", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr };
@@ -609,7 +614,7 @@ static bool BBotBalanceTeams(int a, int b) {
 		if (bots[i].is_used) {
 			char cl_name[128];
 			cl_name[0] = '\0';
-			char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(bots[i].pEdict);
+			const char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(bots[i].pEdict);
 			std::strcpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"));
 			if (cl_name[0] != '\0') {
 				const int team = bots[i].pEdict->v.team - 1;

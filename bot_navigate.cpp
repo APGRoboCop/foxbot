@@ -69,8 +69,8 @@ extern float last_frame_time;
 
 // bit field of waypoint types to ignore when the bot is lost
 // and looking for a new current waypoint to head for
-static const WPT_INT32 lostBotIgnoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING | W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_TFC_DETPACK_CLEAR | W_FL_TFC_DETPACK_SEAL | W_FL_SNIPER | W_FL_TFC_TELEPORTER_ENTRANCE |
-	W_FL_TFC_TELEPORTER_EXIT | W_FL_TFC_JUMP | W_FL_LIFT | W_FL_PATHCHECK);
+static constexpr WPT_INT32 lostBotIgnoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING | W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_TFC_DETPACK_CLEAR | W_FL_TFC_DETPACK_SEAL | W_FL_SNIPER | W_FL_TFC_TELEPORTER_ENTRANCE |
+                                                     W_FL_TFC_TELEPORTER_EXIT | W_FL_TFC_JUMP | W_FL_LIFT | W_FL_PATHCHECK);
 
 int spawnAreaWP[4] = { -1, -1, -1, -1 }; // used for tracking the areas where each team spawns
 extern int team_allies[4];
@@ -1535,8 +1535,8 @@ void BotFindSideRoute(bot_t* pBot) {
 		return;
 
 	// bit field of waypoint types to ignore
-	static const WPT_INT32 ignoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING | W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_SNIPER | W_FL_TFC_DETPACK_CLEAR | W_FL_TFC_DETPACK_SEAL | W_FL_TFC_TELEPORTER_ENTRANCE |
-		W_FL_TFC_TELEPORTER_EXIT | W_FL_HEALTH | W_FL_ARMOR | W_FL_AMMO | W_FL_TFC_JUMP);
+	static constexpr WPT_INT32 ignoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING | W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_SNIPER | W_FL_TFC_DETPACK_CLEAR | W_FL_TFC_DETPACK_SEAL | W_FL_TFC_TELEPORTER_ENTRANCE |
+                                                 W_FL_TFC_TELEPORTER_EXIT | W_FL_HEALTH | W_FL_ARMOR | W_FL_AMMO | W_FL_TFC_JUMP);
 
 	// find out if the bot is at a junction waypoint by counting
 	// the number of paths connected from it
@@ -1699,7 +1699,7 @@ bool BotChangeRoute(bot_t* pBot) {
 	int newBranchWP = -1;
 
 	// bit field of waypoint types to ignore
-	static const WPT_INT32 ignoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING | W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_SNIPER | W_FL_TFC_TELEPORTER_ENTRANCE | W_FL_TFC_TELEPORTER_EXIT | W_FL_TFC_JUMP | W_FL_LIFT);
+	static constexpr WPT_INT32 ignoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING | W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_SNIPER | W_FL_TFC_TELEPORTER_ENTRANCE | W_FL_TFC_TELEPORTER_EXIT | W_FL_TFC_JUMP | W_FL_LIFT);
 
 	// pick a random waypoint to start searching from
 	int index = RANDOM_LONG(0, num_waypoints - 1);
@@ -1874,7 +1874,7 @@ int BotFindRetreatPoint(bot_t* const pBot, const int min_dist, const Vector& r_t
 		return -1;
 
 	// bit field of waypoint types to ignore
-	static const WPT_INT32 ignoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING | W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_SNIPER | W_FL_TFC_TELEPORTER_ENTRANCE | W_FL_TFC_TELEPORTER_EXIT | W_FL_TFC_JUMP | W_FL_LIFT);
+	static constexpr WPT_INT32 ignoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING | W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_SNIPER | W_FL_TFC_TELEPORTER_ENTRANCE | W_FL_TFC_TELEPORTER_EXIT | W_FL_TFC_JUMP | W_FL_LIFT);
 
 	// distance from bot to threat
 	const float botThreatDistance = (pBot->pEdict->v.origin - r_threatOrigin).Length();
@@ -1956,7 +1956,7 @@ int BotFindThreatAvoidPoint(bot_t* const pBot, const int min_dist, const edict_t
 		return -1;
 
 	// bit field of waypoint types to ignore
-	static const WPT_INT32 ignoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING | W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_SNIPER | W_FL_TFC_TELEPORTER_ENTRANCE | W_FL_TFC_TELEPORTER_EXIT | W_FL_TFC_JUMP | W_FL_LIFT);
+	static constexpr WPT_INT32 ignoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING | W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_SNIPER | W_FL_TFC_TELEPORTER_ENTRANCE | W_FL_TFC_TELEPORTER_EXIT | W_FL_TFC_JUMP | W_FL_LIFT);
 
 	// distance from bot to threat
 	const float botThreatDistance = (pBot->pEdict->v.origin - pent->v.origin).Length();
@@ -2036,7 +2036,7 @@ int BotTargetDefenderWaypoint(const bot_t* pBot) {
 	int index = static_cast<int>(random_long(0, num_waypoints - 1));
 
 	// bit field of waypoint types the bot is looking for
-	static const WPT_INT32 validFlags = 0 + (W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_SNIPER);
+	static constexpr WPT_INT32 validFlags = 0 + (W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_SNIPER);
 
 	for (int waypoints_checked = 0; waypoints_checked < num_waypoints; waypoints_checked++, index++) {
 		// wrap the search if it exceeds the number of available waypoints
@@ -2098,7 +2098,7 @@ int BotFindSuicideGoal(const bot_t* pBot) {
 		waypoint_from = pBot->current_wp;
 
 	// bit field of waypoint types the bot is looking for
-	static const WPT_INT32 validFlags = 0 + (W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_SNIPER);
+	static constexpr WPT_INT32 validFlags = 0 + (W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_SNIPER);
 
 	// try to find a waypoint which is further from the bot
 	int furthestIndex = -1;

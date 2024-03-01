@@ -419,7 +419,7 @@ int WaypointFindNearest_E(const edict_t* pEntity, const float range, const int t
 	TraceResult tr;
 
 	// bit field of waypoint types to ignore
-	static const WPT_INT32 ignoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING);
+	static constexpr WPT_INT32 ignoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING);
 
 	// find the nearest waypoint...
 	for (int i = 0; i < num_waypoints; i++) {
@@ -459,7 +459,7 @@ int WaypointFindNearest_V(const Vector& v_src, const float range, const int team
 	float min_distance = range;
 
 	// bit field of waypoint types to ignore
-	static const WPT_INT32 ignoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING);
+	static constexpr WPT_INT32 ignoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING);
 
 	// find the nearest waypoint...
 	for (int index = 0; index < num_waypoints; index++) {
@@ -545,7 +545,7 @@ int WaypointFindInRange(const Vector& v_src, const float min_range, const float 
 		i = RANDOM_LONG(0, num_waypoints - 1);
 
 	// bit field of waypoint types to ignore
-	static const WPT_INT32 ignoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING);
+	static constexpr WPT_INT32 ignoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING);
 
 	// start the search
 	for (int waypoints_checked = 0; waypoints_checked < num_waypoints; waypoints_checked++, i++) {
@@ -1029,7 +1029,7 @@ void WaypointAdd(edict_t* pEntity) {
 		return;
 
 	edict_t* pent = nullptr;
-	const float radius = 40.0f;
+   constexpr float radius = 40.0f;
 	short index = 0;
 
 	// find the next available slot for the new waypoint...
@@ -1102,7 +1102,7 @@ void WaypointAdd(edict_t* pEntity) {
 	// delete from index to other..cus his delete function dont!
 
 	PATH* p = paths[index];
-	short i;
+	int i;
 
 #ifdef _DEBUG
 	int count = 0;
@@ -1697,7 +1697,7 @@ static bool WaypointLoadVersion4(FILE* bfp, const int number_of_waypoints) {
 	WAYPOINT_VERSION4 dummy_waypoint;
 
 	// these script flags used to be in the main waypoint flag
-	const int OLD_POINT1 = 1 << 16, OLD_POINT2 = 1 << 17, OLD_POINT3 = 1 << 18, OLD_POINT4 = 1 << 19, OLD_POINT5 = 1 << 20, OLD_POINT6 = 1 << 21, OLD_POINT7 = 1 << 22, OLD_POINT8 = 1 << 23;
+   constexpr int OLD_POINT1 = 1 << 16, OLD_POINT2 = 1 << 17, OLD_POINT3 = 1 << 18, OLD_POINT4 = 1 << 19, OLD_POINT5 = 1 << 20, OLD_POINT6 = 1 << 21, OLD_POINT7 = 1 << 22, OLD_POINT8 = 1 << 23;
 
 	short i;
 	short num;
@@ -3764,7 +3764,7 @@ int AreaDefPointFindNearest(const edict_t* pEntity, const float range, const int
 			o = areas[i].d;
 		}
 
-      const float tolerance = 0.0001f;
+      constexpr float tolerance = 0.0001f;
 	   
 		if (std::abs(distance - 9999.0f) < tolerance)
 			continue;
@@ -4619,7 +4619,7 @@ void AreaAutoMerge() {
 	// could use wpts aswell, but loading a saved area grid won't
 	// include them
 	bool a, b, c, d;
-	const int stk_sz = 512;
+   constexpr int stk_sz = 512;
 	int stk[stk_sz];
 	int stk_cnt;
 
@@ -5391,7 +5391,7 @@ void ProcessCommanderList() {
 	//{
 	//}
 	commanders.clear();
-	const char invalidChars[] = " abcdefghijklmnopqrstuvwxyz,./<>?;'\"[]{}-=+!@#$%^&*()";
+   constexpr char invalidChars[] = " abcdefghijklmnopqrstuvwxyz,./<>?;'\"[]{}-=+!@#$%^&*()";
 
 	UTIL_BuildFileName(filename, 255, "foxbot_commanders.txt", nullptr);
 	std::FILE* inFile = std::fopen(filename, "r");

@@ -163,7 +163,7 @@ enum {
 static char bot_names[MAX_BOT_NAMES][BOT_NAME_LEN + 1];
 
 // defend response distance per class
-const static float defendMaxRespondDist[] = { 300.0f, 1500.0f, 500.0f, 1500.0f, 800.0f, 1500.0f, 1500.0f, 1500.0f, 1500.0f, 1500.0f };
+static constexpr float defendMaxRespondDist[] = { 300.0f, 1500.0f, 500.0f, 1500.0f, 800.0f, 1500.0f, 1500.0f, 1500.0f, 1500.0f, 1500.0f };
 
 // const static double double_pi = 3.141592653589793238;
 
@@ -620,8 +620,9 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 			c_skin[BOT_SKIN_LEN] = 0; // make sure c_skin is null terminated
 		}
 
-		for (i = 0; c_skin[i] != 0; i++)
-			c_skin[i] = std::tolower(c_skin[i]); // convert to all lowercase
+	   //TODO: Test if this loop is no lower required [APG]RoboCop[CL]
+		//for (i = 0; c_skin[i] != 0; i++)
+		//	c_skin[i] = std::tolower(c_skin[i]); // convert to all lowercase
 
 		index = 0;
 
@@ -662,19 +663,19 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 
 			GET_GAME_DIR(dir_name);
 
-#ifndef __linux__
+/*#ifndef __linux__
 			snprintf(filename, 127, "%s\\models\\player\\%s", dir_name, c_skin);
 #else
 			snprintf(filename, 127, "%s/models/player/%s", dir_name, c_skin);
-#endif
+#endif*/
 
 			if (stat(filename, &stat_str) != 0) {
-#ifndef __linux__
+/*#ifndef __linux__
 				snprintf(filename, 127, "valve\\models\\player\\%s", c_skin);
 #else
 				snprintf(filename, 127, "valve/models/player/%s", c_skin);
-#endif
-				if (stat(filename, &stat_str) != 0) {
+#endif*/
+				/*if (stat(filename, &stat_str) != 0) {
 					char err_msg[80];
 
 					snprintf(err_msg, 79, "model \"%s\" is unknown.\n", c_skin);
@@ -692,7 +693,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 					if (IS_DEDICATED_SERVER())
 						std::printf("    recon, robo, scientist, or zombie\n");
 					return;
-				}
+				}*/
 			}
 
 			if (arg2 != nullptr && *arg2 != 0) {
@@ -3597,7 +3598,7 @@ static void BotEnemyCarrierAlert(bot_t* pBot) {
 	if (pBot->visEnemyCount < 2) {
 		if (pBot->bot_class == TFC_CLASS_SCOUT || pBot->bot_class == TFC_CLASS_SNIPER || pBot->bot_class == TFC_CLASS_DEMOMAN || pBot->bot_class == TFC_CLASS_MEDIC || pBot->bot_class == TFC_CLASS_SPY ||
 			pBot->bot_class == TFC_CLASS_ENGINEER) {
-			if (pBot->enemy.ptr->v.playerclass != TFC_CLASS_SOLDIER || pBot->enemy.ptr->v.playerclass != TFC_CLASS_HWGUY || pBot->enemy.ptr->v.playerclass != TFC_CLASS_PYRO || pBot->enemy.ptr->v.playerclass != TFC_CLASS_MEDIC)
+			if (pBot->enemy.ptr->v.playerclass != TFC_CLASS_SOLDIER && pBot->enemy.ptr->v.playerclass != TFC_CLASS_HWGUY && pBot->enemy.ptr->v.playerclass != TFC_CLASS_PYRO && pBot->enemy.ptr->v.playerclass != TFC_CLASS_MEDIC)
 				return;
 		}
 	}
@@ -3640,7 +3641,7 @@ void BotThink(bot_t* pBot) {
 	const float msecval = (gpGlobals->time - pBot->fLastRunPlayerMoveTime) * 1000.0f;
 	pBot->fLastRunPlayerMoveTime = gpGlobals->time;
 
-	const float fUpdateInterval = 1.0f / 60.0f; // update at 60 fps
+   constexpr float fUpdateInterval = 1.0f / 60.0f; // update at 60 fps
 	pBot->fUpdateTime = gpGlobals->time + fUpdateInterval;
 
 	// this is the only place this should be set
@@ -3827,8 +3828,8 @@ void BotThink(bot_t* pBot) {
 	if (diff < -180) diff = diff + 360;
 	if (diff > 180) diff = diff - 360;
 	if (diff > -10 && diff < 10) speed = 3;
-	else if (diff > -20 && diff < 20) speed = 4;
-	else if (diff > -40 && diff < 40) speed = 4;
+	else if (diff > -20 && diff < 20 && diff > -40 && diff < 40) speed = 4;
+	//else if (diff > -40 && diff < 40) speed = 4;
 	else if (diff > -60 && diff < 60) speed = 5;
 	else if (diff > -90 && diff < 90) speed = 7;
 	else if (diff > -110 && diff < 110) speed = 10;
