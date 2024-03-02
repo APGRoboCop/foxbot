@@ -429,9 +429,9 @@ int UTIL_GetBotIndex(const edict_t* pEdict) {
 }
 
 bot_t* UTIL_GetBotPointer(const edict_t* pEdict) {
-	for (int index = 0; index < 32; index++) {
-		if (bots[index].pEdict == pEdict)
-			return &bots[index];
+	for (auto &bot : bots) {
+		if (bot.pEdict == pEdict)
+			return &bot;
 	}
 
 	return nullptr; // return NULL if edict is not a bot

@@ -157,7 +157,10 @@ enum {
    MAX_BOT_NAMES = 128
 };
 
-#define VALVE_MAX_SKINS 10
+enum {
+   VALVE_MAX_SKINS = 10
+};
+
 //#define GEARBOX_MAX_SKINS 20
 
 static char bot_names[MAX_BOT_NAMES][BOT_NAME_LEN + 1];
@@ -1156,9 +1159,10 @@ void BotFindItem(bot_t* pBot) {
 
 					char mdlname[32] = "";
 					char temp[255];
-					for (int i = 0; i < 255; i++) {
-						temp[i] = '\0';
+					for (char &i : temp) {
+                  i = '\0';
 					}
+
 					std::strcpy(temp, STRING(pent->v.model));
 
 					if (std::strlen(temp) >= 8)
@@ -1352,7 +1356,7 @@ void BotFindItem(bot_t* pBot) {
 				// check if entity is a battery...
 				else if (std::strcmp("item_battery", item_name) == 0) {
 					// check if the bot wants to use this item...
-					if (pEdict->v.armorvalue >= VALVE_MAX_NORMAL_BATTERY)
+					if (static_cast<int>(pEdict->v.armorvalue) >= VALVE_MAX_NORMAL_BATTERY)
 						continue;
 
 					// check if the item is not visible (i.e. has not respawned)
@@ -2234,32 +2238,32 @@ void BotSoundSense(edict_t* pEdict, const char* pszSample, const float fVolume) 
 		const float hearingDistance = 1500 * fVolume;
 		int closestWPToThreat = -1;
 
-		for (int i = 0; i < MAX_BOTS; i++) {
-			if (bots[i].is_used // Is this a bot?
-				&& bots[i].visEnemyCount < 1 && bots[i].mission == ROLE_DEFENDER && bots[i].current_wp != -1 && (bots[i].current_team != sourceTeam || random_long(0, 1000) < 333)) {
-				const float botDistance = (bots[i].pEdict->v.origin - pEdict->v.origin).Length();
+		for (auto &bot : bots) {
+			if (bot.is_used // Is this a bot?
+             && bot.visEnemyCount < 1 && bot.mission == ROLE_DEFENDER && bot.current_wp != -1 && (bot.current_team != sourceTeam || random_long(0, 1000) < 333)) {
+				const float botDistance = (bot.pEdict->v.origin - pEdict->v.origin).Length();
 				if (botDistance < hearingDistance) {
 					// This bot can hear it. Try going to it
-					if (random_long(1, 100) < 100 - bots[i].bot_skill * 10) {
+					if (random_long(1, 100) < 100 - bot.bot_skill * 10) {
 						if (closestWPToThreat == -1)
-							closestWPToThreat = WaypointFindNearest_V(pEdict->v.origin, 500.0f, bots[i].current_team);
+							closestWPToThreat = WaypointFindNearest_V(pEdict->v.origin, 500.0f, bot.current_team);
 
-						const int respondDist = static_cast<int>(defendMaxRespondDist[bots[i].pEdict->v.playerclass]);
+						const int respondDist = static_cast<int>(defendMaxRespondDist[bot.pEdict->v.playerclass]);
 
 						// Respond if we are within range
-						if (WaypointDistanceFromTo(bots[i].current_wp, closestWPToThreat, bots[i].current_team) < respondDist) {
+						if (WaypointDistanceFromTo(bot.current_wp, closestWPToThreat, bot.current_team) < respondDist) {
 							// If it's a spy, and we can see it, attack the mofo
 							if (pEdict->v.playerclass == TFC_CLASS_SPY) {
-								if (FInViewCone(pEdict->v.origin, bots[i].pEdict) && FVisible(pEdict->v.origin, bots[i].pEdict))
-									bots[i].enemy.ptr = pEdict;
+								if (FInViewCone(pEdict->v.origin, bot.pEdict) && FVisible(pEdict->v.origin, bot.pEdict))
+                           bot.enemy.ptr = pEdict;
 							}
 
-							if (!FInViewCone(pEdict->v.origin, bots[i].pEdict)) {
+							if (!FInViewCone(pEdict->v.origin, bot.pEdict)) {
 								// set up a job to investigate the sound
-								newJob = InitialiseNewJob(&bots[i], JOB_INVESTIGATE_AREA);
+								newJob = InitialiseNewJob(&bot, JOB_INVESTIGATE_AREA);
 								if (newJob != nullptr) {
 									newJob->waypoint = closestWPToThreat;
-									SubmitNewJob(&bots[i], JOB_INVESTIGATE_AREA, newJob);
+									SubmitNewJob(&bot, JOB_INVESTIGATE_AREA, newJob);
 								}
 							}
 							// UTIL_HostSay(bots[i].pEdict, 0, "Heard something.");
@@ -2369,36 +2373,36 @@ void BotSoundSense(edict_t* pEdict, const char* pszSample, const float fVolume) 
 
 	// make all other bots turn to face the source of interesting sounds
 	const float hearingDistance = 1500 * fVolume;
-	for (int i = 0; i < MAX_BOTS; i++) {
+	for (auto &bot : bots) {
 		// only check with bots who are now ready to respond to a sound
-		if (bots[i].is_used                                                                        // Is this a bot?
-			&& bots[i].f_soundReactTime < bots[i].f_think_time && bots[i].pEdict->v.deadflag != 5) // skip feigning spies(for now)
+		if (bot.is_used                                                                // Is this a bot?
+          && bot.f_soundReactTime < bot.f_think_time && bot.pEdict->v.deadflag != 5) // skip feigning spies(for now)
 		{
-			newJob = InitialiseNewJob(&bots[i], JOB_SPOT_STIMULUS);
+			newJob = InitialiseNewJob(&bot, JOB_SPOT_STIMULUS);
 			if (newJob == nullptr)
 				continue;
 
 			// sometimes ignore sounds made by allies
 			// technically, this is cheating, but will simulate intelligence
-			if (bots[i].current_team == sourceTeam && random_long(0, 1000) < 400)
+			if (bot.current_team == sourceTeam && random_long(0, 1000) < 400)
 				continue;
 
-			const float botDistance = (bots[i].pEdict->v.origin - pEdict->v.origin).Length();
+			const float botDistance = (bot.pEdict->v.origin - pEdict->v.origin).Length();
 
 			if (botDistance < hearingDistance && botDistance > 100.0f) {
 				// if this bot can hear the sound, but is not looking at its source
-				if (!bots[i].enemy.ptr && !FInViewCone(pEdict->v.origin, bots[i].pEdict) && FVisible(pEdict->v.origin, bots[i].pEdict)) {
+				if (!bot.enemy.ptr && !FInViewCone(pEdict->v.origin, bot.pEdict) && FVisible(pEdict->v.origin, bot.pEdict)) {
 					// set up a job for spotting the unseen activity
 					newJob->origin = pEdict->v.origin;
-					newJob->waypoint = bots[i].goto_wp;
-					SubmitNewJob(&bots[i], JOB_SPOT_STIMULUS, newJob);
+					newJob->waypoint = bot.goto_wp;
+					SubmitNewJob(&bot, JOB_SPOT_STIMULUS, newJob);
 
 					// don't react to sounds again for a few seconds
 					// longer if underwater(don't want to drown)
-					if (bots[i].pEdict->v.waterlevel == WL_NOT_IN_WATER)
-						bots[i].f_soundReactTime = bots[i].f_think_time + RANDOM_FLOAT(3.0f, 4.0f);
+					if (bot.pEdict->v.waterlevel == WL_NOT_IN_WATER)
+                  bot.f_soundReactTime = bot.f_think_time + RANDOM_FLOAT(3.0f, 4.0f);
 					else
-						bots[i].f_soundReactTime = bots[i].f_think_time + 5.0f;
+                  bot.f_soundReactTime = bot.f_think_time + 5.0f;
 
 					//	WaypointDrawBeam(INDEXENT(1), bots[i].pEdict->v.origin,
 					//		pEdict->v.origin,
@@ -2496,13 +2500,13 @@ short BotTeammatesNearWaypoint(const bot_t* pBot, const int waypoint) {
 
 	const float my_distance = (pBot->pEdict->v.origin - waypoints[waypoint].origin).Length();
 
-	for (int i = 0; i < MAX_BOTS; i++) {
+	for (auto &bot : bots) {
 		// Is this player a bot teammate who is
 		// heading towards the indicated waypoint?
-		if (bots[i].is_used && &bots[i] != pBot // make sure the player isn't THIS bot
-			&& bots[i].current_wp == waypoint && bots[i].current_team == pBot->current_team) {
+		if (bot.is_used && &bot != pBot // make sure the player isn't THIS bot
+          && bot.current_wp == waypoint && bot.current_team == pBot->current_team) {
 			// if this player is nearer than the bot add them to the total
-			if (VectorsNearerThan(bots[i].pEdict->v.origin, waypoints[waypoint].origin, my_distance))
+			if (VectorsNearerThan(bot.pEdict->v.origin, waypoints[waypoint].origin, my_distance))
 				++total_present;
 		}
 	}
@@ -2519,15 +2523,15 @@ bot_t* BotDefenderAtWaypoint(const bot_t* pBot, const int waypoint, const float 
 	if (waypoint < 0)
 		return nullptr;
 
-	for (int i = 0; i < MAX_BOTS; i++) {
+	for (auto &bot : bots) {
 		// Is this a bot defender teammate, with an interest in the
 		// indicated waypoint?
-		if (bots[i].is_used     // make sure this player is a bot
-			&& &bots[i] != pBot // make sure the player isn't THIS bot
-			&& bots[i].goto_wp == waypoint && bots[i].mission == ROLE_DEFENDER && bots[i].current_team == pBot->current_team) {
+		if (bot.is_used     // make sure this player is a bot
+          && &bot != pBot // make sure the player isn't THIS bot
+          && bot.goto_wp == waypoint && bot.mission == ROLE_DEFENDER && bot.current_team == pBot->current_team) {
 			// if this player is near enough return who they are
-			if (VectorsNearerThan(bots[i].pEdict->v.origin, waypoints[waypoint].origin, range))
-				return &bots[i];
+			if (VectorsNearerThan(bot.pEdict->v.origin, waypoints[waypoint].origin, range))
+				return &bot;
 		}
 	}
 
@@ -3546,10 +3550,10 @@ static void BotReportMyFlagDrop(bot_t* pBot) {
 		// give the other bots on the bot's team the same JOB_PICKUP_FLAG
 		// job if they're interested
 		if (newJob != nullptr) {
-			for (int i = 0; i < 32; i++) {
-				if (bots[i].is_used && &bots[i] != pBot // not this bot
-					&& bots[i].bot_has_flag == false && bots[i].mission == ROLE_ATTACKER && bots[i].current_team == pBot->current_team) {
-					SubmitNewJob(&bots[i], JOB_PICKUP_FLAG, newJob);
+			for (auto &bot : bots) {
+				if (bot.is_used && &bot != pBot // not this bot
+                && bot.bot_has_flag == false && bot.mission == ROLE_ATTACKER && bot.current_team == pBot->current_team) {
+					SubmitNewJob(&bot, JOB_PICKUP_FLAG, newJob);
 				}
 			}
 		}
@@ -4306,10 +4310,10 @@ static void BotSpectatorDebug(bot_t* pBot) {
 		{
 			// list any jobs in the blacklist
 			std::strncat(msg, "Blacklist:\n", 255 - std::strlen(msg));
-			for (int i = 0; i < JOB_BLACKLIST_MAX; i++) {
+			for (const auto &i : pBot->jobBlacklist) {
 				// list one blacklisted job per line
-				if (pBot->jobBlacklist[i].type > JOB_NONE && pBot->jobBlacklist[i].f_timeOut >= pBot->f_think_time && pBot->jobBlacklist[i].type < JOB_TYPE_TOTAL) {
-					std::strncat(msg, jl[pBot->jobBlacklist[i].type].jobNames, 255 - std::strlen(msg));
+				if (i.type > JOB_NONE && i.f_timeOut >= pBot->f_think_time && i.type < JOB_TYPE_TOTAL) {
+					std::strncat(msg, jl[i.type].jobNames, 255 - std::strlen(msg));
 					std::strncat(msg, "\n", 255 - std::strlen(msg)); // add a newline on the end
 				}
 				else

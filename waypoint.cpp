@@ -130,18 +130,18 @@ void WaypointDebug() {
 	// int x = x - 1; // x is zero
 	// int y = y / x; // cause an divide by zero exception
 
-	return;
+	//return;
 }
 
 // free the linked list of waypoint path nodes...
 void WaypointFree() {
-	for (int i = 0; i < MAX_WAYPOINTS; i++) {
+	for (auto &i : paths) {
 #ifdef _DEBUG
 		int count = 0;
 #endif
 
-		if (paths[i]) {
-			PATH* p = paths[i];
+		if (i) {
+			PATH* p = i;
 
 			while (p) // free the linked list
 			{
@@ -156,7 +156,7 @@ void WaypointFree() {
 #endif
 			}
 
-			paths[i] = nullptr;
+         i = nullptr;
 		}
 	}
 }
@@ -918,11 +918,11 @@ bool DetpackClearIsBlocked(const int index) {
 	const PATH* p = paths[index];
 	int path_total = 0;
 	while (p != nullptr) {
-		for (int i = 0; i < MAX_PATH_INDEX; i++) {
+		for (const short i : p->index) {
 			// test for an obstruction
-			if (p->index[i] != -1) {
+			if (i != -1) {
 				++path_total;
-				UTIL_TraceLine(waypoints[index].origin, waypoints[p->index[i]].origin, ignore_monsters, nullptr, &tr);
+				UTIL_TraceLine(waypoints[index].origin, waypoints[i].origin, ignore_monsters, nullptr, &tr);
 
 				if (tr.flFraction < 1.0f)
 					return true; // a path is blocked by something
@@ -950,10 +950,10 @@ bool DetpackSealIsClear(const int index) {
 	// start checking
 	const PATH* p = paths[index];
 	while (p != nullptr) {
-		for (int i = 0; i < MAX_PATH_INDEX; i++) {
+		for (const short i : p->index) {
 			// test for an obstruction
-			if (p->index[i] != -1) {
-				UTIL_TraceLine(waypoints[index].origin, waypoints[p->index[i]].origin, ignore_monsters, nullptr, &tr);
+			if (i != -1) {
+				UTIL_TraceLine(waypoints[index].origin, waypoints[i].origin, ignore_monsters, nullptr, &tr);
 
 				if (tr.flFraction < 1.0f)
 					return false; // a path is blocked by something
@@ -1966,8 +1966,8 @@ bool WaypointDirectPathCheck(const int srcWP, const int destWP) {
 	const PATH* p = paths[srcWP];
 
 	while (p != nullptr) {
-		for (int i = 0; i < MAX_PATH_INDEX; i++) {
-			if (p->index[i] == destWP)
+		for (const short i : p->index) {
+			if (i == destWP)
 				return true;
 		}
 

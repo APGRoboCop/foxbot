@@ -144,33 +144,33 @@ edict_t* pfnFindEntityInSphere(edict_t* pEdictStartSearchAfter, const float* org
 
 void pfnRemoveEntity(edict_t* e) {
 	// tell each bot to forget about the removed entity
-	for (int i = 0; i < 32; i++) {
-		if (bots[i].is_used) {
-			if (bots[i].lastEnemySentryGun == e)
-				bots[i].lastEnemySentryGun = nullptr;
-			if (bots[i].enemy.ptr == e)
-				bots[i].enemy.ptr = nullptr;
+	for (auto &bot : bots) {
+		if (bot.is_used) {
+			if (bot.lastEnemySentryGun == e)
+            bot.lastEnemySentryGun = nullptr;
+			if (bot.enemy.ptr == e)
+            bot.enemy.ptr = nullptr;
 
-			if (bots[i].pEdict->v.playerclass == TFC_CLASS_ENGINEER) {
-				if (bots[i].sentry_edict == e) {
-					bots[i].has_sentry = false;
-					bots[i].sentry_edict = nullptr;
-					bots[i].SGRotated = false;
+			if (bot.pEdict->v.playerclass == TFC_CLASS_ENGINEER) {
+				if (bot.sentry_edict == e) {
+               bot.has_sentry = false;
+               bot.sentry_edict = nullptr;
+               bot.SGRotated = false;
 				}
 
-				if (bots[i].dispenser_edict == e) {
-					bots[i].has_dispenser = false;
-					bots[i].dispenser_edict = nullptr;
+				if (bot.dispenser_edict == e) {
+               bot.has_dispenser = false;
+               bot.dispenser_edict = nullptr;
 				}
 
-				if (bots[i].tpEntrance == e) {
-					bots[i].tpEntrance = nullptr;
-					bots[i].tpEntranceWP = -1;
+				if (bot.tpEntrance == e) {
+               bot.tpEntrance = nullptr;
+               bot.tpEntranceWP = -1;
 				}
 
-				if (bots[i].tpExit == e) {
-					bots[i].tpExit = nullptr;
-					bots[i].tpExitWP = -1;
+				if (bot.tpExit == e) {
+               bot.tpExit = nullptr;
+               bot.tpExitWP = -1;
 				}
 			}
 		}
@@ -186,19 +186,19 @@ void pfnSetOrigin(edict_t* e, const float* rgflOrigin) {
 	if (std::strcmp(STRING(e->v.classname), "player") == 0) {
 		// teleport at new round start
 		// clear up current wpt
-		for (int bot_index = 0; bot_index < 32; bot_index++) {
+		for (auto &bot : bots) {
 			// only consider existing bots that haven't died very recently
-			if (bots[bot_index].pEdict == e && bots[bot_index].is_used && bots[bot_index].f_killed_time + 3.0f < gpGlobals->time) {
+			if (bot.pEdict == e && bot.is_used && bot.f_killed_time + 3.0f < gpGlobals->time) {
 				// see if a teleporter pad moved the bot
-				const edict_t* teleExit = BotEntityAtPoint("building_teleporter", bots[bot_index].pEdict->v.origin, 90.0f);
+				const edict_t* teleExit = BotEntityAtPoint("building_teleporter", bot.pEdict->v.origin, 90.0f);
 
 				if (teleExit == nullptr) {
 					//	UTIL_BotLogPrintf("%s Non-teleport translocation, time %f\n",
 					//		bots[bot_index].name, gpGlobals->time);
 
-					bots[bot_index].current_wp = -1;
-					bots[bot_index].f_snipe_time = 0.0f;
-					bots[bot_index].f_primary_charging = 0.0f;
+               bot.current_wp = -1;
+               bot.f_snipe_time = 0.0f;
+               bot.f_primary_charging = 0.0f;
 				}
 				/*	else
 								{
@@ -214,17 +214,17 @@ void pfnSetOrigin(edict_t* e, const float* rgflOrigin) {
 		// ok, we have the 'base' entity pointer
 		// we want the pointer to the sentry itself
 
-		for (int bot_index = 0; bot_index < 32; bot_index++) {
-			if (bots[bot_index].sentry_edict != nullptr && bots[bot_index].has_sentry) {
+		for (auto &bot : bots) {
+			if (bot.sentry_edict != nullptr && bot.has_sentry) {
 				edict_t* pent = e;
 				const Vector rgflOriginVector(rgflOrigin[0], rgflOrigin[1], rgflOrigin[2]); // Create a new Vector from the float array
-				int l = static_cast<int>(bots[bot_index].sentry_edict->v.origin.z - rgflOriginVector.z);
+				int l = static_cast<int>(bot.sentry_edict->v.origin.z - rgflOriginVector.z);
 				if (l < 0)
 					l = -l;
 				const int xa = static_cast<int>(rgflOriginVector.x);
 				const int ya = static_cast<int>(rgflOriginVector.y);
-				const int xb = static_cast<int>(bots[bot_index].sentry_edict->v.origin.x);
-				const int yb = static_cast<int>(bots[bot_index].sentry_edict->v.origin.y);
+				const int xb = static_cast<int>(bot.sentry_edict->v.origin.x);
+				const int yb = static_cast<int>(bot.sentry_edict->v.origin.y);
 				// FILE *fp;
 				//{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"l %d xa %d xb %d ya %d yb %d\n",l,xa,xb,ya,yb); std::fclose(fp); }
 				if (l >= 8 &&
@@ -232,7 +232,7 @@ void pfnSetOrigin(edict_t* e, const float* rgflOrigin) {
 					//&& (xa<xb+2 && xa+2>xb)
 					//&& (ya<yb+2 && ya+2>yb))
 					&& xa == xb && ya == yb) {
-					bots[bot_index].sentry_edict = pent;
+               bot.sentry_edict = pent;
 				}
 			}
 		}
@@ -317,29 +317,32 @@ void pfnClientCommand(edict_t* pEdict, char* szFmt, ...) {
 		std::fclose(fp);
 	}
 	snprintf(sz_error_check, 250, "-pfnClientCommand=%s %p\n", szFmt, static_cast<void*>(pEdict));
-	/*if(pEdict!=NULL)
-	   {
+
+   /*if(pEdict!=NULL)
+	{
 	   if((pEdict->v.flags & FL_FAKECLIENT)==FL_FAKECLIENT)
 	   {
 	   //admin mod fix here! ...maybee clientprintf aswell..dunno
 	   FakeClientCommand(pEdict,szFmt,NULL,NULL);
 	   //if(mr_meta) RETURN_META(MRES_SUPERCEDE);
 	   }
-	   }*/
-	char tempFmt[1024];
+	}*/
 
+   char tempFmt[1024];
 	va_list argp;
+
 	va_start(argp, szFmt);
-	std::vsprintf(tempFmt, szFmt, argp);
+	std::vsnprintf(tempFmt, sizeof(tempFmt), szFmt, argp);
+	va_end(argp);
 
 	if (pEdict != nullptr) {
 		// if(!((pEdict->v.flags & FL_FAKECLIENT)==FL_FAKECLIENT))
 		bool b = false;
 		if ((pEdict->v.flags & FL_FAKECLIENT) != FL_FAKECLIENT) {
-			for (int i = 0; i < 32; i++) {
+			for (auto &client : clients) {
 				// if(!((pEdict->v.flags & FL_FAKECLIENT)==FL_FAKECLIENT))
 				// bots[i].is_used &&
-				if (clients[i] == pEdict)
+				if (client == pEdict)
 					b = true;
 				/*if(bots[i].pEdict==pEdict && (GETPLAYERWONID(pEdict)==0 || ENTINDEX(pEdict)==-1 ||
 				   (GETPLAYERWONID(pEdict)==-1 && IS_DEDICATED_SERVER())))
@@ -393,10 +396,10 @@ void pfnClCom(edict_t* pEdict, char* szFmt, ...) {
 		bool b = false;
 
 		if ((pEdict->v.flags & FL_FAKECLIENT) != FL_FAKECLIENT) {
-			for (int i = 0; i < 32; i++) {
+			for (auto &client : clients) {
 				// if(!((pEdict->v.flags & FL_FAKECLIENT)==FL_FAKECLIENT))
 				// bots[i].is_used &&
-				if (clients[i] == pEdict)
+				if (client == pEdict)
 					b = true;
 				/*if(bots[i].pEdict==pEdict && (GETPLAYERWONID(pEdict)==0 || ENTINDEX(pEdict)==-1 ||
 				   (GETPLAYERWONID(pEdict)==-1 && IS_DEDICATED_SERVER())))
@@ -904,12 +907,12 @@ void pfnClientPrintf(edict_t* pEdict, const PRINT_TYPE ptype, const char* szMsg)
 	if (pEdict != nullptr) {
 		bool b = false;
 		if (!(pEdict->v.flags & FL_FAKECLIENT)) {
-			for (int i = 0; i < 32; i++) {
+			for (auto &client : clients) {
 				// if(!((pEdict->v.flags & FL_FAKECLIENT)==FL_FAKECLIENT))
 				// bots[i].is_used &&
 				/*if(clients[i]!=NULL)
 				   snprintf(sz_error_check,250,"%s %x %d\n",sz_error_check,clients[i],i);*/
-				if (clients[i] == pEdict)
+				if (client == pEdict)
 					b = true;
 				/*if(bots[i].pEdict==pEdict && (GETPLAYERWONID(pEdict)==0 || ENTINDEX(pEdict)==-1 ||
 				   (GETPLAYERWONID(pEdict)==-1 && IS_DEDICATED_SERVER())))
@@ -977,14 +980,14 @@ void pfnClPrintf(edict_t* pEdict, PRINT_TYPE ptype, const char* szMsg) {
 	if (pEdict != nullptr) {
 		bool b = false;
 		if ((pEdict->v.flags & FL_FAKECLIENT) != FL_FAKECLIENT) {
-			for (int i = 0; i < 32; i++) {
+			for (auto &client : clients) {
 				// if(!((pEdict->v.flags & FL_FAKECLIENT)==FL_FAKECLIENT))
 				// bots[i].is_used &&
 				/*if(bots[i].pEdict==pEdict
 								&& (GETPLAYERWONID(pEdict)==0 || ENTINDEX(pEdict)==-1
 								|| (GETPLAYERWONID(pEdict)==-1 && IS_DEDICATED_SERVER())))
 				   b=false;*/
-				if (clients[i] == pEdict)
+				if (client == pEdict)
 					b = true;
 			}
 		}

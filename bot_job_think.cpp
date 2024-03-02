@@ -175,8 +175,8 @@ void BlacklistJob(bot_t* pBot, const int jobType, const float timeOut) {
 // This function returns true if the specified jobtype is already in the
 // job buffer.
 bool BufferContainsJobType(const bot_t* pBot, const int JobType) {
-	for (int i = 0; i < JOB_BUFFER_MAX; i++) {
-		if (pBot->jobType[i] == JobType)
+	for (const int i : pBot->jobType) {
+		if (i == JobType)
 			return true;
 	}
 
@@ -632,8 +632,8 @@ void BotJobThink(bot_t* pBot) {
 				int guardChance = 750;
 
 				// find out if any bot teammates are guarding already
-				for (int i = 0; i < MAX_BOTS; i++) {
-					if (bots[i].is_used && bots[i].current_team == pBot->current_team && (BufferedJobIndex(&bots[i], JOB_GUARD_WAYPOINT) != -1 || BufferedJobIndex(&bots[i], JOB_PIPETRAP) != -1)) {
+				for (auto &bot : bots) {
+					if (bot.is_used && bot.current_team == pBot->current_team && (BufferedJobIndex(&bot, JOB_GUARD_WAYPOINT) != -1 || BufferedJobIndex(&bot, JOB_PIPETRAP) != -1)) {
 						guardChance = 500; // only 50% chance the bot will guard
 						break;
 					}

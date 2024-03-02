@@ -374,11 +374,11 @@ int assess_JobEscortAlly(const bot_t* pBot, const job_struct& r_job) {
 
 	// make sure the escorted doesn't have too many bot escorts
 	int escortCount = 0;
-	for (int i = 0; i < 32; i++) {
-		if (bots[i].is_used && bots[i].current_team == pBot->current_team) {
+	for (auto &bot : bots) {
+		if (bot.is_used && bot.current_team == pBot->current_team) {
 			// only count escorts who are near enough to the escorted player
-			const int escortIndex = BufferedJobIndex(&bots[i], JOB_ESCORT_ALLY);
-			if (escortIndex != -1 && bots[i].job[escortIndex].player == r_job.player && VectorsNearerThan(bots[i].pEdict->v.origin, r_job.player->v.origin, 600.0)) {
+			const int escortIndex = BufferedJobIndex(&bot, JOB_ESCORT_ALLY);
+			if (escortIndex != -1 && bot.job[escortIndex].player == r_job.player && VectorsNearerThan(bot.pEdict->v.origin, r_job.player->v.origin, 600.0)) {
 				++escortCount;
 
 				if (escortCount > 2)
@@ -409,9 +409,9 @@ int assess_JobCallMedic(const bot_t* pBot, const job_struct& r_job) {
 	// i.e. avoid overloading medics with medic calls
 	if (r_job.phase == 0) {
 		int cryBabies = 0;
-		for (int i = 0; i < MAX_BOTS; i++) {
-			if (bots[i].is_used && bots[i].currentJob > -1 && bots[i].jobType[bots[i].currentJob] == JOB_CALL_MEDIC && bots[i].current_team == pBot->current_team && &bots[i] != pBot // make sure the player isn't THIS bot
-				&& VectorsNearerThan(bots[i].pEdict->v.origin, pBot->pEdict->v.origin, 900.0)) {
+		for (auto &bot : bots) {
+			if (bot.is_used && bot.currentJob > -1 && bot.jobType[bot.currentJob] == JOB_CALL_MEDIC && bot.current_team == pBot->current_team && &bot != pBot // make sure the player isn't THIS bot
+             && VectorsNearerThan(bot.pEdict->v.origin, pBot->pEdict->v.origin, 900.0)) {
 				++cryBabies;
 
 				if (cryBabies > 1)
@@ -563,11 +563,11 @@ int assess_JobDefendFlag(const bot_t* pBot, const job_struct& r_job) {
 	// see if this flag will have too many defenders
 	if (r_job.phase == 0) {
 		int defenderTotal = 1; // 1 = this bot
-		for (int i = 0; i < MAX_BOTS; i++) {
-			if (bots[i].is_used && bots[i].current_team == pBot->current_team && &bots[i] != pBot) // make sure the player isn't THIS bot
+		for (auto &bot : bots) {
+			if (bot.is_used && bot.current_team == pBot->current_team && &bot != pBot) // make sure the player isn't THIS bot
 			{
-				const int DefendJobIndex = BufferedJobIndex(&bots[i], JOB_DEFEND_FLAG);
-				if (DefendJobIndex != -1 && bots[i].job[DefendJobIndex].object == r_job.object) {
+				const int DefendJobIndex = BufferedJobIndex(&bot, JOB_DEFEND_FLAG);
+				if (DefendJobIndex != -1 && bot.job[DefendJobIndex].object == r_job.object) {
 					++defenderTotal;
 
 					if (defenderTotal > 1)
