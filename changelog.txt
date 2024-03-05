@@ -31,9 +31,10 @@ Updated by RoboCop
 
 - Nailguns and Super Nailguns should now be very accurate as those guns are meant for destroying SG Turrets
 
-- Repaired some rogue pathways in baconbowl_r, phantom, mulch_dm2b1, openfire_l, openfire_lowgrens, rock2, sandbowl_r2, schtop, sniperzone, sniperzone_r and warpath_r2
+- Repaired some rogue pathways in baconbowl_r, bases2k3, cornfield, ksour, phantom, momentum_l, mulch_dm2b1, openfire_l, openfire_lowgrens, rock2,
+  sandbowl_r2, schtop, sniperzone, sniperzone_r and warpath_r2
 
-- Added some more Rocket/Conc Jumps for avanti, baconbowl_r, palermo, rock2 and ravelin
+- Added some more Rocket/Conc Jumps for avanti, baconbowl_r, destroy_l, palermo, rock2 and ravelin
 
 TODO List:-
 

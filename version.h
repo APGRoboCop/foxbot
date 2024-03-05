@@ -37,7 +37,7 @@
    * If not, we provide it here.
    */
 #ifndef VERSION
-#define VERSION (0.87-APG)
+#define VERSION (0.87-beta1)
 #endif
 
    /*

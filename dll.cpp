@@ -61,7 +61,7 @@ enum {
    MENU_7 = 7
 };
 
-cvar_t foxbot = { "foxbot", "0.87-APG", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr };
+cvar_t foxbot = { "foxbot", "0.87-beta1", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr };
 cvar_t enable_foxbot = { "enable_foxbot", "1", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr };
 cvar_t sv_bot = { "bot", "", 0, 0, nullptr };
 
