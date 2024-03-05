@@ -4309,15 +4309,21 @@ static void BotSpectatorDebug(bot_t* pBot) {
 		else if (spectate_debug == 2) // list what jobs are blacklisted
 		{
 			// list any jobs in the blacklist
-			std::strncat(msg, "Blacklist:\n", 255 - std::strlen(msg));
-			for (const auto &i : pBot->jobBlacklist) {
+			size_t msg_length = std::strlen(msg);
+			std::strncat(msg, "Blacklist:\n", 255 - msg_length);
+			msg_length += 11; // length of "Blacklist:\n"
+			for (const auto& [type, f_timeOut] : pBot->jobBlacklist) {
 				// list one blacklisted job per line
-				if (i.type > JOB_NONE && i.f_timeOut >= pBot->f_think_time && i.type < JOB_TYPE_TOTAL) {
-					std::strncat(msg, jl[i.type].jobNames, 255 - std::strlen(msg));
-					std::strncat(msg, "\n", 255 - std::strlen(msg)); // add a newline on the end
+				if (type > JOB_NONE && f_timeOut >= pBot->f_think_time && type < JOB_TYPE_TOTAL) {
+					std::strncat(msg, jl[type].jobNames, 255 - msg_length);
+					msg_length += std::strlen(jl[type].jobNames);
+					std::strncat(msg, "\n", 255 - msg_length);
+					msg_length += 1; // length of "\n"
 				}
-				else
-					std::strncat(msg, "\n", 255 - std::strlen(msg)); // skip empty blacklist indexes
+				else {
+					std::strncat(msg, "\n", 255 - msg_length);
+					msg_length += 1; // length of "\n"
+				}
 			}
 		}
 		else if (spectate_debug == 3) // show the bots personality traits

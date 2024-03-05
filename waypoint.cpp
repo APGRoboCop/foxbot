@@ -5414,6 +5414,9 @@ void ProcessCommanderList() {
 		return;
 	}
 
+   // Calculate the length of invalidChars only once, before the loop [APG]RoboCop[CL]
+	const unsigned int invalidCharsLength = std::strlen(invalidChars);
+
 	// Read the file, line by line.
 	while (UTIL_ReadFileLine(buffer, 80, inFile)) {
 		// Skip lines that begin with comments
@@ -5425,11 +5428,10 @@ void ProcessCommanderList() {
 
 		// Calculate the length of the strings only once
 		const unsigned int bufferLength = std::strlen(buffer);
-		const unsigned int invalidCharsLength = std::strlen(invalidChars);
 	   
 		for (unsigned int i = 0; i < bufferLength; i++) {
-			for (unsigned int j = 0; j < invalidCharsLength; j++) {
-				const char ch = invalidChars[j];
+		for (unsigned int j = 0; j < invalidCharsLength; j++) {
+			const char ch = invalidChars[j];
 				bool found = false;
 				for (unsigned int k = 0; k < bufferLength; k++)
 				{
@@ -5439,41 +5441,41 @@ void ProcessCommanderList() {
 					}
 				}
 				if (found) {
-					valid = false;
-					if (IS_DEDICATED_SERVER())
-						std::printf("[Config] foxbot_commanders.txt : Invalid Character %c\n", ch);
-					else {
-						std::sprintf(msg, "[Config] foxbot_commanders.txt : Invalid Character %c\n", ch);
-						ALERT(at_console, msg);
-					}
+				valid = false;
+				if (IS_DEDICATED_SERVER())
+					std::printf("[Config] foxbot_commanders.txt : Invalid Character %c\n", ch);
+				else {
+					std::sprintf(msg, "[Config] foxbot_commanders.txt : Invalid Character %c\n", ch);
+					ALERT(at_console, msg);
 				}
 			}
 		}
-	   
-	  // The read string is valid enough.
-	  if (valid) {
-		  char* uId = new char[80];
-		  std::strcpy(uId, buffer);
-	     
-		  // Get rid of line feeds
-		  if (const size_t len = std::strlen(uId); len > 0 && (uId[len - 1] == '\n' || uId[len - 1] == '\r' || uId[len - 1] == '\0')) {
-			  uId[len - 1] = '\0';
-		  }
-		  fp = UTIL_OpenFoxbotLog();
-	     
-		  if (fp != nullptr) {
-			  std::fprintf(fp, "LOAD USERID: %s\n", uId);
-			  std::fclose(fp);
-		  }
-	     
-		  commanders.addTail(uId);
-		  if (IS_DEDICATED_SERVER())
+		}
+
+	   // The read string is valid enough.
+	   if (valid) {
+	      char* uId = new char[80];
+	      std::strcpy(uId, buffer);
+
+	      // Get rid of line feeds
+	      if (const size_t len = std::strlen(uId); len > 0 && (uId[len - 1] == '\n' || uId[len - 1] == '\r' || uId[len - 1] == '\0')) {
+	         uId[len - 1] = '\0';
+	      }
+	      fp = UTIL_OpenFoxbotLog();
+
+	      if (fp != nullptr) {
+	         std::fprintf(fp, "LOAD USERID: %s\n", uId);
+	         std::fclose(fp);
+	      }
+
+	      commanders.addTail(uId);
+	      if (IS_DEDICATED_SERVER())
 			  std::printf("[Config] foxbot_commanders.txt : Loaded User %s\n", buffer);
-		  else {
-			  std::sprintf(msg, "[Config] foxbot_commanders.txt : Loaded User %s\n", buffer);
-			  ALERT(at_console, msg);
-		  }
-	  }
+	      else {
+	         std::sprintf(msg, "[Config] foxbot_commanders.txt : Loaded User %s\n", buffer);
+	         ALERT(at_console, msg);
+	      }
+	   }
 	}
 	// Report status
 	if (IS_DEDICATED_SERVER())

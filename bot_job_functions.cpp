@@ -1892,8 +1892,12 @@ int JobFeignAmbush(bot_t* pBot) {
 int JobSnipe(bot_t* pBot) {
 	job_struct* job_ptr = &pBot->job[pBot->currentJob];
 
+	// minimum time to charge rifle based on skill level
+   // (skills 4 - 5 shouldn't pre-charge)
+	static constexpr float baseChargeTime[5] = { 2.0f, 1.0f, 0.0f, -5.0f, -5.0f };
+
 	// phase 0 - get near enough to the waypoint to start charging the rifle
-	if (job_ptr->phase == 0) {
+   if (job_ptr->phase == 0) {
 		// stop the bot from taking large route variations during this job
 		pBot->f_side_route_time = pBot->f_think_time + 5.0f;
 		pBot->sideRouteTolerance = 1000; // short route changes
@@ -1901,14 +1905,11 @@ int JobSnipe(bot_t* pBot) {
 		const float zDiff = waypoints[job_ptr->waypoint].origin.z - pBot->pEdict->v.origin.z;
 		const int nextWP = WaypointRouteFromTo(pBot->current_wp, job_ptr->waypoint, pBot->current_team);
 
-		// near enough to the waypoint the bot can walk to it whilst charging the rifle?
+      // near enough to the waypoint the bot can walk to it whilst charging the rifle?
 		if (pBot->pEdict->v.flags & FL_ONGROUND && (pBot->current_wp == job_ptr->waypoint || nextWP == job_ptr->waypoint) && zDiff > -45.1f && zDiff < 15.0f // walkable step height(hopefully)
 			&& VectorsNearerThan(waypoints[job_ptr->waypoint].origin, pBot->pEdict->v.origin, 200.0) && FVisible(waypoints[job_ptr->waypoint].origin, pBot->pEdict)) {
-			// minimum time to charge rifle based on skill level
-			// (skills 4 - 5 shouldn't pre-charge)
-         constexpr float baseChargeTime[5] = { 2.0f, 1.0f, 0.0f, -5.0f, -5.0f };
+		   job_ptr->phase = 1;
 
-			job_ptr->phase = 1;
 			if (waypoints[job_ptr->waypoint].flags & W_FL_CROUCH)
 				job_ptr->phase_timer = 0.0f; // crouching AND charging slows you waay down
 			else

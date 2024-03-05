@@ -27,7 +27,7 @@ Updated by RoboCop
 
 - HW bot's Minigun accuracy reduced to give them more recoil and less aimbot
 
-- Sniper bot's average accuracy reduced to avoid less aimbot shots and headshots
+- Sniper bot's average accuracy reduced to avoid more aimbot shots and headshots
 
 - Nailguns and Super Nailguns should now be very accurate as those guns are meant for destroying SG Turrets
 
