@@ -243,7 +243,7 @@ void pfnSetOrigin(edict_t* e, const float* rgflOrigin) {
 			// TYPEDESCRIPTION		*pField;
 			// pField = &gEntvarsDescription[36];
 			//(*(float *)((char *)pev + pField->fieldOffset))
-			std::sprintf(msg, "target %s, toggle %.0f", STRING(e->v.target), static_cast<double>(e->v.frame));
+			snprintf(msg, sizeof(msg), "target %s, toggle %.0f", STRING(e->v.target), static_cast<double>(e->v.frame));
 			script(msg);
 		}
 	}

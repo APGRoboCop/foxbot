@@ -11,6 +11,8 @@ Updated by RoboCop
 - Added new waypoints:-
 	+ piebowl
 
+- Reduced the likelihood of buffer overflow crashes
+
 - Spectate Debug text now realigned to the left for a better visual
 
 - Bots will ignore returning to their respawns in flagrun in order to prevent their flags they are carrying being returned to Neutral Flag Room

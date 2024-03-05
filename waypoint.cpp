@@ -2230,7 +2230,7 @@ void WaypointThink(edict_t* pEntity) {
 
 	if ((g_waypoint_on || g_area_def) && !g_waypoint_cache) {
 		char cmd[255];
-		std::sprintf(cmd, "changelevel %s\n", STRING(gpGlobals->mapname));
+		snprintf(cmd, sizeof(cmd), "changelevel %s\n", STRING(gpGlobals->mapname));
 		SERVER_COMMAND(cmd);
 	}
 

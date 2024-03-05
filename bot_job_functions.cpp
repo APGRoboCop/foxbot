@@ -1778,7 +1778,7 @@ int JobDisguise(bot_t* pBot) {
 		const int new_disguise = disguiseList[random_long(0, 6)];
 
 		char choice[32];
-		std::sprintf(choice, "%d", new_disguise);
+		snprintf(choice, sizeof(choice), "%d", new_disguise);
 
 		FakeClientCommand(pBot->pEdict, "disguise_enemy", choice, nullptr);
 		pBot->disguise_state = DISGUISE_UNDERWAY;
