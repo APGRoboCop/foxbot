@@ -9,7 +9,11 @@ Updated by RoboCop
 --------------------------------------------------------------------------------
 
 - Added new waypoints:-
+	+ de_dust2
+	+ eleventh
 	+ piebowl
+	+ pox
+	+ signal
 
 - Reduced the likelihood of buffer overflow crashes
 
@@ -37,6 +41,10 @@ Updated by RoboCop
   sandbowl_r2, schtop, sniperzone, sniperzone_r and warpath_r2
 
 - Added some more Rocket/Conc Jumps for avanti, baconbowl_r, destroy_l, palermo, rock2 and ravelin
+
+- Added more support for lbdustbowl and tfc_stargate
+
+- Special thanks to Tovasritch for uploading 5 rare waypoints
 
 TODO List:-
 
