@@ -411,7 +411,7 @@ int assess_JobCallMedic(const bot_t* pBot, const job_struct& r_job) {
 		int cryBabies = 0;
 		for (auto &bot : bots) {
 			if (bot.is_used && bot.currentJob > -1 && bot.jobType[bot.currentJob] == JOB_CALL_MEDIC && bot.current_team == pBot->current_team && &bot != pBot // make sure the player isn't THIS bot
-             && VectorsNearerThan(bot.pEdict->v.origin, pBot->pEdict->v.origin, 900.0)) {
+				 && VectorsNearerThan(bot.pEdict->v.origin, pBot->pEdict->v.origin, 900.0)) {
 				++cryBabies;
 
 				if (cryBabies > 1)

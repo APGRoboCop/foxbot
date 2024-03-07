@@ -114,7 +114,7 @@ typedef struct {
 
 // This holds the multigun names we will check using a repeat loop
 enum {
-   NumNTFGuns = 8
+	NumNTFGuns = 8
 };
 
 const char* ntfTargetChecks[] = {
@@ -350,7 +350,7 @@ void BotEnemyCheck(bot_t* pBot) {
 								}
 							}
 
-                     bot.lastEnemySentryGun = nullptr;
+							bot.lastEnemySentryGun = nullptr;
 						}
 					}
 				}
@@ -1019,7 +1019,7 @@ static void BotSGSpotted(bot_t* pBot, edict_t* sg) {
 				{
 					// everyone else has 1 in 10 chance of not "getting it"
 					if (random_long(1, 1000) < 901)
-                  bot.lastEnemySentryGun = pBot->lastEnemySentryGun;
+						bot.lastEnemySentryGun = pBot->lastEnemySentryGun;
 				}
 			}
 		}
@@ -1278,7 +1278,7 @@ static Vector BotBodyTarget(const edict_t* pBotEnemy, bot_t* pBot) {
 			// Make the bot less accurate if the enemy was just seen
 			if (pBot->enemy.f_firstSeen + 2.0f > pBot->f_think_time)
 				aim_error += static_cast<float>(pBot->bot_skill + 1) * random_float(5.0f, 10.0f);
-		   
+			
 			const float aim_offset = bot_snipe_max_inaccuracy[pBot->bot_skill] + aim_error;
 			switch (pBot->bot_skill) {
 			case 0:
@@ -1334,7 +1334,7 @@ static Vector BotBodyTarget(const edict_t* pBotEnemy, bot_t* pBot) {
 			else if (pBot->current_weapon.iId == TF_WEAPON_RPG || pBot->current_weapon.iId == TF_WEAPON_IC) {
 				aim_error = 5.0f * static_cast<float>(pBot->bot_skill);
 			}
-		   
+			
 			const float aim_offset = bot_max_inaccuracy[pBot->bot_skill] + aim_error;
 			switch (pBot->bot_skill) {
 			case 0:
@@ -1471,12 +1471,12 @@ bool BotFireWeapon(const Vector& v_enemy, bot_t* pBot, const int weapon_choice) 
 			diff = -diff;
 
 		/*char msg[512];
-		   std::sprintf(msg,"%f  %f", ang, diff);
-		   UTIL_HostSay(pEdict,0,msg);*/
+			std::sprintf(msg,"%f  %f", ang, diff);
+			UTIL_HostSay(pEdict,0,msg);*/
 		if (ang < diff) //|| (FInViewCone( v_enemy, pEdict ) && FVisible( v_enemy, pEdict )))
 			return false;
 	}
-   
+	
 	// Used for bots to use Nailguns against enemy Sentry Guns [APG]RoboCop[CL]
 	if (pBot->enemy.ptr == pBot->lastEnemySentryGun && !FNullEnt(pBot->lastEnemySentryGun) &&
 		(pBot->pEdict->v.playerclass == TFC_CLASS_SCOUT || pBot->pEdict->v.playerclass == TFC_CLASS_SPY || pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC)) {
@@ -1490,7 +1490,7 @@ bool BotFireWeapon(const Vector& v_enemy, bot_t* pBot, const int weapon_choice) 
 		pBot->pEdict->v.button |= IN_ATTACK;
 		return true;
 	}
-   
+	
 	//////////////////
 	float distance = f_distance;
 
@@ -1615,7 +1615,7 @@ bool BotFireWeapon(const Vector& v_enemy, bot_t* pBot, const int weapon_choice) 
 				continue;
 			}
 
-         constexpr int use_percent = 0;
+			constexpr int use_percent = 0;
 
 			// is use percent greater than weapon use percent?
 			if (use_percent > pSelect[select_index].use_percent) {
@@ -1635,7 +1635,7 @@ bool BotFireWeapon(const Vector& v_enemy, bot_t* pBot, const int weapon_choice) 
 
 			iId = pSelect[select_index].iId;
 			use_primary = use_secondary = false;
-         constexpr int primary_percent = 0;
+			constexpr int primary_percent = 0;
 
 			// check if this weapon uses ammo and is running low
 			if (pBot->m_rgAmmo[weapon_defs[iId].iAmmo1] < pSelect[select_index].min_primary_ammo)
@@ -1718,7 +1718,7 @@ bool BotFireWeapon(const Vector& v_enemy, bot_t* pBot, const int weapon_choice) 
 										float max_delay = pDelay[select_index].primary_max_delay[pBot->bot_skill];
 
 										pBot->f_shoot_time = pBot->f_think_time + base_delay +
-										   random_float(min_delay, max_delay);*/
+											random_float(min_delay, max_delay);*/
 						pBot->f_shoot_time = pBot->f_think_time + 0.3f;
 					}
 				}
@@ -1742,7 +1742,7 @@ bool BotFireWeapon(const Vector& v_enemy, bot_t* pBot, const int weapon_choice) 
 										float min_delay = pDelay[select_index].secondary_min_delay[pBot->bot_skill];
 										float max_delay = pDelay[select_index].secondary_max_delay[pBot->bot_skill];
 										pBot->f_shoot_time = pBot->f_think_time + base_delay +
-										   random_float(min_delay, max_delay);*/
+											random_float(min_delay, max_delay);*/
 						pBot->f_shoot_time = pBot->f_think_time + 0.3f;
 					}
 				}
@@ -1839,7 +1839,7 @@ int BotNadeHandler(bot_t* pBot, bool timed, char newNadeType) {
 	if (pBot->enemy.ptr != nullptr && pBot->nadePrimed) {
 		// Check the distance against where the bot thinks the nade
 		// will blow if thrown now.
-      const float distanceThrown = NADEVELOCITY * timeToDet;
+		const float distanceThrown = NADEVELOCITY * timeToDet;
 
 		// Throw it if we got a good chance at landing good splash damage.
 		if (fabsf(distanceThrown - pBot->enemy.f_seenDistance) < 20.0f || distanceThrown - pBot->enemy.f_seenDistance < -200.0f) {
@@ -1890,7 +1890,7 @@ int BotNadeHandler(bot_t* pBot, bool timed, char newNadeType) {
 													&& !FNullEnt(pBot->lastEnemySentryGun)
 													&& pBot->enemy.ptr != pBot->lastEnemySentryGun
 													&& VectorsNearerThan(waypoints[pBot->current_wp].origin, pBot->lastEnemySentryGun->v.origin,
-	   800))
+		800))
 									{
 													zDiff = pBot->lastEnemySentryGun->v.origin.z - waypoints[pBot->current_wp].origin.z;
 													rtnValue = static_cast<int>(zDiff);
@@ -2352,7 +2352,7 @@ void BotCheckForMultiguns(bot_t* pBot, float nearestdistance, edict_t* pNewEnemy
 void UpdateFlagCarrierList() {
 	// reset the list before updating it
 	for (bool &i : playerHasFlag) {
-      i = false;
+		i = false;
 	}
 
 	// search for visible friendly flag carriers and track them.

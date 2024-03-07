@@ -51,11 +51,11 @@
 // String describing platform/DLL-type, for matching lines in plugins.ini.
 #ifdef linux
 	#define PLATFORM	"linux"
-#  if defined(__x86_64__) || defined(__amd64__)
+#if defined(__x86_64__) || defined(__amd64__)
 	#define PLATFORM_SPC	"lin64"
-#  else
+#else
 	#define PLATFORM_SPC	"lin32"
-#  endif
+#endif
 	#define PLATFORM_DLEXT	".so"
 #elif defined(_WIN32)
 	#define PLATFORM	"mswin"
@@ -65,9 +65,9 @@
 	#define PLATFORM	"macosx"
 #  if defined(__x86_64__) || defined(__amd64__)
 	#define PLATFORM_SPC	"mac64"
-#  else
+#else
 	#define PLATFORM_SPC	"mac32"
-#  endif
+#endif
 	#define PLATFORM_DLEXT	".dylib"
 #else /* unknown */
 	#error "OS unrecognized"
@@ -202,31 +202,31 @@ mBOOL DLLINTERNAL os_safe_call(REG_CMD_FN pfn);
 #ifdef linux
 	#include <limits.h>
 #elif defined(_WIN32)
-	#include <stdlib.h>
+	#include <cstdlib>
 	#define NAME_MAX	_MAX_FNAME
-   
-   #if !defined (PATH_MAX)
+	
+	#if !defined (PATH_MAX)
 	#  define PATH_MAX	_MAX_PATH
-   #endif
+	#endif
 #endif /* _WIN32 */
 
 // Various other windows routine differences.
 #ifdef linux
 	#include <unistd.h>	// sleep
 	#ifndef O_BINARY
-    	#define O_BINARY 0
+		#define O_BINARY 0
 	#endif	
 #elif defined(_WIN32)
 	#define snprintf	_snprintf
 	#define vsnprintf	_vsnprintf
-	#define sleep(x)	Sleep(x*1000)
+	#define sleep(x)	Sleep((x)*1000)
 	#define unlink		_unlink
 	#define strlwr		_strlwr
 	#define strdup		_strdup
 	#define strcasecmp	_stricmp
 	#define strncasecmp	_strnicmp
 	#define getcwd		_getcwd
-    #include <io.h>
+	 #include <io.h>
 	#include <direct.h>
 //    #define open _open
 //    #define read _read
@@ -246,20 +246,20 @@ mBOOL DLLINTERNAL os_safe_call(REG_CMD_FN pfn);
 #endif /* not S_ISREG */
 #ifdef _WIN32
 	// The following two are defined in mingw but not in MSVC
-    #ifndef S_IRUSR
-        #define S_IRUSR _S_IREAD
-    #endif
-    #ifndef S_IWUSR
-        #define S_IWUSR _S_IWRITE
-    #endif
+	 #ifndef S_IRUSR
+		  #define S_IRUSR _S_IREAD
+	 #endif
+	 #ifndef S_IWUSR
+		  #define S_IWUSR _S_IWRITE
+	 #endif
 	
 	// The following two are defined neither in mingw nor in MSVC
-    #ifndef S_IRGRP
-        #define S_IRGRP S_IRUSR
-    #endif
-    #ifndef S_IWGRP
-        #define S_IWGRP S_IWUSR
-    #endif
+	 #ifndef S_IRGRP
+		  #define S_IRGRP S_IRUSR
+	 #endif
+	 #ifndef S_IWGRP
+		  #define S_IWGRP S_IWUSR
+	 #endif
 #endif /* _WIN32 */
 
 // Normalize/standardize a pathname.

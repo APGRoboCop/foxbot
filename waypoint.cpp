@@ -156,7 +156,7 @@ void WaypointFree() {
 #endif
 			}
 
-         i = nullptr;
+			i = nullptr;
 		}
 	}
 }
@@ -1029,7 +1029,7 @@ void WaypointAdd(edict_t* pEntity) {
 		return;
 
 	edict_t* pent = nullptr;
-   constexpr float radius = 40.0f;
+	constexpr float radius = 40.0f;
 	short index = 0;
 
 	// find the next available slot for the new waypoint...
@@ -1455,10 +1455,10 @@ bool WaypointLoad(edict_t* pEntity) {
 	char filename[256];
 	WAYPOINT_HDR header;
 	char msg[256];
-   
+	
 	int index;
 	int i;
-   
+	
 	short num;
 	short path_index;
 
@@ -1697,7 +1697,7 @@ static bool WaypointLoadVersion4(FILE* bfp, const int number_of_waypoints) {
 	WAYPOINT_VERSION4 dummy_waypoint;
 
 	// these script flags used to be in the main waypoint flag
-   constexpr int OLD_POINT1 = 1 << 16, OLD_POINT2 = 1 << 17, OLD_POINT3 = 1 << 18, OLD_POINT4 = 1 << 19, OLD_POINT5 = 1 << 20, OLD_POINT6 = 1 << 21, OLD_POINT7 = 1 << 22, OLD_POINT8 = 1 << 23;
+	constexpr int OLD_POINT1 = 1 << 16, OLD_POINT2 = 1 << 17, OLD_POINT3 = 1 << 18, OLD_POINT4 = 1 << 19, OLD_POINT5 = 1 << 20, OLD_POINT6 = 1 << 21, OLD_POINT7 = 1 << 22, OLD_POINT8 = 1 << 23;
 
 	short i;
 	short num;
@@ -3764,8 +3764,8 @@ int AreaDefPointFindNearest(const edict_t* pEntity, const float range, const int
 			o = areas[i].d;
 		}
 
-      constexpr float tolerance = 0.0001f;
-	   
+		constexpr float tolerance = 0.0001f;
+		
 		if (std::abs(distance - 9999.0f) < tolerance)
 			continue;
 
@@ -4431,7 +4431,7 @@ void AreaAutoBuild1() {
 					k++;
 				}
 				k = 0;
-			   
+				
 				while (k <= num_waypoints) {
 					if (std::abs(waypoints[h].origin.x - waypoints[k].origin.x) < epsilon &&
 						std::abs(waypoints[h].origin.z - waypoints[k].origin.z) < epsilon && h != k) {
@@ -4618,7 +4618,7 @@ void AreaAutoMerge() {
 	// could use wpts aswell, but loading a saved area grid won't
 	// include them
 	bool a, b, c, d;
-   constexpr int stk_sz = 512;
+	constexpr int stk_sz = 512;
 	int stk[stk_sz];
 	int stk_cnt;
 
@@ -5390,7 +5390,7 @@ void ProcessCommanderList() {
 	//{
 	//}
 	commanders.clear();
-   constexpr char invalidChars[] = " abcdefghijklmnopqrstuvwxyz,./<>?;'\"[]{}-=+!@#$%^&*()";
+	constexpr char invalidChars[] = " abcdefghijklmnopqrstuvwxyz,./<>?;'\"[]{}-=+!@#$%^&*()";
 
 	UTIL_BuildFileName(filename, 255, "foxbot_commanders.txt", nullptr);
 	std::FILE* inFile = std::fopen(filename, "r");
@@ -5413,7 +5413,7 @@ void ProcessCommanderList() {
 		return;
 	}
 
-   // Calculate the length of invalidChars only once, before the loop [APG]RoboCop[CL]
+	// Calculate the length of invalidChars only once, before the loop [APG]RoboCop[CL]
 	const unsigned int invalidCharsLength = std::strlen(invalidChars);
 
 	// Read the file, line by line.
@@ -5427,7 +5427,7 @@ void ProcessCommanderList() {
 
 		// Calculate the length of the strings only once
 		const unsigned int bufferLength = std::strlen(buffer);
-	   
+		
 		for (unsigned int i = 0; i < bufferLength; i++) {
 		for (unsigned int j = 0; j < invalidCharsLength; j++) {
 			const char ch = invalidChars[j];
@@ -5451,30 +5451,30 @@ void ProcessCommanderList() {
 		}
 		}
 
-	   // The read string is valid enough.
-	   if (valid) {
-	      char* uId = new char[80];
-	      std::strcpy(uId, buffer);
+		// The read string is valid enough.
+		if (valid) {
+			char* uId = new char[80];
+			std::strcpy(uId, buffer);
 
-	      // Get rid of line feeds
-	      if (const size_t len = std::strlen(uId); len > 0 && (uId[len - 1] == '\n' || uId[len - 1] == '\r' || uId[len - 1] == '\0')) {
-	         uId[len - 1] = '\0';
-	      }
-	      fp = UTIL_OpenFoxbotLog();
+			// Get rid of line feeds
+			if (const size_t len = std::strlen(uId); len > 0 && (uId[len - 1] == '\n' || uId[len - 1] == '\r' || uId[len - 1] == '\0')) {
+				uId[len - 1] = '\0';
+			}
+			fp = UTIL_OpenFoxbotLog();
 
-	      if (fp != nullptr) {
-	         std::fprintf(fp, "LOAD USERID: %s\n", uId);
-	         std::fclose(fp);
-	      }
+			if (fp != nullptr) {
+				std::fprintf(fp, "LOAD USERID: %s\n", uId);
+				std::fclose(fp);
+			}
 
-	      commanders.addTail(uId);
-	      if (IS_DEDICATED_SERVER())
+			commanders.addTail(uId);
+			if (IS_DEDICATED_SERVER())
 			  std::printf("[Config] foxbot_commanders.txt : Loaded User %s\n", buffer);
-	      else {
-	         snprintf(msg, sizeof(msg), "[Config] foxbot_commanders.txt : Loaded User %s\n", buffer);
-	         ALERT(at_console, msg);
-	      }
-	   }
+			else {
+				snprintf(msg, sizeof(msg), "[Config] foxbot_commanders.txt : Loaded User %s\n", buffer);
+				ALERT(at_console, msg);
+			}
+		}
 	}
 	// Report status
 	if (IS_DEDICATED_SERVER())

@@ -154,12 +154,12 @@ extern chatClass chat; // bot chat stuff
 static int number_names = 0;
 
 enum {
-   MAX_BOT_NAMES = 128
+	MAX_BOT_NAMES = 128
 };
 
-enum {
-   VALVE_MAX_SKINS = 10
-};
+/*enum {
+	VALVE_MAX_SKINS = 10
+};*/
 
 //#define GEARBOX_MAX_SKINS 20
 
@@ -495,12 +495,12 @@ void BotPickName(char* name_buffer) {
 
 void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char* arg3, const char* arg4) {
 	// indicate which models are currently used for random model allocation
-	static bool valve_skin_used[VALVE_MAX_SKINS] = { false, false, false, false, false, false, false, false, false, false };
+	/*static bool valve_skin_used[VALVE_MAX_SKINS] = { false, false, false, false, false, false, false, false, false, false };
 
-	/*static bool gearbox_skin_used[GEARBOX_MAX_SKINS] = {
+	static bool gearbox_skin_used[GEARBOX_MAX_SKINS] = {
 					false, false, false, false, false, false, false, false, false, false,
 					false, false, false, false, false, false, false, false, false, false
-	};*/
+	};
 
 	// store the names of the models...
 	static const char* valve_bot_skins[VALVE_MAX_SKINS] = { "barney", "gina", "gman", "gordon", "helmet", "hgrunt", "recon", "robo", "scientist", "zombie" };
@@ -509,12 +509,12 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 					"barney", "beret", "cl_suit", "drill", "fassn", "gina", "gman",
 					"gordon", "grunt", "helmet", "hgrunt", "massn", "otis", "recon",
 					"recruit", "robo", "scientist", "shepard", "tower", "zombie"
-	};*/
+	};
 
 	// store the player names for each of the models...
 	static const char* valve_bot_names[VALVE_MAX_SKINS] = { "Barney", "Gina", "G-Man", "Gordon", "Helmet", "H-Grunt", "Recon", "Robo", "Scientist", "Zombie" };
 
-	/*static const char *gearbox_bot_names[GEARBOX_MAX_SKINS] = {
+	static const char *gearbox_bot_names[GEARBOX_MAX_SKINS] = {
 					"Barney", "Beret", "Cl_suit", "Drill", "Fassn", "Gina", "G-Man",
 					"Gordon", "Grunt", "Helmet", "H-Grunt", "Massn", "Otis", "Recon",
 					"Recruit", "Robo", "Scientist", "Shepard", "Tower", "Zombie"
@@ -525,8 +525,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 	c_skin[0] = '\0';
 	c_name[0] = '\0';
 	int skill;
-	int index = 0;
-	int i;
+   int i;
 	// min/max checking...
 	if (max_bots > MAX_BOTS)
 		max_bots = MAX_BOTS;
@@ -543,7 +542,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 	{
 		char cl_name[128];
 		cl_name[0] = '\0';
-      const char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(INDEXENT(i));
+		const char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(INDEXENT(i));
 		std::strcpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"));
 		if (cl_name[0] != '\0')
 			count++;
@@ -568,15 +567,15 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 	}
 
 	if (mod_id == VALVE_DLL) {
-		bool found = false;
-		int max_skin_index = 0;
+		//bool found = false;
+		//int max_skin_index = 0;
 
-		if (mod_id == VALVE_DLL)
-			max_skin_index = VALVE_MAX_SKINS;
+		//if (mod_id == VALVE_DLL)
+		//	max_skin_index = VALVE_MAX_SKINS;
 		// else  // must be GEARBOX_DLL
 		//	max_skin_index = GEARBOX_MAX_SKINS;
 
-		if (arg1 == nullptr || *arg1 == 0) {
+		/*if (arg1 == nullptr || *arg1 == 0) {
 			bool* pSkinUsed = nullptr;
 
 			// pick a random skin
@@ -584,11 +583,11 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 				index = random_long(0, VALVE_MAX_SKINS - 1);
 				pSkinUsed = &valve_skin_used[0];
 			}
-			/*else  // must be GEARBOX_DLL
+			else  // must be GEARBOX_DLL
 			{
 							index = random_long(0, GEARBOX_MAX_SKINS - 1);
 							pSkinUsed = &gearbox_skin_used[0];
-			}*/
+			}
 
 			if (pSkinUsed) {
 				// check if this skin has already been used...
@@ -622,13 +621,12 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 		else {
 			std::strncpy(c_skin, arg1, BOT_SKIN_LEN - 1);
 			c_skin[BOT_SKIN_LEN] = 0; // make sure c_skin is null terminated
-		}
+		}*/
 
-	   //TODO: Test if this loop is no lower required [APG]RoboCop[CL]
 		//for (i = 0; c_skin[i] != 0; i++)
 		//	c_skin[i] = std::tolower(c_skin[i]); // convert to all lowercase
 
-		index = 0;
+		/*index = 0;
 
 		while (!found && index < max_skin_index) {
 			if (mod_id == VALVE_DLL) {
@@ -637,12 +635,12 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 				else
 					index++;
 			}
-			/*else // must be GEARBOX_DLL
+			else // must be GEARBOX_DLL
 			{
-							if(std::strcmp(c_skin, gearbox_bot_skins[index]) == 0)
-											found = true;
-							else index++;
-			}*/
+				if(std::strcmp(c_skin, gearbox_bot_skins[index]) == 0)
+					found = true;
+				else index++;
+			}
 		}
 
 		if (found == true) {
@@ -659,27 +657,27 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 				//	std::strcpy( c_name, gearbox_bot_names[index] );
 			}
 		}
-		else {
-			char dir_name[128];
-			char filename[128];
+		else {*/
+			//char dir_name[128];
+			//char filename[128];
 
-			struct stat stat_str;
+			//struct stat stat_str;
 
-			GET_GAME_DIR(dir_name);
+			//GET_GAME_DIR(dir_name);
 
 /*#ifndef __linux__
 			snprintf(filename, 127, "%s\\models\\player\\%s", dir_name, c_skin);
 #else
 			snprintf(filename, 127, "%s/models/player/%s", dir_name, c_skin);
-#endif*/
+#endif
 
 			if (stat(filename, &stat_str) != 0) {
-/*#ifndef __linux__
+#ifndef __linux__
 				snprintf(filename, 127, "valve\\models\\player\\%s", c_skin);
 #else
 				snprintf(filename, 127, "valve/models/player/%s", c_skin);
-#endif*/
-				/*if (stat(filename, &stat_str) != 0) {
+#endif
+				if (stat(filename, &stat_str) != 0) {
 					char err_msg[80];
 
 					snprintf(err_msg, 79, "model \"%s\" is unknown.\n", c_skin);
@@ -697,8 +695,8 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 					if (IS_DEDICATED_SERVER())
 						std::printf("    recon, robo, scientist, or zombie\n");
 					return;
-				}*/
-			}
+				}
+			}*/
 
 			if (arg2 != nullptr && *arg2 != 0) {
 				std::strncpy(c_name, arg2, BOT_NAME_LEN - 1);
@@ -713,7 +711,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 					c_name[BOT_NAME_LEN] = '\0'; // make sure c_skin is null terminated
 				}
 			}
-		}
+		//}
 
 		skill = 0;
 
@@ -769,7 +767,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 	}
 	char ptr[256]; // allocate space for message from ClientConnect
 
-	index = 0;
+	int index = 0;
 	while (index < MAX_BOTS && bots[index].is_used)
 		++index;
 
@@ -1161,7 +1159,7 @@ void BotFindItem(bot_t* pBot) {
 					char mdlname[32] = "";
 					char temp[255];
 					for (char &i : temp) {
-                  i = '\0';
+						i = '\0';
 					}
 
 					std::strcpy(temp, STRING(pent->v.model));
@@ -2241,7 +2239,7 @@ void BotSoundSense(edict_t* pEdict, const char* pszSample, const float fVolume) 
 
 		for (auto &bot : bots) {
 			if (bot.is_used // Is this a bot?
-             && bot.visEnemyCount < 1 && bot.mission == ROLE_DEFENDER && bot.current_wp != -1 && (bot.current_team != sourceTeam || random_long(0, 1000) < 333)) {
+				 && bot.visEnemyCount < 1 && bot.mission == ROLE_DEFENDER && bot.current_wp != -1 && (bot.current_team != sourceTeam || random_long(0, 1000) < 333)) {
 				const float botDistance = (bot.pEdict->v.origin - pEdict->v.origin).Length();
 				if (botDistance < hearingDistance) {
 					// This bot can hear it. Try going to it
@@ -2256,7 +2254,7 @@ void BotSoundSense(edict_t* pEdict, const char* pszSample, const float fVolume) 
 							// If it's a spy, and we can see it, attack the mofo
 							if (pEdict->v.playerclass == TFC_CLASS_SPY) {
 								if (FInViewCone(pEdict->v.origin, bot.pEdict) && FVisible(pEdict->v.origin, bot.pEdict))
-                           bot.enemy.ptr = pEdict;
+									bot.enemy.ptr = pEdict;
 							}
 
 							if (!FInViewCone(pEdict->v.origin, bot.pEdict)) {
@@ -2377,7 +2375,7 @@ void BotSoundSense(edict_t* pEdict, const char* pszSample, const float fVolume) 
 	for (auto &bot : bots) {
 		// only check with bots who are now ready to respond to a sound
 		if (bot.is_used                                                                // Is this a bot?
-          && bot.f_soundReactTime < bot.f_think_time && bot.pEdict->v.deadflag != 5) // skip feigning spies(for now)
+			 && bot.f_soundReactTime < bot.f_think_time && bot.pEdict->v.deadflag != 5) // skip feigning spies(for now)
 		{
 			newJob = InitialiseNewJob(&bot, JOB_SPOT_STIMULUS);
 			if (newJob == nullptr)
@@ -2401,9 +2399,9 @@ void BotSoundSense(edict_t* pEdict, const char* pszSample, const float fVolume) 
 					// don't react to sounds again for a few seconds
 					// longer if underwater(don't want to drown)
 					if (bot.pEdict->v.waterlevel == WL_NOT_IN_WATER)
-                  bot.f_soundReactTime = bot.f_think_time + RANDOM_FLOAT(3.0f, 4.0f);
+						bot.f_soundReactTime = bot.f_think_time + RANDOM_FLOAT(3.0f, 4.0f);
 					else
-                  bot.f_soundReactTime = bot.f_think_time + 5.0f;
+						bot.f_soundReactTime = bot.f_think_time + 5.0f;
 
 					//	WaypointDrawBeam(INDEXENT(1), bots[i].pEdict->v.origin,
 					//		pEdict->v.origin,
@@ -2505,7 +2503,7 @@ short BotTeammatesNearWaypoint(const bot_t* pBot, const int waypoint) {
 		// Is this player a bot teammate who is
 		// heading towards the indicated waypoint?
 		if (bot.is_used && &bot != pBot // make sure the player isn't THIS bot
-          && bot.current_wp == waypoint && bot.current_team == pBot->current_team) {
+			 && bot.current_wp == waypoint && bot.current_team == pBot->current_team) {
 			// if this player is nearer than the bot add them to the total
 			if (VectorsNearerThan(bot.pEdict->v.origin, waypoints[waypoint].origin, my_distance))
 				++total_present;
@@ -2528,8 +2526,8 @@ bot_t* BotDefenderAtWaypoint(const bot_t* pBot, const int waypoint, const float 
 		// Is this a bot defender teammate, with an interest in the
 		// indicated waypoint?
 		if (bot.is_used     // make sure this player is a bot
-          && &bot != pBot // make sure the player isn't THIS bot
-          && bot.goto_wp == waypoint && bot.mission == ROLE_DEFENDER && bot.current_team == pBot->current_team) {
+			 && &bot != pBot // make sure the player isn't THIS bot
+			 && bot.goto_wp == waypoint && bot.mission == ROLE_DEFENDER && bot.current_team == pBot->current_team) {
 			// if this player is near enough return who they are
 			if (VectorsNearerThan(bot.pEdict->v.origin, waypoints[waypoint].origin, range))
 				return &bot;
@@ -2864,8 +2862,8 @@ static void BotComms(bot_t* pBot) {
 							//	pBot->track_ttime = pBot->f_think_time;
 
 			if (strcasecmp("die", cmd) == 0) {
-			   EMIT_SOUND_DYN2(pBot->pEdict, CHAN_VOICE, "barney/c1a4_ba_octo4.wav", 0, 0, SND_STOP, PITCH_NORM);
-			   EMIT_SOUND_DYN2(pBot->pEdict, CHAN_VOICE, "barney/c1a4_ba_octo4.wav", 1.0, ATTN_NORM, 0, PITCH_NORM);
+				EMIT_SOUND_DYN2(pBot->pEdict, CHAN_VOICE, "barney/c1a4_ba_octo4.wav", 0, 0, SND_STOP, PITCH_NORM);
+				EMIT_SOUND_DYN2(pBot->pEdict, CHAN_VOICE, "barney/c1a4_ba_octo4.wav", 1.0, ATTN_NORM, 0, PITCH_NORM);
 			}
 			if(strcasecmp("roam", cmd) == 0)
 			{
@@ -3017,10 +3015,10 @@ static bool BotChangeClass(bot_t* pBot, const int iClass, const char* from) {
 			}
 
 			/*char msg[80];
-			   std::sprintf(msg, "wonid: %d", wonId);
-			   UTIL_HostSay(pBot->pEdict, 0, msg);*/
+				std::sprintf(msg, "wonid: %d", wonId);
+				UTIL_HostSay(pBot->pEdict, 0, msg);*/
 
-			   // A-OK Do it.
+				// A-OK Do it.
 			pBot->bot_class = iClass;
 			char c_class[128];
 			switch (pBot->bot_class) {
@@ -3553,7 +3551,7 @@ static void BotReportMyFlagDrop(bot_t* pBot) {
 		if (newJob != nullptr) {
 			for (auto &bot : bots) {
 				if (bot.is_used && &bot != pBot // not this bot
-                && bot.bot_has_flag == false && bot.mission == ROLE_ATTACKER && bot.current_team == pBot->current_team) {
+					 && bot.bot_has_flag == false && bot.mission == ROLE_ATTACKER && bot.current_team == pBot->current_team) {
 					SubmitNewJob(&bot, JOB_PICKUP_FLAG, newJob);
 				}
 			}
@@ -3646,7 +3644,7 @@ void BotThink(bot_t* pBot) {
 	const float msecval = (gpGlobals->time - pBot->fLastRunPlayerMoveTime) * 1000.0f;
 	pBot->fLastRunPlayerMoveTime = gpGlobals->time;
 
-   constexpr float fUpdateInterval = 1.0f / 60.0f; // update at 60 fps
+	constexpr float fUpdateInterval = 1.0f / 60.0f; // update at 60 fps
 	pBot->fUpdateTime = gpGlobals->time + fUpdateInterval;
 
 	// this is the only place this should be set
@@ -3833,8 +3831,8 @@ void BotThink(bot_t* pBot) {
 	if (diff < -180) diff = diff + 360;
 	if (diff > 180) diff = diff - 360;
 	if (diff > -10 && diff < 10) speed = 3;
-	else if (diff > -20 && diff < 20 && diff > -40 && diff < 40) speed = 4;
-	//else if (diff > -40 && diff < 40) speed = 4;
+	else if (diff > -20 && diff < 20) speed = 4;
+	else if (diff > -40 && diff < 40) speed = 4;
 	else if (diff > -60 && diff < 60) speed = 5;
 	else if (diff > -90 && diff < 90) speed = 7;
 	else if (diff > -110 && diff < 110) speed = 10;
@@ -4292,19 +4290,19 @@ static void BotSpectatorDebug(bot_t* pBot) {
 			for (int i = 0; i < JOB_BUFFER_MAX; i++) {
 				// list one job per line
 				if (pBot->jobType[i] > JOB_NONE && pBot->jobType[i] < JOB_TYPE_TOTAL) {
-					std::strncat(msg, jl[pBot->jobType[i]].jobNames, 255 - std::strlen(msg));
+					std::strncat(msg, jl[pBot->jobType[i]].jobNames, 255 - std::strlen(msg) - 1);
 
 					// indicate the current job and how long it's been running
 					if (pBot->currentJob == i) {
 						char msgBuffer[128] = "";
 						snprintf(msgBuffer, 128, " [phase %d, buffered %f]\n", pBot->job[pBot->currentJob].phase, static_cast<double>(pBot->f_think_time - pBot->job[pBot->currentJob].f_bufferedTime));
-						std::strncat(msg, msgBuffer, 255 - std::strlen(msg));
+						std::strncat(msg, msgBuffer, 255 - std::strlen(msg) - 1);
 					}
 					else
-						std::strncat(msg, "\n", 255 - std::strlen(msg)); // add a newline on the end
+						std::strncat(msg, "\n", 255 - std::strlen(msg) - 1); // add a newline on the end
 				}
 				else
-					std::strncat(msg, "\n", 255 - std::strlen(msg)); // skip empty job indexes
+					std::strncat(msg, "\n", 255 - std::strlen(msg) - 1); // skip empty job indexes
 			}
 		}
 		else if (spectate_debug == 2) // list what jobs are blacklisted
@@ -4331,17 +4329,17 @@ static void BotSpectatorDebug(bot_t* pBot) {
 		{
 			char msgBuffer[128] = "";
 			snprintf(msgBuffer, 128, "aggression %d\nhealth threshold %d\ncamper %d", pBot->trait.aggression, pBot->trait.health, pBot->trait.camper);
-			std::strncat(msg, msgBuffer, 255 - std::strlen(msg));
+			std::strncat(msg, msgBuffer, 255 - std::strlen(msg) - 1);
 		}
 		else // some other spectate_debug mode - show navigation info
 		{
 			char msgBuffer[128] = "";
 			snprintf(msgBuffer, 128, "waypoint deadline %f\nnavDistance %f\nf_navProblemStartTime %f\n", static_cast<double>(pBot->f_current_wp_deadline - pBot->f_think_time), static_cast<double>((waypoints[pBot->current_wp].origin - pBot->pEdict->v.origin).Length()),
 				static_cast<double>(pBot->f_think_time - pBot->f_navProblemStartTime));
-			std::strncat(msg, msgBuffer, 255 - std::strlen(msg));
+			std::strncat(msg, msgBuffer, 255 - std::strlen(msg) - 1);
 
 			snprintf(msgBuffer, 128, "velocity length 2D %f\n velocity Z %f\n", static_cast<double>(pBot->pEdict->v.velocity.Length2D()), static_cast<double>(pBot->pEdict->v.velocity.z));
-			std::strncat(msg, msgBuffer, 255 - std::strlen(msg));
+			std::strncat(msg, msgBuffer, 255 - std::strlen(msg) - 1);
 		}
 
 		msg[254] = '\0';

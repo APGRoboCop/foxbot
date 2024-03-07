@@ -143,29 +143,29 @@ C_DLLEXPORT void WINAPI GiveFnptrsToDll(enginefuncs_t* pengfuncsFromEngine, glob
 /*#if defined(__GNUC__)
 
 void *operator new(size_t size) {
-   if (size == 0)
+	if (size == 0)
 	  return (calloc(1, 1));
-   return (calloc(1, size));
+	return (calloc(1, size));
 }
 
 void *operator new[](size_t size) {
-   if (size == 0)
+	if (size == 0)
 	  return (calloc(1, 1));
-   return (calloc(1, size));
+	return (calloc(1, size));
 }
 
 void operator delete(void *ptr) {
-   if (ptr)
+	if (ptr)
 	  free(ptr);
 }
 
 void operator delete(void *ptr, size_t) {
-   if (ptr)
+	if (ptr)
 	  free(ptr);
 }
 
 void operator delete[](void *ptr) {
-   if (ptr)
+	if (ptr)
 	  free(ptr);
 }
 

@@ -70,7 +70,7 @@ extern float last_frame_time;
 // bit field of waypoint types to ignore when the bot is lost
 // and looking for a new current waypoint to head for
 static constexpr WPT_INT32 lostBotIgnoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING | W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_TFC_DETPACK_CLEAR | W_FL_TFC_DETPACK_SEAL | W_FL_SNIPER | W_FL_TFC_TELEPORTER_ENTRANCE |
-                                                     W_FL_TFC_TELEPORTER_EXIT | W_FL_TFC_JUMP | W_FL_LIFT | W_FL_PATHCHECK);
+																	  W_FL_TFC_TELEPORTER_EXIT | W_FL_TFC_JUMP | W_FL_LIFT | W_FL_PATHCHECK);
 
 int spawnAreaWP[4] = { -1, -1, -1, -1 }; // used for tracking the areas where each team spawns
 extern int team_allies[4];
@@ -1536,7 +1536,7 @@ void BotFindSideRoute(bot_t* pBot) {
 
 	// bit field of waypoint types to ignore
 	static constexpr WPT_INT32 ignoreFlags = 0 + (W_FL_DELETED | W_FL_AIMING | W_FL_TFC_PL_DEFEND | W_FL_TFC_PIPETRAP | W_FL_TFC_SENTRY | W_FL_SNIPER | W_FL_TFC_DETPACK_CLEAR | W_FL_TFC_DETPACK_SEAL | W_FL_TFC_TELEPORTER_ENTRANCE |
-                                                 W_FL_TFC_TELEPORTER_EXIT | W_FL_HEALTH | W_FL_ARMOR | W_FL_AMMO | W_FL_TFC_JUMP);
+																 W_FL_TFC_TELEPORTER_EXIT | W_FL_HEALTH | W_FL_ARMOR | W_FL_AMMO | W_FL_TFC_JUMP);
 
 	// find out if the bot is at a junction waypoint by counting
 	// the number of paths connected from it
@@ -2301,20 +2301,20 @@ static void BotCheckForRocketJump(bot_t* pBot) {
 	std::optional<int> closestRJ;
 	float closest2D = 500.1f;
 	float zDiff;
-   
+	
 	// random to simulate how high the bot thinks the jump will go this time
 	const float maxJumpHeight = random_float(340.0f, 440.0f);
-   
+	
 	// find the closest rocket jump point
 	for (auto &RJPoint : RJPoints) {
 		// -1 means we are at the end of the list.
 		if (RJPoint[RJ_WP_INDEX] == -1)
 			break;
-	   
+		
 		// If its our team or not team specific.
 		if (RJPoint[RJ_WP_TEAM] == -1 || RJPoint[RJ_WP_TEAM] == pBot->current_team) {
 			zDiff = waypoints[RJPoint[RJ_WP_INDEX]].origin.z - pBot->pEdict->v.origin.z;
-		   
+			
 			// is this RJ waypoints height reachable with a rocket jump?
 			// on a server with 800 gravity rocket jumps can reach a height of about 440
 			if (zDiff > 54.0f && zDiff < maxJumpHeight) {
@@ -2327,7 +2327,7 @@ static void BotCheckForRocketJump(bot_t* pBot) {
 			}
 		}
 	}
-   
+	
 	// If theres no RJ point get out.
 	if (!closestRJ)
 		return;
@@ -2357,22 +2357,22 @@ static void BotCheckForRocketJump(bot_t* pBot) {
 
 	if (result.flFraction < 1.0f)
 		return; // can't see it
-   // debug stuff
-   //	WaypointDrawBeam(INDEXENT(1), pBot->pEdict->v.origin,
-   //		waypoints[closestRJ].origin, 10, 2, 250, 250, 50, 200, 10);
+	// debug stuff
+	//	WaypointDrawBeam(INDEXENT(1), pBot->pEdict->v.origin,
+	//		waypoints[closestRJ].origin, 10, 2, 250, 250, 50, 200, 10);
 
-   //	UTIL_HostSay(pBot->pEdict, 0, "RJ waypoint seen");
+	//	UTIL_HostSay(pBot->pEdict, 0, "RJ waypoint seen");
 
-   // set up a job to handle the jump
-   job_struct* newJob = InitialiseNewJob(pBot, JOB_ROCKET_JUMP);
+	// set up a job to handle the jump
+	job_struct* newJob = InitialiseNewJob(pBot, JOB_ROCKET_JUMP);
 	if (newJob != nullptr) {
 		newJob->waypoint = *closestRJ;
 		SubmitNewJob(pBot, JOB_ROCKET_JUMP, newJob);
 	}
 
-   //	UTIL_BotLogPrintf("%s: RJ waypoint %d\n", pBot->name, newJob.waypoint);
+	//	UTIL_BotLogPrintf("%s: RJ waypoint %d\n", pBot->name, newJob.waypoint);
 
-   /*char msg[80];
+	/*char msg[80];
 		std::sprintf(msg, "CloseDist: %f Distance: %f zDiff %f ",
 						pBot->RJClosingDistance, distance2D, zDiff);
 		UTIL_HostSay(pBot->pEdict, 0, msg);*/

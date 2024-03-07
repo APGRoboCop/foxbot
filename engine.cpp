@@ -51,20 +51,20 @@ static bool name_message_check(const char* msg_string, const char* name_string);
 
 // my external stuff for scripted message intercept
 /*extern bool blue_av[8];
-   extern bool red_av[8];
-   extern bool green_av[8];
-   extern bool yellow_av[8];
+	extern bool red_av[8];
+	extern bool green_av[8];
+	extern bool yellow_av[8];
 
-   extern struct msg_com_struct
-   {
-   char ifs[32];
-   int blue_av[8];
-   int red_av[8];
-   int green_av[8];
-   int yellow_av[8];
-   struct msg_com_struct *next;
-   } msg_com[MSG_MAX];
-   extern char msg_msg[64][MSG_MAX]; */
+	extern struct msg_com_struct
+	{
+	char ifs[32];
+	int blue_av[8];
+	int red_av[8];
+	int green_av[8];
+	int yellow_av[8];
+	struct msg_com_struct *next;
+	} msg_com[MSG_MAX];
+	extern char msg_msg[64][MSG_MAX]; */
 
 int debug_engine = 0;
 
@@ -119,7 +119,7 @@ edict_t* pfnFindEntityInSphere(edict_t* pEdictStartSearchAfter, const float* org
 		fp = UTIL_OpenFoxbotLog();
 		std::fprintf(fp, "pfnFindEntityInSphere:%p (%f %f %f) %f %d\n", static_cast<void*>(pEdictStartSearchAfter), orgVector.x, orgVector.y, orgVector.z,
 			static_cast<double>(rad), spawn_check_crash_count);
-	   
+		
 		if (pEdictStartSearchAfter != nullptr)
 			if (pEdictStartSearchAfter->v.classname != 0)
 				std::fprintf(fp, "classname %s\n", STRING(pEdictStartSearchAfter->v.classname));
@@ -147,30 +147,30 @@ void pfnRemoveEntity(edict_t* e) {
 	for (auto &bot : bots) {
 		if (bot.is_used) {
 			if (bot.lastEnemySentryGun == e)
-            bot.lastEnemySentryGun = nullptr;
+				bot.lastEnemySentryGun = nullptr;
 			if (bot.enemy.ptr == e)
-            bot.enemy.ptr = nullptr;
+				bot.enemy.ptr = nullptr;
 
 			if (bot.pEdict->v.playerclass == TFC_CLASS_ENGINEER) {
 				if (bot.sentry_edict == e) {
-               bot.has_sentry = false;
-               bot.sentry_edict = nullptr;
-               bot.SGRotated = false;
+					bot.has_sentry = false;
+					bot.sentry_edict = nullptr;
+					bot.SGRotated = false;
 				}
 
 				if (bot.dispenser_edict == e) {
-               bot.has_dispenser = false;
-               bot.dispenser_edict = nullptr;
+					bot.has_dispenser = false;
+					bot.dispenser_edict = nullptr;
 				}
 
 				if (bot.tpEntrance == e) {
-               bot.tpEntrance = nullptr;
-               bot.tpEntranceWP = -1;
+					bot.tpEntrance = nullptr;
+					bot.tpEntranceWP = -1;
 				}
 
 				if (bot.tpExit == e) {
-               bot.tpExit = nullptr;
-               bot.tpExitWP = -1;
+					bot.tpExit = nullptr;
+					bot.tpExitWP = -1;
 				}
 			}
 		}
@@ -196,9 +196,9 @@ void pfnSetOrigin(edict_t* e, const float* rgflOrigin) {
 					//	UTIL_BotLogPrintf("%s Non-teleport translocation, time %f\n",
 					//		bots[bot_index].name, gpGlobals->time);
 
-               bot.current_wp = -1;
-               bot.f_snipe_time = 0.0f;
-               bot.f_primary_charging = 0.0f;
+					bot.current_wp = -1;
+					bot.f_snipe_time = 0.0f;
+					bot.f_primary_charging = 0.0f;
 				}
 				/*	else
 								{
@@ -232,7 +232,7 @@ void pfnSetOrigin(edict_t* e, const float* rgflOrigin) {
 					//&& (xa<xb+2 && xa+2>xb)
 					//&& (ya<yb+2 && ya+2>yb))
 					&& xa == xb && ya == yb) {
-               bot.sentry_edict = pent;
+					bot.sentry_edict = pent;
 				}
 			}
 		}
@@ -248,17 +248,17 @@ void pfnSetOrigin(edict_t* e, const float* rgflOrigin) {
 		}
 	}
 	/*else if(std::strncmp(STRING(e->v.classname),"func_",5)==0)
-	   {
-	   if(e->v.globalname!=NULL)
-	   {
-	   char msg[255];
-	   //TYPEDESCRIPTION		*pField;
-	   //pField = &gEntvarsDescription[36];
-	   //(*(float *)((char *)pev + pField->fieldOffset))
-	   std::sprintf(msg,"name %s, toggle %.0f",STRING(e->v.globalname),e->v.frame);
-	   script(msg);
-	   }
-	   }*/
+		{
+		if(e->v.globalname!=NULL)
+		{
+		char msg[255];
+		//TYPEDESCRIPTION		*pField;
+		//pField = &gEntvarsDescription[36];
+		//(*(float *)((char *)pev + pField->fieldOffset))
+		std::sprintf(msg,"name %s, toggle %.0f",STRING(e->v.globalname),e->v.frame);
+		script(msg);
+		}
+		}*/
 
 	if (debug_engine) {
 		const Vector rgflOriginVector(rgflOrigin[0], rgflOrigin[1], rgflOrigin[2]); // Create a new Vector from the float array
@@ -318,17 +318,17 @@ void pfnClientCommand(edict_t* pEdict, char* szFmt, ...) {
 	}
 	snprintf(sz_error_check, 250, "-pfnClientCommand=%s %p\n", szFmt, static_cast<void*>(pEdict));
 
-   /*if(pEdict!=NULL)
+	/*if(pEdict!=NULL)
 	{
-	   if((pEdict->v.flags & FL_FAKECLIENT)==FL_FAKECLIENT)
-	   {
-	   //admin mod fix here! ...maybee clientprintf aswell..dunno
-	   FakeClientCommand(pEdict,szFmt,NULL,NULL);
-	   //if(mr_meta) RETURN_META(MRES_SUPERCEDE);
-	   }
+		if((pEdict->v.flags & FL_FAKECLIENT)==FL_FAKECLIENT)
+		{
+		//admin mod fix here! ...maybee clientprintf aswell..dunno
+		FakeClientCommand(pEdict,szFmt,NULL,NULL);
+		//if(mr_meta) RETURN_META(MRES_SUPERCEDE);
+		}
 	}*/
 
-   char tempFmt[1024];
+	char tempFmt[1024];
 	va_list argp;
 
 	va_start(argp, szFmt);
@@ -345,18 +345,18 @@ void pfnClientCommand(edict_t* pEdict, char* szFmt, ...) {
 				if (client == pEdict)
 					b = true;
 				/*if(bots[i].pEdict==pEdict && (GETPLAYERWONID(pEdict)==0 || ENTINDEX(pEdict)==-1 ||
-				   (GETPLAYERWONID(pEdict)==-1 && IS_DEDICATED_SERVER())))
-				   {
-				   b=false;
-				   //snprintf(sz_error_check,250,"%s %d",sz_error_check,i);
-				   }*/
+					(GETPLAYERWONID(pEdict)==-1 && IS_DEDICATED_SERVER())))
+					{
+					b=false;
+					//snprintf(sz_error_check,250,"%s %d",sz_error_check,i);
+					}*/
 			}
 		}
 		if (b) {
 			char cl_name[128];
 			cl_name[0] = '\0';
 
-         const char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEdict);
+			const char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEdict);
 			std::strncpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"), 120);
 
 			//{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"cl %d name %s\n",i,cl_name); std::fclose(fp); }
@@ -402,15 +402,15 @@ void pfnClCom(edict_t* pEdict, char* szFmt, ...) {
 				if (client == pEdict)
 					b = true;
 				/*if(bots[i].pEdict==pEdict && (GETPLAYERWONID(pEdict)==0 || ENTINDEX(pEdict)==-1 ||
-				   (GETPLAYERWONID(pEdict)==-1 && IS_DEDICATED_SERVER())))
-				   b=false;*/
+					(GETPLAYERWONID(pEdict)==-1 && IS_DEDICATED_SERVER())))
+					b=false;*/
 			}
 		}
 		if (b) {
 			char cl_name[128];
 			cl_name[0] = '\0';
 
-         const char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEdict);
+			const char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEdict);
 			std::strncpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"), 120);
 			//{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"cl %d name %s\n",i,cl_name); std::fclose(fp); }
 			if (cl_name[0] == '\0' || infobuffer == nullptr)
@@ -447,8 +447,8 @@ void MessageBegin(const int msg_dest, const int msg_type, const float* pOrigin, 
 
 void pfnMessageBegin(const int msg_dest, const int msg_type, const float* pOrigin, edict_t* ed) {
 	/*if(ed!=NULL)
-	   if(ed->v.classname==NULL || ed->v.netname==NULL)
-	   dont_send_packet=true;*/
+		if(ed->v.classname==NULL || ed->v.netname==NULL)
+		dont_send_packet=true;*/
 	if (gpGlobals->deathmatch) {
 		if (debug_engine /* || dont_send_packet*/) {
 			fp = UTIL_OpenFoxbotLog();
@@ -911,22 +911,22 @@ void pfnClientPrintf(edict_t* pEdict, const PRINT_TYPE ptype, const char* szMsg)
 				// if(!((pEdict->v.flags & FL_FAKECLIENT)==FL_FAKECLIENT))
 				// bots[i].is_used &&
 				/*if(clients[i]!=NULL)
-				   snprintf(sz_error_check,250,"%s %x %d\n",sz_error_check,clients[i],i);*/
+					snprintf(sz_error_check,250,"%s %x %d\n",sz_error_check,clients[i],i);*/
 				if (client == pEdict)
 					b = true;
 				/*if(bots[i].pEdict==pEdict && (GETPLAYERWONID(pEdict)==0 || ENTINDEX(pEdict)==-1 ||
-				   (GETPLAYERWONID(pEdict)==-1 && IS_DEDICATED_SERVER())))
-				   {
-				   b=false;
+					(GETPLAYERWONID(pEdict)==-1 && IS_DEDICATED_SERVER())))
+					{
+					b=false;
 
-				   //{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"-bot= %x %d\n",pEdict,i); std::fclose(fp); }
-				   }*/
+					//{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"-bot= %x %d\n",pEdict,i); std::fclose(fp); }
+					}*/
 			}
 		}
 		if (b) {
 			char cl_name[128] = " -";
 
-         const char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEdict);
+			const char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEdict);
 
 			std::strncat(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"), 120 - std::strlen(cl_name));
 			std::strncat(cl_name, "-\n", 127 - std::strlen(cl_name));
@@ -986,7 +986,7 @@ void pfnClPrintf(edict_t* pEdict, PRINT_TYPE ptype, const char* szMsg) {
 				/*if(bots[i].pEdict==pEdict
 								&& (GETPLAYERWONID(pEdict)==0 || ENTINDEX(pEdict)==-1
 								|| (GETPLAYERWONID(pEdict)==-1 && IS_DEDICATED_SERVER())))
-				   b=false;*/
+					b=false;*/
 				if (client == pEdict)
 					b = true;
 			}
@@ -995,7 +995,7 @@ void pfnClPrintf(edict_t* pEdict, PRINT_TYPE ptype, const char* szMsg) {
 			char cl_name[128];
 			cl_name[0] = '\0';
 
-         const char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEdict);
+			const char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEdict);
 			std::strncpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"), 120);
 			/*{ fp=UTIL_OpenFoxbotLog();
 							std::fprintf(fp,"cl %d name %s\n",i,cl_name); std::fclose(fp);}*/

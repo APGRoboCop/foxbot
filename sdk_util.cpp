@@ -23,7 +23,7 @@
 
  ===== util.cpp ========================================================
 
-   Utility code.  Really not optional after all.
+	Utility code.  Really not optional after all.
 
  */
 

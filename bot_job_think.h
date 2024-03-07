@@ -85,12 +85,12 @@ enum knownJobTypes {
 
 // a job should be removed from the buffer if the job's function returns this signal
 enum {
-   JOB_TERMINATED = -1
+	JOB_TERMINATED = -1
 };
 
 // a job function will return this if the job hasn't finished yet
 enum {
-   JOB_UNDERWAY = 1
+	JOB_UNDERWAY = 1
 };
 
 // list of essential data for all known job types

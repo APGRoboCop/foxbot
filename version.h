@@ -32,15 +32,15 @@
 #endif
 
   /*
-   * Version number.
-   * This is also defined by the Makefile.
-   * If not, we provide it here.
-   */
+	* Version number.
+	* This is also defined by the Makefile.
+	* If not, we provide it here.
+	*/
 #ifndef VERSION
-#define VERSION (0.87-beta1)
+#define VERSION (0.87-beta2)
 #endif
 
-   /*
+	/*
 	* Version type.
 	* This is also defined by the Makefile.
 	* If not, we provide it here.

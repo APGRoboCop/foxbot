@@ -44,24 +44,24 @@
 #include "botcam.h"
 
 enum {
-   VER_MAJOR = 0,
-   VER_MINOR = 87
+	VER_MAJOR = 0,
+	VER_MINOR = 87
 };
 
 //#define VER_BUILD 0
 
 enum {
-   MENU_NONE = 0,
-   MENU_1 = 1,
-   MENU_2 = 2,
-   MENU_3 = 3,
-   MENU_4 = 4,
-   MENU_5 = 5,
-   MENU_6 = 6,
-   MENU_7 = 7
+	MENU_NONE = 0,
+	MENU_1 = 1,
+	MENU_2 = 2,
+	MENU_3 = 3,
+	MENU_4 = 4,
+	MENU_5 = 5,
+	MENU_6 = 6,
+	MENU_7 = 7
 };
 
-cvar_t foxbot = { "foxbot", "0.87-beta1", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr };
+cvar_t foxbot = { "foxbot", "0.87-beta2", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr };
 cvar_t enable_foxbot = { "enable_foxbot", "1", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr };
 cvar_t sv_bot = { "bot", "", 0, 0, nullptr };
 
@@ -674,7 +674,7 @@ void GameDLLInit() {
 	CVAR_REGISTER(&enable_foxbot);
 
 	for (auto &client : clients)
-      client = nullptr;
+		client = nullptr;
 
 	// initialize the bots array of structures...
 	std::memset(bots, 0, sizeof bots);
@@ -1004,7 +1004,7 @@ void DispatchThink(edict_t* pent) {
 				UTIL_TraceLine(pent->v.euser1->v.origin + pent->v.euser1->v.view_ofs, pBot->enemy.ptr->v.origin + Vector(xx, yy, zz), dont_ignore_monsters, dont_ignore_glass, pent->v.euser1, &tr);
 
 				float tolerance = 0.0001f; // Define your own tolerance
-			   
+				
 				if (tr.pHit == pBot->enemy.ptr || std::fabs(tr.flFraction - 1.0f) < tolerance)
 					player_vis[scanpos] = true;
 				else
@@ -2673,7 +2673,7 @@ void StartFrame() { // v7 last frame timing
 						BotCreate(nullptr, c_team, c_class, bots[index1].name, c_skill);
 				}
 				respawn_time = gpGlobals->time + 3.0f; // set next respawn time
-				bot_check_time = gpGlobals->time + 6.0f;
+				bot_check_time = gpGlobals->time + 5.0f;
 			}
 			else
 				respawn_time = 2.0f;
@@ -4036,19 +4036,19 @@ void StartFrame() { // v7 last frame timing
 							} // move to end
 							if (start == 2) {
 								for (bool &j : blue_av) {
-                           j = false;
+									j = false;
 								}
 								blue_av[pnt] = true;
 							}
 							if (msgsection == 2 && ifsec == 0) {
 								for (int &j : msg_com[current_msg].blue_av) {
-                           j = 0; // false
+									j = 0; // false
 								}
 								msg_com[current_msg].blue_av[pnt] = 1; // true
 							}
 							if (msgsection == 2 && ifsec == 2) {
 								for (int &j : curr->blue_av) {
-                           j = 0; // false
+									j = 0; // false
 								}
 								curr->blue_av[pnt] = 1; // true
 							}
@@ -4071,19 +4071,19 @@ void StartFrame() { // v7 last frame timing
 							} // move to end
 							if (start == 2) {
 								for (bool &j : red_av) {
-                           j = false;
+									j = false;
 								}
 								red_av[pnt] = true;
 							}
 							if (msgsection == 2 && ifsec == 0) {
 								for (int &j : msg_com[current_msg].red_av) {
-                           j = 0; // false
+									j = 0; // false
 								}
 								msg_com[current_msg].red_av[pnt] = 1; // true
 							}
 							if (msgsection == 2 && ifsec == 2) {
 								for (int &j : curr->red_av) {
-                           j = 0; // false
+									j = 0; // false
 								}
 								curr->red_av[pnt] = 1; // true
 							}
@@ -4106,19 +4106,19 @@ void StartFrame() { // v7 last frame timing
 							} // move to end
 							if (start == 2) {
 								for (bool &j : green_av) {
-                           j = false;
+									j = false;
 								}
 								green_av[pnt] = true;
 							}
 							if (msgsection == 2 && ifsec == 0) {
 								for (int &j : msg_com[current_msg].green_av) {
-                           j = 0; // false
+									j = 0; // false
 								}
 								msg_com[current_msg].green_av[pnt] = 1; // true
 							}
 							if (msgsection == 2 && ifsec == 2) {
 								for (int &j : curr->green_av) {
-                           j = 0; // false
+									j = 0; // false
 								}
 								curr->green_av[pnt] = 1; // true
 							}
@@ -4141,19 +4141,19 @@ void StartFrame() { // v7 last frame timing
 							} // move to end
 							if (start == 2) {
 								for (bool &j : yellow_av) {
-                           j = false;
+									j = false;
 								}
 								yellow_av[pnt] = true;
 							}
 							if (msgsection == 2 && ifsec == 0) {
 								for (int &j : msg_com[current_msg].yellow_av) {
-                           j = 0; // false
+									j = 0; // false
 								}
 								msg_com[current_msg].yellow_av[pnt] = 1; // true
 							}
 							if (msgsection == 2 && ifsec == 2) {
 								for (int &j : curr->yellow_av) {
-                           j = 0; // false
+									j = 0; // false
 								}
 								curr->yellow_av[pnt] = 1; // true
 							}
@@ -5273,8 +5273,8 @@ static void ProcessBotCfgFile() {
 
 		// have to delay here or engine gives "Tried to write to
 		// uninitialized sizebuf_t" error and crashes...
-		bot_cfg_pause_time = gpGlobals->time + 8.0f;
-		bot_check_time = gpGlobals->time + 8.0f;
+		bot_cfg_pause_time = gpGlobals->time + 7.0f;
+		bot_check_time = gpGlobals->time + 7.0f;
 
 		return;
 	}
@@ -5309,7 +5309,7 @@ static void ProcessBotCfgFile() {
 	}
 
 	if (std::strcmp(cmd, "observer") == 0) {
-      const int temp = std::atoi(arg1);
+		const int temp = std::atoi(arg1);
 
 		if (temp)
 			observer_mode = true;
@@ -5351,7 +5351,7 @@ static void ProcessBotCfgFile() {
 
 	if (std::strcmp(cmd, "bot_team_balance") == 0) {
 		if (arg1 != nullptr) {
-         const int temp = std::atoi(arg1);
+			const int temp = std::atoi(arg1);
 			if (temp)
 				bot_team_balance = true;
 			else
@@ -5374,7 +5374,7 @@ static void ProcessBotCfgFile() {
 	}
 	if (std::strcmp(cmd, "bot_bot_balance") == 0) {
 		if (arg1 != nullptr) {
-         const int temp = std::atoi(arg1);
+			const int temp = std::atoi(arg1);
 			if (temp)
 				bot_bot_balance = true;
 			else
@@ -5397,7 +5397,7 @@ static void ProcessBotCfgFile() {
 	}
 
 	if (std::strcmp(cmd, "bot_xmas") == 0) {
-      const int temp = std::atoi(arg1);
+		const int temp = std::atoi(arg1);
 		bot_xmas = true;
 		if (temp == 0) {
 			bot_xmas = false;
@@ -5420,7 +5420,7 @@ static void ProcessBotCfgFile() {
 	}
 
 	if (std::strcmp(cmd, "botdontshoot") == 0) {
-      const int temp = std::atoi(arg1);
+		const int temp = std::atoi(arg1);
 		botdontshoot = true;
 		if (temp == 0) {
 			botdontshoot = false;
@@ -5443,7 +5443,7 @@ static void ProcessBotCfgFile() {
 	}
 
 	if (std::strcmp(cmd, "botdontmove") == 0) {
-      const int temp = std::atoi(arg1);
+		const int temp = std::atoi(arg1);
 		botdontmove = true;
 		if (temp == 0) {
 			botdontmove = false;

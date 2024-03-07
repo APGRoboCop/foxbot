@@ -921,7 +921,7 @@ int JobBuildSentry(bot_t* pBot) {
 	if (job_ptr->phase == 2) {
 		if (job_ptr->phase_timer < pBot->f_think_time) {
 			// find and remember the sentry gun the bot just built
-         constexpr bool success = false;
+			constexpr bool success = false;
 			edict_t* pent = nullptr;
 			while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "building_sentrygun")) != nullptr && !FNullEnt(pent)) {
 				//	UTIL_BotLogPrintf("%s: sentry gun distance %f\n",
@@ -1062,7 +1062,7 @@ int JobBuildDispenser(bot_t* pBot) {
 		if (job_ptr->phase_timer < pBot->f_think_time) {
 			// find and remember the dispenser the bot just built
 			edict_t* pent = nullptr;
-         constexpr bool success = false;
+			constexpr bool success = false;
 			while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "building_dispenser")) != nullptr && !FNullEnt(pent)) {
 				//	UTIL_BotLogPrintf("%s: dispenser distance %f\n",
 				//		pBot->name, (job_ptr->origin - pent->v.origin).Length());
@@ -1199,7 +1199,7 @@ int JobBuildTeleport(bot_t* pBot) {
 		if (job_ptr->phase_timer < pBot->f_think_time) {
 			// find and remember the teleport the bot just built
 			edict_t* pent = nullptr;
-         constexpr bool success = false;
+			constexpr bool success = false;
 			while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "building_teleporter")) != nullptr && !FNullEnt(pent)) {
 				//	UTIL_BotLogPrintf("%s: Teleport distance %f\n",
 				//		pBot->name, (job_ptr->origin - pent->v.origin).Length());
@@ -1395,7 +1395,7 @@ int JobEscortAlly(bot_t* pBot) {
 	pBot->sideRouteTolerance = 200; // very short route changes
 
 	// don't want the bot to trail further than this from it's escortee
-   constexpr auto maxEscortRange = 500;
+	constexpr auto maxEscortRange = 500;
 
 	// phase zero - we assume the ally is visible and must find a waypoint near them
 	if (job_ptr->phase == SET_WAYPOINT_VISIBLE_ALLY) {
@@ -1893,11 +1893,11 @@ int JobSnipe(bot_t* pBot) {
 	job_struct* job_ptr = &pBot->job[pBot->currentJob];
 
 	// minimum time to charge rifle based on skill level
-   // (skills 4 - 5 shouldn't pre-charge)
+	// (skills 4 - 5 shouldn't pre-charge)
 	static constexpr float baseChargeTime[5] = { 2.0f, 1.0f, 0.0f, -5.0f, -5.0f };
 
 	// phase 0 - get near enough to the waypoint to start charging the rifle
-   if (job_ptr->phase == 0) {
+	if (job_ptr->phase == 0) {
 		// stop the bot from taking large route variations during this job
 		pBot->f_side_route_time = pBot->f_think_time + 5.0f;
 		pBot->sideRouteTolerance = 1000; // short route changes
@@ -1905,10 +1905,10 @@ int JobSnipe(bot_t* pBot) {
 		const float zDiff = waypoints[job_ptr->waypoint].origin.z - pBot->pEdict->v.origin.z;
 		const int nextWP = WaypointRouteFromTo(pBot->current_wp, job_ptr->waypoint, pBot->current_team);
 
-      // near enough to the waypoint the bot can walk to it whilst charging the rifle?
+		// near enough to the waypoint the bot can walk to it whilst charging the rifle?
 		if (pBot->pEdict->v.flags & FL_ONGROUND && (pBot->current_wp == job_ptr->waypoint || nextWP == job_ptr->waypoint) && zDiff > -45.1f && zDiff < 15.0f // walkable step height(hopefully)
 			&& VectorsNearerThan(waypoints[job_ptr->waypoint].origin, pBot->pEdict->v.origin, 200.0) && FVisible(waypoints[job_ptr->waypoint].origin, pBot->pEdict)) {
-		   job_ptr->phase = 1;
+			job_ptr->phase = 1;
 
 			if (waypoints[job_ptr->waypoint].flags & W_FL_CROUCH)
 				job_ptr->phase_timer = 0.0f; // crouching AND charging slows you waay down
@@ -2381,7 +2381,7 @@ int JobRocketJump(bot_t* pBot) {
 		pBot->f_side_speed = 0.0f;
 		// Prevent turning too much
 		pBot->side_direction = true;  // or false, depending on the desired direction
-	   
+		
 		//	UTIL_BotLogPrintf("%s: Gliding, velocity Z %f, time %f\n",
 		//		pBot->name, pBot->pEdict->v.velocity.z, pBot->f_think_time);
 
@@ -2418,7 +2418,7 @@ int JobConcussionJump(bot_t* pBot) {
 	// phase 1 - countdown till the grenade goes off - then jump
 	if (job_ptr->phase == 1) {
 		const float timeToDet = 4.0f - (pBot->f_think_time - pBot->primeTime);
-	   
+		
 		// make sure the bot stops hopping about to evade enemies during this job
 		pBot->f_dontEvadeTime = pBot->f_think_time + 4.0f; // Changed from 1.0f to 4.0f [APG]RoboCop[CL]
 
@@ -2625,13 +2625,13 @@ int JobPipetrap(bot_t* pBot) {
 				++pipeBombTally;
 		}
 		// find the team's flag
-      const edict_t* pentFlag = FIND_ENTITY_BY_CLASSNAME(nullptr, "item_tfgoal");
+		const edict_t* pentFlag = FIND_ENTITY_BY_CLASSNAME(nullptr, "item_tfgoal");
 		if (pentFlag != nullptr && !FNullEnt(pentFlag) && pBot->mission == ROLE_DEFENDER) {
 			// calculate a location near the flag to place the pipebomb
-         const Vector v_flag = pentFlag->v.origin;
-         const Vector v_nearFlag = v_flag + Vector(random_float(-100.0f, 100.0f), random_float(-100.0f, 100.0f), 0);
+			const Vector v_flag = pentFlag->v.origin;
+			const Vector v_nearFlag = v_flag + Vector(random_float(-100.0f, 100.0f), random_float(-100.0f, 100.0f), 0);
 
-		   // set the bot's aim to the calculated location
+			// set the bot's aim to the calculated location
 			BotSetFacing(pBot, v_nearFlag);
 		}
 		if (pipeBombTally < 8)
@@ -2811,7 +2811,7 @@ int JobPatrolHome(bot_t* pBot) {
 	// make sure the bot has a waypoint to patrol to
 	if (job_ptr->waypoint == -1 || WaypointRouteFromTo(pBot->current_wp, job_ptr->waypoint, pBot->current_team) == -1) {
 		// waypoint types to patrol to
-      constexpr int wantedFlags = W_FL_TFC_PL_DEFEND | W_FL_TFC_SENTRY | W_FL_TFC_PIPETRAP;
+		constexpr int wantedFlags = W_FL_TFC_PL_DEFEND | W_FL_TFC_SENTRY | W_FL_TFC_PIPETRAP;
 
 		const int defencePoint = WaypointFindRandomGoal(pBot->current_wp, pBot->current_team, wantedFlags);
 

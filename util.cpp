@@ -299,7 +299,7 @@ int UTIL_GetTeamColor(edict_t* pEntity) {
 	if (mod_id == TFC_DLL) {
 		char topcolor[32];
 
-      const char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
+		const char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
 		std::strcpy(topcolor, g_engfuncs.pfnInfoKeyValue(infobuffer, "topcolor"));
 
 		// used for spy checking
@@ -412,7 +412,7 @@ int UTIL_GetFlagsTeam(const edict_t* flag_edict) {
 int UTIL_GetClass(edict_t* pEntity) {
 	char model_name[32];
 
-   const char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
+	const char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
 	std::strcpy(model_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "model"));
 
 	return 0;

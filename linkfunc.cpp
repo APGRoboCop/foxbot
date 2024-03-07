@@ -44,15 +44,15 @@ void helper_LinkEntity(LINK_ENTITY_FUNC& addr, const char* name, entvars_t* pev)
 	}
 
 	if (addr != nullptr) { //fixed condition? [APG]RoboCop[CL]
-	   addr(pev);
+		addr(pev);
 	}
 }
 
 #define LINK_ENTITY_TO_FUNC(entityName)                                                                                                                                                                                                        \
-   C_DLLEXPORT void entityName(entvars_t *pev) {                                                                                                                                                                                               \
-      static LINK_ENTITY_FUNC addr;                                                                                                                                                                                                            \
-      helper_LinkEntity(addr, #entityName, pev);                                                                                                                                                                                               \
-   }
+	C_DLLEXPORT void entityName(entvars_t *pev) {                                                                                                                                                                                               \
+		static LINK_ENTITY_FUNC addr;                                                                                                                                                                                                            \
+		helper_LinkEntity(addr, #entityName, pev);                                                                                                                                                                                               \
+	}
 
 LINK_ENTITY_TO_FUNC(aiscripted_sequence);
 LINK_ENTITY_TO_FUNC(ambient_generic);

@@ -82,21 +82,21 @@ template <typename U> void bzero(U* ptr, size_t len) noexcept {
 }
 
 enum {
-   BOT_PITCH_SPEED = 30,
-   BOT_YAW_SPEED = 30
+	BOT_PITCH_SPEED = 30,
+	BOT_YAW_SPEED = 30
 };
 
 enum {
-   RESPAWN_IDLE = 1,
-   RESPAWN_NEED_TO_RESPAWN = 2,
-   RESPAWN_IS_RESPAWNING = 3
+	RESPAWN_IDLE = 1,
+	RESPAWN_NEED_TO_RESPAWN = 2,
+	RESPAWN_IS_RESPAWNING = 3
 };
 
 // game start messages for TFC...
 enum {
-   MSG_TFC_IDLE = 1,
-   MSG_TFC_TEAM_SELECT = 2,
-   MSG_TFC_CLASS_SELECT = 3
+	MSG_TFC_IDLE = 1,
+	MSG_TFC_TEAM_SELECT = 2,
+	MSG_TFC_CLASS_SELECT = 3
 };
 
 /*		// Not required for TFC - [APG]RoboCop[CL]
@@ -124,45 +124,45 @@ enum {
 */
 
 enum {
-   TFC_CLASS_CIVILIAN = 11,
-   TFC_CLASS_SCOUT = 1,
-   TFC_CLASS_SNIPER = 2,
-   TFC_CLASS_SOLDIER = 3,
-   TFC_CLASS_DEMOMAN = 4,
-   TFC_CLASS_MEDIC = 5,
-   TFC_CLASS_HWGUY = 6,
-   TFC_CLASS_PYRO = 7,
-   TFC_CLASS_SPY = 8,
-   TFC_CLASS_ENGINEER = 9
+	TFC_CLASS_CIVILIAN = 11,
+	TFC_CLASS_SCOUT = 1,
+	TFC_CLASS_SNIPER = 2,
+	TFC_CLASS_SOLDIER = 3,
+	TFC_CLASS_DEMOMAN = 4,
+	TFC_CLASS_MEDIC = 5,
+	TFC_CLASS_HWGUY = 6,
+	TFC_CLASS_PYRO = 7,
+	TFC_CLASS_SPY = 8,
+	TFC_CLASS_ENGINEER = 9
 };
 
 enum {
-   BOT_SKIN_LEN = 32,
-   BOT_NAME_LEN = 32
+	BOT_SKIN_LEN = 32,
+	BOT_NAME_LEN = 32
 };
 
 // This is the same spawn flag as SF_BUTTON_TOUCH_ONLY, i.e. used for buttons
 // that activate when a player bumps into them(like the ones on well)
 // Defined here so that there's no need to trawl the HL SDK to find SF_BUTTON_TOUCH_ONLY.
 enum {
-   SFLAG_PROXIMITY_BUTTON = 256
+	SFLAG_PROXIMITY_BUTTON = 256
 };
 
 // bot chat stuff
 enum {
-   TOTAL_CHAT_TYPES = 6,
-   MAX_CHAT_STRINGS = 100,   // max strings per type of chat
-   MAX_CHAT_LENGTH = 80
+	TOTAL_CHAT_TYPES = 6,
+	MAX_CHAT_STRINGS = 100,   // max strings per type of chat
+	MAX_CHAT_LENGTH = 80
 };
 
 // the indexes for each type of chat
 enum {
-   CHAT_TYPE_GREETING = 0,
-   CHAT_TYPE_KILL_HI = 1,
-   CHAT_TYPE_KILL_LOW = 2,
-   CHAT_TYPE_KILLED_HI = 3,
-   CHAT_TYPE_KILLED_LOW = 4,
-   CHAT_TYPE_SUICIDE = 5
+	CHAT_TYPE_GREETING = 0,
+	CHAT_TYPE_KILL_HI = 1,
+	CHAT_TYPE_KILL_LOW = 2,
+	CHAT_TYPE_KILLED_HI = 3,
+	CHAT_TYPE_KILLED_LOW = 4,
+	CHAT_TYPE_SUICIDE = 5
 };
 
 //Fix for GCC 8 - [APG]RoboCop[CL]
