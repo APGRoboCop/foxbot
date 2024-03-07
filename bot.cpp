@@ -417,6 +417,7 @@ void BotNameInit() {
 
 			if (name_buffer[0] != 0) {
 				std::strncpy(bot_names[number_names], name_buffer, BOT_NAME_LEN);
+				bot_names[number_names][BOT_NAME_LEN - 1] = '\0'; // ensure null termination [APG]RoboCop[CL]
 				number_names++;
 			}
 		}

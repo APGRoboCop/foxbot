@@ -1589,7 +1589,7 @@ bool WaypointLoad(edict_t* pEntity) {
 		return true;
 	}
 	if (pEntity) {
-		std::sprintf(msg, "Waypoint file %s doesn't exist!\nLooking for HPB file instead\n", filename);
+		snprintf(msg, sizeof(msg), "Waypoint file %s doesn't exist!\nLooking for HPB file instead\n", filename);
 		ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 	}
 
@@ -1646,7 +1646,7 @@ bool WaypointLoad(edict_t* pEntity) {
 			}
 			else {
 				if (pEntity) {
-					std::sprintf(msg, "%s HPB waypoints aren't for this map\n", filename);
+					snprintf(msg, sizeof(msg), "%s HPB waypoints aren't for this map\n", filename);
 					ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 				}
 
@@ -1656,7 +1656,7 @@ bool WaypointLoad(edict_t* pEntity) {
 		}
 		else {
 			if (pEntity) {
-				std::sprintf(msg, "%s is not a HPB waypoint file\n", filename);
+				snprintf(msg, sizeof(msg), "%s is not a HPB waypoint file\n", filename);
 				ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 			}
 
@@ -1671,7 +1671,7 @@ bool WaypointLoad(edict_t* pEntity) {
 	}
 	else {
 		if (pEntity) {
-			std::sprintf(msg, "Waypoint file %s doesn't exist\n", filename);
+			snprintf(msg, sizeof(msg), "Waypoint file %s doesn't exist\n", filename);
 			ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 		}
 
@@ -3041,7 +3041,7 @@ static void WaypointRouteInit() {
 	for (int matrix = 0; matrix < 4; matrix++) {
 		if (build_matrix[matrix]) {
 			if (shortest_path[matrix] == nullptr) {
-				std::sprintf(msg, "calculating FoXBot waypoint paths for team %d...\n", matrix + 1);
+				snprintf(msg, sizeof(msg), "calculating FoXBot waypoint paths for team %d...\n", matrix + 1);
 				ALERT(at_console, msg);
 
 				shortest_path[matrix] = static_cast<unsigned int*>(std::malloc(sizeof(unsigned int) * array_size));
@@ -3083,7 +3083,7 @@ static void WaypointRouteInit() {
 											distance = static_cast<float>(WAYPOINT_MAX_DISTANCE);
 
 										if (distance > REACHABLE_RANGE) {
-											std::sprintf(msg, "Waypoint path distance > %4.1f at from %d to %d\n", REACHABLE_RANGE, row, index);
+											snprintf(msg, sizeof(msg), "Waypoint path distance > %4.1f at from %d to %d\n", REACHABLE_RANGE, row, index);
 											ALERT(at_console, msg);
 											WaypointDeletePath(row, index);
 										}
@@ -3111,7 +3111,7 @@ static void WaypointRouteInit() {
 						if (pShortestPath[a * route_num_waypoints + b] == WAYPOINT_UNREACHABLE)
 							pFromTo[a * route_num_waypoints + b] = WAYPOINT_UNREACHABLE;
 				}
-				std::sprintf(msg, "FoXBot waypoint path calculations for team %d complete!\n", matrix + 1);
+				snprintf(msg, sizeof(msg), "FoXBot waypoint path calculations for team %d complete!\n", matrix + 1);
 				ALERT(at_console, msg);
 			}
 		}
@@ -3156,7 +3156,7 @@ static void WaypointRouteInit() {
 				break;
 		}
 	}
-	std::sprintf(msg, "RJ/Conc Total: %d : Blue: %d : Red: %d : Yellow: %d : Green: %d\n", RJIndex + 1, teamCount[0], teamCount[1], teamCount[2], teamCount[3]);
+	snprintf(msg, sizeof(msg), "RJ/Conc Total: %d : Blue: %d : Red: %d : Yellow: %d : Green: %d\n", RJIndex + 1, teamCount[0], teamCount[1], teamCount[2], teamCount[3]);
 	ALERT(at_console, msg);
 }
 
@@ -3919,8 +3919,7 @@ bool AreaDefLoad(edict_t* pEntity) {
 			}
 			else {
 				if (pEntity) {
-					std::sprintf(msg, "%s FoXBot areas aren't for this map\n", filename);
-
+					snprintf(msg, sizeof(msg), "%s FoXBot areas aren't for this map\n", filename);
 					ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 				}
 
@@ -3930,7 +3929,7 @@ bool AreaDefLoad(edict_t* pEntity) {
 		}
 		else {
 			if (pEntity) {
-				std::sprintf(msg, "%s is not a FoXBot area file\n", filename);
+				snprintf(msg, sizeof(msg), "%s is not a FoXBot area file\n", filename);
 				ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 			}
 
@@ -3965,7 +3964,7 @@ void AreaDefPrintInfo(edict_t* pEntity) {
 	int index = AreaDefPointFindNearest(pEntity, 50.0f, A_FL_1);
 
 	if (index != -1) {
-		std::sprintf(msg, "Area %d of %d total\n", index, num_areas);
+		snprintf(msg, sizeof(msg), "Area %d of %d total\n", index, num_areas);
 		ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 		ClientPrint(pEntity, HUD_PRINTNOTIFY, "Area corner 1\n");
 		return;
@@ -3974,7 +3973,7 @@ void AreaDefPrintInfo(edict_t* pEntity) {
 	index = AreaDefPointFindNearest(pEntity, 50.0f, A_FL_2);
 
 	if (index != -1) {
-		std::sprintf(msg, "Area %d of %d total\n", index, num_areas);
+		snprintf(msg, sizeof(msg), "Area %d of %d total\n", index, num_areas);
 		ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 		ClientPrint(pEntity, HUD_PRINTNOTIFY, "Area corner 2\n");
 		return;
@@ -3983,7 +3982,7 @@ void AreaDefPrintInfo(edict_t* pEntity) {
 	index = AreaDefPointFindNearest(pEntity, 50.0f, A_FL_3);
 
 	if (index != -1) {
-		std::sprintf(msg, "Area %d of %d total\n", index, num_areas);
+		snprintf(msg, sizeof(msg), "Area %d of %d total\n", index, num_areas);
 		ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 		ClientPrint(pEntity, HUD_PRINTNOTIFY, "Area corner 3\n");
 		return;
@@ -3992,7 +3991,7 @@ void AreaDefPrintInfo(edict_t* pEntity) {
 	index = AreaDefPointFindNearest(pEntity, 50.0f, A_FL_4);
 
 	if (index != -1) {
-		std::sprintf(msg, "Area %d of %d total\n", index, num_areas);
+		snprintf(msg, sizeof(msg), "Area %d of %d total\n", index, num_areas);
 		ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 		ClientPrint(pEntity, HUD_PRINTNOTIFY, "Area corner 4\n");
 		return;
@@ -5400,7 +5399,7 @@ void ProcessCommanderList() {
 		if (IS_DEDICATED_SERVER())
 			std::printf("[Config] Reading foxbot_commanders.txt\n");
 		else {
-			std::sprintf(msg, "[Config] Reading foxbot_commanders.txt\n");
+			snprintf(msg, sizeof(msg), "[Config] Reading foxbot_commanders.txt\n");
 			ALERT(at_console, msg);
 		}
 	}
@@ -5408,7 +5407,7 @@ void ProcessCommanderList() {
 		if (IS_DEDICATED_SERVER())
 			std::printf("[Config] Couldn't open foxbot_commanders.txt\n");
 		else {
-			std::sprintf(msg, "[Config] Couldn't open foxbot_commanders.txt\n");
+			snprintf(msg, sizeof(msg), "[Config] Couldn't open foxbot_commanders.txt\n");
 			ALERT(at_console, msg);
 		}
 		return;
@@ -5445,7 +5444,7 @@ void ProcessCommanderList() {
 				if (IS_DEDICATED_SERVER())
 					std::printf("[Config] foxbot_commanders.txt : Invalid Character %c\n", ch);
 				else {
-					std::sprintf(msg, "[Config] foxbot_commanders.txt : Invalid Character %c\n", ch);
+					snprintf(msg, sizeof(msg), "[Config] foxbot_commanders.txt : Invalid Character %c\n", ch);
 					ALERT(at_console, msg);
 				}
 			}
@@ -5472,7 +5471,7 @@ void ProcessCommanderList() {
 	      if (IS_DEDICATED_SERVER())
 			  std::printf("[Config] foxbot_commanders.txt : Loaded User %s\n", buffer);
 	      else {
-	         std::sprintf(msg, "[Config] foxbot_commanders.txt : Loaded User %s\n", buffer);
+	         snprintf(msg, sizeof(msg), "[Config] foxbot_commanders.txt : Loaded User %s\n", buffer);
 	         ALERT(at_console, msg);
 	      }
 	   }
@@ -5481,7 +5480,7 @@ void ProcessCommanderList() {
 	if (IS_DEDICATED_SERVER())
 		std::printf("[Config] foxbot_commanders.txt : Loaded %d users\n", commanders.size());
 	else {
-		std::sprintf(msg, "[Config] foxbot_commanders.txt : Loaded %d users\n", commanders.size());
+		snprintf(msg, sizeof(msg), "[Config] foxbot_commanders.txt : Loaded %d users\n", commanders.size());
 		ALERT(at_console, msg);
 	}
 	std::fclose(inFile);

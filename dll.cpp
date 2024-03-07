@@ -163,7 +163,9 @@ int num_bots = 0;
 int prev_num_bots = 0;
 bool g_GameRules = false;
 edict_t* clients[32];
+static float welcome_time = 0.0f;
 static int welcome_index = -1;
+static bool welcome_sent = false;
 static int g_menu_waypoint;
 static int g_menu_state = 0;
 
@@ -2585,6 +2587,33 @@ void StartFrame() { // v7 last frame timing
 			client_update_time = gpGlobals->time + 10.0f;
 			bot_check_time = gpGlobals->time + 30.0f;
 		} // end of config map check stuff.
+
+	  //TODO: Reinstate Welcome Msg and Waypoint Author Announce
+		/*if (!IS_DEDICATED_SERVER()) {
+			if ((welcome_index != -1) && (welcome_sent == false) && (welcome_time < 1.0f)) {
+				// are they out of observer mode yet?
+				if (clients[welcome_index] != nullptr) {
+					// welcome in 5 seconds
+					if (IsAlive(clients[welcome_index]))
+						welcome_time = gpGlobals->time + 5.0f;
+				}
+			}
+
+			if ((welcome_time > 0.0f) && (welcome_time < gpGlobals->time) && (welcome_sent == false)) {
+				char welcome_msg[128] = "--FoxBot--\n\nwww.apg-clan.org\n";
+				char version[32];
+
+				// sprintf(version," Beta v%d.%d Build#%d\n", VER_MAJOR, VER_MINOR, VER_BUILD);
+				snprintf(version, sizeof(version), " v%d.%d \n", VER_MAJOR, VER_MINOR);
+				std::strcat(welcome_msg, version);
+				// let's send a welcome message to this client...
+				// UTIL_SayText(welcome_msg, clients[welcome_index]);
+
+				KewlHUDNotify(clients[welcome_index], welcome_msg);
+				welcome_sent = true; // clear this so we only do it once
+			}
+		}*/
+
 		if (client_update_time <= gpGlobals->time) {
 			client_update_time = gpGlobals->time + 1.0f;
 			for (i = 0; i < 32; i++) {
