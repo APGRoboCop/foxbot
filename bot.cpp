@@ -505,7 +505,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 	// store the names of the models...
 	static const char* valve_bot_skins[VALVE_MAX_SKINS] = { "barney", "gina", "gman", "gordon", "helmet", "hgrunt", "recon", "robo", "scientist", "zombie" };
 
-	/*static const char *gearbox_bot_skins[GEARBOX_MAX_SKINS] = {
+	static const char *gearbox_bot_skins[GEARBOX_MAX_SKINS] = {
 					"barney", "beret", "cl_suit", "drill", "fassn", "gina", "gman",
 					"gordon", "grunt", "helmet", "hgrunt", "massn", "otis", "recon",
 					"recruit", "robo", "scientist", "shepard", "tower", "zombie"
@@ -525,7 +525,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 	c_skin[0] = '\0';
 	c_name[0] = '\0';
 	int skill;
-   int i;
+	int i;
 	// min/max checking...
 	if (max_bots > MAX_BOTS)
 		max_bots = MAX_BOTS;

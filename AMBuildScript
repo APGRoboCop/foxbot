@@ -31,9 +31,21 @@ if builder.cxx.target.platform == 'linux':
   builder.cxx.defines += ['_LINUX', 'POSIX', 'LINUX', 'linux']
   # Linux compiler C flags
   builder.cxx.cflags += [
+    '-mtune=generic',
     '-pipe',
-	'-fPIC',
-	'-msse2',
+    '-fPIC',
+    '-mmmx',
+    '-msse',
+    '-msse2',
+    '-msse3',
+    '-mssse3',
+    '-msse4',
+    '-msse4a',
+    '-msse4.1',
+    '-msse4.2',
+    #'-mavx', FoXBot hates AVX/2?
+    #'-mavx2',
+    '-mfpmath=sse',
     '-fno-strict-aliasing',
     '-Wall',
     '-Werror',
@@ -70,10 +82,10 @@ elif builder.cxx.target.platform == 'windows':
   # Windows compiler C++ flags
   builder.cxx.cxxflags += [
     '/std:c++17',
-	'/arch:SSE2',
+    '/arch:AVX2',
     '/fp:precise',
-	'/Qspectre',
-	'/EHsc'
+    '/Qspectre',
+    '/EHsc'
   ]
   # Windows linker flags
   builder.cxx.linkflags += [

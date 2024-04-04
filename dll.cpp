@@ -299,28 +299,28 @@ void FOX_HudMessage(edict_t* pEntity, const hudtextparms_t& textparms, const cha
 }
 
 void KewlHUDNotify(edict_t* pEntity, const char* msg_name) {
-	MESSAGE_BEGIN(MSG_ONE, SVC_TEMPENTITY, nullptr, pEntity);
-	WRITE_BYTE(TE_TEXTMESSAGE);
-	WRITE_BYTE(3 & 0xFF);
-	WRITE_SHORT(FixedSigned16(1, 1 << 13));
-	WRITE_SHORT(FixedSigned16(1, 1 << 13));
-	WRITE_BYTE(2); // effect
+   MESSAGE_BEGIN(MSG_ONE, SVC_TEMPENTITY, nullptr, pEntity);
+   WRITE_BYTE(TE_TEXTMESSAGE);
+   WRITE_BYTE(3 & 0xFF);
+   WRITE_SHORT(FixedSigned16(1, -1 << 13));
+   WRITE_SHORT(FixedSigned16(1, -1 << 13));
+   WRITE_BYTE(2); // effect
 
-	WRITE_BYTE(205);
-	WRITE_BYTE(205);
-	WRITE_BYTE(10);
-	WRITE_BYTE(255);
+   WRITE_BYTE(205);
+   WRITE_BYTE(205);
+   WRITE_BYTE(10);
+   WRITE_BYTE(255);
 
-	WRITE_BYTE(0);
-	WRITE_BYTE(0);
-	WRITE_BYTE(255);
-	WRITE_BYTE(255);
-	WRITE_SHORT(FixedUnsigned16(0.03f, 1 << 8));
-	WRITE_SHORT(FixedUnsigned16(1, 1 << 8));
-	WRITE_SHORT(FixedUnsigned16(6, 1 << 8));
-	WRITE_SHORT(FixedUnsigned16(4, 1 << 8));
-	WRITE_STRING(msg_name);
-	MESSAGE_END();
+   WRITE_BYTE(0);
+   WRITE_BYTE(0);
+   WRITE_BYTE(255);
+   WRITE_BYTE(255);
+   WRITE_SHORT(FixedUnsigned16(0.03f, 1 << 8));
+   WRITE_SHORT(FixedUnsigned16(1, 1 << 8));
+   WRITE_SHORT(FixedUnsigned16(6, 1 << 8));
+   WRITE_SHORT(FixedUnsigned16(4, 1 << 8));
+   WRITE_STRING(msg_name);
+   MESSAGE_END();
 }
 
 // If bot_total_varies is active then this function will periodically alter
@@ -1278,21 +1278,21 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 			CLIENT_PRINTF(pEntity, print_console, msg);
 		}
 
-		// check if this is NOT a bot joining the server...
-		if (std::strcmp(pszAddress, "127.0.0.1") != 0) {
-			int i = 0;
-			while (i < 32 && (clients[i] != nullptr && clients[i] != pEntity))
-				i++;
-			if (i < 32)
-				clients[i] = pEntity;
-			if (welcome_index == -1)
-				welcome_index = i;
-			// don't try to add bots for 30 seconds, give client time to get added
-			bot_check_time = gpGlobals->time + 30.0f;
-			// save the edict of the first player to join this server...
-			if (first_player == nullptr)
-				first_player = pEntity;
-		}
+        // check if this is NOT a bot joining the server...
+      if (strcmp(pszAddress, "127.0.0.1") != 0) {
+         int i = 0;
+         while ((i < 32) && (clients[i] != nullptr && clients[i] != pEntity))
+            i++;
+         if (i < 32)
+            clients[i] = pEntity;
+         if (welcome_index == -1)
+            welcome_index = i;
+         // don't try to add bots for 30 seconds, give client time to get added
+         bot_check_time = gpGlobals->time + 30.0f;
+         // save the edict of the first player to join this server...
+         if (first_player == nullptr)
+            first_player = pEntity;
+      }
 	}
 
 	if (!mr_meta)
@@ -2588,31 +2588,30 @@ void StartFrame() { // v7 last frame timing
 			bot_check_time = gpGlobals->time + 30.0f;
 		} // end of config map check stuff.
 
-	  //TODO: Reinstate Welcome Msg and Waypoint Author Announce
-		/*if (!IS_DEDICATED_SERVER()) {
+		if (!IS_DEDICATED_SERVER()) {
 			if ((welcome_index != -1) && (welcome_sent == false) && (welcome_time < 1.0f)) {
-				// are they out of observer mode yet?
-				if (clients[welcome_index] != nullptr) {
-					// welcome in 5 seconds
-					if (IsAlive(clients[welcome_index]))
-						welcome_time = gpGlobals->time + 5.0f;
-				}
-			}
+            // are they out of observer mode yet?
+            if (clients[welcome_index] != nullptr) {
+               // welcome in 5 seconds
+               if (IsAlive(clients[welcome_index]))
+                  welcome_time = gpGlobals->time + 5.0f;
+            }
+         }
 
 			if ((welcome_time > 0.0f) && (welcome_time < gpGlobals->time) && (welcome_sent == false)) {
-				char welcome_msg[128] = "--FoxBot--\n\nwww.apg-clan.org\n";
-				char version[32];
+            char welcome_msg[128] = "--FoxBot--\n\nwww.apg-clan.org\n";
+            char version[32];
 
-				// sprintf(version," Beta v%d.%d Build#%d\n", VER_MAJOR, VER_MINOR, VER_BUILD);
-				snprintf(version, sizeof(version), " v%d.%d \n", VER_MAJOR, VER_MINOR);
-				std::strcat(welcome_msg, version);
-				// let's send a welcome message to this client...
-				// UTIL_SayText(welcome_msg, clients[welcome_index]);
+            // sprintf(version," Beta v%d.%d Build#%d\n", VER_MAJOR, VER_MINOR, VER_BUILD);
+            sprintf(version, " v%d.%d \n", VER_MAJOR, VER_MINOR);
+            strcat(welcome_msg, version);
+            // let's send a welcome message to this client...
+            // UTIL_SayText(welcome_msg, clients[welcome_index]);
 
-				KewlHUDNotify(clients[welcome_index], welcome_msg);
+            KewlHUDNotify(clients[welcome_index], welcome_msg);
 				welcome_sent = true; // clear this so we only do it once
-			}
-		}*/
+         }
+      }
 
 		if (client_update_time <= gpGlobals->time) {
 			client_update_time = gpGlobals->time + 1.0f;
@@ -2738,13 +2737,13 @@ void StartFrame() { // v7 last frame timing
 					else
 						ALERT(at_console, msg);
 					bot_cfg_fp = nullptr;
-					UTIL_BuildFileName(filename, 255, "default.cfg", nullptr);
+					UTIL_BuildFileName(filename, 255, "foxbot.cfg", nullptr);
 					bot_cfg_fp = std::fopen(filename, "r");
 					if (bot_cfg_fp == nullptr) {
 						if (IS_DEDICATED_SERVER())
-							std::printf("\ndefault.cfg file not found\n");
+							std::printf("\nfoxbot.cfg file not found\n");
 						else
-							ALERT(at_console, "\ndefault.cfg file not found\n");
+							ALERT(at_console, "\nfoxbot.cfg file not found\n");
 					}
 					else {
 						snprintf(msg2, sizeof(msg2), "\nExecuting %s\n", filename);
@@ -5273,8 +5272,8 @@ static void ProcessBotCfgFile() {
 
 		// have to delay here or engine gives "Tried to write to
 		// uninitialized sizebuf_t" error and crashes...
-		bot_cfg_pause_time = gpGlobals->time + 7.0f;
-		bot_check_time = gpGlobals->time + 7.0f;
+		bot_cfg_pause_time = gpGlobals->time + 5.0f;
+		bot_check_time = gpGlobals->time + 5.0f;
 
 		return;
 	}
@@ -5720,227 +5719,223 @@ void UTIL_SavePent(edict_t* pent) {
 }
 
 static void DisplayBotInfo() {
-	char msg[255];
-	char msg2[512];
+   char msg[255];
+   char msg2[512];
 
-	if (IS_DEDICATED_SERVER()) {
-		// tell the console all the bot vars
+   if (IS_DEDICATED_SERVER()) {
+      // tell the console all the bot vars
 
-		snprintf(msg2, 511, "--FoxBot Loaded--\n--Visit 'www.apg-clan.org' for updates and info--\n");
-		msg2[511] = '\0'; // just in case
-		std::printf("%s", msg2);
+      snprintf(msg2, 511, "--FoxBot Loaded--\n--Visit 'www.apg-clan.org' for updates and info--\n");
+      msg2[511] = '\0'; // just in case
+      printf(msg2);
 
-		/*	std::sprintf(msg,"--* foxbot v%d.%d build# %d *--\n",
-						VER_MAJOR,VER_MINOR,VER_BUILD);*/
+      /*	sprintf(msg,"--* foxbot v%d.%d build# %d *--\n",
+                      VER_MAJOR,VER_MINOR,VER_BUILD);*/
 
-		snprintf(msg, sizeof(msg), "--* foxbot v%d.%d *--\n", VER_MAJOR, VER_MINOR);
-		std::printf("%s", msg);
+      sprintf(msg, "--* foxbot v%d.%d *--\n", VER_MAJOR, VER_MINOR);
+      printf(msg);
 
-		std::strncat(msg2, msg, 511 - std::strlen(msg2));
-		snprintf(msg, sizeof(msg), "\n--FoxBot info--\n");
-		std::printf("%s", msg);
-		std::strncat(msg2, msg, 511 - std::strlen(msg2));
-		// waypoints
-		if (num_waypoints > 0)
-			snprintf(msg, sizeof(msg), "Waypoints loaded\n");
-		else
-			snprintf(msg, sizeof(msg), "Waypoints NOT loaded\n--Warning bots will not navigate correctly!--\n");
-		std::printf("%s", msg);
-		std::strncat(msg2, msg, 511 - std::strlen(msg2));
-		// area file
-		if (num_areas > 0)
-			snprintf(msg, sizeof(msg), "Areas loaded\n");
-		else
-			snprintf(msg, sizeof(msg), "Areas not loaded\n");
-		std::printf("%s", msg);
-		std::strncat(msg2, msg, 511 - std::strlen(msg2));
-		// scripts...loaded/passed?
-		if (script_loaded) {
-			if (script_parsed)
-				snprintf(msg, sizeof(msg), "Script loaded and parsed\n");
-			else
-				snprintf(msg, sizeof(msg), "Script loaded and NOT parsed\n--Warning script file has an error in it, will NOT be used!--\n");
-		}
-		else
-			snprintf(msg, sizeof(msg), "No script file loaded\n");
-		std::printf("%s", msg);
-		std::strncat(msg2, msg, 511 - std::strlen(msg2));
+      strncat(msg2, msg, 511 - strlen(msg2));
+      sprintf(msg, "\n--FoxBot info--\n");
+      printf(msg);
+      strncat(msg2, msg, 511 - strlen(msg2));
+      // waypoints
+      if (num_waypoints > 0)
+         sprintf(msg, "Waypoints loaded\n");
+      else
+         sprintf(msg, "Waypoints NOT loaded\n--Warning bots will not navigate correctly!--\n");
+      printf(msg);
+      strncat(msg2, msg, 511 - strlen(msg2));
+      // area file
+      if (num_areas > 0)
+         sprintf(msg, "Areas loaded\n");
+      else
+         sprintf(msg, "Areas not loaded\n");
+      printf(msg);
+      strncat(msg2, msg, 511 - strlen(msg2));
+      // scripts...loaded/passed?
+      if (script_loaded) {
+         if (script_parsed)
+            sprintf(msg, "Script loaded and parsed\n");
+         else
+            sprintf(msg, "Script loaded and NOT parsed\n--Warning script file has an error in it, will NOT be used!--\n");
+      } else
+         sprintf(msg, "No script file loaded\n");
+      printf(msg);
+      strncat(msg2, msg, 511 - strlen(msg2));
 
-		// now bots vars
-		snprintf(msg, sizeof(msg), "\n--FoxBot vars--\n");
-		std::printf("%s", msg);
-		std::strncat(msg2, msg, 511 - std::strlen(msg2));
+      // now bots vars
+      sprintf(msg, "\n--FoxBot vars--\n");
+      printf(msg);
+      strncat(msg2, msg, 511 - strlen(msg2));
 
-		// bot skill levels
-		snprintf(msg, sizeof(msg), "botskill_lower %d\nbotskill_upper %d\n", botskill_lower, botskill_upper);
-		std::printf("%s", msg);
-		std::strncat(msg2, msg, 511 - std::strlen(msg2));
+      // bot skill levels
+      sprintf(msg, "botskill_lower %d\nbotskill_upper %d\n", botskill_lower, botskill_upper);
+      printf(msg);
+      strncat(msg2, msg, 511 - strlen(msg2));
 
-		snprintf(msg, sizeof(msg), "max_bots %d\nmin_bots %d\n", max_bots, min_bots);
-		std::printf("%s", msg);
-		std::strncat(msg2, msg, 511 - std::strlen(msg2));
+      sprintf(msg, "max_bots %d\nmin_bots %d\n", max_bots, min_bots);
+      printf(msg);
+      strncat(msg2, msg, 511 - strlen(msg2));
 
-		// bot chat
-		snprintf(msg, sizeof(msg), "Bot chat %d\n", bot_chat);
-		std::printf("%s", msg);
-		std::strncat(msg2, msg, 511 - std::strlen(msg2));
+      // bot chat
+      sprintf(msg, "Bot chat %d\n", bot_chat);
+      printf(msg);
+      strncat(msg2, msg, 511 - strlen(msg2));
 
-		if (bot_team_balance)
-			snprintf(msg, sizeof(msg), "Bot auto team balance On\n");
-		else
-			snprintf(msg, sizeof(msg), "Bot auto team balance Off\n");
-		std::printf("%s", msg);
-		std::strncat(msg2, msg, 511 - std::strlen(msg2));
+      if (bot_team_balance)
+         sprintf(msg, "Bot auto team balance On\n");
+      else
+         sprintf(msg, "Bot auto team balance Off\n");
+      printf(msg);
+      strncat(msg2, msg, 511 - strlen(msg2));
 
-		if (bot_bot_balance)
-			snprintf(msg, sizeof(msg), "Bot per team balance On\n");
-		else
-			snprintf(msg, sizeof(msg), "Bot per team balance Off\n");
-		std::printf("%s", msg);
-		std::strncat(msg2, msg, 511 - std::strlen(msg2));
+      if (bot_bot_balance)
+         sprintf(msg, "Bot per team balance On\n");
+      else
+         sprintf(msg, "Bot per team balance Off\n");
+      printf(msg);
+      strncat(msg2, msg, 511 - strlen(msg2));
 
-		snprintf(msg, sizeof(msg), "\n--All bot commands must be enclosed in quotes--\n");
-		std::printf("%s", msg);
-		std::strncat(msg2, msg, 511 - std::strlen(msg2));
-		snprintf(msg, sizeof(msg), "e.g. bot \"bot_chat 20\"\n\n");
-		std::printf("%s", msg);
-		std::strncat(msg2, msg, 511 - std::strlen(msg2));
-		ALERT(at_logged, "[FOXBOT]: %s", msg2);
-		// clear it up if it was 0
-	}
-	else {
-		// have to switch developer 'on' if its not already
-		const char* cvar_dev = const_cast<char*>(CVAR_GET_STRING("developer"));
-		int dev;
-		if (std::strcmp(cvar_dev, "0") == 0)
-			dev = 0;
-		else
-			dev = 1;
-		// tell the console all the bot vars
-		if (dev == 0)
-			CVAR_SET_STRING("developer", "1");
+      sprintf(msg, "\n--All bot commands must be enclosed in quotes--\n");
+      printf(msg);
+      strncat(msg2, msg, 511 - strlen(msg2));
+      sprintf(msg, "e.g. bot \"bot_chat 20\"\n\n");
+      printf(msg);
+      strncat(msg2, msg, 511 - strlen(msg2));
+      ALERT(at_logged, "[FOXBOT]: %s", msg2);
+   } else {
+      // have to switch developer 'on' if its not already
+      const char *cvar_dev = const_cast<char *>(CVAR_GET_STRING("developer"));
+      int dev;
+      if (strcmp(cvar_dev, "0") == 0)
+         dev = 0;
+      else
+         dev = 1;
+      // tell the console all the bot vars
+      if (dev == 0)
+         CVAR_SET_STRING("developer", "1");
 
-		hudtextparms_t h;
-		h.channel = 4;
-		h.effect = 1;
-		h.r1 = 10;
-		h.g1 = 53;
-		h.b1 = 81;
-		h.a1 = 255;
-		h.r2 = 10;
-		h.g2 = 53;
-		h.b2 = 81;
-		h.a2 = 168;
-		h.fadeinTime = 1;
-		h.fadeoutTime = 1;
-		h.holdTime = 5;
-		h.x = 0;
-		h.y = 0;
-		snprintf(msg, sizeof(msg), "--FoxBot Loaded--\n--Visit 'www.apg-clan.org' for updates and info--\n");
-		ALERT(at_console, msg);
-		std::printf("%s", msg2);
+      hudtextparms_t h;
+      h.channel = 4;
+      h.effect = 1;
+      h.r1 = 10;
+      h.g1 = 53;
+      h.b1 = 81;
+      h.a1 = 255;
+      h.r2 = 10;
+      h.g2 = 53;
+      h.b2 = 81;
+      h.a2 = 168;
+      h.fadeinTime = 1;
+      h.fadeoutTime = 1;
+      h.holdTime = 5;
+      h.x = 0;
+      h.y = 0;
+      sprintf(msg, "--FoxBot Loaded--\n--Visit 'www.apg-clan.org' for updates and info--\n");
+      ALERT(at_console, msg);
+      snprintf(msg2, 511, msg);
 
-		/*	std::sprintf(msg,"--* foxbot v%d.%d build# %d *--\n",
-						VER_MAJOR,VER_MINOR,VER_BUILD);*/
+      /*	sprintf(msg,"--* foxbot v%d.%d build# %d *--\n",
+                      VER_MAJOR,VER_MINOR,VER_BUILD);*/
 
-		snprintf(msg, sizeof(msg), "--* foxbot v%d.%d *--\n", VER_MAJOR, VER_MINOR);
-		ALERT(at_console, msg);
-		std::strncat(msg2, msg, 511 - std::strlen(msg2));
-		snprintf(msg, sizeof(msg), "\n--FoxBot info--\n");
-		ALERT(at_console, msg);
-		std::strncat(msg2, msg, 511 - std::strlen(msg2));
+      sprintf(msg, "--* foxbot v%d.%d *--\n", VER_MAJOR, VER_MINOR);
+      ALERT(at_console, msg);
+      strncat(msg2, msg, 511 - strlen(msg2));
+      sprintf(msg, "\n--FoxBot info--\n");
+      ALERT(at_console, msg);
+      strncat(msg2, msg, 511 - strlen(msg2));
 
-		// waypoints
-		if (num_waypoints > 0)
-			snprintf(msg, sizeof(msg), "Waypoints loaded\n");
-		else
-			snprintf(msg, sizeof(msg), "Waypoints NOT loaded\n--Warning, bots will not navigate correctly!--\n");
-		ALERT(at_console, msg);
-		std::strncat(msg2, msg, 511 - std::strlen(msg2));
+      // waypoints
+      if (num_waypoints > 0)
+         sprintf(msg, "Waypoints loaded\n");
+      else
+         sprintf(msg, "Waypoints NOT loaded\n--Warning, bots will not navigate correctly!--\n");
+      ALERT(at_console, msg);
+      strncat(msg2, msg, 511 - strlen(msg2));
 
-		// area file
-		if (num_areas > 0)
-			snprintf(msg, sizeof(msg), "Areas loaded\n");
-		else
-			snprintf(msg, sizeof(msg), "Areas not loaded\n");
+      // area file
+      if (num_areas > 0)
+         sprintf(msg, "Areas loaded\n");
+      else
+         sprintf(msg, "Areas not loaded\n");
 
-		ALERT(at_console, msg);
-		std::strncat(msg2, msg, 511 - std::strlen(msg2));
+      ALERT(at_console, msg);
+      strncat(msg2, msg, 511 - strlen(msg2));
 
-		// scripts...loaded/passed?
-		if (script_loaded) {
-			if (script_parsed)
-				snprintf(msg, sizeof(msg), "Script loaded and parsed\n");
-			else
-				snprintf(msg, sizeof(msg), "Script loaded and NOT parsed\n--Warning script file has an error in it and will NOT be used!--\n");
-		}
-		else
-			snprintf(msg, sizeof(msg), "No script file loaded\n");
-		ALERT(at_console, msg);
-		std::strncat(msg2, msg, 511 - std::strlen(msg2));
+      // scripts...loaded/passed?
+      if (script_loaded) {
+         if (script_parsed)
+            sprintf(msg, "Script loaded and parsed\n");
+         else
+            sprintf(msg, "Script loaded and NOT parsed\n--Warning script file has an error in it and will NOT be used!--\n");
+      } else
+         sprintf(msg, "No script file loaded\n");
+      ALERT(at_console, msg);
+      strncat(msg2, msg, 511 - strlen(msg2));
 
-		// now bots vars
-		snprintf(msg, sizeof(msg), "\n--FoxBot vars--\n");
-		ALERT(at_console, msg);
-		std::strncat(msg2, msg, 511 - std::strlen(msg2));
+      // now bots vars
+      sprintf(msg, "\n--FoxBot vars--\n");
+      ALERT(at_console, msg);
+      strncat(msg2, msg, 511 - strlen(msg2));
 
-		// bot skill levels
-		snprintf(msg, sizeof(msg), "botskill_lower %d\nbotskill_upper %d\n", botskill_lower, botskill_upper);
-		ALERT(at_console, msg);
-		std::strncat(msg2, msg, 511 - std::strlen(msg2));
+      // bot skill levels
+      sprintf(msg, "botskill_lower %d\nbotskill_upper %d\n", botskill_lower, botskill_upper);
+      ALERT(at_console, msg);
+      strncat(msg2, msg, 511 - strlen(msg2));
 
-		snprintf(msg, sizeof(msg), "max_bots %d\nmin_bots %d\n", max_bots, min_bots);
-		ALERT(at_console, msg);
-		std::strncat(msg2, msg, 511 - std::strlen(msg2));
+      sprintf(msg, "max_bots %d\nmin_bots %d\n", max_bots, min_bots);
+      ALERT(at_console, msg);
+      strncat(msg2, msg, 511 - strlen(msg2));
 
-		// bot chat
-		snprintf(msg, sizeof(msg), "Bot chat %d\n", bot_chat);
-		ALERT(at_console, msg);
-		std::strncat(msg2, msg, 511 - std::strlen(msg2));
+      // bot chat
+      sprintf(msg, "Bot chat %d\n", bot_chat);
+      ALERT(at_console, msg);
+      strncat(msg2, msg, 511 - strlen(msg2));
 
-		if (bot_team_balance)
-			snprintf(msg, sizeof(msg), "Bot auto team balance On\n");
-		else
-			snprintf(msg, sizeof(msg), "Bot auto team balance Off\n");
-		ALERT(at_console, msg);
-		std::strncat(msg2, msg, 511 - std::strlen(msg2));
+      if (bot_team_balance)
+         sprintf(msg, "Bot auto team balance On\n");
+      else
+         sprintf(msg, "Bot auto team balance Off\n");
+      ALERT(at_console, msg);
+      strncat(msg2, msg, 511 - strlen(msg2));
 
-		if (bot_bot_balance)
-			snprintf(msg, sizeof(msg), "Bot per team balance On\n");
-		else
-			snprintf(msg, sizeof(msg), "Bot per team balance Off\n");
-		ALERT(at_console, msg);
-		std::strncat(msg2, msg, 511 - std::strlen(msg2));
-		snprintf(msg, sizeof(msg), "\n");
-		ALERT(at_console, msg);
-		std::strncat(msg2, msg, 511 - std::strlen(msg2));
-		ALERT(at_logged, "[FOXBOT]: %s", msg2);
-		ALERT(at_console, "\n\n\n");
-		// clear it up if it was 0
-		if (dev == 0)
-			CVAR_SET_STRING("developer", "0");
-		if (!display_bot_vars)
+      if (bot_bot_balance)
+         sprintf(msg, "Bot per team balance On\n");
+      else
+         sprintf(msg, "Bot per team balance Off\n");
+      ALERT(at_console, msg);
+      strncat(msg2, msg, 511 - strlen(msg2));
+      sprintf(msg, "\n");
+      ALERT(at_console, msg);
+      strncat(msg2, msg, 511 - strlen(msg2));
+      ALERT(at_logged, "[FOXBOT]: %s", msg2);
+      ALERT(at_console, "\n\n\n");
+      // clear it up if it was 0
+      if (dev == 0)
+         CVAR_SET_STRING("developer", "0");
+      if (!display_bot_vars)
 			FOX_HudMessage(INDEXENT(1), h, msg2);
-		if (waypoint_author[0] != '\0') {
-			h.channel = 2;
-			h.effect = 1;
-			h.r1 = 255;
-			h.g1 = 128;
-			h.b1 = 0;
-			h.a1 = 255;
-			h.r2 = 255;
-			h.g2 = 170;
-			h.b2 = 0;
-			h.a2 = 255;
-			h.fadeinTime = 1;
-			h.fadeoutTime = 1;
-			h.holdTime = 7;
-			h.x = -1;
-			h.y = 0.8f;
-			snprintf(msg2, sizeof(msg2), "-- Waypoint author: %s --", waypoint_author);
-			FOX_HudMessage(INDEXENT(1), h, msg);
-		}
-	}
+      if (waypoint_author[0] != '\0') {
+         h.channel = 2;
+         h.effect = 1;
+         h.r1 = 255;
+         h.g1 = 128;
+         h.b1 = 0;
+         h.a1 = 255;
+         h.r2 = 255;
+         h.g2 = 170;
+         h.b2 = 0;
+         h.a2 = 255;
+         h.fadeinTime = 1;
+         h.fadeoutTime = 1;
+         h.holdTime = 7;
+         h.x = -1;
+         h.y = 0.8f;
+         sprintf(msg, "-- Waypoint author: %s --", waypoint_author);
+         FOX_HudMessage(INDEXENT(1), h, msg);
+      }
+   }
 }
 
 // This function can be used to process a specified bot setting command.
