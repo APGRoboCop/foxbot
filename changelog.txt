@@ -9,13 +9,32 @@ Updated by RoboCop
 --------------------------------------------------------------------------------
 
 - Added new waypoints:-
+	+ alchimy
+	+ alchimy_l
+	+ alchimy_l2
+	+ alchimy_lg
+	+ axlfly8
+	+ axlfly9b
+	+ 2kfort4_b2
 	+ de_dust2
 	+ eleventh
+	+++ hollywood
+	+++ hollywood2
+	+ juno
 	+ piebowl
+	+ mulch_dm2
 	+ pox
 	+ signal
 
+- Added support for SSE4.2 Linux CPUs and for AVX2 Win32 CPUs
+
 - Reduced the likelihood of buffer overflow crashes
+
+- Improved on the Windows entity interface and vector coding issues
+
+- Reinstated the HUD display messege for Listenserver Welcome Messege and Waypoint Author
+
+- Removing unwanted HLDM skin selector code that were used from HPB Bot Template
 
 - Spectate Debug text now realigned to the left for a better visual
 
@@ -37,10 +56,10 @@ Updated by RoboCop
 
 - Nailguns and Super Nailguns should now be very accurate as those guns are meant for destroying SG Turrets
 
-- Repaired some rogue pathways in baconbowl_r, bases2k3, cornfield, ksour, phantom, momentum_l, mulch_dm2b1, openfire_l, openfire_lowgrens, rock2,
-  sandbowl_r2, schtop, sniperzone, sniperzone_r and warpath_r2
+- Repaired some rogue pathways in baconbowl_r, bases2k3, cornfield, junob7, ksour, momentum_l, mulch_dm2b1, openfire_l, openfire_lowgrens, phantom,
+  rock2, sandbowl_r2, schtop, sniperzone, sniperzone_r and warpath_r2
 
-- Added some more Rocket/Conc Jumps for avanti, baconbowl_r, destroy_l, palermo, rock2 and ravelin
+- Added some more Rocket/Conc Jumps for avanti, baconbowl_r, destroy_l, palermo, rock2, ravelin and sandbowl_r2
 
 - Added more support for lbdustbowl and tfc_stargate
 
@@ -48,9 +67,11 @@ Updated by RoboCop
 
 TODO List:-
 
->> Complete 'botdontmove' in order for "GolfBots" to stay stationary
+>> The waypoint system appears to hate being compiled for AVX2 for Linux
 
->> To prevent the bots from holding their live nades for too long, that can cause them acting as suicide bombers occassionally
+>> To allow bots to understand on how to shoot door buttons, if touching them doesn't work like in well or alchimy_l2 maps
+
+>> Complete 'botdontmove' in order for "GolfBots" to stay stationary
 
 >> Fix bots navigation when shot by enemies as they sometimes cannot seem to detect where damage is coming from
 
