@@ -15,6 +15,7 @@
 #ifndef EXTDLL_H
 #define EXTDLL_H
 
+#include <algorithm>
 
 //
 // Global header file for extension DLLs
@@ -51,8 +52,6 @@ typedef int BOOL;
 #define MAX_PATH PATH_MAX
 #include <limits.h>
 #include <stdarg.h>
-//Fix for GCC 8 - [APG]RoboCop[CL]
-#include <algorithm>
 
 #ifndef max
 #define max(a,b) (((a) > (b)) ? (a) : (b))

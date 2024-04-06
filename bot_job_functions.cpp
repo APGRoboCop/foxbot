@@ -488,57 +488,68 @@ int JobPickUpFlag(bot_t* pBot) {
 }
 
 // This function handles bot behaviour for the JOB_PUSH_BUTTON job.
+// The new parameter 'shoot' indicates whether the bot should shoot the button. [APG]RoboCop[CL]
 int JobPushButton(bot_t* pBot) {
+
+   bool shoot = false;
+
 	job_struct* job_ptr = &pBot->job[pBot->currentJob];
 
-	// remember the center of the button
-	const Vector v_button = VecBModelOrigin(job_ptr->object);
+   // remember the center of the button
+   const Vector v_button = VecBModelOrigin(job_ptr->object);
 
 	// debugging stuff
 	//	WaypointDrawBeam(INDEXENT(1), pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs,
 	//		v_button, 10, 2, 250, 250, 250, 200, 10);
 
-	// phase zero - figure out which button type it is and how to deal with it
-	if (job_ptr->phase == 0) {
-		// does the button activate only when something(e.g. a player) bumps into it?
-		if (job_ptr->object->v.spawnflags & SFLAG_PROXIMITY_BUTTON)
-			job_ptr->phase = 2;
-		else
-			job_ptr->phase = 1; // no, it's just a standard button that you use to activate
+   // phase zero - figure out which button type it is and how to deal with it
+   if (job_ptr->phase == 0) {
+      // does the button activate only when something(e.g. a player) bumps into it?
+      if (job_ptr->object->v.spawnflags & SFLAG_PROXIMITY_BUTTON)
+         job_ptr->phase = 2;
+      else
+         job_ptr->phase = 1; // no, it's just a standard button that you use to activate
 
-		job_ptr->phase_timer = pBot->f_think_time + 8.0f;
-	}
+      job_ptr->phase_timer = pBot->f_think_time + 8.0f;
+   }
 
-	// phase 1 - deal with normal use-to-activate buttons here
-	if (job_ptr->phase == 1) {
-		// taken too long getting to the button?
-		if (job_ptr->phase_timer < pBot->f_think_time) {
-			BlacklistJob(pBot, JOB_PUSH_BUTTON, 3.0f);
-			return JOB_TERMINATED;
-		}
+   // phase 1 - deal with normal use-to-activate buttons here
+   if (job_ptr->phase == 1) {
+      // taken too long getting to the button?
+      if (job_ptr->phase_timer < pBot->f_think_time) {
+         BlacklistJob(pBot, JOB_PUSH_BUTTON, 3.0f);
+         return JOB_TERMINATED;
+      }
 
-		BotSetFacing(pBot, v_button);
-		pBot->f_current_wp_deadline = pBot->f_think_time + BOT_WP_DEADLINE;
+      BotSetFacing(pBot, v_button);
+      pBot->f_current_wp_deadline = pBot->f_think_time + BOT_WP_DEADLINE;
 
-		// approach if not near enough to the button
-		if (!VectorsNearerThan(pBot->pEdict->v.origin, v_button, 50.0)) {
-			BotNavigateWaypointless(pBot);
-		}
-		else {
-			pBot->f_pause_time = pBot->f_think_time + 0.2f;
+      // approach if not near enough to the button
+      if (!VectorsNearerThan(pBot->pEdict->v.origin, v_button, 50.0)) {
+         BotNavigateWaypointless(pBot);
+      }
+      else {
+         pBot->f_pause_time = pBot->f_think_time + 0.2f;
 
-			const Vector vecStart = pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs;
+         const Vector vecStart = pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs;
 
-			if (BotInFieldOfView(pBot, v_button - vecStart) < 15) {
-				pBot->pEdict->v.button = IN_USE;
-				pBot->f_use_button_time = pBot->f_think_time;
+         if (BotInFieldOfView(pBot, v_button - vecStart) < 15) {
+            if (shoot) {
+               // shoot the button
+               pBot->pEdict->v.button = IN_ATTACK;
+               pBot->f_shoot_time = pBot->f_think_time;
+            } else {
+               // push the button
+               pBot->pEdict->v.button = IN_USE;
+               pBot->f_use_button_time = pBot->f_think_time;
+            }
 
-				pBot->current_wp = WaypointFindNearest_E(pBot->pEdict, REACHABLE_RANGE, pBot->current_team);
+            pBot->current_wp = WaypointFindNearest_E(pBot->pEdict, REACHABLE_RANGE, pBot->current_team);
 
-				return JOB_TERMINATED; // success
-			}
-		}
-	}
+            return JOB_TERMINATED; // success
+         }
+      }
+   }
 
 	// phase 2 - get fairly close to what must be a proximity button
 	if (job_ptr->phase == 2) {

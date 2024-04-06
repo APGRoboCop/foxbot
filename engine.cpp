@@ -332,14 +332,14 @@ void pfnClientCommand(edict_t* pEdict, char* szFmt, ...) {
 	va_list argp;
 
 	va_start(argp, szFmt);
-	std::vsnprintf(tempFmt, sizeof(tempFmt), szFmt, argp);
+	vsnprintf(tempFmt, sizeof(tempFmt), szFmt, argp);
 	va_end(argp);
 
 	if (pEdict != nullptr) {
 		// if(!((pEdict->v.flags & FL_FAKECLIENT)==FL_FAKECLIENT))
 		bool b = false;
 		if ((pEdict->v.flags & FL_FAKECLIENT) != FL_FAKECLIENT) {
-			for (auto &client : clients) {
+			for (edict_t *&client : clients) {
 				// if(!((pEdict->v.flags & FL_FAKECLIENT)==FL_FAKECLIENT))
 				// bots[i].is_used &&
 				if (client == pEdict)

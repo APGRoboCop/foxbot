@@ -1672,7 +1672,7 @@ bool BotFireWeapon(const Vector& v_enemy, bot_t* pBot, const int weapon_choice) 
 
 			if (pDelay[select_index].iId != iId) {
 				char msg[80];
-				std::snprintf(msg, sizeof(msg), "fire_delay mismatch for weapon id=%d\n", iId);
+				snprintf(msg, sizeof(msg), "fire_delay mismatch for weapon id=%d\n", iId);
 				ALERT(at_console, msg);
 				return false;
 			}

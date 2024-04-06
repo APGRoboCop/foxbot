@@ -175,12 +175,9 @@ void BlacklistJob(bot_t* pBot, const int jobType, const float timeOut) {
 // This function returns true if the specified jobtype is already in the
 // job buffer.
 bool BufferContainsJobType(const bot_t* pBot, const int JobType) {
-	for (const int i : pBot->jobType) {
-		if (i == JobType)
-			return true;
-	}
-
-	return false;
+    return std::any_of(std::begin(pBot->jobType), std::end(pBot->jobType), [JobType](int i) {
+        return i == JobType;
+    });
 }
 
 // If the specified job type is already in the job buffer this function will

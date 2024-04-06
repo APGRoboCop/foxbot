@@ -78,7 +78,9 @@ elif builder.cxx.target.platform == 'windows':
     '_WINDOWS'
   ]
   # Windows compiler C flags
-  builder.cxx.cflags += []
+  builder.cxx.cflags += [
+    '/W4',
+  ]
   # Windows compiler C++ flags
   builder.cxx.cxxflags += [
     '/std:c++17',

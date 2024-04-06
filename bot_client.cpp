@@ -406,7 +406,7 @@ void BotClient_TFC_ItemPickup(void* p, const int bot_index) {
 
 	const int index = *static_cast<int*>(p);
 	char msg[255];
-	std::snprintf(msg, sizeof(msg), "%d", index);
+	snprintf(msg, sizeof(msg), "%d", index);
 	// UTIL_HostSay(0, 0, msg);
 	// FILE *fp;
 	//{ fp=std::fopen("route.txt","a"); std::fprintf(fp,"a %s\n",msg); std::fclose(fp); }

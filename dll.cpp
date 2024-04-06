@@ -302,8 +302,8 @@ void KewlHUDNotify(edict_t* pEntity, const char* msg_name) {
    MESSAGE_BEGIN(MSG_ONE, SVC_TEMPENTITY, nullptr, pEntity);
    WRITE_BYTE(TE_TEXTMESSAGE);
    WRITE_BYTE(3 & 0xFF);
-   WRITE_SHORT(FixedSigned16(1, -1 << 13));
-   WRITE_SHORT(FixedSigned16(1, -1 << 13));
+   WRITE_SHORT(FixedSigned16(1, -(1 << 13)));
+   WRITE_SHORT(FixedSigned16(1, -(1 << 13)));
    WRITE_BYTE(2); // effect
 
    WRITE_BYTE(205);
