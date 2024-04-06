@@ -1098,7 +1098,9 @@ void BotFindItem(bot_t* pBot) {
 						}
 					}
 
-					else if (std::strcmp("func_breakable", item_name) == 0) {
+			      // TODO: To allow bots to understand on how to shoot door buttons,
+			      // if touching them doesn't work like in well or alchimy_l2 maps [APG]RoboCop[CL]
+					else if (std::strcmp("func_breakable", item_name) == 0 || std::strcmp("func_button", item_name) == 0) {
 						// make sure it really is breakable
 						if (pent->v.takedamage <= 0)
 							continue;
