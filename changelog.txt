@@ -32,21 +32,21 @@ Updated by RoboCop
 
 - Improved on the Windows entity interface and vector coding issues
 
-- Reinstated the HUD display messege for Listenserver Welcome Messege and Waypoint Author
+- Reinstated the HUD display messages for Listenserver Welcome Messege and Waypoint Author
 
 - Removing unwanted HLDM skin selector code that were used from HPB Bot Template
 
 - Spectate Debug text now realigned to the left for a better visual
 
-- Bots will ignore returning to their respawns in flagrun in order to prevent their flags they are carrying being returned to Neutral Flag Room
+- Bots will ignore returning to their respawns in flagrun to prevent their flags they are carrying being returned to Neutral Flag Room
 
 - Bots will no longer toss grenades in a far distance nor aim their guns in the skies or ceilings
 
 - Bot's average aggression increased for improved action and tactics
 
-- Scouts, Spies, Medics and Engineer bots will no longer use their lame default weapons when been spawned
+- Scouts, Spies, Medics and Engineer bots will no longer use their lame default weapons when spawned
 
-- Bots will use Nail Guns for destroying SG Turrets from a long distance
+- Bots will use Nail Guns to destroy SG Turrets from a long distance
 
 - Soldier bots should now Rocket Jump slightly better, and for Medics and Scouts to Conc Jump
 

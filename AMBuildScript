@@ -43,8 +43,6 @@ if builder.cxx.target.platform == 'linux':
     '-msse4a',
     '-msse4.1',
     '-msse4.2',
-    #'-mavx', FoXBot hates AVX/2?
-    #'-mavx2',
     '-mfpmath=sse',
     '-fno-strict-aliasing',
     '-Wall',
@@ -84,7 +82,7 @@ elif builder.cxx.target.platform == 'windows':
   # Windows compiler C++ flags
   builder.cxx.cxxflags += [
     '/std:c++17',
-    '/arch:AVX2',
+    '/arch:SSE2',
     '/fp:precise',
     '/Qspectre',
     '/EHsc'
