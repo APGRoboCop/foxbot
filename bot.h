@@ -74,7 +74,7 @@ int Cmd_Argc();
 
 // anologue of memset
 template <typename U> void bzero(U* ptr, size_t len) noexcept {
-	const auto zeroing = reinterpret_cast<unsigned char*>(ptr);
+   unsigned char *const zeroing = reinterpret_cast<unsigned char *>(ptr);
 
 	for (size_t i = 0; i < len; ++i) {
 		zeroing[i] = 0;
@@ -561,12 +561,10 @@ enum entity_waterlevels {
 	WL_HEAD_IN_WATER     // waterlevel 3 - head in water
 };
 
-#define MAX_BOTS 32
-
-#define MAX_TEAMS 32
-#define MAX_TEAMNAME_LENGTH 16
-
-#define MAX_FLAGS 5
+constexpr int MAX_BOTS = 32;
+constexpr int MAX_TEAMS = 4;
+constexpr int MAX_TEAMNAME_LENGTH = 16;
+constexpr int MAX_FLAGS = 5;
 
 // structure for keeping track of what flags are in each map
 typedef struct {
