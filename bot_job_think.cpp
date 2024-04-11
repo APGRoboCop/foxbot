@@ -629,7 +629,7 @@ void BotJobThink(bot_t* pBot) {
 				int guardChance = 750;
 
 				// find out if any bot teammates are guarding already
-				for (auto &bot : bots) {
+				for (bot_t &bot : bots) {
 					if (bot.is_used && bot.current_team == pBot->current_team && (BufferedJobIndex(&bot, JOB_GUARD_WAYPOINT) != -1 || BufferedJobIndex(&bot, JOB_PIPETRAP) != -1)) {
 						guardChance = 500; // only 50% chance the bot will guard
 						break;

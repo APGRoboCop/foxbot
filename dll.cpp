@@ -299,28 +299,28 @@ void FOX_HudMessage(edict_t* pEntity, const hudtextparms_t& textparms, const cha
 }
 
 void KewlHUDNotify(edict_t* pEntity, const char* msg_name) {
-   MESSAGE_BEGIN(MSG_ONE, SVC_TEMPENTITY, nullptr, pEntity);
-   WRITE_BYTE(TE_TEXTMESSAGE);
-   WRITE_BYTE(3 & 0xFF);
-   WRITE_SHORT(FixedSigned16(1, -(1 << 13)));
-   WRITE_SHORT(FixedSigned16(1, -(1 << 13)));
-   WRITE_BYTE(2); // effect
+	MESSAGE_BEGIN(MSG_ONE, SVC_TEMPENTITY, nullptr, pEntity);
+	WRITE_BYTE(TE_TEXTMESSAGE);
+	WRITE_BYTE(3 & 0xFF);
+	WRITE_SHORT(FixedSigned16(1, -(1 << 13)));
+	WRITE_SHORT(FixedSigned16(1, -(1 << 13)));
+	WRITE_BYTE(2); // effect
 
-   WRITE_BYTE(205);
-   WRITE_BYTE(205);
-   WRITE_BYTE(10);
-   WRITE_BYTE(255);
+	WRITE_BYTE(205);
+	WRITE_BYTE(205);
+	WRITE_BYTE(10);
+	WRITE_BYTE(255);
 
-   WRITE_BYTE(0);
-   WRITE_BYTE(0);
-   WRITE_BYTE(255);
-   WRITE_BYTE(255);
-   WRITE_SHORT(FixedUnsigned16(0.03f, 1 << 8));
-   WRITE_SHORT(FixedUnsigned16(1, 1 << 8));
-   WRITE_SHORT(FixedUnsigned16(6, 1 << 8));
-   WRITE_SHORT(FixedUnsigned16(4, 1 << 8));
-   WRITE_STRING(msg_name);
-   MESSAGE_END();
+	WRITE_BYTE(0);
+	WRITE_BYTE(0);
+	WRITE_BYTE(255);
+	WRITE_BYTE(255);
+	WRITE_SHORT(FixedUnsigned16(0.03f, 1 << 8));
+	WRITE_SHORT(FixedUnsigned16(1, 1 << 8));
+	WRITE_SHORT(FixedUnsigned16(6, 1 << 8));
+	WRITE_SHORT(FixedUnsigned16(4, 1 << 8));
+	WRITE_STRING(msg_name);
+	MESSAGE_END();
 }
 
 // If bot_total_varies is active then this function will periodically alter
@@ -501,7 +501,7 @@ static void BotBalanceTeams_Casual() {
 	if (mod_id != TFC_DLL) // Fix for bot_team_balance? [APG]RoboCop[CL]
 		return;
 
-	static float nextBalanceCheck = 5.0f;
+	static float nextBalanceCheck = 6.0f;
 
 	// perform a balance check every random number of seconds
 	if (nextBalanceCheck < gpGlobals->time)
@@ -516,7 +516,7 @@ static void BotBalanceTeams_Casual() {
 	// find out which teams have player limits, and are full
 	int i;
 	bool team_is_full[4] = { false, false, false, false };
-	for (i = 0; i < 4; i++) {
+	for (i = 0; i < MAX_TEAMS; i++) {
 		if (max_team_players[i] > 0 && playersPerTeam[i] >= max_team_players[i])
 			team_is_full[i] = true;
 	}
@@ -561,7 +561,7 @@ static void BotBalanceTeams_Casual() {
 	++smallest_team;
 
 	// let only one bot change team(if it wants to) once per function call
-	for (i = 0; i < 32; i++) {
+	for (i = 0; i < MAX_BOTS; i++) {
 		// is this an active bot on the bigger team?
 		// and is it willing to change teams?
 		if (bots[i].is_used && bots[i].pEdict->v.team == biggest_team && random_long(1, 1000) < bots[i].trait.fairplay) {
@@ -592,7 +592,7 @@ static bool BotBalanceTeams(int a, int b) {
 			// is this slot used?
 			if (bots[i].is_used && bots[i].pEdict->v.team == a) {
 				char msg[32];
-				snprintf(msg, 32, "%d", b);
+            snprintf(msg, sizeof(msg), "%d", b);
 				//	FakeClientCommand(bots[i].pEdict, "jointeam", msg, NULL);
 				bots[i].bot_team = b;       // choose your team
 				bots[i].not_started = true; // join the team, pick a class
@@ -611,7 +611,7 @@ static bool BBotBalanceTeams(int a, int b) {
 	// now just set up teams to include bots in them :D
 	int bteams[4] = { 0, 0, 0, 0 };
 
-	for (const auto &bot : bots) ///<
+	for (const bot_t &bot : bots) ///<
 	{
 		if (bot.is_used) {
 			char cl_name[128];
@@ -621,7 +621,7 @@ static bool BBotBalanceTeams(int a, int b) {
 			if (cl_name[0] != '\0') {
 				const int team = bot.pEdict->v.team - 1;
 
-				if (team >= 0 && team < 4)
+				if (team >= 0 && team < MAX_TEAMS)
 					bteams[team] = bteams[team] + 1;
 			}
 		}
@@ -631,7 +631,7 @@ static bool BBotBalanceTeams(int a, int b) {
 			// is this slot used?
 			if (bots[i].is_used && bots[i].pEdict->v.team == a) {
 				char msg[32];
-				snprintf(msg, 32, "%d", b);
+            snprintf(msg, sizeof(msg), "%d", b);
 				//	FakeClientCommand(bots[i].pEdict, "jointeam", msg, NULL);
 				bots[i].bot_team = b;       // choose your team
 				bots[i].not_started = true; // join the team, pick a class
@@ -649,7 +649,7 @@ static bool BBotBalanceTeams(int a, int b) {
 // them to switch teams if necessary.
 static bool HBalanceTeams(int a, int b) {
 	if (playersPerTeam[a - 1] - 1 > playersPerTeam[b - 1] && (max_team_players[b - 1] > playersPerTeam[b - 1] || max_team_players[b - 1] == 0) && is_team[b - 1]) {
-		for (int i = 1; i <= 32; i++) {
+      for (int i = 1; i <= MAX_BOTS; i++) {
 			bool not_bot = true;
 			for (int j = 31; j >= 0; j--) {
 				if (bots[j].is_used && bots[j].pEdict == INDEXENT(i))
@@ -673,7 +673,7 @@ void GameDLLInit() {
 	CVAR_REGISTER(&sv_bot);
 	CVAR_REGISTER(&enable_foxbot);
 
-	for (auto &client : clients)
+	for (edict_t *&client : clients)
 		client = nullptr;
 
 	// initialize the bots array of structures...
@@ -807,7 +807,7 @@ void chatClass::pickRandomChatString(char* msg, size_t maxLength, const int chat
 	}
 
 	// push the selected string on to the list of recently used strings
-	for (i = 4; i > 0; i--) {
+   for (i = MAX_TEAMS; i > 0; i--) {
 		this->recent_strings_[chatSection][i] = this->recent_strings_[chatSection][i - 1];
 	}
 	this->recent_strings_[chatSection][0] = randomIndex;
@@ -853,7 +853,7 @@ int DispatchSpawn(edict_t* pent) {
 			pent_info_ctfdetect = nullptr;
 			pent_item_tfgoal = nullptr;
 
-			for (int index = 0; index < 4; index++) {
+			for (int index = 0; index < MAX_TEAMS; index++) {
 				max_team_players[index] = 0;  // no player limit
 				team_class_limits[index] = 0; // no class limits
 				team_allies[index] = 0;
@@ -1278,21 +1278,21 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 			CLIENT_PRINTF(pEntity, print_console, msg);
 		}
 
-        // check if this is NOT a bot joining the server...
-      if (strcmp(pszAddress, "127.0.0.1") != 0) {
-         int i = 0;
-         while ((i < 32) && (clients[i] != nullptr && clients[i] != pEntity))
-            i++;
-         if (i < 32)
-            clients[i] = pEntity;
-         if (welcome_index == -1)
-            welcome_index = i;
-         // don't try to add bots for 30 seconds, give client time to get added
-         bot_check_time = gpGlobals->time + 30.0f;
-         // save the edict of the first player to join this server...
-         if (first_player == nullptr)
-            first_player = pEntity;
-      }
+		  // check if this is NOT a bot joining the server...
+		if (strcmp(pszAddress, "127.0.0.1") != 0) {
+			int i = 0;
+         while ((i < MAX_BOTS) && (clients[i] != nullptr && clients[i] != pEntity))
+				i++;
+         if (i < MAX_BOTS)
+				clients[i] = pEntity;
+			if (welcome_index == -1)
+				welcome_index = i;
+			// don't try to add bots for 30 seconds, give client time to get added
+			bot_check_time = gpGlobals->time + 30.0f;
+			// save the edict of the first player to join this server...
+			if (first_player == nullptr)
+				first_player = pEntity;
+		}
 	}
 
 	if (!mr_meta)
@@ -1335,7 +1335,7 @@ void ClientDisconnect(edict_t* pEntity) {
 
 		int i, index = -1;
 
-		for (i = 0; i < 32; i++) {
+		for (i = 0; i < MAX_BOTS; i++) {
 			if (bots[i].pEdict == pEntity && bots[i].is_used) {
 				index = i;
 				break;
@@ -1352,10 +1352,10 @@ void ClientDisconnect(edict_t* pEntity) {
 		else {
 			i = 0;
 
-			while (i < 32 && clients[i] != pEntity)
+			while (i < MAX_BOTS && clients[i] != pEntity)
 				i++;
 
-			if (i < 32)
+			if (i < MAX_BOTS)
 				clients[i] = nullptr;
 			// human left?
 			// what about level changes?
@@ -1440,7 +1440,7 @@ void ClientCommand(edict_t* pEntity) {
 				std::strcpy(c, "-1");
 				BotCreate(pEntity, arg1, c, arg3, arg4);
 			}
-			bot_check_time = gpGlobals->time + 5.0f;
+			bot_check_time = gpGlobals->time + 6.0f;
 			if (mr_meta)
 				RETURN_META(MRES_SUPERCEDE);
 			return;
@@ -1653,13 +1653,13 @@ void ClientCommand(edict_t* pEntity) {
 
 					index = 0;
 
-					while (index < 32) {
+					while (index < MAX_BOTS) {
 						if (bots[index].is_used && strcasecmp(bots[index].name, botname) == 0)
 							break;
 						index++;
 					}
 
-					if (index < 32) {
+					if (index < MAX_BOTS) {
 						pBot = bots[index].pEdict;
 					}
 				}
@@ -1667,10 +1667,10 @@ void ClientCommand(edict_t* pEntity) {
 			else {
 				index = 0;
 
-				while (index < 32 && bots[index].is_used == false)
+				while (index < MAX_BOTS && bots[index].is_used == false)
 					index++;
 
-				if (index < 32) {
+				if (index < MAX_BOTS) {
 					pBot = bots[index].pEdict;
 				}
 			}
@@ -2550,7 +2550,7 @@ void StartFrame() { // v7 last frame timing
 					bot_cfg_fp = std::fopen(filename, "r");
 				}
 				if (bot_cfg_fp != nullptr) {
-					for (index = 0; index < 32; index++) {
+               for (index = 0; index < MAX_BOTS; index++) {
 						bots[index].is_used = false;
 						bots[index].respawn_state = 0;
 						bots[index].f_kick_time = 0.0f;
@@ -2560,7 +2560,7 @@ void StartFrame() { // v7 last frame timing
 				}
 				else {
 					count = 0; // mark the bots as needing to be respawned...
-					for (index = 0; index < 32; index++) {
+               for (index = 0; index < MAX_BOTS; index++) {
 						if (count >= prev_num_bots) {
 							bots[index].is_used = false;
 							bots[index].respawn_state = 0;
@@ -2571,7 +2571,7 @@ void StartFrame() { // v7 last frame timing
 							bots[index].respawn_state = RESPAWN_NEED_TO_RESPAWN;
 							count++;
 						} // check for any bots that were very recently kicked...
-						if (bots[index].f_kick_time + 5.0f > previous_time) {
+						if (bots[index].f_kick_time + 6.0f > previous_time) {
 							bots[index].respawn_state = RESPAWN_NEED_TO_RESPAWN;
 							count++;
 						}
@@ -2590,32 +2590,32 @@ void StartFrame() { // v7 last frame timing
 
 		if (!IS_DEDICATED_SERVER()) {
 			if ((welcome_index != -1) && (welcome_sent == false) && (welcome_time < 1.0f)) {
-            // are they out of observer mode yet?
-            if (clients[welcome_index] != nullptr) {
-               // welcome in 5 seconds
-               if (IsAlive(clients[welcome_index]))
-                  welcome_time = gpGlobals->time + 5.0f;
-            }
-         }
+				// are they out of observer mode yet?
+				if (clients[welcome_index] != nullptr) {
+					// welcome in 5 seconds
+					if (IsAlive(clients[welcome_index]))
+						welcome_time = gpGlobals->time + 5.0f;
+				}
+			}
 
 			if ((welcome_time > 0.0f) && (welcome_time < gpGlobals->time) && (welcome_sent == false)) {
-            char welcome_msg[128] = "--FoxBot--\n\nwww.apg-clan.org\n";
-            char version[32];
+				char welcome_msg[128] = "--FoxBot--\n\nwww.apg-clan.org\n";
+				char version[32];
 
-            // sprintf(version," Beta v%d.%d Build#%d\n", VER_MAJOR, VER_MINOR, VER_BUILD);
-            sprintf(version, " v%d.%d \n", VER_MAJOR, VER_MINOR);
-            strcat(welcome_msg, version);
-            // let's send a welcome message to this client...
-            // UTIL_SayText(welcome_msg, clients[welcome_index]);
+				// sprintf(version," Beta v%d.%d Build#%d\n", VER_MAJOR, VER_MINOR, VER_BUILD);
+				std::sprintf(version, " v%d.%d \n", VER_MAJOR, VER_MINOR);
+				strcat(welcome_msg, version);
+				// let's send a welcome message to this client...
+				// UTIL_SayText(welcome_msg, clients[welcome_index]);
 
-            KewlHUDNotify(clients[welcome_index], welcome_msg);
+				KewlHUDNotify(clients[welcome_index], welcome_msg);
 				welcome_sent = true; // clear this so we only do it once
-         }
-      }
+			}
+		}
 
 		if (client_update_time <= gpGlobals->time) {
 			client_update_time = gpGlobals->time + 1.0f;
-			for (i = 0; i < 32; i++) {
+			for (i = 0; i < MAX_BOTS; i++) {
 				if (bots[i].is_used) {
 					std::memset(&cd, 0, sizeof cd); // replaced bzero with memset
 					MDLL_UpdateClientData(bots[i].pEdict, 1, &cd); // see if a weapon was dropped...
@@ -2648,9 +2648,9 @@ void StartFrame() { // v7 last frame timing
 		if (respawn_time > 1.0f && respawn_time <= gpGlobals->time) {
 			int index1 = 0; // Not wanted? [APG]RoboCop[CL]
 			// find bot needing to be respawned...
-			while (index1 < 32 && bots[index1].respawn_state != RESPAWN_NEED_TO_RESPAWN)
+			while (index1 < MAX_BOTS && bots[index1].respawn_state != RESPAWN_NEED_TO_RESPAWN)
 				index1++;
-			if (index1 < 32) {
+			if (index1 < MAX_BOTS) {
 				bots[index1].respawn_state = RESPAWN_IS_RESPAWNING;
 				bots[index1].is_used = false; // free up this slot
 				// respawn 1 bot then wait a while(otherwise engine crashes)
@@ -2713,7 +2713,7 @@ void StartFrame() { // v7 last frame timing
 			}
 			if (need_to_open_cfg2) // have we opened foxbot.cfg file yet?
 			{
-				bot_cfg_pause_time = gpGlobals->time + 5.0f;
+				bot_cfg_pause_time = gpGlobals->time + 6.0f;
 				char filename[256];
 				char mapname[64];
 				need_to_open_cfg2 = false; // only do this once!!!
@@ -2777,7 +2777,7 @@ void StartFrame() { // v7 last frame timing
 		} // if time to check for server commands then do so...
 		if (check_server_cmd <= gpGlobals->time && IS_DEDICATED_SERVER()) {
 			check_server_cmd = gpGlobals->time + 1.0f;
-			auto cvar_bot = const_cast<char*>(CVAR_GET_STRING("bot"));
+         char *cvar_bot = const_cast<char *>(CVAR_GET_STRING("bot"));
 			if (cvar_bot && cvar_bot[0]) {
 				char cmd_line[80];
 				char* cmd, * arg1, * arg2, * arg3, * arg4;
@@ -2811,7 +2811,7 @@ void StartFrame() { // v7 last frame timing
 				}
 				if (std::strcmp(cmd, "addbot") == 0) {
 					BotCreate(nullptr, arg1, arg2, arg3, arg4);
-					bot_check_time = gpGlobals->time + 5.0f;
+					bot_check_time = gpGlobals->time + 6.0f;
 				}
 				else if (std::strcmp(cmd, "min_bots") == 0) {
 					changeBotSetting("min_bots", &min_bots, arg1, -1, 31, SETTING_SOURCE_SERVER_COMMAND);
@@ -2976,13 +2976,13 @@ void StartFrame() { // v7 last frame timing
 					if (cl_name[0] != '\0') {
 						count1++;
 						int team = INDEXENT(i)->v.team - 1;
-						if (team > -1 && team < 4)
+                  if (team > -1 && team < MAX_TEAMS)
 							++playersPerTeam[team];
 					}
 				}
 			} // sort out is_team, just in case the map ents are fucked
 			bool active_team_found = false;
-			for (i = 0; i < 4; i++) // look for an active team
+         for (i = 0; i < MAX_TEAMS; i++) // look for an active team
 			{
 				if (is_team[i])
 					active_team_found = true;
@@ -3093,7 +3093,7 @@ void StartFrame() { // v7 last frame timing
 		char filename[256];
 		char mapname[64];
 		int i; // reset known team data on map change
-		for (i = 0; i < 4; i++) {
+      for (i = 0; i < MAX_TEAMS; i++) {
 			attack[i] = false;
 			defend[i] = false;
 		}
@@ -5272,8 +5272,8 @@ static void ProcessBotCfgFile() {
 
 		// have to delay here or engine gives "Tried to write to
 		// uninitialized sizebuf_t" error and crashes...
-		bot_cfg_pause_time = gpGlobals->time + 5.0f;
-		bot_check_time = gpGlobals->time + 5.0f;
+		bot_cfg_pause_time = gpGlobals->time + 6.0f;
+		bot_check_time = gpGlobals->time + 6.0f;
 
 		return;
 	}
@@ -5719,223 +5719,223 @@ void UTIL_SavePent(edict_t* pent) {
 }
 
 static void DisplayBotInfo() {
-   char msg[255];
-   char msg2[512];
+	char msg[255];
+	char msg2[512];
 
-   if (IS_DEDICATED_SERVER()) {
-      // tell the console all the bot vars
+	if (IS_DEDICATED_SERVER()) {
+		// tell the console all the bot vars
 
-      snprintf(msg2, 511, "--FoxBot Loaded--\n--Visit 'www.apg-clan.org' for updates and info--\n");
-      msg2[511] = '\0'; // just in case
-      printf(msg2);
+		snprintf(msg2, 511, "--FoxBot Loaded--\n--Visit 'www.apg-clan.org' for updates and info--\n");
+		msg2[511] = '\0'; // just in case
+		puts(msg2);
 
-      /*	sprintf(msg,"--* foxbot v%d.%d build# %d *--\n",
-                      VER_MAJOR,VER_MINOR,VER_BUILD);*/
+		/*	sprintf(msg,"--* foxbot v%d.%d build# %d *--\n",
+							 VER_MAJOR,VER_MINOR,VER_BUILD);*/
 
-      sprintf(msg, "--* foxbot v%d.%d *--\n", VER_MAJOR, VER_MINOR);
-      printf(msg);
+		std::sprintf(msg, "--* foxbot v%d.%d *--\n", VER_MAJOR, VER_MINOR);
+		puts(msg);
 
-      strncat(msg2, msg, 511 - strlen(msg2));
-      sprintf(msg, "\n--FoxBot info--\n");
-      printf(msg);
-      strncat(msg2, msg, 511 - strlen(msg2));
-      // waypoints
-      if (num_waypoints > 0)
-         sprintf(msg, "Waypoints loaded\n");
-      else
-         sprintf(msg, "Waypoints NOT loaded\n--Warning bots will not navigate correctly!--\n");
-      printf(msg);
-      strncat(msg2, msg, 511 - strlen(msg2));
-      // area file
-      if (num_areas > 0)
-         sprintf(msg, "Areas loaded\n");
-      else
-         sprintf(msg, "Areas not loaded\n");
-      printf(msg);
-      strncat(msg2, msg, 511 - strlen(msg2));
-      // scripts...loaded/passed?
-      if (script_loaded) {
-         if (script_parsed)
-            sprintf(msg, "Script loaded and parsed\n");
-         else
-            sprintf(msg, "Script loaded and NOT parsed\n--Warning script file has an error in it, will NOT be used!--\n");
-      } else
-         sprintf(msg, "No script file loaded\n");
-      printf(msg);
-      strncat(msg2, msg, 511 - strlen(msg2));
+		strncat(msg2, msg, 511 - strlen(msg2));
+		std::sprintf(msg, "\n--FoxBot info--\n");
+		puts(msg);
+		strncat(msg2, msg, 511 - strlen(msg2));
+		// waypoints
+		if (num_waypoints > 0)
+			std::sprintf(msg, "Waypoints loaded\n");
+		else
+			std::sprintf(msg, "Waypoints NOT loaded\n--Warning bots will not navigate correctly!--\n");
+		puts(msg);
+		strncat(msg2, msg, 511 - strlen(msg2));
+		// area file
+		if (num_areas > 0)
+			std::sprintf(msg, "Areas loaded\n");
+		else
+			std::sprintf(msg, "Areas not loaded\n");
+		puts(msg);
+		strncat(msg2, msg, 511 - strlen(msg2));
+		// scripts...loaded/passed?
+		if (script_loaded) {
+			if (script_parsed)
+				std::sprintf(msg, "Script loaded and parsed\n");
+			else
+				std::sprintf(msg, "Script loaded and NOT parsed\n--Warning script file has an error in it, will NOT be used!--\n");
+		} else
+			std::sprintf(msg, "No script file loaded\n");
+		puts(msg);
+		strncat(msg2, msg, 511 - strlen(msg2));
 
-      // now bots vars
-      sprintf(msg, "\n--FoxBot vars--\n");
-      printf(msg);
-      strncat(msg2, msg, 511 - strlen(msg2));
+		// now bots vars
+		std::sprintf(msg, "\n--FoxBot vars--\n");
+		puts(msg);
+		strncat(msg2, msg, 511 - strlen(msg2));
 
-      // bot skill levels
-      sprintf(msg, "botskill_lower %d\nbotskill_upper %d\n", botskill_lower, botskill_upper);
-      printf(msg);
-      strncat(msg2, msg, 511 - strlen(msg2));
+		// bot skill levels
+		std::sprintf(msg, "botskill_lower %d\nbotskill_upper %d\n", botskill_lower, botskill_upper);
+		puts(msg);
+		strncat(msg2, msg, 511 - strlen(msg2));
 
-      sprintf(msg, "max_bots %d\nmin_bots %d\n", max_bots, min_bots);
-      printf(msg);
-      strncat(msg2, msg, 511 - strlen(msg2));
+		std::sprintf(msg, "max_bots %d\nmin_bots %d\n", max_bots, min_bots);
+		puts(msg);
+		strncat(msg2, msg, 511 - strlen(msg2));
 
-      // bot chat
-      sprintf(msg, "Bot chat %d\n", bot_chat);
-      printf(msg);
-      strncat(msg2, msg, 511 - strlen(msg2));
+		// bot chat
+		std::sprintf(msg, "Bot chat %d\n", bot_chat);
+		puts(msg);
+		strncat(msg2, msg, 511 - strlen(msg2));
 
-      if (bot_team_balance)
-         sprintf(msg, "Bot auto team balance On\n");
-      else
-         sprintf(msg, "Bot auto team balance Off\n");
-      printf(msg);
-      strncat(msg2, msg, 511 - strlen(msg2));
+		if (bot_team_balance)
+			std::sprintf(msg, "Bot auto team balance On\n");
+		else
+			std::sprintf(msg, "Bot auto team balance Off\n");
+		puts(msg);
+		strncat(msg2, msg, 511 - strlen(msg2));
 
-      if (bot_bot_balance)
-         sprintf(msg, "Bot per team balance On\n");
-      else
-         sprintf(msg, "Bot per team balance Off\n");
-      printf(msg);
-      strncat(msg2, msg, 511 - strlen(msg2));
+		if (bot_bot_balance)
+			std::sprintf(msg, "Bot per team balance On\n");
+		else
+			std::sprintf(msg, "Bot per team balance Off\n");
+		puts(msg);
+		strncat(msg2, msg, 511 - strlen(msg2));
 
-      sprintf(msg, "\n--All bot commands must be enclosed in quotes--\n");
-      printf(msg);
-      strncat(msg2, msg, 511 - strlen(msg2));
-      sprintf(msg, "e.g. bot \"bot_chat 20\"\n\n");
-      printf(msg);
-      strncat(msg2, msg, 511 - strlen(msg2));
-      ALERT(at_logged, "[FOXBOT]: %s", msg2);
-   } else {
-      // have to switch developer 'on' if its not already
-      const char *cvar_dev = const_cast<char *>(CVAR_GET_STRING("developer"));
-      int dev;
-      if (strcmp(cvar_dev, "0") == 0)
-         dev = 0;
-      else
-         dev = 1;
-      // tell the console all the bot vars
-      if (dev == 0)
-         CVAR_SET_STRING("developer", "1");
+		std::sprintf(msg, "\n--All bot commands must be enclosed in quotes--\n");
+		puts(msg);
+		strncat(msg2, msg, 511 - strlen(msg2));
+		std::sprintf(msg, "e.g. bot \"bot_chat 20\"\n\n");
+		puts(msg);
+		strncat(msg2, msg, 511 - strlen(msg2));
+		ALERT(at_logged, "[FOXBOT]: %s", msg2);
+	} else {
+		// have to switch developer 'on' if its not already
+		const char *cvar_dev = const_cast<char *>(CVAR_GET_STRING("developer"));
+		int dev;
+		if (strcmp(cvar_dev, "0") == 0)
+			dev = 0;
+		else
+			dev = 1;
+		// tell the console all the bot vars
+		if (dev == 0)
+			CVAR_SET_STRING("developer", "1");
 
-      hudtextparms_t h;
-      h.channel = 4;
-      h.effect = 1;
-      h.r1 = 10;
-      h.g1 = 53;
-      h.b1 = 81;
-      h.a1 = 255;
-      h.r2 = 10;
-      h.g2 = 53;
-      h.b2 = 81;
-      h.a2 = 168;
-      h.fadeinTime = 1;
-      h.fadeoutTime = 1;
-      h.holdTime = 5;
-      h.x = 0;
-      h.y = 0;
-      sprintf(msg, "--FoxBot Loaded--\n--Visit 'www.apg-clan.org' for updates and info--\n");
-      ALERT(at_console, msg);
-      snprintf(msg2, 511, msg);
+		hudtextparms_t h;
+		h.channel = 4;
+		h.effect = 1;
+		h.r1 = 10;
+		h.g1 = 53;
+		h.b1 = 81;
+		h.a1 = 255;
+		h.r2 = 10;
+		h.g2 = 53;
+		h.b2 = 81;
+		h.a2 = 168;
+		h.fadeinTime = 1;
+		h.fadeoutTime = 1;
+		h.holdTime = 5;
+		h.x = 0;
+		h.y = 0;
+		std::sprintf(msg, "--FoxBot Loaded--\n--Visit 'www.apg-clan.org' for updates and info--\n");
+		ALERT(at_console, msg);
+      snprintf(msg2, 511, "%s", msg);
 
-      /*	sprintf(msg,"--* foxbot v%d.%d build# %d *--\n",
-                      VER_MAJOR,VER_MINOR,VER_BUILD);*/
+		/*	sprintf(msg,"--* foxbot v%d.%d build# %d *--\n",
+							 VER_MAJOR,VER_MINOR,VER_BUILD);*/
 
-      sprintf(msg, "--* foxbot v%d.%d *--\n", VER_MAJOR, VER_MINOR);
-      ALERT(at_console, msg);
-      strncat(msg2, msg, 511 - strlen(msg2));
-      sprintf(msg, "\n--FoxBot info--\n");
-      ALERT(at_console, msg);
-      strncat(msg2, msg, 511 - strlen(msg2));
+		std::sprintf(msg, "--* foxbot v%d.%d *--\n", VER_MAJOR, VER_MINOR);
+		ALERT(at_console, msg);
+		strncat(msg2, msg, 511 - strlen(msg2));
+		std::sprintf(msg, "\n--FoxBot info--\n");
+		ALERT(at_console, msg);
+		strncat(msg2, msg, 511 - strlen(msg2));
 
-      // waypoints
-      if (num_waypoints > 0)
-         sprintf(msg, "Waypoints loaded\n");
-      else
-         sprintf(msg, "Waypoints NOT loaded\n--Warning, bots will not navigate correctly!--\n");
-      ALERT(at_console, msg);
-      strncat(msg2, msg, 511 - strlen(msg2));
+		// waypoints
+		if (num_waypoints > 0)
+			std::sprintf(msg, "Waypoints loaded\n");
+		else
+			std::sprintf(msg, "Waypoints NOT loaded\n--Warning, bots will not navigate correctly!--\n");
+		ALERT(at_console, msg);
+		strncat(msg2, msg, 511 - strlen(msg2));
 
-      // area file
-      if (num_areas > 0)
-         sprintf(msg, "Areas loaded\n");
-      else
-         sprintf(msg, "Areas not loaded\n");
+		// area file
+		if (num_areas > 0)
+			std::sprintf(msg, "Areas loaded\n");
+		else
+			std::sprintf(msg, "Areas not loaded\n");
 
-      ALERT(at_console, msg);
-      strncat(msg2, msg, 511 - strlen(msg2));
+		ALERT(at_console, msg);
+		strncat(msg2, msg, 511 - strlen(msg2));
 
-      // scripts...loaded/passed?
-      if (script_loaded) {
-         if (script_parsed)
-            sprintf(msg, "Script loaded and parsed\n");
-         else
-            sprintf(msg, "Script loaded and NOT parsed\n--Warning script file has an error in it and will NOT be used!--\n");
-      } else
-         sprintf(msg, "No script file loaded\n");
-      ALERT(at_console, msg);
-      strncat(msg2, msg, 511 - strlen(msg2));
+		// scripts...loaded/passed?
+		if (script_loaded) {
+			if (script_parsed)
+				std::sprintf(msg, "Script loaded and parsed\n");
+			else
+				std::sprintf(msg, "Script loaded and NOT parsed\n--Warning script file has an error in it and will NOT be used!--\n");
+		} else
+			std::sprintf(msg, "No script file loaded\n");
+		ALERT(at_console, msg);
+		strncat(msg2, msg, 511 - strlen(msg2));
 
-      // now bots vars
-      sprintf(msg, "\n--FoxBot vars--\n");
-      ALERT(at_console, msg);
-      strncat(msg2, msg, 511 - strlen(msg2));
+		// now bots vars
+		std::sprintf(msg, "\n--FoxBot vars--\n");
+		ALERT(at_console, msg);
+		strncat(msg2, msg, 511 - strlen(msg2));
 
-      // bot skill levels
-      sprintf(msg, "botskill_lower %d\nbotskill_upper %d\n", botskill_lower, botskill_upper);
-      ALERT(at_console, msg);
-      strncat(msg2, msg, 511 - strlen(msg2));
+		// bot skill levels
+		std::sprintf(msg, "botskill_lower %d\nbotskill_upper %d\n", botskill_lower, botskill_upper);
+		ALERT(at_console, msg);
+		strncat(msg2, msg, 511 - strlen(msg2));
 
-      sprintf(msg, "max_bots %d\nmin_bots %d\n", max_bots, min_bots);
-      ALERT(at_console, msg);
-      strncat(msg2, msg, 511 - strlen(msg2));
+		std::sprintf(msg, "max_bots %d\nmin_bots %d\n", max_bots, min_bots);
+		ALERT(at_console, msg);
+		strncat(msg2, msg, 511 - strlen(msg2));
 
-      // bot chat
-      sprintf(msg, "Bot chat %d\n", bot_chat);
-      ALERT(at_console, msg);
-      strncat(msg2, msg, 511 - strlen(msg2));
+		// bot chat
+		std::sprintf(msg, "Bot chat %d\n", bot_chat);
+		ALERT(at_console, msg);
+		strncat(msg2, msg, 511 - strlen(msg2));
 
-      if (bot_team_balance)
-         sprintf(msg, "Bot auto team balance On\n");
-      else
-         sprintf(msg, "Bot auto team balance Off\n");
-      ALERT(at_console, msg);
-      strncat(msg2, msg, 511 - strlen(msg2));
+		if (bot_team_balance)
+			std::sprintf(msg, "Bot auto team balance On\n");
+		else
+			std::sprintf(msg, "Bot auto team balance Off\n");
+		ALERT(at_console, msg);
+		strncat(msg2, msg, 511 - strlen(msg2));
 
-      if (bot_bot_balance)
-         sprintf(msg, "Bot per team balance On\n");
-      else
-         sprintf(msg, "Bot per team balance Off\n");
-      ALERT(at_console, msg);
-      strncat(msg2, msg, 511 - strlen(msg2));
-      sprintf(msg, "\n");
-      ALERT(at_console, msg);
-      strncat(msg2, msg, 511 - strlen(msg2));
-      ALERT(at_logged, "[FOXBOT]: %s", msg2);
-      ALERT(at_console, "\n\n\n");
-      // clear it up if it was 0
-      if (dev == 0)
-         CVAR_SET_STRING("developer", "0");
-      if (!display_bot_vars)
+		if (bot_bot_balance)
+			std::sprintf(msg, "Bot per team balance On\n");
+		else
+			std::sprintf(msg, "Bot per team balance Off\n");
+		ALERT(at_console, msg);
+		strncat(msg2, msg, 511 - strlen(msg2));
+		std::sprintf(msg, "\n");
+		ALERT(at_console, msg);
+		strncat(msg2, msg, 511 - strlen(msg2));
+		ALERT(at_logged, "[FOXBOT]: %s", msg2);
+		ALERT(at_console, "\n\n\n");
+		// clear it up if it was 0
+		if (dev == 0)
+			CVAR_SET_STRING("developer", "0");
+		if (!display_bot_vars)
 			FOX_HudMessage(INDEXENT(1), h, msg2);
-      if (waypoint_author[0] != '\0') {
-         h.channel = 2;
-         h.effect = 1;
-         h.r1 = 255;
-         h.g1 = 128;
-         h.b1 = 0;
-         h.a1 = 255;
-         h.r2 = 255;
-         h.g2 = 170;
-         h.b2 = 0;
-         h.a2 = 255;
-         h.fadeinTime = 1;
-         h.fadeoutTime = 1;
-         h.holdTime = 7;
-         h.x = -1;
-         h.y = 0.8f;
-         sprintf(msg, "-- Waypoint author: %s --", waypoint_author);
-         FOX_HudMessage(INDEXENT(1), h, msg);
-      }
-   }
+		if (waypoint_author[0] != '\0') {
+			h.channel = 2;
+			h.effect = 1;
+			h.r1 = 255;
+			h.g1 = 128;
+			h.b1 = 0;
+			h.a1 = 255;
+			h.r2 = 255;
+			h.g2 = 170;
+			h.b2 = 0;
+			h.a2 = 255;
+			h.fadeinTime = 1;
+			h.fadeoutTime = 1;
+			h.holdTime = 7;
+			h.x = -1;
+			h.y = 0.8f;
+		   snprintf(msg, sizeof(msg), "-- Waypoint author: %s --", waypoint_author);
+			FOX_HudMessage(INDEXENT(1), h, msg);
+		}
+	}
 }
 
 // This function can be used to process a specified bot setting command.
@@ -6100,7 +6100,7 @@ static void ClearKickedBotsData(const int botIndex, const bool eraseBotsName) {
 	}
 }
 
-#if 0 // TODO: this function is not useful enough yet
+#if FALSE // TODO: this function is not useful enough yet
 // This function scans a maps waypoints for flag waypoints that belong to
 // one team or another.  It then tries to find out which teams are trying
 // to carry which teams flags.

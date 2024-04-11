@@ -44,9 +44,7 @@ void* h_Library = nullptr;
 
 enginefuncs_t g_engfuncs;
 globalvars_t* gpGlobals;
-char g_argv[256] = {
-	0,
-};
+char g_argv[256] = {};
 
 // static FILE *fp;
 

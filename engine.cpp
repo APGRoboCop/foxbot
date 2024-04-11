@@ -144,7 +144,7 @@ edict_t* pfnFindEntityInSphere(edict_t* pEdictStartSearchAfter, const float* org
 
 void pfnRemoveEntity(edict_t* e) {
 	// tell each bot to forget about the removed entity
-	for (auto &bot : bots) {
+	for (bot_t &bot : bots) {
 		if (bot.is_used) {
 			if (bot.lastEnemySentryGun == e)
 				bot.lastEnemySentryGun = nullptr;
@@ -186,7 +186,7 @@ void pfnSetOrigin(edict_t* e, const float* rgflOrigin) {
 	if (std::strcmp(STRING(e->v.classname), "player") == 0) {
 		// teleport at new round start
 		// clear up current wpt
-		for (auto &bot : bots) {
+		for (bot_t &bot : bots) {
 			// only consider existing bots that haven't died very recently
 			if (bot.pEdict == e && bot.is_used && bot.f_killed_time + 3.0f < gpGlobals->time) {
 				// see if a teleporter pad moved the bot
@@ -214,7 +214,7 @@ void pfnSetOrigin(edict_t* e, const float* rgflOrigin) {
 		// ok, we have the 'base' entity pointer
 		// we want the pointer to the sentry itself
 
-		for (auto &bot : bots) {
+		for (bot_t &bot : bots) {
 			if (bot.sentry_edict != nullptr && bot.has_sentry) {
 				edict_t* pent = e;
 				const Vector rgflOriginVector(rgflOrigin[0], rgflOrigin[1], rgflOrigin[2]); // Create a new Vector from the float array
@@ -396,7 +396,7 @@ void pfnClCom(edict_t* pEdict, char* szFmt, ...) {
 		bool b = false;
 
 		if ((pEdict->v.flags & FL_FAKECLIENT) != FL_FAKECLIENT) {
-			for (auto &client : clients) {
+			for (edict_t *&client : clients) {
 				// if(!((pEdict->v.flags & FL_FAKECLIENT)==FL_FAKECLIENT))
 				// bots[i].is_used &&
 				if (client == pEdict)
@@ -907,7 +907,7 @@ void pfnClientPrintf(edict_t* pEdict, const PRINT_TYPE ptype, const char* szMsg)
 	if (pEdict != nullptr) {
 		bool b = false;
 		if (!(pEdict->v.flags & FL_FAKECLIENT)) {
-			for (auto &client : clients) {
+			for (edict_t *&client : clients) {
 				// if(!((pEdict->v.flags & FL_FAKECLIENT)==FL_FAKECLIENT))
 				// bots[i].is_used &&
 				/*if(clients[i]!=NULL)
@@ -980,7 +980,7 @@ void pfnClPrintf(edict_t* pEdict, PRINT_TYPE ptype, const char* szMsg) {
 	if (pEdict != nullptr) {
 		bool b = false;
 		if ((pEdict->v.flags & FL_FAKECLIENT) != FL_FAKECLIENT) {
-			for (auto &client : clients) {
+			for (edict_t *&client : clients) {
 				// if(!((pEdict->v.flags & FL_FAKECLIENT)==FL_FAKECLIENT))
 				// bots[i].is_used &&
 				/*if(bots[i].pEdict==pEdict
@@ -1052,7 +1052,7 @@ void pfnServerPrint(const char* szMsg) {
 
 					// look through the list of active bots for the intended recipient of
 					// the message
-	while (i < 32) {
+   while (i < MAX_BOTS) {
 		std::strncpy(buffa, sz, 253);
 		int k = 1;
 		while (k != 0) {

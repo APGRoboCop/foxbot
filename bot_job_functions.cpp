@@ -1395,7 +1395,7 @@ int JobEscortAlly(bot_t* pBot) {
 	pBot->sideRouteTolerance = 200; // very short route changes
 
 	// don't want the bot to trail further than this from it's escortee
-	constexpr auto maxEscortRange = 500;
+   constexpr int maxEscortRange = 500;
 
 	// phase zero - we assume the ally is visible and must find a waypoint near them
 	if (job_ptr->phase == SET_WAYPOINT_VISIBLE_ALLY) {
@@ -2527,7 +2527,7 @@ int JobDetpackWaypoint(bot_t* pBot) {
 			FakeClientCommand(pBot->pEdict, "+det5", nullptr, nullptr);
 
 			// find somewhere to run away to
-			if (pBot->current_team > -1 && pBot->current_team < 4 && spawnAreaWP[pBot->current_team] != -1)
+			if (pBot->current_team > -1 && pBot->current_team < MAX_TEAMS && spawnAreaWP[pBot->current_team] != -1)
 				job_ptr->waypoint = spawnAreaWP[pBot->current_team];
 
 			job_ptr->phase = 2;

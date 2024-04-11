@@ -914,7 +914,7 @@ void BotClient_Engineer_BuildStatus(void* p, const int bot_index) {
 			builder[127] = '\0';
 
 			// Loop through the humans to look for the builder
-			for (auto &client : clients) {
+			for (edict_t *&client : clients) {
 				// is this client the builder?
 				if (client && std::strcmp(STRING(client->v.netname), builder) == 0) {
 					// Get the teleporter ent
@@ -974,7 +974,7 @@ void BotClient_TFC_DetPack(void* p, const int bot_index) {
 }
 
 void BotClient_Menu(void* p, int bot_index) {
-#if 0
+#if FALSE
 	static int val, s;
 	if (g_state == 0) {
 		// g_state++;
@@ -1018,7 +1018,7 @@ void BotClient_TFC_Grens(void* p, const int bot_index) {
 	}
 }
 
-#if 0 // don't compile this function yet, it's not reliable enough
+#if FALSE // don't compile this function yet, it's not reliable enough
 // This function can update the team scores data.
 // This function is unreliable because the names of the teams can change.
 // For example Red are "Red" on most maps, but on hunted they are called

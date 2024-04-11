@@ -135,7 +135,7 @@ void WaypointDebug() {
 
 // free the linked list of waypoint path nodes...
 void WaypointFree() {
-	for (auto &i : paths) {
+	for (PATH *&i : paths) {
 #ifdef _DEBUG
 		int count = 0;
 #endif
@@ -633,7 +633,7 @@ int WaypointFindNearestGoal(const int srcWP, const int team, int range, const WP
 	return min_index;
 }
 
-#if 0 // this function is currently unused
+#if FALSE // this function is currently unused
 // find the goal nearest to the source position (v_src) matching the
 // "flags" bits and return the index of that waypoint...
 // Returns -1 if one wasn't found
@@ -1760,16 +1760,16 @@ static bool WaypointLoadVersion4(FILE* bfp, const int number_of_waypoints) {
 	}
 
 	// read and add waypoint paths...
-	for (short index = 0; index < num_waypoints; index++) {
-		// read the number of paths from this node...
-		std::fread(&num, sizeof num, 1, bfp);
+   for (int index = 0; index < num_waypoints; index++) {
+      // read the number of paths from this node...
+      std::fread(&num, sizeof num, 1, bfp);
 
-		for (i = 0; i < num; i++) {
-			std::fread(&path_index, sizeof path_index, 1, bfp);
+      for (i = 0; i < num; i++) {
+         std::fread(&path_index, sizeof path_index, 1, bfp);
 
-			WaypointAddPath(index, path_index);
-		}
-	}
+         WaypointAddPath(index, path_index);
+      }
+   }
 
 	g_waypoint_paths = true; // keep track so path can be freed
 
@@ -3120,7 +3120,7 @@ static void WaypointRouteInit() {
 	int RJIndex = 0;
 	// a local array to keep track of the # of RJ points for each team
 	int teamCount[4];
-	for (i = 0; i < 4; i++)
+   for (i = 0; i < MAX_TEAMS; i++)
 		teamCount[i] = 0;
 
 	// initialize the RJPoints to -1 so we can check for that later to
@@ -3193,7 +3193,7 @@ int WaypointRouteFromTo(const int src, const int dest, int team) {
 
 	const unsigned int* pFromTo = from_to[team];
 
-	return static_cast<int>(pFromTo[src * route_num_waypoints + dest]);
+   return static_cast<int>(pFromTo[static_cast<size_t>(src) * route_num_waypoints + dest]);
 }
 
 // return the total distance (based on the Floyd matrix) of a path from
@@ -3227,7 +3227,7 @@ int WaypointDistanceFromTo(const int src, const int dest, int team) {
 
 	const unsigned int* pShortestPath = shortest_path[team];
 
-	return static_cast<int>(pShortestPath[src * route_num_waypoints + dest]);
+	return static_cast<int>(pShortestPath[static_cast<size_t>(src) * route_num_waypoints + dest]);
 }
 
 // index is the waypoint, team = bots team

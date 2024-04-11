@@ -4,7 +4,7 @@
 
 --------------------------------------------------------------------------------
 Version 0.87
-??-??-2024
+April-11-2024
 Updated by RoboCop
 --------------------------------------------------------------------------------
 
@@ -26,7 +26,9 @@ Updated by RoboCop
 	+ pox
 	+ signal
 
-- Added support for SSE4.2 Linux CPUs and for AVX2 Win32 CPUs
+- Added support for SSE4.2 Linux Server CPUs
+
+- Preventing bots to get stuck underneath ramps for 2fort and well
 
 - Reduced the likelihood of buffer overflow crashes
 
@@ -59,7 +61,7 @@ Updated by RoboCop
 - Repaired some rogue pathways in baconbowl_r, bases2k3, cornfield, junob7, ksour, momentum_l, mulch_dm2b1, openfire_l, openfire_lowgrens, phantom,
   rock2, sandbowl_r2, schtop, sniperzone, sniperzone_r and warpath_r2
 
-- Added some more Rocket/Conc Jumps for avanti, baconbowl_r, destroy_l, palermo, rock2, ravelin and sandbowl_r2
+- Added some more Rocket/Conc Jumps for avanti, baconbowl_r, chimkey_l, destroy_l, palermo, rock2, ravelin and sandbowl_r2
 
 - Added more support for lbdustbowl and tfc_stargate
 
@@ -67,9 +69,7 @@ Updated by RoboCop
 
 TODO List:-
 
->> The waypoint system appears to hate being compiled for AVX2 for Linux
-
->> To allow bots to understand on how to shoot door buttons, if touching them doesn't work like in well or alchimy_l2 maps
+>> To allow bots to understand on how to shoot door buttons, if touching them doesn't work like in well or alchimy maps
 
 >> Complete 'botdontmove' in order for "GolfBots" to stay stationary
 

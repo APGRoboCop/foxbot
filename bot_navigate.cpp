@@ -901,7 +901,7 @@ static bool BotUpdateRoute(bot_t* pBot) {
 	// this check can solve waypoint circling problems
 	else if (dist < 100.0f && pBot->f_navProblemStartTime > 0.1f && pBot->f_navProblemStartTime + 0.5f < pBot->f_think_time) {
 		if (nextWP != -1 && nextWP != pBot->goto_wp) {
-			const auto pathDistance = static_cast<float>(WaypointDistanceFromTo(new_current_wp, nextWP, pBot->current_team));
+         const float pathDistance = static_cast<float>(WaypointDistanceFromTo(new_current_wp, nextWP, pBot->current_team));
 			const float distToNext = (waypoints[nextWP].origin - pBot->pEdict->v.origin).Length();
 
 			// see if the bot is near enough to the next waypoint despite
@@ -2306,7 +2306,7 @@ static void BotCheckForRocketJump(bot_t* pBot) {
 	const float maxJumpHeight = random_float(340.0f, 440.0f);
 	
 	// find the closest rocket jump point
-	for (auto &RJPoint : RJPoints) {
+	for (int (&RJPoint)[2] : RJPoints) {
 		// -1 means we are at the end of the list.
 		if (RJPoint[RJ_WP_INDEX] == -1)
 			break;
@@ -2446,7 +2446,7 @@ static void BotCheckForConcJump(bot_t* pBot) {
 	float zDiff;
 
 	// Find the closest RJ point from the bots predicted waypoint location
-	for (auto &RJPoint : RJPoints) {
+	for (int (&RJPoint)[2] : RJPoints) {
 		// -1 means we are at the end of the list.
 		if (RJPoint[RJ_WP_INDEX] == -1)
 			break;

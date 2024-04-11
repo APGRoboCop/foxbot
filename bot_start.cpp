@@ -99,7 +99,7 @@ void BotStartGame(bot_t* pBot) {
 
 			// reset the bots team if the team it's chosen is full already
 			const int botsTeam = pBot->bot_team - 1;
-			if (botsTeam > -1 && botsTeam < 4 && max_team_players[botsTeam] > 0 && playersPerTeam[botsTeam] >= max_team_players[botsTeam]) {
+			if (botsTeam > -1 && botsTeam < MAX_TEAMS && max_team_players[botsTeam] > 0 && playersPerTeam[botsTeam] >= max_team_players[botsTeam]) {
 				pBot->bot_team = -1;
 				//	UTIL_BotLogPrintf("%p resetting team to %d\n", pBot, pBot->bot_team);
 			}
@@ -363,7 +363,7 @@ static int BotPickFavoredTeam_TFC(const int faveClass) {
 	short activeTeamTotal = 0;
 
 	// count the number of suitable teams
-	for (short i = 0; i < 4; i++) {
+	for (short i = 0; i < MAX_TEAMS; i++) {
 		//	UTIL_BotLogPrintf("team:%d, is_team:%d, maxplayers:%d, total players %d\n",
 		//		i, is_team[i], max_team_players[i], playersPerTeam[i]);
 

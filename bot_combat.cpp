@@ -219,7 +219,7 @@ int FriendlyClassTotal(const edict_t* pEdict, const int specifiedClass, const bo
 // are changed, because it updates the bot inaccuracy levels based on those two
 // config settings.
 void BotUpdateSkillInaccuracy() {
-	const auto f_aim_per_skill = static_cast<float>(bot_aim_per_skill);
+   const float f_aim_per_skill = static_cast<float>(bot_aim_per_skill);
 
 	bot_max_inaccuracy[0] = static_cast<float>(bot_skill_1_aim);
 	bot_max_inaccuracy[1] = bot_max_inaccuracy[0] + f_aim_per_skill;
@@ -335,7 +335,7 @@ void BotEnemyCheck(bot_t* pBot) {
 
 					bool destruction_reported = false;
 
-					for (auto &bot : bots) {
+					for (bot_t &bot : bots) {
 						if (bot.is_used && bot.lastEnemySentryGun == deadSG) {
 							// get one bot that saw the sentry get destroyed to report it
 							if (!destruction_reported && bot.current_team == pBot->current_team && !BufferContainsJobType(&bot, JOB_REPORT) && VectorsNearerThan(deadSG->v.origin, bot.pEdict->v.origin, 1400.0) &&
@@ -1014,7 +1014,7 @@ static void BotSGSpotted(bot_t* pBot, edict_t* sg) {
 		newJob->message[MAX_CHAT_LENGTH - 1] = '\0';
 		if (SubmitNewJob(pBot, JOB_REPORT, newJob) == true) {
 			// get the other bots to know about this sg if they dont know of one already.
-			for (auto &bot : bots) {
+			for (bot_t &bot : bots) {
 				if (bot.is_used && bot.current_team == pBot->current_team && bot.lastEnemySentryGun == nullptr && bot.bot_skill < 3) // skill 5's are too dumb
 				{
 					// everyone else has 1 in 10 chance of not "getting it"
@@ -1169,7 +1169,7 @@ void BotShootAtEnemy(bot_t* pBot) {
 	if (pBot->disturbedViewAmount > 0) {
 		// periodically update the bots disturbed view
 		if (pBot->f_periodicAlert1 < pBot->f_think_time) {
-			pBot->f_disturbedViewYaw = random_float(-pBot->disturbedViewAmount, pBot->disturbedViewAmount);
+         pBot->f_disturbedViewYaw = random_float(-pBot->disturbedViewAmount, pBot->disturbedViewAmount);
 
 			pBot->f_disturbedViewPitch = random_float(-pBot->disturbedViewAmount, pBot->disturbedViewAmount);
 		}
@@ -2259,7 +2259,7 @@ int PickRandomEnemyTeam(const int my_team) {
 	int total = 0;
 
 	// count and index the hostile teams
-	for (int index = 0; index < 4; index++) {
+	for (int index = 0; index < MAX_TEAMS; index++) {
 		if (is_team[index] == true && my_team != index && !(team_allies[my_team] & 1 << index)) {
 			teamList[total] = index;
 			++total;
@@ -2321,7 +2321,7 @@ void BotCheckForMultiguns(bot_t* pBot, float nearestdistance, edict_t* pNewEnemy
 
 	// Loop through all the multigun types, checking for a closer target
 	// and storing it in nearestdistance, and pNewEnemy
-	for (auto &ntfTargetCheck : ntfTargetChecks) {
+	for (const char *&ntfTargetCheck : ntfTargetChecks) {
 		edict_t* pent = nullptr;
 		while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, ntfTargetCheck)) != nullptr && !FNullEnt(pent)) {
 			const int sentry_team = pent->v.team - 1;

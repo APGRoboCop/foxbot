@@ -538,7 +538,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 
 	// count the number of players present
 	int count = 0;
-	for (i = 1; i <= 32; i++) ///<
+   for (i = 1; i <= MAX_BOTS; i++) ///<
 	{
 		char cl_name[128];
 		cl_name[0] = '\0';
@@ -785,10 +785,10 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 	// (for Admin Mod)only helps if we've just created a bot
 	// probably never used
 	i = 0;
-	while (i < 32 && clients[i] != BotEnt)
+   while (i < MAX_BOTS && clients[i] != BotEnt)
 		i++;
 
-	if (i < 32)
+	if (i < MAX_BOTS)
 	{
 		clients[i] = nullptr;
 	}
@@ -1418,7 +1418,7 @@ void BotFindItem(bot_t* pBot) {
 					if (pent->v.team == UTIL_GetTeam(pEdict) + 1)
 						can_pickup = true;
 					else {
-						auto cvar_ntf_capture_mg = const_cast<char*>(CVAR_GET_STRING("ntf_capture_mg"));
+                  char *cvar_ntf_capture_mg = const_cast<char *>(CVAR_GET_STRING("ntf_capture_mg"));
 
 						if (std::strcmp(cvar_ntf_capture_mg, "1") == 0)
 							can_pickup = true;
@@ -2239,7 +2239,7 @@ void BotSoundSense(edict_t* pEdict, const char* pszSample, const float fVolume) 
 		const float hearingDistance = 1500 * fVolume;
 		int closestWPToThreat = -1;
 
-		for (auto &bot : bots) {
+		for (bot_t &bot : bots) {
 			if (bot.is_used // Is this a bot?
 				 && bot.visEnemyCount < 1 && bot.mission == ROLE_DEFENDER && bot.current_wp != -1 && (bot.current_team != sourceTeam || random_long(0, 1000) < 333)) {
 				const float botDistance = (bot.pEdict->v.origin - pEdict->v.origin).Length();
@@ -2284,7 +2284,7 @@ void BotSoundSense(edict_t* pEdict, const char* pszSample, const float fVolume) 
 		int nearestEngy = -1;
 
 		// find the nearest Medic and Engineer to the sound source
-		for (int index = 0; index < 32; index++) {
+      for (int index = 0; index < MAX_BOTS; index++) {
 			// look for the nearest free Medic
 			if (bots[index].is_used && bots[index].pEdict->v.playerclass == TFC_CLASS_MEDIC && bots[index].enemy.ptr == nullptr) {
 				botDistance = (bots[index].pEdict->v.origin - pEdict->v.origin).Length();
@@ -2374,7 +2374,7 @@ void BotSoundSense(edict_t* pEdict, const char* pszSample, const float fVolume) 
 
 	// make all other bots turn to face the source of interesting sounds
 	const float hearingDistance = 1500 * fVolume;
-	for (auto &bot : bots) {
+	for (bot_t &bot : bots) {
 		// only check with bots who are now ready to respond to a sound
 		if (bot.is_used                                                                // Is this a bot?
 			 && bot.f_soundReactTime < bot.f_think_time && bot.pEdict->v.deadflag != 5) // skip feigning spies(for now)
@@ -2501,7 +2501,7 @@ short BotTeammatesNearWaypoint(const bot_t* pBot, const int waypoint) {
 
 	const float my_distance = (pBot->pEdict->v.origin - waypoints[waypoint].origin).Length();
 
-	for (auto &bot : bots) {
+	for (bot_t &bot : bots) {
 		// Is this player a bot teammate who is
 		// heading towards the indicated waypoint?
 		if (bot.is_used && &bot != pBot // make sure the player isn't THIS bot
@@ -2524,7 +2524,7 @@ bot_t* BotDefenderAtWaypoint(const bot_t* pBot, const int waypoint, const float 
 	if (waypoint < 0)
 		return nullptr;
 
-	for (auto &bot : bots) {
+	for (bot_t &bot : bots) {
 		// Is this a bot defender teammate, with an interest in the
 		// indicated waypoint?
 		if (bot.is_used     // make sure this player is a bot
@@ -2670,7 +2670,7 @@ static void BotRoleCheck(bot_t* pBot) {
 
 	// Clear our knowledge of each teams composition
 	int i;
-	for (i = 0; i < 4; i++) {
+	for (i = 0; i < MAX_TEAMS; i++) {
 		teams.attackers[i].clear();
 		teams.defenders[i].clear();
 		teams.humanAttackers[i].clear();
@@ -2694,7 +2694,7 @@ static void BotRoleCheck(bot_t* pBot) {
 	}
 
 	// Guess at the roles any human players have taken
-	for (i = 0; i < 32; i++) {
+   for (i = 0; i < MAX_BOTS; i++) {
 		if (clients[i]) {
 			teams.total[clients[i]->v.team - 1]++;
 			if (clients[i]->v.playerclass == TFC_CLASS_MEDIC || clients[i]->v.playerclass == TFC_CLASS_SPY || clients[i]->v.playerclass == TFC_CLASS_SCOUT || clients[i]->v.playerclass == TFC_CLASS_PYRO)
@@ -2713,7 +2713,7 @@ static void BotRoleCheck(bot_t* pBot) {
 
 					// need to make some adjustments to the roles based on the above figures.
 					// Only do this 1 bot per team. Don't want mass role changes.
-	for (short team = 0; team < 4; team++) {
+   for (short team = 0; team < MAX_TEAMS; team++) {
 		// Crash prevention //
 		if (teams.total[team] == 0)
 			continue;
@@ -2806,7 +2806,7 @@ static void BotComms(bot_t* pBot) {
 			// std::strcpy(buffb, cmd);
 			if (strcasecmp("changeclass", cmd) == 0 || strcasecmp("changeclassnow", cmd) == 0) {
 				// Check if this message is from another player on our team.
-				char fromName[255] = { 0 };
+				char fromName[255] = {};
 				if (strncasecmp("(TEAM)", pBot->message + 1, 6) == 0)
 					std::strcpy(fromName, pBot->message + 8);
 				else
@@ -2839,7 +2839,7 @@ static void BotComms(bot_t* pBot) {
 			}
 			if (strcasecmp("changerole", cmd) == 0 || strcasecmp("changerolenow", cmd) == 0) {
 				// Check if this message is from another player on our team.
-				char fromName[255] = { 0 };
+				char fromName[255] = {};
 				if (strncasecmp("(TEAM)", pBot->message + 1, 6) == 0)
 					std::strcpy(fromName, pBot->message + 8);
 				else
@@ -2894,7 +2894,7 @@ static void BotComms(bot_t* pBot) {
 				WRITE_COORD(pEdict->v.origin.x);
 				WRITE_COORD(pEdict->v.origin.y);
 				WRITE_COORD(pEdict->v.origin.z);
-				WRITE_COORD(random_long(100, 1000));
+				WRITE_COORD(random_float(100, 1000));
 				WRITE_SHORT(model);
 				WRITE_SHORT(random_long(2, 6));
 				WRITE_BYTE(random_long(20, 60));
@@ -3151,7 +3151,7 @@ static void BotPickNewClass(bot_t* pBot) {
 	if (pBot->lockClass || mod_id != TFC_DLL)
 		return;
 
-	static const short defense_classes[] = { 2, 3, 4, 6, 7, 9 };
+	static const short defense_classes[] = { 2, 3, 4, 6, 9 };
 	static const short offense_classes[] = { 1, 3, 4, 5, 6, 7, 8, 9 };
 
 	// reward/penalise bots based on how they scored until they last died
@@ -3184,7 +3184,7 @@ static void BotPickNewClass(bot_t* pBot) {
 
 	// Analyse the composition of this bots team
 	short attackers = 0, team_total = 0;
-	for (short i = 0; i < 32; i++) {
+   for (short i = 0; i < MAX_BOTS; i++) {
 		// Tally the number of bots on defender or attacker roles
 		if (bots[i].is_used) {
 			if (bots[i].pEdict->v.playerclass && bots[i].pEdict->v.team - 1 == pBot->current_team) {
@@ -3551,7 +3551,7 @@ static void BotReportMyFlagDrop(bot_t* pBot) {
 		// give the other bots on the bot's team the same JOB_PICKUP_FLAG
 		// job if they're interested
 		if (newJob != nullptr) {
-			for (auto &bot : bots) {
+			for (bot_t &bot : bots) {
 				if (bot.is_used && &bot != pBot // not this bot
 					 && bot.bot_has_flag == false && bot.mission == ROLE_ATTACKER && bot.current_team == pBot->current_team) {
 					SubmitNewJob(&bot, JOB_PICKUP_FLAG, newJob);

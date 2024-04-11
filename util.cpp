@@ -124,7 +124,7 @@ bool VectorsNearerThan(const Vector& r_vOne, const Vector& r_vTwo, double value)
 	return false;
 }
 
-#if 0 // this function is unused so far
+#if FALSE // this function is unused so far
 int UTIL_SentryLevel(edict_t* pEntity)
 {
 	char* model = (char*)STRING(pEntity->v.model);
@@ -419,7 +419,7 @@ int UTIL_GetClass(edict_t* pEntity) {
 }
 
 int UTIL_GetBotIndex(const edict_t* pEdict) {
-	for (int index = 0; index < 32; index++) {
+   for (int index = 0; index < MAX_BOTS; index++) {
 		if (bots[index].pEdict == pEdict)
 			return index;
 	}
@@ -429,7 +429,7 @@ int UTIL_GetBotIndex(const edict_t* pEdict) {
 }
 
 bot_t* UTIL_GetBotPointer(const edict_t* pEdict) {
-	for (auto &bot : bots) {
+	for (bot_t &bot : bots) {
 		if (bot.pEdict == pEdict)
 			return &bot;
 	}
@@ -696,10 +696,10 @@ static void UTIL_FindFoxbotPath() {
 #ifndef __linux__ // must be a Windows machine
 	if (std::strcmp(foxbot_path, "") == 0) {
 		// try the addons directory first(for Foxbot 0.76 and newer)
-		std::FILE* fptr = std::fopen("tfc\\addons\\foxbot\\tfc\\foxbot.cfg", "r");
+		std::FILE* fptr = std::fopen(R"(tfc\addons\foxbot\tfc\foxbot.cfg)", "r");
 		if (fptr != nullptr) {
-			std::strcpy(foxbot_path, "tfc\\addons\\foxbot\\tfc\\");
-			std::strcpy(foxbot_logname, "tfc\\addons\\foxbot\\foxbot.log");
+			std::strcpy(foxbot_path, R"(tfc\addons\foxbot\tfc\)");
+			std::strcpy(foxbot_logname, R"(tfc\addons\foxbot\foxbot.log)");
 			std::fclose(fptr);
 		}
 		else // try the older directory location(Foxbot 0.75 and older)
