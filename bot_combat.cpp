@@ -1184,7 +1184,7 @@ void BotShootAtEnemy(bot_t* pBot) {
 	// if the bot is a disguised Spy targetting a Sentry Gun
 	// and is near enough to throw frag grenades at it
 	if (bot_use_grenades && pBot->pEdict->v.playerclass == TFC_CLASS_SPY && pBot->enemy.ptr == pBot->lastEnemySentryGun && pBot->disguise_state == DISGUISE_COMPLETE && !FNullEnt(pBot->lastEnemySentryGun) &&
-		pBot->grenades[PrimaryGrenade] > 0 && f_distance < 600.0f) {
+		pBot->grenades[PrimaryGrenade] > 0 && f_distance < 650.0f) {
 		// don't shoot until the Spy has no frag grenades left
 		pBot->f_shoot_time = pBot->f_think_time + 3.0f;
 
@@ -1332,7 +1332,7 @@ static Vector BotBodyTarget(const edict_t* pBotEnemy, bot_t* pBot) {
 				aim_error = 0.0f;
 			}
 			else if (pBot->current_weapon.iId == TF_WEAPON_RPG || pBot->current_weapon.iId == TF_WEAPON_IC) {
-				aim_error = 5.0f * static_cast<float>(pBot->bot_skill);
+				aim_error = 3.0f * static_cast<float>(pBot->bot_skill);
 			}
 			
 			const float aim_offset = bot_max_inaccuracy[pBot->bot_skill] + aim_error;

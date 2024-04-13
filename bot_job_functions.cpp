@@ -3356,8 +3356,8 @@ int JobBinGrenade(bot_t* pBot) {
 			}
 			return JOB_UNDERWAY;
 		}
-		pBot->f_move_speed = 0.0f;
-	}
+      pBot->f_move_speed = 0.0f;
+   }
 
 	// phase 2 - keep backing away for a second or two, after throwing the grenade
 	if (job_ptr->phase == 2) {

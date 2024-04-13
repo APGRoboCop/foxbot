@@ -28,7 +28,11 @@ Updated by RoboCop
 
 - Added support for SSE4.2 Linux Server CPUs
 
-- Preventing bots to get stuck underneath ramps for 2fort and well
+- Preventing bots to get stuck underneath ramps for 2fort, shutdown2 and well
+
+- Preventing bots from pursuing enemies when waiting in elevators, especially in well flag room
+
+- Demobots should now properly plant detpacks in well grates
 
 - Reduced the likelihood of buffer overflow crashes
 
@@ -58,7 +62,7 @@ Updated by RoboCop
 
 - Nailguns and Super Nailguns should now be very accurate as those guns are meant for destroying SG Turrets
 
-- Repaired some rogue pathways in baconbowl_r, bases2k3, cornfield, junob7, ksour, momentum_l, mulch_dm2b1, openfire_l, openfire_lowgrens, phantom,
+- Repaired some rogue pathways in baconbowl_r, bases2k3, cornfield, destroy_l, junob7, ksour, momentum_l, mulch_dm2b1, openfire_l, openfire_lowgrens, phantom,
   rock2, sandbowl_r2, schtop, sniperzone, sniperzone_r and warpath_r2
 
 - Added some more Rocket/Conc Jumps for avanti, baconbowl_r, chimkey_l, destroy_l, palermo, rock2, ravelin and sandbowl_r2
