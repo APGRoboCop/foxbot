@@ -1383,7 +1383,7 @@ int JobEscortAlly(bot_t* pBot) {
 		return JOB_TERMINATED;
 
 	// added for readability
-	enum phaseNames {
+   enum phaseNames : std::uint8_t {
 		SET_WAYPOINT_VISIBLE_ALLY = 0, // must be 0 for the job to work
 		FOLLOW_VISIBLE_ALLY,
 		SET_WAYPOINT_UNSEEN_ALLY,
@@ -2720,7 +2720,7 @@ int JobPursueEnemy(bot_t* pBot) {
 	job_struct* job_ptr = &pBot->job[pBot->currentJob];
 
 	// added for readability
-	enum phaseNames {
+   enum phaseNames : std::uint8_t {
 		SET_WAYPOINT_VISIBLE_ENEMY = 0, // must be 0 for the job to work
 		PURSUE_VISIBLE_ENEMY,
 		SET_WAYPOINT_UNSEEN_ENEMY,

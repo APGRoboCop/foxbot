@@ -113,7 +113,7 @@ typedef struct {
 } bot_fire_delay_t;
 
 // This holds the multigun names we will check using a repeat loop
-enum {
+enum : std::uint8_t {
 	NumNTFGuns = 8
 };
 

@@ -39,7 +39,7 @@ typedef signed char WPT_INT8;
 typedef signed short WPT_INT16;
 typedef signed int WPT_INT32;
 
-enum {
+enum : std::uint16_t {
    MAX_WAYPOINTS = 32000
 };
 
@@ -93,7 +93,7 @@ enum {
 #define S_FL_POINT7 (1 << 6) /* point7 */
 #define S_FL_POINT8 (1 << 7) /* point8 */
 
-enum {
+enum : std::uint8_t {
    WAYPOINT_VERSION = 5
 };
 
@@ -116,7 +116,7 @@ typedef struct {
 #define WAYPOINT_UNREACHABLE UINT_MAX
 #define WAYPOINT_MAX_DISTANCE (UINT_MAX - 1)
 
-enum {
+enum : std::uint8_t {
    MAX_PATH_INDEX = 4
 };
 
@@ -130,7 +130,7 @@ typedef struct path {
 	path* next;                      // link to next structure
 } PATH;
 
-enum {
+enum : std::uint8_t {
    A_FL_1 = 1 << 0,
    A_FL_2 = 1 << 1,
    A_FL_3 = 1 << 2,
@@ -149,7 +149,7 @@ typedef struct area {
 	WPT_INT32 flags;
 } AREA;
 
-enum {
+enum : std::uint8_t {
    AREA_VERSION = 1
 };
 

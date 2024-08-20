@@ -11,9 +11,11 @@
 #ifndef __TF_DEFS_H
 #define __TF_DEFS_H
 
+#include <cstdint>
+
  // instant damage
 
-enum {
+enum : std::int16_t {
 	DMG_GENERIC = 0,   // generic damage was done
 	DMG_CRUSH = 1 << 0,   // crushed by falling or moving object
 	DMG_BULLET = 1 << 1,   // shot
@@ -57,26 +59,26 @@ enum {
 #define DEFAULT_AUTOZOOM false
 #define WEINER_SNIPER        // autoaiming for sniper rifle
 
-enum {
+enum : std::uint8_t {
 	FLAME_MAXWORLDNUM = 20 // maximum number of flames in the world. DO NOT PUT BELOW 20.
 };
 
 //#define MAX_WORLD_PIPEBOMBS      15	// This is divided between teams - this is the most you should have on a net server
-enum {
+enum : std::uint8_t {
 	MAX_PLAYER_PIPEBOMBS = 8,	// maximum number of pipebombs any 1 player can have active
 	MAX_PLAYER_AMMOBOXES = 3	// maximum number of ammoboxes any 1 player can have active
 };
 
 //#define MAX_WORLD_FLARES         9	// This is the total number of flares allowed in the world at one time
 //#define MAX_WORLD_AMMOBOXES      20	// This is divided between teams - this is the most you should have on a net server
-enum {
+enum : std::uint8_t {
 	GR_TYPE_MIRV_NO = 4,   // Number of Mirvs a Mirv Grenade breaks into
 	GR_TYPE_NAPALM_NO = 8  // Number of flames napalm grenade breaks into (unused if net server)
 };
 
 #define MEDIKIT_IS_BIOWEAPON // Medikit acts as a bioweapon against enemies
 
-enum {
+enum : std::uint8_t {
 	TEAM_HELP_RATE = 60 // used only if teamplay bit 64 (help team with lower score) is set.
 };
 
@@ -90,9 +92,9 @@ enum {
 #define NEVER_TEAMFRAGS false        // teamfrags options always off
 #define ALWAYS_TEAMFRAGS false       // teamfrags options always on
 #define CHECK_SPEEDS true            // makes sure players aren't moving too fast
-#define SNIPER_RIFLE_RELOAD_TIME 1.5 // seconds
+#define SNIPER_RIFLE_RELOAD_TIME 1.5f // seconds
 
-enum {
+enum : std::uint16_t {
 	MAPBRIEFING_MAXTEXTLENGTH = 512,
 	PLAYER_PUSH_VELOCITY = 50 // Players push teammates if they're moving under this speed
 };
@@ -111,7 +113,7 @@ enum {
 // OLD QUAKE Defs
 //===========================================================================
 // items
-enum {
+enum : std::uint16_t {
 	IT_AXE = 4096,
 	IT_SHOTGUN = 1,
 	IT_SUPER_SHOTGUN = 2,
@@ -123,7 +125,7 @@ enum {
 	IT_EXTRA_WEAPON = 128
 };
 
-enum {
+enum : std::uint16_t {
 	IT_SHELLS = 256,
 	IT_NAILS = 512,
 	IT_ROCKETS = 1024,
@@ -181,13 +183,13 @@ enum {
 };
 
 // Defines used by TF_T_Damage (see combat.qc)
-enum {
+enum : std::uint8_t {
 	TF_TD_IGNOREARMOUR = 1,	// Bypasses the armour of the target
 	TF_TD_NOTTEAM = 2,		// Doesn't damage a team member (indicates direct fire weapon)
 	TF_TD_NOTSELF = 4			// Doesn't damage self
 };
 
-enum {
+enum : std::uint16_t {
 	TF_TD_OTHER = 0,			// Ignore armorclass
 	TF_TD_SHOT = 1,			// Bullet damage
 	TF_TD_NAIL = 2,			// Nail damage
@@ -200,13 +202,13 @@ enum {
 /*==================================================*/
 /* Toggleable Game Settings							*/
 /*==================================================*/
-enum {
+enum : std::uint8_t {
 	TF_RESPAWNDELAY1 = 5,	// seconds of waiting before player can respawn
 	TF_RESPAWNDELAY2 = 10,	// seconds of waiting before player can respawn
 	TF_RESPAWNDELAY3 = 20	// seconds of waiting before player can respawn
 };
 
-enum {
+enum : std::uint16_t {
 	TEAMPLAY_NORMAL = 1,
 	TEAMPLAY_HALFDIRECT = 2,
 	TEAMPLAY_NODIRECT = 4,
@@ -226,7 +228,7 @@ enum {
 
 #define TEAMPLAY_TEAMDAMAGE (TEAMPLAY_NODIRECT | TEAMPLAY_HALFDIRECT | TEAMPLAY_HALFEXPLOSIVE | TEAMPLAY_NOEXPLOSIVE)
 // FortressMap stuff
-enum {
+enum : std::uint8_t {
 	TEAM1_CIVILIANS = 1,
 	TEAM2_CIVILIANS = 2,
 	TEAM3_CIVILIANS = 4,
@@ -234,11 +236,11 @@ enum {
 };
 
 // Defines for the playerclass
-enum {
+enum : std::uint8_t {
 	PC_UNDEFINED = 0
 };
 
-enum {
+enum : std::uint8_t {
 	PC_SCOUT = 1,
 	PC_SNIPER = 2,
 	PC_SOLDIER = 3,
@@ -253,7 +255,7 @@ enum {
 // Insert new class definitions here
 
 // PC_RANDOM _MUST_ be the third last class
-enum {
+enum : std::uint8_t {
 	PC_RANDOM = 10,
 	// Random playerclass
 	PC_CIVILIAN = 11, // Civilians are a special class. They cannot
@@ -263,41 +265,41 @@ enum {
 
 // through the playerclass.
 
-enum {
+enum : std::uint8_t {
 	SENTRY_COLOR = 10 // will be in the PC_RANDOM slot for team colors
 };
 
 // These are just for the scanner
-enum {
+enum : std::uint8_t {
 	SCAN_SENTRY = 13,
 	SCAN_GOALITEM = 14
 };
 
 // Values returned by CheckArea
-enum { CAREA_CLEAR, CAREA_BLOCKED, CAREA_NOBUILD };
+enum : std::uint8_t { CAREA_CLEAR, CAREA_BLOCKED, CAREA_NOBUILD };
 
 /*==================================================*/
 /* Impulse Defines		                        	*/
 /*==================================================*/
 // Alias check to see whether they already have the aliases
-enum {
+enum : std::uint8_t {
 	TF_ALIAS_CHECK = 13
 };
 
 // CTF Support Impulses
-enum {
+enum : std::uint8_t {
 	HOOK_IMP1 = 22,
 	FLAG_INFO = 23,
 	HOOK_IMP2 = 39
 };
 
 // Axe
-enum {
+enum : std::uint8_t {
 	AXE_IMP = 40
 };
 
 // Camera Impulse
-enum {
+enum : std::uint8_t {
 	TF_CAM_TARGET = 50,
 	TF_CAM_ZOOM = 51,
 	TF_CAM_ANGLE = 52,
@@ -314,18 +316,18 @@ enum {
 };
 
 // Last Weapon impulse
-enum {
+enum : std::uint8_t {
 	TF_LAST_WEAPON = 69
 };
 
 // Status Bar Resolution Settings.  Same as CTF to maintain ease of use.
-enum {
+enum : std::uint8_t {
 	TF_STATUSBAR_RES_START = 71,
 	TF_STATUSBAR_RES_END = 81
 };
 
 // Clan Messages
-enum {
+enum : std::uint8_t {
 	TF_MESSAGE_1 = 82,
 	TF_MESSAGE_2 = 83,
 	TF_MESSAGE_3 = 84,
@@ -333,13 +335,13 @@ enum {
 	TF_MESSAGE_5 = 86
 };
 
-enum {
+enum : std::uint8_t {
 	TF_CHANGE_CLASS = 99 // Bring up the Class Change menu
 };
 
 // Added to PC_??? to get impulse to use if this clashes with your
 // own impulses, just change this value, not the PC_??
-enum {
+enum : std::uint8_t {
 	TF_CHANGEPC = 100
 };
 
@@ -357,24 +359,24 @@ enum {
 // PC_ENGINEER	111
 
 // Help impulses
-enum {
+enum : std::uint8_t {
 	TF_DISPLAYLOCATION = 118,
 	TF_STATUS_QUERY = 119
 };
 
-enum {
+enum : std::uint8_t {
 	TF_HELP_MAP = 131
 };
 
 // Information impulses
-enum {
+enum : std::uint8_t {
 	TF_INVENTORY = 135,
 	TF_SHOWTF = 136,
 	TF_SHOWLEGALCLASSES = 137
 };
 
 // Team Impulses
-enum {
+enum : std::uint8_t {
 	TF_TEAM_1 = 140,   // Join Team 1
 	TF_TEAM_2 = 141,   // Join Team 2
 	TF_TEAM_3 = 142,   // Join Team 3
@@ -385,7 +387,7 @@ enum {
 };
 
 // Grenade Impulses
-enum {
+enum : std::uint8_t {
 	TF_GRENADE_1 = 150,   // Prime grenade type 1
 	TF_GRENADE_2 = 151,   // Prime grenade type 2
 	TF_GRENADE_T = 152 // Throw primed grenade
@@ -393,7 +395,7 @@ enum {
 
 // Impulses for new items
 //#define TF_SCAN				159		// Scanner Pre-Impulse
-enum {
+enum : std::uint8_t {
 	TF_AUTO_SCAN = 159,   // Scanner On/Off
 	TF_SCAN_ENEMY = 160,   // Impulses to toggle scanning of enemies
 	TF_SCAN_FRIENDLY = 161,   // Impulses to toggle scanning of friendlies
@@ -410,81 +412,81 @@ enum {
 };
 
 // Special skill
-enum {
+enum : std::uint8_t {
 	TF_SPECIAL_SKILL = 171
 };
 
 // Ammo Drop impulse
-enum {
+enum : std::uint8_t {
 	TF_DROP_AMMO = 172
 };
 
 // Reload impulse
-enum {
+enum : std::uint8_t {
 	TF_RELOAD = 173
 };
 
 // auto-zoom toggle
-enum {
+enum : std::uint8_t {
 	TF_AUTOZOOM = 174
 };
 
 // drop/pass commands
-enum {
+enum : std::uint8_t {
 	TF_DROPKEY = 175
 };
 
 // Select Medikit
-enum {
+enum : std::uint8_t {
 	TF_MEDIKIT = 176
 };
 
 // Spy Impulses
-enum {
+enum : std::uint8_t {
 	TF_SPY_SPY = 177,   // On net, go invisible, on LAN, change skin/color
 	TF_SPY_DIE = 178 // Feign Death
 };
 
 // Engineer Impulses
-enum {
+enum : std::uint8_t {
 	TF_ENGINEER_BUILD = 179,
 	TF_ENGINEER_SANDBAG = 180
 };
 
 // Medic
-enum {
+enum : std::uint8_t {
 	TF_MEDIC_HELPME = 181
 };
 
 // Status bar
-enum {
+enum : std::uint8_t {
 	TF_STATUSBAR_ON = 182,
 	TF_STATUSBAR_OFF = 183
 };
 
 // Discard impulse
-enum {
+enum : std::uint8_t {
 	TF_DISCARD = 184
 };
 
 // ID Player impulse
-enum {
+enum : std::uint8_t {
 	TF_ID = 185
 };
 
 // Clan Battle impulses
-enum {
+enum : std::uint8_t {
 	TF_SHOWIDS = 186
 };
 
 // More Engineer Impulses
-enum {
+enum : std::uint8_t {
 	TF_ENGINEER_DETDISP = 187,
 	TF_ENGINEER_DETSENT = 188
 };
 
 // Admin Commands
-enum {
+enum : std::uint8_t {
 	TF_ADMIN_DEAL_CYCLE = 189,
 	TF_ADMIN_KICK = 190,
 	TF_ADMIN_BAN = 191,
@@ -493,28 +495,28 @@ enum {
 };
 
 // Drop Goal Items
-enum {
+enum : std::uint8_t {
 	TF_DROPGOALITEMS = 194
 };
 
 // More Admin Commands
-enum {
+enum : std::uint8_t {
 	TF_ADMIN_NEXT = 195
 };
 
 // More Engineer Impulses
-enum {
+enum : std::uint8_t {
 	TF_ENGINEER_DETEXIT = 196,
 	TF_ENGINEER_DETENTRANCE = 197
 };
 
 // Yet MORE Admin Commands
-enum {
+enum : std::uint8_t {
 	TF_ADMIN_LISTIPS = 198
 };
 
 // Silent Spy Feign
-enum {
+enum : std::uint8_t {
 	TF_SPY_SILENTDIE = 199
 };
 
@@ -522,7 +524,7 @@ enum {
 /* Defines for the ENGINEER's Building ability		*/
 /*==================================================*/
 // Ammo costs
-enum {
+enum : std::uint8_t {
 	AMMO_COST_SHELLS = 2,   // Metal needed to make 1 shell
 	AMMO_COST_NAILS = 1,
 	AMMO_COST_ROCKETS = 2,
@@ -530,7 +532,7 @@ enum {
 };
 
 // Building types
-enum {
+enum : std::uint8_t {
 	BUILD_DISPENSER = 1,
 	BUILD_SENTRYGUN = 2,
 	BUILD_MORTAR = 3,
@@ -539,19 +541,19 @@ enum {
 };
 
 // Building metal costs
-enum {
+enum : std::uint8_t {
 	BUILD_COST_DISPENSER = 100,   // Metal needed to built
 	BUILD_COST_SENTRYGUN = 130,
 	BUILD_COST_MORTAR = 150,
 	BUILD_COST_TELEPORTER = 125
 };
 
-enum {
+enum : std::uint8_t {
 	BUILD_COST_SANDBAG = 20 // Built with a separate alias
 };
 
 // Building times
-enum {
+enum : std::uint8_t {
 	BUILD_TIME_DISPENSER = 2,   // seconds to build
 	BUILD_TIME_SENTRYGUN = 5,
 	BUILD_TIME_MORTAR = 5,
@@ -559,7 +561,7 @@ enum {
 };
 
 // Building health levels
-enum {
+enum : std::uint8_t {
 	BUILD_HEALTH_DISPENSER = 150,   // Health of the building
 	BUILD_HEALTH_SENTRYGUN = 150,
 	BUILD_HEALTH_MORTAR = 200,
@@ -567,7 +569,7 @@ enum {
 };
 
 // Dispenser's maximum carrying capability
-enum {
+enum : std::uint16_t {
 	BUILD_DISPENSER_MAX_SHELLS = 400,
 	BUILD_DISPENSER_MAX_NAILS = 600,
 	BUILD_DISPENSER_MAX_ROCKETS = 300,
@@ -576,7 +578,7 @@ enum {
 };
 
 // Build state sent down to client
-enum {
+enum : std::uint8_t {
 	BS_BUILDING = 1 << 0,
 	BS_HAS_DISPENSER = 1 << 1,
 	BS_HAS_SENTRYGUN = 1 << 2,
@@ -595,7 +597,7 @@ enum {
 /*==================================================*/
 /* Team Defines				            			*/
 /*==================================================*/
-enum {
+enum : std::uint8_t {
 	TM_MAX_NO = 4 // Max number of teams. Simply changing this value isn't enough.
 };
 
@@ -634,7 +636,7 @@ enum {
 // a weapon mode (like the rifle)
 
 // HL-compatible weapon numbers
-enum {
+enum : std::uint8_t {
 	WEAPON_HOOK = 1
 };
 
@@ -665,7 +667,7 @@ enum {
 /* New Weapon Related Defines		                */
 /*==================================================*/
 // shots per reload
-enum {
+enum : std::uint8_t {
 	RE_SHOTGUN = 8,
 	RE_SUPER_SHOTGUN = 16,   // 8 shots
 	RE_GRENADE_LAUNCHER = 6,
@@ -673,7 +675,7 @@ enum {
 };
 
 // reload times
-enum {
+enum : std::uint8_t {
 	RE_SHOTGUN_TIME = 2,
 	RE_SUPER_SHOTGUN_TIME = 3,
 	RE_GRENADE_LAUNCHER_TIME = 4,
@@ -681,23 +683,23 @@ enum {
 };
 
 // Maximum velocity you can move and fire the Sniper Rifle
-enum {
+enum : std::uint8_t {
 	WEAP_SNIPER_RIFLE_MAX_MOVE = 50
 };
 
 // Medikit
-enum {
+enum : std::uint8_t {
 	WEAP_MEDIKIT_HEAL = 200,   // Amount medikit heals per hit
 	WEAP_MEDIKIT_OVERHEAL = 50 // Amount of superhealth over max_health the medikit will dispense
 };
 
 // Spanner
-enum {
+enum : std::uint8_t {
 	WEAP_SPANNER_REPAIR = 10
 };
 
 // Detpack
-enum {
+enum : std::uint16_t {
 	WEAP_DETPACK_DISARMTIME = 3,   // Time it takes to disarm a Detpack
 	WEAP_DETPACK_SETTIME = 3,   // Time it takes to set a Detpack
 	WEAP_DETPACK_SIZE = 700,   // Explosion Size
@@ -706,18 +708,18 @@ enum {
 };
 
 // Tranquiliser Gun
-enum {
+enum : std::uint8_t {
 	TRANQ_TIME = 15
 };
 
 // Grenades
-enum {
+enum : std::uint8_t {
 	GR_PRIMETIME = 3
 };
 
-#define GR_CALTROP_PRIME 0.5
+#define GR_CALTROP_PRIME 0.5f
 
-enum {
+enum : std::uint8_t {
 	GR_TYPE_NONE = 0,
 	GR_TYPE_NORMAL = 1,
 	GR_TYPE_CONCUSSION = 2,
@@ -733,40 +735,40 @@ enum {
 //#define GR_TYPE_FLASH		10
 
 // Defines for WeaponMode
-enum {
+enum : std::uint8_t {
 	GL_NORMAL = 0,
 	GL_PIPEBOMB = 1
 };
 
 // Defines for OLD Concussion Grenade
-enum {
+enum : std::uint8_t {
 	GR_OLD_CONCUSS_TIME = 5,
 	GR_OLD_CONCUSS_DEC = 20
 };
 
 // Defines for Concussion Grenade
-#define GR_CONCUSS_TIME 0.25
+#define GR_CONCUSS_TIME 0.25f
 
-enum {
+enum : std::uint8_t {
 	GR_CONCUSS_DEC = 10,
 	MEDIUM_PING = 150,
 	HIGH_PING = 200
 };
 
 // Defines for the Gas Grenade
-#define GR_HALLU_TIME 0.3
-#define GR_OLD_HALLU_TIME 0.5
-#define GR_HALLU_DEC 2.5
+#define GR_HALLU_TIME 0.3f
+#define GR_OLD_HALLU_TIME 0.5f
+#define GR_HALLU_DEC 2.5f
 
 // Defines for the BioInfection
-enum {
+enum : std::uint8_t {
 	BIO_JUMP_RADIUS = 128 // The distance the bioinfection can jump between players
 };
 
 /*==================================================*/
 /* New Items			                        	*/
 /*==================================================*/
-enum {
+enum : std::uint8_t {
 	NIT_SCANNER = 1
 };
 
@@ -776,7 +778,7 @@ enum {
 /*==================================================*/
 /* New Item Flags		                        	*/
 /*==================================================*/
-enum {
+enum : std::uint8_t {
 	NIT_SCANNER_ENEMY = 1,   // Detect enemies
 	NIT_SCANNER_FRIENDLY = 2,   // Detect friendlies (team members)
 	NIT_SCANNER_SOUND = 4 // Motion detection. Only report moving entities.
@@ -785,7 +787,7 @@ enum {
 /*==================================================*/
 /* New Item Related Defines		                    */
 /*==================================================*/
-enum {
+enum : std::uint8_t {
 	NIT_SCANNER_POWER = 25,   // The amount of power spent on a scan with the scanner
 	  // is multiplied by this to get the scanrange.
 	NIT_SCANNER_MAXCELL = 50,   // The maximum number of cells than can be used in one scan
@@ -798,7 +800,7 @@ enum {
 /* Variables used for New Weapons and Reloading     */
 /*==================================================*/
 // Armor Classes : Bitfields. Use the "armorclass" of armor for the Armor Type.
-enum {
+enum : std::uint8_t {
 	AT_SAVESHOT = 1,   // Kevlar  	 : Reduces bullet damage by 15%
 	AT_SAVENAIL = 2,   // Wood :) 	 : Reduces nail damage by 15%
 	AT_SAVEEXPLOSION = 4,   // Blast   	 : Reduces explosion damage by 15%
@@ -810,7 +812,7 @@ enum {
 /* TEAMFORTRESS CLASS DETAILS												*/
 /*==========================================================================*/
 // Class Details for SCOUT
-enum {
+enum : std::uint16_t {
 	PC_SCOUT_SKIN = 4,   // Skin for this class when Classkin is on.
 	PC_SCOUT_MAXHEALTH = 75,   // Maximum Health Level
 	PC_SCOUT_MAXSPEED = 400,   // Maximum movement speed
@@ -819,17 +821,17 @@ enum {
 	PC_SCOUT_INITARMOR = 25 // Armor level when respawned
 };
 
-#define PC_SCOUT_MAXARMORTYPE 0.3 // Maximum level of Armor absorption
-#define PC_SCOUT_INITARMORTYPE 0.3 // Absorption Level of armor when respawned
+#define PC_SCOUT_MAXARMORTYPE 0.3f // Maximum level of Armor absorption
+#define PC_SCOUT_INITARMORTYPE 0.3f // Absorption Level of armor when respawned
 
-enum {
+enum : std::uint8_t {
 	PC_SCOUT_ARMORCLASSES = 3,   // #AT_SAVESHOT | #AT_SAVENAIL   		<-Armor Classes allowed for this class
 	PC_SCOUT_INITARMORCLASS = 0 // Armorclass worn when respawned
 };
 
 #define PC_SCOUT_WEAPONS (WEAP_AXE | WEAP_SHOTGUN | WEAP_NAILGUN)
 
-enum {
+enum : std::uint8_t {
 	PC_SCOUT_MAXAMMO_SHOT = 50,   // Maximum amount of shot ammo this class can carry
 	PC_SCOUT_MAXAMMO_NAIL = 200,   // Maximum amount of nail ammo this class can carry
 	PC_SCOUT_MAXAMMO_CELL = 100,   // Maximum amount of cell ammo this class can carry
@@ -843,16 +845,16 @@ enum {
 #define PC_SCOUT_GRENADE_TYPE_1 GR_TYPE_CALTROP //    <- 1st Type of Grenade this class has
 #define PC_SCOUT_GRENADE_TYPE_2 GR_TYPE_CONCUSSION //    <- 2nd Type of Grenade this class has
 
-enum {
+enum : std::uint8_t {
 	PC_SCOUT_GRENADE_INIT_1 = 2,   // Number of grenades of Type 1 this class has when respawned
 	PC_SCOUT_GRENADE_INIT_2 = 3 // Number of grenades of Type 2 this class has when respawned
 };
 
 #define PC_SCOUT_TF_ITEMS NIT_SCANNER // <- TeamFortress Items this class has
 
-#define PC_SCOUT_MOTION_MIN_I 0.5 // < Short range
+#define PC_SCOUT_MOTION_MIN_I 0.5f // < Short range
 
-enum {
+enum : std::uint8_t {
 	PC_SCOUT_MOTION_MIN_MOVE = 50,   // Minimum vlen of player velocity to be picked up by motion detector
 	PC_SCOUT_SCAN_TIME = 2,   // # of seconds between each scan pulse
 	PC_SCOUT_SCAN_RANGE = 100,   // Default scanner range
@@ -860,7 +862,7 @@ enum {
 };
 
 // Class Details for SNIPER
-enum {
+enum : std::uint16_t {
 	PC_SNIPER_SKIN = 5,
 	PC_SNIPER_MAXHEALTH = 90,
 	PC_SNIPER_MAXSPEED = 300,
@@ -869,10 +871,10 @@ enum {
 	PC_SNIPER_INITARMOR = 0
 };
 
-#define PC_SNIPER_MAXARMORTYPE 0.3
-#define PC_SNIPER_INITARMORTYPE 0.3
+#define PC_SNIPER_MAXARMORTYPE 0.3f
+#define PC_SNIPER_INITARMORTYPE 0.3f
 
-enum {
+enum : std::uint8_t {
 	PC_SNIPER_ARMORCLASSES = 3,
 	// #AT_SAVESHOT | #AT_SAVENAIL
 	PC_SNIPER_INITARMORCLASS = 0
@@ -880,7 +882,7 @@ enum {
 
 #define PC_SNIPER_WEAPONS (WEAP_SNIPER_RIFLE | WEAP_AUTO_RIFLE | WEAP_AXE | WEAP_NAILGUN)
 
-enum {
+enum : std::uint8_t {
 	PC_SNIPER_MAXAMMO_SHOT = 75,
 	PC_SNIPER_MAXAMMO_NAIL = 100,
 	PC_SNIPER_MAXAMMO_CELL = 50,
@@ -894,14 +896,14 @@ enum {
 #define PC_SNIPER_GRENADE_TYPE_1 GR_TYPE_NORMAL
 #define PC_SNIPER_GRENADE_TYPE_2 GR_TYPE_NONE
 
-enum {
+enum : std::uint8_t {
 	PC_SNIPER_GRENADE_INIT_1 = 2,
 	PC_SNIPER_GRENADE_INIT_2 = 0,
 	PC_SNIPER_TF_ITEMS = 0
 };
 
 // Class Details for SOLDIER
-enum {
+enum : std::uint8_t {
 	PC_SOLDIER_SKIN = 6,
 	PC_SOLDIER_MAXHEALTH = 100,
 	PC_SOLDIER_MAXSPEED = 240,
@@ -910,10 +912,10 @@ enum {
 	PC_SOLDIER_INITARMOR = 100
 };
 
-#define PC_SOLDIER_MAXARMORTYPE 0.8
-#define PC_SOLDIER_INITARMORTYPE 0.8
+#define PC_SOLDIER_MAXARMORTYPE 0.8f
+#define PC_SOLDIER_INITARMORTYPE 0.8f
 
-enum {
+enum : std::uint8_t {
 	PC_SOLDIER_ARMORCLASSES = 31,
 	// ALL
 	PC_SOLDIER_INITARMORCLASS = 0
@@ -921,7 +923,7 @@ enum {
 
 #define PC_SOLDIER_WEAPONS (WEAP_AXE | WEAP_SHOTGUN | WEAP_SUPER_SHOTGUN | WEAP_ROCKET_LAUNCHER)
 
-enum {
+enum : std::uint8_t {
 	PC_SOLDIER_MAXAMMO_SHOT = 100,
 	PC_SOLDIER_MAXAMMO_NAIL = 100,
 	PC_SOLDIER_MAXAMMO_CELL = 50,
@@ -935,13 +937,13 @@ enum {
 #define PC_SOLDIER_GRENADE_TYPE_1 GR_TYPE_NORMAL
 #define PC_SOLDIER_GRENADE_TYPE_2 GR_TYPE_NAIL
 
-enum {
+enum : std::uint8_t {
 	PC_SOLDIER_GRENADE_INIT_1 = 2,
 	PC_SOLDIER_GRENADE_INIT_2 = 1,
 	PC_SOLDIER_TF_ITEMS = 0
 };
 
-enum {
+enum : std::uint8_t {
 	MAX_NAIL_GRENS = 2,   // Can only have 2 Nail grens active
 	MAX_NAPALM_GRENS = 2,   // Can only have 2 Napalm grens active
 	MAX_GAS_GRENS = 2,   // Can only have 2 Gas grenades active
@@ -951,7 +953,7 @@ enum {
 };
 
 // Class Details for DEMOLITION MAN
-enum {
+enum : std::uint16_t {
 	PC_DEMOMAN_SKIN = 1,
 	PC_DEMOMAN_MAXHEALTH = 90,
 	PC_DEMOMAN_MAXSPEED = 280,
@@ -960,17 +962,17 @@ enum {
 	PC_DEMOMAN_INITARMOR = 50
 };
 
-#define PC_DEMOMAN_MAXARMORTYPE 0.6
-#define PC_DEMOMAN_INITARMORTYPE 0.6
+#define PC_DEMOMAN_MAXARMORTYPE 0.6f
+#define PC_DEMOMAN_INITARMORTYPE 0.6f
 
-enum {
+enum : std::uint8_t {
 	PC_DEMOMAN_ARMORCLASSES = 31,   // ALL
 	PC_DEMOMAN_INITARMORCLASS = 0
 };
 
 #define PC_DEMOMAN_WEAPONS (WEAP_AXE | WEAP_SHOTGUN | WEAP_GRENADE_LAUNCHER | WEAP_DETPACK)
 
-enum {
+enum : std::uint8_t {
 	PC_DEMOMAN_MAXAMMO_SHOT = 75,
 	PC_DEMOMAN_MAXAMMO_NAIL = 50,
 	PC_DEMOMAN_MAXAMMO_CELL = 50,
@@ -986,14 +988,14 @@ enum {
 #define PC_DEMOMAN_GRENADE_TYPE_1 GR_TYPE_NORMAL
 #define PC_DEMOMAN_GRENADE_TYPE_2 GR_TYPE_MIRV
 
-enum {
+enum : std::uint8_t {
 	PC_DEMOMAN_GRENADE_INIT_1 = 2,
 	PC_DEMOMAN_GRENADE_INIT_2 = 2,
 	PC_DEMOMAN_TF_ITEMS = 0
 };
 
 // Class Details for COMBAT MEDIC
-enum {
+enum : std::uint16_t {
 	PC_MEDIC_SKIN = 3,
 	PC_MEDIC_MAXHEALTH = 90,
 	PC_MEDIC_MAXSPEED = 320,
@@ -1002,17 +1004,17 @@ enum {
 	PC_MEDIC_INITARMOR = 50
 };
 
-#define PC_MEDIC_MAXARMORTYPE 0.6
-#define PC_MEDIC_INITARMORTYPE 0.3
+#define PC_MEDIC_MAXARMORTYPE 0.6f
+#define PC_MEDIC_INITARMORTYPE 0.3f
 
-enum {
+enum : std::uint8_t {
 	PC_MEDIC_ARMORCLASSES = 11,   // ALL except EXPLOSION
 	PC_MEDIC_INITARMORCLASS = 0
 };
 
 #define PC_MEDIC_WEAPONS (WEAP_BIOWEAPON | WEAP_MEDIKIT | WEAP_SHOTGUN | WEAP_SUPER_SHOTGUN | WEAP_SUPER_NAILGUN)
 
-enum {
+enum : std::uint8_t {
 	PC_MEDIC_MAXAMMO_SHOT = 75,
 	PC_MEDIC_MAXAMMO_NAIL = 150,
 	PC_MEDIC_MAXAMMO_CELL = 50,
@@ -1028,7 +1030,7 @@ enum {
 #define PC_MEDIC_GRENADE_TYPE_1 GR_TYPE_NORMAL
 #define PC_MEDIC_GRENADE_TYPE_2 GR_TYPE_CONCUSSION
 
-enum {
+enum : std::uint8_t {
 	PC_MEDIC_GRENADE_INIT_1 = 2,
 	PC_MEDIC_GRENADE_INIT_2 = 2,
 	PC_MEDIC_TF_ITEMS = 0,
@@ -1038,7 +1040,7 @@ enum {
 };
 
 // Class Details for HVYWEAP
-enum {
+enum : std::uint16_t {
 	PC_HVYWEAP_SKIN = 2,
 	PC_HVYWEAP_MAXHEALTH = 100,
 	PC_HVYWEAP_MAXSPEED = 230,
@@ -1047,10 +1049,10 @@ enum {
 	PC_HVYWEAP_INITARMOR = 150
 };
 
-#define PC_HVYWEAP_MAXARMORTYPE 0.8
-#define PC_HVYWEAP_INITARMORTYPE 0.8
+#define PC_HVYWEAP_MAXARMORTYPE 0.8f
+#define PC_HVYWEAP_INITARMORTYPE 0.8f
 
-enum {
+enum : std::uint8_t {
 	PC_HVYWEAP_ARMORCLASSES = 31,
 	// ALL
 	PC_HVYWEAP_INITARMORCLASS = 0
@@ -1058,7 +1060,7 @@ enum {
 
 #define PC_HVYWEAP_WEAPONS (WEAP_ASSAULT_CANNON | WEAP_AXE | WEAP_SHOTGUN | WEAP_SUPER_SHOTGUN)
 
-enum {
+enum : std::uint8_t {
 	PC_HVYWEAP_MAXAMMO_SHOT = 200,
 	PC_HVYWEAP_MAXAMMO_NAIL = 200,
 	PC_HVYWEAP_MAXAMMO_CELL = 50,
@@ -1072,7 +1074,7 @@ enum {
 #define PC_HVYWEAP_GRENADE_TYPE_1 GR_TYPE_NORMAL
 #define PC_HVYWEAP_GRENADE_TYPE_2 GR_TYPE_MIRV
 
-enum {
+enum : std::uint8_t {
 	PC_HVYWEAP_GRENADE_INIT_1 = 2,
 	PC_HVYWEAP_GRENADE_INIT_2 = 1,
 	PC_HVYWEAP_TF_ITEMS = 0,
@@ -1080,7 +1082,7 @@ enum {
 };
 
 // Class Details for PYRO
-enum {
+enum : std::uint16_t {
 	PC_PYRO_SKIN = 21,
 	PC_PYRO_MAXHEALTH = 100,
 	PC_PYRO_MAXSPEED = 300,
@@ -1089,17 +1091,17 @@ enum {
 	PC_PYRO_INITARMOR = 50
 };
 
-#define PC_PYRO_MAXARMORTYPE 0.6
-#define PC_PYRO_INITARMORTYPE 0.6
+#define PC_PYRO_MAXARMORTYPE 0.6f
+#define PC_PYRO_INITARMORTYPE 0.6f
 
-enum {
+enum : std::uint8_t {
 	PC_PYRO_ARMORCLASSES = 27,   // ALL except EXPLOSION
 	PC_PYRO_INITARMORCLASS = 16 // #AT_SAVEFIRE
 };
 
 #define PC_PYRO_WEAPONS (WEAP_INCENDIARY | WEAP_FLAMETHROWER | WEAP_AXE | WEAP_SHOTGUN)
 
-enum {
+enum : std::uint8_t {
 	PC_PYRO_MAXAMMO_SHOT = 40,
 	PC_PYRO_MAXAMMO_NAIL = 50,
 	PC_PYRO_MAXAMMO_CELL = 200,
@@ -1113,7 +1115,7 @@ enum {
 #define PC_PYRO_GRENADE_TYPE_1 GR_TYPE_NORMAL
 #define PC_PYRO_GRENADE_TYPE_2 GR_TYPE_NAPALM
 
-enum {
+enum : std::uint8_t {
 	PC_PYRO_GRENADE_INIT_1 = 2,
 	PC_PYRO_GRENADE_INIT_2 = 4,
 	PC_PYRO_TF_ITEMS = 0,
@@ -1121,7 +1123,7 @@ enum {
 };
 
 // Class Details for SPY
-enum {
+enum : std::uint16_t {
 	PC_SPY_SKIN = 22,
 	PC_SPY_MAXHEALTH = 90,
 	PC_SPY_MAXSPEED = 300,
@@ -1130,17 +1132,17 @@ enum {
 	PC_SPY_INITARMOR = 25
 };
 
-#define PC_SPY_MAXARMORTYPE 0.6 // Was 0.3
-#define PC_SPY_INITARMORTYPE 0.6 // Was 0.3
+#define PC_SPY_MAXARMORTYPE 0.6f // Was 0.3
+#define PC_SPY_INITARMORTYPE 0.6f // Was 0.3
 
-enum {
+enum : std::uint8_t {
 	PC_SPY_ARMORCLASSES = 27,   // ALL except EXPLOSION
 	PC_SPY_INITARMORCLASS = 0
 };
 
 #define PC_SPY_WEAPONS (WEAP_AXE | WEAP_TRANQ | WEAP_SUPER_SHOTGUN | WEAP_NAILGUN)
 
-enum {
+enum : std::uint8_t {
 	PC_SPY_MAXAMMO_SHOT = 40,
 	PC_SPY_MAXAMMO_NAIL = 100,
 	PC_SPY_MAXAMMO_CELL = 30,
@@ -1154,7 +1156,7 @@ enum {
 #define PC_SPY_GRENADE_TYPE_1 GR_TYPE_NORMAL
 #define PC_SPY_GRENADE_TYPE_2 GR_TYPE_GAS
 
-enum {
+enum : std::uint8_t {
 	PC_SPY_GRENADE_INIT_1 = 2,
 	PC_SPY_GRENADE_INIT_2 = 2,
 	PC_SPY_TF_ITEMS = 0,
@@ -1165,7 +1167,7 @@ enum {
 };
 
 // Class Details for ENGINEER
-enum {
+enum : std::uint16_t {
 	PC_ENGINEER_SKIN = 22,   // Not used anymore
 	PC_ENGINEER_MAXHEALTH = 80,
 	PC_ENGINEER_MAXSPEED = 300,
@@ -1174,10 +1176,10 @@ enum {
 	PC_ENGINEER_INITARMOR = 25
 };
 
-#define PC_ENGINEER_MAXARMORTYPE 0.6
-#define PC_ENGINEER_INITARMORTYPE 0.3
+#define PC_ENGINEER_MAXARMORTYPE 0.6f
+#define PC_ENGINEER_INITARMORTYPE 0.3f
 
-enum {
+enum : std::uint8_t {
 	PC_ENGINEER_ARMORCLASSES = 31,
 	// ALL
 	PC_ENGINEER_INITARMORCLASS = 0
@@ -1185,7 +1187,7 @@ enum {
 
 #define PC_ENGINEER_WEAPONS (WEAP_SPANNER | WEAP_LASER | WEAP_SUPER_SHOTGUN)
 
-enum {
+enum : std::uint8_t {
 	PC_ENGINEER_MAXAMMO_SHOT = 50,
 	PC_ENGINEER_MAXAMMO_NAIL = 50,
 	PC_ENGINEER_MAXAMMO_CELL = 200,   // synonymous with metal
@@ -1199,14 +1201,14 @@ enum {
 #define PC_ENGINEER_GRENADE_TYPE_1 GR_TYPE_NORMAL
 #define PC_ENGINEER_GRENADE_TYPE_2 GR_TYPE_EMP
 
-enum {
+enum : std::uint8_t {
 	PC_ENGINEER_GRENADE_INIT_1 = 2,
 	PC_ENGINEER_GRENADE_INIT_2 = 2,
 	PC_ENGINEER_TF_ITEMS = 0
 };
 
 // Class Details for CIVILIAN
-enum {
+enum : std::uint8_t {
 	PC_CIVILIAN_SKIN = 22,
 	PC_CIVILIAN_MAXHEALTH = 50,
 	PC_CIVILIAN_MAXSPEED = 240,
@@ -1221,7 +1223,7 @@ enum {
 
 #define PC_CIVILIAN_WEAPONS WEAP_AXE
 
-enum {
+enum : std::uint8_t {
 	PC_CIVILIAN_MAXAMMO_SHOT = 0,
 	PC_CIVILIAN_MAXAMMO_NAIL = 0,
 	PC_CIVILIAN_MAXAMMO_CELL = 0,
@@ -1243,7 +1245,7 @@ enum {
 // For all these defines, see the tfortmap.txt that came with the zip
 // for complete descriptions.
 // Defines for Goal Activation types : goal_activation (in goals)
-enum {
+enum : std::uint16_t {
 	TFGA_TOUCH = 1,   // Activated when touched
 	TFGA_TOUCH_DETPACK = 2,   // Activated when touched by a detpack explosion
 	TFGA_REVERSE_AP = 4,   // Activated when AP details are _not_ met
@@ -1252,7 +1254,7 @@ enum {
 };
 
 // Defines for Goal Effects types : goal_effect
-enum {
+enum : std::uint8_t {
 	TFGE_AP = 1,   // AP is affected. Default.
 	TFGE_AP_TEAM = 2,   // All of the AP's team.
 	TFGE_NOT_AP_TEAM = 4,   // All except AP's team.
@@ -1263,7 +1265,7 @@ enum {
 };
 
 // Defines for Goal Result types : goal_result
-enum {
+enum : std::uint8_t {
 	TFGR_SINGLE = 1,   // Goal can only be activated once
 	TFGR_ADD_BONUSES = 2,   // Any Goals activated by this one give their bonuses
 	TFGR_ENDGAME = 4,   // Goal fires Intermission, displays scores, and ends level
@@ -1279,7 +1281,7 @@ enum {
 // that some will show up sometime.
 
 // Defines for Goal Item types, : goal_activation (in items)
-enum {
+enum : std::uint16_t {
 	TFGI_GLOW = 1,   // Players carrying this GoalItem will glow
 	TFGI_SLOW = 2,   // Players carrying this GoalItem will move at half-speed
 	TFGI_DROP = 4,   // Players dying with this item will drop it
@@ -1297,7 +1299,7 @@ enum {
 };
 
 // Defines for methods of GoalItem returning
-enum {
+enum : std::uint8_t {
 	GI_RET_DROP_DEAD = 0,   // Dropped by a dead player
 	GI_RET_DROP_LIVING = 1,   // Dropped by a living player
 	GI_RET_GOAL = 2,   // Returned by a Goal
@@ -1305,18 +1307,18 @@ enum {
 };
 
 // Defines for TeamSpawnpoints : goal_activation (in teamspawns)
-enum {
+enum : std::uint8_t {
 	TFSP_MULTIPLEITEMS = 1,   // Give out the GoalItem multiple times
 	TFSP_MULTIPLEMSGS = 2 // Display the message multiple times
 };
 
 // Defines for TeamSpawnpoints : goal_effects (in teamspawns)
-enum {
+enum : std::uint8_t {
 	TFSP_REMOVESELF = 1 // Remove itself after being spawned on
 };
 
 // Defines for Goal States
-enum {
+enum : std::uint8_t {
 	TFGS_ACTIVE = 1,
 	TFGS_INACTIVE = 2,
 	TFGS_REMOVED = 3,
@@ -1324,14 +1326,14 @@ enum {
 };
 
 // Defines for GoalItem Removing from Player Methods
-enum {
+enum : std::uint8_t {
 	GI_DROP_PLAYERDEATH = 0,   // Dropped by a dying player
 	GI_DROP_REMOVEGOAL = 1,   // Removed by a Goal
 	GI_DROP_PLAYERDROP = 2 // Dropped by a player
 };
 
 // Legal Playerclass Handling
-enum {
+enum : std::uint16_t {
 	TF_ILL_SCOUT = 1,
 	TF_ILL_SNIPER = 2,
 	TF_ILL_SOLDIER = 4,
@@ -1345,7 +1347,7 @@ enum {
 };
 
 // Addition classes
-enum {
+enum : std::uint8_t {
 	CLASS_TFGOAL = 128,
 	CLASS_TFGOAL_TIMER = 129,
 	CLASS_TFGOAL_ITEM = 130,
@@ -1355,33 +1357,33 @@ enum {
 /*==========================================================================*/
 /* Flamethrower																				 */
 /*==========================================================================*/
-#define FLAME_PLYRMAXTIME 5.0 // lifetime in seconds of a flame on a player
+#define FLAME_PLYRMAXTIME 5.0f // lifetime in seconds of a flame on a player
 
-enum {
+enum : std::uint8_t {
 	FLAME_MAXBURNTIME = 8,   // lifetime in seconds of a flame on the world (big ones)
 	NAPALM_MAXBURNTIME = 20,   // lifetime in seconds of flame from a napalm grenade
 	FLAME_MAXPLYRFLAMES = 4,   // maximum number of flames on a player
 	FLAME_NUMLIGHTS = 1 // maximum number of light flame
 };
 
-#define FLAME_BURNRATIO 0.3 // the chance of a flame not 'sticking'
+#define FLAME_BURNRATIO 0.3f // the chance of a flame not 'sticking'
 
-enum {
+enum : std::uint8_t {
 	GR_TYPE_FLAMES_NO = 15,   // number of flames spawned when a grenade explode
 	FLAME_DAMAGE_TIME = 1 // Interval between damage burns from flames
 };
 
-#define FLAME_EFFECT_TIME 0.2 // frequency at which we display flame effects.
-#define FLAME_THINK_TIME 0.1 // Seconds between times the flame checks burn
+#define FLAME_EFFECT_TIME 0.2f // frequency at which we display flame effects.
+#define FLAME_THINK_TIME 0.1f // Seconds between times the flame checks burn
 
-enum {
+enum : std::uint8_t {
 	PER_FLAME_DAMAGE = 2 // Damage taken per second per flame by burning players
 };
 
 /*==================================================*/
 /* CTF Support defines 								*/
 /*==================================================*/
-enum {
+enum : std::uint8_t {
 	CTF_FLAG1 = 1,
 	CTF_FLAG2 = 2,
 	CTF_DROPOFF1 = 3,
@@ -1417,7 +1419,7 @@ float already_chosen_map;
 /* Server Settings								    */
 /*==================================================*/
 // Admin modes
-enum {
+enum : std::uint8_t {
 	ADMIN_MODE_NONE = 0,
 	ADMIN_MODE_DEAL = 1
 };
@@ -1425,7 +1427,7 @@ enum {
 /*==================================================*/
 /* Death Message defines							*/
 /*==================================================*/
-enum {
+enum : std::uint8_t {
 	DMSG_SHOTGUN = 1,
 	DMSG_SSHOTGUN = 2,
 	DMSG_NAILGUN = 3,
@@ -1474,7 +1476,7 @@ enum {
 /*==================================================*/
 // Some of the toggleflags aren't used anymore, but the bits are still
 // there to provide compatability with old maps
-enum {
+enum : std::uint16_t {
 	TFLAG_CLASS_PERSIST = 1 << 0, // Persistent Classes Bit
 	TFLAG_CHEATCHECK = 1 << 1,    // Cheatchecking Bit
 	TFLAG_RESPAWNDELAY = 1 << 2,   // RespawnDelay bit
@@ -1500,7 +1502,7 @@ enum {
 //      Menu stuff      //
 /*======================*/
 
-enum {
+enum : std::uint8_t {
 	MENU_DEFAULT = 1,
 	MENU_TEAM = 2,
 	MENU_CLASS = 3,
@@ -1511,11 +1513,11 @@ enum {
 	MENU_REPEATHELP = 8
 };
 
-enum {
+enum : std::uint8_t {
 	MENU_SPECHELP = 9
 };
 
-enum {
+enum : std::uint8_t {
 	MENU_SPY = 12,
 	MENU_SPY_SKIN = 13,
 	MENU_SPY_COLOR = 14,
@@ -1528,17 +1530,17 @@ enum {
 	MENU_TEAM_CHANGE = 21
 };
 
-enum {
+enum : std::uint8_t {
 	MENU_REFRESH_RATE = 25
 };
 
-enum {
+enum : std::uint8_t {
 	MENU_VOICETWEAK = 50
 };
 
 //============================
 // Timer Types
-enum {
+enum : std::uint8_t {
 	TF_TIMER_ANY = 0,
 	TF_TIMER_CONCUSSION = 1,
 	TF_TIMER_INFECTION = 2,
@@ -1557,7 +1559,7 @@ enum {
 };
 
 // Non Player timers
-enum {
+enum : std::uint8_t {
 	TF_TIMER_RETURNITEM = 100,
 	TF_TIMER_DELAYEDGOAL = 101,
 	TF_TIMER_ENDROUND = 102
@@ -1565,7 +1567,7 @@ enum {
 
 //============================
 // Teamscore printing
-enum {
+enum : std::uint8_t {
 	TS_PRINT_SHORT = 1,
 	TS_PRINT_LONG = 2,
 	TS_PRINT_LONG_TO_ALL = 3

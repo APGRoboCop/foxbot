@@ -38,14 +38,14 @@ extern HINSTANCE h_Library;
 extern void* h_Library;
 #endif
 
-void helper_LinkEntity(LINK_ENTITY_FUNC& addr, const char* name, entvars_t* pev) {
-	if (addr == nullptr) {
-		addr = reinterpret_cast<LINK_ENTITY_FUNC>(GetProcAddress(h_Library, name));
-	}
+void helper_LinkEntity(LINK_ENTITY_FUNC &addr, const char *name, entvars_t *pev) {
+   if (addr == nullptr) {
+      addr = reinterpret_cast<LINK_ENTITY_FUNC>(GetProcAddress(h_Library, name));
+   }
 
-	if (addr != nullptr) { //fixed condition? [APG]RoboCop[CL]
-		addr(pev);
-	}
+   if (addr != nullptr) { // fixed condition? [APG]RoboCop[CL]
+      addr(pev);
+   }
 }
 
 #define LINK_ENTITY_TO_FUNC(entityName)                                                                                                                                                                                                        \

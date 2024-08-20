@@ -30,12 +30,14 @@
 
 #include "osdep.h"
 #include <cstring>
-
+#include <cstdint>
 #include <string>
 
 // stuff for Win32 vs. Linux builds
 
 #ifndef __linux__
+#include <windows.h>
+
 typedef int(FAR* GETENTITYAPI)(DLL_FUNCTIONS*, int);
 typedef int(FAR* GETNEWDLLFUNCTIONS)(NEW_DLL_FUNCTIONS*, int*);
 typedef void(__stdcall* GIVEFNPTRSTODLL)(enginefuncs_t*, globalvars_t*);
@@ -55,7 +57,7 @@ typedef void (*LINK_ENTITY_FUNC)(entvars_t*);
 #endif
 
 // define constants used to identify the MOD we are playing...
-enum { TFC_DLL = 1, VALVE_DLL = 2 };
+enum : std::uint8_t { TFC_DLL = 1, VALVE_DLL = 2 };
 
 // define some function prototypes...
 BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress, char szRejectReason[128]);
@@ -81,19 +83,19 @@ template <typename U> void bzero(U* ptr, size_t len) noexcept {
 	}
 }
 
-enum {
+enum : std::uint8_t {
 	BOT_PITCH_SPEED = 30,
 	BOT_YAW_SPEED = 30
 };
 
-enum {
+enum : std::uint8_t {
 	RESPAWN_IDLE = 1,
 	RESPAWN_NEED_TO_RESPAWN = 2,
 	RESPAWN_IS_RESPAWNING = 3
 };
 
 // game start messages for TFC...
-enum {
+enum : std::uint8_t {
 	MSG_TFC_IDLE = 1,
 	MSG_TFC_TEAM_SELECT = 2,
 	MSG_TFC_CLASS_SELECT = 3
@@ -123,7 +125,7 @@ enum {
 #define MSG_FLF_HEAVYWEAPONS_SELECT 9
 */
 
-enum {
+enum : std::uint8_t {
 	TFC_CLASS_CIVILIAN = 11,
 	TFC_CLASS_SCOUT = 1,
 	TFC_CLASS_SNIPER = 2,
@@ -136,7 +138,7 @@ enum {
 	TFC_CLASS_ENGINEER = 9
 };
 
-enum {
+enum : std::uint8_t {
 	BOT_SKIN_LEN = 32,
 	BOT_NAME_LEN = 32
 };
@@ -144,19 +146,19 @@ enum {
 // This is the same spawn flag as SF_BUTTON_TOUCH_ONLY, i.e. used for buttons
 // that activate when a player bumps into them(like the ones on well)
 // Defined here so that there's no need to trawl the HL SDK to find SF_BUTTON_TOUCH_ONLY.
-enum {
+enum : std::uint16_t {
 	SFLAG_PROXIMITY_BUTTON = 256
 };
 
 // bot chat stuff
-enum {
+enum : std::uint8_t {
 	TOTAL_CHAT_TYPES = 6,
 	MAX_CHAT_STRINGS = 100,   // max strings per type of chat
 	MAX_CHAT_LENGTH = 80
 };
 
 // the indexes for each type of chat
-enum {
+enum : std::uint8_t {
 	CHAT_TYPE_GREETING = 0,
 	CHAT_TYPE_KILL_HI = 1,
 	CHAT_TYPE_KILL_LOW = 2,
@@ -509,17 +511,17 @@ typedef struct {
 } bot_t;
 
 // roles to fill on the team
-enum botRoles { ROLE_NONE, ROLE_ATTACKER, ROLE_DEFENDER };
+enum botRoles : std::uint8_t { ROLE_NONE, ROLE_ATTACKER, ROLE_DEFENDER };
 
-enum side_direction_values { SIDE_DIRECTION_LEFT, SIDE_DIRECTION_RIGHT };
+enum side_direction_values : std::uint8_t { SIDE_DIRECTION_LEFT, SIDE_DIRECTION_RIGHT };
 
-enum Misc { RJ_WP_INDEX = 0, RJ_WP_TEAM = 1, MAXRJWAYPOINTS = 20 };
+enum Misc : std::uint8_t { RJ_WP_INDEX = 0, RJ_WP_TEAM = 1, MAXRJWAYPOINTS = 20 };
 
-enum SpyDisguiseStates { DISGUISE_NONE = 0, DISGUISE_UNDERWAY, DISGUISE_COMPLETE };
+enum SpyDisguiseStates : std::uint8_t { DISGUISE_NONE = 0, DISGUISE_UNDERWAY, DISGUISE_COMPLETE };
 
-enum strafe_mod_values { STRAFE_MOD_NORMAL = 1, STRAFE_MOD_HEAL, STRAFE_MOD_STAB };
+enum strafe_mod_values : std::uint8_t { STRAFE_MOD_NORMAL = 1, STRAFE_MOD_HEAL, STRAFE_MOD_STAB };
 
-enum tracker_reasons {
+enum tracker_reasons : std::uint8_t {
 	TRACK_REASON_ASSIST = 0, // the bot is helping a flag carrier
 	TRACK_REASON_SUSPICIOUS, // the bot is following a suspected spy
 	TRACK_REASON_TAG,        // the bot has decided to follow a fellow offensive bot
@@ -528,10 +530,10 @@ enum tracker_reasons {
 	TRACK_REASON_PURSUIT     // chase after an enemy
 };
 
-enum GrenadeSlots { PrimaryGrenade = 0, SecondaryGrenade = 1 };
+enum GrenadeSlots : std::uint8_t { PrimaryGrenade = 0, SecondaryGrenade = 1 };
 
 // these grenade types are specific to TFC
-enum GrenadeTypes {
+enum GrenadeTypes : std::uint8_t {
 	GRENADE_FRAGMENTATION = 1, // standard issue grenade most TFC classes carry
 	GRENADE_CALTROP,
 	GRENADE_CONCUSSION,
@@ -547,14 +549,14 @@ enum GrenadeTypes {
 
 // general bot ammo level indicators for all weapons any bot is carrying
 // pBot->ammoStatus is set to one of these values
-enum ammo_levels {
+enum ammo_levels : std::uint8_t {
 	AMMO_LOW,     // a weapon is running very low
 	AMMO_WANTED,  // a weapon is below 50% max capacity
 	AMMO_UNNEEDED // all neccessary ammo is above 50%
 };
 
 // pent->v.waterlevel constants
-enum entity_waterlevels {
+enum entity_waterlevels : std::uint8_t {
 	WL_NOT_IN_WATER = 0, // waterlevel 0 - not in water
 	WL_FEET_IN_WATER,    // waterlevel 1 - feet in water
 	WL_WAIST_IN_WATER,   // waterlevel 2 - waist in water

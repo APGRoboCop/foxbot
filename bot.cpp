@@ -153,8 +153,9 @@ extern chatClass chat; // bot chat stuff
 
 static int number_names = 0;
 
-enum {
-	MAX_BOT_NAMES = 128
+enum : std::uint8_t
+{
+   MAX_BOT_NAMES = 128
 };
 
 /*enum {
@@ -241,14 +242,14 @@ inline void SET_CLIENT_KEY_VALUE(const int clientIndex, char* infobuffer, char* 
 }
 
 // this is the LINK_ENTITY_TO_CLASS function that creates a player (bot)
-void player(entvars_t* pev) {
-	static LINK_ENTITY_FUNC otherClassName = nullptr;
-	if (otherClassName == nullptr) {
-		otherClassName = reinterpret_cast<LINK_ENTITY_FUNC>(GetProcAddress(h_Library, "player"));
-	}
-	if (otherClassName != nullptr) {
-		(*otherClassName)(pev);
-	}
+void player(entvars_t *pev) {
+   static LINK_ENTITY_FUNC otherClassName = nullptr;
+   if (otherClassName == nullptr) {
+      otherClassName = reinterpret_cast<LINK_ENTITY_FUNC>(GetProcAddress(h_Library, "player"));
+   }
+   if (otherClassName != nullptr) {
+      (*otherClassName)(pev);
+   }
 }
 
 // This function initializes a bots data to safe values.
@@ -2548,7 +2549,7 @@ static void BotGrenadeAvoidance(bot_t* pBot) {
 		return;
 	pBot->f_grenadeScanTime = pBot->f_think_time + 0.35f;
 
-	enum avoid_actions { avoid_no_action, avoid_retreat, avoid_strafe };
+	enum avoid_actions : std::uint8_t { avoid_no_action, avoid_retreat, avoid_strafe };
 	short avoid_action = avoid_no_action;
 
 	UTIL_MakeVectors(pBot->pEdict->v.v_angle);

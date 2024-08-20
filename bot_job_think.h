@@ -29,7 +29,7 @@
 #define BOT_JOB_THINK_H
 
 // list of job types that the bots can try to accomplish
-enum knownJobTypes {
+enum knownJobTypes : std::int8_t {
 	JOB_NONE = -1,
 	JOB_SEEK_WAYPOINT, // used when the bot can't find a current waypoint
 	JOB_GET_UNSTUCK,
@@ -84,12 +84,12 @@ enum knownJobTypes {
 };
 
 // a job should be removed from the buffer if the job's function returns this signal
-enum {
+enum : std::int8_t {
 	JOB_TERMINATED = -1
 };
 
 // a job function will return this if the job hasn't finished yet
-enum {
+enum : std::uint8_t {
 	JOB_UNDERWAY = 1
 };
 

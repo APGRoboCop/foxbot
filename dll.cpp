@@ -43,14 +43,14 @@
 
 #include "botcam.h"
 
-enum {
+enum : std::uint8_t {
 	VER_MAJOR = 0,
 	VER_MINOR = 87
 };
 
 //#define VER_BUILD 0
 
-enum {
+enum : std::uint8_t {
 	MENU_NONE = 0,
 	MENU_1 = 1,
 	MENU_2 = 2,
@@ -141,7 +141,7 @@ extern char msg_msg[64][MSG_MAX];
 
 // define the sources that a bot option/setting can be changed from
 // used primarily by the changeBotSetting() function
-enum {
+enum : std::uint8_t {
 	SETTING_SOURCE_CLIENT_COMMAND, // command issued at console by host on Listen server
 	SETTING_SOURCE_SERVER_COMMAND, // command issued to the server directly
 	SETTING_SOURCE_CONFIG_FILE

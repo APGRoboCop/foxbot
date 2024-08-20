@@ -29,7 +29,7 @@
 #define BOT_WEAPONS_H
 
 // weapon ID values for Valve's Half-Life Deathmatch
-enum {
+enum : std::uint8_t {
 	VALVE_WEAPON_CROWBAR = 1,
 	VALVE_WEAPON_GLOCK = 2,
 	VALVE_WEAPON_PYTHON = 3,
@@ -47,13 +47,13 @@ enum {
 	VALVE_WEAPON_SNARK = 15
 };
 
-enum {
+enum : std::uint8_t {
 	VALVE_MAX_NORMAL_BATTERY = 100,
 	VALVE_HORNET_MAX_CARRY = 8
 };
 
 // weapon ID values for Valve's Team Fortress Classic & 1.5
-enum {
+enum : std::uint8_t {
 	TF_WEAPON_UNKNOWN1 = 1,
 	TF_WEAPON_UNKNOWN2 = 2,
 	TF_WEAPON_MEDIKIT = 3,

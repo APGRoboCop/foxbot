@@ -1774,7 +1774,7 @@ bool BotSetAlternativeGoalWaypoint(bot_t* const pBot, int& r_goalWP, const WPT_I
 	if (nextWP == -1)
 		return false; // sanity check
 
-	enum { MAX_INDICES = 5 };
+	enum : std::uint8_t { MAX_INDICES = 5 };
 	int indices[MAX_INDICES];
 	int count = 0;
 
