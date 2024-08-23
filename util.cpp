@@ -566,7 +566,7 @@ bool UTIL_FootstepsHeard(const edict_t* pEdict, const edict_t* pPlayer) {
 	return false;
 }
 
-void UTIL_ShowMenu(edict_t* pEdict, int slots, int displaytime, bool needmore, const char* pText) {
+void UTIL_ShowMenu(edict_t* pEdict, const int slots, const int displaytime, const bool needmore, const char* pText) {
 	if (gmsgShowMenu == 0)
 		gmsgShowMenu = REG_USER_MSG("ShowMenu", -1);
 

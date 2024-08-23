@@ -75,7 +75,7 @@ const char* Cmd_Argv(int argc);
 int Cmd_Argc();
 
 // anologue of memset
-template <typename U> void bzero(U* ptr, size_t len) noexcept {
+template <typename U> void bzero(U* ptr, const size_t len) noexcept {
    unsigned char *const zeroing = reinterpret_cast<unsigned char *>(ptr);
 
 	for (size_t i = 0; i < len; ++i) {

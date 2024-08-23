@@ -136,7 +136,7 @@ void BotResetJobBuffer(bot_t* pBot) {
 
 // This function eliminates whatever job is in the specified buffer
 // index, and is the preferred method of terminating any job.
-static void DropJobFromBuffer(bot_t* pBot, int buffer_index) {
+static void DropJobFromBuffer(bot_t* pBot, const int buffer_index) {
 	pBot->jobType[buffer_index] = JOB_NONE;
 	pBot->job[buffer_index].f_bufferedTime = 0.0f;
 	pBot->job[buffer_index].priority = PRIORITY_NONE;
@@ -175,7 +175,7 @@ void BlacklistJob(bot_t* pBot, const int jobType, const float timeOut) {
 // This function returns true if the specified jobtype is already in the
 // job buffer.
 bool BufferContainsJobType(const bot_t* pBot, const int JobType) {
-    return std::any_of(std::begin(pBot->jobType), std::end(pBot->jobType), [JobType](int i) {
+    return std::any_of(std::begin(pBot->jobType), std::end(pBot->jobType), [JobType](const int i) {
         return i == JobType;
     });
 }
@@ -548,10 +548,10 @@ void BotJobThink(bot_t* pBot) {
 	case TFC_CLASS_MEDIC:
 		UTIL_SelectItem(pBot->pEdict, "tf_weapon_supershotgun");
 		break;
-	case TFC_CLASS_HWGUY:
-		break;
-	case TFC_CLASS_PYRO:
-		break;
+   case TFC_CLASS_HWGUY:
+      break;
+   case TFC_CLASS_PYRO:
+      break;
 	case TFC_CLASS_SPY:
 		UTIL_SelectItem(pBot->pEdict, "tf_weapon_supershotgun");
 		// time for a disguise?

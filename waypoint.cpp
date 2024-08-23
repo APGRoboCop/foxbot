@@ -999,7 +999,7 @@ int WaypointFindNearestAiming(const Vector& r_v_origin) {
 	return min_index;
 }
 
-void WaypointDrawBeam(edict_t* pEntity, const Vector& start, const Vector& end, int width, int noise, int red, int green, int blue, int brightness, int speed) {
+void WaypointDrawBeam(edict_t* pEntity, const Vector& start, const Vector& end, const int width, const int noise, const int red, const int green, const int blue, const int brightness, const int speed) {
 	MESSAGE_BEGIN(MSG_ONE, SVC_TEMPENTITY, nullptr, pEntity);
 	WRITE_BYTE(TE_BEAMPOINTS);
 	WRITE_COORD(start.x);
@@ -1123,26 +1123,26 @@ void WaypointAdd(edict_t* pEntity) {
 			WaypointDebug();
 #endif
 	}
-	if (g_path_connect) {
-		// calculate all the paths to this new waypoint
-		for (i = 0; i < num_waypoints; i++) {
-			if (i == index)
-				continue; // skip the waypoint that was just added
+   if (g_path_connect) {
+      // calculate all the paths to this new waypoint
+      for (int j = 0; j < num_waypoints; j++) {
+         if (j == index)
+            continue; // skip the waypoint that was just added
 
-			if (waypoints[i].flags & W_FL_AIMING || waypoints[i].flags & W_FL_DELETED)
-				continue; // skip deleted/aiming wpts!!
+         if (waypoints[j].flags & W_FL_AIMING || waypoints[j].flags & W_FL_DELETED)
+            continue; // skip deleted/aiming wpts!!
 
-			// check if the waypoint is reachable from the new one (one-way)
-			if (WaypointReachable(pEntity->v.origin, waypoints[i].origin, pEntity)) {
-				WaypointAddPath(index, i);
-			}
+         // check if the waypoint is reachable from the new one (one-way)
+         if (WaypointReachable(pEntity->v.origin, waypoints[j].origin, pEntity)) {
+            WaypointAddPath(index, static_cast<short>(j));
+         }
 
-			// check if the new one is reachable from the waypoint (other way)
-			if (WaypointReachable(waypoints[i].origin, pEntity->v.origin, pEntity)) {
-				WaypointAddPath(i, index);
-			}
-		}
-	}
+         // check if the new one is reachable from the waypoint (other way)
+         if (WaypointReachable(waypoints[j].origin, pEntity->v.origin, pEntity)) {
+            WaypointAddPath(static_cast<short>(j), index);
+         }
+      }
+   }
 }
 
 void WaypointAddAiming(edict_t* pEntity) {
@@ -3269,6 +3269,10 @@ bool WaypointAvailable(const int index, const int team) {
 				if (green_av[0] == true)
 					return true;
 				break;
+         default:
+            // Handle the default case
+            // You can return false, throw an exception, or handle it in another way
+            return false;
 			}
 		}
 		if (waypoints[index].script_flags & S_FL_POINT2) {
@@ -3290,6 +3294,10 @@ bool WaypointAvailable(const int index, const int team) {
 				if (green_av[1] == true)
 					return true;
 				break;
+         default:
+            // Handle the default case
+            // You can return false, throw an exception, or handle it in another way
+            return false;
 			}
 		}
 		if (waypoints[index].script_flags & S_FL_POINT3) {
@@ -3311,6 +3319,10 @@ bool WaypointAvailable(const int index, const int team) {
 				if (green_av[2] == true)
 					return true;
 				break;
+         default:
+            // Handle the default case
+            // You can return false, throw an exception, or handle it in another way
+            return false;
 			}
 		}
 		if (waypoints[index].script_flags & S_FL_POINT4) {
@@ -3332,6 +3344,10 @@ bool WaypointAvailable(const int index, const int team) {
 				if (green_av[3] == true)
 					return true;
 				break;
+         default:
+            // Handle the default case
+            // You can return false, throw an exception, or handle it in another way
+            return false;
 			}
 		}
 		if (waypoints[index].script_flags & S_FL_POINT5) {
@@ -3353,6 +3369,10 @@ bool WaypointAvailable(const int index, const int team) {
 				if (green_av[4] == true)
 					return true;
 				break;
+         default:
+            // Handle the default case
+            // You can return false, throw an exception, or handle it in another way
+            return false;
 			}
 		}
 		if (waypoints[index].script_flags & S_FL_POINT6) {
@@ -3374,6 +3394,10 @@ bool WaypointAvailable(const int index, const int team) {
 				if (green_av[5] == true)
 					return true;
 				break;
+         default:
+            // Handle the default case
+            // You can return false, throw an exception, or handle it in another way
+            return false;
 			}
 		}
 		if (waypoints[index].script_flags & S_FL_POINT7) {
@@ -3395,6 +3419,10 @@ bool WaypointAvailable(const int index, const int team) {
 				if (green_av[6] == true)
 					return true;
 				break;
+         default:
+            // Handle the default case
+            // You can return false, throw an exception, or handle it in another way
+            return false;
 			}
 		}
 		if (waypoints[index].script_flags & S_FL_POINT8) {
@@ -3416,6 +3444,10 @@ bool WaypointAvailable(const int index, const int team) {
 				if (green_av[7] == true)
 					return true;
 				break;
+         default:
+            // Handle the default case
+            // You can return false, throw an exception, or handle it in another way
+            return false;
 			}
 		}
 

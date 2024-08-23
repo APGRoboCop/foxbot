@@ -586,7 +586,7 @@ static void BotBalanceTeams_Casual() {
 	}
 }
 
-static bool BotBalanceTeams(int a, int b) {
+static bool BotBalanceTeams(const int a, const int b) {
 	if (playersPerTeam[a - 1] - 1 > playersPerTeam[b - 1] && (max_team_players[b - 1] > playersPerTeam[b - 1] || max_team_players[b - 1] == 0) && is_team[b - 1]) {
 		for (int i = 31; i >= 0; i--) {
 			// is this slot used?
@@ -607,7 +607,7 @@ static bool BotBalanceTeams(int a, int b) {
 }
 
 // used with the bot_bot_balance setting
-static bool BBotBalanceTeams(int a, int b) {
+static bool BBotBalanceTeams(const int a, const int b) {
 	// now just set up teams to include bots in them :D
 	int bteams[4] = { 0, 0, 0, 0 };
 
@@ -647,7 +647,7 @@ static bool BBotBalanceTeams(int a, int b) {
 
 // This function will balance the human players amongst the teams by forcing
 // them to switch teams if necessary.
-static bool HBalanceTeams(int a, int b) {
+static bool HBalanceTeams(const int a, const int b) {
 	if (playersPerTeam[a - 1] - 1 > playersPerTeam[b - 1] && (max_team_players[b - 1] > playersPerTeam[b - 1] || max_team_players[b - 1] == 0) && is_team[b - 1]) {
       for (int i = 1; i <= MAX_BOTS; i++) {
 			bool not_bot = true;
@@ -677,7 +677,7 @@ void GameDLLInit() {
 		client = nullptr;
 
 	// initialize the bots array of structures...
-	std::memset(bots, 0, sizeof bots);
+   std::fill(std::begin(bots), std::end(bots), bot_t{});
 
 	// read the bot names from the bot name file
 	BotNameInit();
@@ -781,7 +781,7 @@ void chatClass::readChatFile() {
 // chat message of the type defined by chatSection.
 // Some chat strings use a players name with the "%n" specifier, so you can
 // specify a players name with playerName, or set it to NULL.
-void chatClass::pickRandomChatString(char* msg, size_t maxLength, const int chatSection, const char* playerName) {
+void chatClass::pickRandomChatString(char* msg, const size_t maxLength, const int chatSection, const char* playerName) {
 	msg[0] = '\0'; // just in case
 
 	// make sure this chat section contains at least one chat string
@@ -2469,44 +2469,25 @@ void ClientCommand(edict_t* pEntity) {
 			return;
 		}
 		// DREVIL CVARS
-		else if (FStrEq(pcmd, "defensive_chatter")) {
-			if (FStrEq(arg1, "on")) {
-				defensive_chatter = true;
-				ClientPrint(pEntity, HUD_PRINTNOTIFY, "Defensive Chatter is ON\n");
-			}
-			else if (FStrEq(arg1, "off")) {
-				defensive_chatter = false;
-				ClientPrint(pEntity, HUD_PRINTNOTIFY, "Defensive Chatter is OFF\n");
-			}
-			else if (FStrEq(arg1, "1")) {
-				defensive_chatter = true;
-				ClientPrint(pEntity, HUD_PRINTNOTIFY, "Defensive Chatter is ON\n");
-			}
-			else if (FStrEq(arg1, "0")) {
-				defensive_chatter = false;
-				ClientPrint(pEntity, HUD_PRINTNOTIFY, "Defensive Chatter is OFF\n");
-			}
-			return;
-		}
-		else if (FStrEq(pcmd, "offensive_chatter")) {
-			if (FStrEq(arg1, "on")) {
-				offensive_chatter = true;
-				ClientPrint(pEntity, HUD_PRINTNOTIFY, "Offensive Chatter is ON\n");
-			}
-			else if (FStrEq(arg1, "off")) {
-				offensive_chatter = false;
-				ClientPrint(pEntity, HUD_PRINTNOTIFY, "Offensive Chatter is OFF\n");
-			}
-			else if (FStrEq(arg1, "1")) {
-				offensive_chatter = true;
-				ClientPrint(pEntity, HUD_PRINTNOTIFY, "Offensive Chatter is ON\n");
-			}
-			else if (FStrEq(arg1, "0")) {
-				offensive_chatter = false;
-				ClientPrint(pEntity, HUD_PRINTNOTIFY, "Offensive Chatter is OFF\n");
-			}
-			return;
-		}
+      else if (FStrEq(pcmd, "defensive_chatter")) {
+         if (FStrEq(arg1, "on") || FStrEq(arg1, "1")) {
+            defensive_chatter = true;
+            ClientPrint(pEntity, HUD_PRINTNOTIFY, "Defensive Chatter is ON\n");
+         } else if (FStrEq(arg1, "off") || FStrEq(arg1, "0")) {
+            defensive_chatter = false;
+            ClientPrint(pEntity, HUD_PRINTNOTIFY, "Defensive Chatter is OFF\n");
+         }
+         return;
+      } else if (FStrEq(pcmd, "offensive_chatter")) {
+         if (FStrEq(arg1, "on") || FStrEq(arg1, "1")) {
+            offensive_chatter = true;
+            ClientPrint(pEntity, HUD_PRINTNOTIFY, "Offensive Chatter is ON\n");
+         } else if (FStrEq(arg1, "off") || FStrEq(arg1, "0")) {
+            offensive_chatter = false;
+            ClientPrint(pEntity, HUD_PRINTNOTIFY, "Offensive Chatter is OFF\n");
+         }
+         return;
+      }
 	}
 
 	if (!mr_meta)
@@ -2613,17 +2594,19 @@ void StartFrame() { // v7 last frame timing
 			}
 		}
 
-		if (client_update_time <= gpGlobals->time) {
-			client_update_time = gpGlobals->time + 1.0f;
-			for (i = 0; i < MAX_BOTS; i++) {
-				if (bots[i].is_used) {
-					std::memset(&cd, 0, sizeof cd); // replaced bzero with memset
-					MDLL_UpdateClientData(bots[i].pEdict, 1, &cd); // see if a weapon was dropped...
-					if (bots[i].bot_weapons != cd.weapons) //duplicate expression? [APG]RoboCop[CL]
-						bots[i].bot_weapons = cd.weapons;
-				}
-			}
-		}
+      if (client_update_time <= gpGlobals->time) {
+         client_update_time = gpGlobals->time + 1.0f;
+         for (i = 0; i < MAX_BOTS; i++) {
+            if (!bots[i].is_used) {
+               continue;
+            }
+            std::memset(&cd, 0, sizeof cd); // replaced bzero with memset
+            MDLL_UpdateClientData(bots[i].pEdict, 1, &cd); // see if a weapon was dropped...
+            if (bots[i].bot_weapons != cd.weapons) {
+               bots[i].bot_weapons = cd.weapons;
+            }
+         }
+      }
 		count = 0;
 		UpdateFlagCarrierList(); // need to do this once per frame
 		for (bot_index = 0; bot_index < gpGlobals->maxClients; bot_index++) {
@@ -4963,7 +4946,7 @@ const char* Cmd_Args() {
 	RETURN_META_VALUE(MRES_IGNORED, NULL);
 }
 
-const char* GetArg(const char* command, unsigned int arg_number) {
+const char* GetArg(const char* command, const unsigned int arg_number) {
 	// the purpose of this function is to provide fakeclients (bots) with
 	// the same Cmd_Argv convenience the engine provides to real clients.
 	// This way the handling of real client commands and bot client
@@ -5005,7 +4988,7 @@ const char* GetArg(const char* command, unsigned int arg_number) {
 	return &arg[0]; // returns the wanted argument
 }
 
-const char* Cmd_Argv(int argc) {
+const char* Cmd_Argv(const int argc) {
 	// this function returns a pointer to a certain argument of the
 	// current client command. Since bots have no client DLL and we may
 	// want a bot to execute a client command, we had to implement a

@@ -25,7 +25,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
-#define NADEVELOCITY 650 // DrEvil #define
+constexpr int NADEVELOCITY = 650; // DrEvil #define
 
 #include "extdll.h"
 #include "util.h"
@@ -1168,11 +1168,11 @@ void BotShootAtEnemy(bot_t* pBot) {
 	// even if that means running into walls (for added realism)
 	if (pBot->disturbedViewAmount > 0) {
 		// periodically update the bots disturbed view
-		if (pBot->f_periodicAlert1 < pBot->f_think_time) {
-         pBot->f_disturbedViewYaw = random_float(-pBot->disturbedViewAmount, pBot->disturbedViewAmount);
+      if (pBot->f_periodicAlert1 < pBot->f_think_time) {
+         pBot->f_disturbedViewYaw = random_float(-static_cast<float>(pBot->disturbedViewAmount), pBot->disturbedViewAmount);
 
-			pBot->f_disturbedViewPitch = random_float(-pBot->disturbedViewAmount, pBot->disturbedViewAmount);
-		}
+         pBot->f_disturbedViewPitch = random_float(-static_cast<float>(pBot->disturbedViewAmount), pBot->disturbedViewAmount);
+      }
 
 		pBot->pEdict->v.ideal_yaw += pBot->f_disturbedViewYaw;
 		pBot->pEdict->v.idealpitch += pBot->f_disturbedViewPitch;
@@ -1280,33 +1280,17 @@ static Vector BotBodyTarget(const edict_t* pBotEnemy, bot_t* pBot) {
 				aim_error += static_cast<float>(pBot->bot_skill + 1) * random_float(5.0f, 10.0f);
 			
 			const float aim_offset = bot_snipe_max_inaccuracy[pBot->bot_skill] + aim_error;
-			switch (pBot->bot_skill) {
-			case 0:
-				pBot->aimDrift.x = random_float(-aim_offset, aim_offset) * f_scale;
-				pBot->aimDrift.y = random_float(-aim_offset, aim_offset) * f_scale;
-				pBot->aimDrift.z = random_float(-aim_offset, aim_offset) * f_scale;
-				break;
-			case 1:
-				pBot->aimDrift.x = random_float(-aim_offset, aim_offset) * f_scale;
-				pBot->aimDrift.y = random_float(-aim_offset, aim_offset) * f_scale;
-				pBot->aimDrift.z = random_float(-aim_offset, aim_offset) * f_scale;
-				break;
-			case 2:
-				pBot->aimDrift.x = random_float(-aim_offset, aim_offset) * f_scale;
-				pBot->aimDrift.y = random_float(-aim_offset, aim_offset) * f_scale;
-				pBot->aimDrift.z = random_float(-aim_offset, aim_offset) * f_scale;
-				break;
-			case 3:
-				pBot->aimDrift.x = random_float(-aim_offset, aim_offset) * f_scale;
-				pBot->aimDrift.y = random_float(-aim_offset, aim_offset) * f_scale;
-				pBot->aimDrift.z = random_float(-aim_offset, aim_offset) * f_scale;
-				break;
-			default: // covers bot_skill 4 (and silences a compiler warning)
-				pBot->aimDrift.x = random_float(-aim_offset, aim_offset) * f_scale;
-				pBot->aimDrift.y = random_float(-aim_offset, aim_offset) * f_scale;
-				pBot->aimDrift.z = random_float(-aim_offset, aim_offset) * f_scale;
-				break;
-			}
+         switch (pBot->bot_skill) {
+         case 0:
+         case 1:
+         case 2:
+         case 3:
+         default: // covers bot_skill 4 (and silences a compiler warning)
+            pBot->aimDrift.x = random_float(-aim_offset, aim_offset) * f_scale;
+            pBot->aimDrift.y = random_float(-aim_offset, aim_offset) * f_scale;
+            pBot->aimDrift.z = random_float(-aim_offset, aim_offset) * f_scale;
+            break;
+         }
 		}
 		else // the bot is not sniping
 		{
@@ -1336,33 +1320,17 @@ static Vector BotBodyTarget(const edict_t* pBotEnemy, bot_t* pBot) {
 			}
 			
 			const float aim_offset = bot_max_inaccuracy[pBot->bot_skill] + aim_error;
-			switch (pBot->bot_skill) {
-			case 0:
-				pBot->aimDrift.x = random_float(-aim_offset, aim_offset) * f_scale;
-				pBot->aimDrift.y = random_float(-aim_offset, aim_offset) * f_scale;
-				pBot->aimDrift.z = random_float(-aim_offset, aim_offset) * f_scale;
-				break;
-			case 1:
-				pBot->aimDrift.x = random_float(-aim_offset, aim_offset) * f_scale;
-				pBot->aimDrift.y = random_float(-aim_offset, aim_offset) * f_scale;
-				pBot->aimDrift.z = random_float(-aim_offset, aim_offset) * f_scale;
-				break;
-			case 2:
-				pBot->aimDrift.x = random_float(-aim_offset, aim_offset) * f_scale;
-				pBot->aimDrift.y = random_float(-aim_offset, aim_offset) * f_scale;
-				pBot->aimDrift.z = random_float(-aim_offset, aim_offset) * f_scale;
-				break;
-			case 3:
-				pBot->aimDrift.x = random_float(-aim_offset, aim_offset) * f_scale;
-				pBot->aimDrift.y = random_float(-aim_offset, aim_offset) * f_scale;
-				pBot->aimDrift.z = random_float(-aim_offset, aim_offset) * f_scale;
-				break;
-			default: // covers bot_skill 4 (and silences a compiler warning)
-				pBot->aimDrift.x = random_float(-aim_offset, aim_offset) * f_scale;
-				pBot->aimDrift.y = random_float(-aim_offset, aim_offset) * f_scale;
-				pBot->aimDrift.z = random_float(-aim_offset, aim_offset) * f_scale;
-				break;
-			}
+         switch (pBot->bot_skill) {
+         case 0:
+         case 1:
+         case 2:
+         case 3:
+         default: // covers bot_skill 4 (and silences a compiler warning)
+            pBot->aimDrift.x = random_float(-aim_offset, aim_offset) * f_scale;
+            pBot->aimDrift.y = random_float(-aim_offset, aim_offset) * f_scale;
+            pBot->aimDrift.z = random_float(-aim_offset, aim_offset) * f_scale;
+            break;
+         }
 		}
 	}
 
@@ -1770,7 +1738,7 @@ bool BotFireWeapon(const Vector& v_enemy, bot_t* pBot, const int weapon_choice) 
 //
 // TODO: to adjust the angle and distance to toss nades
 // at a higher angle and low range as their target aim is too short - [APG]RoboCop[CL]
-int BotNadeHandler(bot_t* pBot, bool timed, char newNadeType) {
+int BotNadeHandler(bot_t* pBot, bool timed, const char newNadeType) {
 	// Lets try putting discard code in here. (dont let the engineer discard)
 	if (pBot->f_discard_time < pBot->f_think_time && pBot->pEdict->v.playerclass != TFC_CLASS_ENGINEER) {
 		FakeClientCommand(pBot->pEdict, "discard", nullptr, nullptr);

@@ -833,7 +833,7 @@ void pfnWriteEntity(int iValue) {
 	(*g_engfuncs.pfnWriteEntity)(iValue);
 }
 
-void pfnRegUserMsg_common(const char* pszName, int msg) {
+void pfnRegUserMsg_common(const char* pszName, const int msg) {
 	if (std::strcmp(pszName, "VGUIMenu") == 0)
 		message_VGUI = msg;
 	else if (std::strcmp(pszName, "WeaponList") == 0)

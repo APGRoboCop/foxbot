@@ -34,56 +34,93 @@
 template <typename Type> class LIter;
 
 template <typename Type> class List {
-	// allow LIter to be a friend class
-	friend class LIter<Type>;
+   // allow LIter to be a friend class
+   friend class LIter<Type>;
 
-protected:
-	struct Node {
-		Type element;      // one cell of data to store
-		Node* prev, * next; // previous and next elements
-	};
+ protected:
+   struct Node {
+      Type element;      // one cell of data to store
+      Node *prev, *next; // previous and next elements
+   };
 
-	// The total number of elements.
-	int total;
+   // The total number of elements.
+   int total;
 
-	// Access to the left and right ends of the list.
-	Node* head, * tail;
+   // Access to the left and right ends of the list.
+   Node *head, *tail;
 
-public:
-	// ctr : Initialize the list to contain 0 things.
-	//
-	List() {
-		head = tail = NULL;
-		total = 0;
-	}
+ public:
+   // Default constructor
+   List() : total(0), head(nullptr), tail(nullptr) {}
 
-	// dtr : Clear all list information
-	//
-	~List() {
-		clear();
-		total = 0;
-	}
+   // Destructor
+   ~List() {
+      clear();
+      total = 0;
+   }
 
-	// algorithms
-	////////////////////
+   // Copy constructor
+   List(const List &other) : total(0), head(nullptr), tail(nullptr) {
+      for (Node *node = other.head; node != nullptr; node = node->next) {
+         addTail(node->element);
+      }
+   }
 
-	// isEmpty : test if list is empty
-	bool isEmpty() { return (head == nullptr); }
+   // Copy assignment operator using copy-and-swap idiom
+   List &operator=(List other) {
+      swap(*this, other);
+      return *this;
+   }
 
-	// add : insert a new node to the beginning / end
-	void addHead(const Type& v);
-	void addTail(const Type& v);
+   // Move constructor
+   List(List &&other) noexcept : total(other.total), head(other.head), tail(other.tail) {
+      other.head = nullptr;
+      other.tail = nullptr;
+      other.total = 0;
+   }
 
-	// insert / remove : place or remove an item
-	//                   in the list at given position
-	void insert(const Type& v, LIter<Type>& loc);
-	void remove(LIter<Type>& loc);
+   // Move assignment operator
+   List &operator=(List &&other) noexcept {
+      if (this != &other) {
+         clear();
+         head = other.head;
+         tail = other.tail;
+         total = other.total;
+         other.head = nullptr;
+         other.tail = nullptr;
+         other.total = 0;
+      }
+      return *this;
+   }
 
-	// clear : remove all nodes from the list
-	void clear();
+   // Swap function
+   friend void swap(List &first, List &second) noexcept {
+      using std::swap;
+      swap(first.head, second.head);
+      swap(first.tail, second.tail);
+      swap(first.total, second.total);
+   }
 
-	// size : return the number of elements we have.
-	int size() const;
+   // algorithms
+   ////////////////////
+   
+   // isEmpty : test if list is empty
+   bool isEmpty() { return (head == nullptr); }
+
+   // add : insert a new node to the beginning / end
+   void addHead(const Type &v);
+   void addTail(const Type &v);
+
+   // insert / remove : place or remove an item
+   //                   in the list at given position
+   void insert(const Type &v, LIter<Type> &loc);
+   void remove(LIter<Type> &loc);
+
+   // clear : remove all nodes from the list
+   void clear();
+
+   // size : return the number of elements we have.
+   int size() const;
 };
 
 // addHead : create a new item and attach it to

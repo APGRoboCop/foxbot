@@ -967,7 +967,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 			}
 		}
 	}
-	std::memset(&pBot->job, 0, sizeof(job_struct) * JOB_BUFFER_MAX);
+   std::fill_n(pBot->job, JOB_BUFFER_MAX, job_struct());
 
 	botJustJoined[index] = false; // the inititation ceremony is over!
 }
@@ -3834,7 +3834,7 @@ void BotThink(bot_t* pBot) {
 	if (diff < -180) diff = diff + 360;
 	if (diff > 180) diff = diff - 360;
 	if (diff > -10 && diff < 10) speed = 3;
-	else if (diff > -20 && diff < 20) speed = 4;
+	else if (diff > -20 && diff < 20) speed = 4;//No longer required? [APG]RoboCop[CL]
 	else if (diff > -40 && diff < 40) speed = 4;
 	else if (diff > -60 && diff < 60) speed = 5;
 	else if (diff > -90 && diff < 90) speed = 7;

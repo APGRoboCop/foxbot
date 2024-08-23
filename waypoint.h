@@ -84,14 +84,14 @@ enum {
 #define W_FL_DELETED (1 << 31) /* used by waypoint allocation code */
 
 // script number flags 1 - 8
-#define S_FL_POINT1 (1 << 0) /* point1 */
-#define S_FL_POINT2 (1 << 1) /* point2 */
-#define S_FL_POINT3 (1 << 2) /* point3 */
-#define S_FL_POINT4 (1 << 3) /* point4 */
-#define S_FL_POINT5 (1 << 4) /* point5 */
-#define S_FL_POINT6 (1 << 5) /* point6 */
-#define S_FL_POINT7 (1 << 6) /* point7 */
-#define S_FL_POINT8 (1 << 7) /* point8 */
+constexpr uint8_t S_FL_POINT1 = 1 << 0; // point1
+constexpr uint8_t S_FL_POINT2 = 1 << 1; // point2
+constexpr uint8_t S_FL_POINT3 = 1 << 2; // point3
+constexpr uint8_t S_FL_POINT4 = 1 << 3; // point4
+constexpr uint8_t S_FL_POINT5 = 1 << 4; // point5
+constexpr uint8_t S_FL_POINT6 = 1 << 5; // point6
+constexpr uint8_t S_FL_POINT7 = 1 << 6; // point7
+constexpr uint8_t S_FL_POINT8 = 1 << 7; // point8
 
 enum : std::uint8_t {
    WAYPOINT_VERSION = 5
