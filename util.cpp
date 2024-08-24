@@ -634,9 +634,10 @@ void UTIL_BotLogPrintf(const char* fmt, ...) {
 		return;
 
 	va_list argptr;
+	static char string[1024]; //String fix from RCBot
 
 	va_start(argptr, fmt);
-	std::vfprintf(lfp, fmt, argptr);
+	vsnprintf(string, sizeof(string), fmt, argptr);
 	va_end(argptr);
 
 	std::fclose(lfp);
