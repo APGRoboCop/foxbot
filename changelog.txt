@@ -8,7 +8,11 @@ Version 0.911
 Updated by RoboCop
 --------------------------------------------------------------------------------
 
-- Modernised and optimised enumerators
+- Added Metamod-P-APG and HLSDK 25th headers for forwards compatibility
+
+- Modernised and optimised the enumerators and memsets
+
+- String fixes done with a small help from Cheeseh from RCBot
 
 TODO List:-
 
