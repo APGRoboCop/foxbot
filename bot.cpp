@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // FoXBot - AI Bot for Halflife's Team Fortress Classic
 //
@@ -153,10 +155,7 @@ extern chatClass chat; // bot chat stuff
 
 static int number_names = 0;
 
-enum : std::uint8_t
-{
-   MAX_BOT_NAMES = 128
-};
+constexpr unsigned char MAX_BOT_NAMES = 128;
 
 /*enum {
 	VALVE_MAX_SKINS = 10

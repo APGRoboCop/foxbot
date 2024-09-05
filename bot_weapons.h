@@ -29,55 +29,49 @@
 #define BOT_WEAPONS_H
 
 // weapon ID values for Valve's Half-Life Deathmatch
-enum : std::uint8_t {
-	VALVE_WEAPON_CROWBAR = 1,
-	VALVE_WEAPON_GLOCK = 2,
-	VALVE_WEAPON_PYTHON = 3,
-	VALVE_WEAPON_MP5 = 4,
-	VALVE_WEAPON_CHAINGUN = 5,
-	VALVE_WEAPON_CROSSBOW = 6,
-	VALVE_WEAPON_SHOTGUN = 7,
-	VALVE_WEAPON_RPG = 8,
-	VALVE_WEAPON_GAUSS = 9,
-	VALVE_WEAPON_EGON = 10,
-	VALVE_WEAPON_HORNETGUN = 11,
-	VALVE_WEAPON_HANDGRENADE = 12,
-	VALVE_WEAPON_TRIPMINE = 13,
-	VALVE_WEAPON_SATCHEL = 14,
-	VALVE_WEAPON_SNARK = 15
-};
+constexpr unsigned char VALVE_WEAPON_CROWBAR = 1;
+constexpr unsigned char VALVE_WEAPON_GLOCK = 2;
+constexpr unsigned char VALVE_WEAPON_PYTHON = 3;
+constexpr unsigned char VALVE_WEAPON_MP5 = 4;
+constexpr unsigned char VALVE_WEAPON_CHAINGUN = 5;
+constexpr unsigned char VALVE_WEAPON_CROSSBOW = 6;
+constexpr unsigned char VALVE_WEAPON_SHOTGUN = 7;
+constexpr unsigned char VALVE_WEAPON_RPG = 8;
+constexpr unsigned char VALVE_WEAPON_GAUSS = 9;
+constexpr unsigned char VALVE_WEAPON_EGON = 10;
+constexpr unsigned char VALVE_WEAPON_HORNETGUN = 11;
+constexpr unsigned char VALVE_WEAPON_HANDGRENADE = 12;
+constexpr unsigned char VALVE_WEAPON_TRIPMINE = 13;
+constexpr unsigned char VALVE_WEAPON_SATCHEL = 14;
+constexpr unsigned char VALVE_WEAPON_SNARK = 15;
 
-enum : std::uint8_t {
-	VALVE_MAX_NORMAL_BATTERY = 100,
-	VALVE_HORNET_MAX_CARRY = 8
-};
+constexpr unsigned char VALVE_MAX_NORMAL_BATTERY = 100;
+constexpr unsigned char VALVE_HORNET_MAX_CARRY = 8;
 
 // weapon ID values for Valve's Team Fortress Classic & 1.5
-enum : std::uint8_t {
-	TF_WEAPON_UNKNOWN1 = 1,
-	TF_WEAPON_UNKNOWN2 = 2,
-	TF_WEAPON_MEDIKIT = 3,
-	TF_WEAPON_SPANNER = 4,
-	TF_WEAPON_AXE = 5,
-	TF_WEAPON_SNIPERRIFLE = 6,
-	TF_WEAPON_AUTORIFLE = 7,
-	TF_WEAPON_SHOTGUN = 8,
-	TF_WEAPON_SUPERSHOTGUN = 9,
-	TF_WEAPON_NAILGUN = 10,
-	TF_WEAPON_SUPERNAILGUN = 11,
-	TF_WEAPON_GL = 12,
-	TF_WEAPON_FLAMETHROWER = 13,
-	TF_WEAPON_RPG = 14,
-	TF_WEAPON_IC = 15,
-	TF_WEAPON_UNKNOWN16 = 16,
-	TF_WEAPON_AC = 17,
-	TF_WEAPON_UNKNOWN18 = 18,
-	TF_WEAPON_UNKNOWN19 = 19,
-	TF_WEAPON_TRANQ = 20,
-	TF_WEAPON_RAILGUN = 21,
-	TF_WEAPON_PL = 22,
-	TF_WEAPON_KNIFE = 23
-};
+constexpr unsigned char TF_WEAPON_UNKNOWN1 = 1;
+constexpr unsigned char TF_WEAPON_UNKNOWN2 = 2;
+constexpr unsigned char TF_WEAPON_MEDIKIT = 3;
+constexpr unsigned char TF_WEAPON_SPANNER = 4;
+constexpr unsigned char TF_WEAPON_AXE = 5;
+constexpr unsigned char TF_WEAPON_SNIPERRIFLE = 6;
+constexpr unsigned char TF_WEAPON_AUTORIFLE = 7;
+constexpr unsigned char TF_WEAPON_SHOTGUN = 8;
+constexpr unsigned char TF_WEAPON_SUPERSHOTGUN = 9;
+constexpr unsigned char TF_WEAPON_NAILGUN = 10;
+constexpr unsigned char TF_WEAPON_SUPERNAILGUN = 11;
+constexpr unsigned char TF_WEAPON_GL = 12;
+constexpr unsigned char TF_WEAPON_FLAMETHROWER = 13;
+constexpr unsigned char TF_WEAPON_RPG = 14;
+constexpr unsigned char TF_WEAPON_IC = 15;
+constexpr unsigned char TF_WEAPON_UNKNOWN16 = 16;
+constexpr unsigned char TF_WEAPON_AC = 17;
+constexpr unsigned char TF_WEAPON_UNKNOWN18 = 18;
+constexpr unsigned char TF_WEAPON_UNKNOWN19 = 19;
+constexpr unsigned char TF_WEAPON_TRANQ = 20;
+constexpr unsigned char TF_WEAPON_RAILGUN = 21;
+constexpr unsigned char TF_WEAPON_PL = 22;
+constexpr unsigned char TF_WEAPON_KNIFE = 23;
 
 /* 			// Not required for TFC - [APG]RoboCop[CL]
 // weapon ID values for Counter-Strike

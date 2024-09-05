@@ -57,7 +57,8 @@ typedef void (*LINK_ENTITY_FUNC)(entvars_t*);
 #endif
 
 // define constants used to identify the MOD we are playing...
-enum : std::uint8_t { TFC_DLL = 1, VALVE_DLL = 2 };
+constexpr unsigned char TFC_DLL = 1;
+constexpr unsigned char VALVE_DLL = 2;
 
 // define some function prototypes...
 BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress, char szRejectReason[128]);
@@ -83,23 +84,17 @@ template <typename U> void bzero(U* ptr, const size_t len) noexcept {
 	}
 }
 
-enum : std::uint8_t {
-	BOT_PITCH_SPEED = 30,
-	BOT_YAW_SPEED = 30
-};
+constexpr unsigned char BOT_PITCH_SPEED = 30;
+constexpr unsigned char BOT_YAW_SPEED = 30;
 
-enum : std::uint8_t {
-	RESPAWN_IDLE = 1,
-	RESPAWN_NEED_TO_RESPAWN = 2,
-	RESPAWN_IS_RESPAWNING = 3
-};
+constexpr unsigned char RESPAWN_IDLE = 1;
+constexpr unsigned char RESPAWN_NEED_TO_RESPAWN = 2;
+constexpr unsigned char RESPAWN_IS_RESPAWNING = 3;
 
 // game start messages for TFC...
-enum : std::uint8_t {
-	MSG_TFC_IDLE = 1,
-	MSG_TFC_TEAM_SELECT = 2,
-	MSG_TFC_CLASS_SELECT = 3
-};
+constexpr unsigned char MSG_TFC_IDLE = 1;
+constexpr unsigned char MSG_TFC_TEAM_SELECT = 2;
+constexpr unsigned char MSG_TFC_CLASS_SELECT = 3;
 
 /*		// Not required for TFC - [APG]RoboCop[CL]
 // game start messages for CS...
@@ -125,47 +120,37 @@ enum : std::uint8_t {
 #define MSG_FLF_HEAVYWEAPONS_SELECT 9
 */
 
-enum : std::uint8_t {
-	TFC_CLASS_CIVILIAN = 11,
-	TFC_CLASS_SCOUT = 1,
-	TFC_CLASS_SNIPER = 2,
-	TFC_CLASS_SOLDIER = 3,
-	TFC_CLASS_DEMOMAN = 4,
-	TFC_CLASS_MEDIC = 5,
-	TFC_CLASS_HWGUY = 6,
-	TFC_CLASS_PYRO = 7,
-	TFC_CLASS_SPY = 8,
-	TFC_CLASS_ENGINEER = 9
-};
+constexpr unsigned char TFC_CLASS_CIVILIAN = 11;
+constexpr unsigned char TFC_CLASS_SCOUT = 1;
+constexpr unsigned char TFC_CLASS_SNIPER = 2;
+constexpr unsigned char TFC_CLASS_SOLDIER = 3;
+constexpr unsigned char TFC_CLASS_DEMOMAN = 4;
+constexpr unsigned char TFC_CLASS_MEDIC = 5;
+constexpr unsigned char TFC_CLASS_HWGUY = 6;
+constexpr unsigned char TFC_CLASS_PYRO = 7;
+constexpr unsigned char TFC_CLASS_SPY = 8;
+constexpr unsigned char TFC_CLASS_ENGINEER = 9;
 
-enum : std::uint8_t {
-	BOT_SKIN_LEN = 32,
-	BOT_NAME_LEN = 32
-};
+constexpr unsigned char BOT_SKIN_LEN = 32;
+constexpr unsigned char BOT_NAME_LEN = 32;
 
 // This is the same spawn flag as SF_BUTTON_TOUCH_ONLY, i.e. used for buttons
 // that activate when a player bumps into them(like the ones on well)
 // Defined here so that there's no need to trawl the HL SDK to find SF_BUTTON_TOUCH_ONLY.
-enum : std::uint16_t {
-	SFLAG_PROXIMITY_BUTTON = 256
-};
+constexpr unsigned short SFLAG_PROXIMITY_BUTTON = 256;
 
 // bot chat stuff
-enum : std::uint8_t {
-	TOTAL_CHAT_TYPES = 6,
-	MAX_CHAT_STRINGS = 100,   // max strings per type of chat
-	MAX_CHAT_LENGTH = 80
-};
+constexpr unsigned char TOTAL_CHAT_TYPES = 6;
+constexpr unsigned char MAX_CHAT_STRINGS = 100; // max strings per type of chat
+constexpr unsigned char MAX_CHAT_LENGTH = 80;
 
 // the indexes for each type of chat
-enum : std::uint8_t {
-	CHAT_TYPE_GREETING = 0,
-	CHAT_TYPE_KILL_HI = 1,
-	CHAT_TYPE_KILL_LOW = 2,
-	CHAT_TYPE_KILLED_HI = 3,
-	CHAT_TYPE_KILLED_LOW = 4,
-	CHAT_TYPE_SUICIDE = 5
-};
+constexpr unsigned char CHAT_TYPE_GREETING = 0;
+constexpr unsigned char CHAT_TYPE_KILL_HI = 1;
+constexpr unsigned char CHAT_TYPE_KILL_LOW = 2;
+constexpr unsigned char CHAT_TYPE_KILLED_HI = 3;
+constexpr unsigned char CHAT_TYPE_KILLED_LOW = 4;
+constexpr unsigned char CHAT_TYPE_SUICIDE = 5;
 
 //Fix for GCC 8 - [APG]RoboCop[CL]
 #ifdef _WIN32

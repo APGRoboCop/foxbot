@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // FoXBot - AI Bot for Halflife's Team Fortress Classic
 //
@@ -1713,23 +1715,24 @@ static bool WaypointLoadVersion4(FILE* bfp, const int number_of_waypoints) {
 
 		waypoints[i].origin = dummy_waypoint.origin;
 
-		// move all script flags over to their new home
-		if (dummy_waypoint.flags & OLD_POINT1)
-			waypoints[i].script_flags |= S_FL_POINT1;
-		if (dummy_waypoint.flags & OLD_POINT2)
-			waypoints[i].script_flags |= S_FL_POINT2;
-		if (dummy_waypoint.flags & OLD_POINT3)
-			waypoints[i].script_flags |= S_FL_POINT3;
-		if (dummy_waypoint.flags & OLD_POINT4)
-			waypoints[i].script_flags |= S_FL_POINT4;
-		if (dummy_waypoint.flags & OLD_POINT5)
-			waypoints[i].script_flags |= S_FL_POINT5;
-		if (dummy_waypoint.flags & OLD_POINT6)
-			waypoints[i].script_flags |= S_FL_POINT6;
-		if (dummy_waypoint.flags & OLD_POINT7)
-			waypoints[i].script_flags |= S_FL_POINT7;
-		if (dummy_waypoint.flags & OLD_POINT8)
-			waypoints[i].script_flags |= S_FL_POINT8;
+      // move all script flags over to their new home
+      if (dummy_waypoint.flags & OLD_POINT1)
+         waypoints[i].script_flags |= static_cast<WPT_INT8>(S_FL_POINT1);
+      if (dummy_waypoint.flags & OLD_POINT2)
+         waypoints[i].script_flags |= static_cast<WPT_INT8>(S_FL_POINT2);
+      if (dummy_waypoint.flags & OLD_POINT3)
+         waypoints[i].script_flags |= static_cast<WPT_INT8>(S_FL_POINT3);
+      if (dummy_waypoint.flags & OLD_POINT4)
+         waypoints[i].script_flags |= static_cast<WPT_INT8>(S_FL_POINT4);
+      if (dummy_waypoint.flags & OLD_POINT5)
+         waypoints[i].script_flags |= static_cast<WPT_INT8>(S_FL_POINT5);
+      if (dummy_waypoint.flags & OLD_POINT6)
+         waypoints[i].script_flags |= static_cast<WPT_INT8>(S_FL_POINT6);
+      if (dummy_waypoint.flags & OLD_POINT7)
+         waypoints[i].script_flags |= static_cast<WPT_INT8>(S_FL_POINT7);
+      if (dummy_waypoint.flags & OLD_POINT8)
+         waypoints[i].script_flags |= static_cast<WPT_INT8>(S_FL_POINT8);
+
 
 		// the script flags have been moved, so clear their old home
 		dummy_waypoint.flags &= ~(OLD_POINT1 | OLD_POINT2 | OLD_POINT3 | OLD_POINT4 | OLD_POINT5 | OLD_POINT6 | OLD_POINT7 | OLD_POINT8);

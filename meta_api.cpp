@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 // vi: set ts=4	sw=4 :
 // vim:	set	tw=75 :
 
@@ -36,7 +38,7 @@ static META_FUNCTIONS gMetaFunctionTable = {
 plugin_info_t Plugin_info = {
 	META_INTERFACE_VERSION,                        // ifvers
 	"FoxBot",                                      // name
-	"0.87",					                          // version
+	"0.911-beta1",					                          // version
 	__DATE__,                                      // date
 	"Tom Simpson & RoboCop <robocop@lycos.co.uk>", // author
 	"https://apg-clan.org/",                       // url

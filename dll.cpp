@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // FoXBot - AI Bot for Halflife's Team Fortress Classic
 //
@@ -43,25 +45,21 @@
 
 #include "botcam.h"
 
-enum : std::uint8_t {
-	VER_MAJOR = 0,
-	VER_MINOR = 87
-};
+constexpr unsigned char VER_MAJOR = 0;
+constexpr unsigned int VER_MINOR = 911;
 
 //#define VER_BUILD 0
 
-enum : std::uint8_t {
-	MENU_NONE = 0,
-	MENU_1 = 1,
-	MENU_2 = 2,
-	MENU_3 = 3,
-	MENU_4 = 4,
-	MENU_5 = 5,
-	MENU_6 = 6,
-	MENU_7 = 7
-};
+constexpr unsigned char MENU_NONE = 0;
+constexpr unsigned char MENU_1 = 1;
+constexpr unsigned char MENU_2 = 2;
+constexpr unsigned char MENU_3 = 3;
+constexpr unsigned char MENU_4 = 4;
+constexpr unsigned char MENU_5 = 5;
+constexpr unsigned char MENU_6 = 6;
+constexpr unsigned char MENU_7 = 7;
 
-cvar_t foxbot = { "foxbot", "0.87", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr };
+cvar_t foxbot = { "foxbot", "0.911-beta1", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr };
 cvar_t enable_foxbot = { "enable_foxbot", "1", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr };
 cvar_t sv_bot = { "bot", "", 0, 0, nullptr };
 
@@ -141,11 +139,9 @@ extern char msg_msg[64][MSG_MAX];
 
 // define the sources that a bot option/setting can be changed from
 // used primarily by the changeBotSetting() function
-enum : std::uint8_t {
-	SETTING_SOURCE_CLIENT_COMMAND, // command issued at console by host on Listen server
-	SETTING_SOURCE_SERVER_COMMAND, // command issued to the server directly
-	SETTING_SOURCE_CONFIG_FILE
-}; // command issued by a config file
+constexpr unsigned char SETTING_SOURCE_CLIENT_COMMAND = 0; // command issued at console by host on Listen server
+constexpr unsigned char SETTING_SOURCE_SERVER_COMMAND = 1; // command issued to the server directly
+constexpr unsigned char SETTING_SOURCE_CONFIG_FILE = 2;    // command issued by a config file
 
 namespace global {
 	static std::FILE* fp;
@@ -2384,62 +2380,62 @@ void ClientCommand(edict_t* pEntity) {
 			}
 			else if (g_menu_state == MENU_7) // control point tags
 			{
-				if (FStrEq(arg1, "1")) // point1
-				{
-					if (waypoints[g_menu_waypoint].script_flags & S_FL_POINT1)
-						waypoints[g_menu_waypoint].script_flags &= ~S_FL_POINT1; // off
-					else
-						waypoints[g_menu_waypoint].script_flags |= S_FL_POINT1; // on
-				}
-				else if (FStrEq(arg1, "2"))                                 // point2
-				{
-					if (waypoints[g_menu_waypoint].script_flags & S_FL_POINT2)
-						waypoints[g_menu_waypoint].script_flags &= ~S_FL_POINT2; // off
-					else
-						waypoints[g_menu_waypoint].script_flags |= S_FL_POINT2; // on
-				}
-				else if (FStrEq(arg1, "3"))                                 // point3
-				{
-					if (waypoints[g_menu_waypoint].script_flags & S_FL_POINT3)
-						waypoints[g_menu_waypoint].script_flags &= ~S_FL_POINT3; // off
-					else
-						waypoints[g_menu_waypoint].script_flags |= S_FL_POINT3; // on
-				}
-				else if (FStrEq(arg1, "4"))                                 // point4
-				{
-					if (waypoints[g_menu_waypoint].script_flags & S_FL_POINT4)
-						waypoints[g_menu_waypoint].script_flags &= ~S_FL_POINT4; // off
-					else
-						waypoints[g_menu_waypoint].script_flags |= S_FL_POINT4; // on
-				}
-				else if (FStrEq(arg1, "5"))                                 // point5
-				{
-					if (waypoints[g_menu_waypoint].script_flags & S_FL_POINT5)
-						waypoints[g_menu_waypoint].script_flags &= ~S_FL_POINT5; // off
-					else
-						waypoints[g_menu_waypoint].script_flags |= S_FL_POINT5; // on
-				}
-				else if (FStrEq(arg1, "6"))                                 // point6
-				{
-					if (waypoints[g_menu_waypoint].script_flags & S_FL_POINT6)
-						waypoints[g_menu_waypoint].script_flags &= ~S_FL_POINT6; // off
-					else
-						waypoints[g_menu_waypoint].script_flags |= S_FL_POINT6; // on
-				}
-				else if (FStrEq(arg1, "7"))                                 // point7
-				{
-					if (waypoints[g_menu_waypoint].script_flags & S_FL_POINT7)
-						waypoints[g_menu_waypoint].script_flags &= ~S_FL_POINT7; // off
-					else
-						waypoints[g_menu_waypoint].script_flags |= S_FL_POINT7; // on
-				}
-				else if (FStrEq(arg1, "8"))                                 // point8
-				{
-					if (waypoints[g_menu_waypoint].script_flags & S_FL_POINT8)
-						waypoints[g_menu_waypoint].script_flags &= ~S_FL_POINT8; // off
-					else
-						waypoints[g_menu_waypoint].script_flags |= S_FL_POINT8; // on
-				}
+            if (FStrEq(arg1, "1")) // point1
+            {
+               if (waypoints[g_menu_waypoint].script_flags & static_cast<WPT_INT8>(S_FL_POINT1))
+                  waypoints[g_menu_waypoint].script_flags &= static_cast<WPT_INT8>(~S_FL_POINT1); // off
+               else
+                  waypoints[g_menu_waypoint].script_flags |= static_cast<WPT_INT8>(S_FL_POINT1); // on
+            }
+			   else if (FStrEq(arg1, "2"))                                                        // point2
+            {
+               if (waypoints[g_menu_waypoint].script_flags & static_cast<WPT_INT8>(S_FL_POINT2))
+                  waypoints[g_menu_waypoint].script_flags &= static_cast<WPT_INT8>(~S_FL_POINT2); // off
+               else
+                  waypoints[g_menu_waypoint].script_flags |= static_cast<WPT_INT8>(S_FL_POINT2); // on
+            }
+			   else if (FStrEq(arg1, "3"))                                                        // point3
+            {
+               if (waypoints[g_menu_waypoint].script_flags & static_cast<WPT_INT8>(S_FL_POINT3))
+                  waypoints[g_menu_waypoint].script_flags &= static_cast<WPT_INT8>(~S_FL_POINT3); // off
+               else
+                  waypoints[g_menu_waypoint].script_flags |= static_cast<WPT_INT8>(S_FL_POINT3); // on
+            }
+			   else if (FStrEq(arg1, "4"))                                                        // point4
+            {
+               if (waypoints[g_menu_waypoint].script_flags & static_cast<WPT_INT8>(S_FL_POINT4))
+                  waypoints[g_menu_waypoint].script_flags &= static_cast<WPT_INT8>(~S_FL_POINT4); // off
+               else
+                  waypoints[g_menu_waypoint].script_flags |= static_cast<WPT_INT8>(S_FL_POINT4); // on
+            }
+			   else if (FStrEq(arg1, "5"))                                                        // point5
+            {
+               if (waypoints[g_menu_waypoint].script_flags & static_cast<WPT_INT8>(S_FL_POINT5))
+                  waypoints[g_menu_waypoint].script_flags &= static_cast<WPT_INT8>(~S_FL_POINT5); // off
+               else
+                  waypoints[g_menu_waypoint].script_flags |= static_cast<WPT_INT8>(S_FL_POINT5); // on
+            }
+			   else if (FStrEq(arg1, "6"))                                                        // point6
+            {
+               if (waypoints[g_menu_waypoint].script_flags & static_cast<WPT_INT8>(S_FL_POINT6))
+                  waypoints[g_menu_waypoint].script_flags &= static_cast<WPT_INT8>(~S_FL_POINT6); // off
+               else
+                  waypoints[g_menu_waypoint].script_flags |= static_cast<WPT_INT8>(S_FL_POINT6); // on
+            }
+			   else if (FStrEq(arg1, "7"))                                                        // point7
+            {
+               if (waypoints[g_menu_waypoint].script_flags & static_cast<WPT_INT8>(S_FL_POINT7))
+                  waypoints[g_menu_waypoint].script_flags &= static_cast<WPT_INT8>(~S_FL_POINT7); // off
+               else
+                  waypoints[g_menu_waypoint].script_flags |= static_cast<WPT_INT8>(S_FL_POINT7); // on
+            }
+			   else if (FStrEq(arg1, "8"))                                                        // point8
+            {
+               if (waypoints[g_menu_waypoint].script_flags & static_cast<WPT_INT8>(S_FL_POINT8))
+                  waypoints[g_menu_waypoint].script_flags &= static_cast<WPT_INT8>(~S_FL_POINT8); // off
+               else
+                  waypoints[g_menu_waypoint].script_flags |= static_cast<WPT_INT8>(S_FL_POINT8); // on
+            }
 				g_menu_state = MENU_NONE;
 			}
 			if (mr_meta)

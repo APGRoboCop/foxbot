@@ -10,7 +10,9 @@ Updated by RoboCop
 
 - Added Metamod-P-APG and HLSDK 25th headers for forwards compatibility
 
-- Modernised and optimised the enumerators and memsets
+- Modernised codes by replacing the enumerators and memsets with constexpr and zeroing out arrays
+
+- Reducing excessive bunnyhop waypoints for those stock maps
 
 - String fixes done with a small help from Cheeseh from RCBot
 

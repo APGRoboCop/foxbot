@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // FoXBot - AI Bot for Halflife's Team Fortress Classic
 //
@@ -113,9 +115,7 @@ typedef struct {
 } bot_fire_delay_t;
 
 // This holds the multigun names we will check using a repeat loop
-enum : std::uint8_t {
-	NumNTFGuns = 8
-};
+constexpr unsigned char NumNTFGuns = 8;
 
 const char* ntfTargetChecks[] = {
 	"ntf_teslacoil", "ntf_grenlauncher", "ntf_rocklauncher", "ntf_lrlauncher", "ntf_flamegun", "ntf_crowbar", "ntf_displacer", "ntf_biocannon",

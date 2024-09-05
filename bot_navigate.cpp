@@ -1,3 +1,5 @@
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 //
 // FoXBot - AI Bot for Halflife's Team Fortress Classic
 //
@@ -1774,7 +1776,7 @@ bool BotSetAlternativeGoalWaypoint(bot_t* const pBot, int& r_goalWP, const WPT_I
 	if (nextWP == -1)
 		return false; // sanity check
 
-	enum : std::uint8_t { MAX_INDICES = 5 };
+	constexpr unsigned char MAX_INDICES = 5;
 	int indices[MAX_INDICES];
 	int count = 0;
 

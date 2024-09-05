@@ -84,14 +84,10 @@ enum knownJobTypes : std::int8_t {
 };
 
 // a job should be removed from the buffer if the job's function returns this signal
-enum : std::int8_t {
-	JOB_TERMINATED = -1
-};
+constexpr char JOB_TERMINATED = -1;
 
 // a job function will return this if the job hasn't finished yet
-enum : std::uint8_t {
-	JOB_UNDERWAY = 1
-};
+constexpr unsigned char JOB_UNDERWAY = 1;
 
 // list of essential data for all known job types
 typedef struct {

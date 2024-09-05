@@ -10,7 +10,7 @@ include_paths = [
   os.path.join(builder.currentSourcePath, 'hlsdk', 'dlls'),
   os.path.join(builder.currentSourcePath, 'hlsdk', 'engine'),
   os.path.join(builder.currentSourcePath, 'hlsdk', 'pm_shared'),
-  os.path.join(builder.currentSourcePath, 'metamod'),
+  os.path.join(builder.currentSourcePath, 'metamod-p'),
 ]
 
 # Compiler setup

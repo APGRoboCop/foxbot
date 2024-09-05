@@ -39,63 +39,56 @@ typedef signed char WPT_INT8;
 typedef signed short WPT_INT16;
 typedef signed int WPT_INT32;
 
-enum : std::uint16_t {
-   MAX_WAYPOINTS = 32000
-};
-
-#define REACHABLE_RANGE 800.0f
+constexpr unsigned short MAX_WAYPOINTS = 32000;
+constexpr float REACHABLE_RANGE = 800.0f;
 
 // defines for waypoint flags field (32 bits are available)
-enum {
-	W_FL_TEAM = (1 << 0) + (1 << 1), /* allow for 4 teams (0-3) */
-	W_FL_TEAM_SPECIFIC = 1 << 2,     /* waypoint only for specified team */
-	W_FL_CROUCH = 1 << 3,            /* must crouch to reach this waypoint */
-	W_FL_LADDER = 1 << 4,            /* waypoint is on a ladder */
-	W_FL_LIFT = 1 << 5,              /* wait for lift to be down before approaching this waypoint */
-	W_FL_WALK = 1 << 6,              /* walk towards this waypoint */
-	W_FL_HEALTH = 1 << 7,            /* health kit (or wall mounted) location */
-	W_FL_ARMOR = 1 << 8,             /* armor (or HEV) location */
-	W_FL_AMMO = 1 << 9,              /* ammo location */
-	W_FL_SNIPER = 1 << 10,           /* sniper waypoint (a good sniper spot) */
+constexpr int W_FL_TEAM = (1 << 0) + (1 << 1);  // allow for 4 teams (0-3)
+constexpr int W_FL_TEAM_SPECIFIC = 1 << 2;      // waypoint only for specified team
+constexpr int W_FL_CROUCH = 1 << 3;             // must crouch to reach this waypoint
+constexpr int W_FL_LADDER = 1 << 4;             // waypoint is on a ladder
+constexpr int W_FL_LIFT = 1 << 5;               // wait for lift to be down before approaching this waypoint
+constexpr int W_FL_WALK = 1 << 6;               // walk towards this waypoint
+constexpr int W_FL_HEALTH = 1 << 7;             // health kit (or wall mounted) location
+constexpr int W_FL_ARMOR = 1 << 8;              // armor (or HEV) location
+constexpr int W_FL_AMMO = 1 << 9;               // ammo location
+constexpr int W_FL_SNIPER = 1 << 10;            // sniper waypoint (a good sniper spot)
 
-	W_FL_TFC_FLAG = 1 << 11,      /* flag position (or hostage or president) */
-	W_FL_TFC_FLAG_GOAL = 1 << 12, /* flag return position (or rescue zone) */
+constexpr int W_FL_TFC_FLAG = 1 << 11;          // flag position (or hostage or president)
+constexpr int W_FL_TFC_FLAG_GOAL = 1 << 12;     // flag return position (or rescue zone)
 
-	W_FL_TFC_SENTRY = 1 << 13,     /* sentry gun */
-	W_FL_TFC_SENTRY_180 = 1 << 28, /* 180 SG point!! */
-	W_FL_AIMING = 1 << 14,         /* aiming waypoint */
+constexpr int W_FL_TFC_SENTRY = 1 << 13;        // sentry gun
+constexpr int W_FL_TFC_SENTRY_180 = 1 << 28;    // 180 SG point!!
+constexpr int W_FL_AIMING = 1 << 14;            // aiming waypoint
 
-	W_FL_JUMP = 1 << 15, /* standard jump waypoint */
+constexpr int W_FL_JUMP = 1 << 15;              // standard jump waypoint
 
-	W_FL_TFC_PIPETRAP = 1 << 24,      /* demoman pipetrap */
-	W_FL_TFC_DETPACK_CLEAR = 1 << 25, /* demoman detpack(blow passageway open) */
-	W_FL_TFC_DETPACK_SEAL = 1 << 16,  /* demoman detpack(blow passageway closed) */
+constexpr int W_FL_TFC_PIPETRAP = 1 << 24;      // demoman pipetrap
+constexpr int W_FL_TFC_DETPACK_CLEAR = 1 << 25; // demoman detpack(blow passageway open)
+constexpr int W_FL_TFC_DETPACK_SEAL = 1 << 16;  // demoman detpack(blow passageway closed)
 
-	W_FL_TFC_JUMP = 1 << 27, /* rocket/concussion jump */
+constexpr int W_FL_TFC_JUMP = 1 << 27;          // rocket/concussion jump
 
-	W_FL_TFC_TELEPORTER_ENTRANCE = 1 << 26,
-	W_FL_TFC_TELEPORTER_EXIT = 1 << 30,
+constexpr int W_FL_TFC_TELEPORTER_ENTRANCE = 1 << 26;
+constexpr int W_FL_TFC_TELEPORTER_EXIT = 1 << 30;
 
-	W_FL_TFC_PL_DEFEND = 1 << 29, /* bot defense point!! */
+constexpr int W_FL_TFC_PL_DEFEND = 1 << 29; // bot defense point!!
 
-	W_FL_PATHCHECK = 1 << 17 /* bots should check if waypoint path is blocked */
-};
+constexpr int W_FL_PATHCHECK = 1 << 17;     // bots should check if waypoint path is blocked
 
 #define W_FL_DELETED (1 << 31) /* used by waypoint allocation code */
 
 // script number flags 1 - 8
-constexpr uint8_t S_FL_POINT1 = 1 << 0; // point1
-constexpr uint8_t S_FL_POINT2 = 1 << 1; // point2
-constexpr uint8_t S_FL_POINT3 = 1 << 2; // point3
-constexpr uint8_t S_FL_POINT4 = 1 << 3; // point4
-constexpr uint8_t S_FL_POINT5 = 1 << 4; // point5
-constexpr uint8_t S_FL_POINT6 = 1 << 5; // point6
-constexpr uint8_t S_FL_POINT7 = 1 << 6; // point7
-constexpr uint8_t S_FL_POINT8 = 1 << 7; // point8
+constexpr int S_FL_POINT1 = 1 << 0; // point1
+constexpr int S_FL_POINT2 = 1 << 1; // point2
+constexpr int S_FL_POINT3 = 1 << 2; // point3
+constexpr int S_FL_POINT4 = 1 << 3; // point4
+constexpr int S_FL_POINT5 = 1 << 4; // point5
+constexpr int S_FL_POINT6 = 1 << 5; // point6
+constexpr int S_FL_POINT7 = 1 << 6; // point7
+constexpr int S_FL_POINT8 = 1 << 7; // point8
 
-enum : std::uint8_t {
-   WAYPOINT_VERSION = 5
-};
+constexpr unsigned char WAYPOINT_VERSION = 5;
 
 // define the waypoint file header structure...
 typedef struct {
@@ -116,9 +109,7 @@ typedef struct {
 #define WAYPOINT_UNREACHABLE UINT_MAX
 #define WAYPOINT_MAX_DISTANCE (UINT_MAX - 1)
 
-enum : std::uint8_t {
-   MAX_PATH_INDEX = 4
-};
+constexpr unsigned char MAX_PATH_INDEX = 4;
 
 // define the structure for waypoint paths (paths are connections between
 // two waypoint nodes that indicates the bot can get from point A to point B.
@@ -130,12 +121,10 @@ typedef struct path {
 	path* next;                      // link to next structure
 } PATH;
 
-enum : std::uint8_t {
-   A_FL_1 = 1 << 0,
-   A_FL_2 = 1 << 1,
-   A_FL_3 = 1 << 2,
-   A_FL_4 = 1 << 3
-};
+constexpr unsigned char A_FL_1 = 1 << 0;
+constexpr unsigned char A_FL_2 = 1 << 1;
+constexpr unsigned char A_FL_3 = 1 << 2;
+constexpr unsigned char A_FL_4 = 1 << 3;
 
 typedef struct area {
 	Vector a;       // location
@@ -149,9 +138,7 @@ typedef struct area {
 	WPT_INT32 flags;
 } AREA;
 
-enum : std::uint8_t {
-   AREA_VERSION = 1
-};
+constexpr unsigned char AREA_VERSION = 1;
 
 // define the area file header structure...
 typedef struct {
