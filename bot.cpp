@@ -4306,7 +4306,7 @@ static void BotSpectatorDebug(bot_t* pBot) {
 		{
 			// list any jobs in the blacklist
 			size_t msg_length = std::strlen(msg);
-			std::strncat(msg, "Blacklist:\n", 255 - msg_length);
+		   std::strncat(msg, "Blacklist:\n", sizeof(msg) - std::strlen(msg) - 1);
 			msg_length += 11; // length of "Blacklist:\n"
 			for (const auto& [type, f_timeOut] : pBot->jobBlacklist) {
 				// list one blacklisted job per line

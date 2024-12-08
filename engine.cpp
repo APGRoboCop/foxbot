@@ -377,8 +377,8 @@ void pfnClientCommand(edict_t* pEdict, char* szFmt, ...) {
 			va_end(argp);
 			return;
 		}
-		std::strncat(sz_error_check, " !b\n", 250 - std::strlen(sz_error_check) - 1);
-		return;
+      std::strncat(sz_error_check, " !b\n", sizeof(sz_error_check) - std::strlen(sz_error_check) - 1);
+      return;
 		//{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"!b\n"); std::fclose(fp); }
 	}
 	(*g_engfuncs.pfnClientCommand)(pEdict, tempFmt);
@@ -423,7 +423,7 @@ void pfnClCom(edict_t* pEdict, char* szFmt, ...) {
 		}
 		// if its a bot (b=false) we need to override
 		if (!b) {
-			std::strncat(sz_error_check, " !b\n", 250 - std::strlen(sz_error_check));
+         std::strncat(sz_error_check, " !b\n", sizeof(sz_error_check) - std::strlen(sz_error_check) - 1);
 			// admin mod fix here! ...maybee clientprintf aswell..dunno
 			// FakeClientCommand(pEdict,szFmt,NULL,NULL);
 			//{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"!b\n"); std::fclose(fp); }
@@ -942,8 +942,8 @@ void pfnClientPrintf(edict_t* pEdict, const PRINT_TYPE ptype, const char* szMsg)
 			//		b=false;
 			//{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"-wonid=0 %d\n",GETPLAYERWONID(pEdict)); std::fclose(fp); }
 			//	}
-			std::strncat(sz_error_check, cl_name, 250 - std::strlen(sz_error_check));
-		}
+         std::strncat(sz_error_check, cl_name, sizeof(sz_error_check) - std::strlen(sz_error_check) - 1);
+      }
 		if (b) {
 			//{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"b\n"); std::fclose(fp); }
 			//	snprintf(sz_error_check,250,"%s b = %d %d\n",sz_error_check,GETPLAYERWONID(pEdict),ENTINDEX(pEdict));
@@ -952,7 +952,7 @@ void pfnClientPrintf(edict_t* pEdict, const PRINT_TYPE ptype, const char* szMsg)
 			//(*g_engfuncs.pfnClientPrintf)(pEdict, ptype, szMsg);
 			return;
 		}
-		std::strncat(sz_error_check, " !b\n", 250 - std::strlen(sz_error_check));
+      std::strncat(sz_error_check, " !b\n", sizeof(sz_error_check) - std::strlen(sz_error_check) - 1);
 		return;
 		// else
 		//{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"!!b\n"); std::fclose(fp); }
@@ -961,7 +961,7 @@ void pfnClientPrintf(edict_t* pEdict, const PRINT_TYPE ptype, const char* szMsg)
 			 if(mr_meta) RETURN_META(MRES_SUPERCEDE);
 			 }*/
 	}
-	std::strncat(sz_error_check, " NULL\n", 250 - std::strlen(sz_error_check));
+   std::strncat(sz_error_check, " NULL\n", sizeof(sz_error_check) - std::strlen(sz_error_check) - 1);
 	//{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"fook\n"); std::fclose(fp); }
 	// if(mr_meta) RETURN_META(MRES_SUPERCEDE);
 	// if(!mr_meta) (*g_engfuncs.pfnClientPrintf)(pEdict, ptype, szMsg);

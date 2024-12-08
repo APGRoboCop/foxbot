@@ -121,19 +121,17 @@ jobList_struct jl[JOB_TYPE_TOTAL] = {
 
 // This function clears the specified bots job buffer, and thus should
 // probably be called when the bot is created.
-void BotResetJobBuffer(bot_t* pBot) {
-	int i;
+void BotResetJobBuffer(bot_t *pBot) {
+   pBot->currentJob = 0;
 
-	pBot->currentJob = 0;
-	for (i = 0; i < JOB_BUFFER_MAX; i++) {
-		DropJobFromBuffer(pBot, i);
-	}
+   std::fill(std::begin(pBot->jobType), std::end(pBot->jobType), JOB_NONE);
+   std::fill(std::begin(pBot->job), std::end(pBot->job), job_struct{});
 
-	// reset the job blacklist
-	for (i = 0; i < JOB_BLACKLIST_MAX; i++) {
-		pBot->jobBlacklist[i].type = JOB_NONE;
-		pBot->jobBlacklist[i].f_timeOut = 0.0f;
-	}
+   // reset the job blacklist
+   for (job_blacklist_struct &blacklist : pBot->jobBlacklist) {
+      blacklist.type = JOB_NONE;
+      blacklist.f_timeOut = 0.0f;
+   }
 }
 
 // This function eliminates whatever job is in the specified buffer
@@ -208,18 +206,18 @@ job_struct* InitialiseNewJob(const bot_t* pBot, const int newJobType) {
 	for (i = 0; i < JOB_BUFFER_MAX; i++) {
 		if (pBot->jobType[i] == newJobType)
 			return nullptr;
-	}
+}
 
 	// abort if the job is currently blacklisted
 	for (i = 0; i < JOB_BLACKLIST_MAX; i++) {
 		if (newJobType == pBot->jobBlacklist[i].type && pBot->jobBlacklist[i].f_timeOut >= pBot->f_think_time)
-			return nullptr;
-	}
+      return nullptr;
+   }
 
-	static job_struct newJob;
+   static job_struct newJob;
 
 	// reset the new job's data
-	newJob.f_bufferedTime = pBot->f_think_time;
+   newJob.f_bufferedTime = pBot->f_think_time;
 	newJob.priority = PRIORITY_NONE;
 	newJob.phase = 0;
 	newJob.phase_timer = 0.0f;
@@ -229,7 +227,7 @@ job_struct* InitialiseNewJob(const bot_t* pBot, const int newJobType) {
 	newJob.object = nullptr;
 	newJob.message[0] = '\0';
 
-	return &newJob;
+   return &newJob;
 }
 
 // This function should be used when you wish to add a new job to the job buffer.
