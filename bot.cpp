@@ -41,6 +41,7 @@
 #include "bot_navigate.h"
 #include "bot_weapons.h"
 
+#include <algorithm>
 #include <sys/stat.h>
 
 #ifdef WIN32
@@ -527,16 +528,12 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 	int skill;
 	int i;
 	// min/max checking...
-	if (max_bots > MAX_BOTS)
-		max_bots = MAX_BOTS;
-	if (max_bots < -1)
-		max_bots = -1;
-	if (min_bots > max_bots)
-		min_bots = max_bots;
-	if (min_bots < -1)
-		min_bots = -1;
+   max_bots = std::min(max_bots, MAX_BOTS);
+   max_bots = std::max(max_bots, -1);
+   min_bots = std::min(min_bots, max_bots);
+   min_bots = std::max(min_bots, -1);
 
-	// count the number of players present
+   // count the number of players present
 	int count = 0;
    for (i = 1; i <= MAX_BOTS; i++) ///<
 	{
@@ -1099,31 +1096,31 @@ void BotFindItem(bot_t* pBot) {
 					}
 
 			      // TODO: To allow bots to understand on how to shoot door buttons,
-			      // if touching them doesn't work like in well or alchimy_l2 maps [APG]RoboCop[CL]
-					else if (std::strcmp("func_breakable", item_name) == 0 || std::strcmp("func_button", item_name) == 0) {
-						// make sure it really is breakable
-						if (pent->v.takedamage <= 0)
-							continue;
+			      // if touching them doesn't work like in well or alchimy maps [APG]RoboCop[CL]
+               else if (std::strcmp("func_breakable", item_name) == 0 || std::strcmp("func_button", item_name) == 0) {
+                  // make sure it really is breakable
+                  if (pent->v.takedamage <= 0)
+                     continue;
 
-						// check if the item is not visible
-						// (i.e. has not respawned)
-						if (pent->v.effects & EF_NODRAW)
-							continue;
+                  // check if the item is not visible
+                  // (i.e. has not respawned)
+                  if (pent->v.effects & EF_NODRAW)
+                     continue;
 
-						// medics have no bashing weapon so make sure they have ammo for this
-						if (pEdict->v.playerclass == TFC_CLASS_MEDIC && pBot->ammoStatus == AMMO_LOW)
-							continue;
+                  // medics have no bashing weapon so make sure they have ammo for this
+                  if (pEdict->v.playerclass == TFC_CLASS_MEDIC && pBot->ammoStatus == AMMO_LOW)
+                     continue;
 
-						newJob = InitialiseNewJob(pBot, JOB_ATTACK_BREAKABLE);
-						if (newJob != nullptr) {
-							newJob->object = pent;
-							if (SubmitNewJob(pBot, JOB_ATTACK_BREAKABLE, newJob) == true)
-								return;
-						}
+                  newJob = InitialiseNewJob(pBot, JOB_ATTACK_BREAKABLE);
+                  if (newJob != nullptr) {
+                     newJob->object = pent;
+                     if (SubmitNewJob(pBot, JOB_ATTACK_BREAKABLE, newJob) == true)
+                        return;
+                  }
 
-						//	UTIL_HostSay(pBot->pEdict, 0, "breakable found"); //DebugMessageOfDoom!
-						continue;
-					}
+                  //	UTIL_HostSay(pBot->pEdict, 0, "breakable found"); //DebugMessageOfDoom!
+                  continue;
+               }
 				}
 			}
 		}
@@ -2057,11 +2054,9 @@ void BotSprayLogo(edict_t* pEntity, const bool sprayDownwards) {
 		default:;
 		}
 	}
-	if (index < 0)
-		// return;
-		index = 0;
+   index = std::max(index, 0);
 
-	TraceResult pTrace;
+   TraceResult pTrace;
 	UTIL_TraceLine(v_src, v_dest, ignore_monsters, pEntity->v.pContainingEntity, &pTrace);
 
 	if (pTrace.pHit && pTrace.flFraction < 1.0f) {

@@ -27,6 +27,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
+#include <algorithm>
 #include <cstring>
 
 #ifndef __linux__
@@ -2062,19 +2063,25 @@ void WaypointPrintInfo(edict_t* pEntity) {
 	// now to provide more specific info...
 
 	if (flags & W_FL_TEAM_SPECIFIC) {
-		if ((flags & W_FL_TEAM) == 0)
-			std::strcpy(msg, "Waypoint is for TEAM 1\n");
-		else if ((flags & W_FL_TEAM) == 1)
-			std::strcpy(msg, "Waypoint is for TEAM 2\n");
-		else if ((flags & W_FL_TEAM) == 2)
-			std::strcpy(msg, "Waypoint is for TEAM 3\n");
-		else if ((flags & W_FL_TEAM) == 3)
-			std::strcpy(msg, "Waypoint is for TEAM 4\n");
-		else
-			std::strcpy(msg, ""); // shouldn't happen
-
-		ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
-	}
+      switch (flags & W_FL_TEAM) {
+      case 0:
+         std::strcpy(msg, "Waypoint is for TEAM 1\n");
+         break;
+      case 1:
+         std::strcpy(msg, "Waypoint is for TEAM 2\n");
+         break;
+      case 2:
+         std::strcpy(msg, "Waypoint is for TEAM 3\n");
+         break;
+      case 3:
+         std::strcpy(msg, "Waypoint is for TEAM 4\n");
+         break;
+      default:
+         std::strcpy(msg, ""); // shouldn't happen
+         break;
+      }
+      ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
+   }
 
 	if (flags & W_FL_LIFT)
 		ClientPrint(pEntity, HUD_PRINTNOTIFY, "Bot will wait for lift before approaching\n");
@@ -2218,9 +2225,8 @@ void WaypointThink(edict_t* pEntity) {
 				if (WaypointReachable(pEntity->v.origin, waypoints[i].origin, pEntity)) {
 					distance = (waypoints[i].origin - pEntity->v.origin).Length();
 
-					if (distance < min_distance)
-						min_distance = distance;
-				}
+               min_distance = std::min(distance, min_distance);
+            }
 			}
 
 			// make sure nearest waypoint is far enough away...
@@ -3082,10 +3088,9 @@ static void WaypointRouteInit() {
 									if (!(waypoints[index].flags & W_FL_TEAM_SPECIFIC) || (waypoints[index].flags & W_FL_TEAM) == matrix) {
 										float distance = (waypoints[row].origin - waypoints[index].origin).Length();
 
-										if (distance > static_cast<float>(WAYPOINT_MAX_DISTANCE))
-											distance = static_cast<float>(WAYPOINT_MAX_DISTANCE);
+                              distance = std::min(distance, static_cast<float>(WAYPOINT_MAX_DISTANCE));
 
-										if (distance > REACHABLE_RANGE) {
+                              if (distance > REACHABLE_RANGE) {
 											snprintf(msg, sizeof(msg), "Waypoint path distance > %4.1f at from %d to %d\n", REACHABLE_RANGE, row, index);
 											ALERT(at_console, msg);
 											WaypointDeletePath(row, index);
@@ -4040,35 +4045,23 @@ bool AreaInside(const edict_t* pEntity, const int i) {
 		const float y = pEntity->v.origin.y;
 
 		float lx = areas[i].a.x;
-		if (areas[i].b.x < lx)
-			lx = areas[i].b.x;
-		if (areas[i].c.x < lx)
-			lx = areas[i].c.x;
-		if (areas[i].d.x < lx)
-			lx = areas[i].d.x;
-		float ly = areas[i].a.y;
-		if (areas[i].b.y < ly)
-			ly = areas[i].b.y;
-		if (areas[i].c.y < ly)
-			ly = areas[i].c.y;
-		if (areas[i].d.y < ly)
-			ly = areas[i].d.y;
-		float hx = areas[i].a.x;
-		if (areas[i].b.x > hx)
-			hx = areas[i].b.x;
-		if (areas[i].c.x > hx)
-			hx = areas[i].c.x;
-		if (areas[i].d.x > hx)
-			hx = areas[i].d.x;
-		float hy = areas[i].a.y;
-		if (areas[i].b.y > hy)
-			hy = areas[i].b.y;
-		if (areas[i].c.y > hy)
-			hy = areas[i].c.y;
-		if (areas[i].d.y > hy)
-			hy = areas[i].d.y;
+      lx = std::min(areas[i].b.x, lx);
+      lx = std::min(areas[i].c.x, lx);
+      lx = std::min(areas[i].d.x, lx);
+      float ly = areas[i].a.y;
+      ly = std::min(areas[i].b.y, ly);
+      ly = std::min(areas[i].c.y, ly);
+      ly = std::min(areas[i].d.y, ly);
+      float hx = areas[i].a.x;
+      hx = std::max(areas[i].b.x, hx);
+      hx = std::max(areas[i].c.x, hx);
+      hx = std::max(areas[i].d.x, hx);
+      float hy = areas[i].a.y;
+      hy = std::max(areas[i].b.y, hy);
+      hy = std::max(areas[i].c.y, hy);
+      hy = std::max(areas[i].d.y, hy);
 
-		// make sure there's no rounding errors (I think vect = float..)
+      // make sure there's no rounding errors (I think vect = float..)
 		lx = lx - 1;
 		hx = hx + 1;
 		ly = ly - 1;
@@ -4106,23 +4099,17 @@ int AreaInsideClosest(const edict_t* pEntity) {
 	for (int i = 0; i < num_areas; i++) {
 		if (AreaInside(pEntity, i)) {
 			float lz = areas[i].a.z;
-			if (areas[i].b.z < lz)
-				lz = areas[i].b.z;
-			if (areas[i].c.z < lz)
-				lz = areas[i].c.z;
-			if (areas[i].d.z < lz)
-				lz = areas[i].d.z;
+         lz = std::min(areas[i].b.z, lz);
+         lz = std::min(areas[i].c.z, lz);
+         lz = std::min(areas[i].d.z, lz);
 
-			float hz = areas[i].a.z;
+         float hz = areas[i].a.z;
 
-			if (areas[i].b.z > hz)
-				hz = areas[i].b.z;
-			if (areas[i].c.z > hz)
-				hz = areas[i].c.z;
-			if (areas[i].d.z > hz)
-				hz = areas[i].d.z;
+         hz = std::max(areas[i].b.z, hz);
+         hz = std::max(areas[i].c.z, hz);
+         hz = std::max(areas[i].d.z, hz);
 
-			// we want the mid point between hz and lz.. that will be
+         // we want the mid point between hz and lz.. that will be
 			// our distance..
 			// nearly forgot, the distance revolves around the player!
 			const float a = fabsf((hz - lz) / 2 + lz - pEntity->v.origin.z);

@@ -30,7 +30,7 @@
  */
 
 #include <extdll.h>
-
+#include <algorithm>
 #include "sdk_util.h"
 
 char* UTIL_VarArgs(const char* format, ...) {
@@ -71,21 +71,17 @@ void UTIL_LogPrintf(char* format, ...) {
 short FixedSigned16(const float value, const float scale) {
 	int output = static_cast<int>(value * scale);
 
-	if (output > 32767)
-		output = 32767;
+   output = std::min(output, 32767);
+   output = std::max(output, -32768);
 
-	if (output < -32768)
-		output = -32768;
-
-	return static_cast<short>(output);
+   return static_cast<short>(output);
 }
 
 unsigned short FixedUnsigned16(const float value, const float scale) {
 	int output = static_cast<int>(value * scale);
-	if (output < 0)
-		output = 0;
-	if (output > 0xFFFF)
-		output = 0xFFFF;
 
-	return static_cast<unsigned short>(output);
+   output = std::max(output, 0);
+   output = std::min(output, 0xFFFF);
+
+   return static_cast<unsigned short>(output);
 }

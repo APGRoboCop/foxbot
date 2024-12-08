@@ -37,6 +37,7 @@
 #include "bot_job_think.h"
 #include "bot_navigate.h"
 
+#include <algorithm>
 #include <optional>
 
 #include "bot_weapons.h"
@@ -241,8 +242,7 @@ float BotChangePitch(edict_t* pEdict, float speed) {
 	speed *= 10;
 
 	// check if difference is less than the max degrees per turn
-	if (diff < speed)
-		speed = diff; // just need to turn a little bit (less than max)
+   speed = std::min(diff, speed); // just need to turn a little bit (less than max)
 
 	// here we have four cases, both angle positive, one positive and
 	// the other negative, one negative and the other positive, or
@@ -317,8 +317,7 @@ float BotChangeYaw(edict_t* pEdict, float speed) {
 	speed *= 10;
 
 	// check if difference is less than the max degrees per turn
-	if (diff < speed)
-		speed = diff; // just need to turn a little bit (less than max)
+   speed = std::min(diff, speed); // just need to turn a little bit (less than max)
 
 	// here we have four cases, both angle positive, one positive and
 	// the other negative, one negative and the other positive, or

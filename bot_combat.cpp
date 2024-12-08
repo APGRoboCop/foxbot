@@ -29,6 +29,8 @@
 
 constexpr int NADEVELOCITY = 650; // DrEvil #define
 
+#include <algorithm>
+
 #include "extdll.h"
 #include "util.h"
 
@@ -2261,10 +2263,9 @@ static int BotLeadTarget(const edict_t* pBotEnemy, const bot_t* pBot, const int 
 	// Lets try some error in the projectile prediction based on skill level
 	f_distance += static_cast<float>(random_long(-pBot->bot_skill, pBot->bot_skill) * 5);
 
-	if (f_distance > 1000.0f)
-		f_distance = 1000.0f;
+   f_distance = std::min(f_distance, 1000.0f);
 
-	d_x += pBot->enemy.ptr->v.velocity.x * (f_distance / static_cast<float>(projSpeed));
+   d_x += pBot->enemy.ptr->v.velocity.x * (f_distance / static_cast<float>(projSpeed));
 	d_y += pBot->enemy.ptr->v.velocity.y * (f_distance / static_cast<float>(projSpeed));
 
 	if (pBot->enemy.ptr->v.velocity.z < -30) // falling

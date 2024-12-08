@@ -2631,7 +2631,7 @@ int JobPipetrap(bot_t* pBot) {
 		if (pentFlag != nullptr && !FNullEnt(pentFlag) && pBot->mission == ROLE_DEFENDER) {
 			// calculate a location near the flag to place the pipebomb
 			const Vector v_flag = pentFlag->v.origin;
-			const Vector v_nearFlag = v_flag + Vector(random_float(-100.0f, 100.0f), random_float(-100.0f, 100.0f), 0);
+			const Vector v_nearFlag = v_flag + Vector(random_float(-80.0f, 80.0f), random_float(-80.0f, 80.0f), 0);
 
 			// set the bot's aim to the calculated location
 			BotSetFacing(pBot, v_nearFlag);

@@ -17,6 +17,10 @@
 
 #include <algorithm>
 
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+
 //
 // Global header file for extension DLLs
 //

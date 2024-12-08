@@ -15,6 +15,9 @@
 #ifndef EXTDLL_H
 #define EXTDLL_H
 
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
 
 //
 // Global header file for extension DLLs

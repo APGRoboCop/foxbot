@@ -101,22 +101,22 @@ static jobFunctions_struct jf[JOB_TYPE_TOTAL] = {
 // list of essential data for all known job types
 // these must be in the right order for each job to run properly
 jobList_struct jl[JOB_TYPE_TOTAL] = {
-	{ 520, "JOB_SEEK_WAYPOINT" }, { PRIORITY_MAXIMUM, "JOB_GET_UNSTUCK" }, { 0, "JOB_ROAM" }, { 360, "JOB_CHAT" },
-	{ 680, "JOB_REPORT" }, { 500, "JOB_PICKUP_ITEM" }, { 610, "JOB_PICKUP_FLAG" },
-	{ 790, "JOB_PUSH_BUTTON" }, { 640, "JOB_USE_TELEPORT" }, { 760, "JOB_MAINTAIN_OBJECT" },
+	{ 520, "JOB_SEEK_WAYPOINT" }, { PRIORITY_MAXIMUM, "JOB_GET_UNSTUCK" }, { 0, "JOB_ROAM" }, { 400, "JOB_CHAT" },
+	{ 680, "JOB_REPORT" }, { 500, "JOB_PICKUP_ITEM" }, { 590, "JOB_PICKUP_FLAG" },
+	{ 790, "JOB_PUSH_BUTTON" }, { 630, "JOB_USE_TELEPORT" }, { 760, "JOB_MAINTAIN_OBJECT" },
 	{ 770, "JOB_BUILD_SENTRY" }, { 510, "JOB_BUILD_DISPENSER" }, { 670, "JOB_BUILD_TELEPORT" },
 	{ 450, "JOB_BUFF_ALLY" }, { 540, "JOB_ESCORT_ALLY" },
 	{ 490, "JOB_CALL_MEDIC" }, // this should be a higher priority than JOB_GET_HEALTH
-	{ 460, "JOB_GET_HEALTH" }, { 440, "JOB_GET_ARMOR" }, { 600, "JOB_GET_AMMO" }, { 660, "JOB_DISGUISE" },
+	{ 460, "JOB_GET_HEALTH" }, { 430, "JOB_GET_ARMOR" }, { 610, "JOB_GET_AMMO" }, { 660, "JOB_DISGUISE" },
 	{ 190, "JOB_FEIGN_AMBUSH" }, { 570, "JOB_SNIPE" }, { 260, "JOB_GUARD_WAYPOINT" }, { 560, "JOB_DEFEND_FLAG" },
-	{ 710, "JOB_GET_FLAG" }, { 780, "JOB_CAPTURE_FLAG" }, { 320, "JOB_HARRASS_DEFENSE" },
+	{ 730, "JOB_GET_FLAG" }, { 780, "JOB_CAPTURE_FLAG" }, { 320, "JOB_HARRASS_DEFENSE" },
 	{ 740, "JOB_ROCKET_JUMP" }, { 750, "JOB_CONCUSSION_JUMP" },
-	{ 400, "JOB_DETPACK_WAYPOINT" }, { 590, "JOB_PIPETRAP" }, { 480, "JOB_INVESTIGATE_AREA" },
+	{ 650, "JOB_DETPACK_WAYPOINT" }, { 600, "JOB_PIPETRAP" }, { 480, "JOB_INVESTIGATE_AREA" },
 	{ 550, "JOB_PURSUE_ENEMY" }, { 200, "JOB_PATROL_HOME" }, { 700, "JOB_SPOT_STIMULUS" },
-	{ 620, "JOB_ATTACK_BREAKABLE" }, { 430, "JOB_ATTACK_TELEPORT" }, { 580, "JOB_SEEK_BACKUP" },
+	{ 620, "JOB_ATTACK_BREAKABLE" }, { 440, "JOB_ATTACK_TELEPORT" }, { 580, "JOB_SEEK_BACKUP" },
 	{ 310, "JOB_AVOID_ENEMY" }, { 720, "JOB_AVOID_AREA_DAMAGE" },
 	{ 690, "JOB_INFECTED_ATTACK" }, { 800, "JOB_BIN_GRENADE" },
-	{ 720, "JOB_DROWN_RECOVER" }, { 240, "JOB_MELEE_WARRIOR" }, { 250, "JOB_GRAFFITI_ARTIST" },
+	{ 710, "JOB_DROWN_RECOVER" }, { 240, "JOB_MELEE_WARRIOR" }, { 250, "JOB_GRAFFITI_ARTIST" },
 };
 
 // This function clears the specified bots job buffer, and thus should
@@ -536,17 +536,18 @@ void BotJobThink(bot_t* pBot) {
 		break;
 	case TFC_CLASS_SOLDIER:
 		break;
-	case TFC_CLASS_DEMOMAN:
+   case TFC_CLASS_DEMOMAN:
 		// go set a detpack?
-		if (pBot->detpack == 2 && WaypointTypeExists(W_FL_TFC_DETPACK_CLEAR | W_FL_TFC_DETPACK_SEAL, pBot->current_team) && random_long(1, 1000) < 334) {
-			newJob = InitialiseNewJob(pBot, JOB_DETPACK_WAYPOINT);
-			if (newJob != nullptr) {
-				newJob->waypoint = WaypointFindDetpackGoal(pBot->current_wp, pBot->current_team);
-				if (newJob->waypoint != -1 && SubmitNewJob(pBot, JOB_DETPACK_WAYPOINT, newJob) == true)
-					return;
-			}
-		}
-		break;
+      if (pBot->detpack == 2 && WaypointTypeExists(W_FL_TFC_DETPACK_CLEAR | W_FL_TFC_DETPACK_SEAL, pBot->current_team) && random_long(1, 1000) < 334) {
+         newJob = InitialiseNewJob(pBot, JOB_DETPACK_WAYPOINT);
+         if (newJob != nullptr) {
+            newJob->waypoint = WaypointFindDetpackGoal(pBot->current_wp, pBot->current_team);
+            if (newJob->waypoint != -1 && SubmitNewJob(pBot, JOB_DETPACK_WAYPOINT, newJob) == true) {
+               return;
+            }
+         }
+      }
+      break;
 	case TFC_CLASS_MEDIC:
 		UTIL_SelectItem(pBot->pEdict, "tf_weapon_supershotgun");
 		break;

@@ -31,6 +31,7 @@
 #include <enginecallback.h>
 #include <entity_state.h>
 
+#include <algorithm>
 #include <cmath>
 #include <osdep.h>
 
@@ -46,7 +47,8 @@
 #include "botcam.h"
 
 constexpr unsigned char VER_MAJOR = 0;
-constexpr unsigned int VER_MINOR = 911;
+constexpr unsigned int VER_MINOR = 911;		//TODO: Replace unsigned int as unsigned char
+                                             // - as long we don't use 3 digits anymore [APG]RoboCop[CL]
 
 //#define VER_BUILD 0
 
@@ -1239,9 +1241,8 @@ void DispatchKeyValue(edict_t* pentKeyvalue, KeyValueData* pkvd) {
 				const int value = std::atoi(pkvd->szValue);
 
 				is_team[value - 1] = true;
-				if (value > max_teams)
-					max_teams = value;
-			}
+            max_teams = std::max(value, max_teams);
+         }
 		}
 	}
 
@@ -2612,9 +2613,8 @@ void StartFrame() { // v7 last frame timing
 				count++;
 			}
 		}
-		if (count > num_bots)
-			num_bots = count;
-		for (player_index = 0; player_index <= gpGlobals->maxClients; player_index++)
+      num_bots = std::max(count, num_bots);
+      for (player_index = 0; player_index <= gpGlobals->maxClients; player_index++)
 		{
 			pPlayer = INDEXENT(player_index);
 
@@ -2930,17 +2930,12 @@ void StartFrame() { // v7 last frame timing
 			playersPerTeam[1] = 0;
 			playersPerTeam[2] = 0;
 			playersPerTeam[3] = 0;
-			if (max_bots > MAX_BOTS)
-				max_bots = MAX_BOTS;
-			if (max_bots > gpGlobals->maxClients)
-				max_bots = gpGlobals->maxClients;
-			if (max_bots < -1)
-				max_bots = -1;
-			if (min_bots > max_bots)
-				min_bots = max_bots;
-			if (min_bots < -1)
-				min_bots = -1;
-			if (min_bots == 0)
+         max_bots = std::min(max_bots, MAX_BOTS);
+         max_bots = std::min(max_bots, gpGlobals->maxClients);
+         max_bots = std::max(max_bots, -1);
+         min_bots = std::min(min_bots, max_bots);
+         min_bots = std::max(min_bots, -1);
+         if (min_bots == 0)
 				min_bots = -1; // count the number of players, and players per team
 			int count1 = 0;   // Not wanted? [APG]RoboCop[CL]
 			{
@@ -3026,34 +3021,28 @@ void StartFrame() { // v7 last frame timing
 						float t = pent->v.mins.x;
 						if (t < 0)
 							t = -t;
-						if (t > max)
-							max = t;
-						t = pent->v.mins.y;
+                  max = std::max(t, max);
+                  t = pent->v.mins.y;
 						if (t < 0)
 							t = -t;
-						if (t > max)
-							max = t;
-						t = pent->v.mins.z;
+                  max = std::max(t, max);
+                  t = pent->v.mins.z;
 						if (t < 0)
 							t = -t;
-						if (t > max)
-							max = t;
-						t = pent->v.maxs.x;
+                  max = std::max(t, max);
+                  t = pent->v.maxs.x;
 						if (t < 0)
 							t = -t;
-						if (t > max)
-							max = t;
-						t = pent->v.maxs.y;
+                  max = std::max(t, max);
+                  t = pent->v.maxs.y;
 						if (t < 0)
 							t = -t;
-						if (t > max)
-							max = t;
-						t = pent->v.maxs.z;
+                  max = std::max(t, max);
+                  t = pent->v.maxs.z;
 						if (t < 0)
 							t = -t;
-						if (t > max)
-							max = t;
-						pent->v.absmin = pent->v.absmin - Vector(max, max, max);
+                  max = std::max(t, max);
+                  pent->v.absmin = pent->v.absmin - Vector(max, max, max);
 						pent->v.absmax = pent->v.absmax + Vector(max, max, max);
 						pent->v.nextthink = 0;
 						if (mr_meta)

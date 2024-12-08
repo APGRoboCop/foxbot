@@ -16,6 +16,6 @@
  */
 
  // Write Strings fixed - [APG]RoboCop[CL]
-char const* COMPILE_DTTM = __DATE__ ", " __TIME__;
+const char* COMPILE_DTTM = __DATE__ ", " __TIME__;
 
-char const* COMPILE_DATE = __DATE__;
+const char* COMPILE_DATE = __DATE__;
