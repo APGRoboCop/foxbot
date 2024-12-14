@@ -30,46 +30,52 @@
  */
 
 #include <extdll.h>
-#include <algorithm>
 #include "sdk_util.h"
 
-char* UTIL_VarArgs(const char* format, ...) {
-	va_list argptr;
-	static char string[1024];
+#include <cstdarg>
+#include <cstdio>
+#include <vector>
+#include <thread>
+#include <mutex>
 
-	va_start(argptr, format);
-#ifdef WIN32
-	_vsnprintf(string, 1024, format, argptr);
-#else
-	_vsnprintf(string, 1024, format, argptr);
+#ifdef _WIN32
+#define vsnprintf _vsnprintf
 #endif
-	va_end(argptr);
 
-	return string;
-}
+// Thread-local storage for the buffer
+thread_local std::vector<char> thread_local_buffer(1024);
+static std::mutex buffer_mutex;
 
-//=========================================================
-// UTIL_LogPrintf - Prints a logged message to console.
-// Preceded by LOG: ( timestamp ) < message >
-//=========================================================
-void UTIL_LogPrintf(char* format, ...) {
-	va_list argptr;
-	static char string[1024];
+// Utility function to format a string with variable arguments
+char *UTIL_VarArgs(const char *format, ...) {
+   std::lock_guard lock(buffer_mutex);
 
-	va_start(argptr, format);
-#ifdef WIN32
-	_vsnprintf(string, 1024, format, argptr);
-#else
-	_vsnprintf(string, 1024, format, argptr);
-#endif
-	va_end(argptr);
+   va_list argptr;
+   va_start(argptr, format);
+   int ret = vsnprintf(thread_local_buffer.data(), thread_local_buffer.size(), format, argptr);
+   va_end(argptr);
 
-	// Print to server console
-	ALERT(at_logged, "%s", string);
+   // Handle buffer overflow
+   while (ret < 0 || static_cast<size_t>(ret) >= thread_local_buffer.size()) {
+      // Resize buffer to the required size plus one for the null terminator
+      thread_local_buffer.resize(thread_local_buffer.size() * 2);
+      va_start(argptr, format);
+      ret = vsnprintf(thread_local_buffer.data(), thread_local_buffer.size(), format, argptr);
+      va_end(argptr);
+   }
+
+   // Check if vsnprintf failed again
+   if (ret < 0) {
+      // Log error and return an empty string
+      fprintf(stderr, "UTIL_VarArgs: vsnprintf failed\n");
+      return nullptr;
+   }
+
+   return thread_local_buffer.data();
 }
 
 short FixedSigned16(const float value, const float scale) {
-	int output = static_cast<int>(value * scale);
+   int output = static_cast<int>(value * scale);
 
    output = std::min(output, 32767);
    output = std::max(output, -32768);
@@ -78,7 +84,7 @@ short FixedSigned16(const float value, const float scale) {
 }
 
 unsigned short FixedUnsigned16(const float value, const float scale) {
-	int output = static_cast<int>(value * scale);
+   int output = static_cast<int>(value * scale);
 
    output = std::max(output, 0);
    output = std::min(output, 0xFFFF);

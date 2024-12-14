@@ -96,7 +96,7 @@ inline void DLLINTERNAL SET_SERVERINFO(char *key, char *value) {
 
 // Get a "localinfo" value.
 inline char * DLLINTERNAL LOCALINFO(char *key) {
-	return(ENTITY_KEYVALUE(NULL, key));
+	return(ENTITY_KEYVALUE(nullptr, key));
 }
 
 // Set a "localinfo" value.

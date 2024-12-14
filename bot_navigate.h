@@ -29,7 +29,7 @@
 #define BOT_NAVIGATE_H
 
 // standard amount of time to reach the bots current waypoint
-#define BOT_WP_DEADLINE 7.0f
+constexpr float BOT_WP_DEADLINE = 7.0f;
 
 void BotUpdateHomeInfo(const bot_t* pBot);
 

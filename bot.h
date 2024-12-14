@@ -29,8 +29,10 @@
 #define BOT_H
 
 #include "osdep.h"
+#include <array>
 #include <cstring>
 #include <cstdint>
+#include <memory>
 #include <string>
 
 // stuff for Win32 vs. Linux builds
@@ -226,7 +228,7 @@ typedef struct {
 } bot_trait_struct;
 
 // maximum number of jobs storable in the bot's job buffer
-#define JOB_BUFFER_MAX 5
+constexpr int JOB_BUFFER_MAX = 5;
 
 // this structure is shared by all the job types in the bot's job buffer
 typedef struct {
@@ -246,7 +248,7 @@ typedef struct {
 } job_struct;
 
 // maximum number of jobs that can be blacklisted(kept out of a bot's buffer) simultaneously
-#define JOB_BLACKLIST_MAX 5
+constexpr int JOB_BLACKLIST_MAX = 5;
 
 // a blacklist structure for jobs that fail repetitively(often because of waypoint problems)
 typedef struct {
@@ -498,7 +500,7 @@ typedef struct {
 // roles to fill on the team
 enum botRoles : std::uint8_t { ROLE_NONE, ROLE_ATTACKER, ROLE_DEFENDER };
 
-enum side_direction_values : std::uint8_t { SIDE_DIRECTION_LEFT, SIDE_DIRECTION_RIGHT };
+enum side_direction_values : bool { SIDE_DIRECTION_LEFT = false, SIDE_DIRECTION_RIGHT = true };
 
 enum Misc : std::uint8_t { RJ_WP_INDEX = 0, RJ_WP_TEAM = 1, MAXRJWAYPOINTS = 20 };
 

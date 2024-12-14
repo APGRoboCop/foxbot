@@ -71,7 +71,7 @@ int BotGuessPlayerPosition(const bot_t* pBot, const Vector& r_playerOrigin);
 
 int BotFindGrenadePoint(const bot_t* pBot, const Vector& r_vecOrigin);
 
-void BotCheckForMultiguns(bot_t* pBot, float nearestdistance, edict_t* pNewEnemy, bool& rtn);
+void BotCheckForMultiguns(bot_t* pBot, float nearestdistance, edict_t *pNewEnemy, bool& rtn);
 
 void BotSoundSense(edict_t* pEdict, const char* pszSample, float fVolume);
 

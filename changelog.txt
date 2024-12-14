@@ -10,6 +10,14 @@ Updated by RoboCop
 
 - Added Metamod-P-APG and HLSDK 25th headers for forwards compatibility
 
+- Added versatile containers for Optional Values
+
+- Added C++ strings and smart pointers to reduce memory leaks and buffer overflows
+
+- Added C++ arrays on the TFC Weapons make the code easier to understand and maintain
+
+- Restructured the `BotEngineerThink()` code function for optimal performance, reliability, and maintainability
+
 - Modernised codes by replacing the enumerators and memsets with constexpr and zeroing out arrays
 
 - Reducing excessive bunnyhop waypoints for those stock maps

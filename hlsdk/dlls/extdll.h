@@ -16,6 +16,7 @@
 #define EXTDLL_H
 
 #include <algorithm>
+#include <vector>
 
 #ifndef NOMINMAX
 #define NOMINMAX
@@ -80,6 +81,9 @@ typedef int BOOL;
 typedef int	func_t;					//
 typedef int	string_t;				// from engine's pr_comp.h;
 typedef float vec_t;				// needed before including progdefs.h
+
+// Thread-local storage for the buffer
+extern thread_local std::vector<char> thread_local_buffer;
 
 // Vector class
 #include "vector.h"

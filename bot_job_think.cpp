@@ -61,6 +61,13 @@ extern bool defensive_chatter;
 extern WAYPOINT waypoints[MAX_WAYPOINTS];
 extern int num_waypoints; // number of waypoints currently in use
 
+// engineer bot settings //////////////////
+constexpr int DISPENSER_AMMO_THRESHOLD = 139;
+constexpr int SENTRY_AMMO_THRESHOLD = 139;
+constexpr int DISPENSER_BUILD_CHANCE = 400;
+constexpr int TELEPORTER_AMMO_THRESHOLD = 180;
+constexpr int TELEPORTER_BUILD_CHANCE = 101;
+
 // function prototypes //////////////
 static void DropJobFromBuffer(bot_t* pBot, int buffer_index);
 static void RefreshJobBuffer(bot_t* pBot);
@@ -122,16 +129,16 @@ jobList_struct jl[JOB_TYPE_TOTAL] = {
 // This function clears the specified bots job buffer, and thus should
 // probably be called when the bot is created.
 void BotResetJobBuffer(bot_t *pBot) {
-   pBot->currentJob = 0;
+	pBot->currentJob = 0;
 
-   std::fill(std::begin(pBot->jobType), std::end(pBot->jobType), JOB_NONE);
-   std::fill(std::begin(pBot->job), std::end(pBot->job), job_struct{});
+	std::fill(std::begin(pBot->jobType), std::end(pBot->jobType), JOB_NONE);
+	std::fill(std::begin(pBot->job), std::end(pBot->job), job_struct{});
 
-   // reset the job blacklist
-   for (job_blacklist_struct &blacklist : pBot->jobBlacklist) {
-      blacklist.type = JOB_NONE;
-      blacklist.f_timeOut = 0.0f;
-   }
+	// reset the job blacklist
+	for (job_blacklist_struct &blacklist : pBot->jobBlacklist) {
+		blacklist.type = JOB_NONE;
+		blacklist.f_timeOut = 0.0f;
+	}
 }
 
 // This function eliminates whatever job is in the specified buffer
@@ -175,9 +182,9 @@ void BlacklistJob(bot_t* pBot, const int jobType, const float timeOut) {
 // This function returns true if the specified jobtype is already in the
 // job buffer.
 bool BufferContainsJobType(const bot_t* pBot, const int JobType) {
-    return std::any_of(std::begin(pBot->jobType), std::end(pBot->jobType), [JobType](const int i) {
-        return i == JobType;
-    });
+	 return std::any_of(std::begin(pBot->jobType), std::end(pBot->jobType), [JobType](const int i) {
+		  return i == JobType;
+	 });
 }
 
 // If the specified job type is already in the job buffer this function will
@@ -211,13 +218,13 @@ job_struct* InitialiseNewJob(const bot_t* pBot, const int newJobType) {
 	// abort if the job is currently blacklisted
 	for (i = 0; i < JOB_BLACKLIST_MAX; i++) {
 		if (newJobType == pBot->jobBlacklist[i].type && pBot->jobBlacklist[i].f_timeOut >= pBot->f_think_time)
-      return nullptr;
-   }
+		return nullptr;
+	}
 
-   static job_struct newJob;
+	static job_struct newJob;
 
 	// reset the new job's data
-   newJob.f_bufferedTime = pBot->f_think_time;
+	newJob.f_bufferedTime = pBot->f_think_time;
 	newJob.priority = PRIORITY_NONE;
 	newJob.phase = 0;
 	newJob.phase_timer = 0.0f;
@@ -227,7 +234,7 @@ job_struct* InitialiseNewJob(const bot_t* pBot, const int newJobType) {
 	newJob.object = nullptr;
 	newJob.message[0] = '\0';
 
-   return &newJob;
+	return &newJob;
 }
 
 // This function should be used when you wish to add a new job to the job buffer.
@@ -243,7 +250,7 @@ bool SubmitNewJob(bot_t* pBot, const int newJobType, job_struct* newJob) {
 	// if the job is currently blacklisted keep it out of the buffer
 	for (i = 0; i < JOB_BLACKLIST_MAX; i++) {
 		if (newJobType == pBot->jobBlacklist[i].type) {
-			if (pBot->jobBlacklist[i].f_timeOut >= pBot->f_think_time)
+		if (pBot->jobBlacklist[i].f_timeOut >= pBot->f_think_time)
 				return false;
 			pBot->jobBlacklist[i].type = JOB_NONE;
 			// job has timed out de-blacklist it
@@ -534,25 +541,25 @@ void BotJobThink(bot_t* pBot) {
 		break;
 	case TFC_CLASS_SOLDIER:
 		break;
-   case TFC_CLASS_DEMOMAN:
+	case TFC_CLASS_DEMOMAN:
 		// go set a detpack?
-      if (pBot->detpack == 2 && WaypointTypeExists(W_FL_TFC_DETPACK_CLEAR | W_FL_TFC_DETPACK_SEAL, pBot->current_team) && random_long(1, 1000) < 334) {
-         newJob = InitialiseNewJob(pBot, JOB_DETPACK_WAYPOINT);
-         if (newJob != nullptr) {
-            newJob->waypoint = WaypointFindDetpackGoal(pBot->current_wp, pBot->current_team);
-            if (newJob->waypoint != -1 && SubmitNewJob(pBot, JOB_DETPACK_WAYPOINT, newJob) == true) {
-               return;
-            }
-         }
-      }
-      break;
+		if (pBot->detpack == 2 && WaypointTypeExists(W_FL_TFC_DETPACK_CLEAR | W_FL_TFC_DETPACK_SEAL, pBot->current_team) && random_long(1, 1000) < 334) {
+			newJob = InitialiseNewJob(pBot, JOB_DETPACK_WAYPOINT);
+			if (newJob != nullptr) {
+				newJob->waypoint = WaypointFindDetpackGoal(pBot->current_wp, pBot->current_team);
+				if (newJob->waypoint != -1 && SubmitNewJob(pBot, JOB_DETPACK_WAYPOINT, newJob) == true) {
+					return;
+				}
+			}
+		}
+		break;
 	case TFC_CLASS_MEDIC:
 		UTIL_SelectItem(pBot->pEdict, "tf_weapon_supershotgun");
 		break;
-   case TFC_CLASS_HWGUY:
-      break;
-   case TFC_CLASS_PYRO:
-      break;
+	case TFC_CLASS_HWGUY:
+		break;
+	case TFC_CLASS_PYRO:
+		break;
 	case TFC_CLASS_SPY:
 		UTIL_SelectItem(pBot->pEdict, "tf_weapon_supershotgun");
 		// time for a disguise?
@@ -676,103 +683,102 @@ void BotJobThink(bot_t* pBot) {
 	}
 }
 
-// This function allows Engineer bots to think about adding new jobs to the job buffer.
-void BotEngineerThink(bot_t* pBot) {
-	// is the bot's sentry gun now in an unavailable map area?
-	if (pBot->has_sentry && !WaypointAvailable(pBot->sentryWaypoint, pBot->current_team)) {
-		FakeClientCommand(pBot->pEdict, "detsentry", nullptr, nullptr);
-		FakeClientCommand(pBot->pEdict, "detdispenser", nullptr, nullptr);
-	}
+void BotEngineerThink(bot_t *pBot) {
+   // is the bot's sentry gun now in an unavailable map area?
+   if (pBot->has_sentry && !WaypointAvailable(pBot->sentryWaypoint, pBot->current_team)) {
+      FakeClientCommand(pBot->pEdict, "detsentry", nullptr, nullptr);
+      FakeClientCommand(pBot->pEdict, "detdispenser", nullptr, nullptr);
+   }
 
-	// is the bot's teleporter entrance now in an unavailable map area?
-	if (pBot->tpEntranceWP != -1 && !FNullEnt(pBot->tpEntrance) && !WaypointAvailable(pBot->tpEntranceWP, pBot->current_team))
-		FakeClientCommand(pBot->pEdict, "detentryteleporter", nullptr, nullptr);
+   // is the bot's teleporter entrance now in an unavailable map area?
+   if (pBot->tpEntranceWP != -1 && !FNullEnt(pBot->tpEntrance) && !WaypointAvailable(pBot->tpEntranceWP, pBot->current_team))
+      FakeClientCommand(pBot->pEdict, "detentryteleporter", nullptr, nullptr);
 
-	// is the bot's teleporter exit now in an unavailable map area?
-	if (pBot->tpExitWP != -1 && !FNullEnt(pBot->tpExit) && !WaypointAvailable(pBot->tpExitWP, pBot->current_team))
-		FakeClientCommand(pBot->pEdict, "detexitteleporter", nullptr, nullptr);
+   // is the bot's teleporter exit now in an unavailable map area?
+   if (pBot->tpExitWP != -1 && !FNullEnt(pBot->tpExit) && !WaypointAvailable(pBot->tpExitWP, pBot->current_team))
+      FakeClientCommand(pBot->pEdict, "detexitteleporter", nullptr, nullptr);
 
-	/* // Sentry gun still alive? This script broken? [APG]RoboCop[CL]
-					if(pBot->has_sentry == true
-									&& (pBot->sentry_edict == nullptr
-									|| FNullEnt(pBot->sentry_edict)))
-					{
-									pBot->has_sentry = false;
-									pBot->sentry_edict = nullptr;
-					}
-	*/
-	job_struct* newJob;
+   /* // Sentry gun still alive? This script broken? [APG]RoboCop[CL]
+               if(pBot->has_sentry == true
+                           && (pBot->sentry_edict == nullptr
+                           || FNullEnt(pBot->sentry_edict)))
+               {
+                           pBot->has_sentry = false;
+                           pBot->sentry_edict = nullptr;
+               }
+   */
+   job_struct *newJob;
 
-	// time to build a dispenser?
-	if (pBot->has_dispenser == false && pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > 139 && random_long(1, 1000) < 400) {
-		newJob = InitialiseNewJob(pBot, JOB_BUILD_DISPENSER);
-		if (newJob != nullptr) {
-			newJob->waypoint = BotGetDispenserBuildWaypoint(pBot);
+   // time to build a dispenser?
+   if (pBot->has_dispenser == false && pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > DISPENSER_AMMO_THRESHOLD && random_long(1, 1000) < DISPENSER_BUILD_CHANCE) {
+      newJob = InitialiseNewJob(pBot, JOB_BUILD_DISPENSER);
+      if (newJob != nullptr) {
+         newJob->waypoint = BotGetDispenserBuildWaypoint(pBot);
 
-			if (newJob->waypoint != -1 && SubmitNewJob(pBot, JOB_BUILD_DISPENSER, newJob) == true)
-				return;
-		}
-	}
+         if (newJob->waypoint != -1 && SubmitNewJob(pBot, JOB_BUILD_DISPENSER, newJob) == true)
+            return;
+      }
+   }
 
-	// time to build a sentry?
-	if (pBot->has_sentry == false && pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > 139) {
-		newJob = InitialiseNewJob(pBot, JOB_BUILD_SENTRY);
-		if (newJob != nullptr) {
-			newJob->waypoint = WaypointFindRandomGoal(pBot->current_wp, pBot->current_team, W_FL_TFC_SENTRY);
+   // time to build a sentry?
+   if (pBot->has_sentry == false && pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > SENTRY_AMMO_THRESHOLD) {
+      newJob = InitialiseNewJob(pBot, JOB_BUILD_SENTRY);
+      if (newJob != nullptr) {
+         newJob->waypoint = WaypointFindRandomGoal(pBot->current_wp, pBot->current_team, W_FL_TFC_SENTRY);
 
-			if (newJob->waypoint == -1)
-				newJob->waypoint = WaypointFindRandomGoal(pBot->current_wp, -1, W_FL_TFC_SENTRY);
+         if (newJob->waypoint == -1)
+            newJob->waypoint = WaypointFindRandomGoal(pBot->current_wp, -1, W_FL_TFC_SENTRY);
 
-			if (newJob->waypoint != -1 && SubmitNewJob(pBot, JOB_BUILD_SENTRY, newJob) == true)
-				return;
-		}
-	}
+         if (newJob->waypoint != -1 && SubmitNewJob(pBot, JOB_BUILD_SENTRY, newJob) == true)
+            return;
+      }
+   }
 
-	// repair/upgrade the bot's sentry?
-	if (pBot->has_sentry == true && pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > 139 && pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SHOTGUN].iAmmo1] > 10) {
-		char modelName[30];
-		std::strncpy(modelName, STRING(pBot->sentry_edict->v.model), 30);
-		modelName[29] = '\0';
+   // repair/upgrade the bot's sentry?
+   if (pBot->has_sentry == true && pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > SENTRY_AMMO_THRESHOLD && pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SHOTGUN].iAmmo1] > 10) {
+      char modelName[30];
+      std::strncpy(modelName, STRING(pBot->sentry_edict->v.model), 30);
+      modelName[29] = '\0';
 
-		if (pBot->sentry_ammo < 100 || pBot->sentry_edict->v.health < 100 || std::strcmp(modelName, "models/sentry3.mdl") != 0) {
-			newJob = InitialiseNewJob(pBot, JOB_MAINTAIN_OBJECT);
-			if (newJob != nullptr) {
-				newJob->object = pBot->sentry_edict;
+      if (pBot->sentry_ammo < 100 || pBot->sentry_edict->v.health < 100 || std::strcmp(modelName, "models/sentry3.mdl") != 0) {
+         newJob = InitialiseNewJob(pBot, JOB_MAINTAIN_OBJECT);
+         if (newJob != nullptr) {
+            newJob->object = pBot->sentry_edict;
 
-				if (SubmitNewJob(pBot, JOB_MAINTAIN_OBJECT, newJob) == true)
-					return;
-			}
-		}
-	}
+            if (SubmitNewJob(pBot, JOB_MAINTAIN_OBJECT, newJob) == true)
+               return;
+         }
+      }
+   }
 
-	// detonate the bots teleporter exit if it doesn't have an teleporter entrance
-	// i.e. build entrances and then build exits, not the other way round
-	// this is because each map has a limited number of teleporter waypoints
-	if (FNullEnt(pBot->tpEntrance) && !FNullEnt(pBot->tpExit)) {
-		//	UTIL_BotLogPrintf("%s, detting my exit\n", pBot->name);
-		FakeClientCommand(pBot->pEdict, "detexitteleporter", nullptr, nullptr);
-	}
+   // detonate the bots teleporter exit if it doesn't have an teleporter entrance
+   // i.e. build entrances and then build exits, not the other way round
+   // this is because each map has a limited number of teleporter waypoints
+   if (FNullEnt(pBot->tpEntrance) && !FNullEnt(pBot->tpExit)) {
+      //	UTIL_BotLogPrintf("%s, detting my exit\n", pBot->name);
+      FakeClientCommand(pBot->pEdict, "detexitteleporter", nullptr, nullptr);
+   }
 
-	// build a teleporter entrance?
-	if (FNullEnt(pBot->tpEntrance) && bot_can_build_teleporter == true && pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > 190 && random_long(1, 1000) < 101) {
-		newJob = InitialiseNewJob(pBot, JOB_BUILD_TELEPORT);
-		if (newJob != nullptr) {
-			newJob->waypoint = BotGetTeleporterBuildWaypoint(pBot, true);
+   // build a teleporter entrance?
+   if (FNullEnt(pBot->tpEntrance) && bot_can_build_teleporter == true && pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > TELEPORTER_AMMO_THRESHOLD && random_long(1, 1000) < TELEPORTER_BUILD_CHANCE) {
+      newJob = InitialiseNewJob(pBot, JOB_BUILD_TELEPORT);
+      if (newJob != nullptr) {
+         newJob->waypoint = BotGetTeleporterBuildWaypoint(pBot, true);
 
-			if (newJob->waypoint != -1 && SubmitNewJob(pBot, JOB_BUILD_TELEPORT, newJob) == true)
-				return;
-		}
-	}
+         if (newJob->waypoint != -1 && SubmitNewJob(pBot, JOB_BUILD_TELEPORT, newJob) == true)
+            return;
+      }
+   }
 
-	// build a teleporter exit?
-	// only do so if the bot owns a Teleporter entrance already
-	if (!FNullEnt(pBot->tpEntrance) && FNullEnt(pBot->tpExit) && bot_can_build_teleporter == true && pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > 190 && random_long(1, 1000) < 101) {
-		newJob = InitialiseNewJob(pBot, JOB_BUILD_TELEPORT);
-		if (newJob != nullptr) {
-			newJob->waypoint = BotGetTeleporterBuildWaypoint(pBot, false);
+   // build a teleporter exit?
+   // only do so if the bot owns a Teleporter entrance already
+   if (!FNullEnt(pBot->tpEntrance) && FNullEnt(pBot->tpExit) && bot_can_build_teleporter == true && pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > TELEPORTER_AMMO_THRESHOLD && random_long(1, 1000) < TELEPORTER_BUILD_CHANCE) {
+      newJob = InitialiseNewJob(pBot, JOB_BUILD_TELEPORT);
+      if (newJob != nullptr) {
+         newJob->waypoint = BotGetTeleporterBuildWaypoint(pBot, false);
 
-			if (newJob->waypoint != -1 && SubmitNewJob(pBot, JOB_BUILD_TELEPORT, newJob) == true)
-				return;
-		}
-	}
+         if (newJob->waypoint != -1 && SubmitNewJob(pBot, JOB_BUILD_TELEPORT, newJob) == true)
+            return;
+      }
+   }
 }

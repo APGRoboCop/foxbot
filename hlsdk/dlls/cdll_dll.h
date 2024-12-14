@@ -20,27 +20,26 @@
 #ifndef CDLL_DLL_H
 #define CDLL_DLL_H
 
-#define MAX_WEAPONS		32		// ???
+constexpr int MAX_WEAPONS = 32; // ???
 
-#define MAX_WEAPON_SLOTS		5	// hud item selection slots
-#define MAX_ITEM_TYPES			6	// hud item selection slots
+constexpr int MAX_WEAPON_SLOTS = 5; // hud item selection slots
+constexpr int MAX_ITEM_TYPES = 6;   // hud item selection slots
 
-#define MAX_ITEMS				5	// hard coded item types
+constexpr int MAX_ITEMS = 5; // hard coded item types
 
-#define	HIDEHUD_WEAPONS		( 1<<0 )
-#define	HIDEHUD_FLASHLIGHT	( 1<<1 )
-#define	HIDEHUD_ALL			( 1<<2 )
-#define 	HIDEHUD_HEALTH		( 1<<3 )
+constexpr int HIDEHUD_WEAPONS = (1 << 0);
+constexpr int HIDEHUD_FLASHLIGHT = (1 << 1);
+constexpr int HIDEHUD_ALL = (1 << 2);
+constexpr int HIDEHUD_HEALTH = (1 << 3);
 
-#define	MAX_AMMO_TYPES	32		// ???
-#define MAX_AMMO_SLOTS  32		// not really slots
+constexpr int MAX_AMMO_TYPES = 32; // ???
+constexpr int MAX_AMMO_SLOTS = 32; // not really slots
 
-#define HUD_PRINTNOTIFY		1
-#define HUD_PRINTCONSOLE	2
-#define HUD_PRINTTALK		3
-#define HUD_PRINTCENTER		4
+constexpr int HUD_PRINTNOTIFY = 1;
+constexpr int HUD_PRINTCONSOLE = 2;
+constexpr int HUD_PRINTTALK = 3;
+constexpr int HUD_PRINTCENTER = 4;
 
-
-#define WEAPON_SUIT			31
+constexpr int WEAPON_SUIT = 31;
 
 #endif
