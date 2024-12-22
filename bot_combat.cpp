@@ -2100,7 +2100,7 @@ int BotAssessThreatLevel(const bot_t *pBot) {
       Threat = 15;
       break;
    case TFC_CLASS_ENGINEER:
-      Threat = 17;
+      Threat = 18;
       break;
    default:;
    }

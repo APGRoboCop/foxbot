@@ -34,7 +34,7 @@ TODO List:-
 
 >> To prevent bots from shooting at spy corpses too long as they aren't aware that a player switched teams as enemy spy
 
->> To improve the pipebomb laying trap pattern and to plant near the flag
+>> To improve the pipebomb laying trap pattern and to plant them near the flag
 
 >> BONUS: Maybe add a feature for bots to have experience and wisdom or learned data in order to be a bit more human
 

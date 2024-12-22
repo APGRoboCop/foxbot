@@ -34,14 +34,6 @@ if builder.cxx.target.platform == 'linux':
     '-mtune=generic',
     '-pipe',
     '-fPIC',
-    '-mmmx',
-    '-msse',
-    '-msse2',
-    '-msse3',
-    '-mssse3',
-    '-msse4',
-    '-msse4a',
-    '-msse4.1',
     '-msse4.2',
     '-mfpmath=sse',
     '-fno-strict-aliasing',
@@ -112,12 +104,14 @@ if builder.options.optimize == '1':
   builder.cxx.defines += ['NDEBUG']
   if builder.cxx.target.platform == 'linux':
     # Linux optimization flags
-    builder.cxx.cflags += ['-O2']
+    builder.cxx.cflags += ['-O3']
   elif builder.cxx.target.platform == 'windows':
-    # Windows optimization flags
-    builder.cxx.cflags += ['/Ox', '/Zo']
+    # Windows optimization flags - /Ob3 needs to be after /Ox, enables aggressive function inling -caxanga334
+    builder.cxx.cflags += ['/Ox', '/Zo', '/Ob3', '/GF']
     # Windows optimization link flags
     builder.cxx.linkflags += ['/OPT:ICF', '/OPT:REF']
+	# This needs to be after our optimization flags which could otherwise disable it.
+    builder.cxx.cflags += ['/Oy-']
 
 # Compiler options for debugging ( --enable-debug )
 if builder.options.debug == '1':
