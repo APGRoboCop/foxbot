@@ -32,7 +32,6 @@
 #include <array>
 #include <cstring>
 #include <cstdint>
-#include <memory>
 #include <string>
 
 // stuff for Win32 vs. Linux builds

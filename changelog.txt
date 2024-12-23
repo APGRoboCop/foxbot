@@ -4,17 +4,19 @@
 
 --------------------------------------------------------------------------------
 Version 0.911
-??-??-202?
+December-23-2024
 Updated by RoboCop
 --------------------------------------------------------------------------------
 
-- Added Metamod-P-APG and HLSDK 25th headers for forwards compatibility
-
 - Added versatile containers for Optional Values
 
-- Added C++ strings and smart pointers to reduce memory leaks and buffer overflows
+- Reduced buffer overflows in `spectate_debug 2`
 
-- Added C++ arrays on the TFC Weapons make the code easier to understand and maintain
+- Added C++ arrays in the TFC Weapons make the code easier to understand and maintain
+
+- AMBuild Windows optimisation flags added by caxanga334
+
+- DemoBots should now use their DetPacks more often
 
 - Restructured the `BotEngineerThink()` code function for optimal performance, reliability, and maintainability
 
@@ -30,7 +32,7 @@ TODO List:-
 
 >> Complete 'botdontmove' in order for "GolfBots" to stay stationary
 
->> Fix bots navigation when shot by enemies as they sometimes cannot seem to detect where damage is coming from
+>> Fix bot's `JOB_BIN_GRENADE` as they need to ditch their live grenades to prevent suicide bombing too often
 
 >> To prevent bots from shooting at spy corpses too long as they aren't aware that a player switched teams as enemy spy
 
