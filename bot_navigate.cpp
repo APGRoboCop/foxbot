@@ -2026,12 +2026,12 @@ int BotFindFlagWaypoint(const bot_t* pBot) {
 int BotTargetDefenderWaypoint(const bot_t* pBot) {
 	// perform basic sanity checks
 	if (pBot->current_wp < 0 || pBot->current_wp >= num_waypoints)
-		return false;
+		return 0;
 
 	// pick an enemy team to harrass
 	const int target_team = PickRandomEnemyTeam(pBot->current_team);
 	if (target_team == -1)
-		return false;
+		return 0;
 
 	// pick a random waypoint to start searching from
 	int index = static_cast<int>(random_long(0, num_waypoints - 1));

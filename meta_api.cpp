@@ -71,9 +71,9 @@ C_DLLEXPORT int Meta_Query(char *ifvers, plugin_info_t **pPlugInfo, mutil_funcs_
    if (std::strcmp(ifvers, Plugin_info.ifvers) != 0) {
       LOG_CONSOLE(PLID, "%s: meta-interface version mismatch (metamod: %s, %s: %s)", Plugin_info.name, ifvers, Plugin_info.name, Plugin_info.ifvers);
       LOG_MESSAGE(PLID, "%s: meta-interface version mismatch (metamod: %s, %s: %s)", Plugin_info.name, ifvers, Plugin_info.name, Plugin_info.ifvers);
-      return false;
+      return 0;
    }
-   return true;
+   return 1;
 }
 
 // Metamod attaching plugin	to the server.
@@ -84,16 +84,16 @@ C_DLLEXPORT int Meta_Query(char *ifvers, plugin_info_t **pPlugInfo, mutil_funcs_
 C_DLLEXPORT int Meta_Attach(const PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTable, meta_globals_t *pMGlobals, gamedll_funcs_t *pGamedllFuncs) {
    if (!pMGlobals) {
       LOG_ERROR(PLID, "Meta_Attach called	with null pMGlobals");
-      return false;
+      return 0;
    }
    gpMetaGlobals = pMGlobals;
    if (!pFunctionTable) {
       LOG_ERROR(PLID, "Meta_Attach called	with null pFunctionTable");
-      return false;
+      return 0;
    }
    std::memcpy(pFunctionTable, &gMetaFunctionTable, sizeof(META_FUNCTIONS));
    gpGamedllFuncs = pGamedllFuncs;
-   return true;
+   return 1;
 }
 
 // Metamod detaching plugin	from the server.
@@ -102,6 +102,6 @@ C_DLLEXPORT int Meta_Attach(const PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTa
 C_DLLEXPORT int Meta_Detach(const PLUG_LOADTIME now, const PL_UNLOAD_REASON reason) {
    if (now && reason)
       // to satisfy gcc -Wunused
-      return true;
+      return 1;
    return 0;
 }

@@ -225,7 +225,7 @@ void WaypointInit() {
 int WaypointAddPath(const short int add_index, const short int path_index) {
 	// don't do it if its greater than max distance
 	if ((waypoints[add_index].origin - waypoints[path_index].origin).Length() > REACHABLE_RANGE)
-		return true;
+		return 1;
 
 	PATH* p = paths[add_index];
 	PATH* prev = nullptr;
@@ -242,11 +242,11 @@ int WaypointAddPath(const short int add_index, const short int path_index) {
 		while (i < MAX_PATH_INDEX) {
 			// don't add the path if its already there?!
 			if (p->index[i] == path_index)
-				return true;
+				return 1;
 
 			if (p->index[i] == -1) {
 				p->index[i] = path_index;
-				return true;
+				return 1;
 			}
 
 			i++;
@@ -271,7 +271,7 @@ int WaypointAddPath(const short int add_index, const short int path_index) {
 	if (p == nullptr) {
 		ALERT(at_error, "FoXBot - Error, memory allocation failed for waypoint path!");
 		UTIL_BotLogPrintf("Memory allocation failed for waypoint path!\n");
-		return false;
+		return 0;
 	}
 
 	p->index[0] = path_index;
@@ -286,7 +286,7 @@ int WaypointAddPath(const short int add_index, const short int path_index) {
 	if (paths[add_index] == nullptr)
 		paths[add_index] = p; // save head point if necessary
 
-	return true;
+	return 1;
 }
 
 // delete all paths to this waypoint index...

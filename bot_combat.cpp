@@ -188,7 +188,7 @@ int FriendlyClassTotal(const edict_t *pEdict, const int specifiedClass, const bo
 
    // report failure if there is no team play
    if (is_team_play <= 0 || mod_id != TFC_DLL)
-      return false;
+      return 0;
 
    const int my_team = UTIL_GetTeam(pEdict);
    int classTotal = 0;

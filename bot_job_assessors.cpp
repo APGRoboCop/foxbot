@@ -716,7 +716,7 @@ int assess_JobInvestigateArea(const bot_t* pBot, const job_struct& r_job) {
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobPursueEnemy(const bot_t* pBot, const job_struct& r_job) {
 	// recommend the job be removed if it is invalid
-	if (FNullEnt(r_job.player) || !IsAlive(r_job.player) && pBot->current_wp > -1 && waypoints[pBot->current_wp].flags & W_FL_LIFT)
+   if (FNullEnt(r_job.player) || (!IsAlive(r_job.player) && pBot->current_wp > -1 && (waypoints[pBot->current_wp].flags & W_FL_LIFT)))
 		return PRIORITY_NONE;
 
 	// still pursue the enemy after being killed? (check once after dying)

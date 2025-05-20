@@ -2489,7 +2489,7 @@ edict_t* BotAllyAtVector(const bot_t* pBot, const Vector& r_vecOrigin, const flo
 short BotTeammatesNearWaypoint(const bot_t* pBot, const int waypoint) {
 	// sanity check
 	if (waypoint < 0)
-		return false;
+		return 0;
 
 	// number of bots found nearer to the waypoint than this bot
 	short total_present = 0;
@@ -3114,26 +3114,26 @@ static bool BotChangeRole(bot_t* pBot, const char* cmdLine, const char* from) {
 
 // This function checks if the specified user has access through
 // the foxbot_commanders.txt
-static bool botVerifyAccess(edict_t* pPlayer) {
-	char authId[255];
-	std::strcpy(authId, GETPLAYERAUTHID(pPlayer));
+static bool botVerifyAccess(edict_t *pPlayer) {
+   char authId[255];
+   std::strcpy(authId, GETPLAYERAUTHID(pPlayer));
 
-	char szBuffer[64];
-	snprintf(szBuffer, 63, "%s Does not have access.", authId);
-	szBuffer[63] = '\0'; // just to be sure
-	ALERT(at_console, szBuffer);
-	// example steam ID: STEAM_0:1245
+   char szBuffer[64];
+   snprintf(szBuffer, 63, "%s Does not have access.", authId);
+   szBuffer[63] = '\0'; // just to be sure
+   ALERT(at_console, szBuffer);
+   // example steam ID: STEAM_0:1245
 
-	bool found = false;
-	LIter<char*> iter(&commanders);
-	for (iter.begin(); !iter.end(); ++iter) {
-		if (strcasecmp(authId, *iter.current()) == 0)
-			found = true;
-	}
-
-	if (found)
-		return true;
-	return false;
+   bool found = false;
+   LIter<char *> iter(&commanders);
+   for (iter.begin(); !iter.end(); ++iter) {
+      // Check if iter.current() is not null before dereferencing
+      if (iter.current() != nullptr && strcasecmp(authId, *iter.current()) == 0) {
+         found = true;
+         break; // Exit the loop early if found
+      }
+   }
+   return found;
 }
 
 // BotPickNewClass().
@@ -3533,26 +3533,27 @@ static void BotReportMyFlagDrop(bot_t* pBot) {
 
 	// set up a job to retrieve the flag
 	job_struct* newJob = InitialiseNewJob(pBot, JOB_PICKUP_FLAG);
-	if (newJob != nullptr) {
-		newJob->waypoint = WaypointFindNearest_E(pent, 600.0f, pBot->current_team);
-		newJob->object = pent;
-		newJob->origin = pent->v.origin;
-		SubmitNewJob(pBot, JOB_PICKUP_FLAG, newJob);
-	}
+   if (newJob == nullptr || pent == nullptr) {
+      // Optionally log or handle error here
+      return;
+   }
+
+   newJob->waypoint = WaypointFindNearest_E(pent, 600.0f, pBot->current_team);
+   newJob->object = pent;
+   newJob->origin = pent->v.origin;
+   SubmitNewJob(pBot, JOB_PICKUP_FLAG, newJob);
 
 	// let the other players know where the flag was dropped
-	const int bot_area = AreaInsideClosest(pBot->pEdict);
-	if (offensive_chatter && bot_area != -1) {
-		// give the other bots on the bot's team the same JOB_PICKUP_FLAG
-		// job if they're interested
-		if (newJob != nullptr) {
-			for (bot_t &bot : bots) {
-				if (bot.is_used && &bot != pBot // not this bot
-					 && bot.bot_has_flag == false && bot.mission == ROLE_ATTACKER && bot.current_team == pBot->current_team) {
-					SubmitNewJob(&bot, JOB_PICKUP_FLAG, newJob);
-				}
-			}
-		}
+   const int bot_area = AreaInsideClosest(pBot->pEdict);
+   if (offensive_chatter && bot_area != -1) {
+      // give the other bots on the bot's team the same JOB_PICKUP_FLAG
+      // job if they're interested
+      for (bot_t &bot : bots) {
+         if (bot.is_used && &bot != pBot // not this bot
+             && bot.bot_has_flag == false && bot.mission == ROLE_ATTACKER && bot.current_team == pBot->current_team) {
+            SubmitNewJob(&bot, JOB_PICKUP_FLAG, newJob);
+         }
+      }
 
 		newJob = InitialiseNewJob(pBot, JOB_REPORT);
 		if (newJob != nullptr) {
@@ -4085,7 +4086,7 @@ static int guessThreatLevel(const bot_t* pBot) {
 		Threat += 20;
 		break;
 	case TFC_CLASS_DEMOMAN:
-		Threat += 25;
+		Threat += 23;
 		break;
 	case TFC_CLASS_MEDIC:
 		Threat += 30;
@@ -4094,13 +4095,13 @@ static int guessThreatLevel(const bot_t* pBot) {
 		Threat += 15;
 		break;
 	case TFC_CLASS_PYRO:
-		Threat += 20;
+		Threat += 27;
 		break;
 	case TFC_CLASS_SPY:
 		Threat += 35; // less gunplay, more sneaking about
 		break;
 	case TFC_CLASS_ENGINEER:
-		Threat += 25;
+		Threat += 28;
 		break;
 	default:
 		break;
@@ -4145,7 +4146,7 @@ static int guessThreatLevel(const bot_t* pBot) {
 			Threat += 10;
 		break;
 	case TFC_CLASS_SPY:
-		Threat += 5; // Spies should be attacked on sight
+		Threat += 7; // Spies should be attacked on sight
 		break;
 	case TFC_CLASS_ENGINEER:
 		Threat += 15;
@@ -4322,12 +4323,12 @@ static void BotSpectatorDebug(bot_t* pBot) {
 				}
 			}
 		}
-		else if (spectate_debug == 3) // show the bots personality traits
-		{
-			char msgBuffer[128] = "";
+	   else if (spectate_debug == 3) // show the bots personality traits
+      {
+         char msgBuffer[128] = "";
 			snprintf(msgBuffer, 128, "aggression %d\nhealth threshold %d\ncamper %d", pBot->trait.aggression, pBot->trait.health, pBot->trait.camper);
-			std::strncat(msg, msgBuffer, 255 - std::strlen(msg) - 1);
-		}
+         std::strncat(msg, msgBuffer, 255 - std::strlen(msg) - 1);
+      }
 		else // some other spectate_debug mode - show navigation info
 		{
 			char msgBuffer[128] = "";

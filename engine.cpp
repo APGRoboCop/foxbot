@@ -1169,10 +1169,10 @@ C_DLLEXPORT int GetEngineFunctions(enginefuncs_t* pengfuncsFromEngine, int* inte
 	pengfuncsFromEngine->pfnClientCommand = pfnClCom;
 	pengfuncsFromEngine->pfnClientPrintf = pfnClPrintf;
 
-	return true;
+	return 1;
 }
 
 int GetEngineFunctions_Post(enginefuncs_t* pengfuncsFromEngine, int* interfaceVersion) {
 	pengfuncsFromEngine->pfnRegUserMsg = pfnRegUserMsg_post;
-	return true;
+	return 1;
 }

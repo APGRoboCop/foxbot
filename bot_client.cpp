@@ -661,15 +661,16 @@ void BotClient_Valve_DeathMsg(void* p, int bot_index) {
 				bots[index].killer_edict = nullptr;
 			}
 			else {
-				// store edict of player that killed this bot...
-				bots[index].killer_edict = INDEXENT(killer_index);
-				killer_edict = INDEXENT(killer_index);
-				indexb = UTIL_GetBotIndex(killer_edict);
-				if (indexb != -1 && victim_edict != nullptr) {
-					if (UTIL_GetTeam(killer_edict) != UTIL_GetTeam(victim_edict)) {
-						bots[indexb].killed_edict = victim_edict;
-					}
-				}
+            // store edict of player that killed this bot...
+            edict_t *killerEdict = INDEXENT(killer_index); // Temporary variable to store the result
+            bots[index].killer_edict = killerEdict;
+            killer_edict = killerEdict;
+            indexb = UTIL_GetBotIndex(killer_edict);
+            if (indexb != -1 && victim_edict != nullptr) {
+               if (UTIL_GetTeam(killer_edict) != UTIL_GetTeam(victim_edict)) {
+                  bots[indexb].killed_edict = victim_edict;
+               }
+            }
 			}
 		}
 	}

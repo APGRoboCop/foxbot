@@ -4813,7 +4813,7 @@ C_DLLEXPORT int GetEntityAPI(DLL_FUNCTIONS* pFunctionTable, int interfaceVersion
 	if (!mr_meta) {
 		// pass other DLLs engine callbacks to function table...
 		if (!(*other_GetEntityAPI)(&other_gFunctionTable, INTERFACE_VERSION)) {
-			return false; // error initializing function table!!!
+			return 0; // error initializing function table!!!
 		}
 		gGameDLLFunc.dllapi_table = &other_gFunctionTable;
 		gpGamedllFuncs = &gGameDLLFunc;
@@ -4827,19 +4827,19 @@ C_DLLEXPORT int GetEntityAPI(DLL_FUNCTIONS* pFunctionTable, int interfaceVersion
 	pFunctionTable->pfnClientConnect = ClientConnect;
 	pFunctionTable->pfnClientDisconnect = ClientDisconnect;
 	pFunctionTable->pfnClientCommand = ClientCommand;
-	return true;
+	return 1;
 }
 
 C_DLLEXPORT int GetNewDLLFunctions(NEW_DLL_FUNCTIONS* pFunctionTable, int* interfaceVersion) {
 	if (other_GetNewDLLFunctions == nullptr)
-		return false;
+		return 0;
 	if (!mr_meta) { // pass other DLLs engine callbacks to function table...
 		if (!(*other_GetNewDLLFunctions)(pFunctionTable, interfaceVersion)) {
-			return false; // error initializing function table!!!
+			return 0; // error initializing function table!!!
 		}
 		gGameDLLFunc.newapi_table = pFunctionTable;
 	}
-	return true;
+	return 1;
 }
 
 void FakeClientCommand(edict_t* pBot, const char* arg1, const char* arg2, const char* arg3) {
@@ -5103,13 +5103,13 @@ void DispatchKeyValue_Post(edict_t* pentKeyvalue, const KeyValueData* pkvd) {
 
 C_DLLEXPORT int GetEntityAPI_Post(DLL_FUNCTIONS* pFunctionTable, const int interfaceVersion) {
 	if (!pFunctionTable) {
-		return false;
+		return 0;
 	}
 	if (interfaceVersion != INTERFACE_VERSION) {
-		return false;
+		return 0;
 	}
 	pFunctionTable->pfnClientConnect = ClientConnect_Post;
-	return true;
+	return 1;
 }
 
 static void ProcessBotCfgFile() {
