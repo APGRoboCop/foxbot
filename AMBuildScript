@@ -110,7 +110,7 @@ if builder.options.optimize == '1':
     builder.cxx.cflags += ['/Ox', '/Zo', '/Ob3', '/GF']
     # Windows optimization link flags
     builder.cxx.linkflags += ['/OPT:ICF', '/OPT:REF']
-	# This needs to be after our optimization flags which could otherwise disable it.
+    # This needs to be after our optimization flags which could otherwise disable it.
     builder.cxx.cflags += ['/Oy-']
 
 # Compiler options for debugging ( --enable-debug )

@@ -1763,7 +1763,7 @@ int BotNadeHandler(bot_t *pBot, bool timed, const char newNadeType) {
    // Go ahead and throw if its about to explode.
    if (pBot->nadePrimed) {
       const int lost_health_percent = 100 - PlayerHealthPercent(pEdict);
-      float release_time = 2.8f;
+      float release_time = 0.8f;
 
       if (pBot->nadeType == GRENADE_MIRV)
          release_time = 1.0f;
@@ -1795,7 +1795,7 @@ int BotNadeHandler(bot_t *pBot, bool timed, const char newNadeType) {
       const float distanceThrown = NADEVELOCITY * timeToDet;
 
       // Throw it if we got a good chance at landing good splash damage.
-      if (fabsf(distanceThrown - pBot->enemy.f_seenDistance) < 20.0f || distanceThrown - pBot->enemy.f_seenDistance < -200.0f) {
+      if (std::fabs(distanceThrown - pBot->enemy.f_seenDistance) < 20.0f || distanceThrown - pBot->enemy.f_seenDistance < -200.0f) {
          toss = true;
          pBot->tossNade = 1;
          // UTIL_HostSay(pEdict, 0, "Die Bitch!!");
@@ -1832,58 +1832,57 @@ int BotNadeHandler(bot_t *pBot, bool timed, const char newNadeType) {
    }
 
    /*	// this code allows bots to prime grenades early when
-               // approaching a known Sentry Gun
-               if(pBot->current_wp != pBot->lastWPIndexChecked)
+      // approaching a known Sentry Gun
+      if(pBot->current_wp != pBot->lastWPIndexChecked)
+      {
+         pBot->lastWPIndexChecked = pBot->current_wp;
+
+         // If we have a last seen sg, lets try checking the visibility
+         // from the next waypoint we are heading to.
+         if(pBot->lastEnemySentryGun != NULL
+            && !FNullEnt(pBot->lastEnemySentryGun)
+            && pBot->enemy.ptr != pBot->lastEnemySentryGun
+            && VectorsNearerThan(waypoints[pBot->current_wp].origin, pBot->lastEnemySentryGun->v.origin, 800))
+         {
+            zDiff = pBot->lastEnemySentryGun->v.origin.z - waypoints[pBot->current_wp].origin.z;
+            rtnValue = static_cast<int>(zDiff);
+            const float dist
+               = (pBot->pEdict->v.origin - waypoints[pBot->current_wp].origin).Length();
+
+            TraceResult result;
+            UTIL_TraceLine( waypoints[pBot->current_wp].origin,
+               pBot->lastEnemySentryGun->v.origin,
+               ignore_monsters,
+               pEdict->v.pContainingEntity,
+               &result );
+
+            // will we be close enough to attack?
+            if((result.flFraction >= 1.0)
+               && (zDiff < 500.0f))
+            {
+               if(dist < 600.0f)
                {
-                           pBot->lastWPIndexChecked = pBot->current_wp;
+                  // Lets see if the scout can use the NTF ring of shadows
+                  if(pEdict->v.playerclass == TFC_CLASS_SCOUT)
+                     FakeClientCommand(pEdict, "_special2", "102", NULL);
 
-                           // If we have a last seen sg, lets try checking the visibility
-                           // from the next waypoint we are heading to.
-                           if(pBot->lastEnemySentryGun != NULL
-                                       && !FNullEnt(pBot->lastEnemySentryGun)
-                                       && pBot->enemy.ptr != pBot->lastEnemySentryGun
-                                       && VectorsNearerThan(waypoints[pBot->current_wp].origin, pBot->lastEnemySentryGun->v.origin,
-      800))
-                           {
-                                       zDiff = pBot->lastEnemySentryGun->v.origin.z - waypoints[pBot->current_wp].origin.z;
-                                       rtnValue = static_cast<int>(zDiff);
-                                       const float dist
-                                                   = (pBot->pEdict->v.origin - waypoints[pBot->current_wp].origin).Length();
+                  char buffer[150];
+                     std::sprintf(buffer, "SG Early Prime P: %d S: %d",
+                        pBot->grenades[PrimaryGrenade],
+                        pBot->grenades[SecondaryGrenade]);
+                     UTIL_HostSay(pEdict, 0, buffer);
 
-                                       TraceResult result;
-                                       UTIL_TraceLine( waypoints[pBot->current_wp].origin,
-                                                   pBot->lastEnemySentryGun->v.origin,
-                                                   ignore_monsters,
-                                                   pEdict->v.pContainingEntity,
-                                                   &result );
+                  // prime a grenade in anticipation
+                  newNadeType = GRENADE_DAMAGE;
+                  timed = true;
+               }
 
-                                       // will we be close enough to attack?
-                                       if((result.flFraction >= 1.0)
-                                                   && (zDiff < 500.0f))
-                                       {
-                                                   if(dist < 600.0f)
-                                                   {
-                                                               // Lets see if the scout can use the NTF ring of shadows
-                                                               if(pEdict->v.playerclass == TFC_CLASS_SCOUT)
-                                                                           FakeClientCommand(pEdict, "_special2", "102", NULL);
-
-                                                               char buffer[150];
-                                                                           std::sprintf(buffer, "SG Early Prime P: %d S: %d",
-                                                                                       pBot->grenades[PrimaryGrenade],
-                                                                                       pBot->grenades[SecondaryGrenade]);
-                                                                           UTIL_HostSay(pEdict, 0, buffer);
-
-                                                               // prime a grenade in anticipation
-                                                               newNadeType = GRENADE_DAMAGE;
-                                                               timed = true;
-                                                   }
-
-                                                   // try not to target the Sentry Gun until it's in view
-                                                   if(dist < 100.0f)
-                                                               pBot->enemy.ptr = pBot->lastEnemySentryGun;
-                                       }
-                           }
-               }*/
+               // try not to target the Sentry Gun until it's in view
+               if(dist < 100.0f)
+                  pBot->enemy.ptr = pBot->lastEnemySentryGun;
+            }
+         }
+      }*/
 
    // Get out if: nothing NEW to throw, or underwater
    if (!newNadeType || pEdict->v.waterlevel == WL_HEAD_IN_WATER)
@@ -2007,7 +2006,6 @@ int BotNadeHandler(bot_t *pBot, bool timed, const char newNadeType) {
                   BotPrimeGrenade(pBot, PrimaryGrenade, GRENADE_FRAGMENTATION, 0);
             }
             break;
-         default:;
          }
       }
    }

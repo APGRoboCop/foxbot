@@ -46,9 +46,8 @@
 
 #include "botcam.h"
 
-constexpr unsigned char VER_MAJOR = 0;
-constexpr unsigned int VER_MINOR = 911;		//TODO: Replace unsigned int as unsigned char
-                                             // - as long we don't use 3 digits anymore [APG]RoboCop[CL]
+constexpr unsigned char VER_MAJOR = 1;
+constexpr unsigned char VER_MINOR = 0;
 
 //#define VER_BUILD 0
 
@@ -61,7 +60,7 @@ constexpr unsigned char MENU_5 = 5;
 constexpr unsigned char MENU_6 = 6;
 constexpr unsigned char MENU_7 = 7;
 
-cvar_t foxbot = { "foxbot", "0.911", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr };
+cvar_t foxbot = { "foxbot", "1.0-beta1", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr };
 cvar_t enable_foxbot = { "enable_foxbot", "1", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr };
 cvar_t sv_bot = { "bot", "", 0, 0, nullptr };
 
@@ -1017,7 +1016,7 @@ void DispatchThink(edict_t* pent) {
 				}
 
 				char text[511];
-				int amb = 0;
+            int amb = 0;
 				float vidsize = 2.0f;
 				float sz = pBot->enemy.ptr->v.maxs.z * (vidsize / distance) * 100;
 				int d = GETENTITYILLUM(pBot->enemy.ptr);
@@ -2939,21 +2938,24 @@ void StartFrame() { // v7 last frame timing
 				min_bots = -1; // count the number of players, and players per team
 			int count1 = 0;   // Not wanted? [APG]RoboCop[CL]
 			{
-				char cl_name[128];
-				for (i = 1; i <= gpGlobals->maxClients; i++) { //TODO: Refactor Loop [APG]RoboCop[CL]
-					if (INDEXENT(i) == nullptr)
-						continue;
-					cl_name[0] = '\0';
-					char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(INDEXENT(i));
-					std::strcpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"));
-					// is this a valid connected player?
-					if (cl_name[0] != '\0') {
-						count1++;
-						int team = INDEXENT(i)->v.team - 1;
-                  if (team > -1 && team < MAX_TEAMS)
-							++playersPerTeam[team];
-					}
-				}
+            for (i = 1; i <= gpGlobals->maxClients; ++i) {
+               edict_t *entity = INDEXENT(i);
+               if (entity == nullptr) {
+                  continue;
+               }
+               char cl_name[128]; // Use a defined constant for the max name length
+               char *infoBuffer = g_engfuncs.pfnGetInfoKeyBuffer(entity);
+               std::strcpy(cl_name, g_engfuncs.pfnInfoKeyValue(infoBuffer, "name"));
+               // Check if this is a valid connected player
+               if (cl_name[0] == '\0') {
+                  continue;
+               }
+               ++count1;
+               int team = entity->v.team - 1;
+               if (team >= 0 && team < MAX_TEAMS) {
+                  ++playersPerTeam[team];
+               }
+            }
 			} // sort out is_team, just in case the map ents are fucked
 			bool active_team_found = false;
          for (i = 0; i < MAX_TEAMS; i++) // look for an active team

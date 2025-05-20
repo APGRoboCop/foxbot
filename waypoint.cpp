@@ -3471,9 +3471,8 @@ bool WaypointAvailable(const int index, const int team) {
 }
 
 void WaypointRunOneWay(edict_t* pEntity) {
-	const int temp = WaypointFindNearest_E(pEntity, 50.0f, -1);
 
-	if (temp != -1) {
+   if (const int temp = WaypointFindNearest_E(pEntity, 50.0f, -1); temp != -1) {
 		if (wpt1 == -1) {
 			// play "cancelled" sound...
 			EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "common/wpn_moveselect.wav", 1.0, ATTN_NORM, 0, 100);
@@ -3490,13 +3489,12 @@ void WaypointRunOneWay(edict_t* pEntity) {
 		}
 		return;
 	}
-	return;
+	//return;
 }
 
 void WaypointRunTwoWay(edict_t* pEntity) {
-	const int temp = WaypointFindNearest_E(pEntity, 50.0f, -1);
 
-	if (temp != -1) {
+   if (const int temp = WaypointFindNearest_E(pEntity, 50.0f, -1); temp != -1) {
 		if (wpt1 == -1) {
 			// play "cancelled" sound...
 			EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "common/wpn_moveselect.wav", 1.0, ATTN_NORM, 0, 100);
@@ -3514,7 +3512,7 @@ void WaypointRunTwoWay(edict_t* pEntity) {
 		}
 		return;
 	}
-	return;
+	//return;
 }
 
 void WaypointAutoBuild(edict_t* pEntity) {

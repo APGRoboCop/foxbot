@@ -550,36 +550,36 @@ int assess_JobGuardWaypoint(const bot_t* pBot, const job_struct& r_job) {
 // assessment function for the priority of a JOB_DEFEND_FLAG job.
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobDefendFlag(const bot_t *pBot, const job_struct &r_job) {
-   // recommend the job be removed if it is invalid
-   if (FNullEnt(r_job.object) || pBot->bot_has_flag)
-      return PRIORITY_NONE;
+	// recommend the job be removed if it is invalid
+	if (FNullEnt(r_job.object) || pBot->bot_has_flag)
+		return PRIORITY_NONE;
 
-   // check the waypoints validity
-   if (r_job.phase != 0 && (!WaypointAvailable(r_job.waypoint, pBot->current_team) || WaypointRouteFromTo(pBot->current_wp, r_job.waypoint, pBot->current_team) == -1))
-      return PRIORITY_NONE;
+	// check the waypoints validity
+	if (r_job.phase != 0 && (!WaypointAvailable(r_job.waypoint, pBot->current_team) || WaypointRouteFromTo(pBot->current_wp, r_job.waypoint, pBot->current_team) == -1))
+		return PRIORITY_NONE;
 
-   // abort if the flag has moved significantly
-   if (!VectorsNearerThan(r_job.object->v.origin, r_job.origin, 200.0))
-      return PRIORITY_NONE;
+	// abort if the flag has moved significantly
+	if (!VectorsNearerThan(r_job.object->v.origin, r_job.origin, 200.0))
+		return PRIORITY_NONE;
 
-   // see if this flag will have too many defenders
-   if (r_job.phase == 0) {
-      int defenderTotal = 1; // 1 = this bot
-      for (bot_t &bot : bots) {
-         if (bot.is_used && bot.current_team == pBot->current_team && &bot != pBot) // make sure the player isn't THIS bot
-         {
-            const int DefendJobIndex = BufferedJobIndex(&bot, JOB_DEFEND_FLAG);
-            if (DefendJobIndex != -1 && bot.job[DefendJobIndex].object == r_job.object) {
-               ++defenderTotal;
+	// see if this flag will have too many defenders
+	if (r_job.phase == 0) {
+		int defenderTotal = 1; // 1 = this bot
+		for (bot_t &bot : bots) {
+			if (bot.is_used && bot.current_team == pBot->current_team && &bot != pBot) // make sure the player isn't THIS bot
+			{
+				const int DefendJobIndex = BufferedJobIndex(&bot, JOB_DEFEND_FLAG);
+				if (DefendJobIndex != -1 && bot.job[DefendJobIndex].object == r_job.object) {
+					++defenderTotal;
 
 					if (defenderTotal > 2)
-                  return PRIORITY_NONE;
-            }
-         }
-      }
-   }
+						return PRIORITY_NONE;
+				}
+			}
+		}
+	}
 
-   return jl[JOB_DEFEND_FLAG].basePriority;
+	return jl[JOB_DEFEND_FLAG].basePriority;
 }
 
 // assessment function for the priority of a JOB_GET_FLAG job.
@@ -716,7 +716,7 @@ int assess_JobInvestigateArea(const bot_t* pBot, const job_struct& r_job) {
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobPursueEnemy(const bot_t* pBot, const job_struct& r_job) {
 	// recommend the job be removed if it is invalid
-   if (FNullEnt(r_job.player) || !IsAlive(r_job.player) && pBot->current_wp > -1 && waypoints[pBot->current_wp].flags & W_FL_LIFT)
+	if (FNullEnt(r_job.player) || !IsAlive(r_job.player) && pBot->current_wp > -1 && waypoints[pBot->current_wp].flags & W_FL_LIFT)
 		return PRIORITY_NONE;
 
 	// still pursue the enemy after being killed? (check once after dying)

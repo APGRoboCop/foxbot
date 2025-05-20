@@ -109,10 +109,10 @@ static jobFunctions_struct jf[JOB_TYPE_TOTAL] = {
 // these must be in the right order for each job to run properly
 jobList_struct jl[JOB_TYPE_TOTAL] = {
 	{ 520, "JOB_SEEK_WAYPOINT" }, { PRIORITY_MAXIMUM, "JOB_GET_UNSTUCK" }, { 0, "JOB_ROAM" }, { 400, "JOB_CHAT" },
-	{ 680, "JOB_REPORT" }, { 500, "JOB_PICKUP_ITEM" }, { 590, "JOB_PICKUP_FLAG" },
+	{ 680, "JOB_REPORT" }, { 530, "JOB_PICKUP_ITEM" }, { 590, "JOB_PICKUP_FLAG" },
 	{ 790, "JOB_PUSH_BUTTON" }, { 630, "JOB_USE_TELEPORT" }, { 760, "JOB_MAINTAIN_OBJECT" },
-	{ 770, "JOB_BUILD_SENTRY" }, { 510, "JOB_BUILD_DISPENSER" }, { 670, "JOB_BUILD_TELEPORT" },
-	{ 450, "JOB_BUFF_ALLY" }, { 540, "JOB_ESCORT_ALLY" },
+	{ 770, "JOB_BUILD_SENTRY" }, { 500, "JOB_BUILD_DISPENSER" }, { 670, "JOB_BUILD_TELEPORT" },
+	{ 450, "JOB_BUFF_ALLY" }, { 510, "JOB_ESCORT_ALLY" },
 	{ 490, "JOB_CALL_MEDIC" }, // this should be a higher priority than JOB_GET_HEALTH
 	{ 460, "JOB_GET_HEALTH" }, { 430, "JOB_GET_ARMOR" }, { 610, "JOB_GET_AMMO" }, { 660, "JOB_DISGUISE" },
 	{ 190, "JOB_FEIGN_AMBUSH" }, { 570, "JOB_SNIPE" }, { 260, "JOB_GUARD_WAYPOINT" }, { 560, "JOB_DEFEND_FLAG" },
@@ -143,17 +143,17 @@ void BotResetJobBuffer(bot_t *pBot) {
 
 // This function eliminates whatever job is in the specified buffer
 // index, and is the preferred method of terminating any job.
-static void DropJobFromBuffer(bot_t* pBot, const int buffer_index) {
-	pBot->jobType[buffer_index] = JOB_NONE;
-	pBot->job[buffer_index].f_bufferedTime = 0.0f;
-	pBot->job[buffer_index].priority = PRIORITY_NONE;
-	pBot->job[buffer_index].phase = 0;
-	pBot->job[buffer_index].phase_timer = 0.0f;
-	pBot->job[buffer_index].waypoint = -1;
-	pBot->job[buffer_index].waypointTwo = -1;
-	pBot->job[buffer_index].player = nullptr;
-	pBot->job[buffer_index].object = nullptr;
-	pBot->job[buffer_index].message[0] = '\0';
+static void DropJobFromBuffer(bot_t *pBot, const int buffer_index) {
+   pBot->jobType[buffer_index] = JOB_NONE;
+   pBot->job[buffer_index].f_bufferedTime = 0.0f;
+   pBot->job[buffer_index].priority = PRIORITY_NONE;
+   pBot->job[buffer_index].phase = 0;
+   pBot->job[buffer_index].phase_timer = 0.0f;
+   pBot->job[buffer_index].waypoint = -1;
+   pBot->job[buffer_index].waypointTwo = -1;
+   pBot->job[buffer_index].player = nullptr;
+   pBot->job[buffer_index].object = nullptr;
+   pBot->job[buffer_index].message[0] = '\0';
 }
 
 // This function allows a job to be blacklisted(so that it cannot be added to the buffer)
@@ -162,41 +162,39 @@ static void DropJobFromBuffer(bot_t* pBot, const int buffer_index) {
 // find a route to it from a certain position.
 // timeOut should specify the number of seconds you want the job blacklisted for and
 // should depend upon the type type of job that failed and the type of failure.
-void BlacklistJob(bot_t* pBot, const int jobType, const float timeOut) {
-	int shortestIndex = -1;
-	float shortestTime = 9999999999999999.0f;
+void BlacklistJob(bot_t *pBot, const int jobType, const float timeOut) {
+   int shortestIndex = -1;
+   float shortestTime = std::numeric_limits<float>::max();
 
-	for (int i = 0; i < JOB_BLACKLIST_MAX; i++) {
-		if (pBot->jobBlacklist[i].f_timeOut < shortestTime) {
-			shortestIndex = i;
-			shortestTime = pBot->jobBlacklist[i].f_timeOut;
-		}
-	}
+   for (int i = 0; i < JOB_BLACKLIST_MAX; i++) {
+      if (pBot->jobBlacklist[i].f_timeOut < shortestTime) {
+         shortestIndex = i;
+         shortestTime = pBot->jobBlacklist[i].f_timeOut;
+      }
+   }
 
-	if (shortestIndex != -1) {
-		pBot->jobBlacklist[shortestIndex].type = jobType;
-		pBot->jobBlacklist[shortestIndex].f_timeOut = pBot->f_think_time + timeOut;
-	}
+   if (shortestIndex != -1) {
+      pBot->jobBlacklist[shortestIndex].type = jobType;
+      pBot->jobBlacklist[shortestIndex].f_timeOut = pBot->f_think_time + timeOut;
+   }
 }
 
 // This function returns true if the specified jobtype is already in the
 // job buffer.
-bool BufferContainsJobType(const bot_t* pBot, const int JobType) {
-	 return std::any_of(std::begin(pBot->jobType), std::end(pBot->jobType), [JobType](const int i) {
-		  return i == JobType;
-	 });
+bool BufferContainsJobType(const bot_t *pBot, const int JobType) {
+   return std::any_of(std::begin(pBot->jobType), std::end(pBot->jobType), [JobType](const int i) { return i == JobType; });
 }
 
 // If the specified job type is already in the job buffer this function will
 // return the buffer index it occupies.
 // Returns -1 if the job type is not in the buffer.
-int BufferedJobIndex(const bot_t* pBot, const int JobType) {
-	for (int i = 0; i < JOB_BUFFER_MAX; i++) {
-		if (pBot->jobType[i] == JobType)
-			return i;
-	}
+int BufferedJobIndex(const bot_t *pBot, const int JobType) {
+   for (int i = 0; i < JOB_BUFFER_MAX; i++) {
+      if (pBot->jobType[i] == JobType)
+         return i;
+   }
 
-	return -1; // job isn't buffered
+   return -1; // job isn't buffered
 }
 
 // This function serves two main purposes.
