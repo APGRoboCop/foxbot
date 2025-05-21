@@ -181,8 +181,7 @@ void WaypointInit() {
 	}
 
 	// erase the name of the waypoint files author
-	for (i = 0; i < 255; i++)
-		waypoint_author[i] = '\0';
+   std::fill(std::begin(waypoint_author), std::end(waypoint_author), '\0');
 
 	for (i = 0; i < MAX_WAYPOINTS; i++) {
 		waypoints[i].flags = 0;
@@ -693,7 +692,8 @@ int WaypointFindRandomGoal(const int source_WP, const int team, const WPT_INT32 
 	if (num_waypoints < 1 || source_WP < 0 || source_WP >= num_waypoints)
 		return -1;
 
-	static int indexes[50]; // made static for speed reasons
+	constexpr int MAX_RANDOM_GOALS = 50;
+   static int indexes[MAX_RANDOM_GOALS]; // made static for speed reasons
 	int count = 0;
 
 	// start from a random waypoint in case there are more matching waypoints
@@ -746,7 +746,8 @@ int WaypointFindRandomGoal_D(const int source_WP, const int team, const int rang
 	if (num_waypoints < 1 || source_WP < 0 || source_WP >= num_waypoints)
 		return -1;
 
-	static int indexes[50]; // made static for speed reasons
+	constexpr int MAX_RANDOM_GOALS = 50;
+   static int indexes[MAX_RANDOM_GOALS]; // made static for speed reasons
 	int count = 0;
 
 	// start from a random waypoint in case there are more matching waypoints
@@ -803,7 +804,8 @@ int WaypointFindRandomGoal_R(const Vector& v_src, const bool checkVisibility, co
 	if (num_waypoints < 1)
 		return -1;
 
-	static int indexes[50]; // made static for speed reasons
+	constexpr int MAX_RANDOM_GOALS = 50;
+   static int indexes[MAX_RANDOM_GOALS]; // made static for speed reasons
 	int count = 0;
 
 	// start from a random waypoint in case there are more matching waypoints
