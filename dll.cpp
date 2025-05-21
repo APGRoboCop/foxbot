@@ -51,14 +51,7 @@ constexpr unsigned char VER_MINOR = 0;
 
 //#define VER_BUILD 0
 
-constexpr unsigned char MENU_NONE = 0;
-constexpr unsigned char MENU_1 = 1;
-constexpr unsigned char MENU_2 = 2;
-constexpr unsigned char MENU_3 = 3;
-constexpr unsigned char MENU_4 = 4;
-constexpr unsigned char MENU_5 = 5;
-constexpr unsigned char MENU_6 = 6;
-constexpr unsigned char MENU_7 = 7;
+enum class Menu : unsigned char { MENU_NONE = 0, MENU_1, MENU_2, MENU_3, MENU_4, MENU_5, MENU_6, MENU_7 };
 
 cvar_t foxbot = { "foxbot", "1.0-beta1", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr };
 cvar_t enable_foxbot = { "enable_foxbot", "1", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr };
@@ -1767,7 +1760,7 @@ void ClientCommand(edict_t* pEntity) {
 				int index = WaypointFindNearest_E(pEntity, 50.0f, -1);
 				if (num_waypoints > 0 && index != -1) {
 					g_menu_waypoint = index;
-					g_menu_state = MENU_1;
+               g_menu_state = static_cast<unsigned char>(Menu::MENU_1);
 
 					UTIL_ShowMenu(pEntity, 0x7F, -1, false, show_menu_1);
 					//	UTIL_ShowMenu(pEntity, 0x3F, -1, false, show_menu_1);
@@ -2141,12 +2134,12 @@ void ClientCommand(edict_t* pEntity) {
 				RETURN_META(MRES_SUPERCEDE);
 			return;
 		}
-		else if (FStrEq(pcmd, "menuselect") && g_menu_state != MENU_NONE) {
-			if (g_menu_state == MENU_1) // main menu...
+		else if (FStrEq(pcmd, "menuselect") && g_menu_state != static_cast<unsigned char>(Menu::MENU_NONE)) {
+         if (g_menu_state == static_cast<unsigned char>(Menu::MENU_1)) // main menu...
 			{
 				if (FStrEq(arg1, "1")) // team specific...
 				{
-					g_menu_state = MENU_2; // display team specific menu...
+               g_menu_state = static_cast<unsigned char>(Menu::MENU_2); // display team specific menu...
 					UTIL_ShowMenu(pEntity, 0x1F, -1, false, show_menu_2);
 					if (mr_meta)
 						RETURN_META(MRES_SUPERCEDE);
@@ -2154,7 +2147,7 @@ void ClientCommand(edict_t* pEntity) {
 				}
 				if (FStrEq(arg1, "2")) // display locations menu
 				{
-					g_menu_state = MENU_3;
+               g_menu_state = static_cast<unsigned char>(Menu::MENU_3);
 					UTIL_ShowMenu(pEntity, 0x07, -1, false, show_menu_3);
 
 					if (mr_meta)
@@ -2163,7 +2156,7 @@ void ClientCommand(edict_t* pEntity) {
 				}
 				if (FStrEq(arg1, "3")) // display items menu
 				{
-					g_menu_state = MENU_4;
+               g_menu_state = static_cast<unsigned char>(Menu::MENU_4);
 					UTIL_ShowMenu(pEntity, 0x0F, -1, false, show_menu_4);
 
 					if (mr_meta)
@@ -2172,7 +2165,7 @@ void ClientCommand(edict_t* pEntity) {
 				}
 				if (FStrEq(arg1, "4")) // display actions menu 1
 				{
-					g_menu_state = MENU_5;
+               g_menu_state = static_cast<unsigned char>(Menu::MENU_5);
 					UTIL_ShowMenu(pEntity, 0xFF, -1, false, show_menu_5);
 
 					if (mr_meta)
@@ -2181,7 +2174,7 @@ void ClientCommand(edict_t* pEntity) {
 				}
 				if (FStrEq(arg1, "5")) // display actions menu 2
 				{
-					g_menu_state = MENU_6;
+               g_menu_state = static_cast<unsigned char>(Menu::MENU_6);
 					UTIL_ShowMenu(pEntity, 0xFF, -1, false, show_menu_6);
 
 					if (mr_meta)
@@ -2190,14 +2183,14 @@ void ClientCommand(edict_t* pEntity) {
 				}
 				if (FStrEq(arg1, "6")) // control points
 				{
-					g_menu_state = MENU_7;
+               g_menu_state = static_cast<unsigned char>(Menu::MENU_7);
 					UTIL_ShowMenu(pEntity, 0x1FF, -1, false, show_menu_7);
 					if (mr_meta)
 						RETURN_META(MRES_SUPERCEDE);
 					return;
 				}
 			}
-			else if (g_menu_state == MENU_2) // team specific tags
+			else if (g_menu_state == static_cast<unsigned char>(Menu::MENU_2)) // team specific tags
 			{
 				int team = std::atoi(arg1);
 				team--; // make 0 - 3
@@ -2212,7 +2205,7 @@ void ClientCommand(edict_t* pEntity) {
 					}
 				}
 			}
-			else if (g_menu_state == MENU_3) // location tags
+			else if (g_menu_state == static_cast<unsigned char>(Menu::MENU_3)) // location tags
 			{
 				if (mod_id == TFC_DLL) {
 					if (FStrEq(arg1, "1")) // flag location
@@ -2231,7 +2224,7 @@ void ClientCommand(edict_t* pEntity) {
 					}
 				}
 			}
-			else if (g_menu_state == MENU_4) // item tags
+			else if (g_menu_state == static_cast<unsigned char>(Menu::MENU_4)) // item tags
 			{
 				if (FStrEq(arg1, "1")) // set health
 				{
@@ -2255,7 +2248,7 @@ void ClientCommand(edict_t* pEntity) {
 						waypoints[g_menu_waypoint].flags |= W_FL_AMMO; // on
 				}
 			}
-			else if (g_menu_state == MENU_5) // action tags
+			else if (g_menu_state == static_cast<unsigned char>(Menu::MENU_5)) // action tags
 			{
 				if (FStrEq(arg1, "1")) // set soldier/hw defender
 				{
@@ -2326,7 +2319,7 @@ void ClientCommand(edict_t* pEntity) {
 					}
 				}
 			}
-			else if (g_menu_state == MENU_6) // action tags p2
+			else if (g_menu_state == static_cast<unsigned char>(Menu::MENU_6)) // action tags p2
 			{
 				if (FStrEq(arg1, "1")) // RJ CJ
 				{
@@ -2378,7 +2371,7 @@ void ClientCommand(edict_t* pEntity) {
 						waypoints[g_menu_waypoint].flags |= W_FL_PATHCHECK; // on
 				}
 			}
-			else if (g_menu_state == MENU_7) // control point tags
+			else if (g_menu_state == static_cast<unsigned char>(Menu::MENU_7)) // control point tags
 			{
             if (FStrEq(arg1, "1")) // point1
             {
@@ -2436,7 +2429,7 @@ void ClientCommand(edict_t* pEntity) {
                else
                   waypoints[g_menu_waypoint].script_flags |= static_cast<WPT_INT8>(S_FL_POINT8); // on
             }
-				g_menu_state = MENU_NONE;
+            g_menu_state = static_cast<unsigned char>(Menu::MENU_NONE);
 			}
 			if (mr_meta)
 				RETURN_META(MRES_SUPERCEDE);
