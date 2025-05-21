@@ -1,5 +1,3 @@
-#ifndef _VERSION_H_
-#define _VERSION_H_
 /*
  *
  * File: version.h
@@ -21,6 +19,9 @@
   * in case is isn't defined by the Makefile
   *
   */
+#ifndef _VERSION_H_
+#define _VERSION_H_
+
 #ifndef OPT_TYPE
 #if defined(_MSC_VER) && defined(_DEBUG)
 #define OPT_TYPE "debugging"
