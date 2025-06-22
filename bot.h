@@ -220,7 +220,7 @@ typedef struct {
 	//	short teamFocus;  // how much the bot wants to help the team(or itself!) win
 	short aggression;    // how dominant the bot tends to be
 	int faveClass;       // which class the bot prefers
-	unsigned camper : 1; // how likely a bot sniper is to stay at the same sniper waypoint after killing someone
+	bool camper : 1; // how likely a bot sniper is to stay at the same sniper waypoint after killing someone
 	short health;        // minimum health percentage the bot will tolerate
 	short humour;        // how keen the bot is on doing daft things
 	//	int logoIndex; // choice of graffiti logo

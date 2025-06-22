@@ -3093,7 +3093,7 @@ static void WaypointRouteInit() {
                               distance = std::min(distance, static_cast<float>(WAYPOINT_MAX_DISTANCE));
 
                               if (distance > REACHABLE_RANGE) {
-											snprintf(msg, sizeof(msg), "Waypoint path distance > %4.1f at from %d to %d\n", REACHABLE_RANGE, row, index);
+											snprintf(msg, sizeof(msg), "Waypoint path distance > %4.1f at from %d to %d\n", REACHABLE_RANGE, static_cast<int>(row), static_cast<int>(index));
 											ALERT(at_console, msg);
 											WaypointDeletePath(row, index);
 										}
@@ -3477,7 +3477,7 @@ void WaypointRunOneWay(edict_t* pEntity) {
    if (const int temp = WaypointFindNearest_E(pEntity, 50.0f, -1); temp != -1) {
 		if (wpt1 == -1) {
 			// play "cancelled" sound...
-			EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "common/wpn_moveselect.wav", 1.0, ATTN_NORM, 0, 100);
+			EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "common/wpn_moveselect.wav", 1.0f, ATTN_NORM, 0, 100);
 			wpt1 = temp;
 			return;
 		}
@@ -3485,7 +3485,7 @@ void WaypointRunOneWay(edict_t* pEntity) {
 		wpt1 = temp;
 		if (wpt1 != -1 && wpt2 != -1 && wpt1 != wpt2) {
 			// play "error" sound...
-			EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "common/wpn_select.wav", 1.0, ATTN_NORM, 0, 100);
+			EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "common/wpn_select.wav", 1.0f, ATTN_NORM, 0, 100);
 
 			WaypointAddPath(wpt2, wpt1);
 		}
@@ -3499,7 +3499,7 @@ void WaypointRunTwoWay(edict_t* pEntity) {
    if (const int temp = WaypointFindNearest_E(pEntity, 50.0f, -1); temp != -1) {
 		if (wpt1 == -1) {
 			// play "cancelled" sound...
-			EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "common/wpn_moveselect.wav", 1.0, ATTN_NORM, 0, 100);
+			EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "common/wpn_moveselect.wav", 1.0f, ATTN_NORM, 0, 100);
 			wpt1 = temp;
 			return;
 		}
@@ -3507,7 +3507,7 @@ void WaypointRunTwoWay(edict_t* pEntity) {
 		wpt1 = temp;
 		if (wpt1 != -1 && wpt2 != -1 && wpt1 != wpt2) {
 			// play "error" sound...
-			EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "common/wpn_select.wav", 1.0, ATTN_NORM, 0, 100);
+			EMIT_SOUND_DYN2(pEntity, CHAN_WEAPON, "common/wpn_select.wav", 1.0f, ATTN_NORM, 0, 100);
 
 			WaypointAddPath(wpt1, wpt2);
 			WaypointAddPath(wpt2, wpt1);

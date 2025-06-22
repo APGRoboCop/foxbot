@@ -5224,13 +5224,12 @@ static void ProcessBotCfgFile() {
 	}
 
 	if (std::strcmp(cmd, "addbot") == 0) {
-		if (IS_DEDICATED_SERVER()) {
-			std::printf("[Config] add bot (%s,%s,%s,%s)\n", arg1, arg2, arg3, arg4);
-		}
-		else {
-			snprintf(msg, sizeof(msg), "[Config] add bot (%s,%s,%s,%s)\n", arg1, arg2, arg3, arg4);
-			ALERT(at_console, msg);
-		}
+      if (IS_DEDICATED_SERVER()) {
+         std::printf("[Config] add bot (%s,%s,%s,%s)\n", arg1 ? arg1 : "null", arg2 ? arg2 : "null", arg3 ? arg3 : "null", arg4 ? arg4 : "null");
+      } else {
+         snprintf(msg, sizeof(msg), "[Config] add bot (%s,%s,%s,%s)\n", arg1 ? arg1 : "null", arg2 ? arg2 : "null", arg3 ? arg3 : "null", arg4 ? arg4 : "null");
+         ALERT(at_console, msg);
+      }
 		BotCreate(nullptr, arg1, arg2, arg3, arg4);
 
 		// have to delay here or engine gives "Tried to write to
