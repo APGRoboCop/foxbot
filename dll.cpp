@@ -480,7 +480,7 @@ static void TeamBalanceCheck() {
 
 	// if auto-balance is switched off then let the bots
 	// balance the teams if they "feel" like it
-	else if (!bot_team_balance && !bot_bot_balance)
+	else if (!bot_team_balance)
 		BotBalanceTeams_Casual();
 }
 
@@ -3708,7 +3708,7 @@ void StartFrame() { // v7 last frame timing
 							} // move to end
 						}
 					} // end of multipoint ifs
-					else if (buffer[i1] != '/' && buffer[i1] != '{' && buffer[i1] != '}' && buffer[i1] != ' ' && buffer[i1] != '\n' && commentline == false && random_shit_error == false) {
+					else if (buffer[i1] != '/' && buffer[i1] != '{' && buffer[i1] != '}' && buffer[i1] != ' ' && buffer[i1] != '\n') {
 						random_shit_error = true;
 						ALERT(at_console, "\\/\\/\\/\\/\\/\\/\n");
 						ALERT(at_console, buf);
@@ -4746,7 +4746,7 @@ void StartFrame() { // v7 last frame timing
 							snprintf(msg, sizeof(msg), "y_mp_%s", pnts);
 							std::strcpy(curr->ifs, msg);
 						} // end of multipoint ifs
-						else if (buffer[i1] != '/' && buffer[i1] != '{' && buffer[i1] != '}' && buffer[i1] != ' ' && buffer[i1] != '\n' && commentline == false && random_shit_error == false) {
+						else if (buffer[i1] != '/' && buffer[i1] != '{' && buffer[i1] != '}' && buffer[i1] != ' ' && buffer[i1] != '\n' && random_shit_error == false) {
 							random_shit_error = true;
 							ALERT(at_console, "\\/\\/\\/\\/\\/\\/\n");
 							ALERT(at_console, buf);

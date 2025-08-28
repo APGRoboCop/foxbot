@@ -650,7 +650,7 @@ bool BotNavigateWaypoints(bot_t* pBot, bool navByStrafe) {
 			}
 
 			// slow down if the next waypoint is a walk waypoint...
-			if (waypoints[pBot->current_wp].flags & W_FL_WALK && !navByStrafe)
+         if (waypoints[pBot->current_wp].flags & W_FL_WALK)
 				pBot->f_move_speed = pBot->f_max_speed / 3;
 		}
 
@@ -2453,7 +2453,7 @@ static void BotCheckForConcJump(bot_t* pBot) {
 			break;
 
 		// If its our team or not team specific.
-		if ((RJPoint[RJ_WP_TEAM] == -1 || RJPoint[RJ_WP_TEAM] == pBot->current_team) && RJPoint[RJ_WP_INDEX] != -1) {
+      if (RJPoint[RJ_WP_TEAM] == -1 || RJPoint[RJ_WP_TEAM] == pBot->current_team) {
 			zDiff = waypoints[RJPoint[RJ_WP_INDEX]].origin.z - waypoints[endWP.value()].origin.z;
 
 			// is this RJ waypoints height reachable with a concussion jump?

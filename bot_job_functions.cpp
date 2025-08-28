@@ -39,6 +39,14 @@
 #include "bot_navigate.h"
 #include "bot_weapons.h"
 
+constexpr float PIPETRAP_WAYPOINT_PROXIMITY = 20.0f;
+constexpr float PIPETRAP_BLACKLIST_TIME_MIN = 10.0f;
+constexpr float PIPETRAP_BLACKLIST_TIME_MAX = 30.0f;
+constexpr float PIPETRAP_WAIT_TIME_MIN = 10.0f;
+constexpr float PIPETRAP_WAIT_TIME_MAX = 30.0f;
+constexpr int MAX_PIPEBOMBS = 8;
+constexpr int PIPE_LAUNCHER_AMMO_CAPACITY = 6;
+
 extern chatClass chat; // bot chat stuff
 
 // team data /////////////////////////
@@ -2564,6 +2572,18 @@ int JobDetpackWaypoint(bot_t* pBot) {
    return JOB_UNDERWAY;
 }
 
+int CountPipebombs(bot_t* pBot) { // TODO: Experimental - might need to transfer this to bot_combat.cpp [APG]RoboCop[CL]
+   int pipeBombTally = 0;
+
+   for (edict_t *pent = nullptr; (pent = FIND_ENTITY_BY_CLASSNAME(pent, "tf_gl_pipebomb")) != nullptr && !FNullEnt(pent);) {
+      if (pBot->pEdict == pent->v.owner) {
+         ++pipeBombTally;
+      }
+   }
+
+   return pipeBombTally;
+}
+
 // This function handles bot behaviour for the JOB_PIPETRAP job.
 // TODO: To improve the pipebomb laying trap pattern [APG]RoboCop[CL]
 int JobPipetrap(bot_t* pBot) {
@@ -2571,8 +2591,7 @@ int JobPipetrap(bot_t* pBot) {
 
    // phase zero - get to the pipetrap waypoint
    if (job_ptr->phase == 0) {
-      if (pBot->current_wp == job_ptr->waypoint
-         && VectorsNearerThan(waypoints[pBot->current_wp].origin, pBot->pEdict->v.origin, 20.0)) {
+      if (pBot->current_wp == job_ptr->waypoint && VectorsNearerThan(waypoints[pBot->current_wp].origin, pBot->pEdict->v.origin, PIPETRAP_WAYPOINT_PROXIMITY)) {
          pBot->f_move_speed = 0.0f;
          pBot->f_side_speed = 0.0f;
 
@@ -2594,7 +2613,7 @@ int JobPipetrap(bot_t* pBot) {
       else {
          pBot->goto_wp = job_ptr->waypoint;
          if (!BotNavigateWaypoints(pBot, false)) {
-            BlacklistJob(pBot, JOB_PIPETRAP, random_float(10.0f, 30.0f));
+            BlacklistJob(pBot, JOB_PIPETRAP, random_float(PIPETRAP_BLACKLIST_TIME_MIN, PIPETRAP_BLACKLIST_TIME_MAX));
             return JOB_TERMINATED;
          }
       }
@@ -2603,7 +2622,7 @@ int JobPipetrap(bot_t* pBot) {
    // phase 1 - reload
    if (job_ptr->phase == 1) {
       if (pBot->current_weapon.iId == TF_WEAPON_PL) {
-         if (pBot->current_weapon.iClip < 6)
+         if (pBot->current_weapon.iClip < PIPE_LAUNCHER_AMMO_CAPACITY)
             pBot->pEdict->v.button |= IN_RELOAD;
          else
             job_ptr->phase = 2;
@@ -2620,12 +2639,7 @@ int JobPipetrap(bot_t* pBot) {
    if (job_ptr->phase == 2) {
       // count the number of pipebombs the bot owns
       // ignore visibility because pipebombs can bounce behind other things
-      int pipeBombTally = 0;
-      edict_t* pent = nullptr;
-      while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "tf_gl_pipebomb")) != nullptr && !FNullEnt(pent)) {
-         if (pBot->pEdict == pent->v.owner)
-            ++pipeBombTally;
-      }
+      const int pipeBombTally = CountPipebombs(pBot);
       // find the team's flag
       const edict_t* pentFlag = FIND_ENTITY_BY_CLASSNAME(nullptr, "item_tfgoal");
       if (pentFlag != nullptr && !FNullEnt(pentFlag) && pBot->mission == ROLE_DEFENDER) {
@@ -2636,12 +2650,12 @@ int JobPipetrap(bot_t* pBot) {
          // set the bot's aim to the calculated location
          BotSetFacing(pBot, v_nearFlag);
       }
-      if (pipeBombTally < 8)
+      if (pipeBombTally < MAX_PIPEBOMBS)
          pBot->pEdict->v.button |= IN_ATTACK;
       else {
          pBot->pEdict->v.button |= IN_RELOAD;
          job_ptr->phase = 3;
-         job_ptr->phase_timer = pBot->f_think_time + random_float(10.0f, 30.0f);
+         job_ptr->phase_timer = pBot->f_think_time + random_float(PIPETRAP_WAIT_TIME_MIN, PIPETRAP_WAIT_TIME_MAX);
       }
    }
 
@@ -2652,14 +2666,9 @@ int JobPipetrap(bot_t* pBot) {
          return JOB_TERMINATED;
 
       // reset the job if the bots pipebombs have been destroyed for any reason
-      int pipeBombTally = 0;
-      edict_t* pent = nullptr;
-      while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "tf_gl_pipebomb")) != nullptr && !FNullEnt(pent)) {
-         if (pBot->pEdict == pent->v.owner)
-            ++pipeBombTally;
-      }
+      const int pipeBombTally = CountPipebombs(pBot);
 
-      if (pipeBombTally < 8) {
+      if (pipeBombTally < MAX_PIPEBOMBS) {
          job_ptr->phase = 0;
          return JOB_UNDERWAY;
       }

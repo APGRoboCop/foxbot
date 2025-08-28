@@ -58,6 +58,7 @@ int JobHarrassDefense(bot_t* pBot);
 int JobRocketJump(bot_t* pBot);
 int JobConcussionJump(bot_t* pBot);
 int JobDetpackWaypoint(bot_t* pBot);
+int CountPipebombs(bot_t* pBot);
 int JobPipetrap(bot_t* pBot);
 int JobInvestigateArea(bot_t* pBot);
 int JobPursueEnemy(bot_t* pBot);

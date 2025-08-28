@@ -676,24 +676,28 @@ int assess_JobDetpackWaypoint(const bot_t* pBot, const job_struct& r_job) {
 // assessment function for the priority of a JOB_PIPETRAP job.
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobPipetrap(const bot_t* pBot, const job_struct& r_job) {
-	// recommend the job be removed if it is invalid
-	if (pBot->pEdict->v.playerclass != TFC_CLASS_DEMOMAN || pBot->mission != ROLE_DEFENDER || pBot->enemy.ptr != nullptr)
-		return PRIORITY_NONE;
+   // recommend the job be removed if it is invalid
+   if (pBot->pEdict->v.playerclass != TFC_CLASS_DEMOMAN || pBot->mission != ROLE_DEFENDER || pBot->enemy.ptr != nullptr)
+      return PRIORITY_NONE;
 
-	// check the waypoints validity
-	if (!WaypointAvailable(r_job.waypoint, pBot->current_team) || WaypointRouteFromTo(pBot->current_wp, r_job.waypoint, pBot->current_team) == -1)
-		return PRIORITY_NONE;
+   // check the waypoints validity
+   if (!WaypointAvailable(r_job.waypoint, pBot->current_team) || WaypointRouteFromTo(pBot->current_wp, r_job.waypoint, pBot->current_team) == -1)
+      return PRIORITY_NONE;
 
-	// find the enemy flag
-	const edict_t* pentFlag = FIND_ENTITY_BY_CLASSNAME(nullptr, "item_tfgoal");
-	if (pentFlag != nullptr && !FNullEnt(pentFlag)) {
-		// calculate the distance between the waypoint and the flag
-		const float distance = (waypoints[r_job.waypoint].origin - pentFlag->v.origin).Length();
-		// increase the priority if the distance is below a certain threshold
-		if (distance < 500.0f)
-			return jl[JOB_PIPETRAP].basePriority * 2;
-	}
-	return jl[JOB_PIPETRAP].basePriority;
+   // find the team's flag
+   edict_t *pentFlag = nullptr;
+   while ((pentFlag = FIND_ENTITY_BY_CLASSNAME(pentFlag, "item_tfgoal")) != nullptr && !FNullEnt(pentFlag)) {
+      if (pentFlag->v.team == pBot->current_team) {
+         // calculate the distance between the waypoint and the flag
+         const float distance = (waypoints[r_job.waypoint].origin - pentFlag->v.origin).Length();
+         // increase the priority if the distance is below a certain threshold
+         if (distance < 500.0f) {
+            return jl[JOB_PIPETRAP].basePriority * 2;
+         }
+         break; // Found the team's flag
+      }
+   }
+   return jl[JOB_PIPETRAP].basePriority;
 }
 
 // assessment function for the priority of a JOB_INVESTIGATE_AREA job.

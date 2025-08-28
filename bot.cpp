@@ -1096,26 +1096,30 @@ void BotFindItem(bot_t* pBot) {
 					}
 
 			      // TODO: To allow bots to understand on how to shoot door buttons,
-			      // if touching them doesn't work like in well or alchimy maps [APG]RoboCop[CL]
+               // if touching them doesn't work like in well or alchimy maps [APG]RoboCop[CL]
                else if (std::strcmp("func_breakable", item_name) == 0 || std::strcmp("func_button", item_name) == 0) {
                   // make sure it really is breakable
-                  if (pent->v.takedamage <= 0)
+                  if (pent->v.takedamage <= 0) {
                      continue;
+                  }
 
                   // check if the item is not visible
                   // (i.e. has not respawned)
-                  if (pent->v.effects & EF_NODRAW)
+                  if (pent->v.effects & EF_NODRAW) {
                      continue;
+                  }
 
                   // medics have no bashing weapon so make sure they have ammo for this
-                  if (pEdict->v.playerclass == TFC_CLASS_MEDIC && pBot->ammoStatus == AMMO_LOW)
+                  if (pEdict->v.playerclass == TFC_CLASS_MEDIC && pBot->ammoStatus == AMMO_LOW) {
                      continue;
+                  }
 
                   newJob = InitialiseNewJob(pBot, JOB_ATTACK_BREAKABLE);
                   if (newJob != nullptr) {
                      newJob->object = pent;
-                     if (SubmitNewJob(pBot, JOB_ATTACK_BREAKABLE, newJob) == true)
+                     if (SubmitNewJob(pBot, JOB_ATTACK_BREAKABLE, newJob)) {
                         return;
+                     }
                   }
 
                   //	UTIL_HostSay(pBot->pEdict, 0, "breakable found"); //DebugMessageOfDoom!
@@ -1284,7 +1288,7 @@ void BotFindItem(bot_t* pBot) {
 					}
 
 					// is this an allied Teleporter the bot hasn't used before?
-					else if (pBot->enemy.ptr == nullptr && bot_can_use_teleporter == true && pent->v.iuser1 == W_FL_TFC_TELEPORTER_ENTRANCE) {
+               else if (bot_can_use_teleporter == true && pent->v.iuser1 == W_FL_TFC_TELEPORTER_ENTRANCE) {
 						// if the bot doesn't know where this entrance goes, give it a test run
 						const int telePairIndex = BotRecallTeleportEntranceIndex(pBot, pent);
 						if (telePairIndex == -1                            // unknown entrance
@@ -1716,7 +1720,7 @@ void script(const char* sz) {
 	}
 
 	for (int current_msg = 0; current_msg < MSG_MAX; current_msg++) {
-		if (sz != nullptr && msg_msg[current_msg] != nullptr && sz[0] != 0 && msg_msg[current_msg][0] != 0) {
+      if (sz != nullptr && sz[0] != 0 && msg_msg[current_msg][0] != 0) {
 			// ALERT( at_console, msg_msg[current_msg]);
 			// ALERT( at_console, "-\n");
 			// some messages have line returns, so check
