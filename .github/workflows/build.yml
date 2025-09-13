@@ -90,10 +90,12 @@ jobs:
         mkdir post
         cd post
         export AM_ARCH=${{ matrix.am_arch }}
-        python3 ../configure.py --symbol-files --enable-optimize
         
-        # Run the 'package' target to create the final distributable files.
-        ambuild package
+        # Configure for a release build by removing --symbol-files
+        python3 ../configure.py --enable-optimize
+        
+        # Run ambuild, which will now execute the packaging steps
+        ambuild
 
     - uses: benjlevesque/short-sha@v2.2
       id: short-sha
