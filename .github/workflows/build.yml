@@ -88,7 +88,16 @@ jobs:
       run: |
         mkdir post
         cd post
-        python3 ../configure.py --symbol-files --enable-optimize --target-arch=${{ matrix.am_arch }}
+        # This script prepares the build, but does not need the arch flag.
+        python3 ../configure.py --symbol-files --enable-optimize
+        
+        # For Linux builds, export the flags that tell the compiler to create a 32-bit binary.
+        if [[ "${{ runner.os }}" == "Linux" ]]; then
+          export CFLAGS="-m32"
+          export CXXFLAGS="-m32"
+        fi
+        
+        # ambuild will now use the CFLAGS/CXXFLAGS to compile correctly.
         ambuild
 
     - uses: benjlevesque/short-sha@v2.2
