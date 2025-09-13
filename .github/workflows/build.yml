@@ -84,21 +84,15 @@ jobs:
         submodules: recursive
 
     - name: Build Files
+      shell: bash
       working-directory: foxbot
       run: |
         mkdir post
         cd post
-        # This script prepares the build, but does not need the arch flag.
         python3 ../configure.py --symbol-files --enable-optimize
         
-        # For Linux builds, export the flags that tell the compiler to create a 32-bit binary.
-        if [[ "${{ runner.os }}" == "Linux" ]]; then
-          export CFLAGS="-m32"
-          export CXXFLAGS="-m32"
-        fi
-        
-        # ambuild will now use the CFLAGS/CXXFLAGS to compile correctly.
-        ambuild
+        # Pass the architecture directly to the ambuild command
+        ambuild ${{ matrix.am_arch }}
 
     - uses: benjlevesque/short-sha@v2.2
       id: short-sha
