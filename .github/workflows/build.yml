@@ -89,12 +89,11 @@ jobs:
       run: |
         mkdir post
         cd post
+        
         export AM_ARCH=${{ matrix.am_arch }}
+
+        python3 ../configure.py --symbol-files --enable-optimize
         
-        # Configure for a release build by removing --symbol-files
-        python3 ../configure.py --enable-optimize
-        
-        # Run ambuild, which will now execute the packaging steps
         ambuild
 
     - uses: benjlevesque/short-sha@v2.2
@@ -105,7 +104,7 @@ jobs:
       with:
         name: foxbot-${{ matrix.os_short }}-${{ steps.short-sha.outputs.sha }}
         path: |
-            foxbot/post/package/*
+            foxbot/post/*
 
     - name: Upload Debug Symbols
       uses: actions/upload-artifact@v4
