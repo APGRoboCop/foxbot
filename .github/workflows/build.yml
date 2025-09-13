@@ -89,10 +89,15 @@ jobs:
       run: |
         mkdir post
         cd post
+        
+        # Set the environment variable that configure.py reads to set the architecture.
+        export AM_ARCH=${{ matrix.am_arch }}
+
+        # Now run the configure script, which will generate 32-bit build files.
         python3 ../configure.py --symbol-files --enable-optimize
         
-        # Pass the architecture as a named option to the ambuild command
-        ambuild --arch=${{ matrix.am_arch }}
+        # The ambuild command now reads the correctly generated files and needs no arguments.
+        ambuild
 
     - uses: benjlevesque/short-sha@v2.2
       id: short-sha
