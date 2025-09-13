@@ -1,0 +1,109 @@
+name: Build
+
+on: ["push", "workflow_dispatch"]
+
+jobs:
+  build_main:
+    name: Build for ${{ matrix.os_short }}
+    runs-on: ${{ matrix.os_version }}
+
+    # skip build on '[ci skip]'
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-22.04
+          - windows-x32
+        include:
+          - os: ubuntu-22.04
+            os_short: linux
+            os_version: ubuntu-22.04
+            package_ext: tar.gz
+            dbg_ext: dbg
+            cc: clang
+            cxx: clang++
+            vs_arch: unused
+            am_arch: x86
+
+          - os: windows-x32
+            os_short: win32
+            os_version: windows-latest
+            package_ext: zip
+            dbg_ext: pdb
+            cc: not-used
+            cxx: not-used
+            vs_arch: x32
+            am_arch: x86
+
+
+    steps:
+    - name: Install (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        sudo dpkg --add-architecture i386
+        sudo apt-get update
+        sudo apt-get install -y clang g++-multilib
+        echo "CC=clang" >> $GITHUB_ENV
+        echo "CXX=clang++" >> $GITHUB_ENV
+
+    - name: Add msbuild to PATH (Windows)
+      if: runner.os == 'Windows'
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Install (Windows)
+      if: runner.os == 'Windows'
+      shell: cmd
+      run: |
+        :: See https://github.com/microsoft/vswhere/wiki/Find-VC
+        for /f "usebackq delims=*" %%i in (`vswhere -latest -property installationPath`) do (
+          call "%%i"\Common7\Tools\vsdevcmd.bat -arch=${{ matrix.vs_arch }} -host_arch=x64
+        )
+        
+        :: Loop over all environment variables and make them global.
+        for /f "delims== tokens=1,2" %%a in ('set') do (
+          echo>>"%GITHUB_ENV%" %%a=%%b
+        )
+
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Setup ambuild
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install wheel
+        pip install git+https://github.com/alliedmodders/ambuild
+
+    - name: Fetch RCBot
+      uses: actions/checkout@v4
+      with:
+        path: rcbot
+        submodules: recursive
+
+    - name: Build Files
+      working-directory: rcbot
+      run: |
+        mkdir post
+        cd post
+        python3 ../configure.py --symbol-files --enable-optimize
+        ambuild
+
+    - uses: benjlevesque/short-sha@v2.2
+      id: short-sha
+
+    - name: Upload Binary
+      uses: actions/upload-artifact@v4
+      with:
+        name: rcbot-${{ matrix.os_short }}-${{ steps.short-sha.outputs.sha }}
+        path: |
+            rcbot/post/package/*
+
+    - name: Upload Debug Symbols
+      uses: actions/upload-artifact@v4
+      with:
+        name: rcbot-dbgsym-${{ matrix.os_short }}-${{ steps.short-sha.outputs.sha }}
+        path: |
+            rcbot/post/**/*.${{ matrix.dbg_ext }}

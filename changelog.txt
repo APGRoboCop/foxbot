@@ -30,7 +30,7 @@ TODO List:-
 
 >> To allow bots to understand on how to shoot door buttons, if touching them doesn't work like in well or alchimy maps
 
->> Complete 'botdontmove' in order for "GolfBots" to stay stationary
+>> Complete `botdontmove` in order for "GolfBots" to stay stationary
 
 >> Fix bot's `JOB_BIN_GRENADE` as they need to ditch their live grenades to prevent suicide bombing too often
 

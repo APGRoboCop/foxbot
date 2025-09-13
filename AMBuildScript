@@ -99,7 +99,7 @@ elif builder.cxx.target.platform == 'windows':
   ]
 
 # Compiler options for optimization ( --enable-optimize )
-if builder.options.optimize == '1':
+if builder.options.optimize:
   # Shared optimization definitions
   builder.cxx.defines += ['NDEBUG']
   if builder.cxx.target.platform == 'linux':
@@ -114,7 +114,7 @@ if builder.options.optimize == '1':
     builder.cxx.cflags += ['/Oy-']
 
 # Compiler options for debugging ( --enable-debug )
-if builder.options.debug == '1':
+if builder.options.debug:
   # Shared debug definitions
   builder.cxx.defines += ['DEBUG', '_DEBUG']
   if builder.cxx.target.platform == 'linux':
