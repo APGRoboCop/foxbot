@@ -91,8 +91,8 @@ jobs:
         cd post
         python3 ../configure.py --symbol-files --enable-optimize
         
-        # Pass the architecture directly to the ambuild command
-        ambuild ${{ matrix.am_arch }}
+        # Pass the architecture as a named option to the ambuild command
+        ambuild --arch=${{ matrix.am_arch }}
 
     - uses: benjlevesque/short-sha@v2.2
       id: short-sha
