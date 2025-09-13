@@ -88,7 +88,7 @@ jobs:
       run: |
         mkdir post
         cd post
-        python3 ../configure.py --symbol-files --enable-optimize
+        python3 ../configure.py --symbol-files --enable-optimize --target-arch=${{ matrix.am_arch }}
         ambuild
 
     - uses: benjlevesque/short-sha@v2.2
