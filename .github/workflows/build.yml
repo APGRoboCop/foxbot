@@ -77,14 +77,14 @@ jobs:
         python -m pip install wheel
         pip install git+https://github.com/alliedmodders/ambuild
 
-    - name: Fetch RCBot
+    - name: Fetch FoXBot
       uses: actions/checkout@v4
       with:
-        path: rcbot
+        path: foxbot
         submodules: recursive
 
     - name: Build Files
-      working-directory: rcbot
+      working-directory: foxbot
       run: |
         mkdir post
         cd post
@@ -97,13 +97,13 @@ jobs:
     - name: Upload Binary
       uses: actions/upload-artifact@v4
       with:
-        name: rcbot-${{ matrix.os_short }}-${{ steps.short-sha.outputs.sha }}
+        name: foxbot-${{ matrix.os_short }}-${{ steps.short-sha.outputs.sha }}
         path: |
-            rcbot/post/package/*
+            foxbot/post/package/*
 
     - name: Upload Debug Symbols
       uses: actions/upload-artifact@v4
       with:
-        name: rcbot-dbgsym-${{ matrix.os_short }}-${{ steps.short-sha.outputs.sha }}
+        name: foxbot-dbgsym-${{ matrix.os_short }}-${{ steps.short-sha.outputs.sha }}
         path: |
-            rcbot/post/**/*.${{ matrix.dbg_ext }}
+            foxbot/post/**/*.${{ matrix.dbg_ext }}
