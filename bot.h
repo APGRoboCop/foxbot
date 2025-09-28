@@ -196,7 +196,7 @@ public:
 };
 
 // message script intercept stuff
-#define MSG_MAX 64
+constexpr int MSG_MAX = 64;
 
 struct msg_com_struct {
 	char ifs[32];
@@ -256,7 +256,7 @@ typedef struct {
 } job_blacklist_struct;
 
 // maximum number of teleport pairs each bot can remember
-#define MAX_BOT_TELEPORTER_MEMORY 3
+constexpr int MAX_BOT_TELEPORTER_MEMORY = 3;
 
 // structure for storing what each bot can know about just one Teleporter pair
 typedef struct {
@@ -367,7 +367,7 @@ typedef struct {
 	//	float prev_waypoint_distance;	// not used at the moment
 	//	Vector lastLiftOrigin;  // not used at the moment
 
-// variables used in allowing bots to use alternative routes /////////////
+   // variables used in allowing bots to use alternative routes /////////////
 	float f_side_route_time; // remembers when the bot will next consider branching its route
 	int sideRouteTolerance;  // how far a bot is currently willing to branch it's route
 	int branch_waypoint;     // a waypoint that will lead the bot along a branching route to it's goal

@@ -1027,21 +1027,44 @@ void BotFindItem(bot_t* pBot) {
 			if (tr.flFraction < 1.0f && tr.pHit != pent)
 				continue;
 
-			// check if the entity is a button...
-			if (std::strcmp("func_button", item_name) == 0 || std::strcmp("func_rot_button", item_name) == 0) {
-				newJob = InitialiseNewJob(pBot, JOB_PUSH_BUTTON);
-				if (newJob != nullptr && pent->v.target != 0 && VectorsNearerThan(pBot->pEdict->v.origin, entity_origin, 250.0)) {
-					// ignore this button if the nearest waypoint to it is unavailable
-					const int nearestWP = WaypointFindNearest_V(entity_origin, 80.0f, -1);
-					if (nearestWP != -1 && !WaypointAvailable(nearestWP, pBot->current_team))
-						continue;
+		   // check if the entity is a button...
+         if (std::strcmp("func_button", item_name) == 0 || std::strcmp("func_rot_button", item_name) == 0) {
+            // A button must have a target to be considered usable.
+            if (pent->v.target == 0) {
+               continue;
+            }
 
-					// set up a job for pushing the button
-					newJob->object = pent;
-					SubmitNewJob(pBot, JOB_PUSH_BUTTON, newJob);
-					continue;
-				}
-			}
+            // If the button is too far away, ignore it for now.
+            if (!VectorsNearerThan(pBot->pEdict->v.origin, entity_origin, 250.0)) {
+               continue;
+            }
+
+            // Ignore this button if the nearest waypoint to it is unavailable.
+            const int nearestWP = WaypointFindNearest_V(entity_origin, 80.0f, -1);
+            if (nearestWP != -1 && !WaypointAvailable(nearestWP, pBot->current_team)) {
+               continue;
+            }
+
+            // If the button must be shot, create an attack job instead.
+            if (!(pent->v.spawnflags & SFLAG_PROXIMITY_BUTTON)) {
+               newJob = InitialiseNewJob(pBot, JOB_ATTACK_BREAKABLE);
+               if (newJob != nullptr) {
+                  newJob->object = pent;
+                  if (SubmitNewJob(pBot, JOB_ATTACK_BREAKABLE, newJob)) {
+                     return; // Job submitted, exit search.
+                  }
+               }
+               continue;
+            }
+
+            // The button can be pushed, set up a job to do so.
+            newJob = InitialiseNewJob(pBot, JOB_PUSH_BUTTON);
+            if (newJob != nullptr) {
+               newJob->object = pent;
+               SubmitNewJob(pBot, JOB_PUSH_BUTTON, newJob);
+            }
+            continue;
+         }
 			else {
 				// trace a line from bot's eyes to func_ entity...
 				UTIL_TraceLine(vecStart, vecEnd, dont_ignore_monsters, pEdict->v.pContainingEntity, &tr);
@@ -1095,21 +1118,15 @@ void BotFindItem(bot_t* pBot) {
 						}
 					}
 
-			      // TODO: To allow bots to understand on how to shoot door buttons,
+				   // TODO: To allow bots to understand on how to shoot door buttons,
                // if touching them doesn't work like in well or alchimy maps [APG]RoboCop[CL]
                else if (std::strcmp("func_breakable", item_name) == 0 || std::strcmp("func_button", item_name) == 0) {
-                  // make sure it really is breakable
-                  if (pent->v.takedamage <= 0) {
+                  // ensure the entity is damageable and visible
+                  if (pent->v.takedamage <= 0 || (pent->v.effects & EF_NODRAW)) {
                      continue;
                   }
 
-                  // check if the item is not visible
-                  // (i.e. has not respawned)
-                  if (pent->v.effects & EF_NODRAW) {
-                     continue;
-                  }
-
-                  // medics have no bashing weapon so make sure they have ammo for this
+                  // Medics have a low-damage melee weapon; ensure they have ammo for ranged attacks.
                   if (pEdict->v.playerclass == TFC_CLASS_MEDIC && pBot->ammoStatus == AMMO_LOW) {
                      continue;
                   }
@@ -1118,7 +1135,7 @@ void BotFindItem(bot_t* pBot) {
                   if (newJob != nullptr) {
                      newJob->object = pent;
                      if (SubmitNewJob(pBot, JOB_ATTACK_BREAKABLE, newJob)) {
-                        return;
+                        return; // Job submitted, exit search for now
                      }
                   }
 
