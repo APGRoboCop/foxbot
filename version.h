@@ -67,15 +67,15 @@ extern const char* COMPILE_DATE;
  * Makefile. If not, we can provide it here.
  */
 #ifndef TZONE
-#define TZONE "GMT"
+constexpr const char* TZONE = "GMT";
 #endif
 
  /*
   * This info is used as Plugin info by Metamod
   */
 #define VDATE COMPILE_DATE
-#define VNAME "FoxBot"
-#define VAUTHOR "Tom Simpson & RoboCop <robocop@lycos.co.uk>"
-#define VURL "apg-clan.org"
+constexpr const char* VNAME = "FoxBot";
+constexpr const char* VAUTHOR = "Tom Simpson & RoboCop <robocop@lycos.co.uk>";
+constexpr const char* VURL = "apg-clan.org";
 
 #endif /* _VERSION_H_ */

@@ -21,19 +21,21 @@
 #endif /* _MSC_VER */
 #endif /* not OPT_TYPE */
 
-#define VDATE "2023/12/23"
-#define VVERSION "1.0"
-#define RC_VERS_DWORD "1.0" // Version Windows DLL Resources in res_meta.rc
+extern const char *COMPILE_DATE;
 
-#define VNAME "FoxBot"
-#define VAUTHOR "Tom Simpson <redfox@foxbot.net>"
-#define VURL "http://www.foxbot.net/"
+#define VDATE COMPILE_DATE
+constexpr const char* VVERSION = "1.0";
+constexpr const char* RC_VERS_DWORD = "1.0"; // Version Windows DLL Resources in res_meta.rc
+
+constexpr const char* VNAME = "FoxBot";
+constexpr const char* VAUTHOR = "Tom Simpson <redfox@foxbot.net>";
+constexpr const char* VURL = "http://www.foxbot.net/";
 
  // Various strings for the Windows DLL Resources in res_meta.rc
-#define RC_COMMENTS "AI opponent for halflife TFC"
-#define RC_DESC "FoxBot Half-Life MOD DLL"
-#define RC_FILENAME "foxbot.dll"
-#define RC_INTERNAL "FoxBot"
-#define RC_COPYRIGHT "Copyright© 2002,Tom Simpson"
+constexpr const char* RC_COMMENTS = "AI opponent for halflife TFC";
+constexpr const char* RC_DESC = "FoxBot Half-Life MOD DLL";
+constexpr const char* RC_FILENAME = "foxbot.dll";
+constexpr const char* RC_INTERNAL = "FoxBot";
+constexpr const char* RC_COPYRIGHT = "Copyright (c) 2002, Tom Simpson";
 
 #endif /* VERS_META_H */
