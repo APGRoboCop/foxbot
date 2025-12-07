@@ -141,7 +141,7 @@ msg_com_struct msg_com[MSG_MAX];
 // and 64 empty msg's, to be filled with messages to intercept
 char msg_msg[64][MSG_MAX];
 
-#define PLAYER_SEARCH_RADIUS 50.0f
+constexpr float PLAYER_SEARCH_RADIUS = 50.0f;
 //#define FLF_PLAYER_SEARCH_RADIUS 60.0f
 
 #define GETPLAYERAUTHID (*g_engfuncs.pfnGetPlayerAuthId)

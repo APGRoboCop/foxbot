@@ -48,7 +48,7 @@ static std::mutex buffer_mutex;
 
 // Utility function to format a string with variable arguments
 char *UTIL_VarArgs(const char *format, ...) {
-   std::lock_guard lock(buffer_mutex);
+   std::scoped_lock lock(buffer_mutex);
 
    va_list argptr;
    va_start(argptr, format);

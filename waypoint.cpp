@@ -118,7 +118,7 @@ unsigned int* from_to[4] = { nullptr, nullptr, nullptr, nullptr };
 static std::FILE* fp;
 
 // FUNCTION PROTOTYPES
-static void WaypointFloyds(unsigned int* shortest_path, unsigned int* from_to);
+static void WaypointFloyds(unsigned int* path, unsigned int* to);
 static void WaypointRouteInit();
 static bool WaypointLoadVersion4(FILE* bfp, int number_of_waypoints);
 static bool WaypointDeleteAimArtifact(const edict_t* pEntity);
@@ -1704,7 +1704,7 @@ static bool WaypointLoadVersion4(FILE* bfp, const int number_of_waypoints) {
 	// these script flags used to be in the main waypoint flag
 	constexpr int OLD_POINT1 = 1 << 16, OLD_POINT2 = 1 << 17, OLD_POINT3 = 1 << 18, OLD_POINT4 = 1 << 19, OLD_POINT5 = 1 << 20, OLD_POINT6 = 1 << 21, OLD_POINT7 = 1 << 22, OLD_POINT8 = 1 << 23;
 
-	short i;
+	int i;
 	short num;
 	short path_index;
 

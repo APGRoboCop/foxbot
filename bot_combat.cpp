@@ -2006,6 +2006,12 @@ int BotNadeHandler(bot_t *pBot, bool timed, const char newNadeType) {
                   BotPrimeGrenade(pBot, PrimaryGrenade, GRENADE_FRAGMENTATION, 0);
             }
             break;
+         default: 
+            if (newNadeType == GRENADE_STATIONARY || newNadeType == GRENADE_DAMAGE)
+               BotPrimeGrenade(pBot, PrimaryGrenade, GRENADE_FRAGMENTATION, 0);
+            else if (newNadeType == GRENADE_RANDOM)
+               BotPrimeGrenade(pBot, PrimaryGrenade, GRENADE_FRAGMENTATION, 1);
+            break;
          }
       }
    }

@@ -2572,7 +2572,7 @@ int JobDetpackWaypoint(bot_t* pBot) {
    return JOB_UNDERWAY;
 }
 
-int CountPipebombs(bot_t* pBot) { // TODO: Experimental - might need to transfer this to bot_combat.cpp [APG]RoboCop[CL]
+int CountPipebombs(const bot_t* pBot) { // TODO: Experimental - might need to transfer this to bot_combat.cpp [APG]RoboCop[CL]
    int pipeBombTally = 0;
 
    for (edict_t *pent = nullptr; (pent = FIND_ENTITY_BY_CLASSNAME(pent, "tf_gl_pipebomb")) != nullptr && !FNullEnt(pent);) {

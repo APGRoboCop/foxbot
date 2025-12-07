@@ -577,7 +577,7 @@ edict_t *UTIL_FindEntityByTargetname( edict_t *pentStart, const char *szName );
 */
 void HUDNotify(edict_t* pEntity, const char* msg_name);
 
-void ClientPrint(edict_t* pEdict, int msg_dest, const char* msg_name);
+void ClientPrint(edict_t* pEntity, int msg_dest, const char* msg_name);
 
 void UTIL_SayText(const char* pText, edict_t* pEdict);
 
