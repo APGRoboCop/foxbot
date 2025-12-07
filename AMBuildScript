@@ -121,7 +121,7 @@ if builder.options.debug:
   builder.cxx.defines += ['DEBUG', '_DEBUG']
   if builder.cxx.target.platform == 'linux':
     # Linux debug flags
-    builder.cxx.cflags += ['-g3', '-O0']
+    builder.cxx.cflags += ['-g3', '-Og', '-ggdb3']
   elif builder.cxx.target.platform == 'windows':
     # Windows debug flags
     builder.cxx.cflags += ['/Od', '/RTC1', '/MTd']
