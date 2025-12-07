@@ -56,7 +56,7 @@ if builder.cxx.target.platform == 'linux':
     '-std=c++17',
   ]
   # Linux linker flags
-  builder.cxx.linkflags += ['-m32', '-ldl', '-lm']
+  builder.cxx.linkflags += ['-m32', '-ldl', '-lm', '-flto']
 elif builder.cxx.target.platform == 'windows':
   # Windows defines
   builder.cxx.defines += [
@@ -105,8 +105,8 @@ if builder.options.optimize:
   if builder.cxx.target.platform == 'linux':
     # Linux optimization flags
     builder.cxx.cflags += ['-O3']
-	# Linux optimization link flags
-	builder.cxx.linkflags += ['-flto']
+	# Linux optimization link flags #TODO
+	#builder.cxx.linkflags += ['-flto']
   elif builder.cxx.target.platform == 'windows':
     # Windows optimization flags - /Ob3 needs to be after /Ox, enables aggressive function inling -caxanga334
     builder.cxx.cflags += ['/Ox', '/Zo', '/Ob3', '/GL']
