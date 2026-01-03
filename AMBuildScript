@@ -39,11 +39,11 @@ if builder.cxx.target.platform == 'linux':
     '-fno-strict-aliasing',
     '-Wall',
     '-Werror',
+    '-Wformat',
+    '-Wformat-security',
     '-Wno-uninitialized',
     '-Wno-unused',
     '-Wno-switch',
-    '-Wno-format',
-    '-Wno-format-security',
     '-Wno-unknown-attributes',
     '-Wno-logical-op-parentheses',
     '-Wno-return-stack-address',
@@ -56,7 +56,14 @@ if builder.cxx.target.platform == 'linux':
     '-std=c++17',
   ]
   # Linux linker flags
-  builder.cxx.linkflags += ['-m32', '-ldl', '-lm', '-flto']
+  builder.cxx.linkflags += [
+    '-m32',
+    '-ldl',
+    '-lm',
+    '-Wl,--gc-sections',
+    '-Wl,--as-needed',
+    '-Wl,--no-undefined',
+  ]
 elif builder.cxx.target.platform == 'windows':
   # Windows defines
   builder.cxx.defines += [
@@ -95,7 +102,7 @@ elif builder.cxx.target.platform == 'windows':
     'odbc32.lib',
     'odbccp32.lib',
     '/SECTION:.data,RW',
-    '/MACHINE:X86'
+    '/MACHINE:X86',
   ]
 
 # Compiler options for optimization ( --enable-optimize )
@@ -104,12 +111,12 @@ if builder.options.optimize:
   builder.cxx.defines += ['NDEBUG']
   if builder.cxx.target.platform == 'linux':
     # Linux optimization flags
-    builder.cxx.cflags += ['-O3']
-	# Linux optimization link flags #TODO
-	#builder.cxx.linkflags += ['-flto']
+    builder.cxx.cflags += ['-O3', '-flto=auto']
+	# Linux optimization link flags - LTO must be in link flags too - [APG]RoboCop[CL]
+    builder.cxx.linkflags += ['-flto=auto']
   elif builder.cxx.target.platform == 'windows':
     # Windows optimization flags - /Ob3 needs to be after /Ox, enables aggressive function inling -caxanga334
-    builder.cxx.cflags += ['/Ox', '/Zo', '/Ob3', '/GL']
+    builder.cxx.cflags += ['/Ox', '/Zo', '/Ob3', '/GL', '/MD']
     # Windows optimization link flags
     builder.cxx.linkflags += ['/OPT:ICF', '/OPT:REF', '/LTCG']
     # This needs to be after our optimization flags which could otherwise disable it.
