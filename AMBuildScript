@@ -5,12 +5,13 @@ import os, sys
 builder.cxx = builder.DetectCxx(target_arch = 'x86')
 
 # Include search paths
+hlsdk_path = os.path.join(builder.currentSourcePath, 'hlsdk')
 include_paths = [
-  os.path.join(builder.currentSourcePath, 'hlsdk', 'common'),
-  os.path.join(builder.currentSourcePath, 'hlsdk', 'dlls'),
-  os.path.join(builder.currentSourcePath, 'hlsdk', 'engine'),
-  os.path.join(builder.currentSourcePath, 'hlsdk', 'pm_shared'),
-  os.path.join(builder.currentSourcePath, 'metamod-p'),
+    os.path.join(hlsdk_path, 'common'),
+    os.path.join(hlsdk_path, 'dlls'),
+    os.path.join(hlsdk_path, 'engine'),
+    os.path.join(hlsdk_path, 'pm_shared'),
+    os.path.join(builder.currentSourcePath, 'metamod-p'),
 ]
 
 # Compiler setup
@@ -37,6 +38,7 @@ if builder.cxx.target.platform == 'linux':
     '-msse4.2',
     '-mfpmath=sse',
     '-fno-strict-aliasing',
+    '-fstack-protector-strong'
     '-Wall',
     '-Werror',
     '-Wformat',
@@ -84,7 +86,8 @@ elif builder.cxx.target.platform == 'windows':
     '/arch:SSE2',
     '/fp:precise',
     '/Qspectre',
-    '/EHsc'
+    '/EHsc',
+    '/GS'
   ]
   # Windows linker flags
   builder.cxx.linkflags += [
@@ -113,7 +116,7 @@ if builder.options.optimize:
     # Linux optimization flags
     builder.cxx.cflags += ['-O3', '-flto=auto']
 	# Linux optimization link flags - LTO must be in link flags too - [APG]RoboCop[CL]
-    builder.cxx.linkflags += ['-flto=auto']
+    builder.cxx.linkflags += ['-flto=auto', '-s', '-Wl,-z,relro,-z,now', '-Wl,-z,noexecstack',]
   elif builder.cxx.target.platform == 'windows':
     # Windows optimization flags - /Ob3 needs to be after /Ox, enables aggressive function inling -caxanga334
     builder.cxx.cflags += ['/Ox', '/Zo', '/Ob3', '/GL', '/MD']
