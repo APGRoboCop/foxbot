@@ -38,7 +38,7 @@ if builder.cxx.target.platform == 'linux':
     '-msse4.2',
     '-mfpmath=sse',
     '-fno-strict-aliasing',
-    '-fstack-protector-strong'
+    '-fstack-protector-strong',
     '-Wall',
     '-Werror',
     '-Wformat',
