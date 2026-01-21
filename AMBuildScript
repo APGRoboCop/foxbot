@@ -39,9 +39,23 @@ if builder.cxx.target.platform == 'linux':
     '-mfpmath=sse',
     '-fno-strict-aliasing',
     '-fstack-protector-strong',
+    '-fstack-clash-protection',
+    '-fcf-protection',
     '-Wall',
-    '-Werror',
-    '-Wformat',
+    #'-Werror',
+    '-Wextra',
+    '-Wshadow',
+    '-Wnon-virtual-dtor',
+    '-Wold-style-cast',
+    '-Wcast-align',
+    '-Wunused',
+    '-Woverloaded-virtual',
+    '-Wpedantic',
+    '-Wconversion',
+    '-Wsign-conversion',
+    '-Wnull-dereference',
+    '-Wdouble-promotion',
+    '-Wformat=2',
     '-Wformat-security',
     '-Wno-uninitialized',
     '-Wno-unused',
@@ -119,7 +133,7 @@ if builder.options.optimize:
     builder.cxx.linkflags += ['-flto=auto', '-s', '-Wl,-z,relro,-z,now', '-Wl,-z,noexecstack',]
   elif builder.cxx.target.platform == 'windows':
     # Windows optimization flags - /Ob3 needs to be after /Ox, enables aggressive function inling -caxanga334
-    builder.cxx.cflags += ['/Ox', '/Zo', '/Ob3', '/GL', '/MD']
+    builder.cxx.cflags += ['/Ox', '/Zo', '/Ob3', '/GL', '/MT']
     # Windows optimization link flags
     builder.cxx.linkflags += ['/OPT:ICF', '/OPT:REF', '/LTCG']
     # This needs to be after our optimization flags which could otherwise disable it.
@@ -131,7 +145,7 @@ if builder.options.debug:
   builder.cxx.defines += ['DEBUG', '_DEBUG']
   if builder.cxx.target.platform == 'linux':
     # Linux debug flags
-    builder.cxx.cflags += ['-g3', '-Og', '-ggdb3']
+    builder.cxx.cflags += ['-g3', '-Og', '-ggdb3', '-fsanitize=address', '-fsanitize=undefined', '-fsanitize=leak']
   elif builder.cxx.target.platform == 'windows':
     # Windows debug flags
     builder.cxx.cflags += ['/Od', '/RTC1', '/MTd']

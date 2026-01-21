@@ -4185,25 +4185,25 @@ void AreaAutoBuild1() {
 					}
 				}
 				else if (std::abs(waypoints[i].origin.y - waypoints[k].origin.y) < epsilon && std::abs(waypoints[i].origin.z - 16 - waypoints[k].origin.z) < epsilon && std::abs(waypoints[i].origin.z + 16 - waypoints[k].origin.z) < epsilon && !lu && !ld && i != k) {
-					if (std::abs(waypoints[i].origin.x - 32.0 * (lc + 1) - waypoints[k].origin.x) < epsilon) {
-						ll = k;
-						k = -1;
-						lc++;
-						if (waypoints[i].origin.z <= waypoints[k].origin.z)
-							ld = true;
-						else
-							lu = true;
-					}
+               if (std::abs(waypoints[i].origin.x - 32.0 * (lc + 1) - waypoints[k].origin.x) < epsilon) {
+                  ll = k;
+                  if (waypoints[i].origin.z <= waypoints[k].origin.z)
+                     ld = true;
+                  else
+                     lu = true;
+                  k = -1;
+                  lc++;
+               }
 				}
 				else if (std::abs(waypoints[i].origin.y - waypoints[k].origin.y) < epsilon && std::abs(waypoints[i].origin.z - 16 - waypoints[k].origin.z) < epsilon && std::abs(waypoints[i].origin.z + 16 - waypoints[k].origin.z) < epsilon && !ru && !rd && i != k) {
 					if (std::abs(waypoints[i].origin.x + 32.0 * (rc + 1) - waypoints[k].origin.x) < epsilon) {
-						lr = k;
-						k = -1;
-						rc++;
+					   lr = k;
 						if (waypoints[i].origin.z <= waypoints[k].origin.z)
 							rd = true;
 						else
 							ru = true;
+					   k = -1;
+						rc++;
 					}
 				}
 				else if ((std::abs(waypoints[i].origin.y - waypoints[k].origin.y) < epsilon && (std::abs(waypoints[ll].origin.z - 16 - waypoints[k].origin.z) < epsilon && std::abs(waypoints[ll].origin.z + 16 - waypoints[k].origin.z) < epsilon)) ||
@@ -4286,12 +4286,12 @@ void AreaAutoBuild1() {
 										!ru && !rd && j != k) {
 										if (std::abs(waypoints[j].origin.x + 32.0 * (r + 1) - waypoints[k].origin.x) < epsilon) {
 											lr = k;
-											k = -1;
-											r++;
 											if (waypoints[j].origin.z <= waypoints[k].origin.z)
 												rd = true;
 											else
 												ru = true;
+										   k = -1;
+											r++;
 										}
 									}
 									else if ((std::abs(waypoints[j].origin.y - waypoints[k].origin.y) < epsilon &&
@@ -4361,12 +4361,12 @@ void AreaAutoBuild1() {
 										!lu && !ld && j != k) {
 										if (std::abs(waypoints[j].origin.x - 32.0 * (l + 1) - waypoints[k].origin.x) < epsilon) {
 											ll = k;
-											k = -1;
-											l++;
 											if (waypoints[j].origin.z <= waypoints[k].origin.z)
 												ld = true;
 											else
 												lu = true;
+                                 k = -1;
+                                 l++;
 										}
 									}
 									else if (std::abs(waypoints[j].origin.y - waypoints[k].origin.y) < epsilon &&
@@ -4375,12 +4375,12 @@ void AreaAutoBuild1() {
 										!ru && !rd && j != k) {
 										if (std::abs(waypoints[j].origin.x + 32.0 * (r + 1) - waypoints[k].origin.x) < epsilon) {
 											lr = k;
-											k = -1;
-											r++;
 											if (waypoints[j].origin.z <= waypoints[k].origin.z)
 												rd = true;
 											else
 												ru = true;
+                                 k = -1;
+                                 r++;
 										}
 									}
 									else if ((std::abs(waypoints[j].origin.y - waypoints[k].origin.y) < epsilon &&
@@ -4472,12 +4472,12 @@ void AreaAutoBuild1() {
 						!lu && !ld && i != k) {
 						if (std::abs(waypoints[h].origin.y - 32.0 * (lc + 1) - waypoints[k].origin.y) < epsilon) {
 							ll = k;
-							k = -1;
-							lc++;
 							if (waypoints[h].origin.z <= waypoints[k].origin.z)
 								ld = true;
 							else
 								lu = true;
+                     k = -1;
+                     lc++;
 						}
 					}
 					else if (std::abs(waypoints[h].origin.x - waypoints[k].origin.x) < epsilon &&
@@ -4486,12 +4486,12 @@ void AreaAutoBuild1() {
 						!ru && !rd && i != k) {
 						if (std::abs(waypoints[h].origin.y + 32.0 * (rc + 1) - waypoints[k].origin.y) < epsilon) {
 							lr = k;
-							k = -1;
-							rc++;
 							if (waypoints[h].origin.z <= waypoints[k].origin.z)
 								rd = true;
 							else
 								ru = true;
+                     k = -1;
+                     rc++;
 						}
 					}
 					else if ((std::abs(waypoints[h].origin.x - waypoints[k].origin.x) < epsilon && (waypoints[ll].origin.z - 16 <= waypoints[k].origin.z && waypoints[ll].origin.z + 16 >= waypoints[k].origin.z)) ||
@@ -4562,23 +4562,23 @@ void AreaAutoBuild1() {
 											else if (std::abs(waypoints[h].origin.x - waypoints[k].origin.x) < epsilon && waypoints[h].origin.z - 16 <= waypoints[k].origin.z && waypoints[h].origin.z + 16 >= waypoints[k].origin.z && !lu && !ld && i != k) {
 												if (std::abs(waypoints[h].origin.y - 32.0 * (l + 1) - waypoints[k].origin.y) < epsilon) {
 													ll = k;
-													k = -1;
-													l++;
 													if (waypoints[h].origin.z <= waypoints[k].origin.z)
 														ld = true;
 													else
 														lu = true;
+                                       k = -1;
+                                       l++;
 												}
 											}
 											else if (std::abs(waypoints[h].origin.x - waypoints[k].origin.x) < epsilon && waypoints[h].origin.z - 16 <= waypoints[k].origin.z && waypoints[h].origin.z + 16 >= waypoints[k].origin.z && !ru && !rd && i != k) {
 												if (std::abs(waypoints[h].origin.y + 32.0 * (r + 1) - waypoints[k].origin.y) < epsilon) {
 													lr = k;
-													k = -1;
-													r++;
 													if (waypoints[h].origin.z <= waypoints[k].origin.z)
 														rd = true;
 													else
 														ru = true;
+                                       k = -1;
+                                       r++;
 												}
 											}
 											else if ((std::abs(waypoints[h].origin.x - waypoints[k].origin.x) < epsilon && (waypoints[ll].origin.z - 16 <= waypoints[k].origin.z && waypoints[ll].origin.z + 16 >= waypoints[k].origin.z)) ||
