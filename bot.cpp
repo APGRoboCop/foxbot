@@ -521,6 +521,12 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 					"Recruit", "Robo", "Scientist", "Shepard", "Tower", "Zombie"
 	};*/
 
+   // Sanitise null pointer inputs - [APG]RoboCop[CL]
+   const char *safe_arg1 = (arg1 == nullptr) ? "" : arg1;
+   const char *safe_arg2 = (arg2 == nullptr) ? "" : arg2;
+   const char *safe_arg3 = (arg3 == nullptr) ? "" : arg3;
+   const char *safe_arg4 = (arg4 == nullptr) ? "" : arg4;
+
 	char c_skin[BOT_SKIN_LEN + 1];
 	char c_name[BOT_NAME_LEN + 1];
 	c_skin[0] = '\0';
@@ -695,8 +701,8 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 				}
 			}*/
 
-			if (arg2 != nullptr && *arg2 != 0) {
-				std::strncpy(c_name, arg2, BOT_NAME_LEN - 1);
+			if (safe_arg2 != nullptr && *safe_arg2 != 0) {
+				std::strncpy(c_name, safe_arg2, BOT_NAME_LEN - 1);
 				c_name[BOT_NAME_LEN] = 0; // make sure c_name is null terminated
 			}
 			else {
@@ -704,7 +710,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 					BotPickName(c_name);
 				else {
 					// copy the name of the model to the bot's name...
-					std::strncpy(c_name, arg1, BOT_NAME_LEN - 1);
+					std::strncpy(c_name, safe_arg1, BOT_NAME_LEN - 1);
 					c_name[BOT_NAME_LEN] = '\0'; // make sure c_skin is null terminated
 				}
 			}
@@ -712,15 +718,15 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 
 		skill = 0;
 
-		if (arg3 != nullptr && *arg3 != 0)
-			skill = std::atoi(arg3);
+		if (safe_arg3 != nullptr && *safe_arg3 != 0)
+			skill = std::atoi(safe_arg3);
 
 		if (skill < 1 || skill > 5)
 			skill = BotAssignDefaultSkill();
 	}
 	else {
-		if (arg3 != nullptr && *arg3 != 0) {
-			std::strncpy(c_name, arg3, BOT_NAME_LEN - 1);
+		if (safe_arg3 != nullptr && *safe_arg3 != 0) {
+			std::strncpy(c_name, safe_arg3, BOT_NAME_LEN - 1);
 			c_name[BOT_NAME_LEN] = '\0'; // make sure c_name is null terminated
 		}
 		else {
@@ -732,8 +738,8 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 
 		skill = 0;
 
-		if (arg4 != nullptr && *arg4 != 0)
-			skill = std::atoi(arg4);
+		if (safe_arg4 != nullptr && *safe_arg4 != 0)
+			skill = std::atoi(safe_arg4);
 
 		if (skill < 1 || skill > 5)
 			skill = BotAssignDefaultSkill();
@@ -955,11 +961,11 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 	pBot->bot_skill = skill - 1; // 0 based for array indexes
 
 	if (mod_id == TFC_DLL) {
-		if (arg1 != nullptr && arg1[0] != 0) {
-			pBot->bot_team = std::atoi(arg1);
+		if (safe_arg1 != nullptr && safe_arg1[0] != 0) {
+			pBot->bot_team = std::atoi(safe_arg1);
 
-			if (arg2 != nullptr && arg2[0] != 0) {
-				pBot->bot_class = std::atoi(arg2);
+			if (safe_arg2 != nullptr && safe_arg2[0] != 0) {
+				pBot->bot_class = std::atoi(safe_arg2);
 			}
 		}
 	}
