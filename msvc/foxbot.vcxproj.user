@@ -5,6 +5,7 @@
     <LocalDebuggerCommandArguments>-console -game tfc +maxplayers 32 +map 2fort +ip 192.168.200.4 +port 27011</LocalDebuggerCommandArguments>
     <LocalDebuggerWorkingDirectory>D:\games\steam\steamapps\common\Half-Life</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommandArgumentsHistory>-console -game tfc +maxplayers 32 +map 2fort +ip 192.168.200.4 +port 27011|</LocalDebuggerCommandArgumentsHistory>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LocalDebuggerCommand>D:\games\steam\steamapps\common\Half-Life\hlds.exe </LocalDebuggerCommand>

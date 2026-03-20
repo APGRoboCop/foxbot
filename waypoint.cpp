@@ -43,6 +43,7 @@
 
 #include "bot.h"
 #include "waypoint.h"
+#include "bot_visibility.h"
 
 // linked list class.
 #include "list.h"
@@ -167,6 +168,9 @@ void WaypointFree() {
 // initialize the waypoint structures...
 void WaypointInit() {
 	int i;
+
+	// free the visibility table from a previous map
+	g_WaypointVisibility.FreeVisibilityTable();
 
 	// have any waypoint path nodes been allocated yet?
 	if (g_waypoint_paths)
@@ -814,6 +818,12 @@ int WaypointFindRandomGoal_R(const Vector& v_src, const bool checkVisibility, co
 
 	TraceResult tr;
 
+	// if visibility checks are needed and the vis table is available,
+	// find the nearest waypoint to v_src for O(1) vis table lookups
+	const int srcWP = (checkVisibility && g_WaypointVisibility.IsAllocated())
+		? WaypointFindNearest_V(v_src, range, team)
+		: -1;
+
 	// find all the waypoints with the matching flags...
 	for (int i = 0; i < num_waypoints; i++, index++) {
 		// wrap the search if it exceeds the number of available waypoints
@@ -837,10 +847,19 @@ int WaypointFindRandomGoal_R(const Vector& v_src, const bool checkVisibility, co
 			continue;
 
 		if (VectorsNearerThan(waypoints[index].origin, v_src, range)) {
-			if (checkVisibility)
-				UTIL_TraceLine(v_src, waypoints[index].origin, ignore_monsters, nullptr, &tr);
+			bool isVisible = true;
 
-			if (!checkVisibility || tr.flFraction >= 1.0f) {
+			if (checkVisibility) {
+				// use the pre-computed vis table if we have a valid source waypoint
+				if (srcWP != -1)
+					isVisible = WaypointVisibleFromTo(srcWP, index);
+				else {
+					UTIL_TraceLine(v_src, waypoints[index].origin, ignore_monsters, nullptr, &tr);
+					isVisible = tr.flFraction >= 1.0f;
+				}
+			}
+
+			if (isVisible) {
 				indexes[count] = index;
 				++count;
 
@@ -1591,6 +1610,7 @@ bool WaypointLoad(edict_t* pEntity) {
 		std::fclose(bfp);
 
 		WaypointRouteInit();
+		WaypointVisibilityInit();
 		return true;
 	}
 	if (pEntity) {
@@ -1673,6 +1693,7 @@ bool WaypointLoad(edict_t* pEntity) {
 
 		WaypointSave();
 		WaypointRouteInit();
+		WaypointVisibilityInit();
 	}
 	else {
 		if (pEntity) {
@@ -1784,6 +1805,7 @@ static bool WaypointLoadVersion4(FILE* bfp, const int number_of_waypoints) {
 	waypoint_author[254] = '\0';
 
 	WaypointRouteInit();
+	WaypointVisibilityInit();
 	return true;
 }
 

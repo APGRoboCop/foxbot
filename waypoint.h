@@ -39,7 +39,7 @@ typedef signed char WPT_INT8;
 typedef signed short WPT_INT16;
 typedef signed int WPT_INT32;
 
-constexpr unsigned short MAX_WAYPOINTS = 32000;
+constexpr unsigned short MAX_WAYPOINTS = 1024;
 constexpr float REACHABLE_RANGE = 800.0f;
 
 // defines for waypoint flags field (32 bits are available)

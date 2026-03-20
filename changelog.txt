@@ -3,6 +3,40 @@
 ==============================
 
 --------------------------------------------------------------------------------
+Version 1.0-beta1
+??????-??-2026
+Updated by RoboCop
+--------------------------------------------------------------------------------
+
+- Added visibility tables based from RCBot1 and are stored in /visibility folder
+
+- Added a self-learning program using Neural Net and Genetic Algorithms based from RCBot1
+
+- Reverting to compile Linux builds only for SSE2 as SSE4.2 isn't necessary
+
+- Sanitised the null pointer inputs for `void BotCreate()`
+
+- Modernised the Waypoint Menu coding
+
+- Adding Link Time Optimisation to boost the bot's performance for pathfinding and AI logic
+
+- Reduced maximum waypoints from 32000 to 1024 as all maps don't use no more than 1000 waypoints
+
+- Pitch and yaw speed doubled to allow bots to turn faster to avoid falling from catwalks without the fences
+
+TODO List:-
+
+>> To allow bots to understand on how to shoot door buttons, if touching them doesn't work like in well or alchimy maps
+
+>> Complete `botdontmove` in order for "GolfBots" to stay stationary
+
+>> Fix bot's `JOB_BIN_GRENADE` as they need to ditch their live grenades to prevent suicide bombing too often
+
+>> To prevent bots from shooting at spy corpses too long as they aren't aware that a player switched teams as enemy spy
+
+>> To improve the pipebomb laying trap pattern and to plant them near the flag
+
+--------------------------------------------------------------------------------
 Version 0.911
 December-23-2024
 Updated by RoboCop

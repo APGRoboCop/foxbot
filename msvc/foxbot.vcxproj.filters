@@ -74,6 +74,15 @@
     <ClCompile Include="..\sdk_util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\bot_neuralnet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bot_visibility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\bot_ga.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\bot.h">
@@ -119,6 +128,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\tf_defs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\bot_neuralnet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\bot_visibility.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\bot_ga.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

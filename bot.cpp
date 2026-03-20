@@ -40,6 +40,8 @@
 #include "bot_job_think.h"
 #include "bot_navigate.h"
 #include "bot_weapons.h"
+#include "bot_neuralnet.h"
+#include "bot_ga.h"
 
 #include <algorithm>
 #include <sys/stat.h>
@@ -383,6 +385,13 @@ void BotSpawnInit(bot_t* pBot) {
 
 	std::memset(&pBot->current_weapon, 0, sizeof pBot->current_weapon);
 	std::memset(&pBot->m_rgAmmo, 0, sizeof pBot->m_rgAmmo);
+
+	// reset combat fitness tracking for GA
+	pBot->f_combatDamageDealt = 0.0f;
+	pBot->f_combatDamageTaken = 0.0f;
+	pBot->combatKills = 0;
+	pBot->combatDeaths = 0;
+	pBot->f_combatSurvivalTime = 0.0f;
 }
 
 //#ifdef WIN32
@@ -701,7 +710,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 				}
 			}*/
 
-			if (safe_arg2 != nullptr && *safe_arg2 != 0) {
+			if (*safe_arg2 != 0) {
 				std::strncpy(c_name, safe_arg2, BOT_NAME_LEN - 1);
 				c_name[BOT_NAME_LEN] = 0; // make sure c_name is null terminated
 			}
@@ -718,14 +727,14 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 
 		skill = 0;
 
-		if (safe_arg3 != nullptr && *safe_arg3 != 0)
+		if (*safe_arg3 != 0)
 			skill = std::atoi(safe_arg3);
 
 		if (skill < 1 || skill > 5)
 			skill = BotAssignDefaultSkill();
 	}
 	else {
-		if (safe_arg3 != nullptr && *safe_arg3 != 0) {
+		if (*safe_arg3 != 0) {
 			std::strncpy(c_name, safe_arg3, BOT_NAME_LEN - 1);
 			c_name[BOT_NAME_LEN] = '\0'; // make sure c_name is null terminated
 		}
@@ -738,7 +747,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 
 		skill = 0;
 
-		if (safe_arg4 != nullptr && *safe_arg4 != 0)
+		if (*safe_arg4 != 0)
 			skill = std::atoi(safe_arg4);
 
 		if (skill < 1 || skill > 5)
@@ -961,10 +970,10 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 	pBot->bot_skill = skill - 1; // 0 based for array indexes
 
 	if (mod_id == TFC_DLL) {
-		if (safe_arg1 != nullptr && safe_arg1[0] != 0) {
+		if (safe_arg1[0] != 0) {
 			pBot->bot_team = std::atoi(safe_arg1);
 
-			if (safe_arg2 != nullptr && safe_arg2[0] != 0) {
+			if (safe_arg2[0] != 0) {
 				pBot->bot_class = std::atoi(safe_arg2);
 			}
 		}
@@ -4095,6 +4104,20 @@ static int guessThreatLevel(const bot_t* pBot) {
 	if (PlayerIsInfected(pBot->pEdict))
 		return 0;
 
+	// Feed the combat neural network for a NN-based threat estimate.
+	// The NN considers distance, health, class matchups, visible counts, etc.
+	g_CombatNN.setInputs(
+		pBot->enemy.f_seenDistance,
+		static_cast<float>(PlayerHealthPercent(pBot->pEdict)),
+		pBot->enemy.ptr->v.playerclass,
+		pBot->pEdict->v.playerclass,
+		pBot->visEnemyCount,
+		pBot->visAllyCount,
+		pBot->bot_has_flag != 0,
+		pBot->trait.aggression);
+
+	const int nnThreat = g_CombatNN.getThreatLevel();
+
 	// This will keep track of the threat level.
 	int Threat = 0;
 
@@ -4232,6 +4255,11 @@ static int guessThreatLevel(const bot_t* pBot) {
 	// and the bot is about to throw a grenade at them
 	if (pBot->nadePrimed && pBot->pEdict->v.playerclass != TFC_CLASS_SCOUT && pBot->enemy.f_seenDistance < 400.0f)
 		Threat += 50;
+
+	// Blend the heuristic threat with the neural network estimate.
+	// The NN can learn over time via the GA while the heuristic provides
+	// stable baseline behaviour.
+	Threat = (Threat + nnThreat) / 2;
 
 	return Threat;
 }

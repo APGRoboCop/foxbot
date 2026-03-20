@@ -39,6 +39,8 @@
 #include "bot_func.h"
 #include "bot_weapons.h"
 #include "waypoint.h"
+#include "bot_neuralnet.h"
+#include "bot_ga.h"
 
 // meta mod includes
 #include <dllapi.h>
@@ -832,6 +834,13 @@ int DispatchSpawn(edict_t* pent) {
 		if (std::strcmp(pClassname, "worldspawn") == 0) {
 			// do level initialization stuff here...
 
+			// Save NN/GA learned data for the previous map before re-initializing.
+			// At this point prevmapname still holds the old map name.
+			if (prevmapname[0] != '\0' && std::strcmp(prevmapname, "null") != 0) {
+				g_CombatNN.saveWeightsForMap(prevmapname);
+				FoxCombatGASaveForMap(prevmapname);
+			}
+
 			WaypointInit();
 			WaypointLoad(nullptr);
 			AreaDefLoad(nullptr);
@@ -908,6 +917,9 @@ int DispatchSpawn(edict_t* pent) {
 			num_bots = 0;
 
 			bot_check_time = gpGlobals->time + 30.0f;
+
+			FoxCombatNNInit();
+			FoxCombatGAInit();
 		}
 	}
 
@@ -2502,6 +2514,8 @@ void StartFrame() { // v7 last frame timing
 		int count;
 		// if a new map has started then (MUST BE FIRST IN StartFrame)...
 		if (std::strcmp(STRING(gpGlobals->mapname), prevmapname) != 0) {
+			// NN/GA state was already saved for the previous map in DispatchSpawn.
+
 			first_player = nullptr;
 			display_bot_vars = true;
 			display_start_time = gpGlobals->time + 10.0f;
@@ -6053,6 +6067,13 @@ static void ClearKickedBotsData(const int botIndex, const bool eraseBotsName) {
 	for (int teleIndex = 0; teleIndex < MAX_BOT_TELEPORTER_MEMORY; teleIndex++) {
 		BotForgetTeleportPair(&bots[botIndex], teleIndex);
 	}
+
+	// reset combat fitness tracking
+	bots[botIndex].f_combatDamageDealt = 0.0f;
+	bots[botIndex].f_combatDamageTaken = 0.0f;
+	bots[botIndex].combatKills = 0;
+	bots[botIndex].combatDeaths = 0;
+	bots[botIndex].f_combatSurvivalTime = 0.0f;
 
 	// we don't like ya, so sod off!
 	if (eraseBotsName) {

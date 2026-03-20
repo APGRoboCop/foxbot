@@ -85,8 +85,8 @@ template <typename U> void bzero(U* ptr, const size_t len) noexcept {
 	}
 }
 
-constexpr unsigned char BOT_PITCH_SPEED = 30;
-constexpr unsigned char BOT_YAW_SPEED = 30;
+constexpr unsigned char BOT_PITCH_SPEED = 60;
+constexpr unsigned char BOT_YAW_SPEED = 60;
 
 constexpr unsigned char RESPAWN_IDLE = 1;
 constexpr unsigned char RESPAWN_NEED_TO_RESPAWN = 2;
@@ -494,6 +494,14 @@ typedef struct {
 
 	int mission : 8;          // Attacker, Defender, etc.
 	unsigned lockMission : 1; // whether the bot should stick to it's current defense/offense role or not
+
+	// Combat fitness tracking for GA-driven neural network training.
+	// These are accumulated during combat and submitted to the GA on death.
+	float f_combatDamageDealt;
+	float f_combatDamageTaken;
+	int combatKills;
+	int combatDeaths;
+	float f_combatSurvivalTime;
 } bot_t;
 
 // roles to fill on the team

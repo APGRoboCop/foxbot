@@ -40,6 +40,8 @@
 #include "bot_weapons.h"
 
 #include "tf_defs.h"
+#include "bot_neuralnet.h"
+#include "bot_ga.h"
 
 // types of damage to ignore...
 #define IGNORE_DAMAGE (DMG_CRUSH | DMG_FREEZE | DMG_SHOCK | DMG_DROWN | DMG_NERVEGAS | DMG_RADIATION | DMG_DROWNRECOVER | DMG_ACID | DMG_SLOWBURN | DMG_SLOWFREEZE)
@@ -543,6 +545,9 @@ void BotClient_Valve_Damage(void* p, const int bot_index) {
 
 		// let the bot know it's getting hurt
 		if (damage_armor > 0 || damage_taken > 0) {
+			// track damage taken for GA fitness evaluation
+			bots[bot_index].f_combatDamageTaken += static_cast<float>(damage_taken + damage_armor);
+
 			// drowning detection - set up a job to avoid death by drowning
 			if (damage_bits & DMG_DROWN
 				//	&& bots[bot_index].pEdict->v.waterlevel == WL_HEAD_IN_WATER
@@ -635,44 +640,61 @@ void BotClient_Valve_DeathMsg(void* p, int bot_index) {
 		index = UTIL_GetBotIndex(victim_edict);
 
 		// do message return for human client, so bot can do
-		// haha killed ya message
-		// FILE *fp;
-		//{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"kill messages\n"); std::fclose(fp); }
-		if (index == -1) {
-			if (killer_index == 0 || killer_index == victim_index) {
-				// bot killed by world (worldspawn) or bot killed self...
-				// bots[index].killer_edict = NULL;
-			}
-			else {
-				killer_edict = INDEXENT(killer_index);
-				indexb = UTIL_GetBotIndex(killer_edict);
-				if (indexb != -1 && victim_edict != nullptr) {
-					if (UTIL_GetTeam(killer_edict) != UTIL_GetTeam(victim_edict)) {
-						bots[indexb].killed_edict = victim_edict;
-					}
+			// haha killed ya message
+			// FILE *fp;
+			//{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"kill messages\n"); std::fclose(fp); }
+			if (index == -1) {
+				if (killer_index == 0 || killer_index == victim_index) {
+					// bot killed by world (worldspawn) or bot killed self...
+					// bots[index].killer_edict = NULL;
 				}
-			}
-		}
+				else {
+							killer_edict = INDEXENT(killer_index);
+							indexb = UTIL_GetBotIndex(killer_edict);
+							if (indexb != -1 && victim_edict != nullptr) {
+								if (UTIL_GetTeam(killer_edict) != UTIL_GetTeam(victim_edict)) {
+									bots[indexb].killed_edict = victim_edict;
+									bots[indexb].combatKills++;
+									bots[indexb].f_combatDamageDealt += 100.0f; // estimate per kill
+								}
+							}
+						}
+					}
 
-		// is this message about a bot being killed?
-		if (index != -1) {
-			if (killer_index == 0 || killer_index == victim_index) {
-				// bot killed by world (worldspawn) or bot killed self...
-				bots[index].killer_edict = nullptr;
+						// is this message about a bot being killed?
+						if (index != -1) {
+							if (killer_index == 0 || killer_index == victim_index) {
+								// bot killed by world (worldspawn) or bot killed self...
+								bots[index].killer_edict = nullptr;
+							}
+							else {
+							// store edict of player that killed this bot...
+							edict_t *killerEdict = INDEXENT(killer_index); // Temporary variable to store the result
+							bots[index].killer_edict = killerEdict;
+							killer_edict = killerEdict;
+							indexb = UTIL_GetBotIndex(killer_edict);
+							if (indexb != -1 && victim_edict != nullptr) {
+							   if (UTIL_GetTeam(killer_edict) != UTIL_GetTeam(victim_edict)) {
+								  bots[indexb].killed_edict = victim_edict;
+								  bots[indexb].combatKills++;
+								  bots[indexb].f_combatDamageDealt += 100.0f; // estimate per kill
+							   }
+							}
+							}
+
+				// Record bot death and submit combat fitness to the GA
+				bots[index].combatDeaths++;
+				bots[index].f_combatSurvivalTime = gpGlobals->time - bots[index].f_bot_spawn_time;
+
+				FoxCombatFitness fitness;
+				fitness.damageDealt = bots[index].f_combatDamageDealt;
+				fitness.damageTaken = bots[index].f_combatDamageTaken;
+				fitness.kills = bots[index].combatKills;
+				fitness.deaths = bots[index].combatDeaths;
+				fitness.survivalTime = bots[index].f_combatSurvivalTime;
+
+				g_CombatGA.submitFitness(fitness.calculateFitness());
 			}
-			else {
-            // store edict of player that killed this bot...
-            edict_t *killerEdict = INDEXENT(killer_index); // Temporary variable to store the result
-            bots[index].killer_edict = killerEdict;
-            killer_edict = killerEdict;
-            indexb = UTIL_GetBotIndex(killer_edict);
-            if (indexb != -1 && victim_edict != nullptr) {
-               if (UTIL_GetTeam(killer_edict) != UTIL_GetTeam(victim_edict)) {
-                  bots[indexb].killed_edict = victim_edict;
-               }
-            }
-			}
-		}
 	}
 }
 
