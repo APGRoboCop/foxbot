@@ -86,12 +86,12 @@ template <typename U> void bzero(U* ptr, const size_t len) noexcept {
 }
 
 // Engine pitch/yaw speed caps set on each bot's edict. Only directly used for
-// the slower spawn-turn (yaw_speed / 2 = 40). The main movement loop calculates
+// the slower spawn-turn (yaw_speed / 2 = 30). The main movement loop calculates
 // its own dynamic turn speed based on yaw/pitch error and skill level.
 // 80 is intentionally high to ensure bots can steer through tight corners and
 // recover properly when airborne - it does NOT make them twitch-aim. - [APG]RoboCop[CL]
-constexpr unsigned char BOT_PITCH_SPEED = 80;
-constexpr unsigned char BOT_YAW_SPEED = 80;
+constexpr unsigned char BOT_PITCH_SPEED = 60;
+constexpr unsigned char BOT_YAW_SPEED = 60;
 
 constexpr unsigned char RESPAWN_IDLE = 1;
 constexpr unsigned char RESPAWN_NEED_TO_RESPAWN = 2;
