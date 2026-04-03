@@ -3918,7 +3918,7 @@ void BotThink(bot_t* pBot) {
 		float yawError = pBot->pEdict->v.v_angle.y - pBot->pEdict->v.ideal_yaw;
 		if (yawError < -180.0f) yawError += 360.0f;
 		if (yawError > 180.0f) yawError -= 360.0f;
-		if (std::fabsf(yawError) > 45.0f) {
+		if (fabsf(yawError) > 45.0f) {
 			pBot->f_bunnyHopTime = pBot->f_think_time + 0.3f;
 		}
 		else {
