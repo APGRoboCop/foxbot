@@ -110,17 +110,17 @@ static jobFunctions_struct jf[JOB_TYPE_TOTAL] = {
 jobList_struct jl[JOB_TYPE_TOTAL] = {
 	{ 520, "JOB_SEEK_WAYPOINT" }, { PRIORITY_MAXIMUM, "JOB_GET_UNSTUCK" }, { 0, "JOB_ROAM" }, { 400, "JOB_CHAT" },
 	{ 680, "JOB_REPORT" }, { 530, "JOB_PICKUP_ITEM" }, { 600, "JOB_PICKUP_FLAG" },
-	{ 790, "JOB_PUSH_BUTTON" }, { 630, "JOB_USE_TELEPORT" }, { 760, "JOB_MAINTAIN_OBJECT" },
-	{ 770, "JOB_BUILD_SENTRY" }, { 500, "JOB_BUILD_DISPENSER" }, { 670, "JOB_BUILD_TELEPORT" },
-	{ 450, "JOB_BUFF_ALLY" }, { 510, "JOB_ESCORT_ALLY" },
+	{ 790, "JOB_PUSH_BUTTON" }, { 610, "JOB_USE_TELEPORT" }, { 760, "JOB_MAINTAIN_OBJECT" },
+	{ 770, "JOB_BUILD_SENTRY" }, { 500, "JOB_BUILD_DISPENSER" }, { 660, "JOB_BUILD_TELEPORT" },
+	{ 430, "JOB_BUFF_ALLY" }, { 510, "JOB_ESCORT_ALLY" },
 	{ 490, "JOB_CALL_MEDIC" }, // this should be a higher priority than JOB_GET_HEALTH
-	{ 460, "JOB_GET_HEALTH" }, { 430, "JOB_GET_ARMOR" }, { 610, "JOB_GET_AMMO" }, { 660, "JOB_DISGUISE" },
+	{ 460, "JOB_GET_HEALTH" }, { 440, "JOB_GET_ARMOR" }, { 670, "JOB_GET_AMMO" }, { 650, "JOB_DISGUISE" },
 	{ 190, "JOB_FEIGN_AMBUSH" }, { 580, "JOB_SNIPE" }, { 260, "JOB_GUARD_WAYPOINT" }, { 560, "JOB_DEFEND_FLAG" },
 	{ 730, "JOB_GET_FLAG" }, { 780, "JOB_CAPTURE_FLAG" }, { 320, "JOB_HARRASS_DEFENSE" },
 	{ 740, "JOB_ROCKET_JUMP" }, { 750, "JOB_CONCUSSION_JUMP" },
-	{ 650, "JOB_DETPACK_WAYPOINT" }, { 640, "JOB_PIPETRAP" }, { 480, "JOB_INVESTIGATE_AREA" },
+	{ 640, "JOB_DETPACK_WAYPOINT" }, { 630, "JOB_PIPETRAP" }, { 480, "JOB_INVESTIGATE_AREA" },
 	{ 550, "JOB_PURSUE_ENEMY" }, { 200, "JOB_PATROL_HOME" }, { 700, "JOB_SPOT_STIMULUS" },
-	{ 620, "JOB_ATTACK_BREAKABLE" }, { 440, "JOB_ATTACK_TELEPORT" }, { 590, "JOB_SEEK_BACKUP" },
+	{ 620, "JOB_ATTACK_BREAKABLE" }, { 450, "JOB_ATTACK_TELEPORT" }, { 590, "JOB_SEEK_BACKUP" },
 	{ 310, "JOB_AVOID_ENEMY" }, { 720, "JOB_AVOID_AREA_DAMAGE" },
 	{ 690, "JOB_INFECTED_ATTACK" }, { 800, "JOB_BIN_GRENADE" },
 	{ 710, "JOB_DROWN_RECOVER" }, { 240, "JOB_MELEE_WARRIOR" }, { 250, "JOB_GRAFFITI_ARTIST" },
@@ -734,18 +734,23 @@ void BotEngineerThink(bot_t *pBot) {
 
    // repair/upgrade the bot's sentry?
    if (pBot->has_sentry == true && !FNullEnt(pBot->sentry_edict)) {
-      char modelName[30];
-      std::strncpy(modelName, STRING(pBot->sentry_edict->v.model), 30);
-      modelName[29] = '\0';
+	  char modelName[30];
+	  std::strncpy(modelName, STRING(pBot->sentry_edict->v.model), 30);
+	  modelName[29] = '\0';
 
-      const bool sgNeedsMaintenance = pBot->sentry_ammo < 100
-         || pBot->sentry_edict->v.health < 100
-         || std::strcmp(modelName, "models/sentry3.mdl") != 0;
+	  // defenders should consider even partially full sentries as needing maintenance - [APG]RoboCop[CL]
+	  const int ammoThreshold = (pBot->mission == ROLE_DEFENDER) ? 140 : 100;
+	  const bool sgNeedsMaintenance = pBot->sentry_ammo < ammoThreshold
+		 || pBot->sentry_edict->v.health < 100
+		 || std::strcmp(modelName, "models/sentry3.mdl") != 0;
 
-      if (sgNeedsMaintenance) {
-         // has enough metal to go maintain now
-         if (pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > SENTRY_AMMO_THRESHOLD
-            && pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SHOTGUN].iAmmo1] > 10) {
+	  if (sgNeedsMaintenance) {
+		 // has enough metal to go maintain now
+		 // defenders use a lower metal threshold so they go sooner - [APG]RoboCop[CL]
+		 const int metalThreshold = (pBot->mission == ROLE_DEFENDER)
+			? SENTRY_AMMO_THRESHOLD / 2 : SENTRY_AMMO_THRESHOLD;
+		 if (pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > metalThreshold
+			&& pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SHOTGUN].iAmmo1] > 10) {
             newJob = InitialiseNewJob(pBot, JOB_MAINTAIN_OBJECT);
             if (newJob != nullptr) {
                newJob->object = pBot->sentry_edict;

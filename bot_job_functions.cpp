@@ -819,15 +819,18 @@ int JobMaintainObject(bot_t* pBot) {
          return JOB_TERMINATED;
       }
       BotSetFacing(pBot, job_ptr->object->v.origin);
-      //BotNavigateWaypointless(pBot);
-      //pBot->f_current_wp_deadline = pBot->f_think_time + BOT_WP_DEADLINE;
 
       if (pBot->enemy.ptr == nullptr && pBot->current_weapon.iId != TF_WEAPON_SPANNER)
          UTIL_SelectItem(pBot->pEdict, "tf_weapon_spanner");
 
-      if (VectorsNearerThan(pBot->pEdict->v.origin, job_ptr->object->v.origin, 60.0)) {
+      // walk towards the object until within spanner range - [APG]RoboCop[CL]
+      if (!VectorsNearerThan(pBot->pEdict->v.origin, job_ptr->object->v.origin, 64.0f)) {
+         BotNavigateWaypointless(pBot);
+      }
+      else {
+         pBot->f_move_speed = 0.0f;
          job_ptr->phase = 4;
-         job_ptr->phase_timer = pBot->f_think_time + random_float(2.0f, 3.0f);
+         job_ptr->phase_timer = pBot->f_think_time + random_float(3.0f, 5.0f);
       }
    }
 
@@ -841,8 +844,13 @@ int JobMaintainObject(bot_t* pBot) {
          return JOB_TERMINATED; // enough time spent here - job done
 
       BotSetFacing(pBot, job_ptr->object->v.origin);
-      //BotNavigateWaypointless(pBot);
-      //pBot->f_current_wp_deadline = pBot->f_think_time + BOT_WP_DEADLINE;
+
+      // walk closer if drifted too far from the object - [APG]RoboCop[CL]
+      if (!VectorsNearerThan(pBot->pEdict->v.origin, job_ptr->object->v.origin, 70.0f)) {
+         BotNavigateWaypointless(pBot);
+      }
+      else
+         pBot->f_move_speed = 0.0f;
 
       if (pBot->current_weapon.iId != TF_WEAPON_SPANNER)
          UTIL_SelectItem(pBot->pEdict, "tf_weapon_spanner");
@@ -964,7 +972,7 @@ int JobBuildSentry(bot_t* pBot) {
                }
 
                job_ptr->phase = 3;
-               job_ptr->phase_timer = pBot->f_think_time + random_float(2.5f, 4.0f);
+               job_ptr->phase_timer = pBot->f_think_time + random_float(4.0f, 6.0f);
                return JOB_UNDERWAY;
             }
          }
@@ -983,12 +991,19 @@ int JobBuildSentry(bot_t* pBot) {
          return JOB_TERMINATED;
 
       BotSetFacing(pBot, pBot->sentry_edict->v.origin);
-      pBot->f_move_speed = 0.0f;
 
-      if (pBot->current_weapon.iId != TF_WEAPON_SPANNER)
-         UTIL_SelectItem(pBot->pEdict, "tf_weapon_spanner");
-      else
-         pBot->pEdict->v.button |= IN_ATTACK;
+      // walk towards the sentry until within spanner range - [APG]RoboCop[CL]
+      if (!VectorsNearerThan(pBot->pEdict->v.origin, pBot->sentry_edict->v.origin, 64.0f)) {
+         BotNavigateWaypointless(pBot);
+      }
+      else {
+         pBot->f_move_speed = 0.0f;
+
+         if (pBot->current_weapon.iId != TF_WEAPON_SPANNER)
+            UTIL_SelectItem(pBot->pEdict, "tf_weapon_spanner");
+         else
+            pBot->pEdict->v.button |= IN_ATTACK;
+      }
 
       // done whacking?
       if (job_ptr->phase_timer < pBot->f_think_time) {

@@ -231,7 +231,7 @@ float BotChangePitch(edict_t* pEdict, float speed) {
 	// turn from the current v_angle pitch to the idealpitch by selecting
 	// the quickest way to turn to face that direction
 	// find the difference in the current and ideal angle
-	const float diff = fabsf(current - ideal);
+	const float diff = std::fabsf(current - ideal);
 
 	// check if the bot is already facing the idealpitch direction...
 	if (diff <= 0.01f)
@@ -307,7 +307,7 @@ float BotChangeYaw(edict_t* pEdict, float speed) {
 	// turn from the current v_angle yaw to the ideal_yaw by selecting
 	// the quickest way to turn to face that direction
 	// find the difference in the current and ideal angle
-	const float diff = fabsf(current - ideal);
+	const float diff = std::fabsf(current - ideal);
 
 	// check if the bot is already facing the ideal_yaw direction...
 	if (diff <= 0.01f)
@@ -464,6 +464,16 @@ bool BotNavigateWaypoints(bot_t* pBot, bool navByStrafe) {
 
 	pBot->f_move_speed = pBot->f_max_speed;
 	pBot->f_side_speed = 0.0f;
+
+	// steer away from a single wall to prevent hugging corridor walls - [APG]RoboCop[CL]
+	if (pBot->enemy.ptr == nullptr && pBot->pEdict->v.flags & FL_ONGROUND) {
+		const bool wallL = BotCheckWallOnLeft(pBot);
+		const bool wallR = BotCheckWallOnRight(pBot);
+		if (wallL && !wallR)
+			pBot->f_side_speed = pBot->f_max_speed * 0.3f; // nudge right
+		else if (wallR && !wallL)
+			pBot->f_side_speed = -pBot->f_max_speed * 0.3f; // nudge left
+	}
 
 	// is it time to consider taking some kind of route shortcut?
 	if (pBot->f_shortcutCheckTime < pBot->f_think_time || pBot->f_shortcutCheckTime - 60.0f > pBot->f_think_time) // sanity check

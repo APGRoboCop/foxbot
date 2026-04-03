@@ -3,7 +3,7 @@
 ==============================
 
 --------------------------------------------------------------------------------
-Version 1.0-beta1
+Version 1.0-beta2
 ??????-??-2026
 Updated by RoboCop
 --------------------------------------------------------------------------------
@@ -14,7 +14,7 @@ Updated by RoboCop
 
 - Added a experience program for bots to gain a bit of wisdom and be less lame
 
-- Added a `bot_bunny_hop` variable to allow servers to choose for bots to bunnyhop on their own accord
+- Added a `bot_bhop` variable to allow servers to choose for bots to bunnyhop on their own accord
 
 - The bunnyhopping bots will not bunnyhop in doorways, inside pillbox bunkers nor inside tight corridors
 
@@ -38,7 +38,7 @@ Updated by RoboCop
 
 - Reduced maximum waypoints from 32000 to 1024 as all maps don't use no more than 1000 waypoints
 
-- Pitch and yaw speed tripled to allow bots to turn faster to avoid falling from catwalks without the fences
+- Pitch and yaw speed doubled to allow bots to turn faster to avoid falling from catwalks without the fences
 
 - Adding a detection for when the server changes sv_airaccelerate and sv_gravity to determine their jumps and bunnyhops
 

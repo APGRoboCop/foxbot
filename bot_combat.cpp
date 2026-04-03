@@ -1840,8 +1840,14 @@ int BotNadeHandler(bot_t *pBot, bool timed, const char newNadeType) {
    if (pBot->nadePrimed && pBot->enemy.ptr != nullptr) {
       const float enemyDist = (pBot->enemy.ptr->v.origin - pEdict->v.origin).Length();
       const float dangerRadius = (pBot->nadeType == GRENADE_MIRV) ? 400.0f : 200.0f;
-      if (enemyDist < dangerRadius && timeToDet <= 2.5f) {
+      if (enemyDist < dangerRadius) {
          toss = true; // throw immediately rather than hold and die
+      }
+      // also try to bin the grenade if enemy is very close and detonation is imminent
+      if (enemyDist < 150.0f && timeToDet <= 2.0f) {
+         job_struct *newJob = InitialiseNewJob(pBot, JOB_BIN_GRENADE);
+         if (newJob != nullptr)
+            SubmitNewJob(pBot, JOB_BIN_GRENADE, newJob);
       }
    }
 

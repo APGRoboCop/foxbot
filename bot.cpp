@@ -121,7 +121,7 @@ extern bool bot_can_build_teleporter;
 extern bool bot_xmas;
 extern bool g_bot_debug;
 extern int spectate_debug; // spectators can trigger debug messages from bots
-extern int bot_bunny_hop;
+extern int bot_bhop;
 
 extern edict_t* clients[32];
 
@@ -3902,7 +3902,7 @@ void BotThink(bot_t* pBot) {
 	// Suppressed during rocket/concussion jump jobs, near RJ/CJ waypoints,
 	// shortly after respawn, while steering sharp corners, or when server
 	// physics settings (sv_airaccelerate, sv_gravity) make hopping ineffective
-	if (bot_bunny_hop > 0 && pBot->f_bunnyHopTime < pBot->f_think_time
+	if (bot_bhop > 0 && pBot->f_bunnyHopTime < pBot->f_think_time
 		&& pBot->f_move_speed >= pBot->f_max_speed * 0.8f
 		&& pBot->pEdict->v.flags & FL_ONGROUND
 		&& pBot->pEdict->v.waterlevel == WL_NOT_IN_WATER
@@ -3913,67 +3913,79 @@ void BotThink(bot_t* pBot) {
 		&& !(waypoints[pBot->current_wp].flags & (W_FL_CROUCH | W_FL_LADDER | W_FL_WALK | W_FL_SNIPER | W_FL_TFC_JUMP))
 		&& !BufferContainsJobType(pBot, JOB_ROCKET_JUMP)
 		&& !BufferContainsJobType(pBot, JOB_CONCUSSION_JUMP))
-	{
+	   {
 		// Don't hop while steering sharp corners (yaw error > 45 degrees) - [APG]RoboCop[CL]
 		float yawError = pBot->pEdict->v.v_angle.y - pBot->pEdict->v.ideal_yaw;
 		if (yawError < -180.0f) yawError += 360.0f;
 		if (yawError > 180.0f) yawError -= 360.0f;
-		if (fabsf(yawError) > 45.0f) {
+		if (std::fabsf(yawError) > 45.0f) {
 			pBot->f_bunnyHopTime = pBot->f_think_time + 0.3f;
 		}
 		else {
-		   // Detect server physics: suppress if air control is too low or gravity too extreme - [APG]RoboCop[CL]
-			// sv_airaccelerate default is 10; Jolt TFC guide says 4 disables bhop.
-			// sv_gravity default is 800; allow 400-1200 range for varied servers.
-			const float airAccel = CVAR_GET_FLOAT("sv_airaccelerate");
-			const float gravity = CVAR_GET_FLOAT("sv_gravity");
-			const bool physicsOk = airAccel >= 4.0f && gravity >= 400.0f && gravity <= 1200.0f;
+			// If the bot is hopping but not gaining momentum, stop hopping - [APG]RoboCop[CL]
+			const float horizontalSpeed = pBot->pEdict->v.velocity.Length2D();
 
-			// Check that the area is wide enough (walls on both sides means a tight corridor)
-			const bool wallLeft = BotCheckWallOnLeft(pBot);
-			const bool wallRight = BotCheckWallOnRight(pBot);
-			const bool inTightSpace = wallLeft && wallRight;
-
-			// Check for drop-off: trace straight down a bit to the sides to detect catwalks - [APG]RoboCop[CL]
-			bool nearCatwalkEdge = false;
-			if (!inTightSpace)
-			{
+			if (horizontalSpeed < pBot->f_max_speed * 0.75f) {
+				// not moving fast enough - hopping is counterproductive
+				pBot->f_bunnyHopTime = pBot->f_think_time + random_float(1.5f, 3.0f);
+			}
+			else {
+		      // Detect server physics: suppress if air control is too low or gravity too extreme - [APG]RoboCop[CL]
+			   // sv_airaccelerate default is 10; Jolt TFC guide says 4 disables bhop.
+			   // sv_gravity default is 800; allow 400-1200 range for varied servers.
+			   const float airAccel = CVAR_GET_FLOAT("sv_airaccelerate");
+			   const float gravity = CVAR_GET_FLOAT("sv_gravity");
+			   const bool physicsOk = airAccel >= 4.0f && gravity >= 400.0f && gravity <= 1200.0f;
+   
+			   // Check that the area is wide enough (walls on both sides means a tight corridor)
+			   const bool wallLeft = BotCheckWallOnLeft(pBot);
+			   const bool wallRight = BotCheckWallOnRight(pBot);
+			   const bool inTightSpace = wallLeft && wallRight;
+   
+			   // Check for drop-off: trace straight down a bit to the sides to detect catwalks - [APG]RoboCop[CL]
+			   bool nearCatwalkEdge = false;
+			   if (!inTightSpace)
+			   {
 				UTIL_MakeVectors(pBot->pEdict->v.v_angle);
+
 				Vector sideCheck = pBot->pEdict->v.origin + gpGlobals->v_right * (pBot->bhopStrafeDir ? 30.0f : -30.0f);
 				sideCheck.z -= 50.0f;
 				TraceResult tr;
+
 				UTIL_TraceLine(pBot->pEdict->v.origin, sideCheck, ignore_monsters, pBot->pEdict, &tr);
+
 				if (tr.flFraction >= 1.0f)
 					nearCatwalkEdge = true; // no ground to the side - likely a catwalk
-			}
+			   }
 
-			// Check if the next waypoint along the route is too close (tight navigation) - [APG]RoboCop[CL]
-			bool nextWPTooClose = false;
-			if (!inTightSpace && !nearCatwalkEdge && pBot->goto_wp != -1) {
-				const int nextWP = WaypointRouteFromTo(pBot->current_wp, pBot->goto_wp, pBot->current_team);
-				if (nextWP >= 0 && nextWP < num_waypoints) {
-					// suppress if the next waypoint is nearby (short segments = tight areas)
-					if (VectorsNearerThan(waypoints[pBot->current_wp].origin, waypoints[nextWP].origin, 100.0)
-						|| (waypoints[nextWP].flags & (W_FL_TFC_JUMP | W_FL_WALK | W_FL_CROUCH)))
-						nextWPTooClose = true;
-				}
-			}
+			   // Check if the next waypoint along the route is too close (tight navigation) - [APG]RoboCop[CL]
+			   bool nextWPTooClose = false;
+			   if (!inTightSpace && !nearCatwalkEdge && pBot->goto_wp != -1) {
+   				const int nextWP = WaypointRouteFromTo(pBot->current_wp, pBot->goto_wp, pBot->current_team);
+				   if (nextWP >= 0 && nextWP < num_waypoints) {
+   					// suppress if the next waypoint is nearby (short segments = tight areas)
+					   if (VectorsNearerThan(waypoints[pBot->current_wp].origin, waypoints[nextWP].origin, 100.0)
+						   || (waypoints[nextWP].flags & (W_FL_TFC_JUMP | W_FL_WALK | W_FL_CROUCH)))
+						   nextWPTooClose = true;
+				   }
+			   }
 
-			if (physicsOk && !inTightSpace && !nearCatwalkEdge && !nextWPTooClose && random_long(1, 100) <= bot_bunny_hop)
-			{
-				pBot->pEdict->v.button |= IN_JUMP;
+			   if (physicsOk && !inTightSpace && !nearCatwalkEdge && !nextWPTooClose && random_long(1, 100) <= bot_bhop)
+			   {
+				   pBot->pEdict->v.button |= IN_JUMP;
 
-				// Scale strafe intensity based on sv_airaccelerate (default 10) - [APG]RoboCop[CL]
-				const float strafeFactor = (airAccel > 0.0f) ? std::min(airAccel / 10.0f, 1.5f) * 0.6f : 0.0f;
+   				// Scale strafe intensity based on sv_airaccelerate (default 10) - [APG]RoboCop[CL]
+	   			const float strafeFactor = (airAccel > 0.0f) ? std::min(airAccel / 10.0f, 1.5f) * 0.6f : 0.0f;
 
-				// zigzag: alternate strafe direction
-				if (pBot->bhopStrafeDir)
-					pBot->f_side_speed = pBot->f_max_speed * strafeFactor;
-				else
-					pBot->f_side_speed = -pBot->f_max_speed * strafeFactor;
+		   		// zigzag: alternate strafe direction
+			   	if (pBot->bhopStrafeDir)
+				   	pBot->f_side_speed = pBot->f_max_speed * strafeFactor;
+				   else
+					   pBot->f_side_speed = -pBot->f_max_speed * strafeFactor;
 
-				pBot->bhopStrafeDir = !pBot->bhopStrafeDir;
-			}
+				   pBot->bhopStrafeDir = !pBot->bhopStrafeDir;
+			   }
+			} // end momentum check else
 		}
 
 		// Always set cooldown after evaluation to prevent per-frame re-checks

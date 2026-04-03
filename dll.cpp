@@ -56,7 +56,7 @@ constexpr unsigned char VER_MINOR = 0;
 
 enum class Menu : unsigned char { MENU_NONE = 0, MENU_1, MENU_2, MENU_3, MENU_4, MENU_5, MENU_6, MENU_7 };
 
-cvar_t foxbot = { "foxbot", "1.0-beta1", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr };
+cvar_t foxbot = { "foxbot", "1.0-beta2", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr };
 cvar_t enable_foxbot = { "enable_foxbot", "1", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr };
 cvar_t sv_bot = { "bot", "", 0, 0, nullptr };
 
@@ -102,7 +102,7 @@ bool bot_can_build_teleporter = true;
 int bot_use_grenades = 2;
 bool bot_team_balance = false;
 bool bot_bot_balance = false;
-int bot_bunny_hop = 30; // 0 = off, 1-100 = frequency percentage for bunny hopping
+int bot_bhop = 30; // 0 = off, 1-100 = frequency percentage for bunny hopping
 int min_bots = -1;
 int max_bots = -1;
 int bot_total_varies = 0;
@@ -1921,8 +1921,8 @@ void ClientCommand(edict_t* pEntity) {
 				RETURN_META(MRES_SUPERCEDE);
 			return;
 		}
-		else if (FStrEq(pcmd, "bot_bunny_hop")) {
-			changeBotSetting("bot_bunny_hop", &bot_bunny_hop, arg1, 0, 100, SETTING_SOURCE_CLIENT_COMMAND);
+		else if (FStrEq(pcmd, "bot_bhop")) {
+			changeBotSetting("bot_bhop", &bot_bhop, arg1, 0, 100, SETTING_SOURCE_CLIENT_COMMAND);
 
 			if (mr_meta)
 				RETURN_META(MRES_SUPERCEDE);
@@ -2933,8 +2933,8 @@ void StartFrame() { // v7 last frame timing
 				else if (std::strcmp(cmd, "bot_use_grenades") == 0) {
 					changeBotSetting("bot_use_grenades", &bot_use_grenades, arg1, 0, 2, SETTING_SOURCE_SERVER_COMMAND);
 				}
-				else if (std::strcmp(cmd, "bot_bunny_hop") == 0) {
-					changeBotSetting("bot_bunny_hop", &bot_bunny_hop, arg1, 0, 100, SETTING_SOURCE_SERVER_COMMAND);
+				else if (std::strcmp(cmd, "bot_bhop") == 0) {
+					changeBotSetting("bot_bhop", &bot_bhop, arg1, 0, 100, SETTING_SOURCE_SERVER_COMMAND);
 				}
 				else if (std::strcmp(cmd, "dump") == 0) {
 					edict_t* pent = nullptr;
@@ -5324,8 +5324,8 @@ static void ProcessBotCfgFile() {
 		return;
 	}
 
-	if (std::strcmp(cmd, "bot_bunny_hop") == 0) {
-		changeBotSetting("bot_bunny_hop", &bot_bunny_hop, arg1, 0, 100, SETTING_SOURCE_CONFIG_FILE);
+	if (std::strcmp(cmd, "bot_bhop") == 0) {
+		changeBotSetting("bot_bhop", &bot_bhop, arg1, 0, 100, SETTING_SOURCE_CONFIG_FILE);
 		return;
 	}
 
