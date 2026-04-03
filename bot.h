@@ -85,8 +85,13 @@ template <typename U> void bzero(U* ptr, const size_t len) noexcept {
 	}
 }
 
-constexpr unsigned char BOT_PITCH_SPEED = 60;
-constexpr unsigned char BOT_YAW_SPEED = 60;
+// Engine pitch/yaw speed caps set on each bot's edict. Only directly used for
+// the slower spawn-turn (yaw_speed / 2 = 40). The main movement loop calculates
+// its own dynamic turn speed based on yaw/pitch error and skill level.
+// 80 is intentionally high to ensure bots can steer through tight corners and
+// recover properly when airborne - it does NOT make them twitch-aim. - [APG]RoboCop[CL]
+constexpr unsigned char BOT_PITCH_SPEED = 80;
+constexpr unsigned char BOT_YAW_SPEED = 80;
 
 constexpr unsigned char RESPAWN_IDLE = 1;
 constexpr unsigned char RESPAWN_NEED_TO_RESPAWN = 2;
@@ -467,6 +472,9 @@ typedef struct {
 	float f_disguise_time;      // keeps track of how long it takes for a spy to disguise
 	float f_feigningTime;       // when a Spy should stop feigning death
 	float f_spyFeignAmbushTime; // Spy bots use this to set up ambushes
+	int sgDeathWaypoint;        // waypoint where this bot was last killed by a sentry gun
+	float f_spySGApproachTime;  // when a Spy should next try indirect SG attack
+	unsigned spyUsedNailgun : 1; // set true if the spy is using nailgun from range
 
 	// Sniper related variables ///////////////
 	float f_snipe_time; // remembers when a sniper should release the rifle trigger
@@ -502,6 +510,10 @@ typedef struct {
 	int combatKills;
 	int combatDeaths;
 	float f_combatSurvivalTime;
+
+	// Bunny hop variables ///////////////
+	float f_bunnyHopTime;    // when the bot may next bunny hop
+	unsigned bhopStrafeDir : 1; // alternating strafe direction for zigzag bunny hops
 } bot_t;
 
 // roles to fill on the team

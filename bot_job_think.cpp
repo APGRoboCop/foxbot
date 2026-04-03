@@ -733,18 +733,38 @@ void BotEngineerThink(bot_t *pBot) {
    }
 
    // repair/upgrade the bot's sentry?
-   if (pBot->has_sentry == true && pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > SENTRY_AMMO_THRESHOLD && pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SHOTGUN].iAmmo1] > 10) {
+   if (pBot->has_sentry == true && !FNullEnt(pBot->sentry_edict)) {
       char modelName[30];
       std::strncpy(modelName, STRING(pBot->sentry_edict->v.model), 30);
       modelName[29] = '\0';
 
-      if (pBot->sentry_ammo < 100 || pBot->sentry_edict->v.health < 100 || std::strcmp(modelName, "models/sentry3.mdl") != 0) {
-         newJob = InitialiseNewJob(pBot, JOB_MAINTAIN_OBJECT);
-         if (newJob != nullptr) {
-            newJob->object = pBot->sentry_edict;
+      const bool sgNeedsMaintenance = pBot->sentry_ammo < 100
+         || pBot->sentry_edict->v.health < 100
+         || std::strcmp(modelName, "models/sentry3.mdl") != 0;
 
-            if (SubmitNewJob(pBot, JOB_MAINTAIN_OBJECT, newJob) == true)
-               return;
+      if (sgNeedsMaintenance) {
+         // has enough metal to go maintain now
+         if (pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > SENTRY_AMMO_THRESHOLD
+            && pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SHOTGUN].iAmmo1] > 10) {
+            newJob = InitialiseNewJob(pBot, JOB_MAINTAIN_OBJECT);
+            if (newJob != nullptr) {
+               newJob->object = pBot->sentry_edict;
+
+               if (SubmitNewJob(pBot, JOB_MAINTAIN_OBJECT, newJob) == true)
+                  return;
+            }
+         }
+         // not enough metal - go get ammo first so we can upgrade
+         else if (pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] <= SENTRY_AMMO_THRESHOLD) {
+            newJob = InitialiseNewJob(pBot, JOB_GET_AMMO);
+            if (newJob != nullptr) {
+               newJob->waypoint = WaypointFindNearestGoal(pBot->current_wp, pBot->current_team, 5000, W_FL_AMMO);
+               if (newJob->waypoint == -1)
+                  newJob->waypoint = WaypointFindNearestGoal(pBot->current_wp, -1, 5000, W_FL_AMMO);
+
+               if (newJob->waypoint != -1 && SubmitNewJob(pBot, JOB_GET_AMMO, newJob) == true)
+                  return;
+            }
          }
       }
    }

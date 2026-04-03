@@ -650,8 +650,65 @@ bool BotNavigateWaypoints(bot_t* pBot, bool navByStrafe) {
 			}
 
 			// slow down if the next waypoint is a walk waypoint...
-         if (waypoints[pBot->current_wp].flags & W_FL_WALK)
+		 if (waypoints[pBot->current_wp].flags & W_FL_WALK)
 				pBot->f_move_speed = pBot->f_max_speed / 3;
+
+			// slow down when approaching a sharp corner to prevent overshooting - [APG]RoboCop[CL]
+			if (pBot->current_wp != pBot->goto_wp && pBot->goto_wp != -1
+				&& current_wp_distance < 100.0f && pBot->enemy.ptr == nullptr) {
+				int nextWP;
+				if (pBot->branch_waypoint == -1)
+					nextWP = WaypointRouteFromTo(pBot->current_wp, pBot->goto_wp, pBot->current_team);
+				else
+					nextWP = WaypointRouteFromTo(pBot->current_wp, pBot->branch_waypoint, pBot->current_team);
+
+				if (nextWP >= 0 && nextWP < num_waypoints) {
+					// compute the turn angle between the current heading and the next segment
+					Vector currentDir = waypoints[pBot->current_wp].origin - pBot->pEdict->v.origin;
+					Vector nextDir = waypoints[nextWP].origin - waypoints[pBot->current_wp].origin;
+
+					currentDir.z = 0;
+					nextDir.z = 0;
+
+					const float curLen = currentDir.Length();
+					const float nxtLen = nextDir.Length();
+
+					if (curLen > 1.0f && nxtLen > 1.0f) {
+						currentDir = currentDir * (1.0f / curLen);
+						nextDir = nextDir * (1.0f / nxtLen);
+
+						const float dot = currentDir.x * nextDir.x + currentDir.y * nextDir.y;
+
+						// dot < 0.5 means > ~60 degree turn, dot < 0 means > 90 degrees
+						if (dot < 0.0f && current_wp_distance < 80.0f)
+							pBot->f_move_speed = pBot->f_max_speed * 0.45f;
+						else if (dot < 0.5f && current_wp_distance < 60.0f)
+							pBot->f_move_speed = pBot->f_max_speed * 0.65f;
+					}
+				}
+			}
+		}
+
+		// Detect ground drop-offs ahead to prevent falling off planks, cliffs, into lava etc. - [APG]RoboCop[CL]
+		// Only when on ground, not on a ladder, and not already at a jump/lift waypoint
+		if (pBot->pEdict->v.flags & FL_ONGROUND
+			&& pBot->pEdict->v.waterlevel == WL_NOT_IN_WATER
+			&& !(waypoints[pBot->current_wp].flags & (W_FL_LADDER | W_FL_JUMP | W_FL_LIFT | W_FL_TFC_JUMP))) {
+			UTIL_MakeVectors(pBot->pEdict->v.v_angle);
+
+			// trace forward and down from a point ahead of the bot
+			const Vector aheadPoint = pBot->pEdict->v.origin + gpGlobals->v_forward * 40.0f;
+
+			Vector downPoint = aheadPoint;
+			downPoint.z -= 120.0f; // check for a significant drop
+			TraceResult trGround;
+
+			UTIL_TraceLine(aheadPoint, downPoint, ignore_monsters, pBot->pEdict, &trGround);
+
+			if (trGround.flFraction >= 1.0f) {
+				// no ground 120 units below ahead - likely a dangerous drop
+				pBot->f_move_speed = pBot->f_max_speed / 4.0f;
+			}
 		}
 
 		// if the bot is approaching a lift

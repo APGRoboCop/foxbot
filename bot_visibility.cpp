@@ -22,6 +22,7 @@
 #include "waypoint.h"
 #include "bot_visibility.h"
 #include "bot_neuralnet.h"
+#include "bot_compress.h"
 
 extern int mod_id;
 extern WAYPOINT waypoints[MAX_WAYPOINTS];
@@ -71,7 +72,7 @@ void CWaypointVisibilityTable::WorkOutVisibilityTable(const int iNumWaypoints)
 		std::printf("FoXBot: Visibility table computed for %d waypoints\n", iNumWaypoints);
 }
 
-// Save the visibility table to a binary file.
+// Save the visibility table to a compressed binary file.
 bool CWaypointVisibilityTable::SaveToFile() const
 {
 	if (m_VisTable == nullptr || m_iTableNumWaypoints <= 0)
@@ -97,18 +98,32 @@ bool CWaypointVisibilityTable::SaveToFile() const
 		return false;
 	}
 
-	// write the number of waypoints first so we can verify on load
-	std::fwrite(&m_iTableNumWaypoints, sizeof(int), 1, bfp);
-
-	// write the bit table
+	// build uncompressed payload: waypoint count + bit table
 	const int iDesiredSize = static_cast<int>((static_cast<long long>(m_iTableNumWaypoints) * m_iTableNumWaypoints + 7) / 8);
-	std::fwrite(m_VisTable, sizeof(unsigned char), iDesiredSize, bfp);
+	const unsigned int payloadSize = sizeof(int) + iDesiredSize;
+
+   unsigned char *payload = static_cast<unsigned char *>(std::malloc(payloadSize));
+	if (payload == nullptr)
+	{
+		std::fclose(bfp);
+		return false;
+	}
+
+	std::memcpy(payload, &m_iTableNumWaypoints, sizeof(int));
+	std::memcpy(payload + sizeof(int), m_VisTable, iDesiredSize);
+
+	const bool result = FoxCompressedWrite(bfp, payload, payloadSize);
+	std::free(payload);
 
 	std::fclose(bfp);
-	return true;
+
+	if (result && IS_DEDICATED_SERVER())
+		std::printf("FoXBot: Visibility table saved (compressed %u bytes)\n", payloadSize);
+
+	return result;
 }
 
-// Load the visibility table from a binary file.
+// Load the visibility table from a binary file (compressed or uncompressed).
 bool CWaypointVisibilityTable::ReadFromFile(const int iNumWaypoints)
 {
 	if (iNumWaypoints <= 0)
@@ -129,45 +144,39 @@ bool CWaypointVisibilityTable::ReadFromFile(const int iNumWaypoints)
 	if (bfp == nullptr)
 		return false;
 
-	// read and verify the waypoint count
-	int storedNumWaypoints = 0;
-	if (std::fread(&storedNumWaypoints, sizeof(int), 1, bfp) != 1 || storedNumWaypoints != iNumWaypoints)
-	{
-		std::fclose(bfp);
-		return false;
-	}
-
-	// verify file size matches expected table size
 	const int iDesiredSize = static_cast<int>((static_cast<long long>(iNumWaypoints) * iNumWaypoints + 7) / 8);
+	const unsigned int expectedPayload = sizeof(int) + iDesiredSize;
 
-	std::fseek(bfp, 0, SEEK_END);
-	const long iFileSize = std::ftell(bfp);
+	// try reading as compressed file (also handles uncompressed via fallback)
+	unsigned int dataSize = 0;
+	unsigned char* data = FoxCompressedRead(bfp, &dataSize);
+	std::fclose(bfp);
 
-	if (iFileSize != static_cast<long>(sizeof(int) + iDesiredSize))
+	if (data == nullptr || dataSize != expectedPayload)
 	{
-		std::fclose(bfp);
+		std::free(data);
 		return false;
 	}
 
-	// seek past the header
-	std::fseek(bfp, sizeof(int), SEEK_SET);
+	// verify the stored waypoint count
+	int storedNumWaypoints = 0;
+	std::memcpy(&storedNumWaypoints, data, sizeof(int));
+	if (storedNumWaypoints != iNumWaypoints)
+	{
+		std::free(data);
+		return false;
+	}
 
 	// allocate the table
 	if (!AllocateTable(iNumWaypoints))
 	{
-		std::fclose(bfp);
+		std::free(data);
 		return false;
 	}
 
-	// read the bit table
-	if (std::fread(m_VisTable, sizeof(unsigned char), iDesiredSize, bfp) != static_cast<size_t>(iDesiredSize))
-	{
-		FreeVisibilityTable();
-		std::fclose(bfp);
-		return false;
-	}
-
-	std::fclose(bfp);
+	// copy the bit table from the decompressed data
+	std::memcpy(m_VisTable, data + sizeof(int), iDesiredSize);
+	std::free(data);
 
 	if (IS_DEDICATED_SERVER())
 		std::printf("FoXBot: Visibility table loaded (%d waypoints)\n", iNumWaypoints);

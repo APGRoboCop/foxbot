@@ -199,8 +199,10 @@ int assess_JobPushButton(const bot_t* pBot, const job_struct& r_job) {
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobUseTeleport(const bot_t* pBot, const job_struct& r_job) {
 	// recommend the job be removed if it is invalid
+	// spies should never use teleporters - the glow reveals their team colours for 10-15 seconds - [APG]RoboCop[CL]
 	if (pBot->bot_has_flag || PlayerIsInfected(pBot->pEdict) || r_job.f_bufferedTime < pBot->f_killed_time || FNullEnt(r_job.object) || !IsAlive(r_job.object) // cursed undead zombie-limbo teleports
-		|| r_job.object->v.flags & FL_KILLME) {
+		|| r_job.object->v.flags & FL_KILLME
+		|| pBot->pEdict->v.playerclass == TFC_CLASS_SPY) {
 		return PRIORITY_NONE;
 	}
 
@@ -751,6 +753,13 @@ int assess_JobPursueEnemy(const bot_t* pBot, const job_struct& r_job) {
 	// check the waypoints validity
 	if (r_job.phase != 0 && (!WaypointAvailable(r_job.waypoint, pBot->current_team) || WaypointRouteFromTo(pBot->current_wp, r_job.waypoint, pBot->current_team) == -1))
 		return PRIORITY_NONE;
+
+	// prevent defenders from being drawn too far from base even when alive - [APG]RoboCop[CL]
+	if (pBot->mission == ROLE_DEFENDER && r_job.waypoint >= 0 && pBot->current_wp >= 0) {
+		const int pursueDistance = WaypointDistanceFromTo(pBot->current_wp, r_job.waypoint, pBot->current_team);
+		if (pursueDistance > 1500 && !PlayerHasFlag(r_job.player))
+			return PRIORITY_NONE;
+	}
 
 	return jl[JOB_PURSUE_ENEMY].basePriority;
 }

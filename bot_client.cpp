@@ -42,6 +42,7 @@
 #include "tf_defs.h"
 #include "bot_neuralnet.h"
 #include "bot_ga.h"
+#include "bot_experience.h"
 
 // types of damage to ignore...
 #define IGNORE_DAMAGE (DMG_CRUSH | DMG_FREEZE | DMG_SHOCK | DMG_DROWN | DMG_NERVEGAS | DMG_RADIATION | DMG_DROWNRECOVER | DMG_ACID | DMG_SLOWBURN | DMG_SLOWFREEZE)
@@ -57,14 +58,11 @@ int g_state;
 // int MatchScores[4];  // doesn't update reliably on all maps
 
 // This message is sent when the TFC VGUI menu is displayed.
-void BotClient_TFC_VGUI(void* p, int bot_index) {
-	/*if((*(int *)p) == 2)  // is it a team select menu?
-
-					bots[bot_index].start_action = MSG_TFC_TEAM_SELECT;
-
-					else if((*(int *)p) == 3)  // is is a class selection menu?
-
-					bots[bot_index].start_action = MSG_TFC_CLASS_SELECT;*/
+void BotClient_TFC_VGUI(void* p, const int bot_index) {
+	if ((*static_cast<int *>(p)) == 2)  // is it a team select menu?
+		bots[bot_index].start_action = MSG_TFC_TEAM_SELECT;
+	else if ((*static_cast<int *>(p)) == 3)  // is it a class selection menu?
+		bots[bot_index].start_action = MSG_TFC_CLASS_SELECT;
 }
 
 // This message is sent when the Counter-Strike VGUI menu is displayed. // Not required for TFC - [APG]RoboCop[CL]
@@ -142,7 +140,7 @@ void BotClient_FLF_VGUI(void* p, int bot_index)
 */
 // This message is sent when a client joins the game.  All of the weapons
 // are sent with the weapon ID and information about what ammo is used.
-void BotClient_Valve_WeaponList(void* p, int bot_index) {
+void BotClient_Valve_WeaponList(void* p, const int bot_index) {
 	static int state = 0; // current state machine state
 	static bot_weapon_t bot_weapon;
 
@@ -402,7 +400,7 @@ void BotClient_FLF_WeaponPickup(void* p, int bot_index)
 */
 // This message gets sent when the bot picks up an item (like a battery
 // or a healthkit)
-void BotClient_Valve_ItemPickup(void* p, int bot_index) {}
+void BotClient_Valve_ItemPickup(void* p, const int bot_index) {}
 
 void BotClient_TFC_ItemPickup(void* p, const int bot_index) {
 	// this is just like the Valve Item Pickup message
@@ -615,7 +613,7 @@ void BotClient_FLF_Damage(void* p, int bot_index)
 }*/
 
 // This message gets sent when the bots get killed
-void BotClient_Valve_DeathMsg(void* p, int bot_index) {
+void BotClient_Valve_DeathMsg(void* p, const int bot_index) {
 	static int state = 0; // current state machine state
 	static int killer_index;
 	static int victim_index;
@@ -694,6 +692,20 @@ void BotClient_Valve_DeathMsg(void* p, int bot_index) {
 				fitness.survivalTime = bots[index].f_combatSurvivalTime;
 
 				g_CombatGA.submitFitness(fitness.calculateFitness());
+
+				// Record SG death location in per-map experience data. [APG]RoboCop[CL]	
+				// If the bot had a known enemy sentry gun, record that waypoint as dangerous.
+				if (!FNullEnt(bots[index].lastEnemySentryGun)
+					&& IsAlive(bots[index].lastEnemySentryGun))
+				{
+					const int deathWP = WaypointFindNearest_V(
+						bots[index].pEdict->v.origin, 400.0f, -1);
+					if (deathWP != -1)
+					{
+						g_MapExperience.recordSGDeath(bots[index].current_team, deathWP);
+						bots[index].sgDeathWaypoint = deathWP;
+					}
+				}
 			}
 	}
 }
@@ -864,7 +876,7 @@ void BotClient_FLF_ScreenFade(void* p, int bot_index)
 // This function can be used to monitor which icons are displayed on the bot's HUD.
 // NOTE: This can be used to see if a bot is tranquilised or hallucinating but not
 // if it's infected.
-void BotClient_TFC_StatusIcon(void* p, int bot_index) {
+void BotClient_TFC_StatusIcon(void* p, const int bot_index) {
 	/*	static int icon_status = 0;
 
 					if(g_state == 0)
@@ -998,7 +1010,7 @@ void BotClient_TFC_DetPack(void* p, const int bot_index) {
 					}*/
 }
 
-void BotClient_Menu(void* p, int bot_index) {
+void BotClient_Menu(void* p, const int bot_index) {
 #if FALSE
 	static int val, s;
 	if (g_state == 0) {

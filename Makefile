@@ -44,6 +44,7 @@ CPPFLAGS += -fno-rtti -fno-exceptions -fno-threadsafe-statics ${CFLAGS}
 SRC = 	bot.cpp \
    bot_client.cpp \
    bot_combat.cpp \
+   bot_experience.cpp \
    bot_job_assessors.cpp \
    bot_job_functions.cpp \
    bot_job_think.cpp \
@@ -58,9 +59,14 @@ SRC = 	bot.cpp \
    sdk_util.cpp \
    util.cpp \
    version.cpp \
-   waypoint.cpp
+   waypoint.cpp \
+   miniz.c \
+   miniz_tdef.c \
+   miniz_tinfl.c
 
-OBJ = $(SRC:%.cpp=%.o)
+OBJ_CPP = $(filter %.cpp,$(SRC))
+OBJ_C = $(filter %.c,$(SRC))
+OBJ = $(OBJ_CPP:%.cpp=%.o) $(OBJ_C:%.c=%.o)
 
 ${TARGET}${DLLEND}: ${OBJ} 
 	${CPP} -o $@ ${OBJ} ${LINKFLAGS}
@@ -74,6 +80,10 @@ distclean:
 
 %.o: %.cpp
 	${CPP} ${CPPFLAGS} -c $< -o $@
+
+
+%.o: %.c
+	${CPP} ${CFLAGS} -c $< -o $@
 
 depend: Rules.depend
 

@@ -231,8 +231,20 @@ int JobRoam(bot_t* pBot) {
 
    // make sure the bot has a waypoint destination
    if (job_ptr->waypoint == -1) {
-      // pick a random plain waypoint
-      job_ptr->waypoint = WaypointFindRandomGoal_R(pBot->pEdict->v.origin, false, 8000.0f, -1, 0);
+      // defenders should stay near their defensive positions, not roam across the map - [APG]RoboCop[CL]
+      if (pBot->mission == ROLE_DEFENDER) {
+         constexpr WPT_INT32 defenceFlags = W_FL_TFC_PL_DEFEND | W_FL_TFC_SENTRY | W_FL_TFC_PIPETRAP;
+         const int defencePoint = WaypointFindRandomGoal(pBot->current_wp, pBot->current_team, defenceFlags);
+         if (defencePoint != -1)
+            job_ptr->waypoint = WaypointFindRandomGoal_R(waypoints[defencePoint].origin, false, 800.0f, pBot->current_team, 0);
+         // fallback: try any waypoint near the bot but not too far
+         if (job_ptr->waypoint == -1)
+            job_ptr->waypoint = WaypointFindRandomGoal_R(pBot->pEdict->v.origin, false, 2000.0f, -1, 0);
+      }
+      else {
+         // pick a random plain waypoint
+         job_ptr->waypoint = WaypointFindRandomGoal_R(pBot->pEdict->v.origin, false, 8000.0f, -1, 0);
+      }
       if (job_ptr->waypoint == -1) {
          // this really shouldn't happen(unless the map has no waypoints)
          return JOB_TERMINATED;
@@ -952,6 +964,7 @@ int JobBuildSentry(bot_t* pBot) {
                }
 
                job_ptr->phase = 3;
+               job_ptr->phase_timer = pBot->f_think_time + random_float(2.5f, 4.0f);
                return JOB_UNDERWAY;
             }
          }
@@ -964,8 +977,29 @@ int JobBuildSentry(bot_t* pBot) {
       }
    }
 
-   // final phase - report the sentry guns location
+   // phase 3 - give the newly built sentry a few whacks with the spanner
    if (job_ptr->phase == 3) {
+      if (FNullEnt(pBot->sentry_edict))
+         return JOB_TERMINATED;
+
+      BotSetFacing(pBot, pBot->sentry_edict->v.origin);
+      pBot->f_move_speed = 0.0f;
+
+      if (pBot->current_weapon.iId != TF_WEAPON_SPANNER)
+         UTIL_SelectItem(pBot->pEdict, "tf_weapon_spanner");
+      else
+         pBot->pEdict->v.button |= IN_ATTACK;
+
+      // done whacking?
+      if (job_ptr->phase_timer < pBot->f_think_time) {
+         job_ptr->phase = 4;
+         return JOB_UNDERWAY;
+      }
+      return JOB_UNDERWAY;
+   }
+
+   // final phase - report the sentry guns location
+   if (job_ptr->phase == 4) {
       if (defensive_chatter) {
          const int bot_area = AreaInsideClosest(pBot->pEdict);
          if (bot_area != -1) {
@@ -2141,9 +2175,29 @@ int JobDefendFlag(bot_t* pBot) {
 
       // check if the bot has arrived
       if (pBot->current_wp == job_ptr->waypoint && VectorsNearerThan(waypoints[pBot->current_wp].origin, pBot->pEdict->v.origin, 40.0)) {
-         // look about and wait
-         pBot->f_pause_time = pBot->f_think_time + 0.2f;
-         BotLookAbout(pBot);
+         // Demomen should lay pipe bombs near the dropped flag to trap it - [APG]RoboCop[CL]
+         if (pBot->pEdict->v.playerclass == TFC_CLASS_DEMOMAN
+            && !FNullEnt(job_ptr->object)
+            && CountPipebombs(pBot) < MAX_PIPEBOMBS
+            && pBot->m_rgAmmo[weapon_defs[TF_WEAPON_PL].iAmmo1] > 0) {
+            // select the pipe launcher
+            if (pBot->current_weapon.iId != TF_WEAPON_PL)
+               UTIL_SelectItem(pBot->pEdict, "tf_weapon_pl");
+            else {
+               // aim near the dropped flag with some spread
+               const Vector v_flag = job_ptr->object->v.origin
+                  + Vector(random_float(-60.0f, 60.0f), random_float(-60.0f, 60.0f), 0);
+               BotSetFacing(pBot, v_flag);
+               pBot->pEdict->v.button |= IN_ATTACK;
+            }
+            pBot->f_move_speed = 0.0f;
+            pBot->f_side_speed = 0.0f;
+         }
+         else {
+            // look about and wait
+            pBot->f_pause_time = pBot->f_think_time + 0.2f;
+            BotLookAbout(pBot);
+         }
       }
       else {
          pBot->goto_wp = job_ptr->waypoint;
@@ -3360,11 +3414,16 @@ int JobBinGrenade(bot_t* pBot) {
       const Vector v_aim = job_ptr->origin - pBot->pEdict->v.origin;
 
       if (BotInFieldOfView(pBot, v_aim) == 0) {
-         // thrown the grenade yet?
-         if (pBot->nadePrimed == false) {
-            job_ptr->phase = 2;
-            job_ptr->phase_timer = pBot->f_think_time + 1.0f;
+         // release the grenade now that we're facing the target
+         if (pBot->nadePrimed) {
+            FakeClientCommand(pBot->pEdict, "-gren1", "102", nullptr);
+            FakeClientCommand(pBot->pEdict, "-gren2", "101", nullptr);
+            pBot->nadePrimed = false;
+            pBot->nadeType = 0;
+            pBot->tossNade = 1;
          }
+         job_ptr->phase = 2;
+         job_ptr->phase_timer = pBot->f_think_time + 1.0f;
          return JOB_UNDERWAY;
       }
       pBot->f_move_speed = 0.0f;

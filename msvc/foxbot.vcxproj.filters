@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
@@ -12,6 +12,9 @@
     <Filter Include="Resource Files">
       <UniqueIdentifier>{42f3555b-8a48-4bc8-8a32-f2fcc39f1f31}</UniqueIdentifier>
       <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;cnt;rtf;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Miniz">
+      <UniqueIdentifier>{d756d2aa-b565-4fcd-8a52-c7febca1a2cb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -83,6 +86,18 @@
     <ClCompile Include="..\bot_ga.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\bot_experience.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\miniz.c">
+      <Filter>Source Files\Miniz</Filter>
+    </ClCompile>
+    <ClCompile Include="..\miniz_tdef.c">
+      <Filter>Source Files\Miniz</Filter>
+    </ClCompile>
+    <ClCompile Include="..\miniz_tinfl.c">
+      <Filter>Source Files\Miniz</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\bot.h">
@@ -138,6 +153,24 @@
     </ClInclude>
     <ClInclude Include="..\bot_ga.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\bot_experience.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\miniz.h">
+      <Filter>Source Files\Miniz</Filter>
+    </ClInclude>
+    <ClInclude Include="..\miniz_common.h">
+      <Filter>Source Files\Miniz</Filter>
+    </ClInclude>
+    <ClInclude Include="..\miniz_export.h">
+      <Filter>Source Files\Miniz</Filter>
+    </ClInclude>
+    <ClInclude Include="..\miniz_tdef.h">
+      <Filter>Source Files\Miniz</Filter>
+    </ClInclude>
+    <ClInclude Include="..\miniz_tinfl.h">
+      <Filter>Source Files\Miniz</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

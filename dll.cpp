@@ -41,6 +41,7 @@
 #include "waypoint.h"
 #include "bot_neuralnet.h"
 #include "bot_ga.h"
+#include "bot_experience.h"
 
 // meta mod includes
 #include <dllapi.h>
@@ -101,6 +102,7 @@ bool bot_can_build_teleporter = true;
 int bot_use_grenades = 2;
 bool bot_team_balance = false;
 bool bot_bot_balance = false;
+int bot_bunny_hop = 30; // 0 = off, 1-100 = frequency percentage for bunny hopping
 int min_bots = -1;
 int max_bots = -1;
 int bot_total_varies = 0;
@@ -839,6 +841,7 @@ int DispatchSpawn(edict_t* pent) {
 			if (prevmapname[0] != '\0' && std::strcmp(prevmapname, "null") != 0) {
 				g_CombatNN.saveWeightsForMap(prevmapname);
 				FoxCombatGASaveForMap(prevmapname);
+				FoxExperienceSaveForMap(prevmapname);
 			}
 
 			WaypointInit();
@@ -920,6 +923,8 @@ int DispatchSpawn(edict_t* pent) {
 
 			FoxCombatNNInit();
 			FoxCombatGAInit();
+			FoxExperienceInit();
+
 		}
 	}
 
@@ -1911,6 +1916,13 @@ void ClientCommand(edict_t* pEntity) {
 		}
 		else if (FStrEq(pcmd, "bot_use_grenades")) {
 			changeBotSetting("bot_use_grenades", &bot_use_grenades, arg1, 0, 2, SETTING_SOURCE_CLIENT_COMMAND);
+
+			if (mr_meta)
+				RETURN_META(MRES_SUPERCEDE);
+			return;
+		}
+		else if (FStrEq(pcmd, "bot_bunny_hop")) {
+			changeBotSetting("bot_bunny_hop", &bot_bunny_hop, arg1, 0, 100, SETTING_SOURCE_CLIENT_COMMAND);
 
 			if (mr_meta)
 				RETURN_META(MRES_SUPERCEDE);
@@ -2920,6 +2932,9 @@ void StartFrame() { // v7 last frame timing
 				}
 				else if (std::strcmp(cmd, "bot_use_grenades") == 0) {
 					changeBotSetting("bot_use_grenades", &bot_use_grenades, arg1, 0, 2, SETTING_SOURCE_SERVER_COMMAND);
+				}
+				else if (std::strcmp(cmd, "bot_bunny_hop") == 0) {
+					changeBotSetting("bot_bunny_hop", &bot_bunny_hop, arg1, 0, 100, SETTING_SOURCE_SERVER_COMMAND);
 				}
 				else if (std::strcmp(cmd, "dump") == 0) {
 					edict_t* pent = nullptr;
@@ -5306,6 +5321,11 @@ static void ProcessBotCfgFile() {
 
 	if (std::strcmp(cmd, "bot_use_grenades") == 0) {
 		changeBotSetting("bot_use_grenades", &bot_use_grenades, arg1, 0, 2, SETTING_SOURCE_CONFIG_FILE);
+		return;
+	}
+
+	if (std::strcmp(cmd, "bot_bunny_hop") == 0) {
+		changeBotSetting("bot_bunny_hop", &bot_bunny_hop, arg1, 0, 100, SETTING_SOURCE_CONFIG_FILE);
 		return;
 	}
 

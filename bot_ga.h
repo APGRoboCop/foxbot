@@ -62,7 +62,7 @@ public:
 	void set(unsigned iIndex, ga_value fVal);
 
 	void add(ga_value val) { m_theValues.emplace_back(val); }
-	unsigned size() const { return static_cast<unsigned>(m_theValues.size()); }
+	unsigned size() const { return m_theValues.size(); }
 
 private:
 	std::vector<ga_value> m_theValues;

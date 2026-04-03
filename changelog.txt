@@ -12,17 +12,37 @@ Updated by RoboCop
 
 - Added a self-learning program using Neural Net and Genetic Algorithms based from RCBot1
 
+- Added a experience program for bots to gain a bit of wisdom and be less lame
+
+- Added a `bot_bunny_hop` variable to allow servers to choose for bots to bunnyhop on their own accord
+
+- The bunnyhopping bots will not bunnyhop in doorways, inside pillbox bunkers nor inside tight corridors
+
+- The bunnyhopping will be able bots to jump in a zigzag alternating strafe pattern in order to gain agility and evasion
+
+- The visibility and experience auxillary data can be compressed using Miniz
+
+- Bots should be able to remember and note where enemy SG turrets were spotted and avoid that particular route
+
 - Reverting to compile Linux builds only for SSE2 as SSE4.2 isn't necessary
 
 - Sanitised the null pointer inputs for `void BotCreate()`
 
 - Modernised the Waypoint Menu coding
 
+- Spies should now ignore using teleporters as their team coloured glow will make their covers blown easily
+
+- `BotClient_TFC_VGUI()` reinstated for bot_team_balance 0 to work for like Bots Vs Human gameplay
+
 - Adding Link Time Optimisation to boost the bot's performance for pathfinding and AI logic
 
 - Reduced maximum waypoints from 32000 to 1024 as all maps don't use no more than 1000 waypoints
 
-- Pitch and yaw speed doubled to allow bots to turn faster to avoid falling from catwalks without the fences
+- Pitch and yaw speed tripled to allow bots to turn faster to avoid falling from catwalks without the fences
+
+- Adding a detection for when the server changes sv_airaccelerate and sv_gravity to determine their jumps and bunnyhops
+
+- Removing jump waypoints that was used as bunnyhop waypoints as that is no longer required
 
 TODO List:-
 
@@ -31,8 +51,6 @@ TODO List:-
 >> Complete `botdontmove` in order for "GolfBots" to stay stationary
 
 >> Fix bot's `JOB_BIN_GRENADE` as they need to ditch their live grenades to prevent suicide bombing too often
-
->> To prevent bots from shooting at spy corpses too long as they aren't aware that a player switched teams as enemy spy
 
 >> To improve the pipebomb laying trap pattern and to plant them near the flag
 

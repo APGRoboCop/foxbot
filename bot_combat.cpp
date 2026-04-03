@@ -40,6 +40,8 @@ constexpr int NADEVELOCITY = 650; // DrEvil #define
 #include "bot_job_think.h"
 #include "bot_navigate.h"
 #include "bot_weapons.h"
+#include "bot_experience.h"
+#include "bot_visibility.h"
 
 extern WAYPOINT waypoints[MAX_WAYPOINTS];
 extern int num_waypoints; // number of waypoints currently in map
@@ -321,6 +323,11 @@ void BotEnemyCheck(bot_t *pBot) {
          // get the bots to notice the destruction of this sentry gun
          if (!IsAlive(pBot->lastEnemySentryGun) && pBot->lastEnemySentryGun->v.origin != Vector(0, 0, 0)) {
             const edict_t *deadSG = pBot->lastEnemySentryGun;
+
+            // Clear danger in experience data for this SG location - [APG]RoboCop[CL]
+            const int deadSGWP = WaypointFindNearest_V(deadSG->v.origin, 400.0f, -1);
+            if (deadSGWP >= 0)
+               g_MapExperience.clearSGDanger(pBot->current_team, deadSGWP);
 
             const int area = AreaInsideClosest(deadSG);
             if (area != -1) {
@@ -816,13 +823,32 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
       // if the enemy can't see this bot and this bot is a Spy
       if (pBot->pEdict->v.playerclass == TFC_CLASS_SPY && pBot->bot_real_health > 25 && !pBot->enemy.ptr && pBot->disguise_state == DISGUISE_COMPLETE && distance < 400.0f &&
           !(FInViewCone(vecEnd, pNewEnemy) && FVisible(vecEnd, pNewEnemy))) {
-         // backstab routine...might work :)
-         pBot->strafe_mod = STRAFE_MOD_STAB;
-         return_null = false;
+         // Only backstab if the target is a high-value target or the spy is confident
+         // Don't blow cover on scouts/snipers if there are other enemies nearby
+         if (pBot->visEnemyCount <= 1 || pNewEnemy->v.playerclass == TFC_CLASS_HWGUY
+             || pNewEnemy->v.playerclass == TFC_CLASS_SOLDIER
+             || pNewEnemy->v.playerclass == TFC_CLASS_DEMOMAN) {
+            pBot->strafe_mod = STRAFE_MOD_STAB;
+            return_null = false;
+         }
+         else {
+            // Multiple enemies visible - maintain cover, don't backstab
+            return_null = true;
+         }
       }
       // turn off backstab routine if too far away
       else if (pBot->pEdict->v.playerclass == TFC_CLASS_SPY && distance >= 400.0f)
          pBot->strafe_mod = STRAFE_MOD_NORMAL;
+
+      // Disguised spy near enemy players: don't engage unless necessary - [APG]RoboCop[CL]
+      // This prevents spies from randomly shooting when passing enemies
+      if (return_null && pBot->pEdict->v.playerclass == TFC_CLASS_SPY
+          && pBot->disguise_state == DISGUISE_COMPLETE
+          && pBot->f_injured_time + 1.0f < pBot->f_think_time
+          && pBot->visEnemyCount > 1) {
+         // Maintain cover - act like a teammate, don't target anyone
+         return pBot->enemy.ptr;
+      }
 
       // return null(if return_null == true)
       // only if the enemy hasn't got your flag
@@ -975,6 +1001,11 @@ static void BotSGSpotted(bot_t *pBot, edict_t *sg) {
 
    // Always set as our last SG
    pBot->lastEnemySentryGun = sg;
+
+   // Record this SG location in per-map experience data - [APG]RoboCop[CL]
+   const int sgWP = WaypointFindNearest_V(sg->v.origin, 400.0f, -1);
+   if (sgWP >= 0)
+      g_MapExperience.confirmSGActive(pBot->current_team, sgWP, pBot->f_think_time);
 
    // allowed to report this now?
    // also check if bot is smart enough
@@ -1176,15 +1207,59 @@ void BotShootAtEnemy(bot_t *pBot) {
    }
 
    // if the bot is a disguised Spy targetting a Sentry Gun
-   // and is near enough to throw frag grenades at it
-   if (bot_use_grenades && pBot->pEdict->v.playerclass == TFC_CLASS_SPY && pBot->enemy.ptr == pBot->lastEnemySentryGun && pBot->disguise_state == DISGUISE_COMPLETE && !FNullEnt(pBot->lastEnemySentryGun) &&
-       pBot->grenades[PrimaryGrenade] > 0 && f_distance < 650.0f) {
-      // don't shoot until the Spy has no frag grenades left
-      pBot->f_shoot_time = pBot->f_think_time + 3.0f;
+   // Enhanced: use SG death memory to approach cautiously,
+   // throw grenades from further away, or use nailgun from range - [APG]RoboCop[CL]
+   if (pBot->pEdict->v.playerclass == TFC_CLASS_SPY && pBot->enemy.ptr == pBot->lastEnemySentryGun
+       && pBot->disguise_state == DISGUISE_COMPLETE && !FNullEnt(pBot->lastEnemySentryGun))
+   {
+      // Check if the bot's current waypoint is known dangerous from SG kills
+      const int wpDanger = (pBot->current_wp >= 0)
+         ? g_MapExperience.getSGDanger(pBot->current_team, pBot->current_wp) : 0;
 
-      //	char msg[80];
-      //	std::sprintf(msg, "<Attacking SG, nades left: %d>", (int)pBot->grenades[0]);
-      //	UTIL_HostSay(pBot->pEdict, 0, msg);  //DebugMessageOfDoom!
+      // Record that this SG is active near its waypoint
+      const int sgWP = WaypointFindNearest_V(pBot->lastEnemySentryGun->v.origin, 400.0f, -1);
+      if (sgWP >= 0)
+         g_MapExperience.confirmSGActive(pBot->current_team, sgWP, pBot->f_think_time);
+
+      // Try grenade attack from extended range (up to 900 units)
+      if (bot_use_grenades && pBot->grenades[PrimaryGrenade] > 0 && f_distance < 900.0f)
+      {
+         // don't shoot weapons until the Spy has no frag grenades left
+         pBot->f_shoot_time = pBot->f_think_time + 3.0f;
+
+         // actually prime and throw a grenade at the sentry gun
+         BotNadeHandler(pBot, false, GRENADE_STATIONARY);
+
+         // If in a known danger zone, try to back off while throwing
+         if (wpDanger >= SG_DANGER_THRESHOLD && f_distance < 500.0f)
+         {
+            pBot->f_move_speed = -pBot->f_max_speed * 0.5f; // back away
+         }
+      }
+      // No grenades: use nailgun from range if possible - [APG]RoboCop[CL]
+      else if (pBot->grenades[PrimaryGrenade] <= 0 && f_distance > 300.0f && f_distance < 1200.0f)
+      {
+         // Check if the SG can see us - if not, we can use nailgun safely
+         const Vector botPos = pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs;
+         TraceResult sgTr;
+         UTIL_TraceLine(pBot->lastEnemySentryGun->v.origin, botPos, dont_ignore_monsters,
+            pBot->lastEnemySentryGun, &sgTr);
+
+         if (sgTr.flFraction < 1.0f)
+         {
+            // SG can't see us clearly - safe to use nailgun from cover
+            pBot->spyUsedNailgun = true;
+            // keep shooting from this position, don't advance into danger
+            pBot->f_dontEvadeTime = pBot->f_think_time + 2.0f;
+         }
+         else if (wpDanger >= SG_DANGER_THRESHOLD)
+         {
+            // We're in a dangerous zone and the SG can see us - retreat!
+            pBot->f_move_speed = -pBot->f_max_speed;
+            pBot->f_shoot_time = pBot->f_think_time + 1.0f; // hold fire to maintain disguise
+         }
+      }
+      // Close range with no grenades and the SG can see us - just shoot
    }
 
    // if the bots aim is currently too bad, postpone pulling the trigger
@@ -1760,6 +1835,16 @@ int BotNadeHandler(bot_t *pBot, bool timed, const char newNadeType) {
          SubmitNewJob(pBot, JOB_BIN_GRENADE, newJob);
    }
 
+   // emergency throw if the enemy has closed to self-damage range while
+   // the bot is holding a live grenade - prevents suicide bomber behaviour - [APG]RoboCop[CL]
+   if (pBot->nadePrimed && pBot->enemy.ptr != nullptr) {
+      const float enemyDist = (pBot->enemy.ptr->v.origin - pEdict->v.origin).Length();
+      const float dangerRadius = (pBot->nadeType == GRENADE_MIRV) ? 400.0f : 200.0f;
+      if (enemyDist < dangerRadius && timeToDet <= 2.5f) {
+         toss = true; // throw immediately rather than hold and die
+      }
+   }
+
    // Go ahead and throw if its about to explode.
    if (pBot->nadePrimed) {
       const int lost_health_percent = 100 - PlayerHealthPercent(pEdict);
@@ -1896,7 +1981,9 @@ int BotNadeHandler(bot_t *pBot, bool timed, const char newNadeType) {
          return rtnValue;
 
       // prime a grenade if we don't currently have one primed
-      if (!pBot->nadePrimed && zDiff <= 400.0f && pBot->enemy.f_seenDistance < 1200.0f) {
+      // enforce minimum distance to prevent suicide: 250 units for standard, 400 for MIRV-capable classes - [APG]RoboCop[CL]
+      if (!pBot->nadePrimed && zDiff <= 400.0f && pBot->enemy.f_seenDistance < 1200.0f
+         && pBot->enemy.f_seenDistance >= 250.0f) {
          switch (pEdict->v.playerclass) {
          case TFC_CLASS_SCOUT:
             if (newNadeType == GRENADE_RANDOM || newNadeType == GRENADE_DAMAGE) {

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -203,6 +203,7 @@
     <ClCompile Include="..\botcam.cpp" />
     <ClCompile Include="..\bot_client.cpp" />
     <ClCompile Include="..\bot_combat.cpp" />
+    <ClCompile Include="..\bot_experience.cpp" />
     <ClCompile Include="..\bot_ga.cpp" />
     <ClCompile Include="..\bot_job_assessors.cpp" />
     <ClCompile Include="..\bot_job_functions.cpp" />
@@ -219,6 +220,9 @@
     <ClCompile Include="..\sdk_util.cpp" />
     <ClCompile Include="..\util.cpp" />
     <ClCompile Include="..\version.cpp" />
+    <ClCompile Include="..\miniz.c" />
+    <ClCompile Include="..\miniz_tdef.c" />
+    <ClCompile Include="..\miniz_tinfl.c" />
     <ClCompile Include="..\waypoint.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -240,6 +244,12 @@
     <ClInclude Include="..\version.h" />
     <ClInclude Include="..\vers_fox.h" />
     <ClInclude Include="..\waypoint.h" />
+    <ClInclude Include="..\bot_experience.h" />
+    <ClInclude Include="..\miniz.h" />
+    <ClInclude Include="..\miniz_common.h" />
+    <ClInclude Include="..\miniz_export.h" />
+    <ClInclude Include="..\miniz_tdef.h" />
+    <ClInclude Include="..\miniz_tinfl.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

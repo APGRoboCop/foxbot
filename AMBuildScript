@@ -173,6 +173,7 @@ library.sources += [
   'bot.cpp',
   'bot_client.cpp',
   'bot_combat.cpp',
+  'bot_experience.cpp',
   'bot_ga.cpp',
   'bot_job_assessors.cpp',
   'bot_job_functions.cpp',
@@ -191,6 +192,9 @@ library.sources += [
   'util.cpp',
   'version.cpp',
   'waypoint.cpp',
+  'miniz.c',
+  'miniz_tdef.c',
+  'miniz_tinfl.c',
 ]
 
 #
