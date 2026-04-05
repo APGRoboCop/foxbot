@@ -482,17 +482,16 @@ static void TeamBalanceCheck() {
 		}
 	}
 
-	// if auto-balance is switched off then let the bots
-	// balance the teams if they "feel" like it
-	else if (!bot_team_balance)
-		BotBalanceTeams_Casual();
+	// if auto-balance is switched off then don't balance at all
+	// (BotBalanceTeams_Casual was removed as it caused unwanted
+	// team switches even with bot_team_balance off) [APG]RoboCop[CL]
 }
 
 // This function should only be called if bot_team_balance is switched off.
 // It allows bots to decide for themselves if they "feel" like switching teams
 // to balance the teams.
 static void BotBalanceTeams_Casual() {
-	if (mod_id != TFC_DLL) // Fix for bot_team_balance? [APG]RoboCop[CL]
+	if (mod_id != TFC_DLL)
 		return;
 
 	static float nextBalanceCheck = 6.0f;

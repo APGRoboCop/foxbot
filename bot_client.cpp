@@ -59,6 +59,12 @@ int g_state;
 
 // This message is sent when the TFC VGUI menu is displayed.
 void BotClient_TFC_VGUI(void* p, const int bot_index) {
+	// Only respond to VGUI menus if the bot hasn't started yet.
+	// Once a bot has joined a team and class, ignore further VGUI
+   // team/class menus to prevent unwanted team switches. - [APG]RoboCop[CL]
+	if (bots[bot_index].not_started == false)
+		return;
+
 	if ((*static_cast<int *>(p)) == 2)  // is it a team select menu?
 		bots[bot_index].start_action = MSG_TFC_TEAM_SELECT;
 	else if ((*static_cast<int *>(p)) == 3)  // is it a class selection menu?
