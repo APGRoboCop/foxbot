@@ -389,7 +389,7 @@ static void varyBotTotal() {
 // This function is the core function for checking if the teams need balancing
 // and making sure the bots switch teams if they are supposed to.
 static void TeamBalanceCheck() {
-	if (mod_id != TFC_DLL) // Fix for bot_team_balance? [APG]RoboCop[CL]
+	if (mod_id != TFC_DLL)
 		return;
 
 	if (bot_team_balance && !bot_bot_balance) {
@@ -2706,10 +2706,12 @@ void StartFrame() { // v7 last frame timing
 					bot_cfg_pause_time = gpGlobals->time + 5.0f;
 				else //Required for Listenservers to exec .cfg [APG]RoboCop[CL]
 					bot_cfg_pause_time = gpGlobals->time + 10.0f; // was 20
+            bot_check_time = bot_cfg_pause_time; // suppress auto-create while cfg is loading - [APG]RoboCop[CL]
 			}
 			if (need_to_open_cfg2) // have we opened foxbot.cfg file yet?
 			{
 				bot_cfg_pause_time = gpGlobals->time + 6.0f;
+				bot_check_time = bot_cfg_pause_time; // suppress auto-create while cfg is loading - [APG]RoboCop[CL]
 				char filename[256];
 				char mapname[64];
 				need_to_open_cfg2 = false; // only do this once!!!
@@ -2997,7 +2999,9 @@ void StartFrame() { // v7 last frame timing
 			if (bot_total_varies)
 				varyBotTotal(); // if there are currently less than the maximum number of players
 			// then add another bot using the default skill level...
-			if ((count1 < interested_bots || bot_total_varies == 0) && count1 < max_bots && max_bots != -1) {
+			// but only if config file processing is complete
+			if ((count1 < interested_bots || bot_total_varies == 0) && count1 < max_bots && max_bots != -1
+				&& bot_cfg_fp == nullptr && !need_to_open_cfg && !need_to_open_cfg2) {
 				BotCreate(nullptr, nullptr, nullptr, nullptr, nullptr);
 			} // do bot max_bot kick here... if there are currently more than the minimum number of bots running then kick one of the bots off the server...
 			if (((count1 > interested_bots && bot_total_varies) || count1 > max_bots) && max_bots != -1) {
