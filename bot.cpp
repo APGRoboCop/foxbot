@@ -43,6 +43,7 @@
 #include "bot_neuralnet.h"
 #include "bot_ga.h"
 #include "bot_experience.h"
+#include "bot_visibility.h"
 
 #include <algorithm>
 #include <sys/stat.h>
@@ -3974,17 +3975,30 @@ void BotThink(bot_t* pBot) {
 
 			   // Check if the next waypoint along the route is too close (tight navigation) - [APG]RoboCop[CL]
 			   bool nextWPTooClose = false;
+			   bool routeVisible = false;
 			   if (!inTightSpace && !nearCatwalkEdge && pBot->goto_wp != -1) {
-   				const int nextWP = WaypointRouteFromTo(pBot->current_wp, pBot->goto_wp, pBot->current_team);
+				const int nextWP = WaypointRouteFromTo(pBot->current_wp, pBot->goto_wp, pBot->current_team);
 				   if (nextWP >= 0 && nextWP < num_waypoints) {
-   					// suppress if the next waypoint is nearby (short segments = tight areas)
+					// suppress if the next waypoint is nearby (short segments = tight areas)
 					   if (VectorsNearerThan(waypoints[pBot->current_wp].origin, waypoints[nextWP].origin, 100.0)
 						   || (waypoints[nextWP].flags & (W_FL_TFC_JUMP | W_FL_WALK | W_FL_CROUCH)))
 						   nextWPTooClose = true;
+
+					   // use the visibility table to confirm the route ahead is
+					   // through an open area - visible waypoints means no walls
+					   if (!nextWPTooClose && WaypointVisibleFromTo(pBot->current_wp, nextWP)) {
+						   // also check the waypoint after next for a longer open stretch
+						   const int nextNextWP = WaypointRouteFromTo(nextWP, pBot->goto_wp, pBot->current_team);
+						   if (nextNextWP >= 0 && nextNextWP < num_waypoints
+							   && WaypointVisibleFromTo(nextWP, nextNextWP))
+							   routeVisible = true;
+					   }
 				   }
 			   }
 
-			   if (physicsOk && !inTightSpace && !nearCatwalkEdge && !nextWPTooClose && random_long(1, 100) <= bot_bhop)
+			   // boost the hop chance when the visibility table confirms an open route
+			   const int hopChance = routeVisible ? std::min(bot_bhop * 2, 100) : bot_bhop;
+			   if (physicsOk && !inTightSpace && !nearCatwalkEdge && !nextWPTooClose && random_long(1, 100) <= hopChance)
 			   {
 				   pBot->pEdict->v.button |= IN_JUMP;
 

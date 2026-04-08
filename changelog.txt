@@ -34,6 +34,8 @@ Updated by RoboCop
 
 - `BotClient_TFC_VGUI()` reinstated for bot_team_balance 0 to work for like Bots Vs Human gameplay
 
+- BotBalanceTeams_Casual was removed as it caused unwanted team switches even with bot_team_balance off
+
 - Adding Link Time Optimisation to boost the bot's performance for pathfinding and AI logic
 
 - Reduced maximum waypoints from 32000 to 1024 as all maps don't use no more than 1000 waypoints
@@ -45,6 +47,8 @@ Updated by RoboCop
 - Removing jump waypoints that was used as bunnyhop waypoints as that is no longer required
 
 - Added `botdontmove` in order for "GolfBots" to stay stationary in minigolf maps in order to not ruin their momentum
+
+- Synchronise `bot_check_time` with `bot_cfg_pause_time` to prevent bots that are randomly added before the .cfg is executed
 
 TODO List:-
 

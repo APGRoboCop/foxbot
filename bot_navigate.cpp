@@ -41,6 +41,7 @@
 #include <optional>
 
 #include "bot_weapons.h"
+#include "bot_visibility.h"
 
 extern bot_weapon_t weapon_defs[MAX_WEAPONS];
 extern edict_t* clients[32];
@@ -2411,20 +2412,24 @@ static void BotCheckForRocketJump(bot_t* pBot) {
 
 	TraceResult result;
 
-	// Check visibility from where the bot's head is to a point in the air above
-	// i.e. check for a low ceiling
-	zDiff = waypoints[*closestRJ].origin.z - pBot->pEdict->v.origin.z;
-	UTIL_TraceLine(pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs, pBot->pEdict->v.origin + Vector(0.0f, 0.0f, zDiff), ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
+	// fast-path: if the visibility table confirms ground-level line-of-sight
+	// the jump path is through a wide open area and will be clear - [APG]RoboCop[CL]
+	if (!WaypointVisibleFromTo(pBot->current_wp, *closestRJ)) {
+		// Check visibility from where the bot's head is to a point in the air above
+		// i.e. check for a low ceiling
+		zDiff = waypoints[*closestRJ].origin.z - pBot->pEdict->v.origin.z;
+		UTIL_TraceLine(pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs, pBot->pEdict->v.origin + Vector(0.0f, 0.0f, zDiff), ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
 
-	if (result.flFraction < 1.0f)
-		return; // can't see it
+		if (result.flFraction < 1.0f)
+			return; // can't see it
 
-	// Check visibility from a point in the air above the bot to the RJ waypoint
-	// this improves the bots ability to properly detect RJ waypoints
-	UTIL_TraceLine(pBot->pEdict->v.origin + Vector(0.0f, 0.0f, zDiff), waypoints[*closestRJ].origin, ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
+		// Check visibility from a point in the air above the bot to the RJ waypoint
+		// this improves the bots ability to properly detect RJ waypoints
+		UTIL_TraceLine(pBot->pEdict->v.origin + Vector(0.0f, 0.0f, zDiff), waypoints[*closestRJ].origin, ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
 
-	if (result.flFraction < 1.0f)
-		return; // can't see it
+		if (result.flFraction < 1.0f)
+			return; // can't see it
+	}
 	// debug stuff
 	//	WaypointDrawBeam(INDEXENT(1), pBot->pEdict->v.origin,
 	//		waypoints[closestRJ].origin, 10, 2, 250, 250, 50, 200, 10);
@@ -2452,7 +2457,6 @@ static void BotCheckForRocketJump(bot_t* pBot) {
 // would save us distance to our current goal.
 // If so, we initiate a Conc Jump for that waypoint. There are numerous
 // checks for abort conditions in here.
-// TODO : This needs to be modified to consider the closest, say.. 2-5
 // Conc waypoints. Otherwise points set somewhat close will be ignored and
 // the closest will get favored every time, often resulting in the same point.
 // AVOID TRACELINES TILL NECESSARY. Prioritize the top 3-5 points by
@@ -2504,7 +2508,7 @@ static void BotCheckForConcJump(bot_t* pBot) {
 	}
 
 	// Abort if for some reason the safety counters limit was reached.
-	if (safetyCounter == 30) {
+	if (safetyCounter == 30 || !endWP) {
 		// UTIL_HostSay(pBot->pEdict, 0, "Safety counter hit");
 		return;
 	}
@@ -2553,20 +2557,24 @@ static void BotCheckForConcJump(bot_t* pBot) {
 
 	TraceResult result;
 
-	// Check visibility from where the bot's head will be to a point in the air above
-	// i.e. check for a low ceiling
-	zDiff = waypoints[*closestJumpWP].origin.z - waypoints[endWP.value()].origin.z;
-	UTIL_TraceLine(waypoints[endWP.value()].origin + pBot->pEdict->v.view_ofs, waypoints[endWP.value()].origin + Vector(0.0f, 0.0f, zDiff), ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
+	// fast-path: if the visibility table confirms ground-level line-of-sight
+   // the jump path is through a wide open area and will be clear - [APG]RoboCop[CL]
+	if (!WaypointVisibleFromTo(endWP.value(), *closestJumpWP)) {
+		// Check visibility from where the bot's head will be to a point in the air above
+		// i.e. check for a low ceiling
+		zDiff = waypoints[*closestJumpWP].origin.z - waypoints[endWP.value()].origin.z;
+		UTIL_TraceLine(waypoints[endWP.value()].origin + pBot->pEdict->v.view_ofs, waypoints[endWP.value()].origin + Vector(0.0f, 0.0f, zDiff), ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
 
-	if (result.flFraction < 1.0f)
-		return; // can't see it
+		if (result.flFraction < 1.0f)
+			return; // can't see it
 
-	// Check visibility from a point in the air above the bot to the RJ waypoint
-	// this improves the bots ability to properly detect RJ waypoints
-	UTIL_TraceLine(waypoints[endWP.value()].origin + Vector(0.0f, 0.0f, zDiff), waypoints[*closestJumpWP].origin, ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
+		// Check visibility from a point in the air above the bot to the RJ waypoint
+		// this improves the bots ability to properly detect RJ waypoints
+		UTIL_TraceLine(waypoints[endWP.value()].origin + Vector(0.0f, 0.0f, zDiff), waypoints[*closestJumpWP].origin, ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
 
-	if (result.flFraction < 1.0f)
-		return; // can't see it
+		if (result.flFraction < 1.0f)
+			return; // can't see it
+	}
 	// success - it's time to set up a concussion jump job
 	job_struct* newJob = InitialiseNewJob(pBot, JOB_CONCUSSION_JUMP);
 	if (newJob != nullptr) {

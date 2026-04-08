@@ -42,6 +42,7 @@
 #include "bot_job_assessors.h"
 #include "bot_job_think.h"
 #include "bot_weapons.h"
+#include "bot_visibility.h"
 
 extern bot_t bots[32];
 extern bot_weapon_t weapon_defs[MAX_WEAPONS];
@@ -689,15 +690,27 @@ int assess_JobPipetrap(const bot_t* pBot, const job_struct& r_job) {
    // find the team's flag
    edict_t *pentFlag = nullptr;
    while ((pentFlag = FIND_ENTITY_BY_CLASSNAME(pentFlag, "item_tfgoal")) != nullptr && !FNullEnt(pentFlag)) {
-      if (pentFlag->v.team == pBot->current_team) {
-         // calculate the distance between the waypoint and the flag
-         const float distance = (waypoints[r_job.waypoint].origin - pentFlag->v.origin).Length();
-         // increase the priority if the distance is below a certain threshold
-         if (distance < 500.0f) {
-            return jl[JOB_PIPETRAP].basePriority * 2;
-         }
-         break; // Found the team's flag
-      }
+	  if (pentFlag->v.team == pBot->current_team) {
+		 // calculate the distance between the waypoint and the flag
+		 const float distance = (waypoints[r_job.waypoint].origin - pentFlag->v.origin).Length();
+		 // increase the priority if the distance is below a certain threshold
+		 if (distance < 500.0f) {
+			// further boost priority if the pipetrap waypoint has confirmed
+			// visibility to the flag area (flat, clear surface for crouching)
+			const int flagWP = WaypointFindNearest_V(pentFlag->v.origin, 200.0f, pBot->current_team);
+			if (flagWP != -1 && WaypointVisibleFromTo(r_job.waypoint, flagWP)) {
+			   // close enough to crouch-pipe and the surface is clear
+			   if (distance <= 150.0f) {
+				  const float zDiff = std::fabs(waypoints[r_job.waypoint].origin.z - pentFlag->v.origin.z);
+				  if (zDiff < 30.0f)
+					 return jl[JOB_PIPETRAP].basePriority * 3;
+			   }
+			   return jl[JOB_PIPETRAP].basePriority * 2;
+			}
+			return jl[JOB_PIPETRAP].basePriority * 2;
+		 }
+		 break; // Found the team's flag
+	  }
    }
    return jl[JOB_PIPETRAP].basePriority;
 }

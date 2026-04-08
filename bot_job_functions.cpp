@@ -38,6 +38,7 @@
 #include "bot_job_think.h"
 #include "bot_navigate.h"
 #include "bot_weapons.h"
+#include "bot_visibility.h"
 
 constexpr float PIPETRAP_WAYPOINT_PROXIMITY = 20.0f;
 constexpr float PIPETRAP_BLACKLIST_TIME_MIN = 10.0f;
@@ -825,7 +826,51 @@ int JobMaintainObject(bot_t* pBot) {
 
       // walk towards the object until within spanner range - [APG]RoboCop[CL]
       if (!VectorsNearerThan(pBot->pEdict->v.origin, job_ptr->object->v.origin, 64.0f)) {
-         BotNavigateWaypointless(pBot);
+         // if the object is the bot's own sentry gun, avoid the firing arc
+         if (job_ptr->object == pBot->sentry_edict && pBot->has_sentry && pBot->sentryWaypoint != -1) {
+            if (waypoints[pBot->sentryWaypoint].flags & W_FL_TFC_SENTRY_180) {
+               pBot->f_move_speed = pBot->f_max_speed;
+               pBot->f_side_speed = 0.0f;
+            }
+            else {
+               const int aim_index = WaypointFindNearestAiming(waypoints[pBot->sentryWaypoint].origin);
+               if (aim_index != -1) {
+                  Vector sgFacing = waypoints[aim_index].origin - job_ptr->object->v.origin;
+                  sgFacing.z = 0.0f;
+                  sgFacing = sgFacing.Normalize();
+
+                  Vector sgToBot = pBot->pEdict->v.origin - job_ptr->object->v.origin;
+                  sgToBot.z = 0.0f;
+                  sgToBot = sgToBot.Normalize();
+
+                  float dot = DotProduct(sgFacing, sgToBot);
+                  if (dot > 1.0f) dot = 1.0f;
+                  if (dot < -1.0f) dot = -1.0f;
+
+                  const float angle = std::acos(dot) * (180.0f / static_cast<float>(M_PI));
+
+                  if (angle < 120.0f) {
+                     const float cross = sgFacing.x * sgToBot.y - sgFacing.y * sgToBot.x;
+                     if (cross >= 0.0f)
+                        pBot->f_side_speed = pBot->f_max_speed;
+                     else
+                        pBot->f_side_speed = -pBot->f_max_speed;
+                     pBot->f_move_speed = 0.0f;
+                  }
+                  else {
+                     pBot->f_move_speed = pBot->f_max_speed;
+                     pBot->f_side_speed = 0.0f;
+                  }
+               }
+               else {
+                  pBot->f_move_speed = pBot->f_max_speed;
+                  pBot->f_side_speed = 0.0f;
+               }
+            }
+         }
+         else {
+            BotNavigateWaypointless(pBot);
+         }
       }
       else {
          pBot->f_move_speed = 0.0f;
@@ -847,7 +892,51 @@ int JobMaintainObject(bot_t* pBot) {
 
       // walk closer if drifted too far from the object - [APG]RoboCop[CL]
       if (!VectorsNearerThan(pBot->pEdict->v.origin, job_ptr->object->v.origin, 70.0f)) {
-         BotNavigateWaypointless(pBot);
+         // if the object is the bot's own sentry gun, avoid the firing arc
+         if (job_ptr->object == pBot->sentry_edict && pBot->has_sentry && pBot->sentryWaypoint != -1) {
+            if (waypoints[pBot->sentryWaypoint].flags & W_FL_TFC_SENTRY_180) {
+               pBot->f_move_speed = pBot->f_max_speed;
+               pBot->f_side_speed = 0.0f;
+            }
+            else {
+               const int aim_index = WaypointFindNearestAiming(waypoints[pBot->sentryWaypoint].origin);
+               if (aim_index != -1) {
+                  Vector sgFacing = waypoints[aim_index].origin - job_ptr->object->v.origin;
+                  sgFacing.z = 0.0f;
+                  sgFacing = sgFacing.Normalize();
+
+                  Vector sgToBot = pBot->pEdict->v.origin - job_ptr->object->v.origin;
+                  sgToBot.z = 0.0f;
+                  sgToBot = sgToBot.Normalize();
+
+                  float dot = DotProduct(sgFacing, sgToBot);
+                  if (dot > 1.0f) dot = 1.0f;
+                  if (dot < -1.0f) dot = -1.0f;
+
+                  const float angle = std::acos(dot) * (180.0f / static_cast<float>(M_PI));
+
+                  if (angle < 120.0f) {
+                     const float cross = sgFacing.x * sgToBot.y - sgFacing.y * sgToBot.x;
+                     if (cross >= 0.0f)
+                        pBot->f_side_speed = pBot->f_max_speed;
+                     else
+                        pBot->f_side_speed = -pBot->f_max_speed;
+                     pBot->f_move_speed = 0.0f;
+                  }
+                  else {
+                     pBot->f_move_speed = pBot->f_max_speed;
+                     pBot->f_side_speed = 0.0f;
+                  }
+               }
+               else {
+                  pBot->f_move_speed = pBot->f_max_speed;
+                  pBot->f_side_speed = 0.0f;
+               }
+            }
+         }
+         else {
+            BotNavigateWaypointless(pBot);
+         }
       }
       else
          pBot->f_move_speed = 0.0f;
@@ -994,7 +1083,51 @@ int JobBuildSentry(bot_t* pBot) {
 
       // walk towards the sentry until within spanner range - [APG]RoboCop[CL]
       if (!VectorsNearerThan(pBot->pEdict->v.origin, pBot->sentry_edict->v.origin, 64.0f)) {
-         BotNavigateWaypointless(pBot);
+         // if the sentry waypoint has Rotate 180, the sentry faces away
+         // from the engineer so it is safe to approach directly
+         if (waypoints[job_ptr->waypoint].flags & W_FL_TFC_SENTRY_180) {
+            pBot->f_move_speed = pBot->f_max_speed;
+            pBot->f_side_speed = 0.0f;
+         }
+         else {
+            // circulate only 120 degrees to the side to avoid the sentry's
+            // line of fire, then approach once safely behind it
+            const int aim_index = WaypointFindNearestAiming(waypoints[job_ptr->waypoint].origin);
+            if (aim_index != -1) {
+               Vector sgFacing = waypoints[aim_index].origin - pBot->sentry_edict->v.origin;
+               sgFacing.z = 0.0f;
+               sgFacing = sgFacing.Normalize();
+
+               Vector sgToBot = pBot->pEdict->v.origin - pBot->sentry_edict->v.origin;
+               sgToBot.z = 0.0f;
+               sgToBot = sgToBot.Normalize();
+
+               float dot = DotProduct(sgFacing, sgToBot);
+               if (dot > 1.0f) dot = 1.0f;
+               if (dot < -1.0f) dot = -1.0f;
+
+               const float angle = std::acos(dot) * (180.0f / static_cast<float>(M_PI));
+
+               if (angle < 120.0f) {
+                  // bot is within the sentry's forward arc, strafe to the side
+                  const float cross = sgFacing.x * sgToBot.y - sgFacing.y * sgToBot.x;
+                  if (cross >= 0.0f)
+                     pBot->f_side_speed = pBot->f_max_speed;  // strafe right
+                  else
+                     pBot->f_side_speed = -pBot->f_max_speed; // strafe left
+                  pBot->f_move_speed = 0.0f;
+               }
+               else {
+                  // bot is behind the sentry, safe to approach directly
+                  pBot->f_move_speed = pBot->f_max_speed;
+                  pBot->f_side_speed = 0.0f;
+               }
+            }
+            else {
+               pBot->f_move_speed = pBot->f_max_speed;
+               pBot->f_side_speed = 0.0f;
+            }
+         }
       }
       else {
          pBot->f_move_speed = 0.0f;
@@ -2709,15 +2842,37 @@ int JobPipetrap(bot_t* pBot) {
       // count the number of pipebombs the bot owns
       // ignore visibility because pipebombs can bounce behind other things
       const int pipeBombTally = CountPipebombs(pBot);
-      // find the team's flag
-      const edict_t* pentFlag = FIND_ENTITY_BY_CLASSNAME(nullptr, "item_tfgoal");
-      if (pentFlag != nullptr && !FNullEnt(pentFlag) && pBot->mission == ROLE_DEFENDER) {
-         // calculate a location near the flag to place the pipebomb
-         const Vector v_flag = pentFlag->v.origin;
-         const Vector v_nearFlag = v_flag + Vector(random_float(-80.0f, 80.0f), random_float(-80.0f, 80.0f), 0);
+      // find the team's flag properly by checking team ownership
+      if (pBot->mission == ROLE_DEFENDER) {
+         edict_t* pentFlag = nullptr;
+         while ((pentFlag = FIND_ENTITY_BY_CLASSNAME(pentFlag, "item_tfgoal")) != nullptr && !FNullEnt(pentFlag)) {
+            if (pentFlag->v.team != pBot->current_team)
+               continue;
 
-         // set the bot's aim to the calculated location
-         BotSetFacing(pBot, v_nearFlag);
+            const Vector v_flag = pentFlag->v.origin;
+            const float distToFlag = (waypoints[job_ptr->waypoint].origin - v_flag).Length();
+
+            // if the flag is close enough, the bot can crouch for a shorter
+            // range pipe trap, but only if the surface between them is flat
+            // and wide enough (use visibility table and height check)
+            if (distToFlag <= 150.0f) {
+               const int flagWP = WaypointFindNearest_V(v_flag, 200.0f, pBot->current_team);
+               const float zDiff = std::fabs(waypoints[job_ptr->waypoint].origin.z - v_flag.z);
+
+               // the floor is flat enough if the height difference is small
+               // and the visibility table confirms line-of-sight is clear
+               if (zDiff < 30.0f && (flagWP == -1 || WaypointVisibleFromTo(job_ptr->waypoint, flagWP))) {
+                  pBot->f_duck_time = pBot->f_think_time + 0.5f;
+               }
+            }
+
+            // calculate a location near the flag to place the pipebomb
+            const Vector v_nearFlag = v_flag + Vector(random_float(-80.0f, 80.0f), random_float(-80.0f, 80.0f), 0);
+
+            // set the bot's aim to the calculated location
+            BotSetFacing(pBot, v_nearFlag);
+            break;
+         }
       }
       if (pipeBombTally < MAX_PIPEBOMBS)
          pBot->pEdict->v.button |= IN_ATTACK;
@@ -2778,8 +2933,35 @@ int JobInvestigateArea(bot_t* pBot) {
          pBot->f_move_speed = 0.0f;
          pBot->f_side_speed = 0.0f;
 
-         // look about whilst waiting
-         BotLookAbout(pBot);
+         // look about whilst waiting - prefer visible waypoints for
+         // smarter scanning of the area using the visibility table
+         if (pBot->f_view_change_time <= pBot->f_think_time) {
+            bool foundVisible = false;
+
+            // try to find a visible waypoint to look toward
+            if (pBot->current_wp >= 0) {
+               const int startIdx = random_long(0, num_waypoints - 1);
+               for (int attempts = 0; attempts < 16; attempts++) {
+                  const int idx = (startIdx + attempts) % num_waypoints;
+                  if (idx == pBot->current_wp)
+                     continue;
+                  if (waypoints[idx].flags & (W_FL_DELETED | W_FL_AIMING))
+                     continue;
+                  if (!VectorsNearerThan(waypoints[idx].origin, pBot->pEdict->v.origin, 1200.0))
+                     continue;
+                  if (!WaypointVisibleFromTo(pBot->current_wp, idx))
+                     continue;
+
+                  BotSetFacing(pBot, waypoints[idx].origin);
+                  pBot->f_view_change_time = pBot->f_think_time + random_float(1.0f, 3.0f);
+                  foundVisible = true;
+                  break;
+               }
+            }
+
+            if (!foundVisible)
+               BotLookAbout(pBot);
+         }
       }
    }
    else {
