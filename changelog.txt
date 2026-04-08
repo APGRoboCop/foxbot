@@ -24,6 +24,8 @@ Updated by RoboCop
 
 - Bots should be able to remember and note where enemy SG turrets were spotted and avoid that particular route
 
+- Bots will try to be less visible when trying to destroy enemy SG turrets - especially for spies
+
 - Reverting to compile Linux builds only for SSE2 as SSE4.2 isn't necessary
 
 - Sanitised the null pointer inputs for `void BotCreate()`

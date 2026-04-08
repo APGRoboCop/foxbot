@@ -486,6 +486,13 @@ int assess_JobGetAmmo(const bot_t* pBot, const job_struct& r_job) {
 	if (routeDistance == -1 || routeDistance > 5000)
 		return PRIORITY_NONE;
 
+	// engineers with a sentry but low metal should prioritise ammo
+	// so they can repair/resupply their sentry when needed - [APG]RoboCop[CL]
+	if (pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER
+		&& pBot->has_sentry && !FNullEnt(pBot->sentry_edict)
+		&& pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] < 100)
+		return jl[JOB_GET_AMMO].basePriority + 100;
+
 	return jl[JOB_GET_AMMO].basePriority;
 }
 
@@ -680,24 +687,30 @@ int assess_JobDetpackWaypoint(const bot_t* pBot, const job_struct& r_job) {
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobPipetrap(const bot_t* pBot, const job_struct& r_job) {
    // recommend the job be removed if it is invalid
-   if (pBot->pEdict->v.playerclass != TFC_CLASS_DEMOMAN || pBot->mission != ROLE_DEFENDER || pBot->enemy.ptr != nullptr)
-      return PRIORITY_NONE;
+   if (pBot->pEdict->v.playerclass != TFC_CLASS_DEMOMAN || pBot->mission != ROLE_DEFENDER)
+	  return PRIORITY_NONE;
+
+   // if the bot has an enemy, lower the priority instead of killing the job
+   // so it can resume once the threat is dealt with
+   if (pBot->enemy.ptr != nullptr)
+	  return jl[JOB_PIPETRAP].basePriority / 2;
 
    // check the waypoints validity
    if (!WaypointAvailable(r_job.waypoint, pBot->current_team) || WaypointRouteFromTo(pBot->current_wp, r_job.waypoint, pBot->current_team) == -1)
-      return PRIORITY_NONE;
+	  return PRIORITY_NONE;
 
-   // find the team's flag
+   // find the team's flag (item_tfgoal team values are 1-based, current_team is 0-based)
    edict_t *pentFlag = nullptr;
    while ((pentFlag = FIND_ENTITY_BY_CLASSNAME(pentFlag, "item_tfgoal")) != nullptr && !FNullEnt(pentFlag)) {
-	  if (pentFlag->v.team == pBot->current_team) {
+	  if (pentFlag->v.team == pBot->current_team
+		  || pentFlag->v.team == pBot->current_team + 1) {
 		 // calculate the distance between the waypoint and the flag
 		 const float distance = (waypoints[r_job.waypoint].origin - pentFlag->v.origin).Length();
 		 // increase the priority if the distance is below a certain threshold
 		 if (distance < 500.0f) {
 			// further boost priority if the pipetrap waypoint has confirmed
 			// visibility to the flag area (flat, clear surface for crouching)
-			const int flagWP = WaypointFindNearest_V(pentFlag->v.origin, 200.0f, pBot->current_team);
+			const int flagWP = WaypointFindNearest_V(pentFlag->v.origin, 200.0f, -1);
 			if (flagWP != -1 && WaypointVisibleFromTo(r_job.waypoint, flagWP)) {
 			   // close enough to crouch-pipe and the surface is clear
 			   if (distance <= 150.0f) {

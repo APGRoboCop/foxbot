@@ -114,15 +114,15 @@ jobList_struct jl[JOB_TYPE_TOTAL] = {
 	{ 770, "JOB_BUILD_SENTRY" }, { 500, "JOB_BUILD_DISPENSER" }, { 660, "JOB_BUILD_TELEPORT" },
 	{ 430, "JOB_BUFF_ALLY" }, { 510, "JOB_ESCORT_ALLY" },
 	{ 490, "JOB_CALL_MEDIC" }, // this should be a higher priority than JOB_GET_HEALTH
-	{ 460, "JOB_GET_HEALTH" }, { 440, "JOB_GET_ARMOR" }, { 670, "JOB_GET_AMMO" }, { 650, "JOB_DISGUISE" },
+	{ 460, "JOB_GET_HEALTH" }, { 440, "JOB_GET_ARMOR" }, { 690, "JOB_GET_AMMO" }, { 650, "JOB_DISGUISE" },
 	{ 190, "JOB_FEIGN_AMBUSH" }, { 580, "JOB_SNIPE" }, { 260, "JOB_GUARD_WAYPOINT" }, { 560, "JOB_DEFEND_FLAG" },
 	{ 730, "JOB_GET_FLAG" }, { 780, "JOB_CAPTURE_FLAG" }, { 320, "JOB_HARRASS_DEFENSE" },
 	{ 740, "JOB_ROCKET_JUMP" }, { 750, "JOB_CONCUSSION_JUMP" },
-	{ 640, "JOB_DETPACK_WAYPOINT" }, { 630, "JOB_PIPETRAP" }, { 480, "JOB_INVESTIGATE_AREA" },
+	{ 630, "JOB_DETPACK_WAYPOINT" }, { 640, "JOB_PIPETRAP" }, { 480, "JOB_INVESTIGATE_AREA" },
 	{ 550, "JOB_PURSUE_ENEMY" }, { 200, "JOB_PATROL_HOME" }, { 700, "JOB_SPOT_STIMULUS" },
 	{ 620, "JOB_ATTACK_BREAKABLE" }, { 450, "JOB_ATTACK_TELEPORT" }, { 590, "JOB_SEEK_BACKUP" },
 	{ 310, "JOB_AVOID_ENEMY" }, { 720, "JOB_AVOID_AREA_DAMAGE" },
-	{ 690, "JOB_INFECTED_ATTACK" }, { 800, "JOB_BIN_GRENADE" },
+	{ 670, "JOB_INFECTED_ATTACK" }, { 800, "JOB_BIN_GRENADE" },
 	{ 710, "JOB_DROWN_RECOVER" }, { 240, "JOB_MELEE_WARRIOR" }, { 250, "JOB_GRAFFITI_ARTIST" },
 };
 
@@ -769,10 +769,27 @@ void BotEngineerThink(bot_t *pBot) {
 
                if (newJob->waypoint != -1 && SubmitNewJob(pBot, JOB_GET_AMMO, newJob) == true)
                   return;
-            }
-         }
-      }
-   }
+					  }
+				   }
+				}
+			 }
+
+	// proactively seek ammo/metal when running low, even if the sentry
+	// is fully built and healthy - engineers need metal topped up to
+	// repair under attack or rebuild if destroyed - [APG]RoboCop[CL]
+	if (pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] < 100
+		&& BufferedJobIndex(pBot, JOB_GET_AMMO) == -1
+		&& BufferedJobIndex(pBot, JOB_PICKUP_ITEM) == -1) {
+	   newJob = InitialiseNewJob(pBot, JOB_GET_AMMO);
+	   if (newJob != nullptr) {
+		  newJob->waypoint = WaypointFindNearestGoal(pBot->current_wp, pBot->current_team, 5000, W_FL_AMMO);
+		  if (newJob->waypoint == -1)
+			 newJob->waypoint = WaypointFindNearestGoal(pBot->current_wp, -1, 5000, W_FL_AMMO);
+
+		  if (newJob->waypoint != -1 && SubmitNewJob(pBot, JOB_GET_AMMO, newJob))
+			 return;
+	   }
+	}
 
    // detonate the bots teleporter exit if it doesn't have an teleporter entrance
    // i.e. build entrances and then build exits, not the other way round

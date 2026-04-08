@@ -2842,21 +2842,36 @@ int JobPipetrap(bot_t* pBot) {
       // count the number of pipebombs the bot owns
       // ignore visibility because pipebombs can bounce behind other things
       const int pipeBombTally = CountPipebombs(pBot);
-      // find the team's flag properly by checking team ownership
+      // find the team's flag to aim pipes at, preferring the bot's own
+      // team flag (item_tfgoal team values are 1-based, current_team is 0-based)
       if (pBot->mission == ROLE_DEFENDER) {
          edict_t* pentFlag = nullptr;
+         edict_t* bestFlag = nullptr;
+         float bestDist = 99999.0f;
          while ((pentFlag = FIND_ENTITY_BY_CLASSNAME(pentFlag, "item_tfgoal")) != nullptr && !FNullEnt(pentFlag)) {
-            if (pentFlag->v.team != pBot->current_team)
-               continue;
+            const float dist = (waypoints[job_ptr->waypoint].origin - pentFlag->v.origin).Length();
+            // prefer the bot's own team flag (compare both 0-based and 1-based)
+            if (pentFlag->v.team == pBot->current_team
+                || pentFlag->v.team == pBot->current_team + 1) {
+               bestFlag = pentFlag;
+               break;
+            }
+            // otherwise remember the nearest flag as a fallback
+            if (dist < bestDist) {
+               bestDist = dist;
+               bestFlag = pentFlag;
+            }
+         }
 
-            const Vector v_flag = pentFlag->v.origin;
+         if (bestFlag != nullptr) {
+            const Vector v_flag = bestFlag->v.origin;
             const float distToFlag = (waypoints[job_ptr->waypoint].origin - v_flag).Length();
 
             // if the flag is close enough, the bot can crouch for a shorter
             // range pipe trap, but only if the surface between them is flat
             // and wide enough (use visibility table and height check)
             if (distToFlag <= 150.0f) {
-               const int flagWP = WaypointFindNearest_V(v_flag, 200.0f, pBot->current_team);
+               const int flagWP = WaypointFindNearest_V(v_flag, 200.0f, -1);
                const float zDiff = std::fabs(waypoints[job_ptr->waypoint].origin.z - v_flag.z);
 
                // the floor is flat enough if the height difference is small
@@ -2871,7 +2886,6 @@ int JobPipetrap(bot_t* pBot) {
 
             // set the bot's aim to the calculated location
             BotSetFacing(pBot, v_nearFlag);
-            break;
          }
       }
       if (pipeBombTally < MAX_PIPEBOMBS)
@@ -2934,7 +2948,7 @@ int JobInvestigateArea(bot_t* pBot) {
          pBot->f_side_speed = 0.0f;
 
          // look about whilst waiting - prefer visible waypoints for
-         // smarter scanning of the area using the visibility table
+         // smarter scanning of the area using the visibility table - [APG]RoboCop[CL]
          if (pBot->f_view_change_time <= pBot->f_think_time) {
             bool foundVisible = false;
 

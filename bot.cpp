@@ -1190,12 +1190,20 @@ void BotFindItem(bot_t* pBot) {
 			if (BotCanSeeOrigin(pBot, vecEnd)) {
 				// check if entity is a back pack dropped by a player
 				if (std::strcmp("tf_ammobox", item_name) == 0) {
-					if (pBot->ammoStatus != AMMO_UNNEEDED && pent->v.owner == nullptr)
+					if (pent->v.owner == nullptr
+						&& (pBot->ammoStatus != AMMO_UNNEEDED
+							|| (pEdict->v.playerclass == TFC_CLASS_ENGINEER
+								&& pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] < PC_ENGINEER_MAXAMMO_CELL)))
 						can_pickup = true;
 				}
 				// check if entity is a back pack
 				else if (std::strcmp("item_tfgoal", item_name) == 0) {
-					if (pBot->ammoStatus == AMMO_UNNEEDED || pent->v.owner != nullptr || pent->v.model == 0)
+					if (pent->v.owner != nullptr || pent->v.model == 0)
+						continue;
+					// engineers always want backpacks for metal
+					if (pBot->ammoStatus == AMMO_UNNEEDED
+						&& !(pEdict->v.playerclass == TFC_CLASS_ENGINEER
+							 && pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] < PC_ENGINEER_MAXAMMO_CELL))
 						continue;
 
 					// check if the item is not visible

@@ -1100,9 +1100,13 @@ int BotGuessPlayerPosition(const bot_t *const pBot, const Vector &r_playerOrigin
 // This function is useful for throwing grenades at an enemy who has just dissappeared
 // behind a bit of scenery(e.g. a wall).  It will search for and return a waypoint that
 // is near enough to the enemy to splash them, and visible to both the enemy and the bot.
+// Uses the visibility table for a fast pre-check before falling back to TraceLine.
 // Returns -1 on failure to find a suitable waypoint.
 int BotFindGrenadePoint(const bot_t *const pBot, const Vector &r_vecOrigin) {
    TraceResult tr;
+
+   // find the nearest waypoint to the enemy for visibility table lookups
+   const int enemyWP = WaypointFindNearest_V(r_vecOrigin, 500.0f, -1);
 
    for (int index = 0; index < num_waypoints; index++) {
       // skip any deleted or aiming waypoints
@@ -1111,31 +1115,30 @@ int BotFindGrenadePoint(const bot_t *const pBot, const Vector &r_vecOrigin) {
 
       // if the waypoint is near enough to the enemy check for visibility
       if (VectorsNearerThan(waypoints[index].origin, r_vecOrigin, 500.0)) {
-         UTIL_TraceLine(r_vecOrigin, waypoints[index].origin, ignore_monsters, nullptr, &tr);
+         // fast-path: use the visibility table to confirm both
+         // enemy-to-waypoint and bot-to-waypoint line-of-sight - [APG]RoboCop[CL]
+         if (enemyWP >= 0 && pBot->current_wp >= 0
+             && WaypointVisibleFromTo(enemyWP, index)
+             && WaypointVisibleFromTo(pBot->current_wp, index)) {
+            return index;
+         }
 
-         // debug stuff
-         //	WaypointDrawBeam(INDEXENT(1), r_vecOrigin,
-         //		waypoints[index].origin, 10, 2, 250, 50, 50, 200, 10);
+         // fallback: TraceLine checks for precision
+         UTIL_TraceLine(r_vecOrigin, waypoints[index].origin, ignore_monsters, nullptr, &tr);
 
          // is this waypoint visible to the enemy?
          if (tr.flFraction >= 1.0f) {
             UTIL_TraceLine(pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs, waypoints[index].origin, ignore_monsters, nullptr, &tr);
 
-            // debug stuff
-            //	WaypointDrawBeam(INDEXENT(1), pBot->pEdict->v.origin,
-            //		waypoints[index].origin, 10, 2, 250, 50, 50, 200, 10);
-
             // is this waypoint visible to the bot also?
             // if so we've found a suitable waypoint for throwing at
             if (tr.flFraction >= 1.0f) {
-               //	UTIL_BotLogPrintf("BotFindGrenadePoint success\n");
                return index;
             }
          }
       }
    }
 
-   //	UTIL_BotLogPrintf("BotFindGrenadePoint failure\n");
    return -1; // oops, failure!
 }
 
@@ -1236,31 +1239,42 @@ void BotShootAtEnemy(bot_t *pBot) {
             pBot->f_move_speed = -pBot->f_max_speed * 0.5f; // back away
          }
       }
-      // No grenades: use nailgun from range if possible - [APG]RoboCop[CL]
-      else if (pBot->grenades[PrimaryGrenade] <= 0 && f_distance > 300.0f && f_distance < 1200.0f)
-      {
-         // Check if the SG can see us - if not, we can use nailgun safely
-         const Vector botPos = pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs;
-         TraceResult sgTr;
-         UTIL_TraceLine(pBot->lastEnemySentryGun->v.origin, botPos, dont_ignore_monsters,
-            pBot->lastEnemySentryGun, &sgTr);
+         // No grenades: use nailgun from range if possible - [APG]RoboCop[CL]
+         else if (pBot->grenades[PrimaryGrenade] <= 0 && f_distance > 300.0f && f_distance < 1200.0f)
+         {
+            // Use the visibility table for a fast cover check first,
+            // then fall back to TraceLine for precision
+            bool inCover = false;
+            if (sgWP >= 0 && pBot->current_wp >= 0
+                && !WaypointVisibleFromTo(sgWP, pBot->current_wp)) {
+               inCover = true; // waypoint-level cover confirmed
+            }
+            else {
+               // TraceLine fallback for cases the visibility table can't resolve
+               const Vector botPos = pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs;
+               TraceResult sgTr;
+               UTIL_TraceLine(pBot->lastEnemySentryGun->v.origin, botPos, dont_ignore_monsters,
+                  pBot->lastEnemySentryGun, &sgTr);
+               if (sgTr.flFraction < 1.0f)
+                  inCover = true;
+            }
 
-         if (sgTr.flFraction < 1.0f)
-         {
-            // SG can't see us clearly - safe to use nailgun from cover
-            pBot->spyUsedNailgun = true;
-            // keep shooting from this position, don't advance into danger
-            pBot->f_dontEvadeTime = pBot->f_think_time + 2.0f;
+            if (inCover)
+            {
+               // SG can't see us clearly - safe to use nailgun from cover
+               pBot->spyUsedNailgun = true;
+               // keep shooting from this position, don't advance into danger
+               pBot->f_dontEvadeTime = pBot->f_think_time + 2.0f;
+            }
+            else if (wpDanger >= SG_DANGER_THRESHOLD)
+            {
+               // We're in a dangerous zone and the SG can see us - retreat!
+               pBot->f_move_speed = -pBot->f_max_speed;
+               pBot->f_shoot_time = pBot->f_think_time + 1.0f; // hold fire to maintain disguise
+            }
          }
-         else if (wpDanger >= SG_DANGER_THRESHOLD)
-         {
-            // We're in a dangerous zone and the SG can see us - retreat!
-            pBot->f_move_speed = -pBot->f_max_speed;
-            pBot->f_shoot_time = pBot->f_think_time + 1.0f; // hold fire to maintain disguise
-         }
+         // Close range with no grenades and the SG can see us - just shoot
       }
-      // Close range with no grenades and the SG can see us - just shoot
-   }
 
    // if the bots aim is currently too bad, postpone pulling the trigger
    if (f_distance > 200.0f) {
@@ -1444,12 +1458,32 @@ static Vector BotBodyTarget(const edict_t *pBotEnemy, bot_t *pBot) {
             d_z += dist2d / 3;
       }
    }
-   // Lead for grenades.
+   // Lead for grenades - scale the arc based on distance to prevent
+   // the bot from aiming straight up (which makes the gun point at the sky
+   // and causes grenades to overshoot or miss)
    else if (pBot->tossNade) {
-      // Need to arc up more if they are high or far away.
       if (zDiff > 70 || dist2d > 500) {
-         d_z += dist2d;
-         // UTIL_HostSay(pBot->pEdict, 0, "arcing up");
+         // use a progressive arc that increases with distance:
+         // close range (~500): gentle ~16 degree arc
+         // mid range  (~800): moderate ~25 degree arc
+         // long range (~1200): steeper ~35 degree arc
+         const float normalizedDist = std::min(dist2d / 1200.0f, 1.0f);
+         float arcHeight = dist2d * normalizedDist * 0.7f;
+
+         // compensate for height difference to targets above the bot
+         if (zDiff > 70)
+            arcHeight += static_cast<float>(zDiff) * 0.5f;
+
+         // use the visibility table to detect low ceilings - if the bot's
+         // waypoint can't see upward waypoints the area may be enclosed
+         if (pBot->current_wp >= 0) {
+            const int sgWP = (pBot->enemy.ptr != nullptr)
+               ? WaypointFindNearest_V(pBot->enemy.ptr->v.origin, 400.0f, -1) : -1;
+            if (sgWP >= 0 && !WaypointVisibleFromTo(pBot->current_wp, sgWP))
+               arcHeight *= 0.6f; // reduce arc in enclosed areas
+         }
+
+         d_z += arcHeight;
       }
       pBot->tossNade = 0;
    }
@@ -1511,16 +1545,38 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
    }
 
    // Used for bots to use Nailguns against enemy Sentry Guns [APG]RoboCop[CL]
+   // Only fire the nailgun when in cover from the SG using the visibility table
    if (pBot->enemy.ptr == pBot->lastEnemySentryGun && !FNullEnt(pBot->lastEnemySentryGun) &&
        (pBot->pEdict->v.playerclass == TFC_CLASS_SCOUT || pBot->pEdict->v.playerclass == TFC_CLASS_SPY || pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC)) {
-      // Force the bot to select and fire the Nailgun or Super Nailgun
-      if (pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC) {
-         UTIL_SelectItem(pBot->pEdict, "tf_weapon_superng");
-      } else {
-         UTIL_SelectItem(pBot->pEdict, "tf_weapon_ng");
+      // check if the bot has cover from the SG using the visibility table
+      const int sgWP = WaypointFindNearest_V(pBot->lastEnemySentryGun->v.origin, 400.0f, -1);
+      bool inCover = false;
+      if (sgWP >= 0 && pBot->current_wp >= 0
+          && !WaypointVisibleFromTo(sgWP, pBot->current_wp)) {
+         inCover = true;
       }
-      pBot->pEdict->v.button |= IN_ATTACK;
-      return true;
+      else {
+         // TraceLine fallback for edge cases
+         TraceResult sgTr;
+         UTIL_TraceLine(pBot->lastEnemySentryGun->v.origin,
+            pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs,
+            dont_ignore_monsters, pBot->lastEnemySentryGun, &sgTr);
+         if (sgTr.flFraction < 1.0f)
+            inCover = true;
+      }
+
+      if (inCover) {
+         // safe to fire from cover - select and fire the Nailgun or Super Nailgun
+         if (pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC) {
+            UTIL_SelectItem(pBot->pEdict, "tf_weapon_superng");
+         } else {
+            UTIL_SelectItem(pBot->pEdict, "tf_weapon_ng");
+         }
+         pBot->pEdict->v.button |= IN_ATTACK;
+         pBot->f_dontEvadeTime = pBot->f_think_time + 2.0f;
+         return true;
+      }
+      // not in cover - fall through to normal weapon selection
    }
 
    //////////////////
@@ -1795,9 +1851,6 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
 // checking whether or not the sentry they have in memory is viewable
 // from there. If so they will anticipate contact and prime a grenade,
 // and acquire the target early just before contact.
-//
-// TODO: to adjust the angle and distance to toss nades
-// at a higher angle and low range as their target aim is too short - [APG]RoboCop[CL]
 int BotNadeHandler(bot_t *pBot, bool timed, const char newNadeType) {
    // Lets try putting discard code in here. (dont let the engineer discard)
    if (pBot->f_discard_time < pBot->f_think_time && pBot->pEdict->v.playerclass != TFC_CLASS_ENGINEER) {
