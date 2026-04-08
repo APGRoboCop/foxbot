@@ -44,11 +44,11 @@ Updated by RoboCop
 
 - Removing jump waypoints that was used as bunnyhop waypoints as that is no longer required
 
+- Added `botdontmove` in order for "GolfBots" to stay stationary in minigolf maps in order to not ruin their momentum
+
 TODO List:-
 
 >> To allow bots to understand on how to shoot door buttons, if touching them doesn't work like in well or alchimy maps
-
->> Complete `botdontmove` in order for "GolfBots" to stay stationary
 
 >> Fix bot's `JOB_BIN_GRENADE` as they need to ditch their live grenades to prevent suicide bombing too often
 

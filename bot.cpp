@@ -3783,6 +3783,20 @@ void BotThink(bot_t* pBot) {
 
 	bool is_idle = false;
 
+	// Stationary bots for TFC minigolf maps - botdontmove keeps bots as
+	// golf balls stationary, botdontshoot prevents them fighting back so
+	// human snipers can use their rifles as golf clubs [APG]RoboCop[CL]
+	if (botdontshoot)
+		pBot->enemy.ptr = nullptr;
+	if (botdontmove) {
+		pBot->f_move_speed = 0.0f;
+		pBot->f_side_speed = 0.0f;
+		pBot->f_vertical_speed = 0.0f;
+		pBot->pEdict->v.button = 0;
+		g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, 0, 0, 0, static_cast<unsigned short>(0), static_cast<byte>(0), static_cast<byte>(msecval));
+		return;
+	}
+
 	// don't do anything while blinded
 	if (pBot->f_blinded_time > pBot->f_think_time)
 		is_idle = true;
@@ -4012,13 +4026,6 @@ void BotThink(bot_t* pBot) {
 		pBot->f_periodicAlert1 = pBot->f_think_time + 1.0f;
 	if (pBot->f_periodicAlert3 < pBot->f_think_time)
 		pBot->f_periodicAlert3 = pBot->f_think_time + 3.0f;
-
-	//TODO: copy `mrfreeze` script from MarineBots and implement it here
-	if (botdontmove == 1) { // Stationary bots for TFC minigolf maps [APG]RoboCop[CL]
-		pBot->f_move_speed = 0.0f;
-		pBot->f_side_speed = 0.0f;
-		pBot->f_vertical_speed = 0.0f;
-	}
 }
 
 // This function is home to most of the sensory functions
