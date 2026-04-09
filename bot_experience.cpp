@@ -205,8 +205,8 @@ bool FoxMapExperience::saveForMap(const char* mapname) const
 	constexpr unsigned int maxBufSize = sizeof(int) + 4 * (sizeof(int) + MAX_SG_DEATH_ENTRIES * (sizeof(int) + sizeof(short)));
 	unsigned char buf[maxBufSize];
 	unsigned int offset = 0;
-
-	const int version = FXP_VERSION;
+      
+   constexpr int version = FXP_VERSION;
 	std::memcpy(buf + offset, &version, sizeof(int));
 	offset += sizeof(int);
 

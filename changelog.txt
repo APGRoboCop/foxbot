@@ -12,17 +12,17 @@ Updated by RoboCop
 
 - Added a self-learning program using Neural Net and Genetic Algorithms based from RCBot1
 
-- Added a experience program for bots to gain a bit of wisdom and be less lame
+- Added a experience program for bots to gain a bit of wisdom and be less lame, such as remember enemy SG turrets spotted
 
 - Added a `bot_bhop` variable to allow servers to choose for bots to bunnyhop on their own accord
 
 - The bunnyhopping bots will not bunnyhop in doorways, inside pillbox bunkers nor inside tight corridors
 
-- The bunnyhopping will be able bots to jump in a zigzag alternating strafe pattern in order to gain agility and evasion
+- The bunnyhopping will be able bots to jump in a zigzag alternating strafe pattern in order to gain agility and experience
 
 - The visibility and experience auxillary data can be compressed using Miniz
 
-- Bots should be able to remember and note where enemy SG turrets were spotted and avoid that particular route
+- Bots should be able to remember and note where enemy SG turrets were spotted and avoid that particular route using experience
 
 - Bots will try to be less visible when trying to destroy enemy SG turrets - especially for spies
 
@@ -52,13 +52,19 @@ Updated by RoboCop
 
 - Synchronise `bot_check_time` with `bot_cfg_pause_time` to prevent bots that are randomly added before the .cfg is executed
 
+- Increased weapon delay and aim_error value to decrease accuracy for Heavy's Miniguns in order to prevent them being overpowered
+
 TODO List:-
 
 >> To allow bots to understand on how to shoot door buttons, if touching them doesn't work like in well or alchimy maps
 
 >> Fix bot's `JOB_BIN_GRENADE` as they need to ditch their live grenades to prevent suicide bombing too often
 
->> To improve the pipebomb laying trap pattern and to plant them near the flag
+>> To improve the pipebomb laying trap pattern and to plant them near the flag, and to add bot experience on how their pipebombs land
+
+>> Fix the `botdontmove` code and make sure it doesn't bhop nor jump with the new `bot_bhop` code and by rotating its yaw
+
+>> Improve more on the bunnyhop by not circulating around nodes they cannot reach in close contact, maybe add that as bot experience
 
 --------------------------------------------------------------------------------
 Version 0.911

@@ -74,7 +74,7 @@ constexpr const char* TZONE = "GMT";
   * This info is used as Plugin info by Metamod
   */
 #define VDATE COMPILE_DATE
-constexpr const char* VNAME = "FoxBot";
+constexpr const char* VNAME = "FoXBot";
 constexpr const char* VAUTHOR = "Tom Simpson & RoboCop <robocop@lycos.co.uk>";
 constexpr const char* VURL = "apg-clan.org";
 

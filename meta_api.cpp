@@ -38,7 +38,7 @@ static META_FUNCTIONS gMetaFunctionTable = {
 plugin_info_t Plugin_info = {
     META_INTERFACE_VERSION,                        // ifvers
     "FoXBot",                                      // name
-    "1.0-beta2",                                   // version
+    "1.0-beta3",                                   // version
     __DATE__,                                      // date
     "Tom Simpson & RoboCop <robocop@lycos.co.uk>", // author
     "https://apg-clan.org/",                       // url
@@ -49,7 +49,7 @@ plugin_info_t Plugin_info = {
     PT_STARTUP, // (when) unloadable
 };
 
-// Global vars from	metamod:
+// Global vars from metamod:
 meta_globals_t *gpMetaGlobals = nullptr;   // metamod globals
 gamedll_funcs_t *gpGamedllFuncs = nullptr; // gameDLL function	tables
 mutil_funcs_t *gpMetaUtilFuncs = nullptr;  // metamod utility functions

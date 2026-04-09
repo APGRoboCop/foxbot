@@ -404,6 +404,8 @@ void BotSpawnInit(bot_t* pBot) {
 	// bunny hop
 	pBot->f_bunnyHopTime = 0.0f;
 	pBot->bhopStrafeDir = 0;
+	pBot->bhopLastWP = -1;
+	pBot->bhopStuckCounter = 0;
 }
 
 //#ifdef WIN32
@@ -3802,6 +3804,13 @@ void BotThink(bot_t* pBot) {
 		pBot->f_side_speed = 0.0f;
 		pBot->f_vertical_speed = 0.0f;
 		pBot->pEdict->v.button = 0;
+		pBot->pEdict->v.velocity = Vector(0, 0, 0);
+		pBot->enemy.ptr = nullptr;
+		// freeze the bot's view angles so it doesn't rotate or look around - [APG]RoboCop[CL]
+		pBot->pEdict->v.ideal_yaw = pBot->pEdict->v.v_angle.y;
+		pBot->pEdict->v.idealpitch = 0.0f;
+		// suppress bunny hop and any jump attempts
+		pBot->f_bunnyHopTime = pBot->f_think_time + 10.0f;
 		g_engfuncs.pfnRunPlayerMove(pBot->pEdict, pBot->pEdict->v.v_angle, 0, 0, 0, static_cast<unsigned short>(0), static_cast<byte>(0), static_cast<byte>(msecval));
 		return;
 	}
@@ -3922,9 +3931,9 @@ void BotThink(bot_t* pBot) {
 
 	// Bunny hop logic: zigzag pattern by alternating strafe direction - [APG]RoboCop[CL]
 	// Only in wide open areas (not doorways, tight corridors, or near catwalks)
-	// Suppressed during rocket/concussion jump jobs, near RJ/CJ waypoints,
-	// shortly after respawn, while steering sharp corners, or when server
-	// physics settings (sv_airaccelerate, sv_gravity) make hopping ineffective
+	// Suppressed during rocket/concussion jump jobs, near RJ/CJ/jump waypoints,
+	// shortly after respawn, while steering sharp corners, on narrow paths (planks),
+	// when circling the same waypoint, or when server physics make hopping ineffective
 	if (bot_bhop > 0 && pBot->f_bunnyHopTime < pBot->f_think_time
 		&& pBot->f_move_speed >= pBot->f_max_speed * 0.8f
 		&& pBot->pEdict->v.flags & FL_ONGROUND
@@ -3933,7 +3942,7 @@ void BotThink(bot_t* pBot) {
 		&& !pBot->enemy.ptr
 		&& pBot->current_wp != -1
 		&& pBot->last_spawn_time + 2.0f < pBot->f_think_time
-		&& !(waypoints[pBot->current_wp].flags & (W_FL_CROUCH | W_FL_LADDER | W_FL_WALK | W_FL_SNIPER | W_FL_TFC_JUMP))
+		&& !(waypoints[pBot->current_wp].flags & (W_FL_CROUCH | W_FL_LADDER | W_FL_WALK | W_FL_SNIPER | W_FL_TFC_JUMP | W_FL_JUMP))
 		&& !BufferContainsJobType(pBot, JOB_ROCKET_JUMP)
 		&& !BufferContainsJobType(pBot, JOB_CONCUSSION_JUMP))
 	   {
@@ -3982,14 +3991,18 @@ void BotThink(bot_t* pBot) {
 			   }
 
 			   // Check if the next waypoint along the route is too close (tight navigation) - [APG]RoboCop[CL]
+			   // Also suppress when circling the same waypoint or heading toward planks/jump waypoints
 			   bool nextWPTooClose = false;
 			   bool routeVisible = false;
 			   if (!inTightSpace && !nearCatwalkEdge && pBot->goto_wp != -1) {
 				const int nextWP = WaypointRouteFromTo(pBot->current_wp, pBot->goto_wp, pBot->current_team);
 				   if (nextWP >= 0 && nextWP < num_waypoints) {
+					// suppress if circling: next route waypoint is current waypoint
+					   if (nextWP == pBot->current_wp)
+						   nextWPTooClose = true;
 					// suppress if the next waypoint is nearby (short segments = tight areas)
-					   if (VectorsNearerThan(waypoints[pBot->current_wp].origin, waypoints[nextWP].origin, 100.0)
-						   || (waypoints[nextWP].flags & (W_FL_TFC_JUMP | W_FL_WALK | W_FL_CROUCH)))
+					   else if (VectorsNearerThan(waypoints[pBot->current_wp].origin, waypoints[nextWP].origin, 100.0)
+						   || (waypoints[nextWP].flags & (W_FL_TFC_JUMP | W_FL_JUMP | W_FL_WALK | W_FL_CROUCH)))
 						   nextWPTooClose = true;
 
 					   // use the visibility table to confirm the route ahead is
@@ -4004,18 +4017,36 @@ void BotThink(bot_t* pBot) {
 				   }
 			   }
 
+			   // Detect circulating: bot keeps evaluating bhop at the same
+			   // waypoint without making progress - suppress and log as
+			   // experience so the bot learns this area is bad for hopping - [APG]RoboCop[CL]
+			   bool circulating = false;
+			   if (pBot->bhopLastWP == pBot->current_wp) {
+				   pBot->bhopStuckCounter++;
+				   if (pBot->bhopStuckCounter >= 3) {
+					   circulating = true;
+					   // long suppression - bot has learned this spot is bad
+					   pBot->f_bunnyHopTime = pBot->f_think_time + random_float(5.0f, 10.0f);
+					   pBot->bhopStuckCounter = 0;
+				   }
+			   }
+			   else {
+				   pBot->bhopLastWP = pBot->current_wp;
+				   pBot->bhopStuckCounter = 0;
+			   }
+
 			   // boost the hop chance when the visibility table confirms an open route
 			   const int hopChance = routeVisible ? std::min(bot_bhop * 2, 100) : bot_bhop;
-			   if (physicsOk && !inTightSpace && !nearCatwalkEdge && !nextWPTooClose && random_long(1, 100) <= hopChance)
+			   if (!circulating && physicsOk && !inTightSpace && !nearCatwalkEdge && !nextWPTooClose && random_long(1, 100) <= hopChance)
 			   {
 				   pBot->pEdict->v.button |= IN_JUMP;
 
-   				// Scale strafe intensity based on sv_airaccelerate (default 10) - [APG]RoboCop[CL]
-	   			const float strafeFactor = (airAccel > 0.0f) ? std::min(airAccel / 10.0f, 1.5f) * 0.6f : 0.0f;
+				// Scale strafe intensity based on sv_airaccelerate (default 10) - [APG]RoboCop[CL]
+				const float strafeFactor = (airAccel > 0.0f) ? std::min(airAccel / 10.0f, 1.5f) * 0.6f : 0.0f;
 
-		   		// zigzag: alternate strafe direction
-			   	if (pBot->bhopStrafeDir)
-				   	pBot->f_side_speed = pBot->f_max_speed * strafeFactor;
+				// zigzag: alternate strafe direction
+				if (pBot->bhopStrafeDir)
+					pBot->f_side_speed = pBot->f_max_speed * strafeFactor;
 				   else
 					   pBot->f_side_speed = -pBot->f_max_speed * strafeFactor;
 

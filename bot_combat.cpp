@@ -133,18 +133,18 @@ static std::array<bot_weapon_select_t, 19> tfc_weapon_select = {{{TF_WEAPON_KNIF
                                                                  {TF_WEAPON_SNIPERRIFLE, "tf_weapon_sniperrifle", 5, 300.0f, 4000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, true, false, 2.5, 0.0f},
                                                                  {TF_WEAPON_FLAMETHROWER, "tf_weapon_flamethrower", 5, 0.0f, 200.0f, 0.0f, 0.0f, 100, false, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
                                                                  {TF_WEAPON_AC, "tf_weapon_ac", 5, 0.0f, 2000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
-                                                                 {TF_WEAPON_RPG, "tf_weapon_rpg", 5, 150.0f, 3000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
-                                                                 {TF_WEAPON_IC, "tf_weapon_ic", 5, 150.0f, 2000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
+                                                                 {TF_WEAPON_RPG, "tf_weapon_rpg", 5, 120.0f, 3000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
+                                                                 {TF_WEAPON_IC, "tf_weapon_ic", 5, 120.0f, 2000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
                                                                  {TF_WEAPON_SUPERSHOTGUN, "tf_weapon_supershotgun", 5, 0.0f, 2000.0f, 0.0f, 0.0f, 100, true, 100, 2, 0, false, false, false, false, 0.0f, 0.0f},
                                                                  {TF_WEAPON_SUPERNAILGUN, "tf_weapon_superng", 5, 40.0f, 2000.0f, 0.0f, 0.0f, 100, true, 100, 2, 0, true, false, false, false, 0.0f, 0.0f},
                                                                  {TF_WEAPON_TRANQ, "tf_weapon_tranq", 5, 0.0f, 100.0f, 0.0f, 0.0f, 10, true, 10, 1, 0, false, false, false, false, 0.0f, 0.0f},
                                                                  {TF_WEAPON_AUTORIFLE, "tf_weapon_autorifle", 5, 0.0f, 300.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
                                                                  {TF_WEAPON_AXE, "tf_weapon_axe", 5, 0.0f, 60.0f, 0.0f, 0.0f, 100, true, 100, 0, 0, false, false, false, false, 0.0f, 0.0f},
-                                                                 {TF_WEAPON_PL, "tf_weapon_pl", 5, 150.0f, 500.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
-                                                                 {TF_WEAPON_GL, "tf_weapon_gl", 5, 150.0f, 500.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
-                                                                 {TF_WEAPON_SHOTGUN, "tf_weapon_shotgun", 5, 0.0f, 2000.0f, 0.0f, 0.0f, 80, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
+                                                                 {TF_WEAPON_PL, "tf_weapon_pl", 5, 120.0f, 500.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
+                                                                 {TF_WEAPON_GL, "tf_weapon_gl", 5, 120.0f, 500.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
+                                                                 {TF_WEAPON_SHOTGUN, "tf_weapon_shotgun", 5, 0.0f, 2000.0f, 0.0f, 0.0f, 60, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
                                                                  {TF_WEAPON_NAILGUN, "tf_weapon_ng", 5, 40.0f, 2000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
-                                                                 {TF_WEAPON_RAILGUN, "tf_weapon_railgun", 5, 80.0f, 2000.0f, 0.0f, 0.0f, 10, true, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
+                                                                 {TF_WEAPON_RAILGUN, "tf_weapon_railgun", 5, 80.0f, 2000.0f, 0.0f, 0.0f, 5, true, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
                                                                  /* terminator */
                                                                  {0, "", 0, 0.0f, 0.0f, 0.0f, 0.0f, 0, true, 0, 1, 1, false, false, false, false, 0.0f, 0.0f}}
 };
@@ -154,19 +154,19 @@ static std::array<bot_fire_delay_t, 19> tfc_fire_delay = {{{TF_WEAPON_KNIFE, 0.3
                                                            {TF_WEAPON_MEDIKIT, 0.3f, {0.0f, 0.2f, 0.3f, 0.4f, 0.6f}, {0.1f, 0.3f, 0.5f, 0.7f, 1.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
                                                            {TF_WEAPON_SNIPERRIFLE, 0.5f, {0.2f, 0.4f, 0.6f, 0.8f, 1.0f}, {0.4f, 0.6f, 0.8f, 1.0f, 1.2f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
                                                            {TF_WEAPON_FLAMETHROWER, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
-                                                           {TF_WEAPON_AC, 0.5f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
-                                                           {TF_WEAPON_RPG, 0.6f, {0.1f, 0.2f, 0.3f, 0.4f, 0.5f}, {0.2f, 0.4f, 0.7f, 1.0f, 2.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+                                                           {TF_WEAPON_AC, 0.6f, {0.1f, 0.2f, 0.3f, 0.4f, 0.5f}, {0.2f, 0.4f, 0.6f, 0.8f, 1.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+                                                           {TF_WEAPON_RPG, 0.5f, {0.1f, 0.2f, 0.3f, 0.4f, 0.5f}, {0.2f, 0.4f, 0.6f, 0.8f, 1.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
                                                            {TF_WEAPON_IC, 0.3f, {0.1f, 0.2f, 0.3f, 0.4f, 0.5f}, {1.0f, 2.0f, 3.0f, 4.0f, 5.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
-                                                           {TF_WEAPON_SUPERSHOTGUN, 0.3f, {0.0f, 0.2f, 0.5f, 0.8f, 1.0f}, {0.25f, 0.4f, 0.7f, 1.0f, 1.3f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+                                                           {TF_WEAPON_SUPERSHOTGUN, 0.3f, {0.0f, 0.2f, 0.5f, 0.8f, 1.0f}, {0.2f, 0.4f, 0.7f, 1.0f, 1.3f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
                                                            {TF_WEAPON_SUPERNAILGUN, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
                                                            {TF_WEAPON_TRANQ, 0.5f, {0.0f, 0.2f, 0.4f, 0.6f, 0.8f}, {2.0f, 3.0f, 4.0f, 5.0f, 6.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
                                                            {TF_WEAPON_AUTORIFLE, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
                                                            {TF_WEAPON_AXE, 0.3f, {0.0f, 0.2f, 0.3f, 0.4f, 0.6f}, {0.1f, 0.3f, 0.5f, 0.7f, 1.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
-                                                           {TF_WEAPON_PL, 0.5f, {0.0f, 0.2f, 0.5f, 0.8f, 1.0f}, {0.25f, 0.4f, 0.7f, 1.0f, 1.3f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
-                                                           {TF_WEAPON_GL, 0.5f, {0.0f, 0.2f, 0.5f, 0.8f, 1.0f}, {0.25f, 0.4f, 0.7f, 1.0f, 1.3f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
-                                                           {TF_WEAPON_SHOTGUN, 0.2f, {0.1f, 0.2f, 0.4f, 0.6f, 0.8f}, {0.25f, 0.5f, 0.8f, 1.2f, 2.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+                                                           {TF_WEAPON_PL, 0.5f, {0.0f, 0.2f, 0.5f, 0.8f, 1.0f}, {0.2f, 0.4f, 0.7f, 1.0f, 1.3f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+                                                           {TF_WEAPON_GL, 0.5f, {0.0f, 0.2f, 0.5f, 0.8f, 1.0f}, {0.5f, 0.4f, 0.7f, 1.0f, 1.3f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+                                                           {TF_WEAPON_SHOTGUN, 0.2f, {0.0f, 0.2f, 0.4f, 0.6f, 0.8f}, {0.2f, 0.5f, 0.8f, 1.2f, 2.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
                                                            {TF_WEAPON_NAILGUN, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
-                                                           {TF_WEAPON_RAILGUN, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.1f, 0.2f, 0.3f, 0.4f, 0.5f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+                                                           {TF_WEAPON_RAILGUN, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
                                                            /* terminator */
                                                            {0, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, 0.0f, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f}}}
 };
@@ -244,12 +244,29 @@ void BotUpdateSkillInaccuracy() {
 }
 
 // Set pipebombs off if they are near to the bots enemy.
+// Also detonates when the enemy is near the flag being defended - [APG]RoboCop[CL]
 static void BotPipeBombCheck(const bot_t *pBot) {
    edict_t *pent = nullptr;
    while ((pent = FIND_ENTITY_BY_CLASSNAME(pent, "tf_gl_pipebomb")) != nullptr && !FNullEnt(pent)) {
-      if (pBot->pEdict == pent->v.owner && VectorsNearerThan(pBot->enemy.ptr->v.origin, pent->v.origin, 90.0)) {
-         FakeClientCommand(pBot->pEdict, "detpipe", nullptr, nullptr);
-         return;
+      if (pBot->pEdict == pent->v.owner) {
+         // detonate if the enemy is near the pipebomb
+         if (VectorsNearerThan(pBot->enemy.ptr->v.origin, pent->v.origin, 80.0)) {
+            FakeClientCommand(pBot->pEdict, "detpipe", nullptr, nullptr);
+            return;
+         }
+         // also detonate if a pipebomb is near the flag and the enemy is
+         // approaching it - the trap should catch them picking up the flag
+         if (pBot->mission == ROLE_DEFENDER) {
+            edict_t* pentFlag = nullptr;
+            while ((pentFlag = FIND_ENTITY_BY_CLASSNAME(pentFlag, "item_tfgoal")) != nullptr && !FNullEnt(pentFlag)) {
+               if ((pentFlag->v.team == pBot->current_team || pentFlag->v.team == pBot->current_team + 1)
+                   && VectorsNearerThan(pent->v.origin, pentFlag->v.origin, 60.0)
+                   && VectorsNearerThan(pBot->enemy.ptr->v.origin, pentFlag->v.origin, 100.0)) {
+                  FakeClientCommand(pBot->pEdict, "detpipe", nullptr, nullptr);
+                  return;
+               }
+            }
+         }
       }
    }
 }
@@ -1242,12 +1259,11 @@ void BotShootAtEnemy(bot_t *pBot) {
          // No grenades: use nailgun from range if possible - [APG]RoboCop[CL]
          else if (pBot->grenades[PrimaryGrenade] <= 0 && f_distance > 300.0f && f_distance < 1200.0f)
          {
-            // Use the visibility table for a fast cover check first,
-            // then fall back to TraceLine for precision
+            // Use the visibility table when both waypoint indices are valid,
+            // only fall back to TraceLine when the table can't resolve
             bool inCover = false;
-            if (sgWP >= 0 && pBot->current_wp >= 0
-                && !WaypointVisibleFromTo(sgWP, pBot->current_wp)) {
-               inCover = true; // waypoint-level cover confirmed
+            if (sgWP >= 0 && pBot->current_wp >= 0) {
+               inCover = !WaypointVisibleFromTo(sgWP, pBot->current_wp);
             }
             else {
                // TraceLine fallback for cases the visibility table can't resolve
@@ -1266,15 +1282,35 @@ void BotShootAtEnemy(bot_t *pBot) {
                // keep shooting from this position, don't advance into danger
                pBot->f_dontEvadeTime = pBot->f_think_time + 2.0f;
             }
-            else if (wpDanger >= SG_DANGER_THRESHOLD)
+            else
             {
-               // We're in a dangerous zone and the SG can see us - retreat!
-               pBot->f_move_speed = -pBot->f_max_speed;
-               pBot->f_shoot_time = pBot->f_think_time + 1.0f; // hold fire to maintain disguise
+               // Not in cover from SG - hold fire to maintain disguise
+               pBot->f_shoot_time = pBot->f_think_time + 1.0f;
+               if (wpDanger >= SG_DANGER_THRESHOLD)
+                  pBot->f_move_speed = -pBot->f_max_speed; // also retreat from danger zone
             }
          }
          // Close range with no grenades and the SG can see us - just shoot
       }
+
+   // Non-spy classes (Scout, Medic) can also use nailguns against SGs from range - [APG]RoboCop[CL]
+   // They don't have a disguise to protect so they can fire freely from cover or at range
+   if (pBot->pEdict->v.playerclass != TFC_CLASS_SPY
+       && pBot->enemy.ptr == pBot->lastEnemySentryGun && !FNullEnt(pBot->lastEnemySentryGun)
+       && (pBot->pEdict->v.playerclass == TFC_CLASS_SCOUT || pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC)
+       && f_distance > 200.0f && f_distance < 2000.0f)
+   {
+      // Select the appropriate nailgun and fire
+      if (pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC)
+         UTIL_SelectItem(pBot->pEdict, "tf_weapon_superng");
+      else
+         UTIL_SelectItem(pBot->pEdict, "tf_weapon_ng");
+
+      // strafe to make the bot harder for the SG to track
+      if (pBot->f_periodicAlert1 < pBot->f_think_time) {
+         pBot->f_side_speed = (random_long(0, 1) == 0) ? pBot->f_max_speed : -pBot->f_max_speed;
+      }
+   }
 
    // if the bots aim is currently too bad, postpone pulling the trigger
    if (f_distance > 200.0f) {
@@ -1390,13 +1426,13 @@ static Vector BotBodyTarget(const edict_t *pBotEnemy, bot_t *pBot) {
          // Add condition to check if bot's class is HWGuy [APG]RoboCop[CL]
          else if (pBot->pEdict->v.playerclass == TFC_CLASS_HWGUY && pBot->current_weapon.iId == TF_WEAPON_AC) {
             // Increase aim_error value to decrease accuracy
-            aim_error += 20.0f;
+            aim_error += 30.0f;
          }
          // Make nailguns as accurate as possible
          else if (pBot->current_weapon.iId == TF_WEAPON_SUPERNAILGUN || pBot->current_weapon.iId == TF_WEAPON_NAILGUN) {
             aim_error = 0.0f;
          } else if (pBot->current_weapon.iId == TF_WEAPON_RPG || pBot->current_weapon.iId == TF_WEAPON_IC) {
-            aim_error = 3.0f * static_cast<float>(pBot->bot_skill);
+            aim_error = 2.0f * static_cast<float>(pBot->bot_skill);
          }
 
          const float aim_offset = bot_max_inaccuracy[pBot->bot_skill] + aim_error;
@@ -1551,12 +1587,11 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
       // check if the bot has cover from the SG using the visibility table
       const int sgWP = WaypointFindNearest_V(pBot->lastEnemySentryGun->v.origin, 400.0f, -1);
       bool inCover = false;
-      if (sgWP >= 0 && pBot->current_wp >= 0
-          && !WaypointVisibleFromTo(sgWP, pBot->current_wp)) {
-         inCover = true;
+      if (sgWP >= 0 && pBot->current_wp >= 0) {
+         inCover = !WaypointVisibleFromTo(sgWP, pBot->current_wp);
       }
       else {
-         // TraceLine fallback for edge cases
+         // TraceLine fallback only when visibility table can't resolve
          TraceResult sgTr;
          UTIL_TraceLine(pBot->lastEnemySentryGun->v.origin,
             pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs,
@@ -1575,6 +1610,11 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
          pBot->pEdict->v.button |= IN_ATTACK;
          pBot->f_dontEvadeTime = pBot->f_think_time + 2.0f;
          return true;
+      }
+      // Spy is exposed to SG - don't fire to maintain disguise - [APG]RoboCop[CL]
+      if (pBot->pEdict->v.playerclass == TFC_CLASS_SPY
+          && pBot->disguise_state == DISGUISE_COMPLETE) {
+         return false;
       }
       // not in cover - fall through to normal weapon selection
    }

@@ -514,6 +514,8 @@ typedef struct {
 	// Bunny hop variables ///////////////
 	float f_bunnyHopTime;    // when the bot may next bunny hop
 	unsigned bhopStrafeDir : 1; // alternating strafe direction for zigzag bunny hops
+	int bhopLastWP;             // last waypoint index when bhop evaluation ran
+	int bhopStuckCounter;       // how many times the bot was near the same waypoint while hopping
 } bot_t;
 
 // roles to fill on the team

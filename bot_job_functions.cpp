@@ -2787,7 +2787,7 @@ int CountPipebombs(const bot_t* pBot) { // TODO: Experimental - might need to tr
 }
 
 // This function handles bot behaviour for the JOB_PIPETRAP job.
-// TODO: To improve the pipebomb laying trap pattern [APG]RoboCop[CL]
+// Pipes are spread in a pattern around the flag position - [APG]RoboCop[CL]
 int JobPipetrap(bot_t* pBot) {
    job_struct* job_ptr = &pBot->job[pBot->currentJob];
 
@@ -2846,7 +2846,7 @@ int JobPipetrap(bot_t* pBot) {
       // team flag (item_tfgoal team values are 1-based, current_team is 0-based)
       if (pBot->mission == ROLE_DEFENDER) {
          edict_t* pentFlag = nullptr;
-         edict_t* bestFlag = nullptr;
+         const edict_t* bestFlag = nullptr;
          float bestDist = 99999.0f;
          while ((pentFlag = FIND_ENTITY_BY_CLASSNAME(pentFlag, "item_tfgoal")) != nullptr && !FNullEnt(pentFlag)) {
             const float dist = (waypoints[job_ptr->waypoint].origin - pentFlag->v.origin).Length();
@@ -2881,8 +2881,16 @@ int JobPipetrap(bot_t* pBot) {
                }
             }
 
-            // calculate a location near the flag to place the pipebomb
-            const Vector v_nearFlag = v_flag + Vector(random_float(-80.0f, 80.0f), random_float(-80.0f, 80.0f), 0);
+            // Spread pipebombs in a pattern around the flag instead of
+            // purely random placement - rotate around the flag based on
+            // how many pipes have been laid so far - [APG]RoboCop[CL]
+            constexpr float pipeSpreadRadius = 60.0f;
+            const float angle = static_cast<float>(pipeBombTally) * (360.0f / static_cast<float>(MAX_PIPEBOMBS));
+            const float rad = angle * (M_PI / 180.0f);
+            const Vector v_nearFlag = v_flag + Vector(
+               std::cos(rad) * pipeSpreadRadius + random_float(-15.0f, 15.0f),
+               std::sin(rad) * pipeSpreadRadius + random_float(-15.0f, 15.0f),
+               0);
 
             // set the bot's aim to the calculated location
             BotSetFacing(pBot, v_nearFlag);
@@ -3598,6 +3606,21 @@ int JobBinGrenade(bot_t* pBot) {
    //	WaypointDrawBeam(INDEXENT(1), pBot->pEdict->v.origin + pBot->pEdict->v.view_ofs,
    //		pBot->pEdict->v.origin + Vector(0, 0, 100.0), 10, 2, 250, 50, 250, 200, 10);
 
+   // emergency: if the grenade is about to explode, release it immediately
+   // regardless of which phase the bot is in - [APG]RoboCop[CL]
+   const float timeToDet = 4.0f - (pBot->f_think_time - pBot->primeTime);
+   if (pBot->nadePrimed && timeToDet <= 0.5f) {
+      FakeClientCommand(pBot->pEdict, "-gren1", "102", nullptr);
+      FakeClientCommand(pBot->pEdict, "-gren2", "101", nullptr);
+      pBot->nadePrimed = false;
+      pBot->nadeType = 0;
+      pBot->tossNade = 1;
+      pBot->f_move_speed = -pBot->f_max_speed; // back away from the throw
+      job_ptr->phase = 2;
+      job_ptr->phase_timer = pBot->f_think_time + 1.5f;
+      return JOB_UNDERWAY;
+   }
+
    // phase zero - figure out where to throw the grenade
    if (job_ptr->phase == 0) {
       // can we throw at where the enemy was last seen?
@@ -3608,10 +3631,17 @@ int JobBinGrenade(bot_t* pBot) {
       if (targetWP == -1)
          targetWP = WaypointFindInRange(pBot->pEdict->v.origin, 400.0f, 1200.0f, pBot->current_team, false);
 
+      // try a shorter range if still nothing found - [APG]RoboCop[CL]
+      if (targetWP == -1)
+         targetWP = WaypointFindInRange(pBot->pEdict->v.origin, 100.0f, 400.0f, pBot->current_team, true);
+
       if (targetWP != -1)
          job_ptr->origin = waypoints[targetWP].origin;
-      else
-         return JOB_TERMINATED; // couldn't find anywhere to throw
+      else {
+         // last resort: throw in the direction the bot is currently facing - [APG]RoboCop[CL]
+         UTIL_MakeVectors(pBot->pEdict->v.v_angle);
+         job_ptr->origin = pBot->pEdict->v.origin + gpGlobals->v_forward * 500.0f;
+      }
 
       job_ptr->phase = 1;
    }
@@ -3624,7 +3654,8 @@ int JobBinGrenade(bot_t* pBot) {
 
       const Vector v_aim = job_ptr->origin - pBot->pEdict->v.origin;
 
-      if (BotInFieldOfView(pBot, v_aim) == 0) {
+      // release if facing the target, or if time is running out - [APG]RoboCop[CL]
+      if (BotInFieldOfView(pBot, v_aim) == 0 || timeToDet <= 1.2f) {
          // release the grenade now that we're facing the target
          if (pBot->nadePrimed) {
             FakeClientCommand(pBot->pEdict, "-gren1", "102", nullptr);

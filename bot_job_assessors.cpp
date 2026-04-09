@@ -912,7 +912,14 @@ int assess_JobInfectedAttack(const bot_t* pBot, const job_struct& r_job) {
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobBinGrenade(const bot_t* pBot, const job_struct& r_job) {
 	// recommend the job be removed if it is invalid
-	if ((r_job.phase == 0 && pBot->nadePrimed == false) || pBot->enemy.ptr != nullptr || r_job.f_bufferedTime < pBot->f_killed_time || (r_job.f_bufferedTime + 5.0f) < pBot->f_think_time) {
+	if ((r_job.phase == 0 && pBot->nadePrimed == false) || r_job.f_bufferedTime < pBot->f_killed_time || (r_job.f_bufferedTime + 5.0f) < pBot->f_think_time) {
+		return PRIORITY_NONE;
+	}
+
+	// Allow binning even when an enemy is present if detonation is imminent - [APG]RoboCop[CL]
+	// Without this the bot suicide-bombs instead of throwing the grenade away
+	const float timeToDet = 4.0f - (pBot->f_think_time - pBot->primeTime);
+	if (pBot->enemy.ptr != nullptr && timeToDet > 2.0f) {
 		return PRIORITY_NONE;
 	}
 

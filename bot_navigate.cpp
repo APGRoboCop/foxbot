@@ -720,6 +720,45 @@ bool BotNavigateWaypoints(bot_t* pBot, bool navByStrafe) {
 				// no ground 120 units below ahead - likely a dangerous drop
 				pBot->f_move_speed = pBot->f_max_speed / 4.0f;
 			}
+			// On walk waypoints (planks/narrow paths) also check sides for drop-offs
+			// and use the visibility table to verify the next waypoint is reachable - [APG]RoboCop[CL]
+			else if (waypoints[pBot->current_wp].flags & W_FL_WALK) {
+				// check for drop-off to the left and right
+				bool leftDrop = false;
+				bool rightDrop = false;
+				{
+					Vector sideL = pBot->pEdict->v.origin + gpGlobals->v_right * -24.0f;
+					sideL.z -= 80.0f;
+					TraceResult trL;
+					UTIL_TraceLine(pBot->pEdict->v.origin, sideL, ignore_monsters, pBot->pEdict, &trL);
+					if (trL.flFraction >= 1.0f)
+						leftDrop = true;
+
+					Vector sideR = pBot->pEdict->v.origin + gpGlobals->v_right * 24.0f;
+					sideR.z -= 80.0f;
+					TraceResult trR;
+					UTIL_TraceLine(pBot->pEdict->v.origin, sideR, ignore_monsters, pBot->pEdict, &trR);
+					if (trR.flFraction >= 1.0f)
+						rightDrop = true;
+				}
+
+				if (leftDrop || rightDrop) {
+					// on a narrow path with a drop on at least one side
+					pBot->f_move_speed = std::min(pBot->f_move_speed, pBot->f_max_speed * 0.4f);
+					pBot->f_side_speed = 0.0f; // no strafing on narrow paths
+				}
+
+				// use visibility table: if we can't see the next route waypoint
+				// from here, we may be drifting off the path
+				if (pBot->goto_wp != -1) {
+					const int nextWP = WaypointRouteFromTo(pBot->current_wp, pBot->goto_wp, pBot->current_team);
+					if (nextWP >= 0 && nextWP < num_waypoints
+						&& !WaypointVisibleFromTo(pBot->current_wp, nextWP)) {
+						// can't see the next waypoint - slow down further
+						pBot->f_move_speed = std::min(pBot->f_move_speed, pBot->f_max_speed * 0.3f);
+					}
+				}
+			}
 		}
 
 		// if the bot is approaching a lift

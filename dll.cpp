@@ -56,7 +56,7 @@ constexpr unsigned char VER_MINOR = 0;
 
 enum class Menu : unsigned char { MENU_NONE = 0, MENU_1, MENU_2, MENU_3, MENU_4, MENU_5, MENU_6, MENU_7 };
 
-cvar_t foxbot = { "foxbot", "1.0-beta2", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr };
+cvar_t foxbot = { "foxbot", "1.0-beta3", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr };
 cvar_t enable_foxbot = { "enable_foxbot", "1", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr };
 cvar_t sv_bot = { "bot", "", 0, 0, nullptr };
 
