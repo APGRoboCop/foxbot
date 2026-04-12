@@ -50,7 +50,7 @@ Updated by RoboCop
 
 - Added `botdontmove` in order for "GolfBots" to stay stationary in minigolf maps in order to not ruin their momentum
 
-- Synchronise `bot_check_time` with `bot_cfg_pause_time` to prevent bots that are randomly added before the .cfg is executed
+- Synchronised `bot_check_time` with `bot_cfg_pause_time` to prevent bots that are randomly added before the .cfg is executed
 
 - Increased weapon delay and aim_error value to decrease accuracy for Heavy's Miniguns in order to prevent them being overpowered
 

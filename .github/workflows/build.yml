@@ -96,18 +96,18 @@ jobs:
         
         ambuild
 
-    - uses: benjlevesque/short-sha@v2.2
+    - uses: benjlevesque/short-sha@v3.0
       id: short-sha
 
     - name: Upload Binary
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: foxbot-${{ matrix.os_short }}-${{ steps.short-sha.outputs.sha }}
         path: |
             foxbot/post/*
 
     - name: Upload Debug Symbols
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: foxbot-dbgsym-${{ matrix.os_short }}-${{ steps.short-sha.outputs.sha }}
         path: |
