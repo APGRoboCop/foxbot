@@ -50,7 +50,7 @@ jobs:
 
     - name: Add msbuild to PATH (Windows)
       if: runner.os == 'Windows'
-      uses: microsoft/setup-msbuild@v2
+      uses: microsoft/setup-msbuild@v3
 
     - name: Install (Windows)
       if: runner.os == 'Windows'
@@ -67,7 +67,7 @@ jobs:
         )
 
     - name: Setup Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: '3.12'
 
@@ -78,7 +78,7 @@ jobs:
         pip install git+https://github.com/alliedmodders/ambuild
 
     - name: Fetch FoXBot
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         path: foxbot
         submodules: recursive
