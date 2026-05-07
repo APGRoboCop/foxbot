@@ -75,7 +75,7 @@ constexpr const char* TZONE = "GMT";
   */
 #define VDATE COMPILE_DATE
 constexpr const char* VNAME = "FoXBot";
-constexpr const char* VAUTHOR = "Tom Simpson & RoboCop <robocop@lycos.co.uk>";
+constexpr const char* VAUTHOR = "Tom Simpson & RoboCop <apg-clan.org>";
 constexpr const char* VURL = "apg-clan.org";
 
 #endif /* _VERSION_H_ */

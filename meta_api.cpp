@@ -40,7 +40,7 @@ plugin_info_t Plugin_info = {
     "FoXBot",                                      // name
     "1.0-beta3",                                   // version
     __DATE__,                                      // date
-    "Tom Simpson & RoboCop <robocop@lycos.co.uk>", // author
+    "Tom Simpson & RoboCop <apg-clan.org>",        // author
     "https://apg-clan.org/",                       // url
     //"http://www.omni-bot.com/",	// url
     //"http://www.foxbot.net/",	// url
