@@ -1029,7 +1029,7 @@ void DispatchThink(edict_t* pent) {
 				float vidsize = 2.0f;
 				float sz = pBot->enemy.ptr->v.maxs.z * (vidsize / distance) * 100;
 				int d = GETENTITYILLUM(pBot->enemy.ptr);
-				if (amb == 0) {
+				{
 					edict_t* s = nullptr;
 					edict_t* pPoint = nullptr;
 					while ((s = FIND_ENTITY_IN_SPHERE(s, pBot->enemy.ptr->v.origin, 50)) != nullptr && !FNullEnt(s) && amb == 0) {
@@ -2674,8 +2674,7 @@ void StartFrame() { // v7 last frame timing
 				respawn_time = 2.0f;
 		}
 		if (g_GameRules) {
-			char msg[256];
-			char msg2[512];
+			char msg[512];
 			if (need_to_open_cfg) // have we opened foxbot.cfg file yet?
 			{
 				char filename[256];
@@ -2696,7 +2695,7 @@ void StartFrame() { // v7 last frame timing
 						ALERT(at_console, "foxbot.cfg file not found\n");
 				}
 				else {
-					snprintf(msg2, sizeof(msg2), "Executing %s\n", filename);
+					snprintf(msg, sizeof(msg), "Executing %s\n", filename);
 					if (IS_DEDICATED_SERVER())
 						std::fputs(msg, stdout);
 					else
@@ -2722,14 +2721,14 @@ void StartFrame() { // v7 last frame timing
 				UTIL_BuildFileName(filename, 255, "configs", mapname);
 				bot_cfg_fp = std::fopen(filename, "r");
 				if (bot_cfg_fp != nullptr) {
-					snprintf(msg2, sizeof(msg2), "\nExecuting %s\n", filename);
+					snprintf(msg, sizeof(msg), "\nExecuting %s\n", filename);
 					if (IS_DEDICATED_SERVER())
 						std::fputs(msg, stdout);
 					else
 						ALERT(at_console, msg);
 				}
 				else { // first say map config not found
-					snprintf(msg2, sizeof(msg2), "\n%s not found\n", filename);
+					snprintf(msg, sizeof(msg), "\n%s not found\n", filename);
 					if (IS_DEDICATED_SERVER())
 						std::fputs(msg, stdout);
 					else
@@ -2744,7 +2743,7 @@ void StartFrame() { // v7 last frame timing
 							ALERT(at_console, "\nfoxbot.cfg file not found\n");
 					}
 					else {
-						snprintf(msg2, sizeof(msg2), "\nExecuting %s\n", filename);
+						snprintf(msg, sizeof(msg), "\nExecuting %s\n", filename);
 						if (IS_DEDICATED_SERVER())
 							std::fputs(msg, stdout);
 						else

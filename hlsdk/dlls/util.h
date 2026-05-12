@@ -197,8 +197,17 @@ typedef enum
 // Misc useful
 static inline BOOL FStrEq(const char*sz1, const char*sz2)
 	{ return (strcmp(sz1, sz2) == 0); }
+
 static inline BOOL FClassnameIs(edict_t* pent, const char* szClassname)
-	{ return FStrEq(STRING(VARS(pent)->classname), szClassname); }
+{
+   if (pent == nullptr || VARS(pent) == nullptr)
+   {
+      return FALSE;
+   }
+
+   return FStrEq(STRING(VARS(pent)->classname), szClassname);
+}
+
 static inline BOOL FClassnameIs(entvars_t* pev, const char* szClassname)
 	{ return FStrEq(STRING(pev->classname), szClassname); }
 

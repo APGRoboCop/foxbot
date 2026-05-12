@@ -1672,7 +1672,7 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
             while (pSelect[select_index].iId && pSelect[select_index].iId != iId)
                select_index++;
 
-            const float base_delay = pDelay[select_index].primary_base_delay;
+            const float base_delay = pDelay != nullptr ? pDelay[select_index].primary_base_delay : 0.0f;
             const float min_delay = pDelay[select_index].primary_min_delay[pBot->bot_skill];
             const float max_delay = pDelay[select_index].primary_max_delay[pBot->bot_skill];
 
