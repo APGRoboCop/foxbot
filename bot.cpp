@@ -569,12 +569,16 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 		char cl_name[128];
 		cl_name[0] = '\0';
 		edict_t* pEdict = INDEXENT(i);
+
 		if (pEdict == nullptr)
 			continue;
+
 		const char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEdict);
 		const char* name = g_engfuncs.pfnInfoKeyValue(infobuffer, "name");
+
 		if (name == nullptr)
 			continue;
+
 		snprintf(cl_name, sizeof(cl_name), "%s", name);
 		if (cl_name[0] != '\0')
 			count++;
@@ -2755,13 +2759,17 @@ static void BotRoleCheck(bot_t* pBot) {
 	// Guess at the roles any human players have taken
    for (i = 0; i < MAX_BOTS; i++) {
 		if (clients[i]) {
-			// TFC teams are 1..MAX_TEAMS; spectators (team 0) would underflow these arrays
+			// TFC teams are 1..MAX_TEAMS; spectators (team 0) would underflow these arrays [APG]RoboCop[CL]
 			const int teamIdx = clients[i]->v.team - 1;
+
 			if (teamIdx < 0 || teamIdx >= MAX_TEAMS)
 				continue;
+
 			teams.total[teamIdx]++;
+
 			if (clients[i]->v.playerclass == TFC_CLASS_MEDIC || clients[i]->v.playerclass == TFC_CLASS_SPY || clients[i]->v.playerclass == TFC_CLASS_SCOUT || clients[i]->v.playerclass == TFC_CLASS_PYRO)
 				teams.humanAttackers[teamIdx].addTail(clients[i]);
+
 			else if (clients[i]->v.playerclass == TFC_CLASS_ENGINEER || clients[i]->v.playerclass == TFC_CLASS_SNIPER)
 				teams.humanDefenders[teamIdx].addTail(clients[i]);
 		}
@@ -3184,7 +3192,8 @@ static bool BotChangeRole(bot_t* pBot, const char* cmdLine, const char* from) {
 // the foxbot_commanders.txt
 static bool botVerifyAccess(edict_t *pPlayer) {
    const char *rawAuthId = GETPLAYERAUTHID(pPlayer);
-   // engine may return NULL or "STEAM_ID_PENDING" while Steam negotiates the ticket
+
+   // engine may return NULL or "STEAM_ID_PENDING" while Steam negotiates the ticket [APG]RoboCop[CL]
    if (rawAuthId == nullptr || rawAuthId[0] == '\0' || std::strcmp(rawAuthId, "STEAM_ID_PENDING") == 0)
       return false;
 
@@ -3197,7 +3206,7 @@ static bool botVerifyAccess(edict_t *pPlayer) {
    // example steam ID: STEAM_0:1245
 
    bool found = false;
-   LIter<char *> iter(&commanders);
+   LIter iter(&commanders);
    for (iter.begin(); !iter.end(); ++iter) {
       // Check if iter.current() is not null before dereferencing
       if (iter.current() != nullptr && strcasecmp(authId, *iter.current()) == 0) {
