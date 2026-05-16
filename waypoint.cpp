@@ -226,6 +226,11 @@ void WaypointInit() {
 // add a path from one waypoint (add_index) to another (path_index)...
 // Returns false on memory allocation failure.
 int WaypointAddPath(const short int add_index, const short int path_index) {
+	// reject out-of-range indices (e.g. corrupt path data read from a waypoint file) [APG]RoboCop[CL]
+	if (add_index < 0 || add_index >= MAX_WAYPOINTS ||
+		path_index < 0 || path_index >= MAX_WAYPOINTS)
+		return 1;
+
 	// don't do it if its greater than max distance
 	if ((waypoints[add_index].origin - waypoints[path_index].origin).Length() > REACHABLE_RANGE)
 		return 1;
@@ -1540,6 +1545,18 @@ bool WaypointLoad(edict_t* pEntity) {
 			return false;
 		}
 
+		// reject corrupt headers before trusting the count [APG]RoboCop[CL]
+		if (header.number_of_waypoints < 0 || header.number_of_waypoints > MAX_WAYPOINTS) {
+			if (pEntity)
+				ClientPrint(pEntity, HUD_PRINTNOTIFY, "FoXBot waypoint file has an invalid waypoint count!\nWaypoints not loaded!\n");
+
+			if (IS_DEDICATED_SERVER())
+				std::printf("FoXBot waypoint file has an invalid waypoint count!\nWaypoints not loaded!\n");
+
+			std::fclose(bfp);
+			return false;
+		}
+
 		// load and convert version 4 waypoint files
 		if (header.waypoint_file_version == 4) {
 			if (WaypointLoadVersion4(bfp, header.number_of_waypoints) == true) {
@@ -1648,6 +1665,14 @@ bool WaypointLoad(edict_t* pEntity) {
 			header.mapname[31] = 0;
 
 			if (std::strcmp(header.mapname, STRING(gpGlobals->mapname)) == 0) {
+				if (header.number_of_waypoints < 0 || header.number_of_waypoints > MAX_WAYPOINTS) {
+					if (pEntity)
+						ClientPrint(pEntity, HUD_PRINTNOTIFY, "HPB waypoint file has an invalid waypoint count!\nWaypoints not loaded\n");
+
+					std::fclose(bfp);
+					return false;
+				}
+
 				WaypointInit(); // remove any existing waypoints
 
 				for (i = 0; i < header.number_of_waypoints; i++) {

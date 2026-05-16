@@ -302,7 +302,10 @@ int UTIL_GetTeamColor(edict_t* pEntity) {
 		char topcolor[32];
 
 		const char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
-		std::strcpy(topcolor, g_engfuncs.pfnInfoKeyValue(infobuffer, "topcolor"));
+		const char* value = g_engfuncs.pfnInfoKeyValue(infobuffer, "topcolor");
+		if (value == nullptr)
+			return -1;
+		snprintf(topcolor, sizeof(topcolor), "%s", value);
 
 		// used for spy checking
 		if (std::strcmp(topcolor, "150") == 0 || std::strcmp(topcolor, "153") == 0 || std::strcmp(topcolor, "148") == 0 || std::strcmp(topcolor, "140") == 0)
@@ -415,7 +418,9 @@ int UTIL_GetClass(edict_t* pEntity) {
 	char model_name[32];
 
 	const char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
-	std::strcpy(model_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "model"));
+	const char* value = g_engfuncs.pfnInfoKeyValue(infobuffer, "model");
+	if (value != nullptr)
+		snprintf(model_name, sizeof(model_name), "%s", value);
 
 	return 0;
 }

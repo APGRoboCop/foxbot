@@ -568,8 +568,14 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 	{
 		char cl_name[128];
 		cl_name[0] = '\0';
-		const char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(INDEXENT(i));
-		std::strcpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"));
+		edict_t* pEdict = INDEXENT(i);
+		if (pEdict == nullptr)
+			continue;
+		const char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEdict);
+		const char* name = g_engfuncs.pfnInfoKeyValue(infobuffer, "name");
+		if (name == nullptr)
+			continue;
+		snprintf(cl_name, sizeof(cl_name), "%s", name);
 		if (cl_name[0] != '\0')
 			count++;
 	}
@@ -2749,11 +2755,15 @@ static void BotRoleCheck(bot_t* pBot) {
 	// Guess at the roles any human players have taken
    for (i = 0; i < MAX_BOTS; i++) {
 		if (clients[i]) {
-			teams.total[clients[i]->v.team - 1]++;
+			// TFC teams are 1..MAX_TEAMS; spectators (team 0) would underflow these arrays
+			const int teamIdx = clients[i]->v.team - 1;
+			if (teamIdx < 0 || teamIdx >= MAX_TEAMS)
+				continue;
+			teams.total[teamIdx]++;
 			if (clients[i]->v.playerclass == TFC_CLASS_MEDIC || clients[i]->v.playerclass == TFC_CLASS_SPY || clients[i]->v.playerclass == TFC_CLASS_SCOUT || clients[i]->v.playerclass == TFC_CLASS_PYRO)
-				teams.humanAttackers[clients[i]->v.team - 1].addTail(clients[i]);
+				teams.humanAttackers[teamIdx].addTail(clients[i]);
 			else if (clients[i]->v.playerclass == TFC_CLASS_ENGINEER || clients[i]->v.playerclass == TFC_CLASS_SNIPER)
-				teams.humanDefenders[clients[i]->v.team - 1].addTail(clients[i]);
+				teams.humanDefenders[teamIdx].addTail(clients[i]);
 		}
 	}
 	/*char msg[255];
@@ -3173,12 +3183,16 @@ static bool BotChangeRole(bot_t* pBot, const char* cmdLine, const char* from) {
 // This function checks if the specified user has access through
 // the foxbot_commanders.txt
 static bool botVerifyAccess(edict_t *pPlayer) {
+   const char *rawAuthId = GETPLAYERAUTHID(pPlayer);
+   // engine may return NULL or "STEAM_ID_PENDING" while Steam negotiates the ticket
+   if (rawAuthId == nullptr || rawAuthId[0] == '\0' || std::strcmp(rawAuthId, "STEAM_ID_PENDING") == 0)
+      return false;
+
    char authId[255];
-   std::strcpy(authId, GETPLAYERAUTHID(pPlayer));
+   snprintf(authId, sizeof(authId), "%s", rawAuthId);
 
    char szBuffer[64];
-   snprintf(szBuffer, 63, "%s Does not have access.", authId);
-   szBuffer[63] = '\0'; // just to be sure
+   snprintf(szBuffer, sizeof(szBuffer), "%s Does not have access.", authId);
    ALERT(at_console, szBuffer);
    // example steam ID: STEAM_0:1245
 

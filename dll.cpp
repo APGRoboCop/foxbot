@@ -610,7 +610,10 @@ static bool BBotBalanceTeams(const int a, const int b) {
 			char cl_name[128];
 			cl_name[0] = '\0';
 			const char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(bot.pEdict);
-			std::strcpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"));
+			const char* name = g_engfuncs.pfnInfoKeyValue(infobuffer, "name");
+			if (name == nullptr)
+				continue;
+			snprintf(cl_name, sizeof(cl_name), "%s", name);
 			if (cl_name[0] != '\0') {
 				const int team = bot.pEdict->v.team - 1;
 
@@ -2967,7 +2970,11 @@ void StartFrame() { // v7 last frame timing
                }
                char cl_name[128]; // Use a defined constant for the max name length
                char *infoBuffer = g_engfuncs.pfnGetInfoKeyBuffer(entity);
-               std::strcpy(cl_name, g_engfuncs.pfnInfoKeyValue(infoBuffer, "name"));
+               const char *name = g_engfuncs.pfnInfoKeyValue(infoBuffer, "name");
+               if (name == nullptr) {
+                  continue;
+               }
+               snprintf(cl_name, sizeof(cl_name), "%s", name);
                // Check if this is a valid connected player
                if (cl_name[0] == '\0') {
                   continue;

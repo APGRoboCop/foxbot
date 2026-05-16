@@ -54,6 +54,14 @@ Updated by RoboCop
 
 - Increased weapon delay and aim_error value to decrease accuracy for Heavy's Miniguns in order to prevent them being overpowered
 
+- Reducing null pointer dereferences, buffer issues, and invalid memory access for stability
+
+- Added verification for `GETPLAYERAUTHID` and handle `STEAM_ID_PENDING` in `botVerifyAccess()`
+
+- Added a validate team indices code to avoid underflow in `BotRoleCheck()`
+
+- Added waypoint index/header bounds checks when loading/adding waypoints to reject corrupt data
+
 TODO List:-
 
 >> To allow bots to understand on how to shoot door buttons, if touching them doesn't work like in well or alchimy maps

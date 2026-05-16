@@ -119,13 +119,15 @@ edict_t* pfnFindEntityInSphere(edict_t* pEdictStartSearchAfter, const float* org
 	if (debug_engine) {
 		const Vector orgVector(org[0], org[1], org[2]); // Create a new Vector from the float array
 		fp = UTIL_OpenFoxbotLog();
-		std::fprintf(fp, "pfnFindEntityInSphere:%p (%f %f %f) %f %d\n", static_cast<void*>(pEdictStartSearchAfter), orgVector.x, orgVector.y, orgVector.z,
-			static_cast<double>(rad), spawn_check_crash_count);
-		
-		if (pEdictStartSearchAfter != nullptr)
-			if (pEdictStartSearchAfter->v.classname != 0)
-				std::fprintf(fp, "classname %s\n", STRING(pEdictStartSearchAfter->v.classname));
-		std::fclose(fp);
+		if (fp != nullptr) {
+			std::fprintf(fp, "pfnFindEntityInSphere:%p (%f %f %f) %f %d\n", static_cast<void*>(pEdictStartSearchAfter), orgVector.x, orgVector.y, orgVector.z,
+				static_cast<double>(rad), spawn_check_crash_count);
+
+			if (pEdictStartSearchAfter != nullptr)
+				if (pEdictStartSearchAfter->v.classname != 0)
+					std::fprintf(fp, "classname %s\n", STRING(pEdictStartSearchAfter->v.classname));
+			std::fclose(fp);
+		}
 	}
 	if (spawn_check_crash && static_cast<int>(rad) == 96) {
 		spawn_check_crash_count++;
@@ -134,8 +136,10 @@ edict_t* pfnFindEntityInSphere(edict_t* pEdictStartSearchAfter, const float* org
 			SET_ORIGIN(spawn_check_crash_edict, org);
 			{
 				fp = UTIL_OpenFoxbotLog();
-				std::fprintf(fp, "spawn crash fix!: \n");
-				std::fclose(fp);
+				if (fp != nullptr) {
+					std::fprintf(fp, "spawn crash fix!: \n");
+					std::fclose(fp);
+				}
 			}
 		}
 	}
@@ -265,20 +269,22 @@ void pfnSetOrigin(edict_t* e, const float* rgflOrigin) {
 	if (debug_engine) {
 		const Vector rgflOriginVector(rgflOrigin[0], rgflOrigin[1], rgflOrigin[2]); // Create a new Vector from the float array
 		fp = UTIL_OpenFoxbotLog();
-		std::fprintf(fp, "pfnSetOrigin: %p (%f %f %f)\n", static_cast<void*>(e), static_cast<double>(rgflOriginVector.x), static_cast<double>(rgflOriginVector.y), static_cast<double>(rgflOriginVector.z));
+		if (fp != nullptr) {
+			std::fprintf(fp, "pfnSetOrigin: %p (%f %f %f)\n", static_cast<void*>(e), static_cast<double>(rgflOriginVector.x), static_cast<double>(rgflOriginVector.y), static_cast<double>(rgflOriginVector.z));
 
-		if (e->v.classname != 0)
-			std::fprintf(fp, " name=%s\n", STRING(e->v.classname));
-		if (e->v.target != 0)
-			std::fprintf(fp, " target=%s\n", STRING(e->v.target));
-		if (e->v.ltime < e->v.nextthink)
-			std::fprintf(fp, " 1\n");
-		else
-			std::fprintf(fp, " 0\n");
+			if (e->v.classname != 0)
+				std::fprintf(fp, " name=%s\n", STRING(e->v.classname));
+			if (e->v.target != 0)
+				std::fprintf(fp, " target=%s\n", STRING(e->v.target));
+			if (e->v.ltime < e->v.nextthink)
+				std::fprintf(fp, " 1\n");
+			else
+				std::fprintf(fp, " 0\n");
 
-		std::fprintf(fp, " t %f %f\n", static_cast<double>(e->v.ltime), static_cast<double>(e->v.nextthink));
-		std::fprintf(fp, " button=%d\n", e->v.button);
-		std::fclose(fp);
+			std::fprintf(fp, " t %f %f\n", static_cast<double>(e->v.ltime), static_cast<double>(e->v.nextthink));
+			std::fprintf(fp, " button=%d\n", e->v.button);
+			std::fclose(fp);
+		}
 	}
 	if (mr_meta)
 		RETURN_META(MRES_HANDLED);
@@ -288,8 +294,10 @@ void pfnSetOrigin(edict_t* e, const float* rgflOrigin) {
 void pfnEmitSound(edict_t* entity, const int channel, const char* sample, const float volume, const float attenuation, const int fFlags, const int pitch) {
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
-		std::fprintf(fp, "pfnEmitSound: %s\n", sample);
-		std::fclose(fp);
+		if (fp != nullptr) {
+			std::fprintf(fp, "pfnEmitSound: %s\n", sample);
+			std::fclose(fp);
+		}
 	}
 
 	BotSoundSense(entity, sample, volume);
@@ -302,8 +310,10 @@ void pfnEmitSound(edict_t* entity, const int channel, const char* sample, const 
 void pfnEmitAmbientSound(edict_t* entity, float* pos, const char* samp, const float vol, const float attenuation, const int fFlags, const int pitch) {
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
-		std::fprintf(fp, "pfnEmitAmbientSound: %s\n", samp);
-		std::fclose(fp);
+		if (fp != nullptr) {
+			std::fprintf(fp, "pfnEmitAmbientSound: %s\n", samp);
+			std::fclose(fp);
+		}
 	}
 
 	script(samp);
@@ -315,8 +325,10 @@ void pfnEmitAmbientSound(edict_t* entity, float* pos, const char* samp, const fl
 void pfnClientCommand(edict_t* pEdict, char* szFmt, ...) {
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
-		std::fprintf(fp, "-pfnClientCommand=%s %p\n", szFmt, static_cast<void*>(pEdict));
-		std::fclose(fp);
+		if (fp != nullptr) {
+			std::fprintf(fp, "-pfnClientCommand=%s %p\n", szFmt, static_cast<void*>(pEdict));
+			std::fclose(fp);
+		}
 	}
 	snprintf(sz_error_check, 250, "-pfnClientCommand=%s %p\n", szFmt, static_cast<void*>(pEdict));
 
@@ -390,8 +402,10 @@ void pfnClientCommand(edict_t* pEdict, char* szFmt, ...) {
 void pfnClCom(edict_t* pEdict, char* szFmt, ...) {
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
-		std::fprintf(fp, "-pfnClientCom=%s %p\n", szFmt, static_cast<void*>(pEdict));
-		std::fclose(fp);
+		if (fp != nullptr) {
+			std::fprintf(fp, "-pfnClientCom=%s %p\n", szFmt, static_cast<void*>(pEdict));
+			std::fclose(fp);
+		}
 	}
 	snprintf(sz_error_check, 250, "-pfnClientCom=%s %p\n", szFmt, static_cast<void*>(pEdict));
 	if (pEdict != nullptr) {
@@ -454,8 +468,10 @@ void pfnMessageBegin(const int msg_dest, const int msg_type, const float* pOrigi
 	if (gpGlobals->deathmatch) {
 		if (debug_engine /* || dont_send_packet*/) {
 			fp = UTIL_OpenFoxbotLog();
-			std::fprintf(fp, "pfnMessageBegin: edict=%p dest=%d type=%d\n", static_cast<void*>(ed), msg_dest, msg_type);
-			std::fclose(fp);
+			if (fp != nullptr) {
+				std::fprintf(fp, "pfnMessageBegin: edict=%p dest=%d type=%d\n", static_cast<void*>(ed), msg_dest, msg_type);
+				std::fclose(fp);
+			}
 		}
 
 		/*snprintf(sz_error_check,250,
@@ -560,8 +576,10 @@ void pfnMessageEnd() {
 		// if(debug_engine || dont_send_packet) { fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"pfnMessageEnd:\n"); std::fclose(fp); }
 		if (debug_engine) {
 			fp = UTIL_OpenFoxbotLog();
-			std::fprintf(fp, "pfnMessageEnd:\n");
-			std::fclose(fp);
+			if (fp != nullptr) {
+				std::fprintf(fp, "pfnMessageEnd:\n");
+				std::fclose(fp);
+			}
 		}
 
 		if (botMsgEndFunction)
@@ -598,8 +616,10 @@ void pfnWriteByte(int iValue) {
 		// std::fclose(fp); }
 		if (debug_engine) {
 			fp = UTIL_OpenFoxbotLog();
-			std::fprintf(fp, "pfnWriteByte: %d\n", iValue);
-			std::fclose(fp);
+			if (fp != nullptr) {
+				std::fprintf(fp, "pfnWriteByte: %d\n", iValue);
+				std::fclose(fp);
+			}
 		}
 
 		// if this message is for a bot, call the client message function...
@@ -629,8 +649,10 @@ void pfnWriteChar(int iValue) {
 		// std::fclose(fp); }
 		if (debug_engine) {
 			fp = UTIL_OpenFoxbotLog();
-			std::fprintf(fp, "pfnWriteChar: %d\n", iValue);
-			std::fclose(fp);
+			if (fp != nullptr) {
+				std::fprintf(fp, "pfnWriteChar: %d\n", iValue);
+				std::fclose(fp);
+			}
 		}
 
 		// if this message is for a bot, call the client message function...
@@ -660,8 +682,10 @@ void pfnWriteShort(int iValue) {
 		// std::fclose(fp); }
 		if (debug_engine) {
 			fp = UTIL_OpenFoxbotLog();
-			std::fprintf(fp, "pfnWriteShort: %d\n", iValue);
-			std::fclose(fp);
+			if (fp != nullptr) {
+				std::fprintf(fp, "pfnWriteShort: %d\n", iValue);
+				std::fclose(fp);
+			}
 		}
 
 		// if this message is for a bot, call the client message function...
@@ -691,8 +715,10 @@ void pfnWriteLong(int iValue) {
 		// std::fclose(fp); }
 		if (debug_engine) {
 			fp = UTIL_OpenFoxbotLog();
-			std::fprintf(fp, "pfnWriteLong: %d\n", iValue);
-			std::fclose(fp);
+			if (fp != nullptr) {
+				std::fprintf(fp, "pfnWriteLong: %d\n", iValue);
+				std::fclose(fp);
+			}
 		}
 
 		// if this message is for a bot, call the client message function...
@@ -722,8 +748,10 @@ void pfnWriteAngle(float flValue) {
 		// std::fclose(fp); }
 		if (debug_engine) {
 			fp = UTIL_OpenFoxbotLog();
-			std::fprintf(fp, "pfnWriteAngle: %f\n", static_cast<double>(flValue));
-			std::fclose(fp);
+			if (fp != nullptr) {
+				std::fprintf(fp, "pfnWriteAngle: %f\n", static_cast<double>(flValue));
+				std::fclose(fp);
+			}
 		}
 
 		// if this message is for a bot, call the client message function...
@@ -753,8 +781,10 @@ void pfnWriteCoord(float flValue) {
 		// std::fclose(fp); }
 		if (debug_engine) {
 			fp = UTIL_OpenFoxbotLog();
-			std::fprintf(fp, "pfnWriteCoord: %f\n", static_cast<double>(flValue));
-			std::fclose(fp);
+			if (fp != nullptr) {
+				std::fprintf(fp, "pfnWriteCoord: %f\n", static_cast<double>(flValue));
+				std::fclose(fp);
+			}
 		}
 
 		// if this message is for a bot, call the client message function...
@@ -784,8 +814,10 @@ void pfnWriteString(const char* sz) {
 		// std::fclose(fp); }
 		if (debug_engine) {
 			fp = UTIL_OpenFoxbotLog();
-			std::fprintf(fp, "pfnWriteString: %s\n", sz);
-			std::fclose(fp);
+			if (fp != nullptr) {
+				std::fprintf(fp, "pfnWriteString: %s\n", sz);
+				std::fclose(fp);
+			}
 		}
 
 		// if this message is for a bot, call the client message function...
@@ -816,8 +848,10 @@ void pfnWriteEntity(int iValue) {
 		// std::fclose(fp); }
 		if (debug_engine) {
 			fp = UTIL_OpenFoxbotLog();
-			std::fprintf(fp, "pfnWriteEntity: %d\n", iValue);
-			std::fclose(fp);
+			if (fp != nullptr) {
+				std::fprintf(fp, "pfnWriteEntity: %d\n", iValue);
+				std::fclose(fp);
+			}
 		}
 
 		// if this message is for a bot, call the client message function...
@@ -899,8 +933,10 @@ int pfnRegUserMsg_pre(const char* pszName, const int iSize) {
 void pfnClientPrintf(edict_t* pEdict, const PRINT_TYPE ptype, const char* szMsg) {
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
-		std::fprintf(fp, "pfnClientPrintf: %p %s\n", static_cast<void*>(pEdict), szMsg);
-		std::fclose(fp);
+		if (fp != nullptr) {
+			std::fprintf(fp, "pfnClientPrintf: %p %s\n", static_cast<void*>(pEdict), szMsg);
+			std::fclose(fp);
+		}
 	}
 
 	snprintf(sz_error_check, 250, "CPf: %p %s\n", static_cast<void*>(pEdict), szMsg);
@@ -973,8 +1009,10 @@ void pfnClientPrintf(edict_t* pEdict, const PRINT_TYPE ptype, const char* szMsg)
 void pfnClPrintf(edict_t* pEdict, PRINT_TYPE ptype, const char* szMsg) {
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
-		std::fprintf(fp, "pfnClPrintf: %p %s\n", static_cast<void*>(pEdict), szMsg);
-		std::fclose(fp);
+		if (fp != nullptr) {
+			std::fprintf(fp, "pfnClPrintf: %p %s\n", static_cast<void*>(pEdict), szMsg);
+			std::fclose(fp);
+		}
 	}
 	snprintf(sz_error_check, 250, "pfnClPrintf: %p %s\n", static_cast<void*>(pEdict), szMsg);
 
@@ -1019,8 +1057,10 @@ void pfnClPrintf(edict_t* pEdict, PRINT_TYPE ptype, const char* szMsg) {
 void pfnServerPrint(const char* szMsg) {
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
-		std::fprintf(fp, "pfnServerPrint: %s\n", szMsg);
-		std::fclose(fp);
+		if (fp != nullptr) {
+			std::fprintf(fp, "pfnServerPrint: %s\n", szMsg);
+			std::fclose(fp);
+		}
 	}
 
 	// snprintf(sz_error_check,250,"pfnServerPrint: %s\n",szMsg);
