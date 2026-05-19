@@ -100,8 +100,9 @@ C_DLLEXPORT int Meta_Attach(const PLUG_LOADTIME now, META_FUNCTIONS *pFunctionTa
 // now		(given)	current	phase, ie during map, etc
 // reason	(given)	why	detaching (refresh,	console	unload,	forced unload, etc)
 C_DLLEXPORT int Meta_Detach(const PLUG_LOADTIME now, const PL_UNLOAD_REASON reason) {
-   if (now && reason)
-      // to satisfy gcc -Wunused
-      return 1;
-   return 0;
+   // The args are part of the metamod ABI but unused here - silence -Wunused
+   // without testing enum values as booleans - [APG]RoboCop[CL]
+   (void)now;
+   (void)reason;
+   return 1;
 }

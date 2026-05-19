@@ -824,7 +824,8 @@ int assess_JobSpotStimulus(const bot_t* pBot, const job_struct& r_job) {
 // r_job can be a job you wish to add to the buffer or an existing job.
 int assess_JobAttackBreakable(const bot_t* pBot, const job_struct& r_job) {
 	// recommend the job be removed if it is invalid
-	if (FNullEnt(r_job.object) || r_job.object->v.flags & FL_KILLME || r_job.object->v.health < 0 || pBot->enemy.ptr != nullptr || r_job.f_bufferedTime < pBot->f_killed_time || pBot->ammoStatus <= AMMO_LOW)
+	// (health <= 0 means already destroyed - don't keep beating on it) - [APG]RoboCop[CL]
+	if (FNullEnt(r_job.object) || r_job.object->v.flags & FL_KILLME || r_job.object->v.health <= 0 || pBot->enemy.ptr != nullptr || r_job.f_bufferedTime < pBot->f_killed_time || pBot->ammoStatus <= AMMO_LOW)
 		return PRIORITY_NONE;
 
 	// too far away to be concerned with?

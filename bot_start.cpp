@@ -143,7 +143,8 @@ void BotStartGame(bot_t* pBot) {
 		}
 
 		if (pBot->start_action == MSG_TFC_CLASS_SELECT) {
-			char c_class[32];
+			// zero-initialised so a bot_class outside 0-9 can't pass garbage to FakeClientCommand
+			char c_class[32] = {0};
 			pBot->start_action = MSG_TFC_IDLE; // switch back to idle
 			if (pBot->bot_class < 1 || pBot->bot_class > 9)
 				pBot->bot_class = -1;
@@ -196,6 +197,10 @@ void BotStartGame(bot_t* pBot) {
 				std::strcpy(c_class, "spy");
 			else if (pBot->bot_class == 9)
 				std::strcpy(c_class, "engineer");
+
+			// skip the command entirely if no branch matched
+			if (c_class[0] == '\0')
+				return;
 
 			FakeClientCommand(pEdict, c_class, nullptr, nullptr);
 
