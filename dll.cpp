@@ -936,11 +936,13 @@ int DispatchSpawn(edict_t* pent) {
 }
 
 void DispatchThink(edict_t* pent) {
-	if (FStrEq(STRING(pent->v.classname), "entity_botcam")) {
+	// hoist the euser1 null check to the top so the trace and
+	// MakeVectors below it never deref a null pointer - [APG]RoboCop[CL]
+	if (FStrEq(STRING(pent->v.classname), "entity_botcam") && pent->v.euser1 != nullptr && !FNullEnt(pent->v.euser1)) {
 		TraceResult tr;
 		int off_f = 16;
 		UTIL_MakeVectors(pent->v.euser1->v.v_angle);
-		if (pent->v.euser1 != nullptr && !FNullEnt(pent->v.euser1) && pent->v.owner != nullptr && !FNullEnt(pent->v.owner)) {
+		if (pent->v.owner != nullptr && !FNullEnt(pent->v.owner)) {
 			bot_t* pBot = UTIL_GetBotPointer(pent->v.euser1);
 
 			UTIL_TraceLine(pent->v.euser1->v.origin + pent->v.euser1->v.view_ofs + gpGlobals->v_forward * static_cast<float>(off_f), pent->v.euser1->v.origin + pent->v.euser1->v.view_ofs + gpGlobals->v_forward * 4000, ignore_monsters, pent->v.euser1, &tr);
@@ -3239,7 +3241,7 @@ void StartFrame() { // v7 last frame timing
 						for (int j = 0; j < 12; j++) {
 							i1++;
 							buf = buf + 1;
-							RoleStatus[3] = 90;
+							RoleStatus[2] = 90; // was RoleStatus[3] - typo, green is team 2 - [APG]RoboCop[CL]
 						} // move to end
 					}    // defend
 					else if (std::strncmp(buf, "blue_defend", 11) == 0) {
@@ -4396,8 +4398,7 @@ void StartFrame() { // v7 last frame timing
 								curr->yellow_av[i2] = -1;
 								curr->green_av[i2] = -1;
 							}
-							snprintf(msg, sizeof(msg), "b_p_%d", pnt);
-							std::strcpy(curr->ifs, msg);
+							snprintf(curr->ifs, sizeof(curr->ifs), "b_p_%d", pnt);
 						}
 						else if (std::strncmp(buf, "if_red_point", 12) == 0) {
 							// this can only be in a section
@@ -4429,8 +4430,7 @@ void StartFrame() { // v7 last frame timing
 								curr->yellow_av[i2] = -1;
 								curr->green_av[i2] = -1;
 							}
-							snprintf(msg, sizeof(msg), "r_p_%d", pnt);
-							std::strcpy(curr->ifs, msg);
+							snprintf(curr->ifs, sizeof(curr->ifs), "r_p_%d", pnt);
 						}
 						else if (std::strncmp(buf, "if_green_point", 14) == 0) {
 							// this can only be in a section
@@ -4462,8 +4462,7 @@ void StartFrame() { // v7 last frame timing
 								curr->yellow_av[i2] = -1;
 								curr->green_av[i2] = -1;
 							}
-							snprintf(msg, sizeof(msg), "g_p_%d", pnt);
-							std::strcpy(curr->ifs, msg);
+							snprintf(curr->ifs, sizeof(curr->ifs), "g_p_%d", pnt);
 						}
 						else if (std::strncmp(buf, "if_yellow_point", 15) == 0) {
 							// this can only be in a section
@@ -4495,8 +4494,7 @@ void StartFrame() { // v7 last frame timing
 								curr->yellow_av[i2] = -1;
 								curr->green_av[i2] = -1;
 							}
-							snprintf(msg, sizeof(msg), "y_p_%d", pnt);
-							std::strcpy(curr->ifs, msg);
+							snprintf(curr->ifs, sizeof(curr->ifs), "y_p_%d", pnt);
 						} // is point<n> NOT availabe?
 						else if (std::strncmp(buf, "ifn_blue_point", 14) == 0) {
 							// this can only be in a section
@@ -4529,8 +4527,7 @@ void StartFrame() { // v7 last frame timing
 								curr->yellow_av[i2] = -1;
 								curr->green_av[i2] = -1;
 							}
-							snprintf(msg, sizeof(msg), "b_pn_%d", pnt);
-							std::strcpy(curr->ifs, msg);
+							snprintf(curr->ifs, sizeof(curr->ifs), "b_pn_%d", pnt);
 						}
 						else if (std::strncmp(buf, "ifn_red_point", 13) == 0) {
 							// this can only be in a section
@@ -4562,8 +4559,7 @@ void StartFrame() { // v7 last frame timing
 								curr->yellow_av[i2] = -1;
 								curr->green_av[i2] = -1;
 							}
-							snprintf(msg, sizeof(msg), "r_pn_%d", pnt);
-							std::strcpy(curr->ifs, msg);
+							snprintf(curr->ifs, sizeof(curr->ifs), "r_pn_%d", pnt);
 						}
 						else if (std::strncmp(buf, "ifn_green_point", 15) == 0) {
 							// this can only be in a section
@@ -4595,8 +4591,7 @@ void StartFrame() { // v7 last frame timing
 								curr->yellow_av[i2] = -1;
 								curr->green_av[i2] = -1;
 							}
-							snprintf(msg, sizeof(msg), "g_pn_%d", pnt);
-							std::strcpy(curr->ifs, msg);
+							snprintf(curr->ifs, sizeof(curr->ifs), "g_pn_%d", pnt);
 						}
 						else if (std::strncmp(buf, "ifn_yellow_point", 16) == 0) {
 							// this can only be in a section
@@ -4628,8 +4623,7 @@ void StartFrame() { // v7 last frame timing
 								curr->yellow_av[i2] = -1;
 								curr->green_av[i2] = -1;
 							}
-							snprintf(msg, sizeof(msg), "y_pn_%d", pnt);
-							std::strcpy(curr->ifs, msg);
+							snprintf(curr->ifs, sizeof(curr->ifs), "y_pn_%d", pnt);
 						}
 						// multipoint ifs
 						else if (std::strncmp(buf, "if_blue_mpoint", 14) == 0) {
@@ -4667,8 +4661,7 @@ void StartFrame() { // v7 last frame timing
 								curr->green_av[i2] = -1;
 							}
 							pnts[8] = '\0';
-							snprintf(msg, sizeof(msg), "b_mp_%s", pnts);
-							std::strcpy(curr->ifs, msg);
+							snprintf(curr->ifs, sizeof(curr->ifs), "b_mp_%s", pnts);
 						}
 						else if (std::strncmp(buf, "if_red_mpoint", 13) == 0) {
 							// this can only be in a section
@@ -4705,8 +4698,7 @@ void StartFrame() { // v7 last frame timing
 								curr->green_av[i2] = -1;
 							}
 							pnts[8] = '\0';
-							snprintf(msg, sizeof(msg), "r_mp_%s", pnts);
-							std::strcpy(curr->ifs, msg);
+							snprintf(curr->ifs, sizeof(curr->ifs), "r_mp_%s", pnts);
 						}
 						else if (std::strncmp(buf, "if_green_mpoint", 15) == 0) {
 							// this can only be in a section
@@ -4743,8 +4735,7 @@ void StartFrame() { // v7 last frame timing
 								curr->green_av[i2] = -1;
 							}
 							pnts[8] = '\0';
-							snprintf(msg, sizeof(msg), "g_mp_%s", pnts);
-							std::strcpy(curr->ifs, msg);
+							snprintf(curr->ifs, sizeof(curr->ifs), "g_mp_%s", pnts);
 						}
 						else if (std::strncmp(buf, "if_yellow_mpoint", 16) == 0) {
 							// this can only be in a section
@@ -4781,8 +4772,7 @@ void StartFrame() { // v7 last frame timing
 								curr->green_av[i2] = -1;
 							}
 							pnts[8] = '\0';
-							snprintf(msg, sizeof(msg), "y_mp_%s", pnts);
-							std::strcpy(curr->ifs, msg);
+							snprintf(curr->ifs, sizeof(curr->ifs), "y_mp_%s", pnts);
 						} // end of multipoint ifs
 						else if (buffer[i1] != '/' && buffer[i1] != '{' && buffer[i1] != '}' && buffer[i1] != ' ' && buffer[i1] != '\n' && random_shit_error == false) {
 							random_shit_error = true;

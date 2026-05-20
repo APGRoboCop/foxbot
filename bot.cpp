@@ -2703,10 +2703,30 @@ static void BotGrenadeAvoidance(bot_t* pBot) {
 				}
 			}
 		}
-		else if (std::strncmp("tf_weapon_caltrop", classname, 29) == 0 && pBot->bot_skill < 3) {
+		// Deployed caltrops use the entity name "tf_weapon_caltropgrenade".
+		// The old check looked for "tf_weapon_caltrop" with a 29-byte strncmp,
+		// which only matches the exact 17-char string and therefore never
+		// triggered against the real grenade entity (PVS-style dead branch).
+		// Now match both the prefix and broaden the skill gate so that
+		// average-skill bots also try to avoid the speed penalty by sidestepping
+		// around or jumping over the cluster. [APG]RoboCop[CL]
+		else if (std::strncmp("tf_weapon_caltrop", classname, 17) == 0) {
 			entity_origin = pent->v.origin;
-			if (FInViewCone(entity_origin, pBot->pEdict) && FVisible(entity_origin, pBot->pEdict))
+			if (FInViewCone(entity_origin, pBot->pEdict) && FVisible(entity_origin, pBot->pEdict)) {
+				// jump over the immediate cluster
 				pBot->pEdict->v.button |= IN_JUMP;
+
+				// also strafe sideways so the bot doesn't land in the same pile.
+				// Skill 1-3 (better bots) sidestep; skill 4-5 just jumps.
+				if (pBot->bot_skill <= 3) {
+					UTIL_MakeVectors(pBot->pEdict->v.v_angle);
+					const Vector toCaltrop = entity_origin - pBot->pEdict->v.origin;
+					const float dotR = DotProduct(toCaltrop, gpGlobals->v_right);
+					// strafe away from the caltrop along the right vector
+					pBot->f_side_speed = (dotR > 0.0f) ? -pBot->f_max_speed : pBot->f_max_speed;
+					pBot->strafe_mod = STRAFE_MOD_NORMAL;
+				}
+			}
 		}
 	}
 
@@ -3314,7 +3334,8 @@ static void BotPickNewClass(bot_t* pBot) {
 		return;
 
 	// name the class the bot wishes to use and change to it
-	char c_class[16];
+	// (zero-initialised so an unhandled new_class can't pass garbage to FakeClientCommand)
+	char c_class[16] = {0};
 	switch (new_class) {
 	case 1:
 		std::strcpy(c_class, "scout");
@@ -3344,7 +3365,7 @@ static void BotPickNewClass(bot_t* pBot) {
 		std::strcpy(c_class, "engineer");
 		break;
 	default:
-		break;
+		return; // unknown class id - don't issue an empty change-class command
 	}
 	pBot->bot_class = new_class;
 	FakeClientCommand(pBot->pEdict, c_class, nullptr, nullptr);

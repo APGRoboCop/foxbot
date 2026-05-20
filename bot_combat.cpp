@@ -1672,9 +1672,10 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
             while (pSelect[select_index].iId && pSelect[select_index].iId != iId)
                select_index++;
 
+            // All three reads now guarded against null pDelay - [APG]RoboCop[CL]
             const float base_delay = pDelay != nullptr ? pDelay[select_index].primary_base_delay : 0.0f;
-            const float min_delay = pDelay[select_index].primary_min_delay[pBot->bot_skill];
-            const float max_delay = pDelay[select_index].primary_max_delay[pBot->bot_skill];
+            const float min_delay = pDelay != nullptr ? pDelay[select_index].primary_min_delay[pBot->bot_skill] : 0.0f;
+            const float max_delay = pDelay != nullptr ? pDelay[select_index].primary_max_delay[pBot->bot_skill] : 0.0f;
 
             pBot->f_shoot_time = pBot->f_think_time + base_delay + random_float(min_delay, max_delay);
             return true;
