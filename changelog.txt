@@ -60,7 +60,11 @@ Updated by RoboCop
 
 - Added a validate team indices code to avoid underflow in `BotRoleCheck()`
 
+- Added null checks, bounds validation and safe I/O
+
 - Added waypoint index/header bounds checks when loading/adding waypoints to reject corrupt data
+
+- Improved on the bot avoidance behaviour around caltrops too prevent bots from being slightly immobilised
 
 TODO List:-
 
