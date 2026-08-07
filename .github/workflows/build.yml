@@ -6,6 +6,7 @@ jobs:
   build_main:
     name: Build for ${{ matrix.os_short }}
     runs-on: ${{ matrix.os_version }}
+    container: ${{ matrix.container }}
 
     # skip build on '[ci skip]'
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
@@ -14,12 +15,16 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - ubuntu-22.04
+          - linux
           - windows-x32
         include:
-          - os: ubuntu-22.04
+          - os: linux
             os_short: linux
-            os_version: ubuntu-22.04
+            os_version: ubuntu-latest
+            # Build inside Debian 12 so the artifact links against glibc 2.36.
+            # Anything newer (ubuntu-latest is now 24.04 / glibc 2.39) produces
+            # binaries that will NOT load on Debian 12 servers.
+            container: debian:bookworm
             package_ext: tar.gz
             dbg_ext: dbg
             cc: clang
@@ -30,6 +35,7 @@ jobs:
           - os: windows-x32
             os_short: win32
             os_version: windows-latest
+            container: ''
             package_ext: zip
             dbg_ext: pdb
             cc: not-used
@@ -37,14 +43,18 @@ jobs:
             vs_arch: x32
             am_arch: x86
 
-
     steps:
+    # Container runs as root, so no sudo. git is needed for actions/checkout
+    # to do a real clone (and therefore submodules) rather than a tarball.
     - name: Install (Linux)
       if: runner.os == 'Linux'
       run: |
-        sudo dpkg --add-architecture i386
-        sudo apt-get update
-        sudo apt-get install -y clang g++-multilib
+        dpkg --add-architecture i386
+        apt-get update
+        apt-get install -y --no-install-recommends \
+          clang g++-multilib gcc-multilib \
+          python3 python3-pip python3-setuptools \
+          git ca-certificates binutils
         echo "CC=clang" >> $GITHUB_ENV
         echo "CXX=clang++" >> $GITHUB_ENV
 
@@ -60,22 +70,30 @@ jobs:
         for /f "usebackq delims=*" %%i in (`vswhere -latest -property installationPath`) do (
           call "%%i"\Common7\Tools\vsdevcmd.bat -arch=${{ matrix.vs_arch }} -host_arch=x64
         )
-        
+
         :: Loop over all environment variables and make them global.
         for /f "delims== tokens=1,2" %%a in ('set') do (
           echo>>"%GITHUB_ENV%" %%a=%%b
         )
 
-    - name: Setup Python
+    # The Debian container supplies its own python3; setup-python would pull a
+    # build linked against the runner's newer glibc, defeating the point.
+    - name: Setup Python (Windows)
+      if: runner.os == 'Windows'
       uses: actions/setup-python@v6
       with:
         python-version: '3.12'
 
     - name: Setup ambuild
+      shell: bash
       run: |
-        python -m pip install --upgrade pip
-        python -m pip install wheel
-        pip install git+https://github.com/alliedmodders/ambuild
+        if [ "$RUNNER_OS" = "Linux" ]; then
+          python3 -m pip install --break-system-packages --upgrade pip wheel
+          python3 -m pip install --break-system-packages git+https://github.com/alliedmodders/ambuild
+        else
+          python -m pip install --upgrade pip wheel
+          python -m pip install git+https://github.com/alliedmodders/ambuild
+        fi
 
     - name: Fetch FoXBot
       uses: actions/checkout@v5
@@ -83,21 +101,47 @@ jobs:
         path: foxbot
         submodules: recursive
 
+    # Replaces benjlevesque/short-sha, which still runs on Node.js 20.
+    - name: Short SHA
+      id: short-sha
+      shell: bash
+      run: echo "sha=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+
     - name: Build Files
       shell: bash
       working-directory: foxbot
       run: |
         mkdir post
         cd post
-        
+
         export AM_ARCH=${{ matrix.am_arch }}
 
         python3 ../configure.py --symbol-files --enable-optimize
-        
+
         ambuild
 
-    - uses: benjlevesque/short-sha@v3.0
-      id: short-sha
+    # Fails the build if anything links against a glibc newer than the target.
+    # GLIBC_2.36 is Debian 12; raise this only when the servers move forward.
+    - name: Check glibc ABI (Linux)
+      if: runner.os == 'Linux'
+      shell: bash
+      run: |
+        MAXVER="2.36"
+        FOUND=0
+        while IFS= read -r so; do
+          FOUND=1
+          echo "== $so"
+          need=$(objdump -T "$so" | grep -oP 'GLIBC_[0-9.]+' | sed 's/GLIBC_//' \
+                 | sort -uV | tail -1)
+          echo "   highest glibc symbol: ${need:-none}"
+          if [ -n "$need" ] && \
+             [ "$(printf '%s\n%s\n' "$MAXVER" "$need" | sort -V | tail -1)" != "$MAXVER" ]; then
+            echo "   ERROR: requires glibc $need, target is $MAXVER"
+            exit 1
+          fi
+        done < <(find post -name '*.so' -type f)
+        [ "$FOUND" = "1" ] || { echo "No .so found to check"; exit 1; }
+      working-directory: foxbot
 
     - name: Upload Binary
       uses: actions/upload-artifact@v7
