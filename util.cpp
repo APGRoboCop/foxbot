@@ -657,7 +657,7 @@ void UTIL_BotLogPrintf(const char* fmt, ...) {
 // and/or directory.
 void UTIL_BuildFileName(char* filename, const int max_fn_length, const char* arg1, const char* arg2) {
 	filename[0] = '\0';
-   ALERT(at_console, "Foxbot: trying to open chat file: %s\n", filename);
+   ALERT(at_console, "FoXBot: trying to open chat file: %s\n", filename);
 
 	UTIL_FindFoxbotPath();
 

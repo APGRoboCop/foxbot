@@ -1187,8 +1187,10 @@ C_DLLEXPORT int GetEngineFunctions(enginefuncs_t* pengfuncsFromEngine, int* inte
 	pengfuncsFromEngine->pfnCmd_Args = Cmd_Args;
 	pengfuncsFromEngine->pfnCmd_Argv = Cmd_Argv;
 	pengfuncsFromEngine->pfnCmd_Argc = Cmd_Argc;
-	pengfuncsFromEngine->pfnClientCommand = pfnClientCommand;
-	pengfuncsFromEngine->pfnClientPrintf = pfnClientPrintf;
+   // pengfuncsFromEngine->pfnClientCommand = pfnClientCommand;
+   // pengfuncsFromEngine->pfnClientPrintf = pfnClientPrintf;
+	// pfnClientCommand / pfnClientPrintf are assigned further down to pfnClCom / pfnClPrintf;
+	// the older direct hooks here were dead writes (PVS V519) - removed [APG]RoboCop[CL]
 	pengfuncsFromEngine->pfnMessageBegin = MessageBegin;
 	pengfuncsFromEngine->pfnMessageEnd = MessageEnd;
 	pengfuncsFromEngine->pfnWriteByte = WriteByte;
