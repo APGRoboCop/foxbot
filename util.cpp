@@ -641,13 +641,15 @@ void UTIL_BotLogPrintf(const char* fmt, ...) {
 		return;
 
 	va_list argptr;
-	static char string[1024]; //String fix from RCBot
+	char string[1024]; //String fix from RCBot
 
 	va_start(argptr, fmt);
 	vsnprintf(string, sizeof(string), fmt, argptr);
 	va_end(argptr);
 
-	std::fclose(lfp);
+	std::fprintf(lfp, "%s", string);
+   std::fflush(lfp);
+   std::fclose(lfp);
 }
 
 // This function tries to find out where the Foxbot directory is and
@@ -655,6 +657,7 @@ void UTIL_BotLogPrintf(const char* fmt, ...) {
 // and/or directory.
 void UTIL_BuildFileName(char* filename, const int max_fn_length, const char* arg1, const char* arg2) {
 	filename[0] = '\0';
+   ALERT(at_console, "Foxbot: trying to open chat file: %s\n", filename);
 
 	UTIL_FindFoxbotPath();
 
