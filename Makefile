@@ -45,11 +45,14 @@ SRC = 	bot.cpp \
    bot_client.cpp \
    bot_combat.cpp \
    bot_experience.cpp \
+   bot_ga.cpp \
    bot_job_assessors.cpp \
    bot_job_functions.cpp \
    bot_job_think.cpp \
    bot_navigate.cpp \
+   bot_neuralnet.cpp \
    bot_start.cpp \
+   bot_visibility.cpp \
    botcam.cpp \
    dll.cpp \
    engine.cpp \
