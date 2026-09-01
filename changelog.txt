@@ -8,31 +8,31 @@ Version 1.0-beta2
 Updated by RoboCop
 --------------------------------------------------------------------------------
 
-- Added visibility tables based from RCBot1 and are stored in /visibility folder
+- Added visibility tables based on RCBot1 and stored in the /visibility folder
 
-- Added a self-learning program using Neural Net and Genetic Algorithms based from RCBot1
+- Added a self-learning program using Neural Net and Genetic Algorithms based on RCBot1
 
-- Added a experience program for bots to gain a bit of wisdom and be less lame, such as remember enemy SG turrets spotted
+- Added an experience program for bots to gain a bit of wisdom and be less lame, such as remembering enemy SG turrets spotted
 
-- Added a `bot_bhop` variable to allow servers to choose for bots to bunnyhop on their own accord
+- Added a `bot_bhop` variable to allow servers to choose whether bots bunnyhop on their own accord
 
-- The bunnyhopping bots will not bunnyhop in doorways, inside pillbox bunkers nor inside tight corridors
+- The bunnyhopping bots will not bunnyhop in doorways, inside pillbox bunkers, nor inside tight corridors
 
-- The bunnyhopping will be able bots to jump in a zigzag alternating strafe pattern in order to gain agility and experience
+- The bunnyhopping will allow bots to jump in a zigzag alternating strafe pattern in order to gain agility and experience
 
-- The visibility and experience auxillary data can be compressed using Miniz
+- The visibility and experience auxiliary data can be compressed using Miniz
 
 - Bots should be able to remember and note where enemy SG turrets were spotted and avoid that particular route using experience
 
 - Bots will try to be less visible when trying to destroy enemy SG turrets - especially for spies
 
-- Reverting to compile Linux builds only for SSE2 as SSE4.2 isn't necessary until the future
+- Reverting to compile Linux builds only for SSE2, as SSE4.2 isn't necessary until the future
 
 - Sanitised the null pointer inputs for `void BotCreate()`
 
 - Modernised the Waypoint Menu coding
 
-- Spies should now ignore using teleporters as their team coloured glow will make their covers blown easily
+- Spies should now ignore using teleporters, as their team coloured glow will make their cover blown easily
 
 - `BotClient_TFC_VGUI()` reinstated for bot_team_balance 0 to work for like Bots Vs Human gameplay
 
@@ -40,23 +40,23 @@ Updated by RoboCop
 
 - Adding Link Time Optimisation to boost the bot's performance for pathfinding and AI logic
 
-- Reduced maximum waypoints from 32000 to 1024 as all maps don't use no more than 1000 waypoints
+- Reduced maximum waypoints from 32000 to 1024, as all maps don't use no more than 1000 waypoints
 
 - Pitch and yaw speed doubled to allow bots to turn faster to avoid falling from catwalks without the fences
 
-- Adding a detection for when the server changes sv_airaccelerate and sv_gravity to determine their jumps and bunnyhops
+- Added a detection for when the server changes sv_airaccelerate and sv_gravity to determine their jumps and bunnyhops
 
-- Removing jump waypoints that was used as bunnyhop waypoints as that is no longer required
+- Removed jump waypoints that were used as bunnyhop waypoints, as that is no longer required
 
 - Added `botdontmove` in order for "GolfBots" to stay stationary in minigolf maps in order to not ruin their momentum
 
 - Synchronised `bot_check_time` with `bot_cfg_pause_time` to prevent bots that are randomly added before the .cfg is executed
 
-- Increased weapon delay and aim_error value to decrease accuracy for Heavy's Miniguns in order to prevent them being overpowered
+- Increased weapon delay and aim_error value to decrease accuracy for Heavy's Miniguns in order to prevent them from being overpowered
 
-- Reducing null pointer dereferences, buffer issues, and invalid memory access for stability
+- Reduced null pointer dereferences, buffer issues, and invalid memory access for stability
 
-- Added verification for `GETPLAYERAUTHID` and handle `STEAM_ID_PENDING` in `botVerifyAccess()`
+- Added verification for `GETPLAYERAUTHID` and handled `STEAM_ID_PENDING` in `botVerifyAccess()`
 
 - Added a validate team indices code to avoid underflow in `BotRoleCheck()`
 
@@ -64,7 +64,7 @@ Updated by RoboCop
 
 - Added waypoint index/header bounds checks when loading/adding waypoints to reject corrupt data
 
-- Improved on the bot avoidance behaviour around caltrops too prevent bots from being slightly immobilised
+- Improved the bot avoidance behaviour around caltrops to prevent bots from being slightly immobilised
 
 - Avoid using redundant optional checks in FindConcJump() to simplify the optional dereferences in bot_navigate.cpp
 
@@ -74,15 +74,15 @@ Updated by RoboCop
 
 TODO List:-
 
->> To allow bots to understand on how to shoot door buttons, if touching them doesn't work like in well or alchimy maps
+>> To allow bots to understand how to shoot door buttons, if touching them doesn't work like in well or alchimy maps
 
->> Fix bot's `JOB_BIN_GRENADE` as they need to ditch their live grenades to prevent suicide bombing too often
+>> Fix bots' `JOB_BIN_GRENADE` as they need to ditch their live grenades to prevent suicide bombing too often
 
 >> To improve the pipebomb laying trap pattern and to plant them near the flag, and to add bot experience on how their pipebombs land
 
 >> Fix the `botdontmove` code and make sure it doesn't bhop nor jump with the new `bot_bhop` code and by rotating its yaw
 
->> Improve more on the bunnyhop by not circulating around nodes they cannot reach in close contact, maybe add that as bot experience
+>> Improve the bunnyhop more by not circulating around nodes they cannot reach in close contact; maybe add that as bot experience
 
 --------------------------------------------------------------------------------
 Version 0.911
