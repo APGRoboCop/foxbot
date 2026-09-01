@@ -2091,7 +2091,6 @@ void ClientCommand(edict_t* pEntity) {
 				AreaDefCreate(pEntity);
 			}
 			else if (FStrEq(arg1, "delete") && g_area_def) {
-				g_area_def = true;
 				AreaDefDelete(pEntity);
 			}
 			else if (FStrEq(arg1, "save") && g_area_def) {
