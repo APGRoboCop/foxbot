@@ -72,6 +72,8 @@ Updated by RoboCop
 
 - Guard config file settings against a missing argument
 
+- Drop a redundant g_area_def assignment in the area delete command
+
 TODO List:-
 
 >> To allow bots to understand how to shoot door buttons, if touching them doesn't work like in well or alchimy maps
