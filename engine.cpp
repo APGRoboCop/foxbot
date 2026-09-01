@@ -117,10 +117,9 @@ char sz_error_check[255];
 
 edict_t* pfnFindEntityInSphere(edict_t* pEdictStartSearchAfter, const float* org, const float rad) {
 	if (debug_engine) {
-		const Vector orgVector(org[0], org[1], org[2]); // Create a new Vector from the float array
 		fp = UTIL_OpenFoxbotLog();
 		if (fp != nullptr) {
-			std::fprintf(fp, "pfnFindEntityInSphere:%p (%f %f %f) %f %d\n", static_cast<void*>(pEdictStartSearchAfter), orgVector.x, orgVector.y, orgVector.z,
+			std::fprintf(fp, "pfnFindEntityInSphere:%p (%f %f %f) %f %d\n", static_cast<void*>(pEdictStartSearchAfter), static_cast<double>(org[0]), static_cast<double>(org[1]), static_cast<double>(org[2]),
 				static_cast<double>(rad), spawn_check_crash_count);
 
 			if (pEdictStartSearchAfter != nullptr)
@@ -267,10 +266,9 @@ void pfnSetOrigin(edict_t* e, const float* rgflOrigin) {
 		}*/
 
 	if (debug_engine) {
-		const Vector rgflOriginVector(rgflOrigin[0], rgflOrigin[1], rgflOrigin[2]); // Create a new Vector from the float array
 		fp = UTIL_OpenFoxbotLog();
 		if (fp != nullptr) {
-			std::fprintf(fp, "pfnSetOrigin: %p (%f %f %f)\n", static_cast<void*>(e), static_cast<double>(rgflOriginVector.x), static_cast<double>(rgflOriginVector.y), static_cast<double>(rgflOriginVector.z));
+			std::fprintf(fp, "pfnSetOrigin: %p (%f %f %f)\n", static_cast<void*>(e), static_cast<double>(rgflOrigin[0]), static_cast<double>(rgflOrigin[1]), static_cast<double>(rgflOrigin[2]));
 
 			if (e->v.classname != 0)
 				std::fprintf(fp, " name=%s\n", STRING(e->v.classname));
