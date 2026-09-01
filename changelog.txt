@@ -70,6 +70,8 @@ Updated by RoboCop
 
 - Print origin floats directly instead of via temp Vectors
 
+- Guard config file settings against a missing argument
+
 TODO List:-
 
 >> To allow bots to understand on how to shoot door buttons, if touching them doesn't work like in well or alchimy maps

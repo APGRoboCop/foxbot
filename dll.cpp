@@ -5299,6 +5299,9 @@ static void ProcessBotCfgFile() {
 	}
 
 	if (std::strcmp(cmd, "observer") == 0) {
+		if (arg1 == nullptr)
+			return; // this setting needs a numeric argument
+
 		const int temp = std::atoi(arg1);
 
 		if (temp)
@@ -5400,6 +5403,9 @@ static void ProcessBotCfgFile() {
 	}
 
 	if (std::strcmp(cmd, "bot_xmas") == 0) {
+		if (arg1 == nullptr)
+			return; // this setting needs a numeric argument
+
 		const int temp = std::atoi(arg1);
 		bot_xmas = true;
 		if (temp == 0) {
@@ -5427,6 +5433,9 @@ static void ProcessBotCfgFile() {
 	}
 
 	if (std::strcmp(cmd, "botdontshoot") == 0) {
+		if (arg1 == nullptr)
+			return; // this setting needs a numeric argument
+
 		const int temp = std::atoi(arg1);
 		botdontshoot = true;
 		if (temp == 0) {
@@ -5454,6 +5463,9 @@ static void ProcessBotCfgFile() {
 	}
 
 	if (std::strcmp(cmd, "botdontmove") == 0) {
+		if (arg1 == nullptr)
+			return; // this setting needs a numeric argument
+
 		const int temp = std::atoi(arg1);
 		botdontmove = true;
 		if (temp == 0) {
@@ -5481,6 +5493,9 @@ static void ProcessBotCfgFile() {
 	}
 
 	if (std::strcmp(cmd, "bot_can_build_teleporter") == 0) {
+		if (arg1 == nullptr)
+			return; // this setting needs an "on" or "off" argument
+
 		if (std::strcmp(arg1, "on") == 0) {
 			bot_can_build_teleporter = true;
 			if (IS_DEDICATED_SERVER()) {
@@ -5507,6 +5522,9 @@ static void ProcessBotCfgFile() {
 	}
 
 	if (std::strcmp(cmd, "bot_can_use_teleporter") == 0) {
+		if (arg1 == nullptr)
+			return; // this setting needs an "on" or "off" argument
+
 		if (std::strcmp(arg1, "on") == 0) {
 			bot_can_use_teleporter = true;
 			if (IS_DEDICATED_SERVER()) {
@@ -5533,6 +5551,9 @@ static void ProcessBotCfgFile() {
 	}
 
 	if (std::strcmp(cmd, "pause") == 0) {
+		if (arg1 == nullptr)
+			return; // this setting needs a numeric argument
+
 		bot_cfg_pause_time = gpGlobals->time + static_cast<float>(std::atoi(arg1));
 		bot_check_time = bot_cfg_pause_time; // bot_check_time governs bot spawn time too
 		if (IS_DEDICATED_SERVER()) {
@@ -5547,6 +5568,9 @@ static void ProcessBotCfgFile() {
 	}
 
 	if (std::strcmp(cmd, "bot_create_interval") == 0) {
+		if (arg1 == nullptr)
+			return; // this setting needs a numeric argument
+
 		bot_create_interval = static_cast<float>(std::atoi(arg1));
 		if (bot_create_interval < 1.0f || bot_create_interval > 8.0f)
 			bot_create_interval = 1.0f;
@@ -5563,6 +5587,9 @@ static void ProcessBotCfgFile() {
 	}
 
 	if (std::strcmp(cmd, "defensive_chatter") == 0) {
+		if (arg1 == nullptr)
+			return; // this setting needs a numeric argument
+
 		const int temp = std::atoi(arg1);
 		if (temp == 0)
 			defensive_chatter = false;
@@ -5580,6 +5607,9 @@ static void ProcessBotCfgFile() {
 		return;
 	}
 	if (std::strcmp(cmd, "offensive_chatter") == 0) {
+		if (arg1 == nullptr)
+			return; // this setting needs a numeric argument
+
 		const int temp = std::atoi(arg1);
 		if (temp == 0)
 			offensive_chatter = false;
