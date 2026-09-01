@@ -1032,7 +1032,7 @@ static bool BotUpdateRoute(bot_t* pBot) {
 		else // bot has no route to it's goal
 		{
 			++pBot->routeFailureTally; // chalk up another route failure
-			new_current_wp = pBot->current_wp;
+			// new_current_wp already holds current_wp here, so the bot stays put
 		}
 
 		// set the amount of time to get to the new current waypoint

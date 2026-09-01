@@ -74,6 +74,8 @@ Updated by RoboCop
 
 - Drop a redundant g_area_def assignment in the area delete command
 
+- Drop a redundant new_current_wp assignment in BotUpdateRoute()
+
 TODO List:-
 
 >> To allow bots to understand how to shoot door buttons, if touching them doesn't work like in well or alchimy maps
