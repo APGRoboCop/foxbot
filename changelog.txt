@@ -66,6 +66,8 @@ Updated by RoboCop
 
 - Improved on the bot avoidance behaviour around caltrops too prevent bots from being slightly immobilised
 
+- Avoid using redundant optional checks in FindConcJump() to simplify the optional dereferences in bot_navigate.cpp
+
 TODO List:-
 
 >> To allow bots to understand on how to shoot door buttons, if touching them doesn't work like in well or alchimy maps
