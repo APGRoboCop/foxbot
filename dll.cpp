@@ -5647,10 +5647,10 @@ static void ProcessBotCfgFile() {
 					}*/
 
 	snprintf(msg2, sizeof(msg2), "executing: %s\n", server_cmd);
-	ALERT(at_console, msg);
+	ALERT(at_console, msg2);
 
 	if (IS_DEDICATED_SERVER())
-		std::fputs(msg, stdout);
+		std::fputs(msg2, stdout);
 
 	SERVER_COMMAND(server_cmd);
 }
