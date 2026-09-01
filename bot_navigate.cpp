@@ -2538,11 +2538,11 @@ static void BotCheckForConcJump(bot_t* pBot) {
 			return;
 
 		// Add the distance
-		distAhead += static_cast<float>(WaypointDistanceFromTo(currentWP, endWP.value(), pBot->current_team));
+		distAhead += static_cast<float>(WaypointDistanceFromTo(currentWP, *endWP, pBot->current_team));
 
 		// Set current wp to the next one.
 		// This should keep checking ahead with each loop iteration.
-		currentWP = endWP.value();
+		currentWP = *endWP;
 		safetyCounter++;
 	}
 
@@ -2564,12 +2564,12 @@ static void BotCheckForConcJump(bot_t* pBot) {
 
 		// If its our team or not team specific.
       if (RJPoint[RJ_WP_TEAM] == -1 || RJPoint[RJ_WP_TEAM] == pBot->current_team) {
-			zDiff = waypoints[RJPoint[RJ_WP_INDEX]].origin.z - waypoints[endWP.value()].origin.z;
+			zDiff = waypoints[RJPoint[RJ_WP_INDEX]].origin.z - waypoints[*endWP].origin.z;
 
 			// is this RJ waypoints height reachable with a concussion jump?
 			// on a server with 800 gravity concussion jumps can reach a height of about 490
 			if (zDiff > 54.0f && zDiff < 450.0f) {
-				const float distance2D = (waypoints[endWP.value()].origin - waypoints[RJPoint[RJ_WP_INDEX]].origin).Length2D();
+				const float distance2D = (waypoints[*endWP].origin - waypoints[RJPoint[RJ_WP_INDEX]].origin).Length2D();
 
 				if (distance2D < closest2D) {
 					closest2D = distance2D;
@@ -2583,7 +2583,7 @@ static void BotCheckForConcJump(bot_t* pBot) {
 	if (!closestJumpWP)
 		return;
 
-	const int distanceSaved = WaypointDistanceFromTo(endWP.value(), pBot->goto_wp, pBot->current_team) - WaypointDistanceFromTo(*closestJumpWP, pBot->goto_wp, pBot->current_team);
+	const int distanceSaved = WaypointDistanceFromTo(*endWP, pBot->goto_wp, pBot->current_team) - WaypointDistanceFromTo(*closestJumpWP, pBot->goto_wp, pBot->current_team);
 
 	// Don't bother if the distance it saves us is less than this.
 	if (distanceSaved < 1000)
@@ -2598,18 +2598,18 @@ static void BotCheckForConcJump(bot_t* pBot) {
 
 	// fast-path: if the visibility table confirms ground-level line-of-sight
    // the jump path is through a wide open area and will be clear - [APG]RoboCop[CL]
-	if (!WaypointVisibleFromTo(endWP.value(), *closestJumpWP)) {
+	if (!WaypointVisibleFromTo(*endWP, *closestJumpWP)) {
 		// Check visibility from where the bot's head will be to a point in the air above
 		// i.e. check for a low ceiling
-		zDiff = waypoints[*closestJumpWP].origin.z - waypoints[endWP.value()].origin.z;
-		UTIL_TraceLine(waypoints[endWP.value()].origin + pBot->pEdict->v.view_ofs, waypoints[endWP.value()].origin + Vector(0.0f, 0.0f, zDiff), ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
+		zDiff = waypoints[*closestJumpWP].origin.z - waypoints[*endWP].origin.z;
+		UTIL_TraceLine(waypoints[*endWP].origin + pBot->pEdict->v.view_ofs, waypoints[*endWP].origin + Vector(0.0f, 0.0f, zDiff), ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
 
 		if (result.flFraction < 1.0f)
 			return; // can't see it
 
 		// Check visibility from a point in the air above the bot to the RJ waypoint
 		// this improves the bots ability to properly detect RJ waypoints
-		UTIL_TraceLine(waypoints[endWP.value()].origin + Vector(0.0f, 0.0f, zDiff), waypoints[*closestJumpWP].origin, ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
+		UTIL_TraceLine(waypoints[*endWP].origin + Vector(0.0f, 0.0f, zDiff), waypoints[*closestJumpWP].origin, ignore_monsters, pBot->pEdict->v.pContainingEntity, &result);
 
 		if (result.flFraction < 1.0f)
 			return; // can't see it
@@ -2617,7 +2617,7 @@ static void BotCheckForConcJump(bot_t* pBot) {
 	// success - it's time to set up a concussion jump job
 	job_struct* newJob = InitialiseNewJob(pBot, JOB_CONCUSSION_JUMP);
 	if (newJob != nullptr) {
-		newJob->waypoint = endWP.value();
+		newJob->waypoint = *endWP;
 		newJob->waypointTwo = *closestJumpWP;
 
 		SubmitNewJob(pBot, JOB_CONCUSSION_JUMP, newJob);
