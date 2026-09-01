@@ -5496,7 +5496,13 @@ static void ProcessBotCfgFile() {
 		if (arg1 == nullptr)
 			return; // this setting needs an "on" or "off" argument
 
-		if (std::strcmp(arg1, "on") == 0) {
+		// PVS-Studio reports V547 "always false" for the two comparisons below.
+		// It is a false positive: cmd and arg1 both point into cmd_line, so once
+		// the analyser accepts the outer strcmp against the command name it models
+		// the whole buffer as that literal and sees an empty string at arg1.
+		// The same code on a buffer it cannot model (see the server command
+		// handler above) is not flagged. [APG]RoboCop[CL]
+		if (std::strcmp(arg1, "on") == 0) { //-V547
 			bot_can_build_teleporter = true;
 			if (IS_DEDICATED_SERVER()) {
 				snprintf(msg, sizeof(msg), "[Config] bot_can_build_teleporter on\n");
@@ -5507,7 +5513,7 @@ static void ProcessBotCfgFile() {
 				ALERT(at_console, msg);
 			}
 		}
-		else if (std::strcmp(arg1, "off") == 0) {
+		else if (std::strcmp(arg1, "off") == 0) { //-V547
 			bot_can_build_teleporter = false;
 			if (IS_DEDICATED_SERVER()) {
 				snprintf(msg, sizeof(msg), "[Config] bot_can_build_teleporter off\n");
@@ -5525,7 +5531,8 @@ static void ProcessBotCfgFile() {
 		if (arg1 == nullptr)
 			return; // this setting needs an "on" or "off" argument
 
-		if (std::strcmp(arg1, "on") == 0) {
+		// V547 false positive again, see the note in the block above.
+		if (std::strcmp(arg1, "on") == 0) { //-V547
 			bot_can_use_teleporter = true;
 			if (IS_DEDICATED_SERVER()) {
 				snprintf(msg, sizeof(msg), "[Config] bot_can_use_teleporter on\n");
@@ -5536,7 +5543,7 @@ static void ProcessBotCfgFile() {
 				ALERT(at_console, msg);
 			}
 		}
-		else if (std::strcmp(arg1, "off") == 0) {
+		else if (std::strcmp(arg1, "off") == 0) { //-V547
 			bot_can_use_teleporter = false;
 			if (IS_DEDICATED_SERVER()) {
 				snprintf(msg, sizeof(msg), "[Config] bot_can_use_teleporter off\n");
