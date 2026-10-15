@@ -76,11 +76,13 @@ Updated by RoboCop
 
 - Drop a redundant new_current_wp assignment in BotUpdateRoute()
 
+- Improving bot stability and teammate support - thanks to White Bishop
+
+- Preventing bots from holding primed grenades after combat - thanks to White Bishop
+
 TODO List:-
 
 >> To allow bots to understand how to shoot door buttons, if touching them doesn't work like in well or alchimy maps
-
->> Fix bots' `JOB_BIN_GRENADE` as they need to ditch their live grenades to prevent suicide bombing too often
 
 >> To improve the pipebomb laying trap pattern and to plant them near the flag, and to add bot experience on how their pipebombs land
 
