@@ -55,6 +55,37 @@ bot_weapon_t weapon_defs[MAX_WEAPONS]; // array of weapon definitions
 
 int g_state;
 
+// Engine messages are external input to these parsers.  Keep every
+// weapon/ammo value inside the fixed GoldSrc arrays before it is used.
+static bool ValidBotIndex(const int index) {
+	return index >= 0 && index < MAX_BOTS;
+}
+
+static bool ValidWeaponIndex(const int index) {
+	return index >= 0 && index < MAX_WEAPONS;
+}
+
+static bool ValidAmmoIndex(const int index) {
+	return index >= 0 && index < MAX_AMMO_SLOTS;
+}
+
+static void UpdateCurrentWeaponAmmo(const int bot_index) {
+	if (!ValidBotIndex(bot_index))
+		return;
+
+	const int weapon = bots[bot_index].current_weapon.iId;
+	if (!ValidWeaponIndex(weapon)) {
+		bots[bot_index].current_weapon.iAmmo1 = 0;
+		bots[bot_index].current_weapon.iAmmo2 = 0;
+		return;
+	}
+
+	const int ammo1 = weapon_defs[weapon].iAmmo1;
+	const int ammo2 = weapon_defs[weapon].iAmmo2;
+	bots[bot_index].current_weapon.iAmmo1 = ValidAmmoIndex(ammo1) ? bots[bot_index].m_rgAmmo[ammo1] : 0;
+	bots[bot_index].current_weapon.iAmmo2 = ValidAmmoIndex(ammo2) ? bots[bot_index].m_rgAmmo[ammo2] : 0;
+}
+
 // int MatchScores[4];  // doesn't update reliably on all maps
 
 // This message is sent when the TFC VGUI menu is displayed.
@@ -152,7 +183,8 @@ void BotClient_Valve_WeaponList(void* p, const int bot_index) {
 
 	if (state == 0) {
 		state++;
-		std::strcpy(bot_weapon.szClassname, static_cast<char*>(p));
+		std::strncpy(bot_weapon.szClassname, static_cast<char*>(p), sizeof(bot_weapon.szClassname) - 1);
+		bot_weapon.szClassname[sizeof(bot_weapon.szClassname) - 1] = '\0';
 	}
 	else if (state == 1) {
 		state++;
@@ -187,8 +219,9 @@ void BotClient_Valve_WeaponList(void* p, const int bot_index) {
 
 		bot_weapon.iFlags = *static_cast<int*>(p); // flags for weapon (WTF???)
 
-		// store away this weapon with it's ammo information...
-		weapon_defs[bot_weapon.iId] = bot_weapon;
+		// Store only IDs that fit the fixed weapon definition table.
+		if (ValidWeaponIndex(bot_weapon.iId))
+			weapon_defs[bot_weapon.iId] = bot_weapon;
 	}
 }
 
@@ -236,16 +269,14 @@ void BotClient_Valve_CurrentWeapon(void* p, const int bot_index) {
 
 		iClip = *static_cast<int*>(p); // ammo currently in the clip for this weapon
 
-		if (iId <= 31) {
-			bots[bot_index].bot_weapons |= 1 << iId; // set this weapon bit
+		if (ValidBotIndex(bot_index) && ValidWeaponIndex(iId)) {
+			bots[bot_index].bot_weapons |= static_cast<int>(1u << iId); // set this weapon bit
 
 			if (iState == 1) {
 				bots[bot_index].current_weapon.iId = iId;
 				bots[bot_index].current_weapon.iClip = iClip;
 
-				// update the ammo counts for this weapon...
-				bots[bot_index].current_weapon.iAmmo1 = bots[bot_index].m_rgAmmo[weapon_defs[iId].iAmmo1];
-				bots[bot_index].current_weapon.iAmmo2 = bots[bot_index].m_rgAmmo[weapon_defs[iId].iAmmo2];
+				UpdateCurrentWeaponAmmo(bot_index);
 			}
 		}
 	}
@@ -289,13 +320,10 @@ void BotClient_Valve_AmmoX(void* p, const int bot_index) {
 
 		ammount = *static_cast<int*>(p); // the amount of ammo currently available
 
-		bots[bot_index].m_rgAmmo[index] = ammount; // store it away
-
-		const int ammo_index = bots[bot_index].current_weapon.iId;
-
-		// update the ammo counts for this weapon...
-		bots[bot_index].current_weapon.iAmmo1 = bots[bot_index].m_rgAmmo[weapon_defs[ammo_index].iAmmo1];
-		bots[bot_index].current_weapon.iAmmo2 = bots[bot_index].m_rgAmmo[weapon_defs[ammo_index].iAmmo2];
+		if (ValidBotIndex(bot_index) && ValidAmmoIndex(index)) {
+			bots[bot_index].m_rgAmmo[index] = ammount; // store it away
+			UpdateCurrentWeaponAmmo(bot_index);
+		}
 	}
 }
 
@@ -340,13 +368,10 @@ void BotClient_Valve_AmmoPickup(void* p, const int bot_index) {
 
 		ammount = *static_cast<int*>(p);
 
-		bots[bot_index].m_rgAmmo[index] = ammount;
-
-		const int ammo_index = bots[bot_index].current_weapon.iId;
-
-		// update the ammo counts for this weapon...
-		bots[bot_index].current_weapon.iAmmo1 = bots[bot_index].m_rgAmmo[weapon_defs[ammo_index].iAmmo1];
-		bots[bot_index].current_weapon.iAmmo2 = bots[bot_index].m_rgAmmo[weapon_defs[ammo_index].iAmmo2];
+		if (ValidBotIndex(bot_index) && ValidAmmoIndex(index)) {
+			bots[bot_index].m_rgAmmo[index] = ammount;
+			UpdateCurrentWeaponAmmo(bot_index);
+		}
 	}
 }
 
@@ -377,8 +402,9 @@ void BotClient_FLF_AmmoPickup(void* p, int bot_index)
 void BotClient_Valve_WeaponPickup(void* p, const int bot_index) {
 	const int index = *static_cast<int*>(p);
 
-	// set this weapon bit to indicate that we are carrying this weapon
-	bots[bot_index].bot_weapons |= 1 << index;
+	// Set this weapon bit only when both fixed-array indices are valid.
+	if (ValidBotIndex(bot_index) && ValidWeaponIndex(index))
+		bots[bot_index].bot_weapons |= static_cast<int>(1u << index);
 }
 
 void BotClient_TFC_WeaponPickup(void* p, const int bot_index) {

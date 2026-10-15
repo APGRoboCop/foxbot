@@ -416,10 +416,21 @@ bool FoxGA::load(std::FILE* bfp, const int chromosize)
 	if (!bfp)
 		return false;
 
-	if (std::fread(&m_iMaxPopSize, sizeof(unsigned), 1, bfp) != 1)
+	unsigned loadedMaxPopSize = 0;
+	unsigned loadedGeneration = 0;
+	if (std::fread(&loadedMaxPopSize, sizeof(unsigned), 1, bfp) != 1)
 		return false;
-	if (std::fread(&m_iNumGenerations, sizeof(unsigned), 1, bfp) != 1)
+	if (std::fread(&loadedGeneration, sizeof(unsigned), 1, bfp) != 1)
 		return false;
+
+	// Bound persistent GA state before it controls population
+	// allocation/iteration.  The combat GA normally uses only 16 entries.
+	if (chromosize <= 0 || chromosize > 1000000 ||
+	    loadedMaxPopSize == 0 || loadedMaxPopSize > 1024)
+		return false;
+
+	m_iMaxPopSize = loadedMaxPopSize;
+	m_iNumGenerations = loadedGeneration;
 
 	return true;
 }
@@ -534,6 +545,12 @@ bool FoxNNGATrained::load(std::FILE* bfp)
 
 	int numWeights = 0;
 	if (std::fread(&numWeights, sizeof(int), 1, bfp) != 1)
+		return false;
+
+	// A saved chromosome must exactly match the initialized NN.
+	// This also prevents a corrupt count from allocating an arbitrary vector.
+	if (numWeights < 0 || numWeights > 1000000 ||
+	    (numWeights > 0 && numWeights != chromosize))
 		return false;
 
 	if (numWeights > 0)

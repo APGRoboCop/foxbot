@@ -242,7 +242,11 @@ job_struct* InitialiseNewJob(const bot_t* pBot, const int newJobType) {
 bool SubmitNewJob(bot_t* pBot, const int newJobType, job_struct* newJob) {
 	int i;
 
-	if (pBot->current_wp == -1 && newJobType != JOB_SEEK_WAYPOINT) // bit of a kludge but necessary
+	// Direct support and disposal of a live grenade must work even when the bot
+	// temporarily has no current waypoint.  Both jobs can act on nearby state
+	// without route data and terminate safely if no useful waypoint can be found.
+	if (pBot->current_wp == -1 && newJobType != JOB_SEEK_WAYPOINT &&
+		newJobType != JOB_BUFF_ALLY && newJobType != JOB_BIN_GRENADE) // bit of a kludge but necessary
 		return false;                                               // many job assessor functions need a valid current waypoint
 
 	// if the job is currently blacklisted keep it out of the buffer

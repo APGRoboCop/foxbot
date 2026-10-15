@@ -341,6 +341,8 @@ void pfnClientCommand(edict_t* pEdict, char* szFmt, ...) {
 	}*/
 
 	char tempFmt[1024];
+	// The legacy engine API declares this format as mutable char*.
+	static char literalStringFormat[] = "%s";
 	va_list argp;
 
 	va_start(argp, szFmt);
@@ -369,7 +371,12 @@ void pfnClientCommand(edict_t* pEdict, char* szFmt, ...) {
 			cl_name[0] = '\0';
 
 			const char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEdict);
-			std::strncpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"), 120);
+			// Validate the engine-owned buffer before using it and
+			// explicitly terminate the copied client name.
+			if (infobuffer != nullptr) {
+				std::strncpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"), sizeof(cl_name) - 1);
+				cl_name[sizeof(cl_name) - 1] = '\0';
+			}
 
 			//{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"cl %d name %s\n",i,cl_name); std::fclose(fp); }
 			if (cl_name[0] == '\0' || infobuffer == nullptr)
@@ -383,16 +390,16 @@ void pfnClientCommand(edict_t* pEdict, char* szFmt, ...) {
 			//	snprintf(sz_error_check,250,"%s b = %d %d\n",sz_error_check,GETPLAYERWONID(pEdict),ENTINDEX(pEdict));
 			//{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"b\n"); std::fclose(fp); }
 			// snprintf(sz_error_check,250,"%s -executing",sz_error_check);
-			(*g_engfuncs.pfnClientCommand)(pEdict, tempFmt);
-			va_end(argp);
+			// tempFmt is already formatted data.  Forward it through
+			// a literal format so '%' characters cannot consume absent varargs.
+			(*g_engfuncs.pfnClientCommand)(pEdict, literalStringFormat, tempFmt);
 			return;
 		}
 		std::strncat(sz_error_check, " !b\n", sizeof(sz_error_check) - std::strlen(sz_error_check) - 1);
 		return;
 		//{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"!b\n"); std::fclose(fp); }
 	}
-	(*g_engfuncs.pfnClientCommand)(pEdict, tempFmt);
-	va_end(argp);
+	(*g_engfuncs.pfnClientCommand)(pEdict, literalStringFormat, tempFmt);
 	// if(mr_meta) RETURN_META(MRES_HANDLED);
 	//return;
 }
@@ -401,56 +408,27 @@ void pfnClCom(edict_t* pEdict, char* szFmt, ...) {
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
 		if (fp != nullptr) {
-			std::fprintf(fp, "-pfnClientCom=%s %p\n", szFmt, static_cast<void*>(pEdict));
+			std::fprintf(fp, "-pfnClientCom=%s %p\n", szFmt ? szFmt : "", static_cast<void*>(pEdict));
 			std::fclose(fp);
 		}
 	}
-	snprintf(sz_error_check, 250, "-pfnClientCom=%s %p\n", szFmt, static_cast<void*>(pEdict));
-	if (pEdict != nullptr) {
-		bool b = false;
+	snprintf(sz_error_check, 250, "-pfnClientCom=%s %p\n", szFmt ? szFmt : "", static_cast<void*>(pEdict));
 
-		if ((pEdict->v.flags & FL_FAKECLIENT) != FL_FAKECLIENT) {
-			for (edict_t *&client : clients) {
-				// if(!((pEdict->v.flags & FL_FAKECLIENT)==FL_FAKECLIENT))
-				// bots[i].is_used &&
-				if (client == pEdict)
-					b = true;
-				/*if(bots[i].pEdict==pEdict && (GETPLAYERWONID(pEdict)==0 || ENTINDEX(pEdict)==-1 ||
-					(GETPLAYERWONID(pEdict)==-1 && IS_DEDICATED_SERVER())))
-					b=false;*/
-			}
-		}
-		if (b) {
-			char cl_name[128];
-			cl_name[0] = '\0';
-
-			const char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEdict);
-			std::strncpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"), 120);
-			//{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"cl %d name %s\n",i,cl_name); std::fclose(fp); }
-			if (cl_name[0] == '\0' || infobuffer == nullptr)
-				b = false;
-			// unsigned int u=GETPLAYERWONID(pEdict);
-			// if((u==0 || ENTINDEX(pEdict)==-1))
-			//	b=false;
-		}
-		// if its a bot (b=false) we need to override
-		if (!b) {
-			std::strncat(sz_error_check, " !b\n", sizeof(sz_error_check) - std::strlen(sz_error_check) - 1);
-			// admin mod fix here! ...maybee clientprintf aswell..dunno
-			// FakeClientCommand(pEdict,szFmt,NULL,NULL);
-			//{ fp=UTIL_OpenFoxbotLog(); std::fprintf(fp,"!b\n"); std::fclose(fp); }
-			if (mr_meta)
-				RETURN_META(MRES_SUPERCEDE);
-			return;
-		}
-		//	snprintf(sz_error_check,250,"%s b = %d %d\n",sz_error_check,GETPLAYERWONID(pEdict),ENTINDEX(pEdict));
+	// ClientCommand is an engine call directed to a client, so
+	// FL_FAKECLIENT is the authoritative distinction.  The former clients[]
+	// and player-name checks could misclassify a connecting human and suppress
+	// a legitimate command.  Null or fake-client targets remain suppressed.
+	if (pEdict == nullptr || (pEdict->v.flags & FL_FAKECLIENT) == FL_FAKECLIENT) {
+		std::strncat(sz_error_check, " suppressed\n", sizeof(sz_error_check) - std::strlen(sz_error_check) - 1);
+		if (mr_meta)
+			RETURN_META(MRES_SUPERCEDE);
 		return;
 	}
+
+	// Every Metamod hook path must set a result.  FoXBot does
+	// not alter commands for real clients, so allow the original engine call.
 	if (mr_meta)
-		RETURN_META(MRES_SUPERCEDE);
-	return;
-	//	if(mr_meta) RETURN_META(MRES_HANDLED);  // unreachable code
-	 //	return;
+		RETURN_META(MRES_IGNORED);
 }
 
 void MessageBegin(const int msg_dest, const int msg_type, const float* pOrigin, edict_t* ed) {
@@ -1008,48 +986,20 @@ void pfnClPrintf(edict_t* pEdict, PRINT_TYPE ptype, const char* szMsg) {
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
 		if (fp != nullptr) {
-			std::fprintf(fp, "pfnClPrintf: %p %s\n", static_cast<void*>(pEdict), szMsg);
+			std::fprintf(fp, "pfnClPrintf: %p %s\n", static_cast<void*>(pEdict), szMsg ? szMsg : "");
 			std::fclose(fp);
 		}
 	}
-	snprintf(sz_error_check, 250, "pfnClPrintf: %p %s\n", static_cast<void*>(pEdict), szMsg);
+	snprintf(sz_error_check, 250, "pfnClPrintf: %p %s\n", static_cast<void*>(pEdict), szMsg ? szMsg : "");
 
-	// only send message if its not a bot...
-	if (pEdict != nullptr) {
-		bool b = false;
-		if ((pEdict->v.flags & FL_FAKECLIENT) != FL_FAKECLIENT) {
-			for (edict_t *&client : clients) {
-				// if(!((pEdict->v.flags & FL_FAKECLIENT)==FL_FAKECLIENT))
-				// bots[i].is_used &&
-				/*if(bots[i].pEdict==pEdict
-								&& (GETPLAYERWONID(pEdict)==0 || ENTINDEX(pEdict)==-1
-								|| (GETPLAYERWONID(pEdict)==-1 && IS_DEDICATED_SERVER())))
-					b=false;*/
-				if (client == pEdict)
-					b = true;
-			}
-		}
-		if (b) {
-			char cl_name[128];
-			cl_name[0] = '\0';
-
-			const char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEdict);
-			std::strncpy(cl_name, g_engfuncs.pfnInfoKeyValue(infobuffer, "name"), 120);
-			/*{ fp=UTIL_OpenFoxbotLog();
-							std::fprintf(fp,"cl %d name %s\n",i,cl_name); std::fclose(fp);}*/
-			if (cl_name[0] == '\0' || infobuffer == nullptr)
-				b = false;
-			//	unsigned int u=GETPLAYERWONID(pEdict);
-			//	if((u==0 || ENTINDEX(pEdict)==-1))
-			//		b=false;
-		}
-		if (b) {
-			RETURN_META(MRES_HANDLED);
-		}
+	// Use the engine's fake-client flag rather than clients[] or
+	// an InfoKeyBuffer name lookup.  Besides being unnecessary, the old code
+	// dereferenced the info buffer before checking it for null.
+	if (pEdict == nullptr || (pEdict->v.flags & FL_FAKECLIENT) == FL_FAKECLIENT)
 		RETURN_META(MRES_SUPERCEDE);
-	}
-	RETURN_META(MRES_SUPERCEDE);
-	//	RETURN_META(MRES_HANDLED);
+
+	// FoXBot does not modify output for a real client.  Let the engine print it.
+	RETURN_META(MRES_IGNORED);
 }
 
 void pfnServerPrint(const char* szMsg) {
@@ -1076,7 +1026,10 @@ void pfnServerPrint(const char* szMsg) {
 	// first compare the message to all bot names, then if bots name is
 	// in message pass to bot
 	// check that the bot that sent a message isn't getting it back
-	std::strncpy(sz, szMsg, 253);
+	// All parser buffers must be terminated even when the engine
+	// supplies an unusually long line.
+	std::strncpy(sz, szMsg ? szMsg : "", sizeof(sz) - 1);
+	sz[sizeof(sz) - 1] = '\0';
 	// clear up sz, and copy start to buffa
 	while (i < 250 && sz[i] != ' ') {
 		msgstart[i] = sz[i];
@@ -1093,7 +1046,8 @@ void pfnServerPrint(const char* szMsg) {
 					// look through the list of active bots for the intended recipient of
 					// the message
 	while (i < MAX_BOTS) {
-		std::strncpy(buffa, sz, 253);
+		std::strncpy(buffa, sz, sizeof(buffa) - 1);
+		buffa[sizeof(buffa) - 1] = '\0';
 		int k = 1;
 		while (k != 0) {
 			// remove start spaces
@@ -1130,8 +1084,10 @@ void pfnServerPrint(const char* szMsg) {
 				if (strcasecmp(cmd, "bots") == 0 && std::strstr(szMsg, "changeclassnow"))
 					continue;
 
-				std::strncpy(bots[i].message, szMsg, 253);
-				std::strncpy(bots[i].msgstart, msgstart, 253);
+				std::strncpy(bots[i].message, szMsg, sizeof(bots[i].message) - 1);
+				bots[i].message[sizeof(bots[i].message) - 1] = '\0';
+				std::strncpy(bots[i].msgstart, msgstart, sizeof(bots[i].msgstart) - 1);
+				bots[i].msgstart[sizeof(bots[i].msgstart) - 1] = '\0';
 				bots[i].newmsg = true; // tell the bot it has mail
 			}
 		}
@@ -1146,6 +1102,11 @@ void pfnServerPrint(const char* szMsg) {
 
 // This function returns true if the bots name is in the indicated message.
 static bool name_message_check(const char* msg_string, const char* name_string) {
+	// The old strlen(name)-1 expression underflowed for an empty
+	// bot name.  Null or empty inputs cannot contain a valid name match.
+	if (msg_string == nullptr || name_string == nullptr || name_string[0] == '\0')
+		return false;
+
 	const size_t msg_length = std::strlen(msg_string);
 	const size_t name_end = std::strlen(name_string) - static_cast<size_t>(1);
 

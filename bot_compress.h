@@ -49,14 +49,24 @@ inline bool FoxCompressedWrite(std::FILE* fp, const unsigned char* data, const u
 		return false;
 	}
 
-	// write header
-	std::fwrite(FZC_MAGIC, 1, 4, fp);
+	// Detect header write failures instead of producing a partial
+	// file that a later map load may try to interpret.
+	if (std::fwrite(FZC_MAGIC, 1, 4, fp) != 4) {
+		std::free(compBuf);
+		return false;
+	}
 
 	const unsigned int uncompSize = dataSize;
-	std::fwrite(&uncompSize, sizeof(unsigned int), 1, fp);
+	if (std::fwrite(&uncompSize, sizeof(unsigned int), 1, fp) != 1) {
+		std::free(compBuf);
+		return false;
+	}
 
 	const auto compSizeU = static_cast<unsigned int>(compSize);
-	std::fwrite(&compSizeU, sizeof(unsigned int), 1, fp);
+	if (std::fwrite(&compSizeU, sizeof(unsigned int), 1, fp) != 1) {
+		std::free(compBuf);
+		return false;
+	}
 
 	// write compressed data
 	const size_t written = std::fwrite(compBuf, 1, static_cast<size_t>(compSize), fp);
@@ -91,7 +101,12 @@ inline unsigned char* FoxCompressedRead(std::FILE* fp, unsigned int* outSize)
 		if (std::fread(&compSize, sizeof(unsigned int), 1, fp) != 1)
 			return nullptr;
 
-		if (uncompSize == 0 || compSize == 0 || uncompSize > 4 * 1024 * 1024)
+		// Cap both sizes.  Previously only the uncompressed size was
+		// bounded, so a corrupt header could request an enormous compBuf.
+		constexpr unsigned int MAX_UNCOMPRESSED_SIZE = 4u * 1024u * 1024u;
+		constexpr unsigned int MAX_COMPRESSED_SIZE = 5u * 1024u * 1024u;
+		if (uncompSize == 0 || compSize == 0 ||
+		    uncompSize > MAX_UNCOMPRESSED_SIZE || compSize > MAX_COMPRESSED_SIZE)
 			return nullptr; // sanity check: 4 MB max
 
 		auto* compBuf = static_cast<unsigned char*>(std::malloc(compSize));

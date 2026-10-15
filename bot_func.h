@@ -61,6 +61,10 @@ void BotShootAtEnemy(bot_t* pBot);
 // DrEvils functions.
 int BotNadeHandler(bot_t* pBot, bool timed, char newNadeType);
 
+void BotCheckPrimedGrenade(bot_t* pBot);
+
+void BotReleasePrimedGrenade(bot_t* pBot);
+
 int BotAssessThreatLevel(const bot_t* pBot);
 
 int BotTeamColorCheck(const edict_t* pent);

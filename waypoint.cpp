@@ -1099,8 +1099,8 @@ void WaypointAdd(edict_t* pEntity) {
 	//********************************************************
 
 	while ((pent = FIND_ENTITY_IN_SPHERE(pent, pEntity->v.origin, radius)) != nullptr && !FNullEnt(pent)) {
-		char item_name[64];
-		std::strcpy(item_name, STRING(pent->v.classname));
+		// Avoid copying a map-provided classname into a fixed local buffer.
+		const char* item_name = STRING(pent->v.classname);
 
 		if (std::strcmp("item_healthkit", item_name) == 0) {
 			ClientPrint(pEntity, HUD_PRINTCONSOLE, "found a healthkit!\n");
@@ -1511,8 +1511,12 @@ bool WaypointLoad(edict_t* pEntity) {
 		if (IS_DEDICATED_SERVER())
 			std::printf("loading waypoint file: %s\n", filename);
 
-		// read in the waypoint header
-		std::fread(&header, sizeof header, 1, bfp);
+		// Reject truncated headers and impossible fixed-array counts
+		// before consuming any waypoint data.
+		if (std::fread(&header, sizeof header, 1, bfp) != 1) {
+			std::fclose(bfp);
+			return false;
+		}
 
 		header.filetype[7] = 0; // null terminate the filetype string
 
@@ -1544,7 +1548,6 @@ bool WaypointLoad(edict_t* pEntity) {
 			std::fclose(bfp);
 			return false;
 		}
-
 		// reject corrupt headers before trusting the count [APG]RoboCop[CL]
 		if (header.number_of_waypoints < 0 || header.number_of_waypoints > MAX_WAYPOINTS) {
 			if (pEntity)
@@ -1582,7 +1585,11 @@ bool WaypointLoad(edict_t* pEntity) {
 
 		// read the waypoint data from the file
 		for (i = 0; i < header.number_of_waypoints; i++) {
-			std::fread(&waypoints[i], sizeof(WAYPOINT), 1, bfp);
+			if (std::fread(&waypoints[i], sizeof(WAYPOINT), 1, bfp) != 1) {
+				std::fclose(bfp);
+				WaypointInit();
+				return false;
+			}
 			++num_waypoints;
 
 			// keep track of which waypoint types have been loaded for each team
@@ -1609,10 +1616,18 @@ bool WaypointLoad(edict_t* pEntity) {
 		// read and add waypoint paths...
 		for (index = 0; index < num_waypoints; index++) {
 			// read the number of paths from this node...
-			std::fread(&num, sizeof num, 1, bfp);
+			if (std::fread(&num, sizeof num, 1, bfp) != 1 || num < 0 || num > MAX_WAYPOINTS) {
+				std::fclose(bfp);
+				WaypointInit();
+				return false;
+			}
 
 			for (i = 0; i < num; i++) {
-				std::fread(&path_index, sizeof path_index, 1, bfp);
+				if (std::fread(&path_index, sizeof path_index, 1, bfp) != 1) {
+					std::fclose(bfp);
+					WaypointInit();
+					return false;
+				}
 
 				WaypointAddPath(index, path_index);
 			}
@@ -1650,7 +1665,10 @@ bool WaypointLoad(edict_t* pEntity) {
 	if (bfp != nullptr) {
 		if (IS_DEDICATED_SERVER())
 			std::printf("loading waypoint file: %s\n", filename);
-		std::fread(&header, sizeof header, 1, bfp);
+		if (std::fread(&header, sizeof header, 1, bfp) != 1) {
+			std::fclose(bfp);
+			return false;
+		}
 
 		header.filetype[7] = 0;
 		if (std::strcmp(header.filetype, "HPB_bot") == 0) {
@@ -1661,7 +1679,6 @@ bool WaypointLoad(edict_t* pEntity) {
 				std::fclose(bfp);
 				return false;
 			}
-
 			header.mapname[31] = 0;
 
 			if (std::strcmp(header.mapname, STRING(gpGlobals->mapname)) == 0) {
@@ -1676,17 +1693,29 @@ bool WaypointLoad(edict_t* pEntity) {
 				WaypointInit(); // remove any existing waypoints
 
 				for (i = 0; i < header.number_of_waypoints; i++) {
-					std::fread(&waypoints[i], sizeof waypoints[0], 1, bfp);
+					if (std::fread(&waypoints[i], sizeof waypoints[0], 1, bfp) != 1) {
+						std::fclose(bfp);
+						WaypointInit();
+						return false;
+					}
 					num_waypoints++;
 				}
 
 				// read and add waypoint paths...
 				for (index = 0; index < num_waypoints; index++) {
 					// read the number of paths from this node...
-					std::fread(&num, sizeof num, 1, bfp);
+					if (std::fread(&num, sizeof num, 1, bfp) != 1 || num < 0 || num > MAX_WAYPOINTS) {
+						std::fclose(bfp);
+						WaypointInit();
+						return false;
+					}
 
 					for (i = 0; i < num; i++) {
-						std::fread(&path_index, sizeof path_index, 1, bfp);
+						if (std::fread(&path_index, sizeof path_index, 1, bfp) != 1) {
+							std::fclose(bfp);
+							WaypointInit();
+							return false;
+						}
 
 						WaypointAddPath(index, path_index);
 					}
@@ -1754,11 +1783,18 @@ static bool WaypointLoadVersion4(FILE* bfp, const int number_of_waypoints) {
 	short num;
 	short path_index;
 
+	// A file-provided count must fit the fixed waypoint array.
+	if (bfp == nullptr || number_of_waypoints < 0 || number_of_waypoints > MAX_WAYPOINTS)
+		return false;
+
 	WaypointInit(); // remove any existing waypoints
 
 	// read the waypoint data from the file
 	for (i = 0; i < number_of_waypoints; i++) {
-		std::fread(&dummy_waypoint, sizeof(WAYPOINT_VERSION4), 1, bfp);
+		if (std::fread(&dummy_waypoint, sizeof(WAYPOINT_VERSION4), 1, bfp) != 1) {
+			WaypointInit();
+			return false;
+		}
 
 		// convert version 4 data to version 5 data
 
@@ -1814,10 +1850,16 @@ static bool WaypointLoadVersion4(FILE* bfp, const int number_of_waypoints) {
 	// read and add waypoint paths...
    for (int index = 0; index < num_waypoints; index++) {
       // read the number of paths from this node...
-      std::fread(&num, sizeof num, 1, bfp);
+      if (std::fread(&num, sizeof num, 1, bfp) != 1 || num < 0 || num > MAX_WAYPOINTS) {
+			WaypointInit();
+			return false;
+		}
 
       for (i = 0; i < num; i++) {
-         std::fread(&path_index, sizeof path_index, 1, bfp);
+			if (std::fread(&path_index, sizeof path_index, 1, bfp) != 1) {
+				WaypointInit();
+				return false;
+			}
 
          WaypointAddPath(index, path_index);
       }
@@ -3100,17 +3142,25 @@ static void WaypointRouteInit() {
 		if (build_matrix[matrix]) {
 			if (shortest_path[matrix] == nullptr) {
 				snprintf(msg, sizeof(msg), "calculating FoXBot waypoint paths for team %d...\n", matrix + 1);
-				ALERT(at_console, msg);
+				ALERT(at_console, "%s", msg);
 
 				shortest_path[matrix] = static_cast<unsigned int*>(std::malloc(sizeof(unsigned int) * array_size));
 
-				if (shortest_path[matrix] == nullptr)
+				// Reporting an allocation failure is not sufficient;
+				// the old code immediately dereferenced the null pointer.
+				if (shortest_path[matrix] == nullptr) {
 					ALERT(at_error, "FoXBot - Error allocating memory for shortest path!");
+					return;
+				}
 
 				from_to[matrix] = static_cast<unsigned int*>(std::malloc(sizeof(unsigned int) * array_size));
 
-				if (from_to[matrix] == nullptr)
+				if (from_to[matrix] == nullptr) {
 					ALERT(at_error, "FoXBot - Error allocating memory for from to matrix!");
+					std::free(shortest_path[matrix]);
+					shortest_path[matrix] = nullptr;
+					return;
+				}
 
 				unsigned int* pShortestPath = shortest_path[matrix];
 				unsigned int* pFromTo = from_to[matrix];
@@ -3131,6 +3181,12 @@ static void WaypointRouteInit() {
 							while (i < MAX_PATH_INDEX) {
 								if (p->index[i] != -1) {
 									index = p->index[i];
+									// Tolerate old or damaged path lists without
+									// indexing beyond the loaded waypoint set.
+									if (index >= route_num_waypoints) {
+										i++;
+										continue;
+									}
 
 									// check if this is NOT team specific OR
 									// matches this team
@@ -3141,7 +3197,7 @@ static void WaypointRouteInit() {
 
                               if (distance > REACHABLE_RANGE) {
 											snprintf(msg, sizeof(msg), "Waypoint path distance > %4.1f at from %d to %d\n", REACHABLE_RANGE, static_cast<int>(row), static_cast<int>(index));
-											ALERT(at_console, msg);
+											ALERT(at_console, "%s", msg);
 											WaypointDeletePath(row, index);
 										}
 										else {
@@ -3169,7 +3225,7 @@ static void WaypointRouteInit() {
 							pFromTo[a * route_num_waypoints + b] = WAYPOINT_UNREACHABLE;
 				}
 				snprintf(msg, sizeof(msg), "FoXBot waypoint path calculations for team %d complete!\n", matrix + 1);
-				ALERT(at_console, msg);
+				ALERT(at_console, "%s", msg);
 			}
 		}
 	}
@@ -3214,7 +3270,7 @@ static void WaypointRouteInit() {
 		}
 	}
 	snprintf(msg, sizeof(msg), "RJ/Conc Total: %d : Blue: %d : Red: %d : Yellow: %d : Green: %d\n", RJIndex + 1, teamCount[0], teamCount[1], teamCount[2], teamCount[3]);
-	ALERT(at_console, msg);
+	ALERT(at_console, "%s", msg);
 }
 
 // return the next waypoint index for a path from the Floyd matrix when
@@ -3932,6 +3988,12 @@ void AreaDefSave() {
 	UTIL_BuildFileName(filename, 255, "areas", mapname);
 
 	std::FILE* bfp = std::fopen(filename, "wb");
+	// Do not pass a null FILE pointer to fwrite/fclose when the
+	// service account cannot create or replace the area file.
+	if (bfp == nullptr) {
+		ALERT(at_error, "FoXBot - Unable to create area file!\n");
+		return;
+	}
 
 	// write the waypoint header to the file...
 	std::fwrite(&header, sizeof header, 1, bfp);
@@ -3962,7 +4024,10 @@ bool AreaDefLoad(edict_t* pEntity) {
 		char msg[256];
 		if (IS_DEDICATED_SERVER())
 			std::printf("loading area file: %s\n", filename);
-		std::fread(&header, sizeof header, 1, bfp);
+		if (std::fread(&header, sizeof header, 1, bfp) != 1) {
+			std::fclose(bfp);
+			return false;
+		}
 
 		header.filetype[7] = 0;
 		if (std::strcmp(header.filetype, "FoXBot") == 0) {
@@ -3974,7 +4039,13 @@ bool AreaDefLoad(edict_t* pEntity) {
 				return false;
 			}
 
-			header.mapname[31] = 0;
+				header.mapname[31] = 0;
+
+			if (header.number_of_areas < 0 || header.number_of_areas > MAX_WAYPOINTS) {
+				ALERT(at_error, "FoXBot - Invalid area count in area file!\n");
+				std::fclose(bfp);
+				return false;
+			}
 
 			if (strcasecmp(header.mapname, STRING(gpGlobals->mapname)) == 0) {
 				// works for areas aswell :)
@@ -4000,7 +4071,11 @@ bool AreaDefLoad(edict_t* pEntity) {
 					ClientPrint(pEntity, HUD_PRINTNOTIFY, "Loading FoXBot area file\n");
 
 				for (i = 0; i < header.number_of_areas; i++) {
-					std::fread(&areas[i], sizeof areas[0], 1, bfp);
+					if (std::fread(&areas[i], sizeof areas[0], 1, bfp) != 1) {
+						std::fclose(bfp);
+						num_areas = 0;
+						return false;
+					}
 					num_areas++;
 				}
 			}
@@ -4174,7 +4249,8 @@ void AreaAutoBuild1() {
 	int lc, rc, r, l;
 	bool ru, lu, rd, ld;
 	int lr, ll;
-	for (i = 0; i <= num_waypoints; i++) {
+	// num_waypoints/num_areas are counts, not final indices.
+	for (i = 0; i < num_waypoints; i++) {
 		if (!(waypoints[i].flags & W_FL_DELETED)) {
 			if (num_areas >= MAX_WAYPOINTS)
 				return;
@@ -4220,7 +4296,7 @@ void AreaAutoBuild1() {
 			ll = 0;
 			lr = 0;
 			double epsilon = 0.0001; // Define your own level of precision
-			while (k <= num_waypoints) {
+			while (k < num_waypoints) {
 				if (std::abs(waypoints[i].origin.y - waypoints[k].origin.y) < epsilon && std::abs(waypoints[i].origin.z - waypoints[k].origin.z) < epsilon && i != k) {
 					if (std::abs(waypoints[i].origin.x - 32.0 * (lc + 1) - waypoints[k].origin.x) < epsilon) {
 						k = -1;
@@ -4284,7 +4360,7 @@ void AreaAutoBuild1() {
 			}
 			while (expanded) {
 				expanded = false;
-				for (j = 0; j <= num_waypoints; j++) {
+				for (j = 0; j < num_waypoints; j++) {
 					if (!(waypoints[j].flags & W_FL_DELETED)) {
 						// expand via y
 						// and no slopeing in z
@@ -4301,7 +4377,7 @@ void AreaAutoBuild1() {
 								ld = false;
 								ll = 0;
 								lr = 0;
-								while (k <= num_waypoints) {
+								while (k < num_waypoints) {
 									if (std::abs(waypoints[j].origin.y - waypoints[k].origin.y) < epsilon &&
 										std::abs(waypoints[j].origin.z - waypoints[k].origin.z) < epsilon && j != k) {
 										if (std::abs(waypoints[j].origin.x - 32.0 * (l + 1) - waypoints[k].origin.x) < epsilon) {
@@ -4390,7 +4466,7 @@ void AreaAutoBuild1() {
 								ld = false;
 								ll = 0;
 								lr = 0;
-								while (k <= num_waypoints) {
+								while (k < num_waypoints) {
 									if (std::abs(waypoints[j].origin.y - waypoints[k].origin.y) < epsilon &&
 										std::abs(waypoints[j].origin.z - waypoints[k].origin.z) < epsilon && j != k) {
 										if (std::abs(waypoints[j].origin.x - 32.0 * (l + 1) - waypoints[k].origin.x) < epsilon) {
@@ -4476,7 +4552,7 @@ void AreaAutoBuild1() {
 	}
 	// now all areas have been created (from all the wpts)
 	// their will be lots of parallel areas that can be merged...
-	for (i = 0; i <= num_areas; i++) {
+	for (i = 0; i < num_areas; i++) {
 		if (!(areas[i].flags & W_FL_DELETED)) {
 			if ((areas[i].flags & A_FL_1) == A_FL_1 && (areas[i].flags & A_FL_2) == A_FL_2 && (areas[i].flags & A_FL_3) == A_FL_3 && (areas[i].flags & A_FL_4) == A_FL_4) {
 				lc = 0;
@@ -4492,7 +4568,7 @@ void AreaAutoBuild1() {
 				ld = false;
 				ll = 0;
 				lr = 0;
-				while (k <= num_waypoints) {
+				while (k < num_waypoints) {
 					if (waypoints[k].origin == areas[i].a + Vector(16, 16, 0)) {
 						h = k;
 						k = num_waypoints;
@@ -4501,7 +4577,7 @@ void AreaAutoBuild1() {
 				}
 				k = 0;
 				
-				while (k <= num_waypoints) {
+				while (k < num_waypoints) {
 					if (std::abs(waypoints[h].origin.x - waypoints[k].origin.x) < epsilon &&
 						std::abs(waypoints[h].origin.z - waypoints[k].origin.z) < epsilon && h != k) {
 						if (std::abs(waypoints[h].origin.y - 32.0 * (lc + 1) - waypoints[k].origin.y) < epsilon) {
@@ -4578,7 +4654,7 @@ void AreaAutoBuild1() {
 				bool expanded = true;
 				while (expanded) {
 					expanded = false;
-					for (j = 0; j <= num_areas; j++) {
+					for (j = 0; j < num_areas; j++) {
 						if (!(areas[j].flags & W_FL_DELETED)) {
 							if ((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 && (areas[j].flags & A_FL_3) == A_FL_3 && (areas[j].flags & A_FL_4) == A_FL_4) {
 								if (i != j) {
@@ -4587,7 +4663,7 @@ void AreaAutoBuild1() {
 										l = 0;
 										k = 0;
 										h = 0;
-										while (k <= num_waypoints) {
+										while (k < num_waypoints) {
 											if (waypoints[k].origin == areas[j].d + Vector(-16, 16, 0)) {
 												h = k;
 												k = num_waypoints;
@@ -4595,7 +4671,7 @@ void AreaAutoBuild1() {
 											k++;
 										}
 										k = 0;
-										while (k <= num_waypoints) {
+										while (k < num_waypoints) {
 											if (std::abs(waypoints[h].origin.x - waypoints[k].origin.x) < epsilon && std::abs(waypoints[h].origin.z - waypoints[k].origin.z) < epsilon && h != k) {
 												if (std::abs(waypoints[h].origin.y - 32.0 * (l + 1) - waypoints[k].origin.y) < epsilon) {
 													k = -1;
@@ -4691,14 +4767,14 @@ void AreaAutoMerge() {
 	int stk[stk_sz];
 	int stk_cnt;
 
-	for (i = 0; i <= num_areas; i++) {
+	for (i = 0; i < num_areas; i++) {
 		if (!(areas[i].flags & W_FL_DELETED)) {
 			if ((areas[i].flags & A_FL_1) == A_FL_1 && (areas[i].flags & A_FL_2) == A_FL_2 && (areas[i].flags & A_FL_3) == A_FL_3 && (areas[i].flags & A_FL_4) == A_FL_4) {
 				a = false;
 				b = false;
 				c = false;
 				d = false;
-				for (j = 0; j <= num_areas; j++) {
+				for (j = 0; j < num_areas; j++) {
 					if (!(areas[j].flags & W_FL_DELETED) && i != j) {
 						if ((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 && (areas[j].flags & A_FL_3) == A_FL_3 && (areas[j].flags & A_FL_4) == A_FL_4) {
 							if (areas[j].a == areas[i].a || areas[j].b == areas[i].a || areas[j].c == areas[i].a || areas[j].d == areas[i].a)
@@ -4723,7 +4799,7 @@ void AreaAutoMerge() {
 						merged = false;
 						if (areas[i].d.x - areas[i].a.x > areas[i].b.y - areas[i].a.y) {
 							// x>y so expand in the y direction
-							for (j = 0; j <= num_areas; j++) {
+							for (j = 0; j < num_areas; j++) {
 								if (!(areas[j].flags & W_FL_DELETED) && i != j) {
 									if ((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 && (areas[j].flags & A_FL_3) == A_FL_3 && (areas[j].flags & A_FL_4) == A_FL_4) {
 										if (!a || !d) {
@@ -4806,7 +4882,7 @@ void AreaAutoMerge() {
 						}
 						else {
 							// x<=y so expand in the x direction
-							for (j = 0; j <= num_areas; j++) {
+							for (j = 0; j < num_areas; j++) {
 								if (!(areas[j].flags & W_FL_DELETED) && i != j) {
 									if ((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 && (areas[j].flags & A_FL_3) == A_FL_3 && (areas[j].flags & A_FL_4) == A_FL_4) {
 										if (!a || !b) {
@@ -4895,14 +4971,14 @@ void AreaAutoMerge() {
 	}
 
 	// clear the remaining shit up!!
-	for (i = 0; i <= num_areas; i++) {
+	for (i = 0; i < num_areas; i++) {
 		if (!(areas[i].flags & W_FL_DELETED)) {
 			if ((areas[i].flags & A_FL_1) == A_FL_1 && (areas[i].flags & A_FL_2) == A_FL_2 && (areas[i].flags & A_FL_3) == A_FL_3 && (areas[i].flags & A_FL_4) == A_FL_4) {
 				a = false;
 				b = false;
 				c = false;
 				d = false;
-				for (j = 0; j <= num_areas; j++) {
+				for (j = 0; j < num_areas; j++) {
 					if (!(areas[j].flags & W_FL_DELETED) && i != j) {
 						if ((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 && (areas[j].flags & A_FL_3) == A_FL_3 && (areas[j].flags & A_FL_4) == A_FL_4) {
 							if (areas[j].a == areas[i].a || areas[j].b == areas[i].a || areas[j].c == areas[i].a || areas[j].d == areas[i].a)
@@ -4927,7 +5003,7 @@ void AreaAutoMerge() {
 						merged = false;
 						if (areas[i].d.x - areas[i].a.x > areas[i].b.y - areas[i].a.y) {
 							// x>y so expand in the y direction
-							for (j = 0; j <= num_areas; j++) {
+							for (j = 0; j < num_areas; j++) {
 								if (!(areas[j].flags & W_FL_DELETED) && i != j) {
 									if ((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 && (areas[j].flags & A_FL_3) == A_FL_3 && (areas[j].flags & A_FL_4) == A_FL_4) {
 										if (!a || !d) {
@@ -5010,7 +5086,7 @@ void AreaAutoMerge() {
 						}
 						else {
 							// x<=y so expand in the x direction
-							for (j = 0; j <= num_areas; j++) {
+							for (j = 0; j < num_areas; j++) {
 								if (!(areas[j].flags & W_FL_DELETED) && i != j) {
 									if ((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 && (areas[j].flags & A_FL_3) == A_FL_3 && (areas[j].flags & A_FL_4) == A_FL_4) {
 										if (!a || !b) {
@@ -5098,7 +5174,7 @@ void AreaAutoMerge() {
 		}
 	}
 	// and the final lot?
-	for (i = 0; i <= num_areas; i++) {
+	for (i = 0; i < num_areas; i++) {
 		if (!(areas[i].flags & W_FL_DELETED)) {
 			if ((areas[i].flags & A_FL_1) == A_FL_1 && (areas[i].flags & A_FL_2) == A_FL_2 && (areas[i].flags & A_FL_3) == A_FL_3 && (areas[i].flags & A_FL_4) == A_FL_4) {
 				a = false;
@@ -5114,7 +5190,7 @@ void AreaAutoMerge() {
 						stk_cnt = 0;
 						merged = false;
 						// x>y so expand in the y direction
-						for (j = 0; j <= num_areas; j++) {
+						for (j = 0; j < num_areas; j++) {
 							if (!(areas[j].flags & W_FL_DELETED) && i != j) {
 								if ((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 && (areas[j].flags & A_FL_3) == A_FL_3 && (areas[j].flags & A_FL_4) == A_FL_4) {
 									if (!a || !d) {
@@ -5195,7 +5271,7 @@ void AreaAutoMerge() {
 							}
 						}
 						// x<=y so expand in the x direction
-						for (j = 0; j <= num_areas; j++) {
+						for (j = 0; j < num_areas; j++) {
 							if (!(areas[j].flags & W_FL_DELETED) && i != j) {
 								if ((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 && (areas[j].flags & A_FL_3) == A_FL_3 && (areas[j].flags & A_FL_4) == A_FL_4) {
 									if (!a || !b) {
@@ -5288,13 +5364,13 @@ void AreaAutoMerge() {
 	// a)size of adjacent area matches
 	// b)step is the same (more than 2 areas)
 	// c)same direction as first ones found
-	for (i = 0; i <= num_areas; i++) {
+	for (i = 0; i < num_areas; i++) {
 		if (!(areas[i].flags & W_FL_DELETED)) {
 			if ((areas[i].flags & A_FL_1) == A_FL_1 && (areas[i].flags & A_FL_2) == A_FL_2 && (areas[i].flags & A_FL_3) == A_FL_3 && (areas[i].flags & A_FL_4) == A_FL_4) {
 				float sx, sy;
 				sx = areas[i].d.x - areas[i].a.x;
 				sy = areas[i].b.y - areas[i].a.y;
-				for (j = 0; j <= num_areas; j++) {
+				for (j = 0; j < num_areas; j++) {
 					if (!(areas[j].flags & W_FL_DELETED) && i != j) {
 						if ((areas[j].flags & A_FL_1) == A_FL_1 && (areas[j].flags & A_FL_2) == A_FL_2 && (areas[j].flags & A_FL_3) == A_FL_3 && (areas[j].flags & A_FL_4) == A_FL_4) {
 							// find neighbours to i
@@ -5318,7 +5394,7 @@ void AreaAutoMerge() {
 									// j=-1;
 									// now search for neighbours with the same z
 									// and same size
-									for (k = 0; k <= num_areas; k++) {
+									for (k = 0; k < num_areas; k++) {
 										if (!(areas[k].flags & W_FL_DELETED) && j != k && i != k) {
 											if ((areas[k].flags & A_FL_1) == A_FL_1 && (areas[k].flags & A_FL_2) == A_FL_2 && (areas[k].flags & A_FL_3) == A_FL_3 && (areas[k].flags & A_FL_4) == A_FL_4) {
 												float zz;
@@ -5386,7 +5462,7 @@ void AreaAutoMerge() {
 									// j=-1;
 									// now search for neighbours with the same z
 									// and same size
-									for (k = 0; k <= num_areas; k++) {
+									for (k = 0; k < num_areas; k++) {
 										if (!(areas[k].flags & W_FL_DELETED) && j != k && i != k) {
 											if ((areas[k].flags & A_FL_1) == A_FL_1 && (areas[k].flags & A_FL_2) == A_FL_2 && (areas[k].flags & A_FL_3) == A_FL_3 && (areas[k].flags & A_FL_4) == A_FL_4) {
 												float zz;
@@ -5453,11 +5529,14 @@ void ProcessCommanderList() {
 	char msg[255];
 	char buffer[80];
 	char filename[255];
-	//// delete dynamic memory
-	// LIter<char *> iter(&commanders);
-	// for(iter.begin(); !iter.end(); ++iter)
-	//{
-	//}
+	// List<char*> owns only its nodes, not the allocated strings.
+	// Release those strings before rebuilding the list on each map load.
+	LIter<char*> oldCommander(&commanders);
+	for (oldCommander.begin(); !oldCommander.end(); ++oldCommander) {
+		char** value = oldCommander.current();
+		if (value != nullptr)
+			delete[] *value;
+	}
 	commanders.clear();
 	constexpr char invalidChars[] = " abcdefghijklmnopqrstuvwxyz,./<>?;'\"[]{}-=+!@#$%^&*()";
 
@@ -5469,7 +5548,7 @@ void ProcessCommanderList() {
 			std::printf("[Config] Reading foxbot_commanders.txt\n");
 		else {
 			snprintf(msg, sizeof(msg), "[Config] Reading foxbot_commanders.txt\n");
-			ALERT(at_console, msg);
+			ALERT(at_console, "%s", msg);
 		}
 	}
 	else {
@@ -5477,7 +5556,7 @@ void ProcessCommanderList() {
 			std::printf("[Config] Couldn't open foxbot_commanders.txt\n");
 		else {
 			snprintf(msg, sizeof(msg), "[Config] Couldn't open foxbot_commanders.txt\n");
-			ALERT(at_console, msg);
+			ALERT(at_console, "%s", msg);
 		}
 		return;
 	}
@@ -5514,7 +5593,7 @@ void ProcessCommanderList() {
 					std::printf("[Config] foxbot_commanders.txt : Invalid Character %c\n", ch);
 				else {
 					snprintf(msg, sizeof(msg), "[Config] foxbot_commanders.txt : Invalid Character %c\n", ch);
-					ALERT(at_console, msg);
+					ALERT(at_console, "%s", msg);
 				}
 			}
 		}
@@ -5525,10 +5604,11 @@ void ProcessCommanderList() {
 			char* uId = new char[80];
 			std::strcpy(uId, buffer);
 
-			// Get rid of line feeds
-			if (const size_t len = std::strlen(uId); len > 0 && (uId[len - 1] == '\n' || uId[len - 1] == '\r' || uId[len - 1] == '\0')) {
-				uId[len - 1] = '\0';
-			}
+			// Remove both bytes of Windows CRLF, not just the final
+			// byte, so the stored ID compares exactly with the live ID.
+			size_t len = std::strlen(uId);
+			while (len > 0 && (uId[len - 1] == '\n' || uId[len - 1] == '\r'))
+				uId[--len] = '\0';
 			fp = UTIL_OpenFoxbotLog();
 
 			if (fp != nullptr) {
@@ -5541,7 +5621,7 @@ void ProcessCommanderList() {
 			  std::printf("[Config] foxbot_commanders.txt : Loaded User %s\n", buffer);
 			else {
 				snprintf(msg, sizeof(msg), "[Config] foxbot_commanders.txt : Loaded User %s\n", buffer);
-				ALERT(at_console, msg);
+				ALERT(at_console, "%s", msg);
 			}
 		}
 	}
@@ -5550,7 +5630,7 @@ void ProcessCommanderList() {
 		std::printf("[Config] foxbot_commanders.txt : Loaded %d users\n", commanders.size());
 	else {
 		snprintf(msg, sizeof(msg), "[Config] foxbot_commanders.txt : Loaded %d users\n", commanders.size());
-		ALERT(at_console, msg);
+		ALERT(at_console, "%s", msg);
 	}
 	std::fclose(inFile);
 }

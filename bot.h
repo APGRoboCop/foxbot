@@ -234,6 +234,21 @@ typedef struct {
 // maximum number of jobs storable in the bot's job buffer
 constexpr int JOB_BUFFER_MAX = 5;
 
+// Medic and Engineer support starts nearby and may finish a short, bounded
+// chase.  Urgent Medic care can override ordinary distant combat, but close
+// combat and recent damage remain immediate threats and interrupt treatment.
+constexpr float SUPPORT_DISCOVERY_RANGE = 400.0f;
+constexpr float SUPPORT_MAX_CHASE_RANGE = 600.0f;
+constexpr float SUPPORT_REQUEST_DURATION = 5.0f;
+constexpr float SUPPORT_COMMIT_DURATION = 1.25f;
+constexpr float MEDIC_IMMEDIATE_THREAT_RANGE = 250.0f;
+constexpr float MEDIC_DAMAGE_INTERRUPT_DURATION = 1.0f;
+constexpr int MEDIC_HEAL_PRIORITY_NORMAL = 540;
+constexpr int MEDIC_HEAL_PRIORITY_URGENT = 710;
+constexpr int ENGINEER_REPAIR_PRIORITY_NORMAL = 525;
+constexpr int ENGINEER_REPAIR_PRIORITY_URGENT = 650;
+constexpr int ENGINEER_CRITICAL_ARMOR_PERCENT = 25;
+
 // this structure is shared by all the job types in the bot's job buffer
 typedef struct {
 	float f_bufferedTime; // how long ago this job was put into the buffer
@@ -349,6 +364,11 @@ typedef struct {
 	int routeFailureTally;       // used to spot successive failures to get to a waypoint goal
 
 	float f_find_item_time; // when to next check environment for interesting objects
+	float f_flag_toss_time; // next recipient scan or retry time
+	int flag_toss_target_index; // 1-based client index; 0 when no handoff is pending
+	float f_support_request_time; // expiration time for an urgent saveme request
+	int support_requester_index; // 1-based patient index; 0 when no request is active
+	float f_support_commit_time; // short Medic commitment/hysteresis window
 
 	float f_pause_time;     // remembers when to unpause the bot
 	float f_duck_time;      // remembers when the bot should stop crouching
@@ -654,6 +674,7 @@ void script(const char* sz);
 int PlayerArmorPercent(const edict_t* pEdict);
 
 int PlayerHealthPercent(const edict_t* pEdict);
+bool MedicHasImmediateCombatThreat(const bot_t* pBot);
 
 void UTIL_SavePent(edict_t* pent);
 

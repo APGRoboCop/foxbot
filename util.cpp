@@ -299,13 +299,13 @@ int UTIL_GetTeamColor(edict_t* pEntity) {
 		return -1;
 
 	if (mod_id == TFC_DLL) {
-		char topcolor[32];
-
 		const char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
-		const char* value = g_engfuncs.pfnInfoKeyValue(infobuffer, "topcolor");
-		if (value == nullptr)
-			return -1;
-		snprintf(topcolor, sizeof(topcolor), "%s", value);
+		// Compare the engine-owned value directly.  A client-provided userinfo
+		// value must not be copied without bounds into a small local buffer.
+		const char* topcolor = infobuffer != nullptr
+			? g_engfuncs.pfnInfoKeyValue(infobuffer, "topcolor") : "";
+		if (topcolor == nullptr)
+			topcolor = "";
 
 		// used for spy checking
 		if (std::strcmp(topcolor, "150") == 0 || std::strcmp(topcolor, "153") == 0 || std::strcmp(topcolor, "148") == 0 || std::strcmp(topcolor, "140") == 0)
@@ -333,7 +333,9 @@ int UTIL_GetTeam(const edict_t* pEntity) {
 	if (mod_id == TFC_DLL) {
 		// Check if this entity is a player and return the team number
 		// of that player
-		if (pEntity->v.team - 1 > -1)
+		// Only TFC playing teams 1-4 are valid internal team
+		// indices.  Spectator is team 6 and must not become index 5.
+		if (pEntity->v.team >= 1 && pEntity->v.team <= MAX_TEAMS)
 			return pEntity->v.team - 1; // TFC teams are 0-3 based
 
 		// the team number was invalid, check if this entity is a
@@ -415,13 +417,9 @@ int UTIL_GetFlagsTeam(const edict_t* flag_edict) {
 
 // return class number 0 through N
 int UTIL_GetClass(edict_t* pEntity) {
-	char model_name[32];
-
-	const char* infobuffer = (*g_engfuncs.pfnGetInfoKeyBuffer)(pEntity);
-	const char* value = g_engfuncs.pfnInfoKeyValue(infobuffer, "model");
-	if (value != nullptr)
-		snprintf(model_name, sizeof(model_name), "%s", value);
-
+	// Class detection is not implemented here.  The previous placeholder copied
+	// a client-controlled model string into a fixed buffer and then ignored it.
+	(void)pEntity;
 	return 0;
 }
 
@@ -656,6 +654,9 @@ void UTIL_BotLogPrintf(const char* fmt, ...) {
 // attempts to piece together the path and name of the specified file
 // and/or directory.
 void UTIL_BuildFileName(char* filename, const int max_fn_length, const char* arg1, const char* arg2) {
+	if (filename == nullptr || max_fn_length <= 0)
+		return;
+
 	filename[0] = '\0';
    ALERT(at_console, "FoXBot: trying to open chat file: %s\n", filename);
 
@@ -673,20 +674,18 @@ void UTIL_BuildFileName(char* filename, const int max_fn_length, const char* arg
 	else
 		return;
 
-	// add on the directory and or filename
+	// Build the complete name with a bounded formatter.  The old
+	// strcat sequence could overrun filename when a path component was long.
 	if (arg1 && *arg1 && arg2 && *arg2) {
-		std::strcat(filename, arg1);
-
 #ifndef __linux__
-		std::strcat(filename, "\\");
+		const char separator = '\\';
 #else
-		std::strcat(filename, "/");
+		const char separator = '/';
 #endif
-
-		std::strcat(filename, arg2);
+		snprintf(filename, max_fn_length, "%s%s%c%s", foxbot_path, arg1, separator, arg2);
 	}
 	else if (arg1 && *arg1) {
-		std::strcat(filename, arg1);
+		snprintf(filename, max_fn_length, "%s%s", foxbot_path, arg1);
 	}
 
 	filename[max_fn_length - 1] = '\0'; // just to be sure
@@ -763,13 +762,18 @@ static void UTIL_FindFoxbotPath() {
 // It also makes sure that the string is null terminated on success.
 // It returns false if fgets() returned NULL.
 bool UTIL_ReadFileLine(char* string, const int max_length, FILE* file_ptr) {
+	if (string == nullptr || file_ptr == nullptr || max_length <= 1)
+		return false;
+
 	bool line_end_found = false;
 
 	if (fgets(string, max_length, file_ptr) == nullptr)
 		return false;
 
 	// check if the string read contains a line terminator of some sort
-	for (int a = 0; a < max_length; a++) {
+	// Only inspect characters actually returned by fgets().
+	// Scanning to max_length examined uninitialized bytes beyond the '\0'.
+	for (size_t a = 0; string[a] != '\0'; a++) {
 		if (string[a] == '\n' || string[a] == '\r')
 			line_end_found = true;
 	}

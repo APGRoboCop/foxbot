@@ -351,8 +351,28 @@ int assess_JobBuffAlly(const bot_t* pBot, const job_struct& r_job) {
 	if (FNullEnt(r_job.player) || !IsAlive(r_job.player) || r_job.f_bufferedTime < pBot->f_killed_time || r_job.f_bufferedTime + 30.0f < pBot->f_think_time)
 		return PRIORITY_NONE;
 
+	const bool isMedic = pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC;
+	const bool isEngineer = pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER;
+	if (!isMedic && !isEngineer)
+		return PRIORITY_NONE;
+
+	// The patient must remain on the bot's actual team for the entire job.
+	if (UTIL_GetTeam(r_job.player) != pBot->current_team)
+		return PRIORITY_NONE;
+
+	// Medic support survives ordinary distant enemy visibility,
+	// but close combat or damage received during the last second is an immediate
+	// threat and still cancels healing.  Engineer combat behavior is unchanged.
+	if ((isMedic && MedicHasImmediateCombatThreat(pBot)) ||
+		(isEngineer && pBot->enemy.ptr != nullptr))
+		return PRIORITY_NONE;
+
+	const float patientDistance = (pBot->pEdict->v.origin - r_job.player->v.origin).Length();
+	if (patientDistance > SUPPORT_MAX_CHASE_RANGE)
+		return PRIORITY_NONE;
+
 	// a metal wrench doth not cureth the contagion
-	if (pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER) {
+	if (isEngineer) {
 		if (pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] < 20 // need ammo too
 			|| PlayerIsInfected(r_job.player) || PlayerArmorPercent(r_job.player) > 99)
 			return PRIORITY_NONE;
@@ -360,14 +380,47 @@ int assess_JobBuffAlly(const bot_t* pBot, const job_struct& r_job) {
 
 	// check the waypoints validity
 	// and to see if the patient is too far away
-	if (r_job.phase > 0) {
-		const int routeDistance = WaypointDistanceFromTo(pBot->current_wp, r_job.waypoint, pBot->current_team);
+	// Only the waypoint-navigation phase requires a valid route.  A nearby,
+	// visible patient advances directly from phase 0 to phase 2 and deliberately
+	// has no waypoint; rejecting that job here prevented touch-range healing.
+	if (r_job.phase == 1) {
+		if (pBot->current_wp < 0 || !WaypointAvailable(r_job.waypoint, pBot->current_team))
+			return PRIORITY_NONE;
 
-		if (!WaypointAvailable(r_job.waypoint, pBot->current_team) || routeDistance == -1 || routeDistance > 1500)
+		const int routeDistance = WaypointDistanceFromTo(pBot->current_wp, r_job.waypoint, pBot->current_team);
+		if (routeDistance == -1 || routeDistance > SUPPORT_MAX_CHASE_RANGE)
 			return PRIORITY_NONE;
 	}
 
-	return jl[JOB_BUFF_ALLY].basePriority;
+	const int patientIndex = ENTINDEX(r_job.player);
+	const bool requestedSupport = pBot->f_support_request_time > pBot->f_think_time &&
+		pBot->support_requester_index == patientIndex;
+	const bool withinUrgentRange = patientDistance <= SUPPORT_DISCOVERY_RANGE;
+
+	if (isMedic) {
+		const bool needsImmediateCare = r_job.player->v.health < r_job.player->v.max_health ||
+			PlayerIsInfected(r_job.player);
+		const bool committedToPatient = pBot->currentJob >= 0 &&
+			pBot->currentJob < JOB_BUFFER_MAX &&
+			pBot->jobType[pBot->currentJob] == JOB_BUFF_ALLY &&
+			pBot->job[pBot->currentJob].player == r_job.player &&
+			pBot->f_support_commit_time > pBot->f_think_time;
+
+		// Every nearby injured or infected teammate is urgent, not
+		// only patients at 50 percent health or below.  The short commitment window
+		// retains urgent priority if either participant briefly crosses the 400-unit
+		// discovery boundary; the hard 600-unit chase limit still applies.
+		if ((withinUrgentRange || committedToPatient) && (requestedSupport || needsImmediateCare))
+			return MEDIC_HEAL_PRIORITY_URGENT;
+
+		return MEDIC_HEAL_PRIORITY_NORMAL;
+	}
+
+	const bool criticalArmor = PlayerArmorPercent(r_job.player) <= ENGINEER_CRITICAL_ARMOR_PERCENT;
+	if (withinUrgentRange && (requestedSupport || criticalArmor))
+		return ENGINEER_REPAIR_PRIORITY_URGENT;
+
+	return ENGINEER_REPAIR_PRIORITY_NORMAL;
 }
 
 // assessment function for the priority of a JOB_ESCORT_ALLY job.

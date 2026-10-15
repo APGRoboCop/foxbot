@@ -88,6 +88,14 @@ extern int team_class_limits[4];
 extern int spawnAreaWP[4]; // used for tracking the areas where each team spawns
 extern int max_teams;
 
+// Centralize bounds checks for ally masks.  Shifting by -1 (an
+// unassigned/spectator entity) is undefined, and team_allies has four rows.
+static bool TeamsAreAllied(const int team, const int otherTeam) {
+	return team >= 0 && team < MAX_TEAMS &&
+	       otherTeam >= 0 && otherTeam < MAX_TEAMS &&
+	       (team_allies[team] & (1 << otherTeam)) != 0;
+}
+
 extern bot_weapon_t weapon_defs[MAX_WEAPONS];
 
 // extern int flf_bug_fix;
@@ -123,6 +131,8 @@ extern bool bot_xmas;
 extern bool g_bot_debug;
 extern int spectate_debug; // spectators can trigger debug messages from bots
 extern int bot_bhop;
+extern int bot_flag_toss;
+extern int bot_flag_toss_distance;
 
 extern edict_t* clients[32];
 
@@ -195,6 +205,7 @@ static int guessThreatLevel(const bot_t* pBot);
 static void BotReportMyFlagDrop(bot_t* pBot);
 static void BotEnemyCarrierAlert(bot_t* pBot);
 static void BotSenseEnvironment(bot_t* pBot);
+static void BotFlagTossCheck(bot_t* pBot);
 static void BotFight(bot_t* pBot);
 static void BotSpectatorDebug(bot_t* pBot);
 
@@ -295,6 +306,11 @@ void BotSpawnInit(bot_t* pBot) {
 	pBot->job[pBot->currentJob].phase = 0;
 
 	pBot->f_find_item_time = 0.0f;
+	pBot->f_flag_toss_time = 0.0f;
+	pBot->flag_toss_target_index = 0;
+	pBot->f_support_request_time = 0.0f;
+	pBot->support_requester_index = 0;
+	pBot->f_support_commit_time = 0.0f;
 
 	pBot->strafe_mod = STRAFE_MOD_NORMAL;
 
@@ -736,7 +752,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 
 			if (*safe_arg2 != 0) {
 				std::strncpy(c_name, safe_arg2, BOT_NAME_LEN - 1);
-				c_name[BOT_NAME_LEN] = 0; // make sure c_name is null terminated
+				c_name[BOT_NAME_LEN - 1] = '\0';
 			}
 			else {
 				if (number_names > 0)
@@ -744,7 +760,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 				else {
 					// copy the name of the model to the bot's name...
 					std::strncpy(c_name, safe_arg1, BOT_NAME_LEN - 1);
-					c_name[BOT_NAME_LEN] = '\0'; // make sure c_skin is null terminated
+					c_name[BOT_NAME_LEN - 1] = '\0';
 				}
 			}
 		//}
@@ -760,7 +776,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 	else {
 		if (*safe_arg3 != 0) {
 			std::strncpy(c_name, safe_arg3, BOT_NAME_LEN - 1);
-			c_name[BOT_NAME_LEN] = '\0'; // make sure c_name is null terminated
+			c_name[BOT_NAME_LEN - 1] = '\0';
 		}
 		else {
 			if (number_names > 0)
@@ -922,6 +938,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 
 	pBot->lastFrameHealth = 70;
 	pBot->f_injured_time = 0.0f;
+	pBot->f_support_commit_time = 0.0f;
 	pBot->deathsTillClassChange = 4; //(int)random_long(4, 15);
 
 	// time to set up the bots personality stuff
@@ -1041,10 +1058,11 @@ void BotFindItem(bot_t* pBot) {
 
 	edict_t* pent = nullptr;
 	while ((pent = FIND_ENTITY_IN_SPHERE(pent, searchCenter, radius)) != nullptr && !FNullEnt(pent)) {
-		char item_name[40];
 		can_pickup = false; // assume can't use it until known otherwise
 
-		std::strcpy(item_name, STRING(pent->v.classname));
+		// Classnames are engine-owned strings; use them directly instead of
+		// copying a map-provided value into a fixed local buffer.
+		const char* item_name = STRING(pent->v.classname);
 
 		// see if this is a "func_" type of entity (func_button, etc.)...
 		if (std::strncmp("func_", item_name, 5) == 0) {
@@ -1342,7 +1360,7 @@ void BotFindItem(bot_t* pBot) {
 
 					// if it's an enemy teleporter maybe set up a job to attack it
 					const int TeleportTeam = BotTeamColorCheck(pent);
-					if (pBot->current_team != TeleportTeam && !(team_allies[pBot->current_team] & 1 << TeleportTeam)) {
+					if (pBot->current_team != TeleportTeam && !TeamsAreAllied(pBot->current_team, TeleportTeam)) {
 						newJob = InitialiseNewJob(pBot, JOB_ATTACK_TELEPORT);
 						if (newJob != nullptr) {
 							newJob->object = pent;
@@ -1680,7 +1698,7 @@ edict_t* BotContactThink(bot_t* pBot) {
 			if (vang.y < 0.0f)
 				vang.y += 360.0f;
 
-			if (!((UTIL_GetTeamColor(pBot->pEdict) == UTIL_GetTeamColor(pPlayer) || team_allies[pBot->current_team] & 1 << UTIL_GetTeam(pPlayer)) && pPlayer == pBot->enemy.ptr)) {
+			if (!((UTIL_GetTeamColor(pBot->pEdict) == UTIL_GetTeamColor(pPlayer) || TeamsAreAllied(pBot->current_team, UTIL_GetTeam(pPlayer))) && pPlayer == pBot->enemy.ptr)) {
 				Vector vecEnd = pPlayer->v.origin + pPlayer->v.view_ofs;
 
 				if (FInViewCone(vecEnd, pBot->pEdict) && FVisible(vecEnd, pBot->pEdict)) {
@@ -1774,7 +1792,7 @@ void script(const char* sz) {
 	if (g_bot_debug) {
 		char msg[255];
 		snprintf(msg, 250, "msg (%s)\n", sz);
-		ALERT(at_console, msg);
+		ALERT(at_console, "%s", msg);
 
 		fp = UTIL_OpenFoxbotLog();
 		if (fp != nullptr) {
@@ -1797,7 +1815,7 @@ void script(const char* sz) {
 					if (g_bot_debug) {
 						char msg[255];
 						snprintf(msg, 250, "no if : %s +++ %s %d\n", msg_msg[current_msg], sz, current_msg);
-						ALERT(at_console, msg);
+						ALERT(at_console, "%s", msg);
 						/*{ fp=UTIL_OpenFoxbotLog();
 										std::fprintf(fp,msg,sz); std::fclose(fp); }*/
 					}
@@ -1965,7 +1983,7 @@ void script(const char* sz) {
 						if (g_bot_debug) {
 							char msg[255];
 							snprintf(msg, 250, "if : %s +++ %s %d \nComparing point %s\n", msg_msg[current_msg], sz, current_msg, curr->ifs + 4);
-							ALERT(at_console, msg);
+							ALERT(at_console, "%s", msg);
 							/*{ fp=UTIL_OpenFoxbotLog();
 											std::fprintf(fp,msg,sz); std::fclose(fp);}*/
 						}
@@ -1973,7 +1991,7 @@ void script(const char* sz) {
 							if (g_bot_debug) {
 								char msg[64];
 								snprintf(msg, 63, "Executing if\n");
-								ALERT(at_console, msg);
+								ALERT(at_console, "%s", msg);
 								/*{ fp=UTIL_OpenFoxbotLog();
 												std::fprintf(fp,msg,sz); std::fclose(fp); }*/
 							}
@@ -2028,8 +2046,18 @@ void script(const char* sz) {
 int PlayerArmorPercent(const edict_t* pEdict) {
 	const static int tfc_max_armor[10] = { 1, 50, 50, 200, 120, 100, 300, 150, 100, 50 };
 
-	if (mod_id == TFC_DLL && pEdict->v.playerclass >= 0 && pEdict->v.playerclass <= 9)
-		return static_cast<int>(pEdict->v.armorvalue) / tfc_max_armor[pEdict->v.playerclass] * 100;
+	if (mod_id == TFC_DLL && pEdict->v.playerclass >= 0 && pEdict->v.playerclass <= 9) {
+		// Calculate before truncating.  The former integer division
+		// returned 0 for almost every partially armored player and 100 only at full.
+		int armorPercent = static_cast<int>(pEdict->v.armorvalue * 100.0f /
+			tfc_max_armor[pEdict->v.playerclass]);
+		if (armorPercent < 0)
+			armorPercent = 0;
+		else if (armorPercent > 100)
+			armorPercent = 100;
+
+		return armorPercent;
+	}
 
 	// Unknown mod, return 100%
 	return 100;
@@ -2197,7 +2225,7 @@ static void BotAttackerCheck(bot_t* pBot) {
 				const int player_team = UTIL_GetTeam(pPlayer);
 
 				// don't target your teammates or allies
-				if (pBot->current_team == player_team || team_allies[pBot->current_team] & 1 << player_team)
+				if (pBot->current_team == player_team || TeamsAreAllied(pBot->current_team, player_team))
 					continue;
 			}
 
@@ -2264,6 +2292,33 @@ static void BotAttackerCheck(bot_t* pBot) {
 			}
 		}
 	}
+}
+
+// Create or retarget an urgent support job for a visible saveme
+// caller.  Medic and Engineer support share the same request lifetime and job.
+static bool SubmitUrgentSupportJob(bot_t* pSupportBot, edict_t* pPatient, const int urgentPriority) {
+	pSupportBot->f_support_request_time = pSupportBot->f_think_time + SUPPORT_REQUEST_DURATION;
+	pSupportBot->support_requester_index = ENTINDEX(pPatient);
+
+	const int existingJob = BufferedJobIndex(pSupportBot, JOB_BUFF_ALLY);
+	if (existingJob != -1) {
+		pSupportBot->job[existingJob].f_bufferedTime = pSupportBot->f_think_time;
+		pSupportBot->job[existingJob].priority = urgentPriority;
+		pSupportBot->job[existingJob].phase = 0;
+		pSupportBot->job[existingJob].phase_timer = 0.0f;
+		pSupportBot->job[existingJob].waypoint = -1;
+		pSupportBot->job[existingJob].player = pPatient;
+		pSupportBot->job[existingJob].origin = pPatient->v.origin;
+		return true;
+	}
+
+	job_struct* newJob = InitialiseNewJob(pSupportBot, JOB_BUFF_ALLY);
+	if (newJob == nullptr)
+		return false;
+
+	newJob->player = pPatient;
+	newJob->origin = pPatient->v.origin;
+	return SubmitNewJob(pSupportBot, JOB_BUFF_ALLY, newJob);
 }
 
 // Called by the Sound Hooking Code (in EMIT_SOUND)
@@ -2346,20 +2401,27 @@ void BotSoundSense(edict_t* pEdict, const char* pszSample, const float fVolume) 
 		int nearestMedic = -1;
 		int nearestEngy = -1;
 
-		// find the nearest Medic and Engineer to the sound source
-      for (int index = 0; index < MAX_BOTS; index++) {
-			// look for the nearest free Medic
-			if (bots[index].is_used && bots[index].pEdict->v.playerclass == TFC_CLASS_MEDIC && bots[index].enemy.ptr == nullptr) {
+		// Find the nearest free same-team Medic/Engineer.  The old
+		// loop could select a closer enemy class and only reject it afterward,
+		// preventing a valid teammate farther down the list from responding.
+		for (int index = 0; index < MAX_BOTS; index++) {
+			if (!bots[index].is_used || bots[index].current_team != sourceTeam)
+				continue;
+
+			// A distant visible enemy no longer makes a Medic
+			// unavailable.  Only close combat or very recent damage prevents an
+			// urgent response to a nearby saveme call.
+			if (bots[index].pEdict->v.playerclass == TFC_CLASS_MEDIC &&
+				!MedicHasImmediateCombatThreat(&bots[index])) {
 				botDistance = (bots[index].pEdict->v.origin - pEdict->v.origin).Length();
 				if (botDistance < hearingDistance && botDistance < nearestMedDist) {
 					nearestMedic = index;
 					nearestMedDist = botDistance;
-					continue;
 				}
 			}
 
 			// look for the nearest free Engineer
-			if (bots[index].is_used && bots[index].pEdict->v.playerclass == TFC_CLASS_ENGINEER && bots[index].enemy.ptr == nullptr && bots[index].m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > 20) {
+			if (bots[index].pEdict->v.playerclass == TFC_CLASS_ENGINEER && bots[index].enemy.ptr == nullptr && bots[index].m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > 20) {
 				botDistance = (bots[index].pEdict->v.origin - pEdict->v.origin).Length();
 				if (botDistance < hearingDistance && botDistance < nearestEngDist) {
 					nearestEngy = index;
@@ -2370,23 +2432,19 @@ void BotSoundSense(edict_t* pEdict, const char* pszSample, const float fVolume) 
 
 		// send the nearest medic found
 		if (nearestMedic != -1) {
-			// target the patient if they're visible
-			if (FInViewCone(pEdict->v.origin, bots[nearestMedic].pEdict) && FVisible(pEdict->v.origin, bots[nearestMedic].pEdict)) {
-				if (bots[nearestMedic].current_team == UTIL_GetTeam(pEdict)) {
-					// set up a job to handle the healing/repairing
-					newJob = InitialiseNewJob(&bots[nearestMedic], JOB_BUFF_ALLY);
-					if (newJob != nullptr) {
-						newJob->player = pEdict;
-						newJob->origin = pEdict->v.origin; // remember where the player was
-						SubmitNewJob(&bots[nearestMedic], JOB_BUFF_ALLY, newJob);
-					}
-				}
+			bot_t* medic = &bots[nearestMedic];
+			// A request becomes urgent only inside the support discovery range.
+			// Farther calls retain the old investigation response without pulling
+			// the Medic across the map at healing priority.
+			if (nearestMedDist <= SUPPORT_DISCOVERY_RANGE &&
+				FVisible(pEdict->v.origin + pEdict->v.view_ofs, medic->pEdict)) {
+				SubmitUrgentSupportJob(medic, pEdict, MEDIC_HEAL_PRIORITY_URGENT);
 			}
 			else // go find the person who called for a Medic
 			{
-				newJob = InitialiseNewJob(&bots[nearestMedic], JOB_INVESTIGATE_AREA);
+				newJob = InitialiseNewJob(medic, JOB_INVESTIGATE_AREA);
 				if (newJob != nullptr) {
-					const int closestWPToSound = WaypointFindNearest_V(pEdict->v.origin, 500.0f, bots[nearestMedic].current_team);
+					const int closestWPToSound = WaypointFindNearest_V(pEdict->v.origin, 500.0f, medic->current_team);
 
 					if (closestWPToSound != -1) {
 						// un-comment this WaypointDrawBeam to see this function in action
@@ -2395,31 +2453,26 @@ void BotSoundSense(edict_t* pEdict, const char* pszSample, const float fVolume) 
 
 																		// set up a job to investigate the sound
 						newJob->waypoint = closestWPToSound;
-						SubmitNewJob(&bots[nearestMedic], JOB_INVESTIGATE_AREA, newJob);
+						SubmitNewJob(medic, JOB_INVESTIGATE_AREA, newJob);
 					}
 				}
 			}
 		}
 
 		// send the nearest Engineer found
-		if (nearestEngy != -1) {
-			// target the patient if they're visible
-			if (FInViewCone(pEdict->v.origin, bots[nearestEngy].pEdict) && FVisible(pEdict->v.origin, bots[nearestEngy].pEdict)) {
-				if (bots[nearestEngy].current_team == UTIL_GetTeam(pEdict) && !PlayerIsInfected(pEdict) && PlayerArmorPercent(pEdict) < 100) {
-					// set up a job to handle the healing/repairing
-					newJob = InitialiseNewJob(&bots[nearestEngy], JOB_BUFF_ALLY);
-					if (newJob != nullptr) {
-						newJob->player = pEdict;
-						newJob->origin = pEdict->v.origin; // remember where the player was
-						SubmitNewJob(&bots[nearestEngy], JOB_BUFF_ALLY, newJob);
-					}
-				}
+		if (nearestEngy != -1 && !PlayerIsInfected(pEdict) && PlayerArmorPercent(pEdict) < 100) {
+			bot_t* engineer = &bots[nearestEngy];
+			// Engineers now respond from any facing direction, but armor repair is
+			// urgent only for a nearby visible caller.
+			if (nearestEngDist <= SUPPORT_DISCOVERY_RANGE &&
+				FVisible(pEdict->v.origin + pEdict->v.view_ofs, engineer->pEdict)) {
+				SubmitUrgentSupportJob(engineer, pEdict, ENGINEER_REPAIR_PRIORITY_URGENT);
 			}
 			else // go find the person who called for a Medic
 			{
-				newJob = InitialiseNewJob(&bots[nearestEngy], JOB_INVESTIGATE_AREA);
+				newJob = InitialiseNewJob(engineer, JOB_INVESTIGATE_AREA);
 				if (newJob != nullptr) {
-					const int closestWPToSound = WaypointFindNearest_V(pEdict->v.origin, 500.0, bots[nearestEngy].current_team);
+					const int closestWPToSound = WaypointFindNearest_V(pEdict->v.origin, 500.0, engineer->current_team);
 
 					if (closestWPToSound != -1) {
 						// un-comment this WaypointDrawBeam to see this function in action
@@ -2428,7 +2481,7 @@ void BotSoundSense(edict_t* pEdict, const char* pszSample, const float fVolume) 
 
 																		// set up a job to investigate the sound
 						newJob->waypoint = closestWPToSound;
-						SubmitNewJob(&bots[nearestEngy], JOB_INVESTIGATE_AREA, newJob);
+						SubmitNewJob(engineer, JOB_INVESTIGATE_AREA, newJob);
 					}
 				}
 			}
@@ -2693,7 +2746,7 @@ static void BotGrenadeAvoidance(bot_t* pBot) {
 			const int owner_team = UTIL_GetTeam(pent->v.owner);
 
 			// try to get over or around the pipebomb if an enemy fired it
-			if (owner_team != pBot->current_team && !(team_allies[pBot->current_team] & 1 << owner_team)) {
+			if (owner_team != pBot->current_team && !TeamsAreAllied(pBot->current_team, owner_team)) {
 				//	UTIL_HostSay(pBot->pEdict, 0, "enemy PIPEBOMB spotted!");//DebugMessageOfDoom!
 
 				entity_origin = pent->v.origin;
@@ -2766,11 +2819,17 @@ static void BotRoleCheck(bot_t* pBot) {
 	for (i = 0; i < MAX_BOTS; i++) {
 		// Create lists of the defender/attacker roles any bots are playing
 		if (bots[i].is_used && bots[i].pEdict->v.playerclass) {
-			teams.total[bots[i].pEdict->v.team - 1]++;
+			// Spectators use team 6 and connecting clients can use
+			// team 0.  Never use either value to index the four-team arrays.
+			const int team = bots[i].pEdict->v.team - 1;
+			if (team < 0 || team >= MAX_TEAMS)
+				continue;
+
+			teams.total[team]++;
 			if (bots[i].mission == ROLE_DEFENDER)
-				teams.defenders[bots[i].pEdict->v.team - 1].addTail(&bots[i]);
+				teams.defenders[team].addTail(&bots[i]);
 			else if (bots[i].mission == ROLE_ATTACKER)
-				teams.attackers[bots[i].pEdict->v.team - 1].addTail(&bots[i]);
+				teams.attackers[team].addTail(&bots[i]);
 			else if (bots[i].mission == ROLE_NONE)
 				bots[i].mission = ROLE_ATTACKER;
 		}
@@ -2903,15 +2962,12 @@ static void BotComms(bot_t* pBot) {
 				else
 					std::strcpy(fromName, pBot->message);
 
-				int counter = 0;
-				// Pull the name out of the message.
-				while (true) {
-					if (fromName[counter] == ':' && fromName[counter + 1] == ' ') {
-						fromName[counter] = '\0';
-						break;
-					}
-					counter++;
-				}
+				// Pull the name out only when the expected chat delimiter exists.
+				// A malformed command must not scan beyond the message buffer.
+				char* nameEnd = std::strstr(fromName, ": ");
+				if (nameEnd == nullptr)
+					continue;
+				*nameEnd = '\0';
 
 				// Get the class from the command line.
 				char theClass = '\0'; // Initialize theClass to a default value
@@ -2936,15 +2992,11 @@ static void BotComms(bot_t* pBot) {
 				else
 					std::strcpy(fromName, pBot->message);
 
-				int counter = 0;
-				// Pull the name out of the message.
-				while (true) {
-					if (fromName[counter] == ':' && fromName[counter + 1] == ' ') {
-						fromName[counter] = '\0';
-						break;
-					}
-					counter++;
-				}
+				// Pull the name out only when the expected chat delimiter exists.
+				char* nameEnd = std::strstr(fromName, ": ");
+				if (nameEnd == nullptr)
+					continue;
+				*nameEnd = '\0';
 				BotChangeRole(pBot, pBot->message, fromName);
 			}
 			/*	if(strcasecmp("follow", cmd) == 0)
@@ -3222,7 +3274,7 @@ static bool botVerifyAccess(edict_t *pPlayer) {
 
    char szBuffer[64];
    snprintf(szBuffer, sizeof(szBuffer), "%s Does not have access.", authId);
-   ALERT(at_console, szBuffer);
+   ALERT(at_console, "%s", szBuffer);
    // example steam ID: STEAM_0:1245
 
    bool found = false;
@@ -3541,7 +3593,7 @@ bool SpyAmbushAreaCheck(const bot_t* pBot, Vector& r_wallVector) {
 
 			// ignore allied players
 			const int player_team = UTIL_GetTeam(pPlayer);
-			if (player_team > -1 && (player_team == pBot->current_team || team_allies[pBot->current_team] & 1 << player_team))
+			if (player_team > -1 && (player_team == pBot->current_team || TeamsAreAllied(pBot->current_team, player_team)))
 				continue;
 
 			if (VectorsNearerThan(pPlayer->v.origin, pBot->pEdict->v.origin, 1200.0)) {
@@ -3768,7 +3820,9 @@ void BotThink(bot_t* pBot) {
 
 	// keep an up-to-date record of which team the bot is on
 	pBot->current_team = UTIL_GetTeam(pBot->pEdict);
-	if (pBot->current_team < 0) // shouldn't happen, but, just in case
+	// Guard both ends before current_team reaches team arrays and
+	// bit shifts.  Spectator team 6 is not a playable bot team.
+	if (pBot->current_team < 0 || pBot->current_team >= MAX_TEAMS)
 	{
 		pBot->not_started = true; // try joining again
 		return;
@@ -3843,6 +3897,9 @@ void BotThink(bot_t* pBot) {
 	// human snipers can use their rifles as golf clubs [APG]RoboCop[CL]
 	if (botdontshoot)
 		pBot->enemy.ptr = nullptr;
+	// Blinded or deliberately stationary bots bypass normal combat processing,
+	// but must still release an already-live grenade by its safety deadline.
+	BotCheckPrimedGrenade(pBot);
 	if (botdontmove) {
 		pBot->f_move_speed = 0.0f;
 		pBot->f_side_speed = 0.0f;
@@ -3888,9 +3945,16 @@ void BotThink(bot_t* pBot) {
 
 	// these four functions essentially handle the core of bot behaviour
 	BotSenseEnvironment(pBot);
+	// Check again after enemy selection, which can clear the target immediately
+	// after a kill while the grenade still needs to be aimed away.
+	BotCheckPrimedGrenade(pBot);
 	BotFight(pBot);
 	BotJobThink(pBot);
 	BotRunJobs(pBot);
+
+	// Run after normal jobs so a pending handoff gets the final facing choice
+	// for this frame.  The bot does not throw until it has actually turned.
+	BotFlagTossCheck(pBot);
 
 	if (spectate_debug)
 		BotSpectatorDebug(pBot);
@@ -4170,8 +4234,116 @@ static void BotSenseEnvironment(bot_t* pBot) {
 				BotSprayLogo(pBot->pEdict, true);
 		}
 	}
-	else
+	else {
 		pBot->bot_has_flag = false;
+		pBot->flag_toss_target_index = 0;
+		pBot->f_flag_toss_time = 0.0f;
+	}
+}
+
+// Test whether a client is still a safe flag-handoff target.
+// "Teammate" deliberately means the same team rather than merely an allied
+// team, and a player already carrying a GoalItem is not eligible.
+static bool BotFlagTossTargetValid(const bot_t* pBot, edict_t* pPlayer) {
+	if (!pPlayer || pPlayer->free || pPlayer == pBot->pEdict ||
+	    (pPlayer->v.flags & FL_FAKECLIENT) || !IsAlive(pPlayer))
+		return false;
+
+	if (UTIL_GetTeam(pPlayer) != pBot->current_team || PlayerHasFlag(pPlayer))
+		return false;
+
+	if (!VectorsNearerThan(pPlayer->v.origin, pBot->pEdict->v.origin,
+	                      static_cast<float>(bot_flag_toss_distance)))
+		return false;
+
+	return FVisible(pPlayer->v.origin + pPlayer->v.view_ofs, pBot->pEdict);
+}
+
+// Face a nearby human teammate before using TFC's normal
+// voluntary GoalItem drop command.  Failed drops are retried after 1.5 seconds;
+// successful drops are announced only after ownership actually changes.
+static void BotFlagTossCheck(bot_t* pBot) {
+	if (!bot_flag_toss || !pBot->bot_has_flag) {
+		pBot->flag_toss_target_index = 0;
+		return;
+	}
+
+	edict_t* pTarget = nullptr;
+	if (pBot->flag_toss_target_index > 0 &&
+	    pBot->flag_toss_target_index <= std::min(gpGlobals->maxClients, MAX_BOTS)) {
+		pTarget = INDEXENT(pBot->flag_toss_target_index);
+		if (!BotFlagTossTargetValid(pBot, pTarget)) {
+			pTarget = nullptr;
+			pBot->flag_toss_target_index = 0;
+		}
+	}
+
+	// With no active recipient, throttle the full player scan to four times
+	// per second.  f_flag_toss_time also holds the delay after a failed throw.
+	if (!pTarget) {
+		if (pBot->f_flag_toss_time > pBot->f_think_time)
+			return;
+
+		pBot->f_flag_toss_time = pBot->f_think_time + 0.25f;
+		float nearestDistance = static_cast<float>(bot_flag_toss_distance) + 1.0f;
+		const int clientLimit = std::min(gpGlobals->maxClients, MAX_BOTS);
+
+		for (int i = 1; i <= clientLimit; ++i) {
+			edict_t* pPlayer = INDEXENT(i);
+			if (!BotFlagTossTargetValid(pBot, pPlayer))
+				continue;
+
+			const float distance = (pPlayer->v.origin - pBot->pEdict->v.origin).Length();
+			if (distance < nearestDistance) {
+				pTarget = pPlayer;
+				nearestDistance = distance;
+				pBot->flag_toss_target_index = i;
+			}
+		}
+
+		if (!pTarget)
+			return;
+	}
+
+	// Override the navigation/combat facing selected earlier in this frame.
+	// Waiting for a small yaw error stops dropitems from throwing the flag in
+	// the direction the bot happened to be looking when the teammate arrived.
+	BotSetFacing(pBot, pTarget->v.origin + pTarget->v.view_ofs);
+	float yawError = pBot->pEdict->v.v_angle.y - pBot->pEdict->v.ideal_yaw;
+	if (yawError < -180.0f)
+		yawError += 360.0f;
+	else if (yawError > 180.0f)
+		yawError -= 360.0f;
+
+	if (fabsf(yawError) > 10.0f || pBot->f_flag_toss_time > pBot->f_think_time)
+		return;
+
+	const int thrownFlagImpulse = pBot->flag_impulse;
+	FakeClientCommand(pBot->pEdict, "dropitems", nullptr, nullptr);
+
+	// ClientCommand handling is synchronous.  Confirm that the exact GoalItem
+	// is no longer owned before announcing a successful throw.
+	bool stillCarrying = false;
+	edict_t* pGoal = nullptr;
+	while ((pGoal = FIND_ENTITY_BY_CLASSNAME(pGoal, "item_tfgoal")) != nullptr && !FNullEnt(pGoal)) {
+		if (pGoal->v.owner == pBot->pEdict && pGoal->v.impulse == thrownFlagImpulse) {
+			stillCarrying = true;
+			break;
+		}
+	}
+
+	if (!stillCarrying) {
+		char message[96];
+		snprintf(message, sizeof(message), "Flag thrown to %s", STRING(pTarget->v.netname));
+		message[sizeof(message) - 1] = '\0';
+		UTIL_HostSay(pBot->pEdict, 1, message);
+	}
+
+	// On failure, release the facing override during the retry delay.  A fresh
+	// scan after 1.5 seconds accommodates movement or newly available space.
+	pBot->flag_toss_target_index = 0;
+	pBot->f_flag_toss_time = pBot->f_think_time + 1.5f;
+
 }
 
 // This function handles basic combat actions, such as pointing the active
@@ -4180,6 +4352,19 @@ static void BotSenseEnvironment(bot_t* pBot) {
 static void BotFight(bot_t* pBot) {
 	const edict_t* pEdict = pBot->pEdict;
 	const edict_t* pent = pBot->enemy.ptr; // assign the enemy entity to pent
+
+	// Once urgent healing is the selected job, do not let the
+	// earlier combat pass leave IN_ATTACK set or reselect a gun for a distant
+	// enemy.  JobBuffAlly runs later in the frame and owns facing, movement, and
+	// medikit use.  Immediate close combat or recent damage still interrupts the
+	// support job in its assessor before this state can persist.
+	const bool urgentMedicCare = pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC &&
+		pBot->currentJob >= 0 && pBot->currentJob < JOB_BUFFER_MAX &&
+		pBot->jobType[pBot->currentJob] == JOB_BUFF_ALLY &&
+		pBot->job[pBot->currentJob].priority >= MEDIC_HEAL_PRIORITY_URGENT &&
+		!MedicHasImmediateCombatThreat(pBot);
+	if (urgentMedicCare)
+		return;
 
 	if (pEdict != nullptr && pent != nullptr) {
 		// Calculate the distance between the bot and its enemy
@@ -4228,7 +4413,7 @@ static void BotCombatThink(bot_t* pBot) {
 		pBot->f_duck_time = pBot->f_think_time + 0.3f;
 
 	// ignore allies
-	if (pBot->current_team == enemy_team || team_allies[pBot->current_team] & 1 << enemy_team)
+	if (pBot->current_team == enemy_team || TeamsAreAllied(pBot->current_team, enemy_team))
 		return;
 
 	const int ThreatLevel = guessThreatLevel(pBot);

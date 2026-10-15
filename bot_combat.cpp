@@ -70,6 +70,14 @@ static float bot_snipe_max_inaccuracy[5] = {19.0f, 28.0f, 37.0f, 46.0f, 55.0f};
 extern bool is_team[4];
 extern int team_allies[4];
 
+// Reject invalid/spectator team values before indexing ally masks
+// or shifting a bit by an out-of-range count.
+static bool TeamsAreAllied(const int team, const int otherTeam) {
+   return team >= 0 && team < MAX_TEAMS &&
+          otherTeam >= 0 && otherTeam < MAX_TEAMS &&
+          (team_allies[team] & (1 << otherTeam)) != 0;
+}
+
 extern bot_t bots[32];
 
 // list of which player indices carry a flag(updated each frame)
@@ -80,6 +88,7 @@ static bool playerHasFlag[32];
 // FUNCTION PROTOTYPES ///////////////
 static void BotPipeBombCheck(const bot_t* pBot);
 static edict_t* BotFindEnemy(bot_t* pBot);
+static void BotMedicPatientCheck(bot_t* pBot);
 static bool BotSpyDetectCheck(bot_t* pBot, edict_t* pNewEnemy);
 static void BotSGSpotted(bot_t* pBot, edict_t* sg);
 static bool BotPrimeGrenade(bot_t* pBot, int slot, unsigned char nadeType, unsigned short reserve);
@@ -209,7 +218,7 @@ int FriendlyClassTotal(const edict_t *pEdict, const int specifiedClass, const bo
             const int player_team = UTIL_GetTeam(pPlayer);
 
             // add another if the player is a teammate or ally
-            if (my_team == player_team || team_allies[my_team] & 1 << player_team)
+            if (my_team == player_team || TeamsAreAllied(my_team, player_team))
                ++classTotal;
          }
       }
@@ -289,7 +298,7 @@ static void BotFeigningEnemyCheck(bot_t *pBot) {
 
          // ignore allied players
          const int player_team = UTIL_GetTeam(pPlayer);
-         if (player_team > -1 && (player_team == pBot->current_team || team_allies[pBot->current_team] & 1 << player_team))
+         if (player_team > -1 && (player_team == pBot->current_team || TeamsAreAllied(pBot->current_team, player_team)))
             continue;
 
          // is this enemy near and facing away from the bot?
@@ -310,6 +319,62 @@ static void BotFeigningEnemyCheck(bot_t *pBot) {
    // no target found, clear the Spies knowledge of enemies
    pBot->enemy.ptr = nullptr;
    pBot->visEnemyCount = 0;
+}
+
+// Distinguish immediate combat from merely having a visible
+// enemy.  A close enemy or damage during the last second interrupts healing;
+// a distant visible enemy does not automatically invalidate urgent care.
+bool MedicHasImmediateCombatThreat(const bot_t* pBot) {
+   if (pBot->f_injured_time + MEDIC_DAMAGE_INTERRUPT_DURATION > pBot->f_think_time)
+      return true;
+
+   return pBot->enemy.ptr != nullptr &&
+          pBot->enemy.f_seenDistance <= MEDIC_IMMEDIATE_THREAT_RANGE;
+}
+
+// Discover nearby Medic patients independently of enemy target selection.
+// Keeping this outside BotFindEnemy() prevents its current-enemy fast path
+// from returning before patient discovery is reached.
+static void BotMedicPatientCheck(bot_t* pBot) {
+   if (mod_id != TFC_DLL || pBot->pEdict->v.playerclass != TFC_CLASS_MEDIC ||
+       MedicHasImmediateCombatThreat(pBot))
+      return;
+
+   edict_t* nearestPatient = nullptr;
+   float nearestPatientDistance = SUPPORT_DISCOVERY_RANGE;
+
+   for (int i = 1; i <= std::min(gpGlobals->maxClients, MAX_BOTS); ++i) {
+      edict_t* pPlayer = INDEXENT(i);
+
+      if (!pPlayer || pPlayer->free || pPlayer == pBot->pEdict || !IsAlive(pPlayer))
+         continue;
+
+      // Support actual same-team players rather than crossing to teams that
+      // happen to be allied by a map rule.
+      if (UTIL_GetTeam(pPlayer) != pBot->current_team || pPlayer->v.max_health <= 0.0f)
+         continue;
+
+      // Any health below the normal maximum is now urgent within 400 units;
+      // infection remains urgent even when current health is full.
+      if (pPlayer->v.health >= pPlayer->v.max_health && !PlayerIsInfected(pPlayer))
+         continue;
+
+      const float distance = (pPlayer->v.origin - pBot->pEdict->v.origin).Length();
+      const Vector patientEyes = pPlayer->v.origin + pPlayer->v.view_ofs;
+      if (distance <= nearestPatientDistance && FVisible(patientEyes, pBot->pEdict)) {
+         nearestPatient = pPlayer;
+         nearestPatientDistance = distance;
+      }
+   }
+
+   if (nearestPatient) {
+      job_struct* newJob = InitialiseNewJob(pBot, JOB_BUFF_ALLY);
+      if (newJob != nullptr) {
+         newJob->player = nearestPatient;
+         newJob->origin = nearestPatient->v.origin;
+         SubmitNewJob(pBot, JOB_BUFF_ALLY, newJob);
+      }
+   }
 }
 
 // This function will first check that the bots current enemy is still a
@@ -469,7 +534,14 @@ void BotEnemyCheck(bot_t *pBot) {
       pBot->enemy.f_firstSeen = pBot->f_think_time;
       pBot->enemy.f_lastSeen = pBot->f_think_time;
       pBot->enemy.lastLocation = new_enemy->v.origin;
+      // Keep the distance current immediately so support logic can decide
+      // whether combat is close enough to interrupt urgent healing.
+      pBot->enemy.f_seenDistance = (pBot->pEdict->v.origin - new_enemy->v.origin).Length();
    }
+
+   // Run after enemy selection so immediate-threat filtering uses the current
+   // target and distance.  This scan remains throttled by f_enemy_check_time.
+   BotMedicPatientCheck(pBot);
 }
 
 // This function is responsible for checking if the bot can see a new
@@ -509,7 +581,7 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
 
             // don't target your own team's sentry guns...
             // don't target allied sentry guns either...
-            if (pBot->current_team == sentry_team || team_allies[pBot->current_team] & 1 << sentry_team)
+            if (pBot->current_team == sentry_team || TeamsAreAllied(pBot->current_team, sentry_team))
                continue;
 
             vecEnd = pent->v.origin + pent->v.view_ofs;
@@ -532,7 +604,7 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
                continue;
             int sentry_team = pent->v.team - 1;
             // don't target friendly sentry guns...
-            if (pBot->current_team == sentry_team || team_allies[pBot->current_team] & 1 << sentry_team)
+            if (pBot->current_team == sentry_team || TeamsAreAllied(pBot->current_team, sentry_team))
                continue;
 
             // ntf_capture_mg 1 = ignore, we can cap it
@@ -581,55 +653,47 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
    nearestDistance = 1000.0f;
 
    if (mod_id == TFC_DLL) {
-      // get medics and engineers to heal/repair teammates
-      if (pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC || (pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER && pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > 80)) {
-         nearestDistance = 1000.0f;
-         edict_t *pPlayer;
-         int player_team;
+      // Give Engineers the same reliable support discovery used
+      // by Medics.  Select the nearest visible same-team player rather than the
+      // first client slot, and do not divert from combat to repair armor.
+      if (pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER &&
+          pBot->enemy.ptr == nullptr &&
+          pBot->m_rgAmmo[weapon_defs[TF_WEAPON_SPANNER].iAmmo1] > 80) {
+         edict_t* nearestPatient = nullptr;
+         float nearestPatientDistance = SUPPORT_DISCOVERY_RANGE;
 
-         // search the world for players...
-         for (i = 1; i <= gpGlobals->maxClients; i++) {
-            pPlayer = INDEXENT(i);
+         for (i = 1; i <= std::min(gpGlobals->maxClients, MAX_BOTS); ++i) {
+            edict_t* pPlayer = INDEXENT(i);
 
-            // skip invalid players and skip self (i.e. this bot)
-            if (pPlayer && !pPlayer->free && pPlayer != pEdict) {
-               // skip this player if they're not alive
-               if (!IsAlive(pPlayer))
-                  continue;
+            if (!pPlayer || pPlayer->free || pPlayer == pEdict || !IsAlive(pPlayer))
+               continue;
 
-               // skip human players in observer mode
-               if (observer_mode && !(pPlayer->v.flags & FL_FAKECLIENT))
-                  continue;
+            if (observer_mode && !(pPlayer->v.flags & FL_FAKECLIENT))
+               continue;
 
-               player_team = UTIL_GetTeamColor(pPlayer);
+            // Repair only the Engineer's actual team, not map-defined allies.
+            if (UTIL_GetTeam(pPlayer) != pBot->current_team)
+               continue;
 
-               // ignore all enemies...
-               if (pBot->current_team != player_team && !(team_allies[pBot->current_team] & 1 << player_team))
-                  continue;
+            // Preserve the original automatic-repair threshold, now using the
+            // corrected armor percentage calculation.
+            if (PlayerIsInfected(pPlayer) || PlayerArmorPercent(pPlayer) > 60)
+               continue;
 
-               // check if the player needs to be healed
-               if (pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC && pPlayer->v.health / pPlayer->v.max_health > 0.80f && !PlayerIsInfected(pPlayer)) // scores a point, even to selfish medics
-                  continue;                                                                                                                           // health greater than 70% so ignore
+            const float distance = (pPlayer->v.origin - pEdict->v.origin).Length();
+            const Vector patientEyes = pPlayer->v.origin + pPlayer->v.view_ofs;
+            if (distance <= nearestPatientDistance && FVisible(patientEyes, pEdict)) {
+               nearestPatient = pPlayer;
+               nearestPatientDistance = distance;
+            }
+         }
 
-               // check if the player needs to be armored...
-               if (pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER && (PlayerIsInfected(pPlayer) || PlayerArmorPercent(pPlayer) > 60))
-                  continue; // armor greater than 60% so ignore - was 50% [APG]RoboCop[CL]
-
-               // see if bot can see the player...
-               float distance = (pPlayer->v.origin - pEdict->v.origin).Length();
-               vecEnd = pPlayer->v.origin + pPlayer->v.view_ofs;
-               if (distance < nearestDistance && FInViewCone(vecEnd, pEdict) && FVisible(vecEnd, pEdict)) {
-                  nearestDistance = distance;
-
-                  // set up a job to handle the healing/repairing
-                  job_struct *newJob = InitialiseNewJob(pBot, JOB_BUFF_ALLY);
-                  if (newJob != nullptr) {
-                     newJob->player = pPlayer;
-                     newJob->origin = pPlayer->v.origin; // remember where the player was seen
-                     SubmitNewJob(pBot, JOB_BUFF_ALLY, newJob);
-                  }
-                  break;
-               }
+         if (nearestPatient) {
+            job_struct* newJob = InitialiseNewJob(pBot, JOB_BUFF_ALLY);
+            if (newJob != nullptr) {
+               newJob->player = nearestPatient;
+               newJob->origin = nearestPatient->v.origin;
+               SubmitNewJob(pBot, JOB_BUFF_ALLY, newJob);
             }
          }
       }
@@ -646,7 +710,7 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
 
             // ignore sniper spots from your team
             // and ignore sniper spots from your allies
-            if (sniper_team == pBot->current_team || team_allies[pBot->current_team] & 1 << sniper_team)
+            if (sniper_team == pBot->current_team || TeamsAreAllied(pBot->current_team, sniper_team))
                continue;
 
             // ok... check distance to sniper spot and see if its nearish
@@ -672,7 +736,7 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
             // don't target your own team's sentry guns...
             // don't target allied sentry guns either...
             vecEnd = pent->v.origin + pent->v.view_ofs; // + Vector(0,0,16);
-            if (pBot->current_team == sentry_team || team_allies[pBot->current_team] & 1 << sentry_team) {
+            if (pBot->current_team == sentry_team || TeamsAreAllied(pBot->current_team, sentry_team)) {
                if (VectorsNearerThan(pent->v.origin, pEdict->v.origin, 300.0) && pEdict->v.playerclass != TFC_CLASS_ENGINEER && FInViewCone(vecEnd, pEdict) && FVisible(vecEnd, pEdict)) {
                   // ntf_feature_antigren
                   char *cvar_ntf_feature_antigren = const_cast<char *>(CVAR_GET_STRING("ntf_feature_antigren"));
@@ -709,7 +773,7 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
             int sentry_team = pent->v.team - 1;
 
             // don't target friendly sentry guns...
-            if (pBot->current_team == sentry_team || team_allies[pBot->current_team] & 1 << sentry_team)
+            if (pBot->current_team == sentry_team || TeamsAreAllied(pBot->current_team, sentry_team))
                continue;
 
             // ntf_capture_mg 1 = ignore, we can cap it
@@ -777,7 +841,7 @@ static edict_t *BotFindEnemy(bot_t *pBot) {
 
                if (mod_id == TFC_DLL) {
                   // don't target your allies either...
-                  if (team_allies[pBot->current_team] & 1 << player_team)
+                  if (TeamsAreAllied(pBot->current_team, player_team))
                      player_is_ally = true;
 
                   // so disguised spys wont attack other disguised spys
@@ -1346,7 +1410,7 @@ void BotShootAtEnemy(bot_t *pBot) {
 
       // don't target your teammates.
       // and don't target your allies either...
-      if (pBot->current_team == player_team || team_allies[pBot->current_team] & 1 << player_team) {
+      if (pBot->current_team == player_team || TeamsAreAllied(pBot->current_team, player_team)) {
          pBot->strafe_mod = STRAFE_MOD_HEAL;
          return;
       }
@@ -1801,7 +1865,7 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
          if (pDelay[select_index].iId != iId) {
             char msg[80];
             snprintf(msg, sizeof(msg), "fire_delay mismatch for weapon id=%d\n", iId);
-            ALERT(at_console, msg);
+            ALERT(at_console, "%s", msg);
             return false;
          }
 
@@ -1819,7 +1883,7 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
                const int player_team = UTIL_GetTeam(pBot->enemy.ptr);
 
                // only heal your teammates or allies...
-               if ((pBot->current_team == player_team || team_allies[pBot->current_team] & 1 << player_team) && (iId != TF_WEAPON_MEDIKIT && iId != TF_WEAPON_SPANNER)) {
+               if ((pBot->current_team == player_team || TeamsAreAllied(pBot->current_team, player_team)) && (iId != TF_WEAPON_MEDIKIT && iId != TF_WEAPON_SPANNER)) {
                   pBot->strafe_mod = STRAFE_MOD_HEAL;
                   // return false;  // don't "fire" unless weapon is medikit
                   use_primary = false;
@@ -1892,6 +1956,54 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
 // checking whether or not the sentry they have in memory is viewable
 // from there. If so they will anticipate contact and prime a grenade,
 // and acquire the target early just before contact.
+static float BotGrenadeReleaseTime(const bot_t* pBot) {
+   const int lostHealthPercent = 100 - PlayerHealthPercent(pBot->pEdict);
+   float releaseTime = (pBot->nadeType == GRENADE_MIRV) ? 1.0f : 0.8f;
+
+   // Injured bots release earlier because they can tolerate less splash damage.
+   if (lostHealthPercent > 20)
+      releaseTime += static_cast<float>(lostHealthPercent) * 0.01f;
+
+   return releaseTime;
+}
+
+// Release both grenade buttons and keep the bot's grenade state synchronized.
+// Sending both releases is the established TFC-safe way to handle either slot.
+void BotReleasePrimedGrenade(bot_t* pBot) {
+   if (pBot == nullptr || pBot->pEdict == nullptr || !pBot->nadePrimed)
+      return;
+
+   FakeClientCommand(pBot->pEdict, "-gren1", "102", nullptr);
+   FakeClientCommand(pBot->pEdict, "-gren2", "101", nullptr);
+   pBot->nadePrimed = false;
+   pBot->nadeType = 0;
+}
+
+// Maintain an already-primed grenade even when normal combat processing stops.
+// The disposal job provides ordinary aiming when time permits; the deadline
+// merely releases the grenade in the bot's current direction before detonation.
+void BotCheckPrimedGrenade(bot_t* pBot) {
+   if (pBot == nullptr || pBot->pEdict == nullptr || !pBot->nadePrimed)
+      return;
+
+   const float timeToDet = 4.0f - (pBot->f_think_time - pBot->primeTime);
+
+   // This is the same release deadline used during normal combat.  It must not
+   // depend on bot_use_grenades: that setting may change after a grenade is live.
+   if (timeToDet <= BotGrenadeReleaseTime(pBot)) {
+      BotReleasePrimedGrenade(pBot);
+      return;
+   }
+
+   // If the target disappeared, start looking for a safe throw direction now
+   // rather than waiting until the last two seconds of the fuse.
+   if (pBot->enemy.ptr == nullptr) {
+      job_struct* newJob = InitialiseNewJob(pBot, JOB_BIN_GRENADE);
+      if (newJob != nullptr)
+         SubmitNewJob(pBot, JOB_BIN_GRENADE, newJob);
+   }
+}
+
 int BotNadeHandler(bot_t *pBot, bool timed, const char newNadeType) {
    // Lets try putting discard code in here. (dont let the engineer discard)
    if (pBot->f_discard_time < pBot->f_think_time && pBot->pEdict->v.playerclass != TFC_CLASS_ENGINEER) {
@@ -1921,14 +2033,6 @@ int BotNadeHandler(bot_t *pBot, bool timed, const char newNadeType) {
    const float timeToDet = 4.0f - (pBot->f_think_time - pBot->primeTime);
    float zDiff = 0;
 
-   // if the bot has no target to throw at try to find a place to
-   // dispose of the live grenade(anti-suicide code)
-   if (pBot->nadePrimed == true && pBot->enemy.ptr == nullptr && timeToDet <= 2.0f) {
-      job_struct *newJob = InitialiseNewJob(pBot, JOB_BIN_GRENADE);
-      if (newJob != nullptr)
-         SubmitNewJob(pBot, JOB_BIN_GRENADE, newJob);
-   }
-
    // emergency throw if the enemy has closed to self-damage range while
    // the bot is holding a live grenade - prevents suicide bomber behaviour - [APG]RoboCop[CL]
    if (pBot->nadePrimed && pBot->enemy.ptr != nullptr) {
@@ -1946,25 +2050,8 @@ int BotNadeHandler(bot_t *pBot, bool timed, const char newNadeType) {
    }
 
    // Go ahead and throw if its about to explode.
-   if (pBot->nadePrimed) {
-      const int lost_health_percent = 100 - PlayerHealthPercent(pEdict);
-      float release_time = 0.8f;
-
-      if (pBot->nadeType == GRENADE_MIRV)
-         release_time = 1.0f;
-
-      // factor in the bots state of health
-      if (lost_health_percent > 20)
-         release_time += static_cast<float>(lost_health_percent) * 0.01f;
-
-      if (timeToDet <= release_time) {
-         //	char msg[96];
-         //	std::sprintf(msg, "Tossing. release_time:%f  lost_health_percent:%d",
-         //		release_time, lost_health_percent);
-         //	UTIL_HostSay(pBot->pEdict, 0, msg);//DebugMessageOfDoom!
-         toss = true;
-      }
-   }
+   if (pBot->nadePrimed && timeToDet <= BotGrenadeReleaseTime(pBot))
+      toss = true;
 
    // Elevation check, try to throw up to ledges better.
    if (pBot->enemy.ptr) {
@@ -2007,13 +2094,9 @@ int BotNadeHandler(bot_t *pBot, bool timed, const char newNadeType) {
    }
 
    // Time to throw?
-   if (toss || pEdict->v.waterlevel == WL_HEAD_IN_WATER) {
-      // Throw the mofos!
-      FakeClientCommand(pEdict, "-gren1", "102", nullptr);
-      FakeClientCommand(pEdict, "-gren2", "101", nullptr);
+   if ((toss || pEdict->v.waterlevel == WL_HEAD_IN_WATER) && pBot->nadePrimed) {
+      BotReleasePrimedGrenade(pBot);
       rtnValue = 1;
-      pBot->nadePrimed = false;
-      pBot->nadeType = 0;
    }
 
    /*	// this code allows bots to prime grenades early when
@@ -2204,12 +2287,10 @@ int BotNadeHandler(bot_t *pBot, bool timed, const char newNadeType) {
    }
 
    // Go ahead and toss em if they aren't meant to be timed.
-   if (!timed) {
-      FakeClientCommand(pEdict, "-gren1", "102", nullptr);
-      FakeClientCommand(pEdict, "-gren2", "101", nullptr);
+   if (!timed && pBot->nadePrimed) {
       pBot->tossNade = 1;
+      BotReleasePrimedGrenade(pBot);
       rtnValue = 1;
-      pBot->nadePrimed = false;
    }
 
    return rtnValue;
@@ -2388,7 +2469,7 @@ int PickRandomEnemyTeam(const int my_team) {
 
    // count and index the hostile teams
    for (int index = 0; index < MAX_TEAMS; index++) {
-      if (is_team[index] == true && my_team != index && !(team_allies[my_team] & 1 << index)) {
+      if (is_team[index] == true && my_team != index && !TeamsAreAllied(my_team, index)) {
          teamList[total] = index;
          ++total;
       }
@@ -2458,7 +2539,7 @@ void BotCheckForMultiguns(bot_t *pBot, float nearestdistance, edict_t *pNewEnemy
             continue;
 
          // don't target friendly sentry guns...
-         if (pBot->current_team == sentry_team || team_allies[pBot->current_team] & 1 << sentry_team)
+         if (pBot->current_team == sentry_team || TeamsAreAllied(pBot->current_team, sentry_team))
             continue;
 
          // is this the closest visible sentry gun?
@@ -2493,12 +2574,13 @@ void UpdateFlagCarrierList() {
          if (pPlayer && !pPlayer->free && pent->v.owner == pPlayer && IsAlive(pPlayer)) {
             playerHasFlag[i - 1] = true;
 
-            const int botIndex = i - 2; // -2 definitely not -1!
-
-            // if the player is a bot set it's flag impulse to match the flag
-            // so the bot knows which flag it has
-            if (bots[botIndex + 2].is_used) {
-               bots[botIndex + 2].flag_impulse = pent->v.impulse;
+            // bots[] entries are allocated independently of client
+            // entity slots, so slot - 1 is not a valid bot-record mapping.
+            // Resolve the record by its entity pointer; humans return -1.
+            const int botIndex = UTIL_GetBotIndex(pPlayer);
+            if (botIndex >= 0 && botIndex < MAX_BOTS &&
+                bots[botIndex].is_used && bots[botIndex].pEdict == pPlayer) {
+               bots[botIndex].flag_impulse = pent->v.impulse;
             }
          }
       }

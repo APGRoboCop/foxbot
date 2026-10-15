@@ -298,6 +298,9 @@ template <typename Type> void List<Type>::remove(LIter<Type>& loc) {
 	// store a tmp. ptr to node in the location where
 	// remove will occur.
 	Node* deletedNode = loc.currentNode;
+	// An iterator already at end() has no node to unlink.
+	if (deletedNode == nullptr)
+		return;
 
 	// attach nodes to the left and right of this node
 	// to each other.  Also note that there may not

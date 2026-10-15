@@ -1490,10 +1490,19 @@ int JobBuffAlly(bot_t* pBot) {
          return JOB_TERMINATED;
    }
 
-   // phase zero - set a waypoint near where the patient was last seen
-   // useful when the patient is far away or not visible
-   if (job_ptr->phase == 0) {
-      job_ptr->waypoint = WaypointFindNearest_S(job_ptr->origin, nullptr, 500.0f, pBot->current_team, W_FL_DELETED);
+	// phase zero - set a waypoint near where the patient was last seen
+	// useful when the patient is far away or not visible
+	if (job_ptr->phase == 0) {
+		// A nearby visible patient needs no waypoint.  This also
+		// allows a touching teammate to be healed while the Medic temporarily has
+		// no current waypoint.
+		const float allyDistance = (pBot->pEdict->v.origin - job_ptr->player->v.origin).Length();
+		if (allyDistance <= SUPPORT_MAX_CHASE_RANGE && FVisible(job_ptr->player->v.origin + job_ptr->player->v.view_ofs, pBot->pEdict)) {
+			job_ptr->phase = 2;
+			return JOB_UNDERWAY;
+		}
+
+		job_ptr->waypoint = WaypointFindNearest_S(job_ptr->origin, nullptr, 500.0f, pBot->current_team, W_FL_DELETED);
 
       job_ptr->phase = 1;
       return JOB_UNDERWAY;
@@ -1503,7 +1512,7 @@ int JobBuffAlly(bot_t* pBot) {
    if (job_ptr->phase == 1) {
       // go for the ally if they are near and visible
       const float allyDistance = (pBot->pEdict->v.origin - job_ptr->player->v.origin).Length();
-      if (allyDistance < 500.1f && FVisible(job_ptr->player->v.origin + job_ptr->player->v.view_ofs, pBot->pEdict)) {
+      if (allyDistance <= SUPPORT_MAX_CHASE_RANGE && FVisible(job_ptr->player->v.origin + job_ptr->player->v.view_ofs, pBot->pEdict)) {
          job_ptr->phase = 2;
          return JOB_UNDERWAY;
       }
@@ -1524,6 +1533,17 @@ int JobBuffAlly(bot_t* pBot) {
 
    // phase 2 - decide how long the bot will try to heal the visible patient
    if (job_ptr->phase == 2) {
+      // Once a Medic accepts nearby urgent care, retain that
+      // patient's urgent priority briefly if movement carries them just beyond
+      // the 400-unit discovery boundary.  Immediate threats are still rejected
+      // by assess_JobBuffAlly and the 600-unit hard limit remains unchanged.
+      if (pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC) {
+         const float allyDistance = (pBot->pEdict->v.origin - job_ptr->player->v.origin).Length();
+         if (allyDistance <= SUPPORT_DISCOVERY_RANGE &&
+             (job_ptr->player->v.health < job_ptr->player->v.max_health || PlayerIsInfected(job_ptr->player)))
+            pBot->f_support_commit_time = pBot->f_think_time + SUPPORT_COMMIT_DURATION;
+      }
+
       job_ptr->phase = 3;
       job_ptr->phase_timer = pBot->f_think_time + random_float(8.0f, 12.0f);
    }
@@ -1536,9 +1556,21 @@ int JobBuffAlly(bot_t* pBot) {
          return JOB_TERMINATED;
       }
 
-      // go back to looking for the patient if they disappear from view
+      // Never chase support work beyond the bounded range.
       const float allyDistance = (pBot->pEdict->v.origin - job_ptr->player->v.origin).Length();
-      if (allyDistance >= 500.1f || !FVisible(job_ptr->player->v.origin + job_ptr->player->v.view_ofs, pBot->pEdict)) {
+      if (allyDistance > SUPPORT_MAX_CHASE_RANGE)
+         return JOB_TERMINATED;
+
+      // Refresh the short commitment while urgent care remains nearby.  This is
+      // hysteresis, not an uninterruptible lock: immediate combat still cancels
+      // the job through its assessor on every frame.
+      if (pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC &&
+          allyDistance <= SUPPORT_DISCOVERY_RANGE &&
+          (job_ptr->player->v.health < job_ptr->player->v.max_health || PlayerIsInfected(job_ptr->player)))
+         pBot->f_support_commit_time = pBot->f_think_time + SUPPORT_COMMIT_DURATION;
+
+      // Go back to route planning if the nearby patient disappears from view.
+      if (!FVisible(job_ptr->player->v.origin + job_ptr->player->v.view_ofs, pBot->pEdict)) {
          job_ptr->phase = 0;
          return JOB_UNDERWAY;
       }
@@ -1552,15 +1584,21 @@ int JobBuffAlly(bot_t* pBot) {
 
       pBot->strafe_mod = STRAFE_MOD_HEAL;
 
-      // make sure the right weapon is selected
-      if (pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC && pBot->current_weapon.iId != TF_WEAPON_MEDIKIT)
-         UTIL_SelectItem(pBot->pEdict, "tf_weapon_medikit");
-      else if (pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER && pBot->current_weapon.iId != TF_WEAPON_SPANNER)
-         UTIL_SelectItem(pBot->pEdict, "tf_weapon_spanner");
-
-      if (allyDistance < 80.0f)
-         pBot->pEdict->v.button |= IN_ATTACK;
-   }
+		// Do not press attack during the weapon-switch frame.  The
+		// old sequence could fire the previously selected gun instead of healing.
+		if (pBot->pEdict->v.playerclass == TFC_CLASS_MEDIC) {
+			if (pBot->current_weapon.iId != TF_WEAPON_MEDIKIT)
+				UTIL_SelectItem(pBot->pEdict, "tf_weapon_medikit");
+			else if (allyDistance < 80.0f)
+				pBot->pEdict->v.button |= IN_ATTACK;
+		}
+		else if (pBot->pEdict->v.playerclass == TFC_CLASS_ENGINEER) {
+			if (pBot->current_weapon.iId != TF_WEAPON_SPANNER)
+				UTIL_SelectItem(pBot->pEdict, "tf_weapon_spanner");
+			else if (allyDistance < 80.0f)
+				pBot->pEdict->v.button |= IN_ATTACK;
+		}
+	}
 
    return JOB_UNDERWAY;
 }
@@ -3610,10 +3648,7 @@ int JobBinGrenade(bot_t* pBot) {
    // regardless of which phase the bot is in - [APG]RoboCop[CL]
    const float timeToDet = 4.0f - (pBot->f_think_time - pBot->primeTime);
    if (pBot->nadePrimed && timeToDet <= 0.5f) {
-      FakeClientCommand(pBot->pEdict, "-gren1", "102", nullptr);
-      FakeClientCommand(pBot->pEdict, "-gren2", "101", nullptr);
-      pBot->nadePrimed = false;
-      pBot->nadeType = 0;
+      BotReleasePrimedGrenade(pBot);
       pBot->tossNade = 1;
       pBot->f_move_speed = -pBot->f_max_speed; // back away from the throw
       job_ptr->phase = 2;
@@ -3648,6 +3683,14 @@ int JobBinGrenade(bot_t* pBot) {
 
    // phase 1 - face where to throw the grenade
    if (job_ptr->phase == 1) {
+      // The per-frame safety deadline may have released the grenade before the
+      // bot finished turning.  Stop aiming and use the ordinary retreat phase.
+      if (!pBot->nadePrimed) {
+         job_ptr->phase = 2;
+         job_ptr->phase_timer = pBot->f_think_time + 1.0f;
+         return JOB_UNDERWAY;
+      }
+
       pBot->f_side_speed = 0.0f;
       pBot->f_move_speed = 0.0f;
       BotSetFacing(pBot, job_ptr->origin);
@@ -3658,11 +3701,8 @@ int JobBinGrenade(bot_t* pBot) {
       if (BotInFieldOfView(pBot, v_aim) == 0 || timeToDet <= 1.2f) {
          // release the grenade now that we're facing the target
          if (pBot->nadePrimed) {
-            FakeClientCommand(pBot->pEdict, "-gren1", "102", nullptr);
-            FakeClientCommand(pBot->pEdict, "-gren2", "101", nullptr);
-            pBot->nadePrimed = false;
-            pBot->nadeType = 0;
             pBot->tossNade = 1;
+            BotReleasePrimedGrenade(pBot);
          }
          job_ptr->phase = 2;
          job_ptr->phase_timer = pBot->f_think_time + 1.0f;

@@ -216,11 +216,25 @@ bool FoxNN::load(std::FILE* bfp)
 	if (std::fread(&numOutputs, sizeof(int), 1, bfp) != 1)
 		return false;
 
-	init(numInputs, numHidden, numOutputs);
+	// Do not let a damaged .fnn file request enormous vectors or
+	// replace the initialized combat network with incompatible dimensions.
+	if (numInputs <= 0 || numHidden <= 0 || numOutputs <= 0 ||
+	    numInputs > 1024 || numHidden > 1024 || numOutputs > 1024)
+		return false;
+	if ((m_numInputs > 0 || m_numHidden > 0 || m_numOutputs > 0) &&
+	    (numInputs != m_numInputs || numHidden != m_numHidden || numOutputs != m_numOutputs))
+		return false;
 
 	int numWeights;
 	if (std::fread(&numWeights, sizeof(int), 1, bfp) != 1)
 		return false;
+	const long long expectedWeights =
+		static_cast<long long>(numHidden) * (numInputs + 1LL) +
+		static_cast<long long>(numOutputs) * (numHidden + 1LL);
+	if (numWeights < 0 || expectedWeights > 1000000LL || numWeights != expectedWeights)
+		return false;
+
+	init(numInputs, numHidden, numOutputs);
 
 	std::vector<float> weights(numWeights);
 	if (std::fread(weights.data(), sizeof(float), numWeights, bfp) != static_cast<size_t>(numWeights))
