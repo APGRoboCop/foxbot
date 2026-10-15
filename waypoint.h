@@ -193,7 +193,7 @@ bool WaypointLoad(edict_t* pEntity);
 
 void WaypointSave();
 
-bool WaypointReachable(Vector v_src, Vector v_dest, const edict_t* pEntity);
+bool WaypointReachable(const Vector& v_src, const Vector& v_dest, const edict_t* pEntity);
 
 bool WaypointDirectPathCheck(int srcWP, int destWP);
 

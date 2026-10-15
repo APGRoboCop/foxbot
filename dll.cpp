@@ -421,7 +421,7 @@ static void TeamBalanceCheck() {
 		if (!done)
 			done = BotBalanceTeams(4, 2);
 		if (!done)
-			BotBalanceTeams(4, 3);
+			(void)BotBalanceTeams(4, 3); // last pair in the chain - result not needed
 	}
 	if (bot_bot_balance) {
 		// team 1 has more than team 2?
@@ -480,7 +480,7 @@ static void TeamBalanceCheck() {
 			if (!done)
 				done = HBalanceTeams(4, 2);
 			if (!done)
-				HBalanceTeams(4, 3);
+				(void)HBalanceTeams(4, 3); // last pair in the chain - result not needed
 		}
 	}
 

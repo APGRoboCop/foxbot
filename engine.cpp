@@ -1006,9 +1006,19 @@ void pfnServerPrint(const char* szMsg) {
 	if (debug_engine) {
 		fp = UTIL_OpenFoxbotLog();
 		if (fp != nullptr) {
-			std::fprintf(fp, "pfnServerPrint: %s\n", szMsg);
+			std::fprintf(fp, "pfnServerPrint: %s\n", szMsg ? szMsg : "");
 			std::fclose(fp);
 		}
+	}
+
+	// Nothing to parse for bot commands - pass straight through. The parser
+	// below uses szMsg in name_message_check/strstr/strncpy, so a null here
+	// would crash (PVS V1004) - [APG]RoboCop[CL]
+	if (szMsg == nullptr) {
+		if (mr_meta)
+			RETURN_META(MRES_HANDLED);
+		(*g_engfuncs.pfnServerPrint)(szMsg);
+		return;
 	}
 
 	// snprintf(sz_error_check,250,"pfnServerPrint: %s\n",szMsg);
@@ -1028,7 +1038,7 @@ void pfnServerPrint(const char* szMsg) {
 	// check that the bot that sent a message isn't getting it back
 	// All parser buffers must be terminated even when the engine
 	// supplies an unusually long line.
-	std::strncpy(sz, szMsg ? szMsg : "", sizeof(sz) - 1);
+	std::strncpy(sz, szMsg, sizeof(sz) - 1);
 	sz[sizeof(sz) - 1] = '\0';
 	// clear up sz, and copy start to buffa
 	while (i < 250 && sz[i] != ' ') {
