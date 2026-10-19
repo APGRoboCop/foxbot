@@ -127,9 +127,12 @@ if builder.options.optimize:
   builder.cxx.defines += ['NDEBUG']
   if builder.cxx.target.platform == 'linux':
     # Linux optimization flags
-    builder.cxx.cflags += ['-O3', '-flto=auto']
-	# Linux optimization link flags - LTO must be in link flags too - [APG]RoboCop[CL]
-    builder.cxx.linkflags += ['-flto=auto', '-s', '-Wl,-z,relro,-z,now', '-Wl,-z,noexecstack',]
+    builder.cxx.cflags += ['-O2', '-flto=auto', '-ffunction-sections', '-fdata-sections']
+    # Linux optimization link flags - LTO must be in link flags too - [APG]RoboCop[CL]
+    builder.cxx.linkflags += ['-flto=auto', '-Wl,-z,relro,-z,now', '-Wl,-z,noexecstack',]
+    # Clang LTO through GNU ld needs the LLVMgold plugin; lld handles it natively - [APG]RoboCop[CL]
+    if builder.cxx.family == 'clang':
+      builder.cxx.linkflags += ['-fuse-ld=lld']
   elif builder.cxx.target.platform == 'windows':
     # Windows optimization flags - /Ob3 needs to be after /Ox, enables aggressive function inling -caxanga334
     builder.cxx.cflags += ['/Ox', '/Zo', '/Ob3', '/GL', '/MT']
