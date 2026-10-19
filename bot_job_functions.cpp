@@ -523,11 +523,12 @@ int JobPushButton(bot_t* pBot) {
 
    // phase zero - figure out which button type it is and how to deal with it
    if (job_ptr->phase == 0) {
-      // does the button activate only when something(e.g. a player) bumps into it?
+      // Touch-only buttons activate when physically bumped into.
+      // Other buttons routed here are ordinary +use buttons.
       if (job_ptr->object->v.spawnflags & SFLAG_PROXIMITY_BUTTON)
          job_ptr->phase = 2;
       else
-         job_ptr->phase = 1; // no, it's just a standard button that you use to activate
+         job_ptr->phase = 1;
 
       job_ptr->phase_timer = pBot->f_think_time + 8.0f;
    }
