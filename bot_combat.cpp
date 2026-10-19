@@ -139,7 +139,7 @@ const char *ntfTargetChecks[] = {
 static std::array<bot_weapon_select_t, 19> tfc_weapon_select = {{{TF_WEAPON_KNIFE, "tf_weapon_knife", 5, 0.0f, 80.0f, 0.0f, 0.0f, 100, true, 100, 0, 0, false, false, false, false, 0.0f, 0.0f},
                                                                  {TF_WEAPON_SPANNER, "tf_weapon_spanner", 5, 0.0f, 60.0f, 0.0f, 0.0f, 100, true, 100, 0, 0, false, false, false, false, 0.0f, 0.0f},
                                                                  {TF_WEAPON_MEDIKIT, "tf_weapon_medikit", 5, 0.0f, 60.0f, 0.0f, 0.0f, 100, true, 100, 0, 0, false, false, false, false, 0.0f, 0.0f},
-                                                                 {TF_WEAPON_SNIPERRIFLE, "tf_weapon_sniperrifle", 5, 300.0f, 4000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, true, false, 2.5, 0.0f},
+                                                                 {TF_WEAPON_SNIPERRIFLE, "tf_weapon_sniperrifle", 5, 300.0f, 4000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, true, false, 2.5f, 0.0f},
                                                                  {TF_WEAPON_FLAMETHROWER, "tf_weapon_flamethrower", 5, 0.0f, 200.0f, 0.0f, 0.0f, 100, false, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
                                                                  {TF_WEAPON_AC, "tf_weapon_ac", 5, 0.0f, 2000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, true, false, false, false, 0.0f, 0.0f},
                                                                  {TF_WEAPON_RPG, "tf_weapon_rpg", 5, 120.0f, 3000.0f, 0.0f, 0.0f, 100, true, 100, 1, 0, false, false, false, false, 0.0f, 0.0f},
@@ -1711,7 +1711,7 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
       pDelay = tfc_fire_delay.data();
    }
 
-   if (pSelect) {
+   if (pSelect != nullptr && pDelay != nullptr) {
       int iId;
       int select_index;
 
@@ -1736,10 +1736,9 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
             while (pSelect[select_index].iId && pSelect[select_index].iId != iId)
                select_index++;
 
-            // All three reads now guarded against null pDelay - [APG]RoboCop[CL]
-            const float base_delay = pDelay != nullptr ? pDelay[select_index].primary_base_delay : 0.0f;
-            const float min_delay = pDelay != nullptr ? pDelay[select_index].primary_min_delay[pBot->bot_skill] : 0.0f;
-            const float max_delay = pDelay != nullptr ? pDelay[select_index].primary_max_delay[pBot->bot_skill] : 0.0f;
+            const float base_delay = pDelay[select_index].primary_base_delay;
+            const float min_delay = pDelay[select_index].primary_min_delay[pBot->bot_skill];
+            const float max_delay = pDelay[select_index].primary_max_delay[pBot->bot_skill];
 
             pBot->f_shoot_time = pBot->f_think_time + base_delay + random_float(min_delay, max_delay);
             return true;
