@@ -287,9 +287,10 @@ void BotSpawnInit(bot_t* pBot) {
 	pBot->f_current_wp_deadline = 0.0f;
 	pBot->current_wp = -1;
 
-	// Fix by Cheeseh (RCBot)
-	// float fUpdateTime = gpGlobals->time;
-	// float fLastRunPlayerMoveTime = gpGlobals->time - 0.1f;
+	// fUpdateTime and fLastRunPlayerMoveTime are initialized when a new bot
+	// record is created. Do not reset the movement timestamp here because
+	// BotSpawnInit() also runs after deaths; doing so would distort the first
+	// RunPlayerMove interval after every respawn.
 
 	// pBot->msecnum = 0;
 	// pBot->msecdel = 0.0;
@@ -857,6 +858,11 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 		*pBot = bot_t{}; // Create a new instance and assign it to pBot
 	}
 
+	// Reset bot timers on every creation, including reuse after a map change.
+	// BotThink() uses the movement timestamp to calculate RunPlayerMove msec.
+	pBot->fUpdateTime = gpGlobals->time;
+	pBot->fLastRunPlayerMoveTime = gpGlobals->time;
+
 	pBot->pEdict = BotEnt;
 
 	// clear the player info from the previous player who used this edict
@@ -1102,8 +1108,13 @@ void BotFindItem(bot_t* pBot) {
                continue;
             }
 
-            // If the button must be shot, create an attack job instead.
-            if (!(pent->v.spawnflags & SFLAG_PROXIMITY_BUTTON)) {
+            // Touch-only buttons are activated by walking into them.
+            // A non-touch button is only a shoot target when the game DLL
+            // marks it damageable; otherwise it is an ordinary +use button.
+            const bool touchOnlyButton = (pent->v.spawnflags & SFLAG_PROXIMITY_BUTTON) != 0;
+            const bool shootableButton = pent->v.takedamage > 0;
+
+            if (!touchOnlyButton && shootableButton) {
                newJob = InitialiseNewJob(pBot, JOB_ATTACK_BREAKABLE);
                if (newJob != nullptr) {
                   newJob->object = pent;
@@ -1114,7 +1125,8 @@ void BotFindItem(bot_t* pBot) {
                continue;
             }
 
-            // The button can be pushed, set up a job to do so.
+            // Touch-only and ordinary +use buttons use the push-button job;
+            // JobPushButton() selects the activation method.
             newJob = InitialiseNewJob(pBot, JOB_PUSH_BUTTON);
             if (newJob != nullptr) {
                newJob->object = pent;
