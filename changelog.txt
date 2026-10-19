@@ -3,7 +3,7 @@
 ==============================
 
 --------------------------------------------------------------------------------
-Version 1.0-beta2
+Version 1.0-beta3
 ??????-??-2026
 Updated by RoboCop
 --------------------------------------------------------------------------------
@@ -79,6 +79,8 @@ Updated by RoboCop
 - Improving bot stability and teammate support - thanks to White Bishop
 
 - Preventing bots from holding primed grenades after combat - thanks to White Bishop
+
+- Fixed bot button activation and timing initialisation - thanks to White Bishop
 
 TODO List:-
 

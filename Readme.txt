@@ -25,6 +25,7 @@ jeefo
 RussiaTails
 HeteroChromia
 Cheeseh
+White Bishop
 
    Introduction
    ------------
