@@ -52,7 +52,7 @@ jobs:
         dpkg --add-architecture i386
         apt-get update
         apt-get install -y --no-install-recommends \
-          clang g++-multilib gcc-multilib \
+          clang lld g++-multilib gcc-multilib \
           python3 python3-pip python3-setuptools \
           git ca-certificates binutils
         echo "CC=clang" >> $GITHUB_ENV

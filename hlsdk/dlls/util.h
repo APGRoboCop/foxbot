@@ -200,12 +200,15 @@ static inline BOOL FStrEq(const char*sz1, const char*sz2)
 
 static inline BOOL FClassnameIs(edict_t* pent, const char* szClassname)
 {
-   if (pent == nullptr || VARS(pent) == nullptr)
+   // VARS() returns NULL for a NULL edict - fetch it once so the check
+   // covers the dereference below (PVS-Studio V522)
+   const entvars_t* pev = VARS(pent);
+   if (pev == nullptr)
    {
       return FALSE;
    }
 
-   return FStrEq(STRING(VARS(pent)->classname), szClassname);
+   return FStrEq(STRING(pev->classname), szClassname);
 }
 
 static inline BOOL FClassnameIs(entvars_t* pev, const char* szClassname)
