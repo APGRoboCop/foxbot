@@ -32,6 +32,7 @@
 #include <entity_state.h>
 
 #include <algorithm>
+#include <cstdio>
 #include <cmath>
 #include <osdep.h>
 
