@@ -38,7 +38,7 @@ public:
 		// Vector2D vec2;
 
 		float flLen = Length();
-		if ( flLen == 0.0f )
+		if ( flLen == 0.0f ) //-V550 - only an exact zero would divide by zero below
 		{
 			return Vector2D( 0, 0 );
 		}
@@ -66,12 +66,16 @@ public:
 	Vector(float X, float Y, float Z)	{ x = X; y = Y; z = Z;				}
 	//Vector(double X, double Y, double Z)		{ x = (float)X; y = (float)Y; z = (float)Z;	}
 	//Vector(int X, int Y, int Z)				{ x = (float)X; y = (float)Y; z = (float)Z;	}
-	Vector(const Vector& v): x(0.0), y(0.0), z(0.0)		{ x = v.x; y = v.y; z = v.z;				} 
+	//Vector(const Vector& v): x(0.0), y(0.0), z(0.0)		{ x = v.x; y = v.y; z = v.z;	}
+	// plain member-by-member copies, declared together (PVS-Studio V690) - [APG]RoboCop[CL]
+	Vector(const Vector& v) = default;
+	Vector& operator=(const Vector& v) = default;
 	Vector(float rgfl[3]): x(0.0), y(0.0), z(0.0)		{ x = rgfl[0]; y = rgfl[1]; z = rgfl[2];	}
 
 	// Operators
 	Vector operator-() const				{ return Vector(-x,-y,-z);				}
-	int operator==(const Vector& v) const	{ return x==v.x && y==v.y && z==v.z;	}
+	// exact by design - callers compare copied values, e.g. shared area corners
+	int operator==(const Vector& v) const	{ return x==v.x && y==v.y && z==v.z;	} //-V550
 	bool operator!=(const Vector &v) const { return !(*this == v); }
 	Vector operator+(const Vector& v) const	{ return Vector(x+v.x, y+v.y, z+v.z);	}
 	Vector operator-(const Vector& v) const	{ return Vector(x-v.x, y-v.y, z-v.z);	}
@@ -86,7 +90,7 @@ public:
 	Vector Normalize() const
 	{
 		float flLen = Length();
-		if (flLen == 0) return Vector(0,0,1); // ????
+		if (flLen == 0) return Vector(0,0,1); //-V550 - only an exact zero would divide by zero below
 		flLen = 1 / flLen;
 		return Vector(x * flLen, y * flLen, z * flLen);
 	}
