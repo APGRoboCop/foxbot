@@ -30,6 +30,9 @@
 #include "extdll.h"
 #include <meta_api.h>
 
+#include <algorithm>
+#include <cstdio>
+
 #include "bot.h"
 #include "waypoint.h"
 #include "bot_func.h"
