@@ -30,6 +30,7 @@
 constexpr int NADEVELOCITY = 650; // DrEvil #define
 
 #include <algorithm>
+#include <cstdio>
 
 #include "extdll.h"
 #include "util.h"
