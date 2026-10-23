@@ -564,7 +564,7 @@ static void TeamBalanceCheck() {
 			//		bots[i].pEdict->v.team, bots[i].bot_team);
 
 			char msg[16];
-			snprintf(msg, 16, "%d", smallest_team);
+			std::snprintf(msg, 16, "%d", smallest_team);
 			msg[15] = '\0';
 			//	FakeClientCommand(bots[i].pEdict, "jointeam", msg, NULL);
 			bots[i].bot_team = smallest_team; // choose your team

@@ -37,6 +37,8 @@
 
 #include "meta_api.h" //meta mod"
 
+#include <cstdio>
+
 extern bool mr_meta;
 
 // extern enginefuncs_t g_engfuncs; //No longer required? [APG]RoboCop[CL]
