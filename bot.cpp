@@ -46,6 +46,7 @@
 #include "bot_visibility.h"
 
 #include <algorithm>
+#include <cstdio>
 #include <sys/stat.h>
 
 #ifdef WIN32
