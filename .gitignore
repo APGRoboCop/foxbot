@@ -66,3 +66,7 @@ build_linux/*
 Rules.depend
 obj-windows/*
 apg-load
+
+# PVS-Studio temporary files and reports
+*.PVS-Studio.*
+*.plog

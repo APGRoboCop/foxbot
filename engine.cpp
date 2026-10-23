@@ -248,7 +248,7 @@ void pfnSetOrigin(edict_t* e, const float* rgflOrigin) {
 			// TYPEDESCRIPTION		*pField;
 			// pField = &gEntvarsDescription[36];
 			//(*(float *)((char *)pev + pField->fieldOffset))
-			snprintf(msg, sizeof(msg), "target %s, toggle %.0f", STRING(e->v.target), static_cast<double>(e->v.frame));
+			std::snprintf(msg, sizeof(msg), "target %s, toggle %.0f", STRING(e->v.target), static_cast<double>(e->v.frame));
 			script(msg);
 		}
 	}
@@ -328,7 +328,7 @@ void pfnClientCommand(edict_t* pEdict, char* szFmt, ...) {
 			std::fclose(fp);
 		}
 	}
-	snprintf(sz_error_check, 250, "-pfnClientCommand=%s %p\n", szFmt, static_cast<void*>(pEdict));
+	std::snprintf(sz_error_check, 250, "-pfnClientCommand=%s %p\n", szFmt, static_cast<void*>(pEdict));
 
 	/*if(pEdict!=NULL)
 	{
@@ -412,7 +412,7 @@ void pfnClCom(edict_t* pEdict, char* szFmt, ...) {
 			std::fclose(fp);
 		}
 	}
-	snprintf(sz_error_check, 250, "-pfnClientCom=%s %p\n", szFmt ? szFmt : "", static_cast<void*>(pEdict));
+	std::snprintf(sz_error_check, 250, "-pfnClientCom=%s %p\n", szFmt ? szFmt : "", static_cast<void*>(pEdict));
 
 	// ClientCommand is an engine call directed to a client, so
 	// FL_FAKECLIENT is the authoritative distinction.  The former clients[]
@@ -915,7 +915,7 @@ void pfnClientPrintf(edict_t* pEdict, const PRINT_TYPE ptype, const char* szMsg)
 		}
 	}
 
-	snprintf(sz_error_check, 250, "CPf: %p %s\n", static_cast<void*>(pEdict), szMsg);
+	std::snprintf(sz_error_check, 250, "CPf: %p %s\n", static_cast<void*>(pEdict), szMsg);
 
 	// only send message if its not a bot...
 	if (pEdict != nullptr) {
@@ -990,7 +990,7 @@ void pfnClPrintf(edict_t* pEdict, PRINT_TYPE ptype, const char* szMsg) {
 			std::fclose(fp);
 		}
 	}
-	snprintf(sz_error_check, 250, "pfnClPrintf: %p %s\n", static_cast<void*>(pEdict), szMsg ? szMsg : "");
+	std::snprintf(sz_error_check, 250, "pfnClPrintf: %p %s\n", static_cast<void*>(pEdict), szMsg ? szMsg : "");
 
 	// Use the engine's fake-client flag rather than clients[] or
 	// an InfoKeyBuffer name lookup.  Besides being unnecessary, the old code

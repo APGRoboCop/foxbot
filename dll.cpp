@@ -56,7 +56,7 @@ constexpr unsigned char VER_MINOR = 0;
 
 enum class Menu : unsigned char { MENU_NONE = 0, MENU_1, MENU_2, MENU_3, MENU_4, MENU_5, MENU_6, MENU_7 };
 
-cvar_t foxbot = { "foxbot", "1.0-beta3", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr };
+cvar_t foxbot = { "foxbot", "1.0-beta4", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr };
 cvar_t enable_foxbot = { "enable_foxbot", "1", FCVAR_SERVER | FCVAR_UNLOGGED, 0, nullptr };
 cvar_t sv_bot = { "bot", "", 0, 0, nullptr };
 
@@ -587,7 +587,7 @@ static bool BotBalanceTeams(const int a, const int b) {
 			// is this slot used?
 			if (bots[i].is_used && bots[i].pEdict->v.team == a) {
 				char msg[32];
-            snprintf(msg, sizeof(msg), "%d", b);
+            std::snprintf(msg, sizeof(msg), "%d", b);
 				//	FakeClientCommand(bots[i].pEdict, "jointeam", msg, NULL);
 				bots[i].bot_team = b;       // choose your team
 				bots[i].not_started = true; // join the team, pick a class
@@ -615,7 +615,7 @@ static bool BBotBalanceTeams(const int a, const int b) {
 			const char* name = g_engfuncs.pfnInfoKeyValue(infobuffer, "name");
 			if (name == nullptr)
 				continue;
-			snprintf(cl_name, sizeof(cl_name), "%s", name);
+			std::snprintf(cl_name, sizeof(cl_name), "%s", name);
 			if (cl_name[0] != '\0') {
 				const int team = bot.pEdict->v.team - 1;
 
@@ -629,7 +629,7 @@ static bool BBotBalanceTeams(const int a, const int b) {
 			// is this slot used?
 			if (bots[i].is_used && bots[i].pEdict->v.team == a) {
 				char msg[32];
-            snprintf(msg, sizeof(msg), "%d", b);
+            std::snprintf(msg, sizeof(msg), "%d", b);
 				//	FakeClientCommand(bots[i].pEdict, "jointeam", msg, NULL);
 				bots[i].bot_team = b;       // choose your team
 				bots[i].not_started = true; // join the team, pick a class
@@ -819,10 +819,10 @@ void chatClass::pickRandomChatString(char* msg, const size_t maxLength, const in
 	const size_t marker = chatText.find("%s");
 	if (marker != std::string::npos) {
 		const char* replacement = playerName != nullptr ? playerName : "%s";
-		snprintf(msg, maxLength, "%.*s%s%s", static_cast<int>(marker), chatText.c_str(), replacement, chatText.c_str() + marker + 2);
+		std::snprintf(msg, maxLength, "%.*s%s%s", static_cast<int>(marker), chatText.c_str(), replacement, chatText.c_str() + marker + 2);
 	}
 	else
-		snprintf(msg, maxLength, "%s", chatText.c_str());
+		std::snprintf(msg, maxLength, "%s", chatText.c_str());
 
 	msg[maxLength - 1] = '\0';
 }
@@ -978,15 +978,15 @@ void DispatchThink(edict_t* pent) {
 			// Try putting together a string for more information in botcam
 			char msg[255];
 			if (pBot->mission == ROLE_ATTACKER) {
-				snprintf(msg, 254, "BotCam: Role:Attacker\n ammoStatus:%d deathsTillClassChange:%d trait.health:%d", pBot->ammoStatus, pBot->deathsTillClassChange, pBot->trait.health);
+				std::snprintf(msg, 254, "BotCam: Role:Attacker\n ammoStatus:%d deathsTillClassChange:%d trait.health:%d", pBot->ammoStatus, pBot->deathsTillClassChange, pBot->trait.health);
 				WRITE_STRING(msg);
 			}
 			else if (pBot->mission == ROLE_DEFENDER) {
-				snprintf(msg, 254, "BotCam: Role:Defender\n ammoStatus:%d deathsTillClassChange:%d trait.health:%d", pBot->ammoStatus, pBot->deathsTillClassChange, pBot->trait.health);
+				std::snprintf(msg, 254, "BotCam: Role:Defender\n ammoStatus:%d deathsTillClassChange:%d trait.health:%d", pBot->ammoStatus, pBot->deathsTillClassChange, pBot->trait.health);
 				WRITE_STRING(msg);
 			}
 			else {
-				snprintf(msg, 254, "BotCam: Role:None\n ammoStatus:%d deathsTillClassChange:%d trait.health:%d", pBot->ammoStatus, pBot->deathsTillClassChange, pBot->trait.health);
+				std::snprintf(msg, 254, "BotCam: Role:None\n ammoStatus:%d deathsTillClassChange:%d trait.health:%d", pBot->ammoStatus, pBot->deathsTillClassChange, pBot->trait.health);
 				WRITE_STRING(msg);
 			}
 			MESSAGE_END();
@@ -1110,7 +1110,7 @@ void DispatchThink(edict_t* pent) {
 				float veloff = vel.x + vel.y + vel.z;
 				veloff = veloff * (vidsize / distance) * 10;
 
-				snprintf(text, 510, "Vis %.1f\nAmb %d %d\nSz %.1f\nveloff %.1f", p_vis, amb, d, sz, veloff);
+				std::snprintf(text, 510, "Vis %.1f\nAmb %d %d\nSz %.1f\nveloff %.1f", p_vis, amb, d, sz, veloff);
 
 				MESSAGE_BEGIN(MSG_ONE, SVC_TEMPENTITY, nullptr, pent->v.owner);
 				WRITE_BYTE(TE_TEXTMESSAGE);
@@ -1296,7 +1296,7 @@ BOOL ClientConnect(edict_t* pEntity, const char* pszName, const char* pszAddress
 			// VER_MINOR, VER_BUILD);
 			// std::sprintf(msg, "[FOXBOT] This server is running FoxBot (v%d.%d), Get it at foxbot.net!\n", VER_MAJOR,
 			// VER_MINOR);
-			snprintf(msg, 254, "[FOXBOT] This server is running FoxBot (v%d.%d), get it at www.apg-clan.org\n", VER_MAJOR, VER_MINOR);
+			std::snprintf(msg, 254, "[FOXBOT] This server is running FoxBot (v%d.%d), get it at www.apg-clan.org\n", VER_MAJOR, VER_MINOR);
 			CLIENT_PRINTF(pEntity, print_console, msg);
 		}
 
@@ -1340,7 +1340,7 @@ BOOL ClientConnect_Post(edict_t* pEntity, const char* pszName, const char* pszAd
 		// VER_BUILD);
 		// std::sprintf(msg, "[FOXBOT] This server is running FoxBot (v%d.%d), Get it at foxbot.net!\n", VER_MAJOR,
 		// VER_MINOR);
-		snprintf(msg, 254, "[FOXBOT] This server is running FoxBot (v%d.%d), get it at www.apg-clan.org\n", VER_MAJOR, VER_MINOR);
+		std::snprintf(msg, 254, "[FOXBOT] This server is running FoxBot (v%d.%d), get it at www.apg-clan.org\n", VER_MAJOR, VER_MINOR);
 		CLIENT_PRINTF(pEntity, print_console, msg);
 	}
 	RETURN_META_VALUE(MRES_HANDLED, true);
@@ -1670,7 +1670,7 @@ void ClientCommand(edict_t* pEntity) {
 			if (arg1 != nullptr) {
 				if (*arg1 != 0) {
 					if (std::strchr(arg1, '\"') == nullptr)
-						snprintf(botname, sizeof(botname), "%s", arg1);
+						std::snprintf(botname, sizeof(botname), "%s", arg1);
 					else
 						std::sscanf(arg1, R"("%31s")", &botname[0]);
 
@@ -1728,11 +1728,11 @@ void ClientCommand(edict_t* pEntity) {
 			if (arg1 != nullptr) {
 				if (*arg1 != 0) {
 					char message[512];
-					snprintf(message, sizeof(message), "Waypoint author set to : %s", arg1);
+					std::snprintf(message, sizeof(message), "Waypoint author set to : %s", arg1);
 					// message is already formatted; passing it back through UTIL_VarArgs
 					// would interpret any '%' in an author name as another format token.
 					CLIENT_PRINTF(pEntity, print_console, message);
-					snprintf(waypoint_author, sizeof(waypoint_author), "%s", arg1);
+					std::snprintf(waypoint_author, sizeof(waypoint_author), "%s", arg1);
 
 					hudtextparms_t h;
 					h.channel = 2;
@@ -1750,7 +1750,7 @@ void ClientCommand(edict_t* pEntity) {
 					h.holdTime = 7;
 					h.x = -1;
 					h.y = 0.8f;
-					snprintf(message, sizeof(message), "-- Waypoint author: %s --", waypoint_author);
+					std::snprintf(message, sizeof(message), "-- Waypoint author: %s --", waypoint_author);
 					FOX_HudMessage(INDEXENT(1), h, message);
 				}
 			}
@@ -1831,9 +1831,9 @@ void ClientCommand(edict_t* pEntity) {
 			}
 
 			if (g_auto_waypoint)
-				snprintf(msg, sizeof(msg), "autowaypoint is ON\n");
+				std::snprintf(msg, sizeof(msg), "autowaypoint is ON\n");
 			else
-				snprintf(msg, sizeof(msg), "autowaypoint is OFF\n");
+				std::snprintf(msg, sizeof(msg), "autowaypoint is OFF\n");
 
 			ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 
@@ -1872,7 +1872,7 @@ void ClientCommand(edict_t* pEntity) {
 				if (yellow_av[i])
 					yellow_state = 1;
 
-				snprintf(msg, 250, "POINT:%d, AVAILABILITY: Blue %d Red %d Yellow %d Green %d\n", i + 1, blue_state, red_state, yellow_state, green_state);
+				std::snprintf(msg, 250, "POINT:%d, AVAILABILITY: Blue %d Red %d Yellow %d Green %d\n", i + 1, blue_state, red_state, yellow_state, green_state);
 				msg[251] = '\0';
 				ClientPrint(pEntity, HUD_PRINTNOTIFY, msg);
 			}
@@ -2007,7 +2007,7 @@ void ClientCommand(edict_t* pEntity) {
 				if (l_waypoint <= num_waypoints) {
 					g_find_wp = l_waypoint;
 					char s[255];
-					snprintf(s, sizeof(s), "locate waypoint %d\n", l_waypoint);
+					std::snprintf(s, sizeof(s), "locate waypoint %d\n", l_waypoint);
 					ClientPrint(pEntity, HUD_PRINTNOTIFY, s);
 				}
 			}
@@ -2495,7 +2495,7 @@ void ClientCommand(edict_t* pEntity) {
 			ClientPrint(pEntity, HUD_PRINTCONSOLE, "searching...\n");
 			while ((pent = FIND_ENTITY_IN_SPHERE(pent, pEntity->v.origin, 200.0f)) != nullptr && !FNullEnt(pent)) {
 				char str[80];
-				snprintf(str, sizeof(str), "Found %s at %5.2f %5.2f %5.2f modelindex- %d t %s tn %s\n", STRING(pent->v.classname), pent->v.origin.x, pent->v.origin.y, pent->v.origin.z,
+				std::snprintf(str, sizeof(str), "Found %s at %5.2f %5.2f %5.2f modelindex- %d t %s tn %s\n", STRING(pent->v.classname), pent->v.origin.x, pent->v.origin.y, pent->v.origin.z,
 					pent->v.modelindex, STRING(pent->v.target), STRING(pent->v.targetname));
 				ClientPrint(pEntity, HUD_PRINTCONSOLE, str);
 
@@ -2634,7 +2634,7 @@ void StartFrame() { // v7 last frame timing
 				char version[32];
 
 				// sprintf(version," Beta v%d.%d Build#%d\n", VER_MAJOR, VER_MINOR, VER_BUILD);
-				snprintf(version, sizeof(version), " v%d.%d \n", VER_MAJOR, VER_MINOR);
+				std::snprintf(version, sizeof(version), " v%d.%d \n", VER_MAJOR, VER_MINOR);
 				strcat(welcome_msg, version);
 				// let's send a welcome message to this client...
 				// UTIL_SayText(welcome_msg, clients[welcome_index]);
@@ -2690,16 +2690,16 @@ void StartFrame() { // v7 last frame timing
 				// respawn 1 bot then wait a while(otherwise engine crashes)
 				if (mod_id != TFC_DLL) {
 					char c_skill[2];
-					snprintf(c_skill, sizeof(c_skill), "%d", bots[index1].bot_skill);
+					std::snprintf(c_skill, sizeof(c_skill), "%d", bots[index1].bot_skill);
 					BotCreate(nullptr, bots[index1].skin, bots[index1].name, c_skill, nullptr);
 				}
 				else {
 					char c_skill[2];
 					char c_team[2];
 					char c_class[3];
-					snprintf(c_skill, sizeof(c_skill), "%d", bots[index1].bot_skill);
-					snprintf(c_team, sizeof(c_team), "%d", bots[index1].bot_team);
-					snprintf(c_class, sizeof(c_class), "%d", bots[index1].bot_class);
+					std::snprintf(c_skill, sizeof(c_skill), "%d", bots[index1].bot_skill);
+					std::snprintf(c_team, sizeof(c_team), "%d", bots[index1].bot_team);
+					std::snprintf(c_class, sizeof(c_class), "%d", bots[index1].bot_class);
 					if (mod_id == TFC_DLL)
 						BotCreate(nullptr, nullptr, nullptr, bots[index1].name, c_skill);
 					else
@@ -2733,7 +2733,7 @@ void StartFrame() { // v7 last frame timing
 						ALERT(at_console, "foxbot.cfg file not found\n");
 				}
 				else {
-					snprintf(msg, sizeof(msg), "Executing %s\n", filename);
+					std::snprintf(msg, sizeof(msg), "Executing %s\n", filename);
 					if (IS_DEDICATED_SERVER())
 						std::fputs(msg, stdout);
 					else
@@ -2759,14 +2759,14 @@ void StartFrame() { // v7 last frame timing
 				UTIL_BuildFileName(filename, 255, "configs", mapname);
 				bot_cfg_fp = std::fopen(filename, "r");
 				if (bot_cfg_fp != nullptr) {
-					snprintf(msg, sizeof(msg), "\nExecuting %s\n", filename);
+					std::snprintf(msg, sizeof(msg), "\nExecuting %s\n", filename);
 					if (IS_DEDICATED_SERVER())
 						std::fputs(msg, stdout);
 					else
 						ALERT(at_console, "%s", msg);
 				}
 				else { // first say map config not found
-					snprintf(msg, sizeof(msg), "\n%s not found\n", filename);
+					std::snprintf(msg, sizeof(msg), "\n%s not found\n", filename);
 					if (IS_DEDICATED_SERVER())
 						std::fputs(msg, stdout);
 					else
@@ -2781,7 +2781,7 @@ void StartFrame() { // v7 last frame timing
 							ALERT(at_console, "\nfoxbot.cfg file not found\n");
 					}
 					else {
-						snprintf(msg, sizeof(msg), "\nExecuting %s\n", filename);
+						std::snprintf(msg, sizeof(msg), "\nExecuting %s\n", filename);
 						if (IS_DEDICATED_SERVER())
 							std::fputs(msg, stdout);
 						else
@@ -2821,7 +2821,7 @@ void StartFrame() { // v7 last frame timing
 				// Copy before clearing because CVAR_SET_STRING may invalidate the
 				// engine-owned pointer.  Clearing here also covers handlers that
 				// return early and prevents the same command from being replayed.
-				snprintf(cmd_line, sizeof(cmd_line), "%s", cvar_bot);
+				std::snprintf(cmd_line, sizeof(cmd_line), "%s", cvar_bot);
 				CVAR_SET_STRING("bot", "");
 				index = 0;
 				cmd = cmd_line;
@@ -3020,7 +3020,7 @@ void StartFrame() { // v7 last frame timing
                if (name == nullptr) {
                   continue;
                }
-               snprintf(cl_name, sizeof(cl_name), "%s", name);
+               std::snprintf(cl_name, sizeof(cl_name), "%s", name);
                // Check if this is a valid connected player
                if (cl_name[0] == '\0') {
                   continue;
@@ -3179,7 +3179,7 @@ void StartFrame() { // v7 last frame timing
 		if (bfp != nullptr && mod_id == TFC_DLL) {
 			script_loaded = true;
 			char msg[293];
-			snprintf(msg, sizeof(msg),"\nExecuting FoXBot TFC script file:%s\n\n", filename);
+			std::snprintf(msg, sizeof(msg),"\nExecuting FoXBot TFC script file:%s\n\n", filename);
 			ALERT(at_console, "%s", msg);
 			int ch = fgetc(bfp);
 			int i1; // Not wanted? [APG]RoboCop[CL]
@@ -3951,7 +3951,7 @@ void StartFrame() { // v7 last frame timing
 									msgtext[cnt] = '\0'; // terminate string
 									if (buffer[i1] != ')')
 										msgsection = 99; // missing closing parenthesis
-									snprintf(msg_msg[current_msg], sizeof(msg_msg[current_msg]), "%s", msgtext);
+									std::snprintf(msg_msg[current_msg], sizeof(msg_msg[current_msg]), "%s", msgtext);
 									// now we have the message, we should probably clear out, all the available data
 									for (int i2 = 0; i2 < 8; i2++) {
 										msg_com[current_msg].blue_av[i2] = -1;
@@ -4459,7 +4459,7 @@ void StartFrame() { // v7 last frame timing
 								curr->yellow_av[i2] = -1;
 								curr->green_av[i2] = -1;
 							}
-							snprintf(curr->ifs, sizeof(curr->ifs), "b_p_%d", pnt);
+							std::snprintf(curr->ifs, sizeof(curr->ifs), "b_p_%d", pnt);
 						}
 						else if (std::strncmp(buf, "if_red_point", 12) == 0) {
 							// this can only be in a section
@@ -4491,7 +4491,7 @@ void StartFrame() { // v7 last frame timing
 								curr->yellow_av[i2] = -1;
 								curr->green_av[i2] = -1;
 							}
-							snprintf(curr->ifs, sizeof(curr->ifs), "r_p_%d", pnt);
+							std::snprintf(curr->ifs, sizeof(curr->ifs), "r_p_%d", pnt);
 						}
 						else if (std::strncmp(buf, "if_green_point", 14) == 0) {
 							// this can only be in a section
@@ -4523,7 +4523,7 @@ void StartFrame() { // v7 last frame timing
 								curr->yellow_av[i2] = -1;
 								curr->green_av[i2] = -1;
 							}
-							snprintf(curr->ifs, sizeof(curr->ifs), "g_p_%d", pnt);
+							std::snprintf(curr->ifs, sizeof(curr->ifs), "g_p_%d", pnt);
 						}
 						else if (std::strncmp(buf, "if_yellow_point", 15) == 0) {
 							// this can only be in a section
@@ -4555,7 +4555,7 @@ void StartFrame() { // v7 last frame timing
 								curr->yellow_av[i2] = -1;
 								curr->green_av[i2] = -1;
 							}
-							snprintf(curr->ifs, sizeof(curr->ifs), "y_p_%d", pnt);
+							std::snprintf(curr->ifs, sizeof(curr->ifs), "y_p_%d", pnt);
 						} // is point<n> NOT availabe?
 						else if (std::strncmp(buf, "ifn_blue_point", 14) == 0) {
 							// this can only be in a section
@@ -4588,7 +4588,7 @@ void StartFrame() { // v7 last frame timing
 								curr->yellow_av[i2] = -1;
 								curr->green_av[i2] = -1;
 							}
-							snprintf(curr->ifs, sizeof(curr->ifs), "b_pn_%d", pnt);
+							std::snprintf(curr->ifs, sizeof(curr->ifs), "b_pn_%d", pnt);
 						}
 						else if (std::strncmp(buf, "ifn_red_point", 13) == 0) {
 							// this can only be in a section
@@ -4620,7 +4620,7 @@ void StartFrame() { // v7 last frame timing
 								curr->yellow_av[i2] = -1;
 								curr->green_av[i2] = -1;
 							}
-							snprintf(curr->ifs, sizeof(curr->ifs), "r_pn_%d", pnt);
+							std::snprintf(curr->ifs, sizeof(curr->ifs), "r_pn_%d", pnt);
 						}
 						else if (std::strncmp(buf, "ifn_green_point", 15) == 0) {
 							// this can only be in a section
@@ -4652,7 +4652,7 @@ void StartFrame() { // v7 last frame timing
 								curr->yellow_av[i2] = -1;
 								curr->green_av[i2] = -1;
 							}
-							snprintf(curr->ifs, sizeof(curr->ifs), "g_pn_%d", pnt);
+							std::snprintf(curr->ifs, sizeof(curr->ifs), "g_pn_%d", pnt);
 						}
 						else if (std::strncmp(buf, "ifn_yellow_point", 16) == 0) {
 							// this can only be in a section
@@ -4684,7 +4684,7 @@ void StartFrame() { // v7 last frame timing
 								curr->yellow_av[i2] = -1;
 								curr->green_av[i2] = -1;
 							}
-							snprintf(curr->ifs, sizeof(curr->ifs), "y_pn_%d", pnt);
+							std::snprintf(curr->ifs, sizeof(curr->ifs), "y_pn_%d", pnt);
 						}
 						// multipoint ifs
 						else if (std::strncmp(buf, "if_blue_mpoint", 14) == 0) {
@@ -4722,7 +4722,7 @@ void StartFrame() { // v7 last frame timing
 								curr->green_av[i2] = -1;
 							}
 							pnts[8] = '\0';
-							snprintf(curr->ifs, sizeof(curr->ifs), "b_mp_%s", pnts);
+							std::snprintf(curr->ifs, sizeof(curr->ifs), "b_mp_%s", pnts);
 						}
 						else if (std::strncmp(buf, "if_red_mpoint", 13) == 0) {
 							// this can only be in a section
@@ -4759,7 +4759,7 @@ void StartFrame() { // v7 last frame timing
 								curr->green_av[i2] = -1;
 							}
 							pnts[8] = '\0';
-							snprintf(curr->ifs, sizeof(curr->ifs), "r_mp_%s", pnts);
+							std::snprintf(curr->ifs, sizeof(curr->ifs), "r_mp_%s", pnts);
 						}
 						else if (std::strncmp(buf, "if_green_mpoint", 15) == 0) {
 							// this can only be in a section
@@ -4796,7 +4796,7 @@ void StartFrame() { // v7 last frame timing
 								curr->green_av[i2] = -1;
 							}
 							pnts[8] = '\0';
-							snprintf(curr->ifs, sizeof(curr->ifs), "g_mp_%s", pnts);
+							std::snprintf(curr->ifs, sizeof(curr->ifs), "g_mp_%s", pnts);
 						}
 						else if (std::strncmp(buf, "if_yellow_mpoint", 16) == 0) {
 							// this can only be in a section
@@ -4833,7 +4833,7 @@ void StartFrame() { // v7 last frame timing
 								curr->green_av[i2] = -1;
 							}
 							pnts[8] = '\0';
-							snprintf(curr->ifs, sizeof(curr->ifs), "y_mp_%s", pnts);
+							std::snprintf(curr->ifs, sizeof(curr->ifs), "y_mp_%s", pnts);
 						} // end of multipoint ifs
 						else if (buffer[i1] != '/' && buffer[i1] != '{' && buffer[i1] != '}' && buffer[i1] != ' ' && buffer[i1] != '\n' && random_shit_error == false) {
 							random_shit_error = true;
@@ -4939,15 +4939,15 @@ void FakeClientCommand(edict_t* pBot, const char* arg1, const char* arg2, const 
 	}
 
 	if (arg2 == nullptr || *arg2 == 0) {
-		snprintf(&g_argv[0], sizeof(g_argv), "%s", arg1);
+		std::snprintf(&g_argv[0], sizeof(g_argv), "%s", arg1);
 		fake_arg_count = 1;
 	}
 	else if (arg3 == nullptr || *arg3 == 0) {
-		snprintf(&g_argv[0], sizeof(g_argv), "%s %s", arg1, arg2);
+		std::snprintf(&g_argv[0], sizeof(g_argv), "%s %s", arg1, arg2);
 		fake_arg_count = 2;
 	}
 	else {
-		snprintf(&g_argv[0], sizeof(g_argv), "%s %s %s", arg1, arg2, arg3);
+		std::snprintf(&g_argv[0], sizeof(g_argv), "%s %s %s", arg1, arg2, arg3);
 		fake_arg_count = 3;
 	}
 	isFakeClientCommand = 1;
@@ -5315,10 +5315,10 @@ static void ProcessBotCfgFile() {
 
 	if (std::strcmp(cmd, "addbot") == 0) {
 	  if (IS_DEDICATED_SERVER()) {
-		 snprintf(msg, sizeof(msg), "[Config] add bot (%s,%s,%s,%s)\n", arg1 ? arg1 : "null", arg2 ? arg2 : "null", arg3 ? arg3 : "null", arg4 ? arg4 : "null");
+		 std::snprintf(msg, sizeof(msg), "[Config] add bot (%s,%s,%s,%s)\n", arg1 ? arg1 : "null", arg2 ? arg2 : "null", arg3 ? arg3 : "null", arg4 ? arg4 : "null");
 		 std::fputs(msg, stdout);
 	  } else {
-         snprintf(msg, sizeof(msg), "[Config] add bot (%s,%s,%s,%s)\n", arg1 ? arg1 : "null", arg2 ? arg2 : "null", arg3 ? arg3 : "null", arg4 ? arg4 : "null");
+         std::snprintf(msg, sizeof(msg), "[Config] add bot (%s,%s,%s,%s)\n", arg1 ? arg1 : "null", arg2 ? arg2 : "null", arg3 ? arg3 : "null", arg4 ? arg4 : "null");
          ALERT(at_console, "%s", msg);
       }
 		BotCreate(nullptr, arg1, arg2, arg3, arg4);
@@ -5430,11 +5430,11 @@ static void ProcessBotCfgFile() {
 
 		if (IS_DEDICATED_SERVER()) {
 			if (bot_team_balance) {
-				snprintf(msg, sizeof(msg), "[Config] bot_team_balance (1) On\n");
+				std::snprintf(msg, sizeof(msg), "[Config] bot_team_balance (1) On\n");
 				std::fputs(msg, stdout);
 			}
 			else {
-				snprintf(msg, sizeof(msg), "[Config] bot_team_balance (0) Off\n");
+				std::snprintf(msg, sizeof(msg), "[Config] bot_team_balance (0) Off\n");
 				std::fputs(msg, stdout);
 			}
 		}
@@ -5457,11 +5457,11 @@ static void ProcessBotCfgFile() {
 
 		if (IS_DEDICATED_SERVER()) {
 			if (bot_bot_balance) {
-				snprintf(msg, sizeof(msg), "[Config] bot_bot_balance (1) On\n");
+				std::snprintf(msg, sizeof(msg), "[Config] bot_bot_balance (1) On\n");
 				std::fputs(msg, stdout);
 			}
 			else {
-				snprintf(msg, sizeof(msg), "[Config] bot_bot_balance (0) Off\n");
+				std::snprintf(msg, sizeof(msg), "[Config] bot_bot_balance (0) Off\n");
 				std::fputs(msg, stdout);
 			}
 		}
@@ -5483,21 +5483,21 @@ static void ProcessBotCfgFile() {
 		if (temp == 0) {
 			bot_xmas = false;
 			if (IS_DEDICATED_SERVER()) {
-				snprintf(msg, sizeof(msg), "[Config] bot xmas (0) off\n");
+				std::snprintf(msg, sizeof(msg), "[Config] bot xmas (0) off\n");
 				std::fputs(msg, stdout);
 			}
 			else {
-				snprintf(msg, sizeof(msg), "[Config] bot xmas (0) off\n");
+				std::snprintf(msg, sizeof(msg), "[Config] bot xmas (0) off\n");
 				ALERT(at_console, "%s", msg);
 			}
 		}
 		else {
 			if (IS_DEDICATED_SERVER()) {
-				snprintf(msg, sizeof(msg), "[Config] bot xmas (1) on\n");
+				std::snprintf(msg, sizeof(msg), "[Config] bot xmas (1) on\n");
 				std::fputs(msg, stdout);
 			}
 			else {
-				snprintf(msg, sizeof(msg), "[Config] bot xmas (1) on\n");
+				std::snprintf(msg, sizeof(msg), "[Config] bot xmas (1) on\n");
 				ALERT(at_console, "%s", msg);
 			}
 		}
@@ -5513,21 +5513,21 @@ static void ProcessBotCfgFile() {
 		if (temp == 0) {
 			botdontshoot = false;
 			if (IS_DEDICATED_SERVER()) {
-				snprintf(msg, sizeof(msg), "[Config] botdontshoot (0) off\n");
+				std::snprintf(msg, sizeof(msg), "[Config] botdontshoot (0) off\n");
 				std::fputs(msg, stdout);
 			}
 			else {
-				snprintf(msg, sizeof(msg), "[Config] botdontshoot (0) off\n");
+				std::snprintf(msg, sizeof(msg), "[Config] botdontshoot (0) off\n");
 				ALERT(at_console, "%s", msg);
 			}
 		}
 		else {
 			if (IS_DEDICATED_SERVER()) {
-				snprintf(msg, sizeof(msg), "[Config] botdontshoot (1) on\n");
+				std::snprintf(msg, sizeof(msg), "[Config] botdontshoot (1) on\n");
 				std::fputs(msg, stdout);
 			}
 			else {
-				snprintf(msg, sizeof(msg), "[Config] botdontshoot (1) on\n");
+				std::snprintf(msg, sizeof(msg), "[Config] botdontshoot (1) on\n");
 				ALERT(at_console, "%s", msg);
 			}
 		}
@@ -5543,21 +5543,21 @@ static void ProcessBotCfgFile() {
 		if (temp == 0) {
 			botdontmove = false;
 			if (IS_DEDICATED_SERVER()) {
-				snprintf(msg, sizeof(msg), "[Config] botdontmove (0) off\n");
+				std::snprintf(msg, sizeof(msg), "[Config] botdontmove (0) off\n");
 				std::fputs(msg, stdout);
 			}
 			else {
-				snprintf(msg, sizeof(msg), "[Config] botdontmove (0) off\n");
+				std::snprintf(msg, sizeof(msg), "[Config] botdontmove (0) off\n");
 				ALERT(at_console, "%s", msg);
 			}
 		}
 		else {
 			if (IS_DEDICATED_SERVER()) {
-				snprintf(msg, sizeof(msg), "[Config] botdontmove (1) on\n");
+				std::snprintf(msg, sizeof(msg), "[Config] botdontmove (1) on\n");
 				std::fputs(msg, stdout);
 			}
 			else {
-				snprintf(msg, sizeof(msg), "[Config] botdontmove (1) on\n");
+				std::snprintf(msg, sizeof(msg), "[Config] botdontmove (1) on\n");
 				ALERT(at_console, "%s", msg);
 			}
 		}
@@ -5577,22 +5577,22 @@ static void ProcessBotCfgFile() {
 		if (std::strcmp(arg1, "on") == 0) { //-V547
 			bot_can_build_teleporter = true;
 			if (IS_DEDICATED_SERVER()) {
-				snprintf(msg, sizeof(msg), "[Config] bot_can_build_teleporter on\n");
+				std::snprintf(msg, sizeof(msg), "[Config] bot_can_build_teleporter on\n");
 				std::fputs(msg, stdout);
 			}
 			else {
-				snprintf(msg, sizeof(msg), "[Config] bot_can_build_teleporter on\n");
+				std::snprintf(msg, sizeof(msg), "[Config] bot_can_build_teleporter on\n");
 				ALERT(at_console, "%s", msg);
 			}
 		}
 		else if (std::strcmp(arg1, "off") == 0) { //-V547
 			bot_can_build_teleporter = false;
 			if (IS_DEDICATED_SERVER()) {
-				snprintf(msg, sizeof(msg), "[Config] bot_can_build_teleporter off\n");
+				std::snprintf(msg, sizeof(msg), "[Config] bot_can_build_teleporter off\n");
 				std::fputs(msg, stdout);
 			}
 			else {
-				snprintf(msg, sizeof(msg), "[Config] bot_can_build_teleporter off\n");
+				std::snprintf(msg, sizeof(msg), "[Config] bot_can_build_teleporter off\n");
 				ALERT(at_console, "%s", msg);
 			}
 		}
@@ -5607,22 +5607,22 @@ static void ProcessBotCfgFile() {
 		if (std::strcmp(arg1, "on") == 0) { //-V547
 			bot_can_use_teleporter = true;
 			if (IS_DEDICATED_SERVER()) {
-				snprintf(msg, sizeof(msg), "[Config] bot_can_use_teleporter on\n");
+				std::snprintf(msg, sizeof(msg), "[Config] bot_can_use_teleporter on\n");
 				std::fputs(msg, stdout);
 			}
 			else {
-				snprintf(msg, sizeof(msg), "[Config] bot_can_use_teleporter on\n");
+				std::snprintf(msg, sizeof(msg), "[Config] bot_can_use_teleporter on\n");
 				ALERT(at_console, "%s", msg);
 			}
 		}
 		else if (std::strcmp(arg1, "off") == 0) { //-V547
 			bot_can_use_teleporter = false;
 			if (IS_DEDICATED_SERVER()) {
-				snprintf(msg, sizeof(msg), "[Config] bot_can_use_teleporter off\n");
+				std::snprintf(msg, sizeof(msg), "[Config] bot_can_use_teleporter off\n");
 				std::fputs(msg, stdout);
 			}
 			else {
-				snprintf(msg, sizeof(msg), "[Config] bot_can_use_teleporter off\n");
+				std::snprintf(msg, sizeof(msg), "[Config] bot_can_use_teleporter off\n");
 				ALERT(at_console, "%s", msg);
 			}
 		}
@@ -5636,11 +5636,11 @@ static void ProcessBotCfgFile() {
 		bot_cfg_pause_time = gpGlobals->time + static_cast<float>(std::atoi(arg1));
 		bot_check_time = bot_cfg_pause_time; // bot_check_time governs bot spawn time too
 		if (IS_DEDICATED_SERVER()) {
-			snprintf(msg, sizeof(msg), "[Config] pause has been set to %s\n", arg1);
+			std::snprintf(msg, sizeof(msg), "[Config] pause has been set to %s\n", arg1);
 			std::fputs(msg, stdout);
 		}
 		else {
-			snprintf(msg, sizeof(msg), "[Config] pause has been set to %s\n", arg1);
+			std::snprintf(msg, sizeof(msg), "[Config] pause has been set to %s\n", arg1);
 			ALERT(at_console, "%s", msg);
 		}
 		return;
@@ -5655,11 +5655,11 @@ static void ProcessBotCfgFile() {
 			bot_create_interval = 1.0f;
 
 		if (IS_DEDICATED_SERVER()) {
-			snprintf(msg, sizeof(msg), "[Config] bot_create_interval has been set to %s\n", arg1);
+			std::snprintf(msg, sizeof(msg), "[Config] bot_create_interval has been set to %s\n", arg1);
 			std::fputs(msg, stdout);
 		}
 		else {
-			snprintf(msg, sizeof(msg), "[Config] bot_create_interval has been set to %s\n", arg1);
+			std::snprintf(msg, sizeof(msg), "[Config] bot_create_interval has been set to %s\n", arg1);
 			ALERT(at_console, "%s", msg);
 		}
 		return;
@@ -5676,11 +5676,11 @@ static void ProcessBotCfgFile() {
 			defensive_chatter = true;
 
 		if (IS_DEDICATED_SERVER()) {
-			snprintf(msg, sizeof(msg), "[Config] defensive chatter is %s\n", arg1);
+			std::snprintf(msg, sizeof(msg), "[Config] defensive chatter is %s\n", arg1);
 			std::fputs(msg, stdout);
 		}
 		else {
-			snprintf(msg, sizeof(msg), "[Config] defensive chatter is %s\n", arg1);
+			std::snprintf(msg, sizeof(msg), "[Config] defensive chatter is %s\n", arg1);
 			ALERT(at_console, "%s", msg);
 		}
 		return;
@@ -5696,11 +5696,11 @@ static void ProcessBotCfgFile() {
 			offensive_chatter = true;
 
 		if (IS_DEDICATED_SERVER()) {
-			snprintf(msg, sizeof(msg), "[Config] offensive chatter is %s\n", arg1);
+			std::snprintf(msg, sizeof(msg), "[Config] offensive chatter is %s\n", arg1);
 			std::fputs(msg, stdout);
 		}
 		else {
-			snprintf(msg, sizeof(msg), "[Config] offensive chatter is %s\n", arg1);
+			std::snprintf(msg, sizeof(msg), "[Config] offensive chatter is %s\n", arg1);
 			ALERT(at_console, "%s", msg);
 		}
 		return;
@@ -5725,7 +5725,7 @@ static void ProcessBotCfgFile() {
 									return;
 					}*/
 
-	snprintf(msg2, sizeof(msg2), "executing: %s\n", server_cmd);
+	std::snprintf(msg2, sizeof(msg2), "executing: %s\n", server_cmd);
 	ALERT(at_console, "%s", msg2);
 
 	if (IS_DEDICATED_SERVER())
@@ -5864,7 +5864,7 @@ static void DisplayBotInfo() {
 	if (IS_DEDICATED_SERVER()) {
 		// tell the console all the bot vars
 
-		snprintf(msg2, 511, "--FoxBot Loaded--\n--Visit 'www.apg-clan.org' for updates and info--\n");
+		std::snprintf(msg2, 511, "--FoxBot Loaded--\n--Visit 'www.apg-clan.org' for updates and info--\n");
 		msg2[511] = '\0'; // just in case
 		puts(msg2);
 
@@ -5875,75 +5875,75 @@ static void DisplayBotInfo() {
 		puts(msg);
 
 		strncat(msg2, msg, 511 - strlen(msg2));
-		snprintf(msg, sizeof(msg), "\n--FoxBot info--\n");
+		std::snprintf(msg, sizeof(msg), "\n--FoxBot info--\n");
 		puts(msg);
 		strncat(msg2, msg, 511 - strlen(msg2));
 		// waypoints
 		if (num_waypoints > 0)
-			snprintf(msg, sizeof(msg), "Waypoints loaded\n");
+			std::snprintf(msg, sizeof(msg), "Waypoints loaded\n");
 		else
-			snprintf(msg, sizeof(msg), "Waypoints NOT loaded\n--Warning bots will not navigate correctly!--\n");
+			std::snprintf(msg, sizeof(msg), "Waypoints NOT loaded\n--Warning bots will not navigate correctly!--\n");
 		puts(msg);
 		strncat(msg2, msg, 511 - strlen(msg2));
 		// area file
 		if (num_areas > 0)
-			snprintf(msg, sizeof(msg), "Areas loaded\n");
+			std::snprintf(msg, sizeof(msg), "Areas loaded\n");
 		else
-			snprintf(msg, sizeof(msg), "Areas not loaded\n");
+			std::snprintf(msg, sizeof(msg), "Areas not loaded\n");
 		puts(msg);
 		strncat(msg2, msg, 511 - strlen(msg2));
 		// scripts...loaded/passed?
 		if (script_loaded) {
 			if (script_parsed)
-				snprintf(msg, sizeof(msg), "Script loaded and parsed\n");
+				std::snprintf(msg, sizeof(msg), "Script loaded and parsed\n");
 			else
-				snprintf(msg, sizeof(msg), "Script loaded and NOT parsed\n--Warning script file has an error in it, will NOT be used!--\n");
+				std::snprintf(msg, sizeof(msg), "Script loaded and NOT parsed\n--Warning script file has an error in it, will NOT be used!--\n");
 		} else
-			snprintf(msg, sizeof(msg), "No script file loaded\n");
+			std::snprintf(msg, sizeof(msg), "No script file loaded\n");
 		puts(msg);
 		strncat(msg2, msg, 511 - strlen(msg2));
 
 		// now bots vars
-		snprintf(msg, sizeof(msg), "\n--FoxBot vars--\n");
+		std::snprintf(msg, sizeof(msg), "\n--FoxBot vars--\n");
 		puts(msg);
 		strncat(msg2, msg, 511 - strlen(msg2));
 
 		// bot skill levels
-		snprintf(msg, sizeof(msg), "botskill_lower %d\nbotskill_upper %d\n", botskill_lower, botskill_upper);
+		std::snprintf(msg, sizeof(msg), "botskill_lower %d\nbotskill_upper %d\n", botskill_lower, botskill_upper);
 		puts(msg);
 		strncat(msg2, msg, 511 - strlen(msg2));
 
-		snprintf(msg, sizeof(msg), "max_bots %d\nmin_bots %d\n", max_bots, min_bots);
+		std::snprintf(msg, sizeof(msg), "max_bots %d\nmin_bots %d\n", max_bots, min_bots);
 		puts(msg);
 		strncat(msg2, msg, 511 - strlen(msg2));
 
 		// bot chat
-		snprintf(msg, sizeof(msg), "Bot chat %d\n", bot_chat);
+		std::snprintf(msg, sizeof(msg), "Bot chat %d\n", bot_chat);
 		puts(msg);
 		strncat(msg2, msg, 511 - strlen(msg2));
 
-		snprintf(msg, sizeof(msg), "Bot flag toss %s (distance %d)\n", bot_flag_toss ? "On" : "Off", bot_flag_toss_distance);
+		std::snprintf(msg, sizeof(msg), "Bot flag toss %s (distance %d)\n", bot_flag_toss ? "On" : "Off", bot_flag_toss_distance);
 		puts(msg);
 		strncat(msg2, msg, 511 - strlen(msg2));
 
 		if (bot_team_balance)
-			snprintf(msg, sizeof(msg), "Bot auto team balance On\n");
+			std::snprintf(msg, sizeof(msg), "Bot auto team balance On\n");
 		else
-			snprintf(msg, sizeof(msg), "Bot auto team balance Off\n");
+			std::snprintf(msg, sizeof(msg), "Bot auto team balance Off\n");
 		puts(msg);
 		strncat(msg2, msg, 511 - strlen(msg2));
 
 		if (bot_bot_balance)
-			snprintf(msg, sizeof(msg), "Bot per team balance On\n");
+			std::snprintf(msg, sizeof(msg), "Bot per team balance On\n");
 		else
-			snprintf(msg, sizeof(msg), "Bot per team balance Off\n");
+			std::snprintf(msg, sizeof(msg), "Bot per team balance Off\n");
 		puts(msg);
 		strncat(msg2, msg, 511 - strlen(msg2));
 
-		snprintf(msg, sizeof(msg), "\n--All bot commands must be enclosed in quotes--\n");
+		std::snprintf(msg, sizeof(msg), "\n--All bot commands must be enclosed in quotes--\n");
 		puts(msg);
 		strncat(msg2, msg, 511 - strlen(msg2));
-		snprintf(msg, sizeof(msg), "e.g. bot \"bot_chat 20\"\n\n");
+		std::snprintf(msg, sizeof(msg), "e.g. bot \"bot_chat 20\"\n\n");
 		puts(msg);
 		strncat(msg2, msg, 511 - strlen(msg2));
 		ALERT(at_logged, "[FOXBOT]: %s", msg2);
@@ -5975,33 +5975,33 @@ static void DisplayBotInfo() {
 		h.holdTime = 5;
 		h.x = 0;
 		h.y = 0;
-		snprintf(msg, sizeof(msg), "--FoxBot Loaded--\n--Visit 'www.apg-clan.org' for updates and info--\n");
+		std::snprintf(msg, sizeof(msg), "--FoxBot Loaded--\n--Visit 'www.apg-clan.org' for updates and info--\n");
 		ALERT(at_console, "%s", msg);
-	  snprintf(msg2, 511, "%s", msg);
+	   std::snprintf(msg2, 511, "%s", msg);
 
 		/*	sprintf(msg,"--* foxbot v%d.%d build# %d *--\n",
 							 VER_MAJOR,VER_MINOR,VER_BUILD);*/
 
-		snprintf(msg, sizeof(msg), "--* foxbot v%d.%d *--\n", VER_MAJOR, VER_MINOR);
+		std::snprintf(msg, sizeof(msg), "--* foxbot v%d.%d *--\n", VER_MAJOR, VER_MINOR);
 		ALERT(at_console, "%s", msg);
 		strncat(msg2, msg, 511 - strlen(msg2));
-		snprintf(msg, sizeof(msg), "\n--FoxBot info--\n");
+		std::snprintf(msg, sizeof(msg), "\n--FoxBot info--\n");
 		ALERT(at_console, "%s", msg);
 		strncat(msg2, msg, 511 - strlen(msg2));
 
 		// waypoints
 		if (num_waypoints > 0)
-			snprintf(msg, sizeof(msg), "Waypoints loaded\n");
+			std::snprintf(msg, sizeof(msg), "Waypoints loaded\n");
 		else
-			snprintf(msg, sizeof(msg), "Waypoints NOT loaded\n--Warning, bots will not navigate correctly!--\n");
+			std::snprintf(msg, sizeof(msg), "Waypoints NOT loaded\n--Warning, bots will not navigate correctly!--\n");
 		ALERT(at_console, "%s", msg);
 		strncat(msg2, msg, 511 - strlen(msg2));
 
 		// area file
 		if (num_areas > 0)
-			snprintf(msg, sizeof(msg), "Areas loaded\n");
+			std::snprintf(msg, sizeof(msg), "Areas loaded\n");
 		else
-			snprintf(msg, sizeof(msg), "Areas not loaded\n");
+			std::snprintf(msg, sizeof(msg), "Areas not loaded\n");
 
 		ALERT(at_console, "%s", msg);
 		strncat(msg2, msg, 511 - strlen(msg2));
@@ -6009,25 +6009,25 @@ static void DisplayBotInfo() {
 		// scripts...loaded/passed?
 		if (script_loaded) {
 			if (script_parsed)
-				snprintf(msg, sizeof(msg), "Script loaded and parsed\n");
+				std::snprintf(msg, sizeof(msg), "Script loaded and parsed\n");
 			else
-				snprintf(msg, sizeof(msg), "Script loaded and NOT parsed\n--Warning script file has an error in it and will NOT be used!--\n");
+				std::snprintf(msg, sizeof(msg), "Script loaded and NOT parsed\n--Warning script file has an error in it and will NOT be used!--\n");
 		} else
-			snprintf(msg, sizeof(msg), "No script file loaded\n");
+			std::snprintf(msg, sizeof(msg), "No script file loaded\n");
 		ALERT(at_console, "%s", msg);
 		strncat(msg2, msg, 511 - strlen(msg2));
 
 		// now bots vars
-		snprintf(msg, sizeof(msg), "\n--FoxBot vars--\n");
+		std::snprintf(msg, sizeof(msg), "\n--FoxBot vars--\n");
 		ALERT(at_console, "%s", msg);
 		strncat(msg2, msg, 511 - strlen(msg2));
 
 		// bot skill levels
-		snprintf(msg, sizeof(msg), "botskill_lower %d\nbotskill_upper %d\n", botskill_lower, botskill_upper);
+		std::snprintf(msg, sizeof(msg), "botskill_lower %d\nbotskill_upper %d\n", botskill_lower, botskill_upper);
 		ALERT(at_console, "%s", msg);
 		strncat(msg2, msg, 511 - strlen(msg2));
 
-		snprintf(msg, sizeof(msg), "max_bots %d\nmin_bots %d\n", max_bots, min_bots);
+		std::snprintf(msg, sizeof(msg), "max_bots %d\nmin_bots %d\n", max_bots, min_bots);
 		ALERT(at_console, "%s", msg);
 		strncat(msg2, msg, 511 - strlen(msg2));
 
@@ -6036,24 +6036,24 @@ static void DisplayBotInfo() {
 		ALERT(at_console, "%s", msg);
 		strncat(msg2, msg, 511 - strlen(msg2));
 
-		snprintf(msg, sizeof(msg), "Bot flag toss %s (distance %d)\n", bot_flag_toss ? "On" : "Off", bot_flag_toss_distance);
+		std::snprintf(msg, sizeof(msg), "Bot flag toss %s (distance %d)\n", bot_flag_toss ? "On" : "Off", bot_flag_toss_distance);
 		ALERT(at_console, "%s", msg);
 		strncat(msg2, msg, 511 - strlen(msg2));
 
 		if (bot_team_balance)
-			snprintf(msg, sizeof(msg), "Bot auto team balance On\n");
+			std::snprintf(msg, sizeof(msg), "Bot auto team balance On\n");
 		else
-			snprintf(msg, sizeof(msg), "Bot auto team balance Off\n");
+			std::snprintf(msg, sizeof(msg), "Bot auto team balance Off\n");
 		ALERT(at_console, "%s", msg);
 		strncat(msg2, msg, 511 - strlen(msg2));
 
 		if (bot_bot_balance)
-			snprintf(msg, sizeof(msg), "Bot per team balance On\n");
+			std::snprintf(msg, sizeof(msg), "Bot per team balance On\n");
 		else
-			snprintf(msg, sizeof(msg), "Bot per team balance Off\n");
+			std::snprintf(msg, sizeof(msg), "Bot per team balance Off\n");
 		ALERT(at_console, "%s", msg);
 		strncat(msg2, msg, 511 - strlen(msg2));
-		snprintf(msg, sizeof(msg), "\n");
+		std::snprintf(msg, sizeof(msg), "\n");
 		ALERT(at_console, "%s", msg);
 		strncat(msg2, msg, 511 - strlen(msg2));
 		ALERT(at_logged, "[FOXBOT]: %s", msg2);
@@ -6064,12 +6064,14 @@ static void DisplayBotInfo() {
 		if (!display_bot_vars)
 			FOX_HudMessage(INDEXENT(1), h, msg2);
 		if (waypoint_author[0] != '\0') {
+			// the author message's full style, kept together even where a
+			// value matches the message above
 			h.channel = 2;
-			h.effect = 1;
+			h.effect = 1; //-V1048
 			h.r1 = 255;
 			h.g1 = 128;
 			h.b1 = 0;
-			h.a1 = 255;
+			h.a1 = 255; //-V1048
 			h.r2 = 255;
 			h.g2 = 170;
 			h.b2 = 0;
@@ -6079,7 +6081,7 @@ static void DisplayBotInfo() {
 			h.holdTime = 7;
 			h.x = -1;
 			h.y = 0.8f;
-		   snprintf(msg, sizeof(msg), "-- Waypoint author: %s --", waypoint_author);
+		   std::snprintf(msg, sizeof(msg), "-- Waypoint author: %s --", waypoint_author);
 			FOX_HudMessage(INDEXENT(1), h, msg);
 		}
 	}
@@ -6109,7 +6111,7 @@ static void changeBotSetting(const char* settingName, int* setting, const char* 
 		else {
 			// report that a bad setting was requested
 
-			snprintf(msg, 128, "%s%s should be set from %d to %d\n", configMessage, settingName, minValue, maxValue);
+			std::snprintf(msg, 128, "%s%s should be set from %d to %d\n", configMessage, settingName, minValue, maxValue);
 			msg[127] = '\0';
 
 			if (settingSource == SETTING_SOURCE_CLIENT_COMMAND)
@@ -6127,11 +6129,11 @@ static void changeBotSetting(const char* settingName, int* setting, const char* 
 
 	// report if the setting was actually changed or not
 	if (settingWasChanged) {
-		snprintf(msg, 128, "%s%s has been set to %d\n", configMessage, settingName, *setting);
+		std::snprintf(msg, 128, "%s%s has been set to %d\n", configMessage, settingName, *setting);
 		msg[127] = '\0';
 	}
 	else {
-		snprintf(msg, 128, "%s%s is currently set to %d\n", configMessage, settingName, *setting);
+		std::snprintf(msg, 128, "%s%s is currently set to %d\n", configMessage, settingName, *setting);
 		msg[127] = '\0';
 	}
 
@@ -6163,7 +6165,7 @@ static void kickBots(int totalToKick, const int team) {
 			&& !FNullEnt(bots[index].pEdict) && (team < 0 || bots[index].bot_team == team)) {
 			char cmd[80];
 
-			snprintf(cmd, 80, "kick \"%s\"\n", bots[index].name);
+			std::snprintf(cmd, 80, "kick \"%s\"\n", bots[index].name);
 			cmd[79] = '\0';
 			SERVER_COMMAND(cmd); // kick the bot using (kick "name")
 			ClearKickedBotsData(index, true);
@@ -6198,7 +6200,7 @@ static void kickRandomBot() {
 	if (index > -1 && index < MAX_BOTS && bots[index].is_used && !FNullEnt(bots[index].pEdict)) {
 		char cmd[80];
 
-		snprintf(cmd, 80, "kick \"%s\"\n", bots[index].name);
+		std::snprintf(cmd, 80, "kick \"%s\"\n", bots[index].name);
 		cmd[79] = '\0';
 		SERVER_COMMAND(cmd); // kick the bot using (kick "name")
 		ClearKickedBotsData(index, true);

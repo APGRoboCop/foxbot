@@ -3,14 +3,14 @@
 ==============================
 
 --------------------------------------------------------------------------------
-Version 1.0-beta3
+Version 1.0-beta4
 ??????-??-2026
 Updated by RoboCop
 --------------------------------------------------------------------------------
 
 - Added visibility tables based on RCBot1 and stored in the /visibility folder
 
-- Added a self-learning program using Neural Net and Genetic Algorithms based on RCBot1
+- Added a self-learning program using Neural Net and Genetic Algorithms based on RCBot1 - thanks to Cheeseh and the RCBot coders
 
 - Added an experience program for bots to gain a bit of wisdom and be less lame, such as remembering enemy SG turrets spotted
 
@@ -22,9 +22,9 @@ Updated by RoboCop
 
 - The visibility and experience auxiliary data can be compressed using Miniz
 
-- Bots should be able to remember and note where enemy SG turrets were spotted and avoid that particular route using experience
+- Bots remember where enemy SG turrets were spotted using experience, and disguised spies back off when they're near one
 
-- Bots will try to be less visible when trying to destroy enemy SG turrets - especially for spies
+- Bots will try to be less visible when trying to destroy enemy SG turrets, using cover and suitable weapons
 
 - Reverting to compile Linux builds only for SSE2, as SSE4.2 isn't necessary until the future
 
@@ -38,7 +38,7 @@ Updated by RoboCop
 
 - BotBalanceTeams_Casual was removed as it caused unwanted team switches even with bot_team_balance off
 
-- Adding Link Time Optimisation to boost the bot's performance for pathfinding and AI logic
+- Added Link Time Optimisation to boost the bot's performance for pathfinding and AI logic
 
 - Reduced maximum waypoints from 32000 to 1024, as all maps don't use no more than 1000 waypoints
 
@@ -66,21 +66,51 @@ Updated by RoboCop
 
 - Improved the bot avoidance behaviour around caltrops to prevent bots from being slightly immobilised
 
-- Avoid using redundant optional checks in FindConcJump() to simplify the optional dereferences in bot_navigate.cpp
+- Removed redundant optional checks in FindConcJump() to simplify the optional dereferences in bot_navigate.cpp
 
-- Print origin floats directly instead of via temp Vectors
+- Origin floats are now printed directly instead of via temp Vectors
 
-- Guard config file settings against a missing argument
+- Guarded config file settings against a missing argument
 
-- Drop a redundant g_area_def assignment in the area delete command
+- Dropped a redundant g_area_def assignment in the area delete command
 
-- Drop a redundant new_current_wp assignment in BotUpdateRoute()
+- Dropped a redundant new_current_wp assignment in BotUpdateRoute()
 
-- Improving bot stability and teammate support - thanks to White Bishop
+- Improved bot stability and teammate support - thanks to White Bishop
 
-- Preventing bots from holding primed grenades after combat - thanks to White Bishop
+- Prevented bots from holding primed grenades after combat - thanks to White Bishop
 
 - Fixed bot button activation and timing initialisation - thanks to White Bishop
+
+- Bots no longer throw grenades into nearby walls, avoid priming in tight corridors or at low health, and throw unwanted grenades towards open space
+
+- Bots no longer use MIRV or EMP grenades at close range, and throw or ditch a primed grenade safely when an enemy rushes them
+
+- Demomen crouch when firing pipebombs at close range, lay pipe traps near the flag, and remember where their traps got kills
+
+- Bots remember spots where bunnyhopping kept failing and stop circling nodes they can't reach
+
+- `botdontmove` now fully freezes bots, including jumping, bunnyhopping, turning and grenades
+
+- Fixed bots circling on rooftops above the waypoint they were heading for, e.g. in Dustbowl
+
+- Engineers no longer blow up their own SG when a build fails, only whack their SG while it helps, restock to 130 metal before upgrading
+
+- Added a belief system from RCBot2 so engineers avoid building in areas the enemy holds
+
+- Added the `setup_time` map script command; defending engineers build forward while the gates are shut, and assault/AvD scripts now follow each map's gate countdown
+
+- Map script role lines inside on_msg/if blocks now work (e.g. Avanti's team swap), roles reset on map change, and fixed the yellow and green teams being mixed up
+
+- Experience files moved to a new format with bunnyhop and pipebomb data (older files still load); failed saves are now logged
+
+- Fixed health and armour pickups heading for ammo instead
+
+- Windows builds now use the standard std::snprintf, which always terminates text, and fixed a possible endless loop in UTIL_VarArgs
+
+- Fixed out-of-range array use in the area build/merge commands, plus a 2023 regression in area building
+
+- Fixed a large batch of PVS-Studio and ReSharper++ warnings
 
 TODO List:-
 

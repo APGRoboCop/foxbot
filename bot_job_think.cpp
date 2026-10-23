@@ -244,7 +244,7 @@ bool SubmitNewJob(bot_t* pBot, const int newJobType, job_struct* newJob) {
 
 	// Direct support and disposal of a live grenade must work even when the bot
 	// temporarily has no current waypoint.  Both jobs can act on nearby state
-	// without route data and terminate safely if no useful waypoint can be found.
+	// without route data and terminate safely if no useful waypoint can be found. -White Bishop
 	if (pBot->current_wp == -1 && newJobType != JOB_SEEK_WAYPOINT &&
 		newJobType != JOB_BUFF_ALLY && newJobType != JOB_BIN_GRENADE) // bit of a kludge but necessary
 		return false;                                               // many job assessor functions need a valid current waypoint
@@ -508,7 +508,7 @@ void BotJobThink(bot_t* pBot) {
 		pBot->f_humour_time = pBot->f_think_time + random_float(60.0f, 180.0f);
 
 		// no mucking about if enemies were recently seen or the bot spawned recently
-		if (pBot->enemy.f_lastSeen + 40.0f < pBot->f_think_time && pBot->f_killed_time + 40.0f < pBot->f_think_time && BufferedJobIndex(pBot, JOB_MELEE_WARRIOR) == -1 && BufferedJobIndex(pBot, JOB_GRAFFITI_ARTIST) == -1 &&
+		if (pBot->enemy.f_lastSeen + 40.0f < pBot->f_think_time && pBot->f_killed_time + 40.0f < pBot->f_think_time && BufferedJobIndex(pBot, JOB_MELEE_WARRIOR) == -1 && BufferedJobIndex(pBot, JOB_GRAFFITI_ARTIST) == -1 && //-V1051
 			random_long(1, 200) < pBot->trait.humour) {
 			// take your pick of fun things to do
 			if (random_long(1, 1000) > 400) {

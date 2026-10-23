@@ -211,8 +211,14 @@ char* DLLINTERNAL my_strlwr(char* s);
 
 // Fixed MSVC compiling, by Nikolay "The Storm" Baklicharov.
 #if defined(__GNUC__) || defined (_MSC_VER) && _MSC_VER >= 1400
+// Visual Studio 2015 (_MSC_VER 1900) and later have the standard snprintf and
+// vsnprintf, which always terminate the string. _snprintf/_vsnprintf don't
+// when the text has to be cut short, so only map to them for older
+// compilers that lack the standard ones - [APG]RoboCop[CL]
+#if defined(__GNUC__) || _MSC_VER < 1900
 #define snprintf	_snprintf
 #define vsnprintf	_vsnprintf
+#endif
 #define unlink		_unlink
 #define strlwr		_strlwr
 #define strdup		_strdup

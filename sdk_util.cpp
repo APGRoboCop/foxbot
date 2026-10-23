@@ -38,7 +38,9 @@
 #include <thread>
 #include <mutex>
 
-#ifdef _WIN32
+// Only for Windows compilers older than Visual Studio 2015, which lack the
+// standard vsnprintf (see metamod-p's osdep.h)
+#if defined(_WIN32) && !(defined(_MSC_VER) && _MSC_VER >= 1900)
 #define vsnprintf _vsnprintf
 #endif
 

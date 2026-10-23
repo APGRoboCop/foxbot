@@ -483,16 +483,16 @@ int JobPickUpFlag(bot_t* pBot) {
             if (area != -1) {
                switch (pBot->current_team) {
                case 0:
-                  snprintf(newJob->message, MAX_CHAT_LENGTH, "Enemy has dropped flag %s", areas[area].namea);
+                  std::snprintf(newJob->message, MAX_CHAT_LENGTH, "Enemy has dropped flag %s", areas[area].namea);
                   break;
                case 1:
-                  snprintf(newJob->message, MAX_CHAT_LENGTH, "Enemy has dropped flag %s", areas[area].nameb);
+                  std::snprintf(newJob->message, MAX_CHAT_LENGTH, "Enemy has dropped flag %s", areas[area].nameb);
                   break;
                case 2:
-                  snprintf(newJob->message, MAX_CHAT_LENGTH, "Enemy has dropped flag %s", areas[area].namec);
+                  std::snprintf(newJob->message, MAX_CHAT_LENGTH, "Enemy has dropped flag %s", areas[area].namec);
                   break;
                case 3:
-                  snprintf(newJob->message, MAX_CHAT_LENGTH, "Enemy has dropped flag %s", areas[area].named);
+                  std::snprintf(newJob->message, MAX_CHAT_LENGTH, "Enemy has dropped flag %s", areas[area].named);
                   break;
                default:
                   break;
@@ -1156,16 +1156,16 @@ int JobBuildSentry(bot_t* pBot) {
             if (newJob != nullptr) {
                switch (pBot->current_team) {
                case 0:
-                  snprintf(newJob->message, MAX_CHAT_LENGTH, "Sentry gun built: %s", areas[bot_area].namea);
+                  std::snprintf(newJob->message, MAX_CHAT_LENGTH, "Sentry gun built: %s", areas[bot_area].namea);
                   break;
                case 1:
-                  snprintf(newJob->message, MAX_CHAT_LENGTH, "Sentry gun built: %s", areas[bot_area].nameb);
+                  std::snprintf(newJob->message, MAX_CHAT_LENGTH, "Sentry gun built: %s", areas[bot_area].nameb);
                   break;
                case 2:
-                  snprintf(newJob->message, MAX_CHAT_LENGTH, "Sentry gun built: %s", areas[bot_area].namec);
+                  std::snprintf(newJob->message, MAX_CHAT_LENGTH, "Sentry gun built: %s", areas[bot_area].namec);
                   break;
                case 3:
-                  snprintf(newJob->message, MAX_CHAT_LENGTH, "Sentry gun built: %s", areas[bot_area].named);
+                  std::snprintf(newJob->message, MAX_CHAT_LENGTH, "Sentry gun built: %s", areas[bot_area].named);
                   break;
                default:
                   return JOB_TERMINATED;
@@ -1447,16 +1447,16 @@ int JobBuildTeleport(bot_t* pBot) {
 
                switch (pBot->current_team) {
                case 0:
-                  snprintf(newJob->message, MAX_CHAT_LENGTH, "%s built: %s", tpType, areas[bot_area].namea);
+                  std::snprintf(newJob->message, MAX_CHAT_LENGTH, "%s built: %s", tpType, areas[bot_area].namea);
                   break;
                case 1:
-                  snprintf(newJob->message, MAX_CHAT_LENGTH, "%s built: %s", tpType, areas[bot_area].nameb);
+                  std::snprintf(newJob->message, MAX_CHAT_LENGTH, "%s built: %s", tpType, areas[bot_area].nameb);
                   break;
                case 2:
-                  snprintf(newJob->message, MAX_CHAT_LENGTH, "%s built: %s", tpType, areas[bot_area].namec);
+                  std::snprintf(newJob->message, MAX_CHAT_LENGTH, "%s built: %s", tpType, areas[bot_area].namec);
                   break;
                case 3:
-                  snprintf(newJob->message, MAX_CHAT_LENGTH, "%s built: %s", tpType, areas[bot_area].named);
+                  std::snprintf(newJob->message, MAX_CHAT_LENGTH, "%s built: %s", tpType, areas[bot_area].named);
                   break;
                default:
                   return JOB_TERMINATED;
@@ -2009,7 +2009,7 @@ int JobDisguise(bot_t* pBot) {
       const int new_disguise = disguiseList[random_long(0, 6)];
 
       char choice[32];
-      snprintf(choice, sizeof(choice), "%d", new_disguise);
+      std::snprintf(choice, sizeof(choice), "%d", new_disguise);
 
       FakeClientCommand(pBot->pEdict, "disguise_enemy", choice, nullptr);
       pBot->disguise_state = DISGUISE_UNDERWAY;
@@ -2266,7 +2266,7 @@ int JobSnipe(bot_t* pBot) {
       pBot->f_snipe_time = pBot->f_think_time + random_float(0.8f, 1.5f);
 
       // make snipers look about
-      if (pBot->f_view_change_time <= pBot->f_think_time) {
+      if (pBot->f_view_change_time <= pBot->f_think_time) { //-V1051
          pBot->f_view_change_time = pBot->f_think_time + random_float(1.0f, 4.0f);
 
          const int aim_index = WaypointFindNearestAiming(waypoints[job_ptr->waypoint].origin);
@@ -3685,7 +3685,7 @@ int JobBinGrenade(bot_t* pBot) {
    // phase 1 - face where to throw the grenade
    if (job_ptr->phase == 1) {
       // The per-frame safety deadline may have released the grenade before the
-      // bot finished turning.  Stop aiming and use the ordinary retreat phase.
+      // bot finished turning.  Stop aiming and use the ordinary retreat phase. -White Bishop
       if (!pBot->nadePrimed) {
          job_ptr->phase = 2;
          job_ptr->phase_timer = pBot->f_think_time + 1.0f;

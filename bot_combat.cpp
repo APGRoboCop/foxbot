@@ -415,13 +415,13 @@ void BotEnemyCheck(bot_t *pBot) {
             if (area != -1) {
                char msg[MAX_CHAT_LENGTH];
                if (pBot->current_team == 0)
-                  snprintf(msg, MAX_CHAT_LENGTH, "Sentry Down %s", areas[area].namea);
+                  std::snprintf(msg, MAX_CHAT_LENGTH, "Sentry Down %s", areas[area].namea);
                else if (pBot->current_team == 1)
-                  snprintf(msg, MAX_CHAT_LENGTH, "Sentry Down %s", areas[area].nameb);
+                  std::snprintf(msg, MAX_CHAT_LENGTH, "Sentry Down %s", areas[area].nameb);
                else if (pBot->current_team == 2)
-                  snprintf(msg, MAX_CHAT_LENGTH, "Sentry Down %s", areas[area].namec);
+                  std::snprintf(msg, MAX_CHAT_LENGTH, "Sentry Down %s", areas[area].namec);
                else if (pBot->current_team == 3)
-                  snprintf(msg, MAX_CHAT_LENGTH, "Sentry Down %s", areas[area].named);
+                  std::snprintf(msg, MAX_CHAT_LENGTH, "Sentry Down %s", areas[area].named);
                msg[MAX_CHAT_LENGTH - 1] = '\0';
 
                bool destruction_reported = false;
@@ -1103,16 +1103,16 @@ static void BotSGSpotted(bot_t *pBot, edict_t *sg) {
    if (area != -1) {
       switch (pBot->current_team) {
       case 0:
-         snprintf(newJob->message, MAX_CHAT_LENGTH, "Sentry Spotted %s", areas[area].namea);
+         std::snprintf(newJob->message, MAX_CHAT_LENGTH, "Sentry Spotted %s", areas[area].namea);
          break;
       case 1:
-         snprintf(newJob->message, MAX_CHAT_LENGTH, "Sentry Spotted %s", areas[area].nameb);
+         std::snprintf(newJob->message, MAX_CHAT_LENGTH, "Sentry Spotted %s", areas[area].nameb);
          break;
       case 2:
-         snprintf(newJob->message, MAX_CHAT_LENGTH, "Sentry Spotted %s", areas[area].namec);
+         std::snprintf(newJob->message, MAX_CHAT_LENGTH, "Sentry Spotted %s", areas[area].namec);
          break;
       case 3:
-         snprintf(newJob->message, MAX_CHAT_LENGTH, "Sentry Spotted %s", areas[area].named);
+         std::snprintf(newJob->message, MAX_CHAT_LENGTH, "Sentry Spotted %s", areas[area].named);
          break;
       default:;
       }
@@ -1863,7 +1863,7 @@ bool BotFireWeapon(const Vector &v_enemy, bot_t *pBot, const int weapon_choice) 
 
          if (pDelay[select_index].iId != iId) {
             char msg[80];
-            snprintf(msg, sizeof(msg), "fire_delay mismatch for weapon id=%d\n", iId);
+            std::snprintf(msg, sizeof(msg), "fire_delay mismatch for weapon id=%d\n", iId);
             ALERT(at_console, "%s", msg);
             return false;
          }
@@ -1980,7 +1980,7 @@ void BotReleasePrimedGrenade(bot_t* pBot) {
 
 // Maintain an already-primed grenade even when normal combat processing stops.
 // The disposal job provides ordinary aiming when time permits; the deadline
-// merely releases the grenade in the bot's current direction before detonation.
+// merely releases the grenade in the bot's current direction before detonation. -White Bishop
 void BotCheckPrimedGrenade(bot_t* pBot) {
    if (pBot == nullptr || pBot->pEdict == nullptr || !pBot->nadePrimed)
       return;

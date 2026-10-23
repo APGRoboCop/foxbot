@@ -235,9 +235,9 @@ void UTIL_HostSay(edict_t* pEntity, const int teamonly, const char* message) {
 
 	// turn on color set 2  (color on,  no sound)
 	if (teamonly)
-		snprintf(text, 127, "%c(TEAM) %s: %s\n", 2, STRING(pEntity->v.netname), message);
+		std::snprintf(text, 127, "%c(TEAM) %s: %s\n", 2, STRING(pEntity->v.netname), message);
 	else
-		snprintf(text, 127, "%c%s: %s\n", 2, STRING(pEntity->v.netname), message);
+		std::snprintf(text, 127, "%c%s: %s\n", 2, STRING(pEntity->v.netname), message);
 
 	text[127] = '\0';
 
@@ -682,13 +682,16 @@ void UTIL_BuildFileName(char* filename, const int max_fn_length, const char* arg
 #else
 		const char separator = '/';
 #endif
-		snprintf(filename, max_fn_length, "%s%s%c%s", foxbot_path, arg1, separator, arg2);
+		std::snprintf(filename, max_fn_length, "%s%s%c%s", foxbot_path, arg1, separator, arg2);
 	}
 	else if (arg1 && *arg1) {
-		snprintf(filename, max_fn_length, "%s%s", foxbot_path, arg1);
+		std::snprintf(filename, max_fn_length, "%s%s", foxbot_path, arg1);
 	}
 
-	filename[max_fn_length - 1] = '\0'; // just to be sure
+	// Kept for Windows compilers older than Visual Studio 2015, where
+	// metamod-p's osdep.h maps snprintf to _snprintf, which doesn't add the
+	// terminator when it has to cut the text short
+	filename[max_fn_length - 1] = '\0'; //-V1048
 }
 
 // This function tries to find the Foxbot directory path by testing for

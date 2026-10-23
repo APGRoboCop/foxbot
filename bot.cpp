@@ -596,7 +596,7 @@ void BotCreate(edict_t* pPlayer, const char* arg1, const char* arg2, const char*
 		if (name == nullptr)
 			continue;
 
-		snprintf(cl_name, sizeof(cl_name), "%s", name);
+		std::snprintf(cl_name, sizeof(cl_name), "%s", name);
 		if (cl_name[0] != '\0')
 			count++;
 	}
@@ -1803,7 +1803,7 @@ void script(const char* sz) {
 
 	if (g_bot_debug) {
 		char msg[255];
-		snprintf(msg, 250, "msg (%s)\n", sz);
+		std::snprintf(msg, 250, "msg (%s)\n", sz);
 		ALERT(at_console, "%s", msg);
 
 		fp = UTIL_OpenFoxbotLog();
@@ -1819,14 +1819,14 @@ void script(const char* sz) {
 			// ALERT( at_console, "-\n");
 			// some messages have line returns, so check
 			char msg2[255];
-			snprintf(msg2, 250, "%s\n", msg_msg[current_msg]);
+			std::snprintf(msg2, 250, "%s\n", msg_msg[current_msg]);
 			if (std::strcmp(sz, msg_msg[current_msg]) == 0 || std::strcmp(sz, msg2) == 0) {
 				/*{ fp=UTIL_OpenFoxbotLog();
 								std::fprintf(fp,"a %d\n",current_msg); std::fclose(fp); }*/
 				if (msg_com[current_msg].ifs[0] == '\0') {
 					if (g_bot_debug) {
 						char msg[255];
-						snprintf(msg, 250, "no if : %s +++ %s %d\n", msg_msg[current_msg], sz, current_msg);
+						std::snprintf(msg, 250, "no if : %s +++ %s %d\n", msg_msg[current_msg], sz, current_msg);
 						ALERT(at_console, "%s", msg);
 						/*{ fp=UTIL_OpenFoxbotLog();
 										std::fprintf(fp,msg,sz); std::fclose(fp); }*/
@@ -1994,7 +1994,7 @@ void script(const char* sz) {
 										std::fprintf(fp, "-pass\n"); std::fclose(fp);}*/
 						if (g_bot_debug) {
 							char msg[255];
-							snprintf(msg, 250, "if : %s +++ %s %d \nComparing point %s\n", msg_msg[current_msg], sz, current_msg, curr->ifs + 4);
+							std::snprintf(msg, 250, "if : %s +++ %s %d \nComparing point %s\n", msg_msg[current_msg], sz, current_msg, curr->ifs + 4);
 							ALERT(at_console, "%s", msg);
 							/*{ fp=UTIL_OpenFoxbotLog();
 											std::fprintf(fp,msg,sz); std::fclose(fp);}*/
@@ -3282,10 +3282,10 @@ static bool botVerifyAccess(edict_t *pPlayer) {
       return false;
 
    char authId[255];
-   snprintf(authId, sizeof(authId), "%s", rawAuthId);
+   std::snprintf(authId, sizeof(authId), "%s", rawAuthId);
 
    char szBuffer[64];
-   snprintf(szBuffer, sizeof(szBuffer), "%s Does not have access.", authId);
+   std::snprintf(szBuffer, sizeof(szBuffer), "%s Does not have access.", authId);
    ALERT(at_console, "%s", szBuffer);
    // example steam ID: STEAM_0:1245
 
@@ -3399,7 +3399,7 @@ static void BotPickNewClass(bot_t* pBot) {
 
 	// name the class the bot wishes to use and change to it
 	// (zero-initialised so an unhandled new_class can't pass garbage to FakeClientCommand)
-	char c_class[16] = {0};
+	char c_class[16] = {};
 	switch (new_class) {
 	case 1:
 		std::strcpy(c_class, "scout");
@@ -3511,7 +3511,8 @@ static bool BotChooseCounterClass(bot_t* pBot) {
 		return false;
 
 	// name the class the bot wishes to use and change to it
-	char c_class[16];
+	// (zero-initialised so an unhandled new_class can't pass garbage to FakeClientCommand)
+	char c_class[16] = {};
 	switch (new_class) {
 	case 1:
 		std::strcpy(c_class, "scout");
@@ -3725,16 +3726,16 @@ static void BotReportMyFlagDrop(bot_t* pBot) {
 		if (newJob != nullptr) {
 			switch (pBot->current_team) {
 			case 0:
-				snprintf(newJob->message, MAX_CHAT_LENGTH, "Flag dropped %s", areas[bot_area].namea);
+				std::snprintf(newJob->message, MAX_CHAT_LENGTH, "Flag dropped %s", areas[bot_area].namea);
 				break;
 			case 1:
-				snprintf(newJob->message, MAX_CHAT_LENGTH, "Flag dropped %s", areas[bot_area].nameb);
+				std::snprintf(newJob->message, MAX_CHAT_LENGTH, "Flag dropped %s", areas[bot_area].nameb);
 				break;
 			case 2:
-				snprintf(newJob->message, MAX_CHAT_LENGTH, "Flag dropped %s", areas[bot_area].namec);
+				std::snprintf(newJob->message, MAX_CHAT_LENGTH, "Flag dropped %s", areas[bot_area].namec);
 				break;
 			case 3:
-				snprintf(newJob->message, MAX_CHAT_LENGTH, "Flag dropped %s", areas[bot_area].named);
+				std::snprintf(newJob->message, MAX_CHAT_LENGTH, "Flag dropped %s", areas[bot_area].named);
 				break;
 			default:
 				break;
@@ -3774,16 +3775,16 @@ static void BotEnemyCarrierAlert(bot_t* pBot) {
 	if (found_area != -1) {
 		switch (pBot->current_team) {
 		case 0:
-			snprintf(newJob->message, MAX_CHAT_LENGTH, "Enemy carrier %s", areas[found_area].namea);
+			std::snprintf(newJob->message, MAX_CHAT_LENGTH, "Enemy carrier %s", areas[found_area].namea);
 			break;
 		case 1:
-			snprintf(newJob->message, MAX_CHAT_LENGTH, "Enemy carrier %s", areas[found_area].nameb);
+			std::snprintf(newJob->message, MAX_CHAT_LENGTH, "Enemy carrier %s", areas[found_area].nameb);
 			break;
 		case 2:
-			snprintf(newJob->message, MAX_CHAT_LENGTH, "Enemy carrier %s", areas[found_area].namec);
+			std::snprintf(newJob->message, MAX_CHAT_LENGTH, "Enemy carrier %s", areas[found_area].namec);
 			break;
 		case 3:
-			snprintf(newJob->message, MAX_CHAT_LENGTH, "Enemy carrier %s", areas[found_area].named);
+			std::snprintf(newJob->message, MAX_CHAT_LENGTH, "Enemy carrier %s", areas[found_area].named);
 			break;
 		default:
 			break;
@@ -4346,7 +4347,7 @@ static void BotFlagTossCheck(bot_t* pBot) {
 
 	if (!stillCarrying) {
 		char message[96];
-		snprintf(message, sizeof(message), "Flag thrown to %s", STRING(pTarget->v.netname));
+		std::snprintf(message, sizeof(message), "Flag thrown to %s", STRING(pTarget->v.netname));
 		message[sizeof(message) - 1] = '\0';
 		UTIL_HostSay(pBot->pEdict, 1, message);
 	}
@@ -4739,9 +4740,9 @@ static void BotSpectatorDebug(bot_t* pBot) {
 
 		// show the bots name, skill, and role
 		if (pBot->mission == ROLE_DEFENDER)
-			snprintf(msg, 72, "%s, skill %d, Defending\n", pBot->name, pBot->bot_skill);
+			std::snprintf(msg, 72, "%s, skill %d, Defending\n", pBot->name, pBot->bot_skill);
 		else
-			snprintf(msg, 72, "%s, skill %d, Attacking\n", pBot->name, pBot->bot_skill);
+			std::snprintf(msg, 72, "%s, skill %d, Attacking\n", pBot->name, pBot->bot_skill);
 
 		msg[71] = '\0';
 
@@ -4756,7 +4757,7 @@ static void BotSpectatorDebug(bot_t* pBot) {
 					// indicate the current job and how long it's been running
 					if (pBot->currentJob == i) {
 						char msgBuffer[128] = "";
-						snprintf(msgBuffer, 128, " [phase %d, buffered %f]\n", pBot->job[pBot->currentJob].phase, static_cast<double>(pBot->f_think_time - pBot->job[pBot->currentJob].f_bufferedTime));
+						std::snprintf(msgBuffer, 128, " [phase %d, buffered %f]\n", pBot->job[pBot->currentJob].phase, static_cast<double>(pBot->f_think_time - pBot->job[pBot->currentJob].f_bufferedTime));
 						std::strncat(msg, msgBuffer, 255 - std::strlen(msg) - 1);
 					}
 					else
@@ -4789,17 +4790,17 @@ static void BotSpectatorDebug(bot_t* pBot) {
 	   else if (spectate_debug == 3) // show the bots personality traits
       {
          char msgBuffer[128] = "";
-			snprintf(msgBuffer, 128, "aggression %d\nhealth threshold %d\ncamper %d", pBot->trait.aggression, pBot->trait.health, pBot->trait.camper);
+			std::snprintf(msgBuffer, 128, "aggression %d\nhealth threshold %d\ncamper %d", pBot->trait.aggression, pBot->trait.health, pBot->trait.camper);
          std::strncat(msg, msgBuffer, 255 - std::strlen(msg) - 1);
       }
 		else // some other spectate_debug mode - show navigation info
 		{
 			char msgBuffer[128] = "";
-			snprintf(msgBuffer, 128, "waypoint deadline %f\nnavDistance %f\nf_navProblemStartTime %f\n", static_cast<double>(pBot->f_current_wp_deadline - pBot->f_think_time), static_cast<double>((waypoints[pBot->current_wp].origin - pBot->pEdict->v.origin).Length()),
+			std::snprintf(msgBuffer, 128, "waypoint deadline %f\nnavDistance %f\nf_navProblemStartTime %f\n", static_cast<double>(pBot->f_current_wp_deadline - pBot->f_think_time), static_cast<double>((waypoints[pBot->current_wp].origin - pBot->pEdict->v.origin).Length()),
 				static_cast<double>(pBot->f_think_time - pBot->f_navProblemStartTime));
 			std::strncat(msg, msgBuffer, 255 - std::strlen(msg) - 1);
 
-			snprintf(msgBuffer, 128, "velocity length 2D %f\n velocity Z %f\n", static_cast<double>(pBot->pEdict->v.velocity.Length2D()), static_cast<double>(pBot->pEdict->v.velocity.z));
+			std::snprintf(msgBuffer, 128, "velocity length 2D %f\n velocity Z %f\n", static_cast<double>(pBot->pEdict->v.velocity.Length2D()), static_cast<double>(pBot->pEdict->v.velocity.z));
 			std::strncat(msg, msgBuffer, 255 - std::strlen(msg) - 1);
 		}
 
