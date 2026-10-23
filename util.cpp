@@ -26,6 +26,7 @@
 #include "extdll.h"
 #include <util.h>
 
+#include <cstdio>
 #include <ctime>
 #include <cmath>
 
