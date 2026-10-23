@@ -43,6 +43,7 @@
 #include "bot_neuralnet.h"
 #include "bot_ga.h"
 #include "bot_experience.h"
+#include <cstdio>
 
 // types of damage to ignore...
 #define IGNORE_DAMAGE (DMG_CRUSH | DMG_FREEZE | DMG_SHOCK | DMG_DROWN | DMG_NERVEGAS | DMG_RADIATION | DMG_DROWNRECOVER | DMG_ACID | DMG_SLOWBURN | DMG_SLOWFREEZE)
