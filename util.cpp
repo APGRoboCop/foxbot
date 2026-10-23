@@ -687,11 +687,6 @@ void UTIL_BuildFileName(char* filename, const int max_fn_length, const char* arg
 	else if (arg1 && *arg1) {
 		std::snprintf(filename, max_fn_length, "%s%s", foxbot_path, arg1);
 	}
-
-	// Kept for Windows compilers older than Visual Studio 2015, where
-	// metamod-p's osdep.h maps snprintf to _snprintf, which doesn't add the
-	// terminator when it has to cut the text short
-	filename[max_fn_length - 1] = '\0'; //-V1048
 }
 
 // This function tries to find the Foxbot directory path by testing for
