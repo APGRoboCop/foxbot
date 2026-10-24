@@ -32,7 +32,7 @@ Updated by RoboCop
 
 - Modernised the Waypoint Menu coding
 
-- Spies should now ignore using teleporters, as their team coloured glow will make their cover blown easily
+- Spies now avoid teleporters, as the team-coloured glow would easily blow their cover
 
 - `BotClient_TFC_VGUI()` reinstated for bot_team_balance 0 to work for like Bots Vs Human gameplay
 
@@ -40,7 +40,7 @@ Updated by RoboCop
 
 - Added Link Time Optimisation to boost the bot's performance for pathfinding and AI logic
 
-- Reduced maximum waypoints from 32000 to 1024, as all maps don't use no more than 1000 waypoints
+- Reduced maximum waypoints from 32000 to 1024, as no maps use more than 1000 waypoints
 
 - Pitch and yaw speed doubled to allow bots to turn faster to avoid falling from catwalks without the fences
 
@@ -50,7 +50,7 @@ Updated by RoboCop
 
 - Added `botdontmove` in order for "GolfBots" to stay stationary in minigolf maps in order to not ruin their momentum
 
-- Synchronised `bot_check_time` with `bot_cfg_pause_time` to prevent bots that are randomly added before the .cfg is executed
+- Synchronised `bot_check_time` with `bot_cfg_pause_time` to prevent bots being randomly added before the .cfg is executed
 
 - Increased weapon delay and aim_error value to decrease accuracy for Heavy's Miniguns in order to prevent them from being overpowered
 
